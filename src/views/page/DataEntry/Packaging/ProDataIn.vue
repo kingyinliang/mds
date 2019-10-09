@@ -1,29 +1,14 @@
 <template>
   <!--<el-col v-loading.fullscreen.lock="lodingS" element-loading-text="加载中">-->
   <el-col>
-    <div class="header_main">
-      <el-card class="searchCard newCard" style="margin:0">
+    <div class="main">
+      <el-card class="searchCard newCard" style="margin: 0">
         <el-row type="flex">
           <el-col>
             <form-header :formHeader="formHeader" :isRedact="isRedact" :pro="true" ref="formheader"></form-header>
           </el-col>
-          <el-col :span="8" style="font-size: 14px;line-height: 32px">
-            <div style="text-align:left; overflow:hidden; float:right;">
-              <span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? '#1890f' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：
-              <span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
-            </div>
-            <div style="clear:both"></div>
-            <div style="width:100%; text-align:right; margin-top:50px;">
-              <template style="float:right;margin-bottom: 13px">
-                <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-Packaging-index'})">返回</el-button>
-                <el-button type="primary" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('pkg:order:update')">{{isRedact?'取消':'编辑'}}</el-button>
-              </template>
-              <template v-if="isRedact" style="float:right;">
-                <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')">保存</el-button>
-                <el-button type="primary" size="small" @click="Submitdialog">提交</el-button>
-              </template>
-            </div>
-            <!-- <el-row style="float:right;margin-bottom: 13px">
+          <el-col style="width: 210px">
+            <el-row style="float:right;margin-bottom: 13px">
               <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-Packaging-index'})">返回</el-button>
               <el-button type="primary" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('pkg:order:update')">{{isRedact?'取消':'编辑'}}</el-button>
             </el-row>
@@ -33,7 +18,7 @@
             </el-row>
             <el-row style="position: absolute;right: 0;top: 100px;">
               <div>订单状态：<span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span></div>
-            </el-row> -->
+            </el-row>
           </el-col>
         </el-row>
         <div class="toggleSearchBottom">
@@ -41,7 +26,7 @@
         </div>
       </el-card>
     </div>
-    <div class="main">
+    <div class="main" style="padding-top: 0px">
       <el-card class="tableCard">
         <div class="toggleSearchTop">
           <i class="el-icon-caret-bottom"></i>
@@ -194,7 +179,7 @@ export default {
         this.formHeader = data.list[0]
         this.orderStatus = data.list[0].orderStatus
         this.GetRatio()
-        this.$refs.listbom.GetPot(this.formHeader.factory, this.formHeader.orderNo)
+        this.$refs.listbom.GetPot(this.formHeader.factory)
         this.$refs.formheader.getLin(this.formHeader.workShop)
         this.$refs.excrecord.GetequipmentType(this.formHeader.productLine)
         this.$refs.excrecord.getDataList(this.formHeader.factory)
@@ -275,7 +260,7 @@ export default {
           that.GetOrderList()
           that.$notify({title: '成功', message: '提交成功', type: 'success'})
         }).catch(() => {
-          that.$error_SHINHO('网络请求失败，请刷新重试')
+          that.$message.error('网络请求失败，请刷新重试')
           that.isRedact = false
           that.visible = false
         })
@@ -297,9 +282,6 @@ export default {
         }
       }
       if (!this.$refs.listbom.saprul(str)) {
-        return false
-      }
-      if (!this.$refs.listbom.ListbomsRule(str)) {
         return false
       }
       this.lodingS = true
@@ -352,12 +334,12 @@ export default {
             that.GetOrderList()
             that.$notify({title: '成功', message: '提交成功', type: 'success'})
           }).catch(() => {
-            that.$error_SHINHO('网络请求失败，请刷新重试')
+            that.$message.error('网络请求失败，请刷新重试')
             that.isRedact = false
             that.visible = false
           })
         }).catch(() => {
-          that.$error_SHINHO('网络请求失败，请刷新重试')
+          that.$message.error('网络请求失败，请刷新重试')
           that.isRedact = false
           that.visible = false
         })
@@ -377,7 +359,7 @@ export default {
           that.$notify({title: '成功', message: '保存成功', type: 'success'})
           that.visible = false
         }).catch(() => {
-          that.$error_SHINHO('网络请求失败，请刷新重试')
+          that.$message.error('网络请求失败，请刷新重试')
           that.isRedact = false
           that.visible = false
         })
