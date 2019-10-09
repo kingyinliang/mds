@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 5px 10px">
+  <div class="header_main">
     <el-card class="searchCard  newCard" style="margin-bottom: 5px">
       <el-row type="flex">
         <el-col>
@@ -19,71 +19,71 @@
         </template>
       </el-row>
     </el-card>
-    <el-card class="searchCard  newCard">
-      <el-tabs ref='tabs' v-model="activeName" class="NewDaatTtabs" type="border-card">
-        <el-tab-pane name="1">
-          <span slot="label" class="spanview">
-            原汁领用
-          </span>
-          <el-table header-row-class-name="tableHead" :data="MaterialDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-            <el-table-column type="index" width="55" label="序号"></el-table-column>
-            <el-table-column label="领用物料" :show-overflow-tooltip="true">
-              <template slot-scope="scope">{{scope.row.materialCode + ' ' + scope.row.materialName}}</template>
-            </el-table-column>
-            <el-table-column label="单位" width="50" prop="unit"></el-table-column>
-            <el-table-column label="计划领料" width="100" prop="planAmount"></el-table-column>
-            <el-table-column label="操作" width="70">
-              <template slot-scope="scope">
-                <el-button type="text" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @click="addData(scope.row, scope.$index)"><i class="icons iconfont factory-chaifen"></i>拆分</el-button>
-              </template>
-            </el-table-column>
-            <el-table-column width="130">
-              <template slot="header"><i class="reqI">*</i><span>罐号</span></template>
-              <template slot-scope="scope">
-                <el-select v-model="scope.row.hloderId" @change="setBatch(scope.row)" placeholder="请选择" filterable size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))">
-                  <el-option v-for="(sole, index) in PotList" :key="index" :value="sole.holderId" :label="sole.holderName"></el-option>
-                </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column width="130">
-              <template slot="header"><i class="reqI">*</i><span>批次</span></template>
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.batch" :disabled="true" size="small"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column width="130">
-              <template slot="header"><i class="reqI">*</i><span>实际领料</span></template>
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.receiveAmount" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" placeholder="手工录入" size="small"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column label="备注" width="110">
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.remark" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" placeholder="手工录入" size="small"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column fixed="right" label="操作" width="50">
-              <template slot-scope="scope">
-                <el-button type="danger" icon="el-icon-delete" circle size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @click="delRow(scope.row)"></el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <auditLog :tableData="DataAudit"></auditLog>
-        </el-tab-pane>
-        <el-tab-pane name="2">
-          <span slot="label" class="spanview">
-            异常记录
-          </span>
-          <exc-record ref="excrecord" :isRedact="isRedact"></exc-record>
-        </el-tab-pane>
-        <el-tab-pane name="3">
-          <span slot="label" class="spanview">
-            文本记录
-          </span>
-          <text-record ref="textrecord" :isRedact="isRedact"></text-record>
-        </el-tab-pane>
-      </el-tabs>
-    </el-card>
+    <el-tabs ref='tabs' v-model="activeName" class="NewDaatTtabs" type="border-card">
+      <el-tab-pane name="1">
+        <span slot="label" class="spanview">
+          原汁领用
+        </span>
+        <el-table header-row-class-name="tableHead" :data="MaterialDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
+          <el-table-column type="index" width="55" label="序号"></el-table-column>
+          <el-table-column label="领用物料" :show-overflow-tooltip="true">
+            <template slot-scope="scope">{{scope.row.materialCode + ' ' + scope.row.materialName}}</template>
+          </el-table-column>
+          <el-table-column label="单位" width="50" prop="unit"></el-table-column>
+          <el-table-column label="计划领料" width="100" prop="planAmount"></el-table-column>
+          <el-table-column label="操作" width="70">
+            <template slot-scope="scope">
+              <!--<el-button type="text" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @click="addData(scope.row, scope.$index)"><i class="icons iconfont factory-chaifen"></i>拆分</el-button>-->
+              <el-button type="text" size="mini" disabled @click="addData(scope.row, scope.$index)"><i class="icons iconfont factory-chaifen"></i>拆分</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column width="130">
+            <template slot="header"><i class="reqI">*</i><span>罐号</span></template>
+            <template slot-scope="scope">
+              <!--<el-select v-model="scope.row.hloderId" @change="setBatch(scope.row)" placeholder="请选择" filterable size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))">-->
+              <el-select v-model="scope.row.hloderId" placeholder="请选择" filterable size="mini" disabled>
+                <el-option v-for="(sole, index) in PotList" :key="index" :value="sole.holderId" :label="sole.holderName"></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column width="130">
+            <template slot="header"><i class="reqI">*</i><span>批次</span></template>
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.batch" :disabled="!scope.row.isB" size="small"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column width="130">
+            <template slot="header"><i class="reqI">*</i><span>实际领料</span></template>
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.receiveAmount" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" placeholder="手工录入" size="small"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="备注" width="110">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.remark" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" placeholder="手工录入" size="small"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" label="操作" width="70">
+            <template slot-scope="scope">
+              <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @click="delRow(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <auditLog :tableData="DataAudit"></auditLog>
+      </el-tab-pane>
+      <el-tab-pane name="2">
+        <span slot="label" class="spanview">
+          异常记录
+        </span>
+        <exc-record ref="excrecord" :isRedact="isRedact"></exc-record>
+      </el-tab-pane>
+      <el-tab-pane name="3">
+        <span slot="label" class="spanview">
+          文本记录
+        </span>
+        <text-record ref="textrecord" :isRedact="isRedact"></text-record>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -143,7 +143,7 @@ export default {
       })
     },
     GetPot () {
-      this.$http(`${STERILIZED_API.STE_ENTER_IN_POT_LIST_API}`, 'POST', {
+      this.$http(`${STERILIZED_API.STE_ENTER_MATERIAL_POT_LIST_API}`, 'POST', {
         factory: this.formHeader.factory,
         workShop: this.formHeader.workShop
       }).then(({data}) => {
@@ -156,13 +156,20 @@ export default {
     },
     setBatch (row) {
       row.batch = this.PotList.filter(items => items.holderId === row.hloderId)[0].batch
+      row.receiveAmount = this.PotList.filter(items => items.holderId === row.hloderId)[0].amount
     },
     delRow (row) {
-      if (this.MaterialDate.filter(item => item.delFlag === '0' && item.materialCode === row.materialCode).length === 1) {
-        this.$notify.error({title: '错误', message: '最后一条了哦，不能再删了'})
-      } else {
-        row.delFlag = '1'
-      }
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        if (this.MaterialDate.filter(item => item.delFlag === '0' && item.materialCode === row.materialCode).length === 1) {
+          this.$warning_SHINHO('最后一条了哦，不能再删了')
+        } else {
+          row.delFlag = '1'
+        }
+      })
     },
     //  RowDelFlag
     RowDelFlag ({row, rowIndex}) {
@@ -254,19 +261,21 @@ export default {
     dataRul () {
       let ty = true
       this.MaterialDate.forEach((item) => {
-        if (!item.hloderId) {
-          ty = false
-          this.$notify.error({title: '错误', message: '罐号未填'})
-          return false
+        if (!item.isT) {
+          if (!item.hloderId) {
+            ty = false
+            this.$warning_SHINHO('罐号未填')
+            return false
+          }
         }
         if (!item.batch) {
           ty = false
-          this.$notify.error({title: '错误', message: '批次未填'})
+          this.$warning_SHINHO('批次未填')
           return false
         }
         if (!item.receiveAmount) {
           ty = false
-          this.$notify.error({title: '错误', message: '实际领料未填'})
+          this.$warning_SHINHO('实际领料未填')
           return false
         }
       })

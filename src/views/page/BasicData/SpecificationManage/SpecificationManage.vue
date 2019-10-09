@@ -232,7 +232,7 @@ export default {
     // 删除
     remove () {
       if (this.multipleSelection.length === 0) {
-        this.$notify.error({title: '错误', message: '请选择要删除的规格'})
+        this.$warning_SHINHO('请选择要删除的规格')
       } else {
         this.$confirm('确认删除规格, 是否继续?', '删除规格', {
           confirmButtonText: '确定',
@@ -241,10 +241,7 @@ export default {
         }).then(() => {
           this.$http(`${BASICDATA_API.SPECDEL_API}`, 'POST', this.multipleSelection).then(({data}) => {
             if (data.code === 0) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
+              this.$success_SHINHO('删除成功!')
               this.multipleSelection = []
               this.GetList()
             } else {
@@ -252,10 +249,6 @@ export default {
             }
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
         })
       }
     },

@@ -1,24 +1,24 @@
 <template>
   <el-col v-loading.fullscreen.lock="lodingStatus" element-loading-text="加载中">
     <el-col v-loading.fullscreen.lock="lodingStatus1" element-loading-text="加载中">
-      <div class="main">
+      <div class="header_main">
         <el-card class="searchCard">
           <el-row type="flex">
             <el-col>
-              <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="85px" class="topforms" @keyup.enter.native="GetAuditList()" @submit.native.prevent>
-                <el-form-item label="工厂：">
+              <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row" @keyup.enter.native="GetAuditList()" @submit.native.prevent>
+                <el-form-item label="生产工厂：">
                   <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px">
                     <el-option label="请选择"  value=""></el-option>
                     <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="车间：">
+                <el-form-item label="生产车间：">
                   <el-select v-model="plantList.workShop" placeholder="请选择" style="width: 160px">
                     <el-option label="请选择"  value=""></el-option>
                     <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="产线：">
+                <el-form-item label="生产产线：">
                   <el-select v-model="plantList.productLine" placeholder="产线" style="width: 160px">
                     <el-option label="请选择"  value=""></el-option>
                     <el-option :label="item.deptName" v-for="(item, index) in productline" :key="index" :value="item.deptId"></el-option>
@@ -44,7 +44,7 @@
                     <el-option label="审核不通过"  value="noPass"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item style="margin-left: 67px;">
+                <el-form-item class="floatr">
                   <el-button type="primary" size="small" @click="GetAuditList(true)" v-if="isAuth('sys:att:listAtt')">查询</el-button>
                   <el-button type="primary" size="small" @click="subAutio" v-if="isAuth('sys:att:auditAtt')">审核通过</el-button>
                   <el-button type="danger" size="small" @click="repulseAutios" v-if="isAuth('sys:att:auditAtt')">审核不通过</el-button>
@@ -57,7 +57,7 @@
           </div>
         </el-card>
       </div>
-      <div class="main" style="padding-top: 0">
+      <div class="main">
         <el-card class="tableCard">
           <div class="toggleSearchTop">
             <i class="el-icon-caret-bottom"></i>
@@ -386,14 +386,14 @@ export default {
     // 审核拒绝
     repulseAutios () {
       if (this.multipleSelection.length <= 0) {
-        this.$notify.error({title: '错误', message: '请选择考勤'})
+        this.$warning_SHINHO('请选择考勤')
       } else {
         this.visible = true
       }
     },
     repulseAutio () {
       if (this.Text.length <= 0) {
-        this.$notify.error({title: '错误', message: '请填写不通过原因'})
+        this.$warning_SHINHO('请填写不通过原因')
       } else {
         this.$confirm('确认审核不通过, 是否继续?', '审核不通过', {
           confirmButtonText: '确定',
@@ -422,7 +422,7 @@ export default {
     // 审核通过
     subAutio () {
       if (this.multipleSelection.length <= 0) {
-        this.$notify.error({title: '错误', message: '请选择订单'})
+        this.$warning_SHINHO('请选择订单')
       } else {
         this.$confirm('确认审核通过, 是否继续?', '审核通过', {
           confirmButtonText: '确定',

@@ -1,11 +1,11 @@
 <template>
   <el-col v-loading.fullscreen.lock="lodingStatus" element-loading-text="加载中">
     <el-col v-loading.fullscreen.lock="lodingStatus1" element-loading-text="加载中">
-      <div class="main">
+      <div class="header_main">
         <el-card class="searchCard switching">
           <el-row type="flex">
             <el-col>
-              <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="85px" class="topforms">
+              <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
                   <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px">
                     <el-option label="请选择"  value=""></el-option>
@@ -45,7 +45,7 @@
                 <el-form-item label="生产日期：">
                   <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.productDate" style="width: 160px"></el-date-picker>
                 </el-form-item>
-                <el-form-item style="float: right">
+                <el-form-item class="floatr">
                   <el-button type="primary" size="small" @click="GetAuditList(true)" v-if="isAuth('verify:material:list')">查询</el-button>
                   <el-button type="primary" size="small" @click="subAutio()" v-if="isAuth('verify:material:update')">审核通过</el-button>
                   <el-button type="danger" size="small" @click="repulseAutios()" v-if="isAuth('verify:material:update')">审核不通过</el-button>
@@ -58,12 +58,12 @@
           </div>
         </el-card>
       </div>
-      <div class="main" style="padding-top: 0">
+      <div class="main">
         <el-card class="tableCard">
           <div class="toggleSearchTop">
               <i class="el-icon-caret-bottom"></i>
           </div>
-          <el-form :model="plantList" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="100px" class="topforms">
+          <el-form ref="pstngDate" :model="plantList" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="100px" class="topforms">
             <el-form-item label="过账日期：" prop="pstngDate">
               <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.pstngDate" style="width: 160px"></el-date-picker>
             </el-form-item>
@@ -359,7 +359,7 @@ export default {
         this.plantList.currPage = 1
       }
       if (!this.plantList.factory) {
-        this.$notify.error({title: '错误', message: '请选择工厂'})
+        this.$warning_SHINHO('请选择工厂')
         return
       }
       this.plantList.headerTxt = ''
@@ -506,72 +506,80 @@ export default {
     // 审核拒绝
     repulseAutios () {
       if (this.multipleSelection.length <= 0) {
-        this.$notify.error({title: '错误', message: '请选择订单'})
+        this.$warning_SHINHO('请选择订单')
       } else {
         this.visible = true
       }
     },
     repulseAutio () {
       if (this.Text.length <= 0) {
-        this.$notify.error({title: '错误', message: '请填写不通过原因'})
+        this.$warning_SHINHO('请填写不通过原因')
       } else {
-        this.$confirm('确认审核不通过, 是否继续?', '审核不通过', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.multipleSelection.forEach((item) => {
-            item.status = 'noPass'
-            item.memo = this.Text
-            item.pstngDate = this.plantList.pstngDate
-          })
-          this.lodingStatus1 = true
-          this.$http(`${AUDIT_API.AUDITISSUEUPDATE_API}`, 'POST', this.multipleSelection).then(({data}) => {
-            this.lodingStatus1 = false
-            if (data.code === 0) {
-              this.visible = false
-              this.$notify({title: '成功', message: '操作成功', type: 'success'})
-              this.GetAuditList()
-            } else {
-              this.$notify.error({title: '错误', message: data.msg})
-            }
-          }).catch(() => {
-            this.$notify.error({title: '错误', message: '网络错误'})
-            this.lodingStatus1 = false
-          })
+        this.$refs.pstngDate.validate((valid) => {
+          if (valid) {
+            this.$confirm('确认审核不通过, 是否继续?', '审核不通过', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.multipleSelection.forEach((item) => {
+                item.status = 'noPass'
+                item.memo = this.Text
+                item.pstngDate = this.plantList.pstngDate
+              })
+              this.lodingStatus1 = true
+              this.$http(`${AUDIT_API.AUDITISSUEUPDATE_API}`, 'POST', this.multipleSelection).then(({data}) => {
+                this.lodingStatus1 = false
+                if (data.code === 0) {
+                  this.visible = false
+                  this.$notify({title: '成功', message: '操作成功', type: 'success'})
+                  this.GetAuditList()
+                } else {
+                  this.$notify.error({title: '错误', message: data.msg})
+                }
+              }).catch(() => {
+                this.$notify.error({title: '错误', message: '网络错误'})
+                this.lodingStatus1 = false
+              })
+            })
+          }
         })
       }
     },
     // 审核通过
     subAutio () {
       if (this.multipleSelection.length <= 0) {
-        this.$notify.error({title: '错误', message: '请选择订单'})
+        this.$warning_SHINHO('请选择订单')
       } else {
-        this.$confirm('确认审核通过, 是否继续?', '审核通过', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.multipleSelection.forEach((item) => {
-            item.status = 'checked'
-            item.memo = '审核通过'
-            item.pstngDate = this.plantList.pstngDate
-            item.headerTxt = this.plantList.headerTxt
-          })
-          this.lodingStatus1 = true
-          this.$http(`${AUDIT_API.AUDITISSUEUPDATE_API}`, 'POST', this.multipleSelection).then(({data}) => {
-            this.lodingStatus1 = false
-            if (data.code === 0) {
-              this.$notify({title: '成功', message: '操作成功', type: 'success'})
-              this.GetAuditList()
-            } else {
-              this.$notify.error({title: '错误', message: data.msg})
-              this.GetAuditList()
-            }
-          }).catch(() => {
-            this.$notify.error({title: '错误', message: '网络错误'})
-            this.lodingStatus1 = false
-          })
+        this.$refs.pstngDate.validate((valid) => {
+          if (valid) {
+            this.$confirm('确认审核通过, 是否继续?', '审核通过', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.multipleSelection.forEach((item) => {
+                item.status = 'checked'
+                item.memo = '审核通过'
+                item.pstngDate = this.plantList.pstngDate
+                item.headerTxt = this.plantList.headerTxt
+              })
+              this.lodingStatus1 = true
+              this.$http(`${AUDIT_API.AUDITISSUEUPDATE_API}`, 'POST', this.multipleSelection).then(({data}) => {
+                this.lodingStatus1 = false
+                if (data.code === 0) {
+                  this.$notify({title: '成功', message: '操作成功', type: 'success'})
+                  this.GetAuditList()
+                } else {
+                  this.$notify.error({title: '错误', message: data.msg})
+                  this.GetAuditList()
+                }
+              }).catch(() => {
+                this.$notify.error({title: '错误', message: '网络错误'})
+                this.lodingStatus1 = false
+              })
+            })
+          }
         })
       }
     },

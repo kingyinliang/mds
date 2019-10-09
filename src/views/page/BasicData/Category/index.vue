@@ -1,7 +1,7 @@
 <template>
-  <div style="padding: 15px">
+  <div class="header_main">
     <el-card class="searchCard  newCard">
-      <el-form :inline="true" :model="formHeader" size="small" label-width="82px" class="topform">
+      <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="sole_row">
         <el-form-item label="生产工厂：">
           <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 160px">
             <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
@@ -20,7 +20,7 @@
         </div>
       </el-form>
     </el-card>
-    <el-card style="margin-top: 10px">
+    <el-card style="margin-top:5px">
       <el-table ref="table1" v-loading="dataListLoading" header-row-class-name="tableHead" :data="DataList" @selection-change="handleSelectionChange" border tooltip-effect="dark" style="width: 100%;margin-bottom: 20px">
         <el-table-column type="selection" width="34"></el-table-column>
         <el-table-column label="工厂" prop="factoryName" width="140" :show-overflow-tooltip="true"></el-table-column>
@@ -31,7 +31,8 @@
         </el-table-column>
         <el-table-column label="半成品类别" prop="halfType" width="115"></el-table-column>
         <el-table-column label="订单天数" prop="orderDays" width="110"></el-table-column>
-        <el-table-column label="发酵成熟天数" prop="matureDays" width="115"></el-table-column>
+        <el-table-column label="报工成熟天数" prop="matureDays" width="115"></el-table-column>
+        <el-table-column label="发酵成熟天数" prop="fermentationMatureDays" width="115"></el-table-column>
         <el-table-column label="发酵超期天数" prop="outDays" width="115"></el-table-column>
         <el-table-column label="操作人员" prop="changer" width="120" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="操作时间" prop="changed" width="140" :show-overflow-tooltip="true"></el-table-column>
@@ -108,7 +109,7 @@ export default {
     // 批量删除
     delList () {
       if (this.multipleSelection.length === 0) {
-        this.$notify.error({title: '错误', message: '请选择要删除的类别'})
+        this.$warning_SHINHO('请选择要删除的类别')
       } else {
         this.$confirm('确认删除类别, 是否继续?', '删除类别', {
           confirmButtonText: '确定',
@@ -120,10 +121,7 @@ export default {
           })
           this.$http(`${BASICDATA_API.CATEGORY_DELETE}`, 'POST', this.multipleSelection).then(({data}) => {
             if (data.code === 0) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
+              this.$success_SHINHO('删除成功!')
               this.multipleSelection = []
               this.GetDataList()
             } else {
@@ -131,10 +129,6 @@ export default {
             }
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
         })
       }
     },

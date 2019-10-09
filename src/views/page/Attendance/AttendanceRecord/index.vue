@@ -1,16 +1,16 @@
 <template>
   <el-col v-loading.fullscreen.lock="lodingS" element-loading-text="加载中">
-    <div class="main">
+    <div class="header_main">
       <el-card class="searchCard">
         <el-row type="flex">
-          <el-col>
-            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="85px" @keyup.enter.native="GetList(true)" @submit.native.prevent>
-              <el-form-item label="工厂：">
+          <el-col :span="24">
+            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row" @keyup.enter.native="GetList(true)" @submit.native.prevent>
+              <el-form-item label="生产工厂：">
                 <el-select v-model="plantList.factory" placeholder="请选择">
                   <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="车间：">
+              <el-form-item label="生产车间：">
                 <el-select v-model="plantList.workShop" placeholder="请选择">
                   <el-option label="请选择"  value=""></el-option>
                   <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
@@ -40,16 +40,14 @@
               <el-form-item label="日期：">
                 <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.setDate" style="width: 200px"></el-date-picker>
               </el-form-item>
+              <el-form-item class="floatr">
+                <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('sys:att:listAtt')">查询</el-button>
+                <el-button type="primary" size="small" @click="addAR()" v-if="isAuth('sys:att:saveAtt')">新增</el-button>
+                <el-button type="primary" size="small" @click="saveAtt('saved')" v-if="isAuth('sys:att:updateAtt')">保存</el-button>
+                <el-button type="primary" size="small" @click="saveAtt('submit')" v-if="isAuth('sys:att:updateAtt')">提交</el-button>
+                <el-button type="danger" size="small" @click="delDate()" v-if="isAuth('sys:att:deleteAtt')">删除</el-button>
+              </el-form-item>
             </el-form>
-          </el-col>
-          <el-col style="width: 250px">
-            <el-row style="margin-bottom: 18px">
-              <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('sys:att:listAtt')" style="margin-right: 48px">查询</el-button>
-              <el-button type="danger" size="small" @click="delDate()" v-if="isAuth('sys:att:deleteAtt')">批量删除</el-button>
-            </el-row>
-            <el-button type="primary" size="small" @click="addAR()" v-if="isAuth('sys:att:saveAtt')">新增</el-button>
-            <el-button type="primary" size="small" @click="saveAtt('saved')" v-if="isAuth('sys:att:updateAtt')">保存</el-button>
-            <el-button type="primary" size="small" @click="saveAtt('submit')" v-if="isAuth('sys:att:updateAtt')">提交</el-button>
           </el-col>
         </el-row>
         <div class="toggleSearchBottom">
@@ -57,7 +55,7 @@
         </div>
       </el-card>
     </div>
-    <div class="main" style="padding-top: 0">
+    <div class="main">
       <el-card class="tableCard">
         <div class="toggleSearchTop">
           <i class="el-icon-caret-bottom"></i>
@@ -760,7 +758,7 @@ export default {
     // 新增
     addAR () {
       if (this.plantList.workShop === '') {
-        this.$notify.error({title: '错误', message: '请选择车间后新增'})
+        this.$warning_SHINHO('请选择车间后新增')
       } else {
         this.tableLoding = true
         if (this.clearStatus) {
@@ -831,7 +829,7 @@ export default {
     // 删除
     delDate () {
       if (this.multipleSelection.length === 0) {
-        this.$notify.error({title: '错误', message: '请选择要删除的考勤'})
+        this.$warning_SHINHO('请选择要删除的考勤')
       } else {
         this.$confirm('确认删除考勤, 是否继续?', '删除', {
           confirmButtonText: '确定',
@@ -840,10 +838,7 @@ export default {
         }).then(() => {
           this.$http(`${AR_API.ARDELAPI}`, 'POST', this.multipleSelection).then(({data}) => {
             if (data.code === 0) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
+              this.$success_SHINHO('删除成功!')
               this.multipleSelection = []
               this.GetList()
             } else {
@@ -864,7 +859,7 @@ export default {
         this.plantList.currPage = 1
       }
       if (!this.plantList.factory) {
-        this.$notify.error({title: '错误', message: '请选择工厂'})
+        this.$warning_SHINHO('请选择工厂')
       }
       this.lodingS = true
       this.$http(`${AR_API.ARLIST_API}`, 'POST', this.plantList).then(({data}) => {
@@ -888,10 +883,10 @@ export default {
         if (row.workShop) {
           this.GetUserforteam(row.deptId)
         } else {
-          this.$notify.error({title: '错误', message: '请选择班组'})
+          this.$warning_SHINHO('请选择班组')
         }
       } else {
-        this.$notify.error({title: '错误', message: '请选择人员属性'})
+        this.$warning_SHINHO('请选择人员属性')
       }
     },
     // 反写选中人
@@ -1098,7 +1093,7 @@ export default {
       let st = true
       data.forEach((item, index) => {
         if (item.kqdl && item.kqlx && item.userType && item.userId.length !== 0 && item.classType && (item.timedTime || item.timedTime === 0)) {} else {
-          this.$notify.error({title: '错误', message: '考勤必填项未填写'})
+          this.$warning_SHINHO('考勤必填项未填写')
           st = false
           return false
         }
@@ -1108,7 +1103,7 @@ export default {
     // 保存
     saveAtt (st) {
       if (this.clearStatus && this.multipleSelection.length <= 0) {
-        this.$notify.error({title: '错误', message: '请选择考勤'})
+        this.$warning_SHINHO('请选择考勤')
         return false
       }
       this.$confirm(`确认${st === 'saved' ? '保存' : '提交'}, 是否继续?`, `${st === 'saved' ? '保存' : '提交'}`, {
@@ -1154,7 +1149,7 @@ export default {
     // updata
     subAutio (st) {
       if (this.multipleSelection.length <= 0) {
-        this.$notify.error({title: '错误', message: '请选择考勤'})
+        this.$warning_SHINHO('请选择考勤')
       } else {
         if (st === 'submit') {
           if (!this.datarul(this.multipleSelection)) {

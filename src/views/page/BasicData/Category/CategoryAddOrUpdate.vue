@@ -23,8 +23,11 @@
       <el-form-item label="订单天数：" prop="orderDays">
         <el-input v-model="dataForm.orderDays" placeholder="请输入"></el-input>
       </el-form-item>
-      <el-form-item label="发酵成熟天数：" prop="matureDays">
+      <el-form-item label="报工成熟天数：" prop="matureDays">
         <el-input v-model="dataForm.matureDays" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item label="发酵成熟天数：" prop="fermentationMatureDays">
+        <el-input v-model="dataForm.fermentationMatureDays" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="发酵超期天数：" prop="outDays">
         <el-input v-model="dataForm.outDays" placeholder="请输入"></el-input>
@@ -61,6 +64,9 @@ export default {
           { required: true, message: '订单天数不能为空', trigger: 'blur' }
         ],
         matureDays: [
+          { required: true, message: '报工成熟天数不能为空', trigger: 'blur' }
+        ],
+        fermentationMatureDays: [
           { required: true, message: '发酵成熟天数不能为空', trigger: 'blur' }
         ],
         outDays: [
@@ -98,15 +104,9 @@ export default {
           this.dataForm.materialName = this.material.find((item) => item.materialCode === this.dataForm.materialCode).materialName
           this.$http(`${this.id ? BASICDATA_API.CATEGORY_UPDATE : BASICDATA_API.CATEGORY_SAVE}`, 'POST', this.dataForm).then(({data}) => {
             if (data.code === 0) {
-              this.$message({
-                message: '操作成功',
-                type: 'success',
-                duration: 1500,
-                onClose: () => {
-                  this.visible = false
-                  this.$emit('refreshDataList')
-                }
-              })
+              this.$success_SHINHO('操作成功')
+              this.visible = false
+              this.$emit('refreshDataList')
             } else {
               this.$notify.error({title: '错误', message: data.msg})
             }

@@ -1,7 +1,7 @@
 <template>
-  <div style="padding: 5px 10px">
-    <el-card class="searchCard  newCard">
-      <el-form :inline="true" size="small" :model="formHeader" label-width="75px" class="topform marbottom">
+  <div class="header_main">
+    <el-card class="searchCard">
+      <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform marbottom sole_row">
         <el-form-item label="生产工厂：">
           <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px">
             <el-option label="请选择"  value=""></el-option>
@@ -20,10 +20,12 @@
             <el-option v-for="(sole, index) in PotList" :key="index" :value="sole.holderId" :label="sole.holderName"></el-option>
           </el-select>
         </el-form-item>
-        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('filter:holder:list')">查询</el-button>
+        <el-form-item class="floatr">
+          <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('filter:holder:list')">查询</el-button>
+        </el-form-item>
       </el-form>
     </el-card>
-    <el-card class="searchCard  newCard ferCard" style="margin-top: 5px"  v-show="fastS">
+    <el-card class="searchCard newCard ferCard" style="margin-top:5px" v-show="fastS">
       <h3 style="color: black;margin-bottom: 8px"><i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>成品罐区</h3>
       <el-row class="dataList" :gutter="10" style="min-height: 150px">
         <el-col :span="4" v-for="(item, index) in dataList" :key="index">
@@ -35,15 +37,16 @@
               </span>
               <span class="dataList_item_a" @click="godetails(item)" style="font-size: 14px" v-if="isAuth('filter:holder:list')">详情>></span>
             </h3>
-            <div class="dataList_item_pot clearfix">
+            <div class="dataList_item_pot clearfix" style="position: relative">
+              <img src="@/assets/img/RD.png" alt="" v-if="item.isRdSign === '1'" style="position:absolute; left:10px; top:10px;">
               <div class="dataList_item_pot_box">
                 <div class="dataList_item_pot_box1">
-                  <div class="dataList_item_pot_box_item2" :style="`height:${item.amount < 0? 0 : ((item.amount * 1) / (item.holderHold * 1)) * 100}%`"></div>
+                  <div class="dataList_item_pot_box_item2" :style="`height:${item.holderStatus === '0' ? 0 : item.amount < 0? 0 : ((item.amount * 1) / (item.holderHold * 1)) * 100}%`"></div>
                   <div class="dataList_item_pot_box_detail" v-if="item.holderStatus !== '0'">
                     <p>{{item.batch || ''}}</p>
                     <p>{{(item.materialCode || '') + ' ' + (item.materialName || '')}}</p>
-                    <p>{{item.amount || ''}}L</p>
-                    <p>{{item.timeLength || ''}}</p>
+                    <p v-if="item.amount">{{item.amount/1000 || ''}}方</p>
+                    <p v-if="item.timeLength">{{item.timeLength || ''}}H</p>
                   </div>
                 </div>
               </div>
@@ -68,7 +71,7 @@
         <el-form-item label="批次：" prop="batch">
           <p>{{JBSdataForm.batch}}</p>
         </el-form-item>
-        <el-form-item label="领用量：" prop="receiveAmount">
+        <el-form-item label="领用量(L)：" prop="receiveAmount">
           <el-input v-model="JBSdataForm.receiveAmount" size="small" placeholder="手工录入"></el-input>
         </el-form-item>
         <el-form-item label="打入罐类别：" prop="inHolderType">
@@ -113,11 +116,11 @@
         <el-form-item label="批次：" prop="batch">
           <p>{{TurnSavedataForm.batch}}</p>
         </el-form-item>
-        <el-form-item label="领用量：" prop="receiveAmount">
+        <el-form-item label="领用量(L)：" prop="receiveAmount">
           <el-input v-model="TurnSavedataForm.receiveAmount" size="small" placeholder="手工录入"></el-input>
         </el-form-item>
         <el-form-item label="打入罐类别：" prop="inHolderType">
-          <el-select v-model="TurnSavedataForm.inHolderType" filterable placeholder="请选择" @change="GetHolderType(TurnSavedataForm.inHolderType)">
+          <el-select v-model="TurnSavedataForm.inHolderType" filterable placeholder="请选择" @change="GetHolderType1(TurnSavedataForm)">
             <!--<el-option v-for="(sole, index) in InHolderType" :key="index" :value="sole.code" :label="sole.name"></el-option>-->
             <el-option value="007" label="成品罐"></el-option>
           </el-select>
@@ -153,7 +156,7 @@
 
 <script>
 import {getFactory, getWorkshop, dateFormat} from '@/net/validate'
-import {FILTRATION_API, BASICDATA_API} from '@/api/api'
+import {FILTRATION_API, BASICDATA_API, STERILIZED_API} from '@/api/api'
 export default {
   name: 'index',
   data () {
@@ -235,6 +238,10 @@ export default {
   methods: {
     // 查询
     GetDataList () {
+      if (!this.formHeader.factory) {
+        this.$warning_SHINHO('工厂必填')
+        return false
+      }
       this.$http(`${FILTRATION_API.FILTER_POT_LIST_API}`, 'POST', this.formHeader).then(({data}) => {
         if (data.code === 0) {
           this.fastS = true
@@ -256,15 +263,15 @@ export default {
     // 清罐
     clearPot (item) {
       if (!this.isAuth('filter:holder:cleanProHolder')) {
-        this.$notify.error({title: '错误', message: '无权限操作'})
+        this.$warning_SHINHO('无权限操作')
         return false
       }
       if (item.holderStatus === '0') {
-        this.$notify.error({title: '错误', message: '该罐暂不可进行清罐操作'})
+        this.$warning_SHINHO('该罐暂不可进行清罐操作')
         return false
       }
       if (item.holderStatus !== '4') {
-        this.$notify.error({title: '错误', message: '未领用完不能清洗'})
+        this.$warning_SHINHO('未领用完不能清洗')
         return false
       }
       this.$confirm('清罐后，账务将清零，请确认实物已空！', '清罐确认', {
@@ -338,7 +345,7 @@ export default {
     JBS () {
       if (this.JBSdataForm.isFull === '1') {
         if (!this.JBSdataForm.fullDate) {
-          this.$notify.error({title: '错误', message: '满罐时间必填'})
+          this.$warning_SHINHO('满罐时间必填')
           return
         }
       }
@@ -360,7 +367,7 @@ export default {
     TurnSave () {
       if (this.TurnSavedataForm.isFull === '1') {
         if (!this.TurnSavedataForm.fullDate) {
-          this.$notify.error({title: '错误', message: '满罐时间必填'})
+          this.$warning_SHINHO('满罐时间必填')
           return
         }
       }
@@ -381,6 +388,11 @@ export default {
     // 获取罐号
     GetHolderType (holderType) {
       this.$http(`${FILTRATION_API.FILTER_HOLDER_LIST_API}`, 'POST', {factory: this.formHeader.factory, holderType: holderType}, false, false, false).then(({data}) => {
+        this.Holder = data.list
+      })
+    },
+    GetHolderType1 (row) {
+      this.$http(`${STERILIZED_API.SEMIFINIS_DROPDOWN_LIST}`, 'POST', {factory: this.formHeader.factory, materialCode: row.materialCode, batch: row.batch, code: '007', holderId: row.receiveHolderId}, false, false, false).then(({data}) => {
         this.Holder = data.list
       })
     },

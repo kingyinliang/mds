@@ -6,18 +6,18 @@
       <!--<el-breadcrumb-item>机维组</el-breadcrumb-item>-->
     <!--</el-breadcrumb>-->
   <!--</div>-->
-  <div class="main">
+  <div class="header_main">
     <el-card class="searchCard">
       <el-row type="flex">
         <el-col>
-        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="maintain">
-          <el-form-item label="工厂：">
+        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="maintain multi_row">
+          <el-form-item label="生产工厂：">
             <el-select v-model="plantList.factory" placeholder="请选择">
               <el-option label="请选择"  value=""></el-option>
               <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="车间：">
+          <el-form-item label="生产车间：">
             <el-select v-model="plantList.workshop" placeholder="请选择">
               <el-option label="请选择"  value=""></el-option>
               <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
@@ -35,14 +35,12 @@
           <el-form-item label="日期：">
             <el-date-picker type="date" placeholder="选择" v-model="plantList.productdate" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
           </el-form-item>
-        </el-form>
-        </el-col>
-        <el-col style="width: 260px">
-          <el-row>
+          <el-form-item class="floatr">
             <el-button type="primary" size="small" @click="GetMaintainList(true)">查询</el-button>
             <el-button type="primary" size="small" @click="save()" v-if="isAuth('sys:verifyJWZ:update')">保存</el-button>
             <el-button type="primary" size="small" @click="submit()" v-if="isAuth('sys:verifyJWZ:finished')">提交</el-button>
-          </el-row>
+          </el-form-item>
+        </el-form>
         </el-col>
       </el-row>
       <div class="toggleSearchBottom">
@@ -50,7 +48,7 @@
       </div>
     </el-card>
   </div>
-  <div class="main" style="padding-top: 0">
+  <div class="main">
     <el-card class="tableCard">
         <div class="toggleSearchTop">
             <i class="el-icon-caret-bottom"></i>
@@ -81,7 +79,7 @@
         <el-table-column
           label="品项"
           :show-overflow-tooltip="true"
-          width="360">
+          width="300">
           <template slot-scope="scope">
             {{scope.row.materialCode + ' ' + scope.row.materialName}}
           </template>
@@ -89,7 +87,7 @@
         <el-table-column
           prop="batch"
           label="生产批次"
-          width="105">
+          width="120">
         </el-table-column>
         <el-table-column
           prop="aiShelves"
@@ -338,7 +336,7 @@ export default {
       } else {
         if (row.different !== 0 || row.orgnDifferent) {
           if (!row.differentInfo) {
-            this.$notify.error({title: '错误', message: '差异说明必填'})
+            this.$warning_SHINHO('差异说明必填')
             return false
           }
         }
@@ -360,7 +358,7 @@ export default {
     save () {
       if (this.MaintainList.length > 0) {
         if (!this.getverify()) {
-          this.$notify.error({title: '错误', message: '差异说明必填'})
+          this.$warning_SHINHO('差异说明必填')
           return false
         }
         this.$confirm('确认保存, 是否继续?', '保存', {
@@ -379,18 +377,18 @@ export default {
           this.GetMaintainList()
         })
       } else {
-        this.$notify.error({title: '错误', message: '请勾选后保存'})
+        this.$warning_SHINHO('请勾选后保存')
       }
     },
     // 提交
     submit () {
       if (this.MaintainList.length > 0) {
         if (!this.getverify()) {
-          this.$notify.error({title: '错误', message: '差异说明必填'})
+          this.$warning_SHINHO('差异说明必填')
           return false
         }
         if (!this.getverify1()) {
-          this.$notify.error({title: '错误', message: '车间入库数与机维组确认数不一致，请重新录入数据！'})
+          this.$warning_SHINHO('车间入库数与机维组确认数不一致，请重新录入数据！')
           return false
         }
         this.$confirm('确认提交, 是否继续?', '提交', {
@@ -408,7 +406,7 @@ export default {
           })
         })
       } else {
-        this.$notify.error({title: '错误', message: '请勾选后保存'})
+        this.$warning_SHINHO('请勾选后保存')
       }
     },
     // 改变每页条数

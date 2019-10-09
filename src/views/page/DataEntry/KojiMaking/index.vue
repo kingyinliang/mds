@@ -1,11 +1,11 @@
 <template>
   <el-row>
     <el-col v-loading.fullscreen.lock="lodingStatus" element-loading-text="加载中">
-      <div class="main">
-        <el-card class="newCard">
-          <el-row type="flex" style="border-bottom:1px solid #E9E9E9;margin-bottom:12px">
+      <div class="header_main">
+        <el-card>
+          <el-row type="flex">
             <el-col>
-              <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px">
+              <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
                   <el-select v-model="params.factoryId" class="selectwpx" style="width:140px" @change="changeOptions('factory')">
                     <el-option label="请选择" value=""></el-option>
@@ -47,7 +47,7 @@
             </el-col>
           </el-row>
         </el-card>
-        <el-row v-if="params.productStatus === 'normal' && searched" style="margin-top:20px;">
+        <el-row v-if="params.productStatus === 'normal' && searched" style="margin-top:5px;">
           <el-col>
             <el-row :gutter="32" v-for="(item, index) in orderList" :key="index" v-if="index%3===0">
               <el-col :span="8" v-if="index < orderList.length">
@@ -155,7 +155,7 @@
             </el-row>
           </el-col>
         </el-row>
-        <el-row v-show="params.productStatus === 'abnormal' && searched" style="margin-top:20px;">
+        <el-row v-show="params.productStatus === 'abnormal' && searched" style="margin-top:5px;">
           <div style="min-height:340px">
           <el-table border  header-row-class-name="tableHead" :data="datalist">
             <!-- <el-table-column label="序号" width="50" prop="id" type="index"></el-table-column> -->
@@ -277,7 +277,21 @@ export default class Index extends Vue {
   //   officialWorker: officialWorker
   // }
   // 将common中的参数复制一份到本地
-  params = JSON.parse(JSON.stringify(this.$store.state.common.ZQWorkshop.defaultVal))
+  // params = JSON.parse(JSON.stringify(this.$store.state.common.ZQWorkshop.defaultVal))
+  params = {
+    factoryId: '',
+    factoryName: '',
+    workshopId: '',
+    workshopName: '',
+    // 制曲日期
+    zqDate: '',
+    // normal/abnormal 正常生产/无生产
+    productStatus: 'normal',
+    // 订单管理页的订单日期
+    orderDate: '',
+    orderNo: '',
+    orderStatus: ''
+  }
   factoryList = []
   workshopList = []
   processesList = []
@@ -428,19 +442,19 @@ export default class Index extends Vue {
   }
   getOrderList () {
     if (this.params.factoryId === '') {
-      this.$notify.error({title: '错误', message: '请选择工厂'})
+      Vue.prototype.$warning_SHINHO('请选择工厂')
       return
     }
     if (this.params.workshopId === '') {
-      this.$notify.error({title: '错误', message: '请选择车间'})
+      Vue.prototype.$warning_SHINHO('请选择车间')
       return
     }
     if ((this.params.zqDate === '' || !this.params.zqDate) && this.params.orderNo === '') {
-      this.$notify.error({title: '错误', message: '制曲日期或订单请选填一项'})
+      Vue.prototype.$warning_SHINHO('制曲日期或订单请选填一项')
       return false
     }
     if (this.params.productStatus === '') {
-      this.$notify.error({title: '错误', message: '请选择生产状态'})
+      Vue.prototype.$warning_SHINHO('请选择生产状态')
       return
     }
     // 保存选项值到common store
@@ -510,10 +524,7 @@ export default class Index extends Vue {
         Vue.prototype.$http(`${WHT_API.CINDEXDELUSER}`, 'POST', {orderId: row.orderId}).then(({data}) => {
           if (data.code === 0) {
             this.datalist.splice(this.datalist.indexOf(row), 1)
-            this.$message({
-              type: 'success',
-              message: '删除成功'
-            })
+            Vue.prototype.$success_SHINHO('删除成功!')
           } else {
             this.$notify.error({title: '错误', message: data.msg})
           }
@@ -540,14 +551,14 @@ export default class Index extends Vue {
           officialWorker.init(row.deptId, row.userId)
         })
       } else {
-        this.$notify.error({title: '错误', message: '请选择工序'})
+        Vue.prototype.$warning_SHINHO('请选择工序')
       }
     } else if (row.userType === EMPType.TEMP) {
       this.$nextTick(() => {
         temporaryWorker.init(row)
       })
     } else {
-      this.$notify.error({title: '错误', message: '请选择人员属性'})
+      Vue.prototype.$warning_SHINHO('请选择人员属性')
     }
   }
   // 员工确认
@@ -568,7 +579,7 @@ export default class Index extends Vue {
   }
   save () {
     if (!this.datalist || this.datalist.length === 0) {
-      this.$notify.error({title: '错误', message: '请先新增数据'})
+      Vue.prototype.$warning_SHINHO('请先新增数据')
       return
     }
     this.$confirm('确认保存，是否继续?', '提示', {
@@ -578,40 +589,37 @@ export default class Index extends Vue {
     }).then(() => {
       for (let item of this.datalist) {
         if (!item.classType) {
-          this.$notify.error({title: '错误', message: '班次不能为空'})
+          Vue.prototype.$warning_SHINHO({title: '错误', message: '班次不能为空'})
           return
         }
         if (!item.deptId || item.deptId === '') {
-          this.$notify.error({title: '错误', message: '工序不能为空'})
+          Vue.prototype.$warning_SHINHO({title: '错误', message: '工序不能为空'})
           return
         }
         if (!item.userType) {
-          this.$notify.error({title: '错误', message: '人员属性不能为空'})
+          Vue.prototype.$warning_SHINHO('人员属性不能为空')
           return
         }
         if (!item.userId || item.userId.length === 0) {
-          this.$notify.error({title: '错误', message: '作业人员不能为空'})
+          Vue.prototype.$warning_SHINHO('作业人员不能为空')
           return
         }
         if (!item.startDate || item.startDate === '') {
-          this.$notify.error({title: '错误', message: '开始时间不能为空'})
+          Vue.prototype.$warning_SHINHO('开始时间不能为空')
           return
         }
         if (!item.dinner || item.dinner === '') {
-          this.$notify.error({title: '错误', message: '用餐时间不能为空'})
+          Vue.prototype.$warning_SHINHO('用餐时间不能为空')
           return
         }
         if (!item.endDate || item.endDate === '') {
-          this.$notify.error({title: '错误', message: '结束时间不能为空'})
+          Vue.prototype.$warning_SHINHO('结束时间不能为空')
           return
         }
       }
       Vue.prototype.$http(`${WHT_API.CINDEXUPDATEUSER}`, 'POST', this.datalist).then(({data}) => {
         if (data.code === 0) {
-          this.$message({
-            type: 'success',
-            message: '保存成功'
-          })
+          Vue.prototype.$success_SHINHO('操作成功')
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }

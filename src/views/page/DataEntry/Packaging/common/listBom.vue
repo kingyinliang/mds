@@ -63,13 +63,13 @@
       <template slot-scope="scope">
         <div class="required">
           <i class="reqI">*</i>
-          <el-select v-model="scope.row.potNo" placeholder="请选择" filterable v-if="isRedact && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='') && (scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
-            <el-option :label="iteam.holderNo + iteam.typeName" :value="iteam.holderNo + iteam.typeName" v-for="iteam in finHolder" :key="iteam.holderId"></el-option>
-            <el-option :label="iteam.holderNo + iteam.typeName" :value="iteam.holderNo + iteam.typeName" v-for="iteam in semiHolder" :key="iteam.holderId"></el-option>
+          <el-select v-model="scope.row.potNo" @change="HolderChange($event, scope.row)" placeholder="请选择" filterable v-if="isRedact && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='') && (scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
+            <!-- <el-option :label="iteam.holderNo + iteam.typeName" :value="iteam.holderNo + iteam.typeName" v-for="iteam in finHolder" :key="iteam.holderId"></el-option> -->
+            <el-option :label="iteam.holderName" :value="iteam.holderId" v-for="iteam in semiHolder" :key="iteam.holderId"></el-option>
           </el-select>
           <el-select v-model="scope.row.potNo" placeholder="请选择" filterable v-else disabled size="small">
-            <el-option :label="iteam.holderName" :value="iteam.holderName" v-for="iteam in finHolder" :key="iteam.holderId"></el-option>
-            <el-option :label="iteam.holderName" :value="iteam.holderName" v-for="iteam in semiHolder" :key="iteam.holderId"></el-option>
+            <!-- <el-option :label="iteam.holderName" :value="iteam.holderName" v-for="iteam in finHolder" :key="iteam.holderId"></!--> -->
+            <el-option :label="iteam.holderName" :value="iteam.holderId" v-for="iteam in semiHolder" :key="iteam.holderId"></el-option>
           </el-select>
         </div>
       </template>
@@ -78,8 +78,8 @@
       <template slot-scope="scope">
         <div class="required">
           <i class="reqI">*</i>
-          <el-date-picker size="small" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.filterDate" v-if="isRedact && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='') && (scope.row.status !== 'submit' && scope.row.status !== 'checked')"></el-date-picker>
-          <el-date-picker size="small" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.filterDate" v-else disabled></el-date-picker>
+          <!-- <el-date-picker size="small" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.filterDate" v-if="isRedact && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='') && (scope.row.status !== 'submit' && scope.row.status !== 'checked')"></el-date-picker> -->
+          <el-date-picker size="small" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.filterDate" disabled></el-date-picker>
         </div>
       </template>
     </el-table-column>
@@ -87,8 +87,8 @@
       <template slot-scope="scope">
         <div class="required">
           <i class="reqI">*</i>
-          <el-input size="small" maxlength="10" v-model="scope.row.batch" v-if="isRedact && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='') && (scope.row.status !== 'submit' && scope.row.status !== 'checked')"></el-input>
-          <el-input size="small" v-model="scope.row.batch" v-else disabled></el-input>
+          <!-- <el-input size="small" maxlength="10" v-model="scope.row.batch" v-if="isRedact && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='') && (scope.row.status !== 'submit' && scope.row.status !== 'checked')"></el-input> -->
+          <el-input size="small" v-model="scope.row.batch" disabled></el-input>
         </div>
       </template>
     </el-table-column>
@@ -98,6 +98,19 @@
           <i class="reqI">*</i>
           <el-input size="small" v-model="scope.row.productUseNum" v-if="isRedact && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='') && (scope.row.status !== 'submit' && scope.row.status !== 'checked')"></el-input>
           <el-input size="small" v-model="scope.row.productUseNum" v-else disabled></el-input>
+        </div>
+      </template>
+    </el-table-column>
+    <el-table-column width="120" label="使用情况">
+      <template slot-scope="scope">
+        <div class="required">
+          <i class="reqI">*</i>
+          <el-select v-model="scope.row.useUsage" size="small" v-if="isRedact && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='') && (scope.row.status !== 'submit' && scope.row.status !== 'checked')">
+            <el-option v-for="(item, index) in useUsageList" :value="item" :label="item" :key="index"></el-option>
+          </el-select>
+          <el-select v-model="scope.row.useUsage" size="small" v-else disabled>
+            <el-option v-for="(item, index) in useUsageList" :value="item" :label="item" :key="index"></el-option>
+          </el-select>
         </div>
       </template>
     </el-table-column>
@@ -119,10 +132,10 @@
         <el-input size="small" v-model="scope.row.remark" v-else disabled></el-input>
       </template>
     </el-table-column>
-    <el-table-column fixed="right" label="操作" width="60">
+    <el-table-column fixed="right" label="操作" width="70">
       <template slot-scope="scope">
-        <el-button type="primary" icon="el-icon-plus" circle size="small" @click="addSapS(listbomS, scope.row)" v-if="scope.row.isSplit === '0' && isRedact && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='') && (scope.row.status !== 'submit' && scope.row.status !== 'checked')"></el-button>
-        <el-button type="danger" icon="el-icon-delete" circle size="small" v-if="scope.row.isSplit === '1' && isRedact  && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='')" @click="dellistbomS(scope.row)"></el-button>
+        <el-button type="text" size="small" @click="addSapS(listbomS, scope.row)" v-if="scope.row.isSplit === '0' && isRedact && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='') && (scope.row.status !== 'submit' && scope.row.status !== 'checked')"><i class="icons iconfont factory-chaifen"></i>拆分</el-button>
+        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" v-if="scope.row.isSplit === '1' && isRedact  && (Sapstatus ==='noPass' || Sapstatus ==='saved' || Sapstatus ==='')" @click="dellistbomS(scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -131,7 +144,7 @@
 </template>
 
 <script>
-import {PACKAGING_API, BASICDATA_API} from '@/api/api'
+import {PACKAGING_API} from '@/api/api'
 export default {
   name: 'listBom',
   data () {
@@ -141,7 +154,10 @@ export default {
       semiHolder: [],
       listbomP: [],
       listbomS: [],
-      SapAudit: []
+      SapAudit: [],
+      useUsageList: ['领用完', '转他用'],
+      repertory: [],
+      distinctListbomS: []
     }
   },
   props: {
@@ -200,6 +216,33 @@ export default {
               } else if (item.status === 'saved') {
                 sav = sav + 1
               }
+              item.useUsage = item.useUsage ? item.useUsage : '转他用'
+              if (item.delFlag === '0' && item.holderId) {
+                this.distinctListbomS.push(item.holderId)
+              }
+            })
+            let set = new Set(this.distinctListbomS)
+            Array.from(set).map(item => {
+              if (!this.semiHolder.find(items => items.holderId === item)) {
+                let total = 0
+                this.listbomS.map((itemB) => {
+                  if (itemB.holderId === item && itemB.delFlag === '0') {
+                    total = total + itemB.productUseNum
+                  }
+                })
+                let itemC = this.listbomS.find(itemD => itemD.holderId === item)
+                this.semiHolder.push({
+                  amount: total,
+                  batch: itemC.batch,
+                  fullDate: itemC.filterDate,
+                  holderId: itemC.holderId,
+                  holderName: itemC.holderName,
+                  holderNo: '',
+                  holderType: itemC.holderType,
+                  materialCode: itemC.materialCode,
+                  materialName: itemC.materialName
+                })
+              }
             })
             if (no > 0) {
               this.Sapstatus = 'noPass'
@@ -232,6 +275,7 @@ export default {
         } else {
           item.status = str
         }
+        // item.holderType = this.semiHolder.find(items => items.holderId === item.potNo).holderType
       })
       this.$http(`${PACKAGING_API.PKGSPAUPDATEP_API}`, 'POST', this.listbomP).then(({data}) => {
         this.$http(`${PACKAGING_API.PKGSPAUPDATES_API}`, 'POST', this.listbomS).then(({data}) => {
@@ -287,7 +331,7 @@ export default {
             if (item.productUseNum === 0 || item.productUseNum) {
             } else {
               ty = false
-              this.$notify.error({title: '错误', message: '物料必填项未填'})
+              this.$warning_SHINHO('物料必填项未填')
               return false
             }
           }
@@ -298,7 +342,7 @@ export default {
               if (item.potNo && item.filterDate && item.productUseNum && item.batch) {
               } else {
                 ty = false
-                this.$notify.error({title: '错误', message: '物料半成品必填项未填'})
+                this.$warning_SHINHO('物料半成品必填项未填')
                 return false
               }
             }
@@ -307,8 +351,41 @@ export default {
       }
       return ty
     },
+    ListbomsRule () {
+      let ty = true
+      let holderId
+      this.repertory = []
+      this.listbomS.map(item => {
+        if (item.holderType === '006' && item.delFlag === '0') {
+          let sole = ''
+          // if (item.id === '') {
+          sole = this.repertory.find(items => items.holderId === item.potNo)
+          holderId = item.potNo
+          // } else {
+          //   sole = this.repertory.find(items => items.holderId === item.holderId)
+          //   holderId = item.holderId
+          // }
+          if (sole) {
+            sole.total = Number(sole.total) + Number(item.productUseNum)
+          } else {
+            this.repertory.push({
+              holderId: holderId,
+              total: item.productUseNum ? item.productUseNum : 0
+            })
+          }
+        }
+      })
+      for (let items of this.repertory) {
+        if (items.total > this.semiHolder.find(so => so.holderId === items.holderId).amount) {
+          this.$warning_SHINHO(this.semiHolder.find(so => so.holderId === items.holderId).holderName + '罐生产使用量超过库存，请重新调整')
+          return false
+        }
+      }
+      return ty
+    },
     // 获取罐
-    GetPot (id) {
+    GetPot (id, orderNo) {
+      /*
       // 成品罐
       this.$http(`${BASICDATA_API.CONTAINERLIST_API}`, 'POST', {
         factory: id,
@@ -339,11 +416,31 @@ export default {
           this.$notify.error({title: '错误', message: data.msg})
         }
       })
+    */
+      this.$http(`${PACKAGING_API.PKGSAVEMATERIALHOLDER_API}`, 'POST', {factory: id, orderNo: orderNo}).then(({data}) => {
+        if (data.code === 0) {
+          this.semiHolder = data.list
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+    },
+    HolderChange (val, row) {
+      let semiInfo = this.semiHolder.find(item => item.holderId === val)
+      row.filterDate = semiInfo.fullDate
+      row.batch = semiInfo.batch
+      row.holderType = semiInfo.holderType
     },
     // 删除半成品
     dellistbomS (row, num) {
-      row.delFlag = '1'
-      num++
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        row.delFlag = '1'
+        num++
+      })
     },
     // 新增物料半成品
     addSapS (form, row) {
@@ -361,7 +458,8 @@ export default {
         changePotDate: null,
         usePotDate: null,
         isSplit: '1',
-        delFlag: '0'
+        delFlag: '0',
+        useUsage: row.useUsage
       })
     },
     // tableRowClassName

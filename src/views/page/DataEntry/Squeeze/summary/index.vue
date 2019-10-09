@@ -1,10 +1,10 @@
 <template>
 <div>
-  <div class="main">
-    <el-card class="searchCard  newCard">
+  <div class="header_main">
+    <el-card class="searchCard">
       <el-row type="flex">
-        <el-col :span="21">
-          <el-form :inline="true" :model="formHeader" size="small" label-width="82px" class="topform">
+        <el-col :span="18">
+          <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform multi_row">
             <el-form-item label="生产工厂：">
               <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px">
                 <el-option label="请选择"  value=""></el-option>
@@ -28,29 +28,30 @@
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col style="width:180px;font-size: 14px;line-height: 32px">
-          <div style="float: right;">
+        <el-col :span="6" style="font-size: 14px;line-height: 32px">
+          <div style="text-align: left; overflow: hidden; float: right;">
             <span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? '#1890f' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：
             <span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
           </div>
+          <div style="clear: both;"></div>
+          <div style="width: 100%; text-align: right; margin-top: 10px;">
+            <template style="float:right; margin-left: 10px;">
+              <el-button type="primary" size="small" @click="GetList" v-if="isAuth('mid:prsOrder:orderList')">查询</el-button>
+              <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="isSerch && orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('mid:prsOrder:updateOrder')">{{isRedact?'取消':'编辑'}}</el-button>
+            </template>
+            <template v-if="isRedact" style="float:right; margin-left: 10px;">
+              <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('mid:prsOrder:updateOrder')">保存</el-button>
+              <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('mid:prsOrder:updateOrder')">提交</el-button>
+            </template>
+          </div>
         </el-col>
-      </el-row>
-      <el-row style="text-align:right" class="buttonCss">
-        <template style="float:right; margin-left: 10px;">
-          <el-button type="primary" size="small" @click="GetList" v-if="isAuth('mid:prsOrder:orderList')">查询</el-button>
-          <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="isSerch && orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('mid:prsOrder:updateOrder')">{{isRedact?'取消':'编辑'}}</el-button>
-        </template>
-        <template v-if="isRedact" style="float:right; margin-left: 10px;">
-          <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('mid:prsOrder:updateOrder')">保存</el-button>
-          <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('mid:prsOrder:updateOrder')">提交</el-button>
-        </template>
       </el-row>
       <div class="toggleSearchBottom">
         <i class="el-icon-caret-top"></i>
       </div>
     </el-card>
   </div>
-  <div class="main" style="padding-top: 0px" v-show="isSerch">
+  <div class="main" v-show="isSerch">
     <div class="tableCard">
       <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
         <i class="el-icon-caret-bottom"></i>
@@ -59,19 +60,19 @@
     <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" id="OutTabs" class="NewDaatTtabs" type="border-card">
       <el-tab-pane name="1">
         <span slot="label" class="spanview">
-          <el-tooltip class="item" effect="dark" :content="statusArr[0].status === 'noPass'? '不通过':statusArr[0].status === 'saved'? '已保存':statusArr[0].status === 'submit' ? '已提交' : statusArr[0].status === 'checked'? '通过':'未录入'" placement="top-start">
-            <el-button :style="{'color': statusArr[0].status === 'noPass'? 'red' : ''}" style="font-size: 14px">申请订单</el-button>
-          </el-tooltip>
-        </span>
-        <apply-order ref="applyorder" :isRedact="isRedact"  :orderAudit="orderAudit" :fumet="orderFumet" :SerchSapList="SerchSapList" :VersionList="VersionList" :orderTypeList="orderTypeList" @GetFunet="GetFunet"  @GetList="GetList"></apply-order>
-      </el-tab-pane>
-      <el-tab-pane name="2">
-        <span slot="label" class="spanview">
           <el-tooltip class="item" effect="dark" :content="statusArr[1].status === 'noPass'? '不通过':statusArr[1].status === 'saved'? '已保存':statusArr[1].status === 'submit' ? '已提交' : statusArr[1].status === 'checked'? '通过':'未录入'" placement="top-start">
             <el-button :style="{'color': statusArr[1].status === 'noPass'? 'red' : ''}" style="font-size: 14px">物料领用</el-button>
           </el-tooltip>
         </span>
-        <materiel ref="materielref" :isRedact="isRedact" :fumet="fumet" :SerchSapList="SerchSapListM"></materiel>
+        <materiel ref="materielref" :isRedact="isRedact" :fumet="fumet" :SerchSapList="SerchSapListM" @PoTest="PoTest"></materiel>
+      </el-tab-pane>
+      <el-tab-pane name="2">
+        <span slot="label" class="spanview">
+          <el-tooltip class="item" effect="dark" :content="statusArr[0].status === 'noPass'? '不通过':statusArr[0].status === 'saved'? '已保存':statusArr[0].status === 'submit' ? '已提交' : statusArr[0].status === 'checked'? '通过':'未录入'" placement="top-start">
+            <el-button :style="{'color': statusArr[0].status === 'noPass'? 'red' : ''}" style="font-size: 14px">申请订单</el-button>
+          </el-tooltip>
+        </span>
+        <apply-order ref="applyorder" :PoTestVar="PoTestVar" :isRedact="isRedact"  :orderAudit="orderAudit" :fumet="orderFumet" :SerchSapList="SerchSapList" :VersionList="VersionList" :orderTypeList="orderTypeList" @GetFunet="GetFunet" @ApplyOrder="ApplyOrder"  @GetList="GetList"></apply-order>
       </el-tab-pane>
       <el-tab-pane name="3">
         <span slot="label" class="spanview">
@@ -115,7 +116,8 @@ export default {
       orderFumet: [],
       orderAudit: [],
       fumet: [],
-      statusArr: [{status: ''}, {status: ''}, {status: ''}]
+      statusArr: [{status: ''}, {status: ''}, {status: ''}],
+      PoTestVar: ''
     }
   },
   watch: {
@@ -132,17 +134,59 @@ export default {
     tabClick (val) {
       this.$refs.tabs.setCurrentName(val.name)
     },
+    dataRul (data) {
+      let ty = true
+      data.forEach(item => {
+        let datas = this.$refs.materielref.SumDate.filter(it => it.delFlag !== '1' && it.material.midPrsOrderId === item.id && !it.material.childPotNo)
+        if (datas.length > 0) {
+          ty = false
+          this.$warning_SHINHO(item.potNoName + '原汁罐没有匹配发酵罐，不能申请订单！')
+          return false
+        }
+      })
+      return ty
+    },
+    // 申请订单
+    ApplyOrder (data) {
+      if (data.length === 0) {
+        this.$warning_SHINHO('请选择订单')
+        return
+      }
+      if (!this.dataRul(data)) {
+        return false
+      }
+      if (!this.$refs.materielref.AmountRul()) {
+        return
+      }
+      let updateMaterial = new Promise((resolve, reject) => {
+        this.$refs.materielref.updateMaterial('saved', resolve, reject)
+      })
+      updateMaterial.then(() => {
+        data.forEach((item, index) => {
+          item.materialCode = item.material.substring(0, item.material.indexOf(' '))
+          item.materialName = item.material.substring(item.material.indexOf(' ') + 1)
+        })
+        this.$http(`${SQU_API.SUM_APPLYORDER_API}`, 'POST', data).then(({data}) => {
+          if (data.code === 0) {
+            this.$success_SHINHO('申请成功')
+            this.GetList()
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
+      })
+    },
     GetList () {
       if (!this.formHeader.factory) {
-        this.$notify.error({title: '错误', message: '请选择工厂'})
+        this.$warning_SHINHO('请选择工厂')
         return
       }
       if (!this.formHeader.workShop) {
-        this.$notify.error({title: '错误', message: '请选择车间'})
+        this.$warning_SHINHO('请选择车间')
         return
       }
       if (!this.formHeader.productDate) {
-        this.$notify.error({title: '错误', message: '请选择生产日期'})
+        this.$warning_SHINHO('请选择生产日期')
         return
       }
       this.isRedact = false
@@ -202,44 +246,54 @@ export default {
         }
       }
       let that = this
-      let updateApplyorder = new Promise((resolve, reject) => {
-        that.$refs.applyorder.UpdateOrder(str, resolve, reject)
-      })
       let updateMaterial = new Promise((resolve, reject) => {
         that.$refs.materielref.updateMaterial(str, resolve, reject)
       })
-      let UpdateTime = new Promise((resolve, reject) => {
-        that.$refs.manhour.UpdateTime(str, resolve, reject)
-      })
       if (str === 'submit') {
-        let saveNet = Promise.all([updateApplyorder, updateMaterial, UpdateTime])
-        saveNet.then(function () {
-          let SubmitApplyorder = new Promise((resolve, reject) => {
-            that.$refs.applyorder.UpdateOrder(str, resolve, reject, true)
+        updateMaterial.then(() => {
+          let updateApplyorder = new Promise((resolve, reject) => {
+            that.$refs.applyorder.UpdateOrder(str, resolve, reject)
           })
-          let SubmitMaterial = new Promise((resolve, reject) => {
-            that.$refs.materielref.updateMaterial(str, resolve, reject, true)
+          let UpdateTime = new Promise((resolve, reject) => {
+            that.$refs.manhour.UpdateTime(str, resolve, reject)
           })
-          let SubmitTime = new Promise((resolve, reject) => {
-            that.$refs.manhour.UpdateTime(str, resolve, reject, true)
-          })
-          let SubmitNet = Promise.all([SubmitApplyorder, SubmitMaterial, SubmitTime])
-          SubmitNet.then(function () {
-            that.isRedact = false
-            that.$notify({title: '成功', message: '提交成功', type: 'success'})
-            that.GetList()
-          }, err => {
-            that.$message.error(err)
+          let saveNet = Promise.all([updateApplyorder, UpdateTime])
+          saveNet.then(function () {
+            let SubmitApplyorder = new Promise((resolve, reject) => {
+              that.$refs.applyorder.UpdateOrder(str, resolve, reject, true)
+            })
+            let SubmitMaterial = new Promise((resolve, reject) => {
+              that.$refs.materielref.updateMaterial(str, resolve, reject, true)
+            })
+            let SubmitTime = new Promise((resolve, reject) => {
+              that.$refs.manhour.UpdateTime(str, resolve, reject, true)
+            })
+            let SubmitNet = Promise.all([SubmitApplyorder, SubmitMaterial, SubmitTime])
+            SubmitNet.then(function () {
+              that.isRedact = false
+              that.$notify({title: '成功', message: '提交成功', type: 'success'})
+              that.GetList()
+            }, err => {
+              that.$error_SHINHO(err)
+            })
           })
         })
       } else {
-        let saveNet = Promise.all([updateApplyorder, updateMaterial, UpdateTime])
-        saveNet.then(function () {
-          that.isRedact = false
-          that.$notify({title: '成功', message: '保存成功', type: 'success'})
-          that.GetList()
-        }, err => {
-          that.$message.error(err)
+        updateMaterial.then(() => {
+          let updateApplyorder = new Promise((resolve, reject) => {
+            that.$refs.applyorder.UpdateOrder(str, resolve, reject)
+          })
+          let UpdateTime = new Promise((resolve, reject) => {
+            that.$refs.manhour.UpdateTime(str, resolve, reject)
+          })
+          let saveNet = Promise.all([updateApplyorder, UpdateTime])
+          saveNet.then(function () {
+            that.isRedact = false
+            that.$notify({title: '成功', message: '保存成功', type: 'success'})
+            that.GetList()
+          }, err => {
+            that.$error_SHINHO(err)
+          })
         })
       }
     },
@@ -326,6 +380,9 @@ export default {
           }
         })
       }
+    },
+    PoTest (data) {
+      this.PoTestVar = data
     }
   },
   computed: {},

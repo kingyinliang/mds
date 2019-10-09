@@ -55,6 +55,7 @@
                   <el-tag v-else-if="scope.row.type === '1'" size="small" type="success">菜单</el-tag>
                   <el-tag v-else-if="scope.row.type === '2'" size="small" type="info">按钮</el-tag>
                   <el-tag v-else-if="scope.row.type === '3'" size="small" type="success">三级页面</el-tag>
+                  <el-tag v-else-if="scope.row.type === '4'" size="small" type="success">看板</el-tag>
                 </template>
               </el-table-column>
               <el-table-column
@@ -141,14 +142,8 @@ export default {
       }).then(() => {
         this.$http(`${SYSTEMSETUP_API.MENUDEL_API}/${id}`, 'POST', {}).then(({data}) => {
           if (data && data.code === 0) {
-            this.$message({
-              message: '操作成功',
-              type: 'success',
-              duration: 1500,
-              onClose: () => {
-                this.getDataList()
-              }
-            })
+            this.$success_SHINHO('操作成功')
+            this.getDataList()
           } else {
             this.$notify.error({title: '错误', message: data.msg})
           }

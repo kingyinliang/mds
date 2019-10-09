@@ -17,7 +17,8 @@
       </el-table-column>
       <el-table-column label="是否混合罐" width="110">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.fullPort" @change="fullPortChange" placeholder="请选择" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked') && scope.row.isVerBack !== '1')" size="small">
+          <!--<el-select v-model="scope.row.fullPort" @change="fullPortChange" placeholder="请选择" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked') && scope.row.isVerBack !== '1')" size="small">-->
+          <el-select v-model="scope.row.fullPort" @change="fullPortChange" placeholder="请选择" disabled size="small">
             <el-option label="正常" value="正常"></el-option>
             <el-option label="共用混合" value="共用混合"></el-option>
             <el-option label="单用混合" value="单用混合"></el-option>
@@ -26,7 +27,8 @@
       </el-table-column>
       <el-table-column label="物料" width="220">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.material" filterable placeholder="请选择" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked') && scope.row.isVerBack !== '1')" size="small" @change="setProVersion(scope.row)">
+          <!--<el-select v-model="scope.row.material" filterable placeholder="请选择" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked') && scope.row.isVerBack !== '1')" size="small" @change="setProVersion(scope.row)">-->
+          <el-select v-model="scope.row.material" filterable placeholder="请选择" disabled size="small" @change="setProVersion(scope.row)">
             <el-option
               v-for="item in SerchSapList"
               :key="item.code+' '+item.value"
@@ -43,7 +45,7 @@
       <el-table-column label="原汁批次" width="140" prop="batch"></el-table-column>
       <el-table-column label="订单类型" width="120">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.orderType" placeholder="请选择" size="mini" style="width: 100px">
+          <el-select v-model="scope.row.orderType" placeholder="请选择" disabled size="mini" style="width: 100px">
             <el-option v-for="(item, index) in orderTypeList" :label="item.value"  :value="item.code" :key="index"></el-option>
           </el-select>
         </template>
@@ -79,6 +81,7 @@ export default {
   },
   props: {
     isRedact: '',
+    PoTestVar: '',
     VersionList: {
       type: Array,
       default () { return [] }
@@ -98,24 +101,18 @@ export default {
   },
   mounted () {
   },
+  watch: {
+    'PoTestVar' (n, o) {
+      if (n !== '') {
+        let row = this.fumet.find(item => item.potNoName === n.potNoName)
+        row.orderType = n.orderType
+      }
+    }
+  },
   methods: {
     // 申请订单
     ApplyOrder () {
-      if (this.multipleSelection.length === 0) {
-        this.$notify.error({title: '错误', message: '请选择订单'})
-        return
-      }
-      this.multipleSelection.forEach((item, index) => {
-        item.materialCode = item.material.substring(0, item.material.indexOf(' '))
-        item.materialName = item.material.substring(item.material.indexOf(' ') + 1)
-      })
-      this.$http(`${SQU_API.SUM_APPLYORDER_API}`, 'POST', this.multipleSelection).then(({data}) => {
-        if (data.code === 0) {
-          this.$emit('GetList')
-        } else {
-          this.$notify.error({title: '错误', message: data.msg})
-        }
-      })
+      this.$emit('ApplyOrder', this.multipleSelection)
     },
     setProVersion (row) {
       if (row.material.substring(0, row.material.indexOf(' ')) === 'SS04010003') {

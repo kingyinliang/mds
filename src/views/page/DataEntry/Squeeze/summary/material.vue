@@ -31,7 +31,7 @@
         <el-button v-if="scope.row.fumet.fullPort !== '正常'" type="text" :disabled="!(isRedact && (scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked'))" @click="splitDate(scope.row.fumet, scope.$index)"><i class="icons iconfont factory-chaifen"></i>拆分</el-button>
       </template>
     </el-table-column>
-    <el-table-column label="酱醪领用">
+    <el-table-column label="发酵罐号">
       <el-table-column width="120">
         <template slot="header"><i class="reqI">*</i><span>发酵罐号</span></template>
         <template slot-scope="scope">
@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column label="类别" width="80">
         <template slot-scope="scope">
-          {{scope.row.material.category}}
+          {{scope.row.material.type}}
         </template>
       </el-table-column>
       <el-table-column label="物料" width="220">
@@ -80,9 +80,9 @@
       </el-table-column>
       <el-table-column label="记录人" width="120" prop="material.childRecordMan"></el-table-column>
     </el-table-column>
-    <el-table-column label="操作" fixed="right" width="50">
+    <el-table-column label="操作" fixed="right" width="70">
       <template slot-scope="scope">
-        <el-button type="danger"  icon="el-icon-delete" circle size="small" v-if="dangerIf(scope.row)" :disabled="!(isRedact && (scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked'))" @click="dellist(scope.row)"></el-button>
+        <el-button class="delBtn" type="text"  icon="el-icon-delete" size="small" v-if="dangerIf(scope.row)" :disabled="!(isRedact && (scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked'))" @click="dellist(scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -196,6 +196,9 @@ export default {
     updateMaterial (str, resolve, reject, st = false) {
       let tmp = []
       this.SumDate.forEach((item, index) => {
+        if (!item.material.childUsedAmount) {
+          item.material.childUsedAmount = '0'
+        }
         if (item.childStatus) {
           if (item.material.childStatus === 'saved') { item.material.childStatus = str } else if (item.material.childStatus === 'noPass' && str === 'submit') { item.material.childStatus = str }
         } else {
@@ -231,21 +234,27 @@ export default {
     },
     PotChange (row) {
       let pot = this.potList.filter(it => it.holderId === row.material.childPotNo)[0]
-      console.log(pot)
       if (pot) {
         row.material.childMaterial = pot.materialCode + ' ' + pot.materialName
         row.material.childBatch = pot.batch
         row.material.childFullPotAmount = pot.sumAmount
         if (row.fumet.fullPort === '正常') {
-          row.material.category = pot.halfName
+          row.material.type = pot.halfName
         } else {
-          row.material.category = '味极鲜'
+          row.material.type = '味极鲜'
+        }
+        if (row.fumet.fullPort === '正常') {
+          this.SqueezePot = {
+            orderType: pot.orderType,
+            potNoName: row.fumet.potNoName
+          }
+          this.$emit('PoTest', this.SqueezePot)
         }
       } else {
         if (row.fumet.fullPort === '正常') {
-          row.material.category = ''
+          row.material.type = ''
         } else {
-          row.material.category = '味极鲜'
+          row.material.type = '味极鲜'
         }
       }
     },
@@ -257,7 +266,7 @@ export default {
         if (item.delFlag !== '1') {
           if (!item.material.childPotNo && !item.material.childUsedAmount) {
             ty = false
-            this.$notify.error({title: '错误', message: '物料领用必填项未填写'})
+            this.$warning_SHINHO('物料领用必填项未填写')
             return false
           } else {
             this.sumAmount2[item.material.childPotNo] ? this.sumAmount2[item.material.childPotNo] += (item.material.childUsedAmount ? item.material.childUsedAmount : 0) * 1 : this.sumAmount2[item.material.childPotNo] = (item.material.childUsedAmount ? item.material.childUsedAmount : 0) * 1
@@ -268,7 +277,7 @@ export default {
         console.log(key, this.sumAmount2[key], this.sumAmount1[key])
         if (this.sumAmount2[key] - (this.sumAmount1[key] ? this.sumAmount1[key] : 0) > (this.potList.filter(it => it.holderId === key).length ? this.potList.filter(it => it.holderId === key)[0].sumAmount : 0)) {
           ty = false
-          this.$notify.error({title: '错误', message: '剩余量不足'})
+          this.$warning_SHINHO('剩余量不足')
           return false
         }
       })
@@ -287,7 +296,7 @@ export default {
         console.log(key, this.sumAmount2[key], this.sumAmount1[key])
         if (this.sumAmount2[key] - (this.sumAmount1[key] ? this.sumAmount1[key] : 0) > (this.potList.filter(it => it.holderId === key).length ? this.potList.filter(it => it.holderId === key)[0].sumAmount : 0)) {
           ty = false
-          this.$notify.error({title: '错误', message: '剩余量不足'})
+          this.$warning_SHINHO('剩余量不足')
           return false
         }
       })
@@ -316,19 +325,26 @@ export default {
     },
     // 删除
     dellist (row) {
-      let s = 0
-      this.SumDate.forEach((item) => {
-        if (item.delFlag !== '1' && row.fumet.id === item.fumet.id) {
-          s++
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let s = 0
+        this.SumDate.forEach((item) => {
+          if (item.delFlag !== '1' && row.fumet.id === item.fumet.id) {
+            s++
+          }
+        })
+        if (s > 1) {
+          row.delFlag = '1'
+          row.material.childDelFlag = '1'
+          this.SumDate.splice(this.SumDate.length, 0, {})
+          this.SumDate.splice(this.SumDate.length - 1, 1)
+        } else {
+          this.$warning_SHINHO('此订单最后一条了，不能删除')
         }
       })
-      if (s > 1) {
-        row.delFlag = '1'
-        this.SumDate.splice(this.SumDate.length, 0, {})
-        this.SumDate.splice(this.SumDate.length - 1, 1)
-      } else {
-        this.$notify.error({title: '错误', message: '此订单最后一条了，不能删除'})
-      }
     },
     RowDelFlag ({row, rowIndex}) {
       if (row.delFlag === '1') {
@@ -432,6 +448,10 @@ export default {
         }
       }
     }
+    // SqueezePot: {
+    //   get () { return this.$store.state.common.SqueezePot },
+    //   set (val) { this.$store.commit('common/updateSqueezePot', val) }
+    // }
   },
   components: {
     AuditLog: resolve => {

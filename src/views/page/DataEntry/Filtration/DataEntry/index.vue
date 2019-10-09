@@ -1,37 +1,35 @@
 <template>
-<div style="padding: 5px 10px">
-  <el-card class="newCard" style="min-height: 480px">
-    <el-row type="flex" style="border-bottom: 1px solid #E9E9E9;margin-bottom: 12px">
+<div class="header_main">
+  <el-card class="newCard" style="min-height:480px">
+    <el-row type="flex" style="border-bottom: 1px solid #E9E9E9;">
       <el-col>
-        <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="42px">
-          <el-form-item label="工厂：">
+        <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
+          <el-form-item label="生产工厂：">
             <el-select v-model="formHeader.factory" class="selectwpx" style="width: 140px">
               <el-option label="请选择" value=""></el-option>
               <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="车间：">
+          <el-form-item label="生产车间：">
             <el-select v-model="formHeader.workShop" class="selectwpx" style="width: 140px">
               <el-option label="请选择" value=""></el-option>
               <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="生产日期：" label-width="70px">
+          <el-form-item label="生产日期：">
             <el-date-picker type="date" v-model="formHeader.productDate" value-format="yyyy-MM-dd" style="width: 140px"></el-date-picker>
           </el-form-item>
-          <el-form-item label="订单：">
+          <el-form-item label="订单：" label-width="42px">
             <el-input type="text" v-model="formHeader.orderNo" clearable ></el-input>
+          </el-form-item>
+          <el-form-item class="floatr">
+            <el-button type="primary" size="small" @click="GetOrderList(true)" style="float: right" v-if="isAuth('filter:order:list')">查询</el-button>
           </el-form-item>
         </el-form>
       </el-col>
-      <el-col style="width: 340px">
-        <el-row class="rowButton">
-          <el-button type="primary" size="small" @click="GetOrderList(true)" style="float: right" v-if="isAuth('filter:order:list')">查询</el-button>
-        </el-row>
-      </el-col>
     </el-row>
     <el-row :gutter="20">
-      <el-col v-for="(item, index) in dataList" :key="index" id="normal" :span="12" style="padding-bottom: 20px">
+      <el-col v-for="(item, index) in dataList" :key="index" id="normal" :span="12" style="margin-top:12px; padding-bottom:20px">
         <div class="title_left" style="font-size: 16px;font-weight: bold;margin-bottom: 8px;">工序： <font style="color:red">{{item.productLineName}}</font></div>
         <div class="sole_cont">
           <el-form size="small" :inline="true" label-position="right" label-width="90px">
@@ -100,15 +98,15 @@ export default {
   methods: {
     GetOrderList () {
       if (this.formHeader.factory === '') {
-        this.$notify.error({title: '错误', message: '请选择工厂'})
+        this.$warning_SHINHO('请选择工厂')
         return
       }
       if (this.formHeader.workShop === '') {
-        this.$notify.error({title: '错误', message: '请选择车间'})
+        this.$warning_SHINHO('请选择车间')
         return
       }
       if ((this.formHeader.productDate === '' || !this.formHeader.productDate) && this.formHeader.orderNo === '') {
-        this.$notify.error({title: '错误', message: '生产日期或生产订单请选填一项'})
+        this.$warning_SHINHO('生产日期或生产订单请选填一项')
         return false
       }
       this.$http(`${FILTRATION_API.FILTER_HOME_LIST_API}`, 'POST', this.formHeader).then(({data}) => {
@@ -134,7 +132,7 @@ export default {
             row.orderStatus = data.list[0].orderStatus
             row.outputUnit = data.list[0].outputUnit
             row.properties = data.list[0].properties
-            row.realOutput = data.list[0].realOutput
+            row.countOutput = data.list[0].countOutput
             row.plan = data.list[0].plan
           } else {
             this.$notify.error({title: '错误', message: data.msg})
@@ -145,7 +143,7 @@ export default {
     // 跳转
     go (item) {
       if (!item.orderNo) {
-        this.$notify.error({title: '错误', message: '请选择订单号'})
+        this.$warning_SHINHO('请选择订单号')
         return
       }
       this.$store.state.common.orderNo = item.orderNo

@@ -12,9 +12,13 @@ export default {
     // 侧边栏, 菜单
     menuList: [],
     menuActiveName: '',
+    dynamicMenuRoutes: [],
     // 主入口标签页
     mainTabs: [],
     mainTabsActiveName: '',
+    // 看板
+    dataEchartDeptId: '',
+    dataEchartUid: '',
     // 包装车间
     Pkgfactoryid: '',
     PkgworkShop: '',
@@ -183,6 +187,10 @@ export default {
       instock: {}
     },
     /**
+     * 原汁车间
+     */
+    juice: {},
+    /**
      * 杀菌车间
      */
     sterilized: {
@@ -236,6 +244,9 @@ export default {
     },
     updateSidebarFold (state, fold) {
       state.sidebarFold = fold
+    },
+    updateDynamicMenuRoutes (state, list) {
+      state.dynamicMenuRoutes = list
     },
     updateMenuList (state, list) {
       state.menuList = list
@@ -367,6 +378,9 @@ export default {
     /** 发酵 */
     updateFermentationM (state, params) {
       state.Fermentation.materia = params
+    },
+    updateJuice (state, params) {
+      state.Juice = params
     },
     updateSterilized (state, params) {
       state.Sterilized = params

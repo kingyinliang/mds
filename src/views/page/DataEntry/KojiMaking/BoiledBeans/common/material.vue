@@ -59,9 +59,9 @@
           </el-table-column>
           <el-table-column label="操作人" prop="changer" width="140px"></el-table-column>
           <el-table-column label="操作时间" prop="changed" width="160px"></el-table-column>
-          <el-table-column label="操作" width="50" fixed="right">
+          <el-table-column label="操作" width="70" fixed="right">
             <template slot-scope="scope">
-              <el-button type="danger" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" circle size="small" @click="delrow(scope.row)"></el-button>
+              <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delrow(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -125,9 +125,9 @@
           <el-table-column label="单位" prop="unit" width="50"></el-table-column>
           <el-table-column label="操作人员" prop="changer" width="140"></el-table-column>
           <el-table-column label="操作时间" prop="changed" width="160"></el-table-column>
-          <el-table-column label="操作" width="50" fixed="right">
+          <el-table-column label="操作" width="70" fixed="right">
             <template slot-scope="scope">
-              <el-button type="danger" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" circle size="small" @click="delwheatRow(scope.row)"></el-button>
+              <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delwheatRow(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -192,9 +192,9 @@
           <el-table-column label="入罐/出罐" prop="useType" width="90"></el-table-column>
           <el-table-column label="操作人员" prop="changer" width="140"></el-table-column>
           <el-table-column label="操作时间" prop="changed" width="160"></el-table-column>
-          <el-table-column label="操作" width="50" fixed="right">
+          <el-table-column label="操作" width="70" fixed="right">
             <template slot-scope="scope">
-              <el-button type="danger" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" circle size="small" @click="delsoyRow(scope.row)"></el-button>
+              <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delsoyRow(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -203,112 +203,117 @@
     <el-card>
       <audit-log></audit-log>
     </el-card>
-    <el-dialog :title="MTitle" :visible.sync="dialogFormVisibleMai" width="450px">
+    <el-dialog :title="MTitle" :visible.sync="dialogFormVisibleMai" width="450px" custom-class='dialog__class'>
+      <div slot="title" style="line-hight:59px">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrulestar" ref="wheatstar">
-        <el-form-item label="麦粉批次" :label-width="formLabelWidth" prop="whtBatch">
+        <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">
           <el-select v-model="wheat.whtBatch" placeholder="请选择">
             <el-option v-for='sole in wheatPiArray' :key="sole.batch" :value="sole.batch" :label="sole.batch"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="物料描述" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
-        <el-form-item label="起始数" :label-width="formLabelWidth" prop="startWeight">
-          <el-input type="number" v-model.number="wheat.startWeight" autocomplete="off"></el-input>
+        <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
+        <el-form-item label="起始数：" :label-width="formLabelWidth" prop="startWeight">
+          <el-input type="number" @mousewheel.native.prevent v-model.number="wheat.startWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="操作时间" :label-width="formLabelWidth">{{wheat.changed}}</el-form-item>
-        <el-form-item label="操作人" :label-width="formLabelWidth">{{wheat.changer}}</el-form-item>
+        <el-form-item label="操作时间：" :label-width="formLabelWidth">{{wheat.changed}}</el-form-item>
+        <el-form-item label="操作人：" :label-width="formLabelWidth">{{wheat.changer}}</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleMai = false">取 消</el-button>
         <el-button type="primary" @click="savewheat('wheatstar')">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="MTitle" :visible.sync="dialogFormVisibleMai2" width="450px">
+    <el-dialog :title="MTitle" :visible.sync="dialogFormVisibleMai2" width="450px" custom-class='dialog__class'>
+      <div slot="title" style="line-hight:59px">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrulend" ref="wheatend">
-        <el-form-item label="麦粉批次" :label-width="formLabelWidth" prop="whtBatch">{{wheat.whtBatch}}</el-form-item>
-        <el-form-item label="物料描述" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
-        <el-form-item label="结束数" :label-width="formLabelWidth" prop="endWeight">
-          <el-input type="number" v-model.number="wheat.endWeight" autocomplete="off"></el-input>
+        <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">{{wheat.whtBatch}}</el-form-item>
+        <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
+        <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
+          <el-input type="number" @mousewheel.native.prevent v-model.number="wheat.endWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="操作时间" :label-width="formLabelWidth">{{wheat.changed}}</el-form-item>
-        <el-form-item label="操作人" :label-width="formLabelWidth">{{wheat.changer}}</el-form-item>
+        <el-form-item label="操作时间：" :label-width="formLabelWidth">{{wheat.changed}}</el-form-item>
+        <el-form-item label="操作人：" :label-width="formLabelWidth">{{wheat.changer}}</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleMai2 = false">取 消</el-button>
         <el-button type="primary" @click="savewheat('wheatend')">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="MTitle" :visible.sync="dialogFormVisibleMai3" width="450px">
+    <el-dialog :title="MTitle" :visible.sync="dialogFormVisibleMai3" width="450px" custom-class='dialog__class'>
+      <div slot="title" style="line-hight:59px">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrules" ref="wheat">
-        <el-form-item label="麦粉批次" :label-width="formLabelWidth" prop="whtBatch">
+        <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">
           <el-select v-model="wheat.whtBatch" placeholder="请选择">
             <el-option v-for='sole in wheatPiArray' :key="sole.batch" :value="sole.batch" :label="sole.batch"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="物料描述" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
-        <el-form-item label="起始数" :label-width="formLabelWidth" prop="startWeight">
-          <el-input type="number" v-model.number="wheat.startWeight" autocomplete="off"></el-input>
+        <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
+        <el-form-item label="起始数：" :label-width="formLabelWidth" prop="startWeight">
+          <el-input type="number" @mousewheel.native.prevent v-model.number="wheat.startWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="结束数" :label-width="formLabelWidth" prop="endWeight">
-          <el-input type="number" v-model.number="wheat.endWeight" autocomplete="off"></el-input>
+        <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
+          <el-input type="number" @mousewheel.native.prevent v-model.number="wheat.endWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="领用数量" :label-width="formLabelWidth" prop="wheatuseprop">{{lnum}}</el-form-item>
-        <el-form-item label="操作时间" :label-width="formLabelWidth">{{wheat.changed}}</el-form-item>
-        <el-form-item label="操作人" :label-width="formLabelWidth">{{wheat.changer}}</el-form-item>
+        <el-form-item label="领用数量：" :label-width="formLabelWidth" prop="wheatuseprop">{{lnum}}</el-form-item>
+        <el-form-item label="操作时间：" :label-width="formLabelWidth">{{wheat.changed}}</el-form-item>
+        <el-form-item label="操作人：" :label-width="formLabelWidth">{{wheat.changer}}</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleMai3 = false">取 消</el-button>
         <el-button type="primary" @click="savewheat('wheat')">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="DRTitle" :visible.sync="dialogFormVisibleDouRu" width="450px">
+    <el-dialog :title="DRTitle" :visible.sync="dialogFormVisibleDouRu" width="450px" custom-class='dialog__class'>
+      <div slot="title" style="line-hight:59px">{{this.DRTitle}}</div>
       <el-form :model="rusoy" size="small" :rules="rusoyrules" ref="rusoy">
-        <el-form-item label="领用粮仓" :label-width="formLabelWidth" prop="foodHolderId">
+        <el-form-item label="领用粮仓：" :label-width="formLabelWidth" prop="foodHolderId">
           <el-select v-model="rusoy.foodHolderId" @change="changCang()">
             <el-option v-for='sole in PulpCangList' :key="sole.holderId" :value="sole.holderId" :label="sole.holderName"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="批次" :label-width="formLabelWidth" prop="batch">
+        <el-form-item label="批次：" :label-width="formLabelWidth" prop="batch">
           <el-select v-model="rusoy.batch">
             <el-option v-for="(sole, index) in PulpCangBatchList" :key="index" :value="sole.batch" :label="sole.batch"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="领用物料" :label-width="formLabelWidth">{{rusoy.materialCode}} {{rusoy.materialName}}</el-form-item>
-        <el-form-item label="剩余数" :label-width="formLabelWidth">{{rusoy.currentQuantity}}</el-form-item>
-        <el-form-item label="起始数" :label-width="formLabelWidth" prop="startWeight">
-          <el-input type="number" v-model.number="rusoy.startWeight" autocomplete="off"></el-input>
+        <el-form-item label="领用物料：" :label-width="formLabelWidth">{{rusoy.materialCode}} {{rusoy.materialName}}</el-form-item>
+        <el-form-item label="剩余数：" :label-width="formLabelWidth">{{rusoy.currentQuantity}}</el-form-item>
+        <el-form-item label="起始数：" :label-width="formLabelWidth" prop="startWeight">
+          <el-input type="number" @mousewheel.native.prevent v-model.number="rusoy.startWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="结束数" :label-width="formLabelWidth" prop="endWeight">
-          <el-input type="number" v-model.number="rusoy.endWeight" autocomplete="off"></el-input>
+        <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
+          <el-input type="number" @mousewheel.native.prevent v-model.number="rusoy.endWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="领用数量" :label-width="formLabelWidth">{{rusoylnum}}</el-form-item>
-        <el-form-item label="操作时间" :label-width="formLabelWidth">{{rusoy.changed}}</el-form-item>
-        <el-form-item label="操作人" :label-width="formLabelWidth">{{rusoy.changer}}</el-form-item>
+        <el-form-item label="领用数量：" :label-width="formLabelWidth">{{rusoylnum}}</el-form-item>
+        <el-form-item label="操作时间：" :label-width="formLabelWidth">{{rusoy.changed}}</el-form-item>
+        <el-form-item label="操作人：" :label-width="formLabelWidth">{{rusoy.changer}}</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleDouRu = false">取 消</el-button>
         <el-button type="primary" @click="soydialogrusave('rusoy')">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="DCTitle" :visible.sync="dialogFormVisibleDouChu" width="450px">
+    <el-dialog :title="DCTitle" :visible.sync="dialogFormVisibleDouChu" width="450px" custom-class='dialog__class'>
+      <div slot="title" style="line-hight:59px">{{this.DCTitle}}</div>
       <el-form :model="chusoy" size="small" :rules="chusoyrules" ref="chusoy">
-        <el-form-item label="批次" :label-width="formLabelWidth" prop="batch">
+        <el-form-item label="批次：" :label-width="formLabelWidth" prop="batch">
           <!-- <el-input v-model="chusoy.batch" autocomplete="off" maxlength="10"></el-input> -->
           <el-select v-model="chusoy.batch" placeholder="请选择">
             <el-option v-for='sole in pulpPiArray' :key="sole.batch" :value="sole.batch" :label="sole.batch"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="物料批次" :label-width="formLabelWidth">
+        <el-form-item label="物料批次：" :label-width="formLabelWidth">
           <el-input v-model="chusoy.soyMaterialstr" disabled></el-input>
         </el-form-item>
-        <el-form-item label="起始数" :label-width="formLabelWidth">
-          <el-input type="number" v-model.number="chusoy.startWeight" autocomplete="off"></el-input>
+        <el-form-item label="起始数：" :label-width="formLabelWidth">
+          <el-input type="number" @mousewheel.native.prevent v-model.number="chusoy.startWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="结束数" :label-width="formLabelWidth" prop="endWeight">
-          <el-input type="number" v-model.number="chusoy.endWeight" autocomplete="off"></el-input>
+        <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
+          <el-input type="number" @mousewheel.native.prevent v-model.number="chusoy.endWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="领用数量" :label-width="formLabelWidth">{{chusoylnum}}</el-form-item>
-        <el-form-item label="操作时间" :label-width="formLabelWidth">{{chusoy.changed}}</el-form-item>
-        <el-form-item label="操作人" :label-width="formLabelWidth">{{chusoy.changer}}</el-form-item>
+        <el-form-item label="领用数量：" :label-width="formLabelWidth">{{chusoylnum}}</el-form-item>
+        <el-form-item label="操作时间：" :label-width="formLabelWidth">{{chusoy.changed}}</el-form-item>
+        <el-form-item label="操作人：" :label-width="formLabelWidth">{{chusoy.changer}}</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleDouChu = false">取 消</el-button>
@@ -644,7 +649,7 @@ export default {
       let ty = true
       if (this.materialList.length === 0) {
         ty = false
-        this.$notify.error({title: '错误', message: '请填写种曲'})
+        this.$warning_SHINHO('请填写种曲')
         return false
       }
       this.materialList.forEach((item) => {
@@ -656,7 +661,7 @@ export default {
         }
       })
       if (!ty) {
-        this.$notify.error({title: '错误', message: '种曲必填项未填'})
+        this.$warning_SHINHO('种曲必填项未填')
         return false
       }
       this.materialList.forEach((item) => {
@@ -668,7 +673,7 @@ export default {
         }
       })
       if (!ty) {
-        this.$notify.error({title: '错误', message: '种曲批次长度应为10位'})
+        this.$warning_SHINHO('种曲批次长度应为10位')
         return false
       }
       // if (!this.wheatliang || this.wheatliang === 0 || this.wheatliang.trim() === '') {
@@ -677,7 +682,7 @@ export default {
       // }
       if (this.wheatList.length === 0) {
         ty = false
-        this.$notify.error({title: '错误', message: '请填写小麦粉数据'})
+        this.$warning_SHINHO('请填写小麦粉数据')
         return false
       }
       // if (!this.soyliang || this.soyliang === 0 || this.soyliang.trim() === '') {
@@ -686,7 +691,7 @@ export default {
       // }
       if (this.soyList.length === 0) {
         ty = false
-        this.$notify.error({title: '错误', message: '请填写豆粕数据'})
+        this.$warning_SHINHO('请填写豆粕数据')
         return false
       }
       return ty
@@ -848,7 +853,7 @@ export default {
         }
         this.dialogFormVisibleMai = true
       } else {
-        this.$notify.error({title: '错误', message: '请结束后开始'})
+        this.$warning_SHINHO('请结束后开始')
       }
     },
     endwheat (row) {
@@ -894,7 +899,7 @@ export default {
         }
         this.dialogFormVisibleMai2 = true
       } else {
-        this.$notify.error({title: '错误', message: '请先领用'})
+        this.$warning_SHINHO('请先领用')
       }
     },
     // 小麦领用修改
@@ -983,7 +988,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.rusoylnum <= 0) {
-            this.$notify.error({title: '错误', message: '领用数必须大于0'})
+            this.$warning_SHINHO('领用数必须大于0')
           } else {
             let soyUsedTotal = 0
             var obj = {}
@@ -1005,7 +1010,7 @@ export default {
                 }
               })
               if (soyUsedTotal + (this.rusoy.endWeight - this.rusoy.startWeight) > this.PulpCangBatchList.find(item => item.batch === this.rusoy.batch).currentQuantity) {
-                this.$notify.error({title: '错误', message: '领用数不能大于剩余量'})
+                this.$warning_SHINHO('领用数不能大于剩余量')
                 return false
               }
             }
@@ -1090,7 +1095,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.chusoylnum <= 0) {
-            this.$notify.error({title: '错误', message: '领用数必须大于0'})
+            this.$warning_SHINHO('领用数必须大于0')
           } else {
             this.dialogFormVisibleDouChu = false
             let currentRecord = []
@@ -1335,7 +1340,13 @@ export default {
       })
     },
     delrow (row) {
-      row.delFlag = '1'
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        row.delFlag = '1'
+      })
     },
     rowDelFlag ({row, rowIndex}) {
       if (row.delFlag === '1') {
@@ -1348,14 +1359,26 @@ export default {
       if (row.id === '') {
         this.wheatList.splice(this.wheatList.indexOf(row), 1)
       } else {
-        row.delFlag = '1'
+        this.$confirm('是否删除?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          row.delFlag = '1'
+        })
       }
     },
     delsoyRow (row) {
       if (row.id === '') {
         this.soyList.splice(this.soyList.indexOf(row), 1)
       } else {
-        row.delFlag = '1'
+        this.$confirm('是否删除?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          row.delFlag = '1'
+        })
       }
     },
     GetPuplList (formHeader) {

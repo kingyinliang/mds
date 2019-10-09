@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="main">
+    <div class="header_main">
       <el-card class="searchCards searchCard">
         <el-row>
           <el-col>
-            <el-form :model="formHeader" :inline="true" size="small" label-width="82px">
+            <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
               <el-form-item label="生产工厂：">
                 <el-select v-model="formHeader.factory" placeholder="请选择" class="width180px">
                   <el-option value="">请选择</el-option>
@@ -34,25 +34,25 @@
               <el-form-item label="生产日期：">
                 <el-date-picker v-model="formHeader.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="请选择" style="width:180px"></el-date-picker>
               </el-form-item>
+              <el-form-item class="floatr">
+                <template>
+                  <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('ste:allot:list')">查询</el-button>
+                  <el-button type="primary" size="small" @click="isRedact = !isRedact" v-if="isAuth('ste:allot:update')">{{isRedact === false? '编辑' : '取消'}}</el-button>
+                </template>
+                <template v-if="isRedact">
+                  <el-button type="primary" size="small" @click="SaveForm()">保存</el-button>
+                  <!-- <el-button type="primary" size="small" @click="SaveForm()">提交</el-button> -->
+                </template>
+              </el-form-item>
             </el-form>
           </el-col>
-        </el-row>
-        <el-row style="text-align:right">
-          <template>
-            <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('ste:allot:list')">查询</el-button>
-            <el-button type="primary" size="small" @click="isRedact = !isRedact" v-if="isAuth('ste:allot:update')">{{isRedact === false? '编辑' : '取消'}}</el-button>
-          </template>
-          <template v-if="isRedact">
-            <el-button type="primary" size="small" @click="SaveForm()">保存</el-button>
-            <!-- <el-button type="primary" size="small" @click="SaveForm()">提交</el-button> -->
-          </template>
         </el-row>
         <div class="toggleSearchBottom">
           <i class="el-icon-caret-top"></i>
         </div>
       </el-card>
     </div>
-    <div class="main" style="padding-top: 0">
+    <div class="main">
       <div class="tableCard">
         <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
           <i class="el-icon-caret-bottom"></i>
@@ -61,9 +61,9 @@
       <el-card>
         <el-table :data="dataList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">>
           <el-table-column type="selection" width="35" :selectable="CheckBoxInit" fixed="left"></el-table-column>
-          <el-table-column label="订单状态" prop="orderStatus">
+          <el-table-column label="订单状态" width="100" prop="orderStatus" show-overflow-tooltip>
             <template slot-scope="scope">
-              {{scope.row.orderStatus === 'saved' ? '已保存' : scope.row.orderStatus === 'submit' ? '已提交' : scope.row.orderStatus === 'checked' ? '审核通过' : scope.row.orderStatus === 'nopass' ? '审核不通过' : scope.row.orderStatus }}
+              {{scope.row.orderStatus === 'saved' ? '已保存' : scope.row.orderStatus === 'submit' ? '已提交' : scope.row.orderStatus === 'checked' ? '审核通过' : scope.row.orderStatus === 'noPass' ? '审核不通过' : scope.row.orderStatus }}
             </template>
           </el-table-column>
           <el-table-column label="订单号" width="120" prop="orderNo"></el-table-column>
@@ -210,11 +210,11 @@ export default {
     },
     GetList (st) {
       if (this.formHeader.factory === '') {
-        this.$notify.error({title: '错误', message: '请选择工厂'})
+        this.$warning_SHINHO('请选择工厂')
         return false
       }
       if (this.formHeader.workShop === '') {
-        this.$notify.error({title: '错误', message: '请选择车间'})
+        this.$warning_SHINHO('请选择车间')
         return false
       }
       if (st) {
@@ -254,12 +254,12 @@ export default {
     // 保存
     SaveForm () {
       if (this.multipleSelection.length === 0) {
-        this.$notify.error({title: '错误', message: '请勾选数据'})
+        this.$warning_SHINHO('请勾选数据')
         return false
       } else {
         for (let item of this.multipleSelection) {
           if (!item.productDate || !item.panId) {
-            this.$notify.error({title: '错误', message: '生产日期与锅号为必填项'})
+            this.$warning_SHINHO('生产日期与锅号为必填项')
             return false
           }
         }

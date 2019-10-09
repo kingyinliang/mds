@@ -1,9 +1,9 @@
 <template>
-  <div style="padding: 5px 10px">
-    <el-card class="searchCard  newCard" style="margin-bottom: 5px">
+  <div class="header_main">
+    <el-card class="searchCard" style="margin-bottom: 5px">
       <el-row type="flex">
         <el-col>
-          <el-form :inline="true" size="small" :model="formHeader" label-width="75px" class="topform">
+          <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform multi_row">
             <el-form-item label="生产工厂：">
               <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px">
                 <el-option label="请选择"  value=""></el-option>
@@ -34,22 +34,22 @@
                 <el-option :label="item.materialCode+' '+ item.materialName" v-for="(item, index) in Matertail" :key="index" :value="item.materialCode"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item class="floatr">
+              <template>
+                <el-button type="primary" size="small" @click="GetDataList(true)" v-if="isAuth('ste:supMaterialQQA:orderList')">查询</el-button>
+                <el-button type="primary" size="small" @click="isRedact = !isRedact" v-if="isAuth('ste:supMaterialQQA:mySaveOrUpdate')">{{isRedact?'取消':'编辑'}}</el-button>
+              </template>
+              <template v-if="isRedact ">
+                <el-button type="primary" size="small" @click="SavedOr('已保存')" v-if="isAuth('ste:supMaterialQQA:mySaveOrUpdate')">保存</el-button>
+                <el-button type="primary" size="small" @click="pushData('已推送')" v-if="isAuth('ste:supMaterialQQA:pushInfo')">推送</el-button>
+                <el-button type="primary" size="small" @click="pushData('已确认')" v-if="isAuth('ste:supMaterialQQA:pushInfo')">确认</el-button>
+              </template>
+            </el-form-item>
           </el-form>
-        </el-col>
-        <el-col style="width: 250px">
-          <el-row>
-            <el-button type="primary" size="small" @click="GetDataList(true)" v-if="isAuth('ste:supMaterialQQA:orderList')">查询</el-button>
-            <el-button type="primary" size="small" @click="isRedact = !isRedact" v-if="isAuth('ste:supMaterialQQA:mySaveOrUpdate')">{{isRedact?'取消':'编辑'}}</el-button>
-          </el-row>
-          <el-row style="margin-top: 15px" v-if="isRedact ">
-            <el-button type="primary" size="small" @click="SavedOr('已保存')" v-if="isAuth('ste:supMaterialQQA:mySaveOrUpdate')">保存</el-button>
-            <el-button type="primary" size="small" @click="pushData('已推送')" v-if="isAuth('ste:supMaterialQQA:pushInfo')">推送</el-button>
-            <el-button type="primary" size="small" @click="pushData('已确认')" v-if="isAuth('ste:supMaterialQQA:pushInfo')">确认</el-button>
-          </el-row>
         </el-col>
       </el-row>
     </el-card>
-    <el-card class="searchCard  newCard">
+    <el-card class="searchCard newCard">
       <div class="clearfix" style="padding-top: 5px;padding-bottom: 5px">
         <h3 style="line-height: 32px">订单列表</h3>
       </div>
@@ -132,7 +132,7 @@
         <el-table-column label="物料" :show-overflow-tooltip="true">
           <template slot="header"><i class="reqI">*</i><span>物料</span></template>
           <template slot-scope="scope">
-            <el-select v-model="scope.row.materialCode" placeholder="请选择" size="mini" style="width: 180px" @change="selectMaterial(scope.row)" :disabled="!isRedact || scope.row.supStatus === '已确认'">
+            <el-select v-model="scope.row.materialCode" placeholder="请选择" size="mini" style="width: 180px" @change="selectMaterial(scope.row)" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'">
               <el-option label="请选择"  value=""></el-option>
               <el-option :label="item.materialCode + ' ' + item.materialName" v-for="(item, index) in Materails" :key="index" :value="item.materialCode"></el-option>
             </el-select>
@@ -141,13 +141,13 @@
         <el-table-column label="添加数量" width="110" prop="addAmount" :show-overflow-tooltip="true">
           <template slot="header"><i class="reqI">*</i><span>添加数量</span></template>
           <template slot-scope="scope">
-            <el-input v-model="scope.row.addAmount" :disabled="!isRedact || scope.row.supStatus === '已确认'" placeholder="请输入" size="mini"></el-input>
+            <el-input v-model="scope.row.addAmount" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="单位" width="100" prop="unit" :show-overflow-tooltip="true">
           <template slot="header"><i class="reqI">*</i><span>单位</span></template>
           <template slot-scope="scope">
-            <el-select v-model="scope.row.unit" placeholder="请选择" size="mini" :disabled="!isRedact || scope.row.supStatus === '已确认'">
+            <el-select v-model="scope.row.unit" placeholder="请选择" size="mini" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'">
               <el-option label="请选择"  value=""></el-option>
               <el-option :label="item.value" v-for="(item, index) in Unit" :key="index" :value="item.code"></el-option>
             </el-select>
@@ -155,18 +155,18 @@
         </el-table-column>
         <el-table-column width="100" label="批次">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.batch" :disabled="!isRedact || scope.row.supStatus === '已确认'" placeholder="请输入" size="mini"></el-input>
+            <el-input v-model="scope.row.batch" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="领用数量" width="80" prop="receiveAmount" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="备注" width="90">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.supStatus === '已确认'" placeholder="请输入" size="mini"></el-input>
+            <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="50" fixed="right">
+        <el-table-column label="操作" width="70" fixed="right">
           <template slot-scope="scope">
-            <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="del(scope.row)"></el-button>
+            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="del(scope.row)" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -248,6 +248,11 @@ export default {
       if (row.supStatus !== '已确认') {
         this.$refs.multipleTable.toggleRowSelection(row)
       }
+      // if (row.supStatus === '已确认') {
+      //   this.btn = true
+      // } else {
+      //   this.btn = false
+      // }
       if (row.steSupMaterialBean.resultList) {
         this.AddSupDate = row.steSupMaterialBean.resultList
       } else {
@@ -265,7 +270,7 @@ export default {
     // 保存
     SavedOr (str) {
       if (this.multipleSelection.length === 0) {
-        this.$notify.error({title: '错误', message: '请选择订单'})
+        this.$warning_SHINHO('请选择订单')
         return
       }
       this.multipleSelection.forEach((item) => {
@@ -293,7 +298,7 @@ export default {
     // 推送
     pushData (str) {
       if (this.multipleSelection.length === 0) {
-        this.$notify.error({title: '错误', message: '请选择订单'})
+        this.$warning_SHINHO('请选择订单')
         return
       }
       if (str === '已确认') {
@@ -340,30 +345,30 @@ export default {
       this.multipleSelection.forEach((item) => {
         if (!item.steStatus) {
           ty = false
-          this.$notify.error({title: '错误', message: '杀菌状态必填'})
+          this.$warning_SHINHO('杀菌状态必填')
           return false
         }
         if (item.steStatus === '异常订单') {
           if (!item.steStatusRemake) {
             ty = false
-            this.$notify.error({title: '错误', message: '订单状态为异常，状态备注必填'})
+            this.$warning_SHINHO('订单状态为异常，状态备注必填')
             return false
           }
         }
         item.steSupMaterialBean.supList.forEach((item1) => {
           if (!item1.materialCode) {
             ty = false
-            this.$notify.error({title: '错误', message: '增补料记录物料必填'})
+            this.$warning_SHINHO('增补料记录物料必填')
             return false
           }
           if (!item1.addAmount) {
             ty = false
-            this.$notify.error({title: '错误', message: '增补料记录添加数量必填'})
+            this.$warning_SHINHO('增补料记录添加数量必填')
             return false
           }
           if (!item1.unit) {
             ty = false
-            this.$notify.error({title: '错误', message: '增补料记录单位必填'})
+            this.$warning_SHINHO('增补料记录单位必填')
             return false
           }
         })
@@ -403,7 +408,13 @@ export default {
     },
     // 删除
     del (row) {
-      row.delFlag = '1'
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        row.delFlag = '1'
+      })
     },
     //  RowDelFlag
     RowDelFlag ({row, rowIndex}) {

@@ -1,9 +1,9 @@
 <template>
-  <div class="main">
+  <div class="header_main">
     <el-card>
       <el-row>
-        <el-col :span="22">
-          <el-form :model="form" :inline="true" size="small" label-width="85px">
+        <el-col :span="24">
+          <el-form :model="form" :inline="true" size="small" label-width="70px" class="multi_row">
             <el-form-item label="生产工厂：">
               <el-select v-model="form.factory" placeholder="请选择">
                 <el-option v-for="(item, index) in factory" :key="index" :value="item.deptId" :label="item.deptName"></el-option>
@@ -29,14 +29,14 @@
             <el-form-item label="生产日期：">
               <el-date-picker type="date" v-model="form.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width:199px"></el-date-picker>
             </el-form-item>
+            <el-form-item class="floatr">
+              <el-button type="primary" size="small" @click="SearchList(true)" v-if="isAuth('fer:openholderg:openHolderList')" style="float:right">查询</el-button>
+            </el-form-item>
           </el-form>
-        </el-col>
-        <el-col :span="2">
-          <el-button type="primary" size="small" @click="SearchList(true)" v-if="isAuth('fer:openholderg:openHolderList')" style="float:right">查询</el-button>
         </el-col>
       </el-row>
     </el-card>
-    <el-tabs v-model="activeName" @tab-click="tabClick" type="border-card" style="margin-top:15px">
+    <el-tabs v-model="activeName" @tab-click="tabClick" type="border-card" style="margin-top:5px">
       <el-tab-pane name="0" label="未确认">
         <el-table :data="dataList" border header-row-class-name="tableHead">
           <el-table-column label="车间" prop="workShopName"></el-table-column>
@@ -54,9 +54,10 @@
           <el-table-column label="申请数量" prop="amount"></el-table-column>
           <el-table-column label="申请时间" prop="created" width="170"></el-table-column>
           <el-table-column label="生产日期" prop="productDate"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="100">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" @click="Go(scope.row)" :disabled="(!isAuth('fer:openholderg:confirm'))">确认</el-button>
+              <el-button type="text" size="small" @click="Go(scope.row)" :disabled="(!isAuth('fer:openholderg:confirm'))">确认</el-button>
+              <el-button type="text" size="small" @click="DelRow(scope.row)" :disabled="(!isAuth('fer:openholderg:confirm'))">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -204,6 +205,22 @@ export default {
           this.$router.push({ name: `DataEntry-Fermentation-ForRecipients-detail` })
         }, 100)
       }
+    },
+    DelRow (row) {
+      this.$confirm('确认要删除该数据吗?', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http(`${FERMENTATION_API.FORRECIPIENTSALREADYDEL_API}`, 'POST', [row.id]).then(({data}) => {
+          if (data.code === 0) {
+            this.$notify({title: '成功', message: '删除成功', type: 'success'})
+            this.SearchList()
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
+      })
     },
     // 改变每页条数
     handleSizeChange (val) {

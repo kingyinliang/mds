@@ -35,7 +35,11 @@ export const MAIN_API = {
   /**
    * @property {string} MENULIST_API 功能列表
    */
-  PRINTLTK_API: HOST + '/reports/printLtk'
+  PRINTLTK_API: HOST + '/reports/printLtk',
+  /**
+   * @property {string} MENULIST_API 根据车间id获取容器
+   */
+  CONTAINER_API: HOST + '/all/dropDown/getBoardHolderList'
 }
 /*
 *基础数据api
@@ -650,6 +654,15 @@ export const AUDIT_API = {
   AUDIT_ADJUST_SUBMIT: HOST + '/ver/adjust/adjust',
   AUDIT_ADJUST_MATERIAL: HOST + '/all/dropDown/getAdjustMaterial',
   /**
+   * 原汁转储
+   */
+  AUDIT_TURNSAVE_LIST: HOST + '/juice/pot/juiceExamine',
+  AUDIT_TURNSAVE_SUBMIT: HOST + '/ver/adjust/adjust',
+  AUDIT_TURNSAVE_MATERIAL: HOST + '/all/dropDown/getAdjustMaterial',
+  JUICT_POT_LIST: HOST + '/juice/pot/materialPotList',
+  AUDIT_ADD_EXPORT: HOST + '/juiceExamineAddExport', // 原汁生管添加审核导出
+  AUDIT_DUMP_EXPORT: HOST + '/juiceExamineDumpExport', // 原汁生管转储审核导出
+  /**
    * 助滤剂审核
    */
   AUDIT_AID_LIST: HOST + '/ver/aid/list',
@@ -887,7 +900,10 @@ export const REP_API = {
    */
   TWOONERETROSPECT_LIST_API: HOST + '/report/formh/pkgOneAndTwoList',
   REPTWOONERETROSPECT_API: HOST + '/report/formh/exportPkgOneAndTwoList',
-  REP_ADJUST_LIST_API: HOST + '/ver/adjust/exportList'
+  REP_ADJUST_LIST_API: HOST + '/ver/adjust/exportList',
+  /** ******************** 通用报表  START *************************** */
+  CURRENT_MATERIALTRACEABILITY_LIAT: HOST + '/report/production/materielTraceSelectInfo',
+  CURRENT_MATERIALTRACEABILITY_LIST: HOST + '/report/production/materielTrace'
 }
 /*
 *炒麦api
@@ -1116,9 +1132,9 @@ export const KJM_API = {
   DOULOOKKANQUSAVE_API: HOST + '/kjm/guard/record/update', // 工艺 看曲记录
   DOULOOKGANGUANSAVE_API: HOST + '/kjm/guard/feel/update', // 工艺 感官
   DOULOOKSTATUS_API: HOST + '/kjm/guard/tech/updateStatus', // 工艺 状态,
-  IOT_LIST: HOST + '/iot/tu/list',
+  IOT_LIST: HOST + '/fromEs/lineChart',
   IOT_TIME_INFO: HOST + '/iot/tu/timeList',
-  IOT_READ: HOST + '/iot/tu/readData',
+  IOT_READ: HOST + '/fromEs/readData',
 
   /**
    * @property {string} KJMAKINGHEAD_API 车间审核表头
@@ -1309,7 +1325,11 @@ export const SQU_API = {
   /**
    * 工时与异常更新接口
    */
-  PRS_TIMESHEET_UPDATE_API: HOST + '/prs/timeSheet/update'
+  PRS_TIMESHEET_UPDATE_API: HOST + '/prs/timeSheet/update',
+  /**
+   * 罐
+   */
+  PRE_INSTORAGE_LIST_API: HOST + '/prs/inStorage/holderList'
 }
 
 /**
@@ -1377,6 +1397,7 @@ export const FERMENTATION_API = {
    */
   FORRECIPIENTSLIST_API: HOST + '/fer/openHolder/openHolderList',
   FORRECIPIENTSALREADYLIST_API: HOST + '/fer/openHolder/isOpenFermentationList',
+  FORRECIPIENTSALREADYDEL_API: HOST + '/fer/openHolder/deleteG',
   FORRECIPIENTSHOLDER_API: HOST + '/fer/openHolder/productsList', // 罐
   /**
    *  压榨通知单
@@ -1412,6 +1433,7 @@ export const FERMENTATION_API = {
   FER_HALF_LIST_API: HOST + '/fer/holderManage/halfList', // 获取半成品
   FER_HOLDER_STATUS_API: HOST + '/fer/holderManage/ferHolderStatusList', // 发酵罐状态
   FER_RINSE_API: HOST + '/fer/clean/save', // 清洗
+  FER_REPORT_LIST: HOST + '/report/production/fermentation', // 发酵一览表
   /*
    * 订单申请
    */
@@ -1469,6 +1491,7 @@ export const STERILIZED_API = {
   STE_ENTER_MATERIAL_LIST_API: HOST + '/ste/semiMaterial/list',
   STE_ENTER_MATERIAL_UPDATE_API: HOST + '/ste/semiMaterial/mySaveOrUpdate',
   STE_ENTER_MATERIAL_SUBMIT_API: HOST + '/ste/semiMaterial/submit',
+  STE_ENTER_MATERIAL_POT_LIST_API: HOST + '/ste/semiMaterial/halfHolderList',
   // 杀菌录入入库
   STE_ENTER_IN_LIST_API: HOST + '/ste/inStorage/list',
   STE_ENTER_IN_UPDATE_API: HOST + '/ste/inStorage/mySaveOrUpdate',
@@ -1513,6 +1536,9 @@ export const STERILIZED_API = {
   JUICEDEPLOYMENTSAVE: HOST + '/ste/allocate/allocateUpdate',
   JUICEDEPLOYMENTSUBMIT: HOST + '/ste/allocate/allocateSubmit',
   JUICEDEPLOYMENTHOLDER: HOST + '/ste/allocate/holderList',
+  JUICEDLIST: HOST + '/juice/record/list',
+  JUICEDUSERLIST: HOST + '/juice/record/userList',
+  JUICEDRECORDSAVE: HOST + '/juice/record/save',
   /**
    * 半成品罐
    */
@@ -1520,8 +1546,8 @@ export const STERILIZED_API = {
   SEMIFINISHEDPRODUCTGNSAVE: HOST + '/ste/gn/save',
   SEMIFINISHEDPRODUCTJSBSAVE: HOST + '/ste/jbs/save',
   SEMIFINISHEDPRODUCTZCSAVE: HOST + '/ste/semi/dumpSemiMaterial',
-  SEMIFINISHEDPRODUCTHOLDER: HOST + '/ste/semi/oneselfHolderList',
-  SEMIFINISHEDPRODUCTHROWHOLDER: HOST + '/ste/semi/holderList',
+  SEMIFINISHEDPRODUCTHROWHOLDER: HOST + '/ste/allocate/yzHolderList',
+  SEMIFINIS_DROPDOWN_LIST: HOST + '/all/dropDown/getDumpHolder', // 转储打入罐下拉
   /**
    *  调配列表
    */
@@ -1624,5 +1650,13 @@ export const JUICE_API = {
   JUICE_TRANSFER_POT_LIST: HOST + '/juice/pot/transferStoragePotList',
   JUICE_TRANSFER_SAVE: HOST + '/juice/pot/transferStorage',
   JUICE_ADD_POT_LIST: HOST + '/juice/pot/addPotList',
-  JUICE_ADD_SAVE: HOST + '/juice/pot/addJuicePot'
+  JUICE_ADD_SAVE: HOST + '/juice/pot/addJuicePot',
+  JUICE_JUICEINFO_LIST: HOST + '/juice/pot/juiceJudgeList', // 判定拉取
+  JUICE_JUICEJUDGE_SAVE: HOST + '/juice/pot/juiceJudge', // 判定保存
+  JUICE_JUICE_CLEAN: HOST + '/juice/pot/juiceClean', // 清罐
+  JUICE_JUICE_BRINGOUT_SAVE: HOST + '/juice/pot/juiceBringOut', // 调拨
+  JUICE_JUICE_DETAIL: HOST + '/juice/pot/juiceItem', // 详情
+  JUICE_JUICE_STOCKITEM: HOST + '/juice/pot/juiceStockItem', // 库存详情
+  JUICE_STOCKITEM_KUCUN: HOST + '/juice/pot/juiceStockItemExport', // 导出
+  JUICE_SEARCH_POT_LIST: HOST + '/juice/pot/holderList'
 }

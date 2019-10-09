@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="main">
-      <el-card class="searchCard newCard">
+    <div class="header_main">
+      <el-card class="searchCard">
         <el-row>
           <el-col>
             <div style="line-height:40px;" ><i style="font-size: 22px;float:left;" class="iconfont factory-shouqicaidan"></i><span style="font-size:16px;font-weight:bold;margin-left:12px;">申请基本信息</span></div>
@@ -9,7 +9,7 @@
         </el-row>
         <el-row type="flex">
           <el-col class="header-form" :span="24">
-            <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="100px" class="topform">
+            <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="100px" class="topform multi_row">
               <el-form-item label="生产工厂：" >
                 <el-select v-model="formHeader.factory" class="selectwpx" style="width: 140px" @change="changeOptions('factory')" :disabled="!isEdit">
                   <el-option label="请选择" value=""></el-option>
@@ -79,7 +79,7 @@
         </div>
       </el-card>
     </div>
-    <div class="main" style="padding-top: 0px">
+    <div class="main">
       <div class="tableCard">
         <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
           <i class="el-icon-caret-bottom"></i>
@@ -99,6 +99,11 @@
               <el-table-column label="罐号" :show-overflow-tooltip="true" width="120">
                 <template slot-scope="scope">
                   {{scope.row.holderName}}
+                </template>
+              </el-table-column>
+              <el-table-column label="订单类型" :show-overflow-tooltip="true" width="120">
+                <template slot-scope="scope">
+                  {{scope.row.orderTypeName}}
                 </template>
               </el-table-column>
               <el-table-column label="发酵天数/天" :show-overflow-tooltip="true" width="100">
@@ -323,6 +328,7 @@ export default class Index extends Vue {
         if (res.data.code === 0) {
           this.getHeaderForm(res.data.id)
           this.getDetailList(res.data.id)
+          this.$notify({title: '成功', message: '保存成功', type: 'success'})
         } else {
           this.$notify.error({title: '错误', message: res.data.msg})
         }
@@ -331,28 +337,35 @@ export default class Index extends Vue {
   }
   submit () {
     if (this.validate()) {
-      this.formHeader.status = 'submit'
-      Vue.prototype.$http(`${SQU_API.POT_APPLY_DETAIL_SAVE_API}`, 'POST', this.formHeader).then(res => {
-        if (res.data.code === 0) {
-          this.getHeaderForm(res.data.id)
-          this.getDetailList(res.data.id)
-        } else {
-          this.$notify.error({title: '错误', message: res.data.msg})
-        }
+      this.$confirm('确认提交该订单, 是否继续?', '提交订单', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.formHeader.status = 'submit'
+        Vue.prototype.$http(`${SQU_API.POT_APPLY_DETAIL_SAVE_API}`, 'POST', this.formHeader).then(res => {
+          if (res.data.code === 0) {
+            this.getHeaderForm(res.data.id)
+            this.getDetailList(res.data.id)
+            this.$notify({title: '成功', message: '提交成功', type: 'success'})
+          } else {
+            this.$notify.error({title: '错误', message: res.data.msg})
+          }
+        })
       })
     }
   }
   validate () {
     if (!this.formHeader.factory) {
-      this.$notify.error({title: '错误', message: '请选择工厂'})
+      Vue.prototype.$warning_SHINHO('请选择工厂')
       return false
     }
     if (!this.formHeader.workShop) {
-      this.$notify.error({title: '错误', message: '请选择车间'})
+      Vue.prototype.$warning_SHINHO('请选择车间')
       return false
     }
     if (!this.formHeader.materialCode) {
-      this.$notify.error({title: '错误', message: '请选择酱醪'})
+      Vue.prototype.$warning_SHINHO('请选择酱醪')
       return false
     }
     // if (!this.formHeader.halfType) {
@@ -360,11 +373,11 @@ export default class Index extends Vue {
     //   return false
     // }
     if (!this.formHeader.amount) {
-      this.$notify.error({title: '错误', message: '请填写申请数量'})
+      Vue.prototype.$warning_SHINHO('请填写申请数量')
       return false
     }
     if (!this.formHeader.productDate) {
-      this.$notify.error({title: '错误', message: '请选择生产日期'})
+      Vue.prototype.$warning_SHINHO('请选择生产日期')
       return false
     }
     return true

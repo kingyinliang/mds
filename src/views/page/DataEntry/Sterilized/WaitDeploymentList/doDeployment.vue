@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="main">
-      <el-card class="newCard searchCard">
-        <el-form :model="formHeader" :inline="true" size="small" label-width="80px" style="margin-top:10px">
+    <div class="header_main">
+      <el-card class="searchCard">
+        <el-form :model="formHeader" :inline="true" size="small" label-width="80px">
           <el-row>
             <el-col :span="21">
               <el-form-item label="生产工厂：">
@@ -60,7 +60,7 @@
         </div>
       </el-card>
     </div>
-    <div class="main" style="padding-top: 0">
+    <div class="main">
       <div class="tableCard">
         <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
           <i class="el-icon-caret-bottom"></i>
@@ -86,9 +86,9 @@
           <!-- <el-table-column label="订单结束日期"></el-table-column> -->
           <el-table-column label="生产调度员" prop="dispatchMan"></el-table-column>
           <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="操作" width="50">
+          <el-table-column label="操作" width="70">
             <template slot-scope="scope">
-              <el-button type="danger" icon="el-icon-delete" circle size="small" :disabled="!isRedact"  @click="DelOrderNo(scope.row)"></el-button>
+              <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact"  @click="DelOrderNo(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -259,7 +259,7 @@ export default {
     // 新增订单
     SaveOderNo () {
       if (this.multipleSelection.length === 0) {
-        this.$notify.error({title: '错误', message: '请勾选订单'})
+        this.$warning_SHINHO('请勾选订单')
       } else {
         let materialCode
         let dispatchMan
@@ -272,11 +272,11 @@ export default {
         }
         for (let item of this.multipleSelection) {
           if (materialCode !== item.materialCode) {
-            this.$notify.error({title: '错误', message: '物料冲突，请重新选择订单！'})
+            this.$warning_SHINHO('物料冲突，请重新选择订单！')
             return false
           }
           if (dispatchMan !== item.dispatchMan) {
-            this.$notify.error({title: '错误', message: '调度人员冲突，请重新选择订单！'})
+            this.$warning_SHINHO('调度人员冲突，请重新选择订单！')
             return false
           }
         }
@@ -303,8 +303,12 @@ export default {
     },
     SaveOrderNo () {
       if (this.orderList.length === 0) {
-        this.$notify.error({title: '错误', message: '请添加订单'})
+        this.$warning_SHINHO('请添加订单')
       } else {
+        if (this.orderList.filter(item => item.orderNo.slice(0, 4) === this.orderList[0].orderNo.slice(0, 4)).length !== this.orderList.length) {
+          this.$warning_SHINHO('请选择相同的订单类型的订单！')
+          return false
+        }
         let params = {
           factory: this.$store.state.common.Sterilized.factoryId,
           workShop: this.$store.state.common.Sterilized.workshopId,
@@ -343,15 +347,19 @@ export default {
       }
     },
     CreateOrder () {
+      if (this.orderList.length === 0) {
+        this.$warning_SHINHO('请添加订单')
+        return false
+      }
+      if (this.orderList.filter(item => item.orderNo.slice(0, 4) === this.orderList[0].orderNo.slice(0, 4)).length !== this.orderList.length) {
+        this.$warning_SHINHO('请选择相同的订单类型的订单！')
+        return false
+      }
       this.$confirm('确认生成调配单吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        if (this.orderList.length === 0) {
-          this.$notify.error({title: '错误', message: '请添加订单'})
-          return false
-        }
         if (this.allocateId === '') {
           let params = {
             factory: this.$store.state.common.Sterilized.factoryId,

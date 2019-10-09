@@ -1,31 +1,31 @@
 <template>
   <el-row>
     <el-col v-loading.fullscreen.lock="lodingStatus" element-loading-text="加载中">
-      <div class="main">
-        <el-card class="newCard">
-          <el-row type="flex" style="border-bottom:1px solid #E9E9E9;margin-bottom:12px">
+      <div class="header_main">
+        <el-card>
+          <el-row type="flex">
             <el-col>
-              <el-form :model="params" size="small" :inline="true" label-position="right" label-width="42px">
-                <el-form-item label="工厂：">
-                  <el-select size="small" v-model="params.factoryId" class="selectwpx" style="width:140px" @change="changeOptions('factory')">
+              <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
+                <el-form-item label="生产工厂：">
+                  <el-select size="small" v-model="params.factoryId" class="selectwpx" style="width:150px" @change="changeOptions('factory')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="车间：">
-                  <el-select size="small" v-model="params.workshopId" class="selectwpx" style="width:140px" @change="changeOptions('workshop')">
+                <el-form-item label="生产车间：">
+                  <el-select size="small" v-model="params.workshopId" class="selectwpx" style="width:150px" @change="changeOptions('workshop')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="订单日期：" label-width="70px" class="selectwpx">
-                  <el-date-picker size="small" type="date" v-model="params.orderDate" value-format="yyyy-MM-dd" style="width:140px"></el-date-picker>
+                <el-form-item label="订单日期：" class="selectwpx">
+                  <el-date-picker size="small" type="date" v-model="params.orderDate" value-format="yyyy-MM-dd" style="width:150px"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="订单号：" label-width="60px" >
-                  <el-input size="small" type="text" v-model.trim="params.orderNo" placeholder='请输入' style="width:140px"/>
+                <el-form-item label="订单号：" >
+                  <el-input size="small" type="text" v-model.trim="params.orderNo" placeholder='请输入' style="width:150px"/>
                 </el-form-item>
-                <el-form-item label="订单状态：" label-width="70px">
-                  <el-select size="small" v-model="params.orderStatus" class="selectwpx" style="width:120px">
+                <el-form-item label="订单状态：">
+                  <el-select size="small" v-model="params.orderStatus" class="selectwpx" style="width:150px">
                     <el-option label="请选择" value=""></el-option>
                     <el-option label="已同步" value="已同步"></el-option>
                     <el-option label="未录入" value="已拆分"></el-option>
@@ -36,16 +36,14 @@
                     <el-option label="通过" value="checked"></el-option>
                   </el-select>
                 </el-form-item>
+                <el-form-item class="floatr">
+                  <el-button type="primary" size="small" @click="getOrderList()" style="float:right" v-if="isAuth('sys:order:orderlist')">查询</el-button>
+                </el-form-item>
               </el-form>
-            </el-col>
-            <el-col style="width:80px">
-              <el-row class="rowButton">
-                <el-button type="primary" size="small" @click="getOrderList()" style="float:right" v-if="isAuth('sys:order:orderlist')">查询</el-button>
-              </el-row>
             </el-col>
           </el-row>
         </el-card>
-        <el-row :gutter="12" v-if="searched" style="margin-top:20px;">
+        <el-row :gutter="5" v-if="searched" style="margin-top:5px;">
           <el-col :span="12">
             <el-card>
               <el-row style="margin-bottom:5px;" >
@@ -77,7 +75,7 @@
                         {{scope.row.materialCode + ' ' + scope.row.materialName}}
                       </template>
                     </el-table-column>
-                    <el-table-column width="70" label="数量">
+                    <el-table-column width="70" label="数量" show-overflow-tooltip>
                       <template slot-scope="scope">
                         {{scope.row.planOutput}}
                       </template>
@@ -87,7 +85,7 @@
                         <span>{{scope.row.outputUnit}}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column label="备注" width="140">
+                    <el-table-column label="备注" width="100" show-overflow-tooltip>
                       <template slot-scope="scope">
                         <span>{{scope.row.remark}}</span>
                       </template>
@@ -96,16 +94,18 @@
                       label="操作"
                       fixed="right"
                       align="center"
-                      width="80">
+                      width="130">
                       <template slot-scope="scope">
-                        <div class="operator" v-if="(scope.row.orderStatus === '已同步' || scope.row.orderStatus === '未录入' || scope.row.orderStatus === '已保存') && isAuth('sys:kjmOrderHouse:mySaveOrUpdate')" @click="orderSplit(scope.row)">
+                        <el-button type="text" :disabled="!(scope.row.orderStatus === '不通过' || scope.row.orderStatus === '已同步' || scope.row.orderStatus === '已保存' || scope.row.orderStatus === '待审核' || scope.row.orderStatus === '未录入') || !isAuth('sys:kjmOrderHouse:mySaveOrUpdate')" @click="orderSplit(scope.row)"><i class="iconfont factory-chaifen"></i>拆分</el-button>
+                        <el-button type="text" :disabled="!(scope.row.orderStatus === '待审核' || scope.row.orderStatus === '已提交' || scope.row.orderStatus === '不通过' || scope.row.orderStatus === '通过') || !isAuth('sys:midInStorage:list')" @click="orderCheck(scope.row)"><i class="iconfont factory-renzhengshenhe_huaban"></i>审核</el-button>
+                        <!-- <div class="operator" v-if="(scope.row.orderStatus === '已同步' || scope.row.orderStatus === '未录入' || scope.row.orderStatus === '已保存') && isAuth('sys:kjmOrderHouse:mySaveOrUpdate')" @click="orderSplit(scope.row)">
                           <div class="split"></div>
                           <div>&nbsp;拆分</div>
                         </div>
                         <div class="operator" v-if="(scope.row.orderStatus === '待审核' || scope.row.orderStatus === '已提交' || scope.row.orderStatus === '不通过' || scope.row.orderStatus === '通过') && isAuth('sys:order:orderlist')&& isAuth('sys:midInStorage:list')" @click="orderCheck(scope.row)">
                           <div class="check"></div>
                           <div>&nbsp;审核</div>
-                        </div>
+                        </div> -->
                       </template>
                     </el-table-column>
                   </el-table>
@@ -469,13 +469,14 @@ export default class Index extends Vue {
   }
   getOrderList () {
     if (this.params.factoryId === '') {
-      this.$notify.error({title: '错误', message: '请选择工厂'})
+      Vue.prototype.$warning_SHINHO('请选择工厂')
       return
     }
     if (this.params.workshopId === '') {
-      this.$notify.error({title: '错误', message: '请选择车间'})
+      Vue.prototype.$warning_SHINHO('请选择车间')
       return
     }
+    this.currPage = 1
     // if (this.params.orderDate === null || this.params.orderDate === '') {
     //   this.$message.error('请选择订单日期')
     //   return
@@ -521,7 +522,13 @@ export default class Index extends Vue {
   }
   // 删除
   delRow (row) {
-    row.delFlag = '1'
+    this.$confirm('是否删除?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      row.delFlag = '1'
+    })
   }
   // 增加
   addRow (row) {
@@ -538,29 +545,29 @@ export default class Index extends Vue {
     for (let item of this.splitDetailList) {
       if (item.delFlag === '0') {
         if (!item.inPotNo || item.inPotNo.length === 0) {
-          this.$notify.error({title: '错误', message: '入罐号不能为空'})
+          Vue.prototype.$warning_SHINHO('入罐号不能为空')
           return
         }
         if (!item.houseNo || item.houseNo.length === 0) {
-          this.$notify.error({title: '错误', message: '曲房不能为空'})
+          Vue.prototype.$warning_SHINHO('曲房不能为空')
           return
         }
         if (!item.inKjmDate || item.inKjmDate.length === 0) {
-          this.$notify.error({title: '错误', message: '制曲日期不能为空'})
+          Vue.prototype.$warning_SHINHO('制曲日期不能为空')
           return
         }
         if (!item.productDate || item.productDate.length === 0) {
-          this.$notify.error({title: '错误', message: '生产日期不能为空'})
+          Vue.prototype.$warning_SHINHO('生产日期不能为空')
           return
         }
         potSet.add(item.inPotNo)
         if (potSet.size > 1) {
-          this.$notify.error({title: '错误', message: '同一订单不能多个入罐号'})
+          Vue.prototype.$warning_SHINHO('同一订单不能多个入罐号')
           return
         }
         let houseKey = item.houseNo + item.inKjmDate
         if (houseSet.has(houseKey)) {
-          this.$notify.error({title: '错误', message: '相同制曲日期下，曲房重复'})
+          Vue.prototype.$warning_SHINHO('相同制曲日期下，曲房重复')
           return
         } else {
           houseSet.add(houseKey)
@@ -636,17 +643,17 @@ export default class Index extends Vue {
   // 删除订单详情
   delDetail () {
     if (!this.isAuth('sys:kjmOrderHouse:mySaveOrUpdate')) {
-      this.$notify.error({title: '错误', message: '无权限进行删除操作'})
+      Vue.prototype.$warning_SHINHO('无权限进行删除操作')
       return
     }
     if (!this.selectedDetailList || this.selectedDetailList.length === 0) {
-      this.$notify.error({title: '错误', message: '请选择删除项'})
+      Vue.prototype.$warning_SHINHO('请选择删除项')
       return
     }
     for (let row of this.selectedDetailList) {
       // 提交或者通过的数据不能删除
       if (row.status && (row.status === Status.SUBMIT || row.status === Status.CHECKED)) {
-        this.$notify.error({title: '错误', message: `${row.status}的数据不可删除`})
+        Vue.prototype.$warning_SHINHO(`${row.status}的数据不可删除`)
         return
       }
     }
@@ -672,11 +679,11 @@ export default class Index extends Vue {
   // 订单详情修改
   showModifyDetial (row: OrderDetail) {
     if (!this.isAuth('sys:kjmOrderHouse:mySaveOrUpdate')) {
-      this.$notify.error({title: '错误', message: '无权限进行修改操作'})
+      Vue.prototype.$warning_SHINHO('无权限进行修改操作')
       return
     }
     if (row.status && (row.status === Status.SUBMIT || row.status === Status.CHECKED)) {
-      this.$notify.error({title: '错误', message: `${row.status}的数据不可修改`})
+      Vue.prototype.$warning_SHINHO(`${row.status}的数据不可修改`)
       return
     }
     this.detailForm = row.clone()
@@ -684,19 +691,19 @@ export default class Index extends Vue {
   }
   modifyDetial () {
     if (!this.detailForm.inPotNo || this.detailForm.inPotNo.length === 0) {
-      this.$notify.error({title: '错误', message: '入罐号不能为空'})
+      Vue.prototype.$warning_SHINHO('入罐号不能为空')
       return false
     }
     if (!this.detailForm.houseNo || this.detailForm.houseNo.length === 0) {
-      this.$notify.error({title: '错误', message: '曲房不能为空'})
+      Vue.prototype.$warning_SHINHO('曲房不能为空')
       return false
     }
     if (!this.detailForm.inKjmDate || this.detailForm.inKjmDate.length === 0) {
-      this.$notify.error({title: '错误', message: '制曲日期不能为空'})
+      Vue.prototype.$warning_SHINHO('制曲日期不能为空')
       return false
     }
     if (!this.detailForm.productDate || this.detailForm.productDate.length === 0) {
-      this.$notify.error({title: '错误', message: '生产日期不能为空'})
+      Vue.prototype.$warning_SHINHO('生产日期不能为空')
       return false
     }
     let params: OrderDetail[] = [this.detailForm]

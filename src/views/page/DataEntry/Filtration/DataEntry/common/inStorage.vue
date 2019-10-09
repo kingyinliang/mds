@@ -20,9 +20,9 @@
           <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="操作时间" width="100" prop="changed" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="操作人" width="80" prop="changer" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="操作" width="50" :show-overflow-tooltip="true">
+          <el-table-column label="操作" width="70" :show-overflow-tooltip="true">
             <template slot-scope="scope">
-              <el-button type="danger" circle icon="el-icon-delete" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @click="delRow(scope.row)"></el-button>
+              <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @click="delRow(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -158,7 +158,7 @@ export default {
     addIn () {
       if (this.dataForm.isFull === '1') {
         if (!this.dataForm.fullDate) {
-          this.$notify.error({title: '错误', message: '满罐时间必填'})
+          this.$warning_SHINHO('满罐时间必填')
           return
         }
       }
@@ -198,7 +198,7 @@ export default {
     },
     // 半成品罐下拉
     PotinTankAmount (id) {
-      this.dataForm.holderRemaining = this.PotList.filter(item => item.holderId === id)[0].amount
+      this.dataForm.holderRemaining = this.PotList.filter(item => item.holderId === id)[0].amount / 1000
       this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
       if (this.dataForm.holderRemaining) {
         this.PotObject.inTankAmount = true

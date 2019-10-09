@@ -1,7 +1,7 @@
 <template>
-<div style="padding: 5px 10px">
-  <el-card class="searchCard  newCard ferCard">
-    <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="topform marbottom">
+<div class="header_main">
+  <el-card class="searchCard ferCard">
+    <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="topform sole_row">
       <el-form-item label="生产工厂：">
         <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 140px">
           <el-option label="请选择"  value=""></el-option>
@@ -32,7 +32,9 @@
           <el-option label="发酵中" v-for="(item, index) in holderStatusList" :key="index" value="2,3" v-if="item.code === '2'"></el-option>
         </el-select>
       </el-form-item>
-      <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('fer:holderManage:list')">查询</el-button>
+      <el-form-item style="float:right; margin-right:0;">
+        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('fer:holderManage:list')">查询</el-button>
+      </el-form-item>
     </el-form>
   </el-card>
   <el-card class="searchCard  newCard ferCard" style="margin-top: 5px" v-show="fastS">
@@ -60,7 +62,10 @@
     </div>
   </el-card>
   <el-card class="searchCard  newCard ferCard" style="margin-top: 5px"  v-show="fastS">
-    <h3 style="color: black;margin-bottom: 8px"><i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>发酵罐列表</h3>
+    <h3 style="color:black; margin-bottom:8px; line-height:20px;">
+      <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>发酵罐列表
+      <!-- <i class="gotop" v-if="isAuth('report:production:fermentation')"><a href="#/DataEntry-Fermentation-Fermenter-summary">发酵库存情况>></a></i> -->
+    </h3>
     <el-row class="dataList" :gutter="10" style="min-height: 150px">
       <el-col :span="4" v-for="(item, index) in dataList" :key="index">
         <el-card class="dataList_item">
@@ -72,7 +77,8 @@
             </span>
             <span class="dataList_item_a" @click="godetails(item)" style="font-size: 14px" v-if="isAuth('fer:holderManage:detail')">详情>></span>
           </h3>
-          <div class="dataList_item_pot clearfix">
+          <div class="dataList_item_pot clearfix" style="position: relative">
+            <img src="@/assets/img/RD.png" alt="" style="position:absolute; left:10px; top:10px;" v-if="item.ferOrderNo.slice(0,4) === RDorder">
             <div class="dataList_item_pot_box">
               <div class="dataList_item_pot_box1">
                 <div class="dataList_item_pot_box_item1" :style="`height:${item.reWorkAmount? (item.reWorkAmount / item.holderAmout) * 100 : 0}%`" v-if="item.holderStatus !== '4'">
@@ -161,7 +167,7 @@
 
 <script>
 import { dateFormat } from '@/net/validate'
-import {BASICDATA_API, FERMENTATION_API} from '@/api/api'
+import {SYSTEMSETUP_API, BASICDATA_API, FERMENTATION_API} from '@/api/api'
 export default {
   name: 'index',
   data () {
@@ -171,6 +177,7 @@ export default {
       visible: false,
       dialogData: {},
       a: true,
+      RDorder: '',
       topBox: [
         {
           color: '#999999',
@@ -254,6 +261,7 @@ export default {
       this.formHeader.workShop = ''
       this.formHeader.holderStatus = ''
       this.Getdeptbyid(n)
+      this.GetRDorder(n)
       this.GetHolderStatusList(n)
     },
     'formHeader.workShop' (n, o) {
@@ -306,7 +314,7 @@ export default {
     // 总览点击
     topClick (item) {
       if (!this.formHeader.factory) {
-        this.$notify.error({title: '错误', message: '请选择工厂'})
+        this.$warning_SHINHO('请选择工厂')
         return
       }
       this.formHeader.currPage = 1
@@ -383,6 +391,18 @@ export default {
             if (data.typeList.length) {
               this.formHeader.workShop = data.typeList[0].deptId
             }
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
+      }
+    },
+    // 获取研发字典
+    GetRDorder (id) {
+      if (id) {
+        this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {factory: id, type: 'order_type', value: '研发订单'}, false, false, false).then(({data}) => {
+          if (data.code === 0) {
+            this.RDorder = data.dicList[0].code
           } else {
             this.$notify.error({title: '错误', message: data.msg})
           }
@@ -467,7 +487,7 @@ export default {
           this.dialogData = row
           this.visible = true
         } else {
-          this.$notify.error({title: '错误', message: '该罐不是未清洗状态'})
+          this.$warning_SHINHO('该罐不是未清洗状态')
         }
         return
       }
@@ -523,15 +543,15 @@ export default {
     font-weight: 400;
     padding-bottom: 10px;
     border-bottom: 1px solid #E9E9E9;
-    .gotop{
-      float: right;
-      color: #1890FF;
-      font-size: 14px;
-      cursor: pointer;
-      i{
-        :before{
-          color: #1890FF;
-        }
+  }
+  .gotop{
+    float: right;
+    color: #1890FF;
+    font-size: 14px;
+    cursor: pointer;
+    i{
+      :before{
+        color: #1890FF;
       }
     }
   }

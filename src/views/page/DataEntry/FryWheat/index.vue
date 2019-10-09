@@ -1,10 +1,10 @@
 <template>
   <el-col v-loading.fullscreen.lock="lodingStatus" element-loading-text="加载中">
-    <div class="main">
-      <el-card class="newCard" style="min-height: 480px">
+    <div class="header_main">
+      <el-card style="min-height: 480px">
         <el-row type="flex" style="border-bottom: 1px solid #E9E9E9;margin-bottom: 12px">
           <el-col>
-            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px">
+            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
               <el-form-item label="生产工厂：">
                 <el-select v-model="plantList.factoryid" class="selectwpx" style="width: 140px">
                   <el-option label="请选择" value=""></el-option>
@@ -273,6 +273,13 @@ export default {
   },
   methods: {
     go (item) {
+      if (!item.productDate) {
+        if (!this.plantList.productDate) {
+          item.productDate = dateFormat(new Date(), 'yyyy-MM-dd')
+        } else {
+          item.productDate = this.plantList.productDate
+        }
+      }
       this.FWworkShop = this.workShop
       this.FWfactoryid = this.factoryid
       if (item.productLineName === '炒麦') {
@@ -289,7 +296,7 @@ export default {
             that.$router.push({ name: `DataEntry-FryWheat-EnterData-dataEntryIndex` })
           }, 100)
         } else {
-          this.$notify.error({title: '错误', message: '请选择订单号'})
+          this.$warning_SHINHO('请选择订单号')
         }
       } else {
         // 存储脱皮的state
@@ -403,15 +410,15 @@ export default {
     // 查询
     GetOrderList (st) {
       if (this.plantList.factoryid === '') {
-        this.$notify.error({title: '错误', message: '请选择工厂'})
+        this.$warning_SHINHO('请选择工厂')
         return
       }
       if (this.plantList.workshopid === '') {
-        this.$notify.error({title: '错误', message: '请选择车间'})
+        this.$warning_SHINHO('请选择车间')
         return
       }
       if ((this.plantList.productDate === '' || !this.plantList.productDate) && this.plantList.orderNo === '') {
-        this.$notify.error({title: '错误', message: '生产日期或订单请选填一项'})
+        this.$warning_SHINHO('生产日期或订单请选填一项')
         return false
       }
       this.lodingStatus = true
@@ -448,7 +455,7 @@ export default {
           this.lodingStatus = false
         })
       } else {
-        this.$notify.error({title: '错误', message: '请选择生产状态'})
+        this.$warning_SHINHO('请选择生产状态')
         return
       }
       this.type = this.plantList.status
@@ -486,7 +493,7 @@ export default {
     // 新增人员
     AddPeople () {
       if (this.plantList.workshopid === '') {
-        this.$notify.error({title: '错误', message: '请选择车间'})
+        this.$warning_SHINHO('请选择车间')
         return
       }
       // if (this.addRowStatus === 0) {
@@ -509,10 +516,7 @@ export default {
           this.$http(`${WHT_API.CINDEXDELUSER}`, 'POST', {orderId: row.orderId}).then(({data}) => {
             if (data.code === 0) {
               this.datalist.splice(this.datalist.indexOf(row), 1)
-              this.$message({
-                type: 'success',
-                message: '删除成功'
-              })
+              this.$success_SHINHO('删除成功')
             } else {
               this.$notify.error({title: '错误', message: data.msg})
             }
@@ -535,14 +539,14 @@ export default {
             this.$refs.officialWorker.init(row.deptId, row.userId)
           })
         } else {
-          this.$notify.error({title: '错误', message: '请选择工序'})
+          this.$warning_SHINHO('请选择工序')
         }
       } else if (row.userType === '临时工') {
         this.$nextTick(() => {
           this.$refs.temporaryWorker.init(row)
         })
       } else {
-        this.$notify.error({title: '错误', message: '请选择人员属性'})
+        this.$warning_SHINHO('请选择人员属性')
       }
     },
     // 员工确认
@@ -564,7 +568,7 @@ export default {
         }).then(() => {
           this.datalist.map((item) => {
             if (item.classType === undefined || item.deptId === undefined || item.userType === undefined || item.userId === undefined || item.startDate === undefined || item.endDate === undefined || item.dinner === undefined) {
-              this.$notify.error({title: '错误', message: '除备注外其他选项必填'})
+              this.$warning_SHINHO('除备注外其他选项必填')
               this.abnorsave = false
               return false
             } else {
@@ -583,10 +587,7 @@ export default {
             this.$http(`${WHT_API.CINDEXUPDATEUSER}`, 'POST', this.datalist).then(({data}) => {
               if (data.code === 0) {
                 // this.$notify({title: '成功', message: '操作成功', type: 'success'})
-                this.$message({
-                  type: 'success',
-                  message: '保存成功'
-                })
+                this.$success_SHINHO('保存成功')
                 this.GetOrderList(true)
               } else {
                 this.$notify.error({title: '错误', message: data.msg})

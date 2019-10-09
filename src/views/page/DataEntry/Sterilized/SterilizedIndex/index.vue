@@ -1,14 +1,14 @@
 <template>
-  <div style="padding: 5px 10px">
+  <div class="header_main">
     <el-card class="searchCard  newCard" style="margin-bottom: 5px">
-      <el-form :inline="true" size="small" :model="formHeader" label-width="45px" class="topform marbottom">
-        <el-form-item label="工厂：">
+      <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform sole_row">
+        <el-form-item label="生产工厂：">
           <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="车间：">
+        <el-form-item label="生产车间：">
           <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
@@ -113,11 +113,11 @@ export default {
   methods: {
     GetDataList () {
       if (!this.formHeader.factory || !this.formHeader.workShop) {
-        this.$notify.error({title: '错误', message: '请选择工厂与车间'})
+        this.$warning_SHINHO('请选择工厂与车间')
         return
       }
       if ((this.formHeader.productDate === '' || !this.formHeader.productDate) && this.formHeader.orderNo === '') {
-        this.$notify.error({title: '错误', message: '生产日期或订单请选填一项'})
+        this.$warning_SHINHO('生产日期或订单请选填一项')
         return false
       }
       this.$http(`${STERILIZED_API.STE_HOME_LIST_API}`, 'POST', this.formHeader).then(({data}) => {
@@ -154,17 +154,17 @@ export default {
     toRouter (str, item) {
       let url
       if (!item.orderId) {
-        this.$notify.error({title: '错误', message: '请选择订单'})
+        this.$warning_SHINHO('请选择订单')
         return
       }
       if (str === '1') {
         let st = this.Materails.filter(items => items.code === item.materialCode)
         if (st.length === 0) {
-          this.$notify.error({title: '错误', message: '非特殊物料，不能跳转'})
+          this.$warning_SHINHO('非特殊物料，不能跳转')
           return
         }
         if (!this.isAuth('ste:semiMaterial:list')) {
-          this.$notify.error({title: '错误', message: '没有分配权限'})
+          this.$warning_SHINHO('没有分配权限')
           return
         }
         this.$store.state.common.sterilized.seiOrderId = item.orderId
@@ -173,7 +173,7 @@ export default {
         url = 'DataEntry-Sterilized-SterilizedIndex-semiReceive-index'
       } else if (str === '2') {
         if (!this.isAuth('ste:supMaterial:list')) {
-          this.$notify.error({title: '错误', message: '没有分配权限'})
+          this.$warning_SHINHO('没有分配权限')
           return
         }
         this.$store.state.common.sterilized.acceOrderId = item.orderId
@@ -182,14 +182,14 @@ export default {
         url = 'DataEntry-Sterilized-SterilizedIndex-acceAdd-index'
       } else if (str === '3') {
         if (!this.isAuth('ste:tec:list')) {
-          this.$notify.error({title: '错误', message: '没有分配权限'})
+          this.$warning_SHINHO('没有分配权限')
           return
         }
         this.$store.state.common.sterilized.craftOrderId = item.orderId
         url = 'DataEntry-Sterilized-SterilizedIndex-craftControl-index'
       } else if (str === '4') {
         if (!this.isAuth('ste:inStorage:list')) {
-          this.$notify.error({title: '错误', message: '没有分配权限'})
+          this.$warning_SHINHO('没有分配权限')
           return
         }
         this.$store.state.common.sterilized.inOrderId = item.orderId
@@ -221,10 +221,8 @@ export default {
   .el-select-dropdown__wrap{
     max-height: 200px;
   }
-  .dataList_item{
-    .el-card__body{
-      padding: 0!important;
-    }
+  .dataList_item .el-card__body{
+    padding: 0!important;
   }
   .dataList_item_body_text .el-form-item{
     .el-form-item__label{
@@ -327,7 +325,7 @@ export default {
           }
           &_tit{
             width: 100px;
-            min-height: 26px;
+            min-height: 29px;
             font-size: 12px;
             border-bottom: 1px solid #D8D8D8;
             overflow:hidden;

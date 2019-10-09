@@ -6,18 +6,18 @@
       <!--<el-breadcrumb-item>立体库</el-breadcrumb-item>-->
     <!--</el-breadcrumb>-->
   <!--</div>-->
-  <div class="main">
-    <el-card class="searchCard" style="margin: 0">
+  <div class="header_main">
+    <el-card class="searchCard" style="margin:0">
       <el-row type="flex">
         <el-col>
-          <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="85px" @keyup.enter.native="GetLtkList(true)" @submit.native.prevent>
-            <el-form-item label="工厂：">
+          <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row" @keyup.enter.native="GetLtkList(true)" @submit.native.prevent>
+            <el-form-item label="生产工厂：">
               <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px">
                 <el-option label="请选择"  value=""></el-option>
                 <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="车间：">
+            <el-form-item label="生产车间：">
               <el-select v-model="plantList.workshop" placeholder="请选择" style="width: 160px">
                 <el-option label="请选择"  value=""></el-option>
                 <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
@@ -44,7 +44,7 @@
             <el-form-item label="日期：">
               <el-date-picker type="date" placeholder="选择" v-model="plantList.productdate" value-format="yyyy-MM-dd" style="width: 160px"></el-date-picker>
             </el-form-item>
-            <el-form-item style="margin-left: 85px;">
+            <el-form-item class="floatr">
               <el-button type="primary" size="small" v-if="isAuth('sys:verifyLTK:list')" @click="GetLtkList(true)">查询</el-button>
               <el-button type="primary" size="small" @click="doPrint">导出</el-button>
               <el-button type="primary" size="small" @click="subAutio()" v-if="isAuth('sys:verifyLTK:auditing')">审核通过</el-button>
@@ -58,7 +58,7 @@
       </div>
     </el-card>
   </div>
-  <div class="main" style="padding-top: 0px">
+  <div class="main">
     <el-card class="tableCard">
       <div class="toggleSearchTop">
         <i class="el-icon-caret-bottom"></i>
@@ -107,7 +107,7 @@
         <el-table-column
           prop="batch"
           label="生产批次"
-          width="105">
+          width="110">
         </el-table-column>
         <el-table-column
           prop="input"
@@ -279,7 +279,7 @@ export default {
     // 获取列表
     GetLtkList (st) {
       if (!this.plantList.factory) {
-        this.$notify.error({title: '错误', message: '请选择工厂'})
+        this.$warning_SHINHO('请选择工厂')
         return
       }
       this.deptCode = (this.factory.filter(item => item.deptId === this.plantList.factory))[0].deptCode
@@ -385,14 +385,14 @@ export default {
     // 审核拒绝
     repulseAutios () {
       if (this.multipleSelection.length <= 0) {
-        this.$notify.error({title: '错误', message: '请选择订单'})
+        this.$warning_SHINHO('请选择订单')
       } else {
         this.visible = true
       }
     },
     repulseAutio () {
       if (this.Text.length <= 0) {
-        this.$notify.error({title: '错误', message: '请填写不通过原因'})
+        this.$warning_SHINHO('请填写不通过原因')
       } else {
         this.$confirm('确认审核不通过, 是否继续?', '审核不通过', {
           confirmButtonText: '确定',
@@ -418,7 +418,7 @@ export default {
     // 审核通过
     subAutio () {
       if (this.multipleSelection.length <= 0) {
-        this.$notify.error({title: '错误', message: '请选择订单'})
+        this.$warning_SHINHO('请选择订单')
       } else {
         this.$confirm('确认审核通过, 是否继续?', '审核通过', {
           confirmButtonText: '确定',

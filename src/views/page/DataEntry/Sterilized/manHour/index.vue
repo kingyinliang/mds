@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="main">
-      <el-card class="searchCard  newCard">
+    <div class="header_main">
+      <el-card class="searchCard">
         <el-row type="flex">
-          <el-col :span="21">
-            <el-form :inline="true" :model="formHeader" size="small" label-width="82px" class="topform">
+          <el-col :span="18">
+            <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform multi_row">
               <el-form-item label="生产工厂：">
                 <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px">
                   <el-option label="请选择"  value=""></el-option>
@@ -34,22 +34,23 @@
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col :span="3" style="font-size: 14px;line-height: 32px">
-            <div style="float:left">
+          <el-col :span="6" style="font-size: 14px;line-height: 32px">
+            <div style="text-align:left; overflow:hidden; float:right;">
               <span class="point" :style="{'background': headList.status === 'noPass'? 'red' : headList.status === 'saved'? '#1890f' : headList.status === 'submit' ? '#1890ff' : headList.status === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>状态：
               <span :style="{'color': headList.status === 'noPass'? 'red' : '' }">{{headList.status === 'noPass'? '审核不通过':headList.status === 'saved'? '已保存':headList.status === 'submit' ? '已提交' : headList.status === 'checked'? '通过':headList.status === '已同步' ? '未录入' : headList.status }}</span>
             </div>
+            <div style="clear:both"></div>
+            <div style="width:100%; text-align:right; margin-top:10px;">
+              <template style="float:right; margin-left: 10px;">
+                <el-button type="primary" size="small" @click="GetTimeList" v-if="isAuth('ste:timeSheet:list')">查询</el-button>
+                <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('ste:timeSheet:update')">{{isRedact?'取消':'编辑'}}</el-button>
+              </template>
+              <template v-if="isRedact && searchCard" style="float:right; margin-left: 10px;">
+                <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('ste:timeSheet:update')">保存</el-button>
+                <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('ste:timeSheet:update')">提交</el-button>
+              </template>
+            </div>
           </el-col>
-        </el-row>
-        <el-row style="text-align:right" class="buttonCss">
-          <template style="float:right; margin-left: 10px;">
-            <el-button type="primary" size="small" @click="GetTimeList" v-if="isAuth('ste:timeSheet:list')">查询</el-button>
-            <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('ste:timeSheet:update')">{{isRedact?'取消':'编辑'}}</el-button>
-          </template>
-          <template v-if="isRedact && searchCard" style="float:right; margin-left: 10px;">
-            <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('ste:timeSheet:update')">保存</el-button>
-            <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('ste:timeSheet:update')">提交</el-button>
-          </template>
         </el-row>
         <div class="toggleSearchBottom">
           <i class="el-icon-caret-top"></i>
@@ -216,7 +217,7 @@ export default {
     // 查询
     GetTimeList () {
       if (this.formHeader.factory === '' || this.formHeader.workShop === '' || this.formHeader.inKjmDate === '' || this.formHeader.deptId === '') {
-        this.$notify.error({title: '错误', message: '请填写查询选项'})
+        this.$warning_SHINHO('请填写查询选项')
         return false
       }
       this.searchCard = false
@@ -285,10 +286,10 @@ export default {
             that.GetTimeList()
             that.$notify({title: '成功', message: '提交成功', type: 'success'})
           }, err => {
-            that.$message.error(err)
+            that.$error_SHINHO(err)
           })
         }, err => {
-          that.$message.error(err)
+          that.$error_SHINHO(err)
         })
       } else if (str === 'saved') {
         let saveNet = Promise.all([headSave, readySave, userSave])
@@ -296,7 +297,7 @@ export default {
           that.GetTimeList()
           that.$notify({title: '成功', message: '保存成功', type: 'success'})
         }, err => {
-          that.$message.error(err)
+          that.$error_SHINHO(err)
         })
       }
     },
@@ -399,25 +400,25 @@ export default {
       if (this.readyTimeDate.classes === '白班') {
         if (day) {} else {
           ty = false
-          this.$notify.error({title: '错误', message: '准备时间白班必填项未填写完全'})
+          this.$warning_SHINHO('准备时间白班必填项未填写完全')
           return false
         }
       } else if (this.readyTimeDate.classes === '中班') {
         if (mid) {} else {
           ty = false
-          this.$notify.error({title: '错误', message: '准备时间中班必填项未填写完全'})
+          this.$warning_SHINHO('准备时间中班必填项未填写完全')
           return false
         }
       } else if (this.readyTimeDate.classes === '夜班') {
         if (night) {} else {
           ty = false
-          this.$notify.error({title: '错误', message: '准备时间夜班必填项未填写完全'})
+          this.$warning_SHINHO('准备时间夜班必填项未填写完全')
           return false
         }
       } else if (this.readyTimeDate.classes === '多班') {
         if (day && night) {} else {
           ty = false
-          this.$notify.error({title: '错误', message: '准备时间多班必填项未填写完全'})
+          this.$warning_SHINHO('准备时间多班必填项未填写完全')
           return false
         }
       }

@@ -1,23 +1,23 @@
 <template>
   <div>
-    <div class="main">
-      <el-card class="searchCard newCard">
+    <div class="header_main">
+      <el-card class="searchCard">
         <el-row type="flex">
           <el-col>
-            <el-form :model="params" size="small" :inline="true" label-position="right" label-width="50px">
-              <el-form-item label="工厂：" >
+            <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
+              <el-form-item label="生产工厂：" >
                 <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px" @change="changeOptions('factory')">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="车间：">
+              <el-form-item label="生产车间：">
                 <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px" @change="changeOptions('workshop')">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="订单日期：" label-width="80px">
+              <el-form-item label="订单日期：">
                 <el-date-picker type="date" v-model="params.orderDate" value-format="yyyy-MM-dd" style="width:140px"></el-date-picker>
               </el-form-item>
             </el-form>
@@ -32,7 +32,7 @@
         </div>
       </el-card>
     </div>
-    <div class="main" style="padding-top: 0px">
+    <div class="main">
       <div class="tableCard">
         <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
           <i class="el-icon-caret-bottom"></i>
@@ -133,6 +133,11 @@
               <el-table-column label="罐号" :show-overflow-tooltip="true" width="130">
                 <template slot-scope="scope">
                   {{scope.row.holderName}}
+                </template>
+              </el-table-column>
+              <el-table-column label="订单类型" :show-overflow-tooltip="true" width="120">
+                <template slot-scope="scope">
+                  {{scope.row.orderTypeName}}
                 </template>
               </el-table-column>
               <el-table-column label="发酵天数/天" :show-overflow-tooltip="true" width="100">
@@ -241,13 +246,19 @@ export default class Index extends Vue {
     }, 100)
   }
   deleteRow (id) {
-    Vue.prototype.$http(`${SQU_API.POT_APPLY_DEL_API}`, `POST`, [id]).then(({data}) => {
-      if (data.code === 0) {
-        this.$notify({title: '成功', message: '删除成功', type: 'success'})
-        this.getOrderList()
-      } else {
-        this.$notify.error({title: '错误', message: data.msg})
-      }
+    this.$confirm('确认要删除该数据吗?', '删除', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      Vue.prototype.$http(`${SQU_API.POT_APPLY_DEL_API}`, `POST`, [id]).then(({data}) => {
+        if (data.code === 0) {
+          this.$notify({title: '成功', message: '删除成功', type: 'success'})
+          this.getOrderList()
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
     })
   }
   changeOptions (flag: string) {
@@ -312,7 +323,7 @@ export default class Index extends Vue {
   }
   getOrderList () {
     if (this.params.factoryId === '') {
-      this.$notify.error({title: '错误', message: '请选择工厂'})
+      Vue.prototype.$warning_SHINHO('请选择工厂')
       return
     }
     // if (this.params.workshopId === '') {

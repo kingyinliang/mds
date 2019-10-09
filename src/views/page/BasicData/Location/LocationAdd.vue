@@ -160,7 +160,7 @@ export default {
     // 保存
     dataFormSubmit () {
       if (this.formatDate.materialCode && this.formatDate.materialCode.length !== 10) {
-        this.$notify.error({title: '错误', message: '物料编码为10位非必填'})
+        this.$warning_SHINHO('物料编码为10位非必填')
         return false
       }
       if (this.submitType) {
@@ -177,14 +177,7 @@ export default {
               if (data.code === 0) {
                 this.submitType = true
                 this.visible = false
-                this.$message({
-                  message: '操作成功',
-                  type: 'success'
-                  // duration: 1,
-                  // onClose: () => {
-                  //   this.$emit('refreshDataList')
-                  // }
-                })
+                this.$success_SHINHO('操作成功')
                 this.$emit('refreshDataList')
               } else {
                 this.submitType = true

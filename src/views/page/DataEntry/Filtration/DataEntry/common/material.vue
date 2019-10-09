@@ -20,9 +20,9 @@
           <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="操作时间" width="160" prop="changed" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="操作人" width="150" prop="changer" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column prop="orderStatus" width="50">
+          <el-table-column prop="orderStatus" width="70">
             <template slot-scope="scope">
-              <el-button type="danger" :disabled="!isRedact || scope.row.status === 'checked' || scope.row.status === 'submit'" icon="el-icon-delete" circle @click="DelRow(scope.row)" size="mini"></el-button>
+              <el-button class="delBtn" type="text" :disabled="!isRedact || scope.row.status === 'checked' || scope.row.status === 'submit'" icon="el-icon-delete" @click="DelRow(scope.row)" size="mini">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -34,11 +34,11 @@
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class='dialog__class' @keyup.enter.native="SaveDialog('receive')">
       <div slot="title" style="line-hight:59px">领用</div>
       <el-form :model="receive" size="small" label-width="160px" :rules="receiveRules" ref="receive">
-        <el-form-item label="半成品罐号" v-if="receive.id" prop="holderId">
+        <el-form-item label="半成品罐号：" v-if="receive.id" prop="holderId">
           <el-input v-model="receive.holderId" :disabled="true" style="display:none"></el-input>
           <el-select v-model="receive.holderName" :disabled="true" ref="mySelect"></el-select>
         </el-form-item>
-        <el-form-item label="半成品罐号" prop="holderId" v-else>
+        <el-form-item label="半成品罐号：" prop="holderId" v-else>
           <el-select v-model="receive.holderId" filterable ref="mySelect">
             <el-option v-for="(item, index) in holderList" :key="index" :value="item.holderId" :label="item.holderName"></el-option>
           </el-select>
@@ -53,15 +53,16 @@
           <el-input v-model="receive.receiveAmount" style="width:220px"></el-input>
         </el-form-item>
         <el-form-item label="单位：">
-          <el-input v-model="receive.unit" style="width:220px"></el-input>
+          <!--<el-input v-model="receive.unit" style="width:220px"></el-input>-->
+          {{receive.unit}}
         </el-form-item>
         <el-form-item label="备注：">
           <el-input v-model="receive.remark" style="width:220px"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="SaveDialog('receive')">确 定</el-button>
+        <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="SaveDialog('receive')" size="small">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -183,7 +184,7 @@ export default {
       })
       if (i === 0) {
         ty = false
-        this.$notify.error({title: '错误', message: '请录入物料领用数据'})
+        this.$warning_SHINHO('请录入物料领用数据')
         return false
       }
       return ty
@@ -219,7 +220,7 @@ export default {
         })
         if (total * 1000 > item.holderAmount) {
           ty = false
-          this.$notify.error({title: '错误', message: item.holderName + '罐领用数超过库存，请重新调整'})
+          this.$warning_SHINHO(item.holderName + '罐领用数超过库存，请重新调整')
           return false
         }
       }

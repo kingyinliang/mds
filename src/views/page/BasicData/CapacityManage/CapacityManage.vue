@@ -214,13 +214,13 @@ export default {
           this.$refs.capaaddupdate.init(this.deptId, data)
         })
       } else {
-        this.$notify.error({title: '错误', message: '请先选择部门'})
+        this.$warning_SHINHO('请先选择部门')
       }
     },
     // 删除
     remove () {
       if (this.multipleSelection.length === 0) {
-        this.$notify.error({title: '错误', message: '请选择要删除的产能'})
+        this.$warning_SHINHO('请选择要删除的产能')
       } else {
         this.$confirm('确认删除该物料产能, 是否继续?', '删除产能', {
           confirmButtonText: '确定',
@@ -229,10 +229,7 @@ export default {
         }).then(() => {
           this.$http(`${BASICDATA_API.CAPADEL_API}`, 'POST', this.multipleSelection).then(({data}) => {
             if (data.code === 0) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
+              this.$success_SHINHO('删除成功!')
               this.multipleSelection = []
               this.GetList()
             } else {
@@ -240,10 +237,6 @@ export default {
             }
           })
         }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
         })
       }
     },
