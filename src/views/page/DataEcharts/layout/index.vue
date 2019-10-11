@@ -14,7 +14,7 @@
       <sub-menu v-for="(page, index) in menuList.filter(it => it.type === '4')[0].list" :key="index" :page="page" v-if="!(/总览/g.test(page.name))"></sub-menu>
     </el-menu>
     <div class="DataEchartsContent">
-      <router-view/>
+      <router-view v-if="isRouterAlive"/>
     </div>
   </div>
 </template>
@@ -22,8 +22,14 @@
 <script>
 export default {
   name: 'index',
+  provide () {
+    return {
+      reload: this.reload
+    }
+  },
   data () {
     return {
+      isRouterAlive: true,
       factory: [],
       workshop: []
     }
@@ -44,6 +50,12 @@ export default {
       }
       // this.menuActiveName = 'home'
       // this.$router.push({ path: 'home' })
+    },
+    reload () {
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
+      })
     },
     // 路由操作
     routeHandle (route) {
@@ -87,7 +99,7 @@ export default {
   left: 0;
   top: 80px;
   background-color: rgba(255,255,255,0)!important;
-  max-height: 525px;
+  max-height: 80%;
   overflow-y: scroll;
   &::-webkit-scrollbar { width: 0 !important }
   -ms-overflow-style: none;
