@@ -16,9 +16,6 @@ export default {
     // 主入口标签页
     mainTabs: [],
     mainTabsActiveName: '',
-    // 看板
-    dataEchartDeptId: '',
-    dataEchartUid: '',
     // 包装车间
     Pkgfactoryid: '',
     PkgworkShop: '',
@@ -182,7 +179,7 @@ export default {
         currPage: 1,
         pageSize: 10,
         totalCount: 0,
-        isJudged: 0
+        isJudged: '1'
       },
       instock: {}
     },
