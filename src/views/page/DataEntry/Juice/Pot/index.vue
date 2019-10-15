@@ -97,7 +97,7 @@
             <div class="dataList_item_pot_box">
               <div class="dataList_item_pot_box1">
                 <div class="dataList_item_pot_box_item1" :style="`height:${item.AMOUNT? (item.AMOUNT*1000 / item.HOLDER_HOLD) * 100 : 0}%`" v-if="item.HOLDER_STATUS !== '6'"></div>
-                <div class="dataList_item_pot_box_detail" v-if="item.HOLDER_STATUS !== '6'">
+                <div class="dataList_item_pot_box_detail" v-if="item.HOLDER_STATUS !== '6' && item.HOLDER_STATUS !== '10'">
                   <p>{{item.BATCH}}</p>
                   <p v-if="item.IS_F === '2'">JBS</p>
                   <p>{{item.TYPE}}</p>
@@ -147,8 +147,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-radio v-model="formTransfer.isFo" label="1">F0标识</el-radio>
-          <el-radio v-model="formTransfer.isFo" label="2">原汁JBS</el-radio>
+          <el-radio v-model="formTransfer.isF" label="1">F0标识</el-radio>
+          <el-radio v-model="formTransfer.isF" label="2">原汁JBS</el-radio>
         </el-form-item>
         <el-form-item label="打入罐号：" prop="inHolderId">
           <el-select v-model="formTransfer.inHolderId">
@@ -704,7 +704,7 @@ export default {
               batch: item.BATCH,
               amount: '',
               unit: 'L',
-              isF: '',
+              isF: '0',
               inHolderType: '',
               inHolderId: '',
               inBatch: '',
@@ -807,7 +807,8 @@ export default {
         this.dialogData = {
           HOLDER_NAME: item.HOLDER_NAME,
           holderId: item.HOLDER_ID,
-          remark: ''
+          remark: '',
+          holderType: item.HOLDER_TYPE
         }
         this.visible = true
       } else {
@@ -819,6 +820,7 @@ export default {
         if (data.code === 0) {
           this.$notify({title: '成功', message: '清洗成功', type: 'success'})
           this.GetDataList(true)
+          this.visible = false
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -1102,7 +1104,8 @@ export default {
         &_item2s,&_item1{
           height: 50px;
           background: #69C0FF;
-          position: relative;
+          position: absolute;
+          bottom: 0;
           overflow: hidden;
           &::before,&::after{
             content: "";

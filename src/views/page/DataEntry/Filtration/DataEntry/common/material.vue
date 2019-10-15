@@ -191,6 +191,7 @@ export default {
     },
     ReadyRepertoryRules () {
       let ty = true
+      this.repertory = []
       this.dataList.map((item) => {
         // 领用数 库存比较
         if (!this.repertory.find(items => items.holderId === item.holderId)) {
@@ -198,12 +199,13 @@ export default {
           if (this.holderList.find((itemss) => itemss.holderId === item.holderId)) {
             soleAmount = this.holderList.find((itemss) => itemss.holderId === item.holderId).amount
           } else {
-            this.dataAList.map(itema => {
-              if (itema.delFlag === '0' && itema.holderId === item.holderId) {
-                soleAmount = Number(soleAmount) + (Number(itema.receiveAmount) * 1000)
-              }
-            })
+            soleAmount = 0
           }
+          this.dataAList.map(itema => {
+            if (itema.delFlag === '0' && itema.holderId === item.holderId) {
+              soleAmount = Number(soleAmount) + (Number(itema.receiveAmount) * 1000)
+            }
+          })
           this.repertory.push({
             holderId: item.holderId,
             holderName: item.holderName,
@@ -214,7 +216,7 @@ export default {
       for (let item of this.repertory) {
         let total = 0
         this.dataList.map((items) => {
-          if (item.holderId === items.holderId) {
+          if (item.holderId === items.holderId && items.delFlag === '0') {
             total = Number(total) + Number(items.receiveAmount)
           }
         })
