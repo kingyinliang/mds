@@ -93,12 +93,12 @@ export default (url, method = HTTP_METHOD.GET, data = {}, ContentType = false, r
       router.push({path: '/login'})
     }
     if (response.data && response.data.code === 500) {
-      Vue.prototype.$log.writeErrorLog(new Error(`接口错误：${url}`), `msg:${response.data.msg},data: ${JSON.stringify(data)}`)
+      // Vue.prototype.$log.writeErrorLog(new Error(`接口错误：${url}`), `msg:${response.data.msg},data: ${JSON.stringify(data)}`)
     }
     tryHideFullScreenLoading()// 关闭遮罩
     return response
   }, error => {
-    Vue.prototype.$log.writeErrorLog(new Error(`网络请求失败，接口：${url}`), `${error}`)
+    // Vue.prototype.$log.writeErrorLog(new Error(`网络请求失败，接口：${url}`), `${error}`)
     ElementUI.Notification({ title: '错误', message: '网络请求失败，请刷新重试', type: 'error' })
     endLoading() // 关闭遮罩
     return Promise.reject(error)
