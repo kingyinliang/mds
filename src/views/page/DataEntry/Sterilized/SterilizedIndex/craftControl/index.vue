@@ -25,7 +25,8 @@
           工艺控制
         </span>
         <el-form :inline="true" size="small" :model="crafData" :rules="dataRule" ref="dataForm" class="topform">
-          <el-form-item label="原汁换热介质：" prop="hotMedium" label-width="120px">
+          <!--<el-form-item label="原汁换热介质：" prop="hotMedium" label-width="120px">-->
+          <el-form-item label="原汁换热介质：" label-width="120px">
             <el-checkbox-group v-model="crafData.hotMedium" :disabled="!isRedact" style="width: 170px">
               <el-checkbox label="热水" name="type"></el-checkbox>
               <el-checkbox label="酱油" name="type"></el-checkbox>
@@ -145,9 +146,9 @@ export default {
       },
       DataAudit: [],
       dataRule: {
-        hotMedium: [
-          { required: true, message: '原汁换热介质不能为空', trigger: 'blur' }
-        ],
+        // hotMedium: [
+        //   { required: true, message: '原汁换热介质不能为空', trigger: 'blur' }
+        // ],
         originalTemp: [
           { required: true, message: '原汁入锅温度不能为空', trigger: 'blur' }
         ],
@@ -274,9 +275,6 @@ export default {
             }
           }
         })
-      } else {
-        ty = false
-        this.$warning_SHINHO('原汁换热介质必填')
       }
       this.crafData.result.forEach((item) => {
         if (!item.temp) {
@@ -332,8 +330,13 @@ export default {
             this.Stesave.orderUpdate(this, 'techStatus', str, resolve, reject)
           })
           net0.then(() => {
-            this.$notify({title: '成功', message: '提交成功', type: 'success'})
-            this.GetOrderHead()
+            let net99 = new Promise((resolve, reject) => {
+              this.GetSubmit(str, resolve, reject)
+            })
+            net99.then(() => {
+              this.$notify({title: '成功', message: '提交成功', type: 'success'})
+              this.GetOrderHead()
+            })
           }).catch((err) => {
             this.$notify.error({title: '错误', message: err})
           })
@@ -356,6 +359,20 @@ export default {
           this.$notify.error({title: '错误', message: err})
         })
       }
+    },
+    GetSubmit (str, resolve, reject) {
+      this.crafData.orderId = this.formHeader.orderId
+      this.$http(`${STERILIZED_API.CRAFTCONTROLSUBMIT}`, 'POST', this.crafData).then(({data}) => {
+        if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
+        } else {
+          if (reject) {
+            reject('工艺保存' + data.msg)
+          }
+        }
+      })
     },
     // 获取订单表头
     GetOrderHead () {
