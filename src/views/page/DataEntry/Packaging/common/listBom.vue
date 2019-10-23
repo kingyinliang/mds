@@ -351,7 +351,12 @@ export default {
         if (this.order.properties !== '二合一&礼盒产线') {
           for (var itema of this.listbomS) {
             if (itema.delFlag !== '1') {
-              if (itema.potNo && itema.filterDate && itema.productUseNum && itema.batch && itema.useUsage) {
+              if (itema.potNo && itema.filterDate && itema.productUseNum && itema.batch) {
+                if (!itema.useUsage && this.order.factoryCode !== '6010') {
+                  ty = false
+                  this.$warning_SHINHO('物料半成品必填项未填')
+                  return false
+                }
               } else {
                 ty = false
                 this.$warning_SHINHO('物料半成品必填项未填')
@@ -378,7 +383,12 @@ export default {
       if (this.order.properties !== '二合一&礼盒产线') {
         for (var itema of this.listbomS) {
           if (itema.delFlag !== '1') {
-            if (itema.potNo && itema.filterDate && itema.productUseNum && itema.batch && itema.useUsage) {
+            if (itema.potNo && itema.filterDate && itema.productUseNum && itema.batch) {
+              if (!itema.useUsage && this.order.factoryCode !== '6010') {
+                ty = false
+                this.$warning_SHINHO('物料半成品必填项未填')
+                return false
+              }
             } else {
               ty = false
               this.$warning_SHINHO('物料半成品必填项未填')
