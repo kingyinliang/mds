@@ -168,9 +168,10 @@
     </el-dialog>
     <el-dialog :visible.sync="RecordDialogTableVisible" width="400px" custom-class='dialog__class'>
       <div slot="title" style="line-hight:59px">记录</div>
-      <el-form :model="record" size="small" label-width="130px" :rules="recordrules" ref="record">
-        <el-form-item label="搅罐时间：" prop="stirringTime">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>
+      <el-form :model="record" size="small" label-width="140px" :rules="recordrules" ref="record">
+        <el-form-item label="搅罐时间（min）：" prop="stirringTime">
+          <el-input v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
+          <!--<el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>-->
         </el-form-item>
         <el-form-item label="送样时间：" prop="sampleTime">
           <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.sampleTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>
@@ -237,7 +238,7 @@ export default {
       RecordDialogTableVisible: false,
       recordrules: {
         stirringTime: [
-          { required: true, message: '请选择搅罐时间', trigger: 'blur' }
+          { required: true, message: '请输入搅罐时间', trigger: 'blur' }
         ],
         sampleTime: [
           { required: true, message: '请选择送样时间', trigger: 'blur' }
