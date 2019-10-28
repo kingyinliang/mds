@@ -8,6 +8,7 @@ const HappyPack = require('happypack');
 const os = require('os'); // node 提供的系统操作模块
 // 根据我的系统的内核数量 指定线程池个数 也可以其他数量
 const happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length})
+// const manifest = require('../vendor-manifest.json')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -121,6 +122,10 @@ module.exports = {
     child_process: 'empty'
   },
   plugins: [
+    // new webpack.DllReferencePlugin({
+    //   context: __dirname,
+    //   manifest
+    // }),
     new HappyPack({ // 基础参数设置
       id: 'babel', // 上面loader?后面指定的id
       loaders: ['babel-loader?cacheDirectory'], // 实际匹配处理的loader
