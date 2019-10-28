@@ -24,6 +24,7 @@
         <span class="iconfont">&#xe606;</span> 看曲记录<el-button type="text" class="readyshiftBtn" name="lookar" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
       </div>
       <div class="lookarBox">
+        <look-echarts ref="LookEcharts" :formHeader="formHeader"></look-echarts>
         <!-- <iframe src="#/lookEcharts" style="width:100%; height:460px" name="iframe_a" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe> -->
         <!-- <iframe src="https://search-iot-m4krkhtzni6xjktkbymymhix5a.cn-north-1.es.amazonaws.com.cn/_plugin/kibana/app/kibana#/visualize/edit/e6382af0-adb4-11e9-8b6e-1f733cf01d7e?embed=true&_g=(refreshInterval%3A(pause%3A!f%2Cvalue%3A10000)%2Ctime%3A(from%3A'2019-07-23T14%3A52%3A42.616Z'%2Cmode%3Aabsolute%2Cto%3A'2019-07-26T14%3A12%3A20.186Z'))" style="width:100%;height:600px" name="iframe_a" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe> -->
         <el-row style="line-height: 32px; margin-bottom:10px">
@@ -69,23 +70,23 @@
               <el-input v-model="scope.row.productTemp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
             </template>
           </el-table-column>
-          <el-table-column width="100">
+          <el-table-column width="130">
             <template slot="header">
               <i class="reqI">*</i>
-              <span>风机风速</span>
+              <span>风速（R/HZ）</span>
             </template>
             <template slot-scope="scope">
               <el-input v-model="scope.row.windSpeed" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
             </template>
           </el-table-column>
-          <el-table-column width="120" label="单位">
+          <!-- <el-table-column width="120" label="单位">
             <template slot-scope="scope">
               <el-select v-model="scope.row.unit" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">
                 <el-option label="R/MIN" value="R/MIN"></el-option>
                 <el-option label="HZ" value="HZ"></el-option>
               </el-select>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column width="100">
             <template slot="header">
               <i class="reqI">*</i>
@@ -142,14 +143,14 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="品温探头温度">
+          <el-table-column label="外品温探头温度">
             <el-table-column label="">
-            <template slot="header">
-              <i class="reqI">*</i>
-              <span>上</span>
-            </template>
+              <template slot="header">
+                <i class="reqI">*</i>
+                <span>上</span>
+              </template>
               <template slot-scope="scope">
-                <el-input v-model="scope.row.productTempUp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                <el-input v-model="scope.row.productTempOutsideUp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="">
@@ -158,12 +159,38 @@
                 <span>中</span>
               </template>
               <template slot-scope="scope">
-                <el-input v-model="scope.row.productTempMid" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                <el-input v-model="scope.row.productTempOutsideMid" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="">
               <template slot="header">
                 <i class="reqI">*</i>
+                <span>下</span>
+              </template>
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.productTempOutsideDown" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+              </template>
+            </el-table-column>
+          </el-table-column>
+          <el-table-column label="内品温探头温度">
+            <el-table-column label="">
+              <template slot="header">
+                <span>上</span>
+              </template>
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.productTempUp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="">
+              <template slot="header">
+                <span>中</span>
+              </template>
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.productTempMid" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="">
+              <template slot="header">
                 <span>下</span>
               </template>
               <template slot-scope="scope">
@@ -197,9 +224,9 @@
             </template>
           </el-table-column>
           <el-table-column label="操作人" prop="changer" width="150px"></el-table-column>
-          <el-table-column width=50 fixed="right">
+          <el-table-column width=70 fixed="right">
             <template slot-scope="scope">
-              <el-button type="danger" icon="el-icon-delete" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" circle size="small" @click="delrow(scope.row)"></el-button>
+              <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small" @click="delrow(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -295,6 +322,7 @@
 <script>
 import { Readyanimation } from '@/net/validate'
 import { SYSTEMSETUP_API, KJM_API } from '@/api/api'
+import LookEcharts from '@/views/components/lookEcharts'
 export default {
   name: 'craft',
   data () {
@@ -371,7 +399,7 @@ export default {
         if (data.code === 0) {
           this.userList = data.page.list
         } else {
-          this.$message.error(data.msg)
+          this.$notify.error({title: '错误', message: data.msg})
         }
       })
     },
@@ -379,53 +407,53 @@ export default {
       let ty = true
       if (!this.tech.inCheck || this.tech.inCheck === '') {
         ty = false
-        this.$message.error('入曲检查必填')
+        this.$warning_SHINHO('入曲检查必填')
         return false
       }
       if (!this.tech.inCheckMan || this.tech.inCheckMan === '') {
         ty = false
-        this.$message.error('检查人必填')
+        this.$warning_SHINHO('检查人必填')
         return false
       }
       if (!this.tech.inStartTime || this.tech.inStartTime === '') {
         ty = false
-        this.$message.error('入曲开始时间为必填')
+        this.$warning_SHINHO('入曲开始时间为必填')
         return false
       }
       if (!this.tech.inEndTime || this.tech.inEndTime === '') {
         ty = false
-        this.$message.error('入曲结束时间为必填')
+        this.$warning_SHINHO('入曲结束时间为必填')
         return false
       }
       if (this.lookList.length === 0) {
         ty = false
-        this.$message.error('看曲记录未填')
+        this.$warning_SHINHO('看曲记录未填')
         return false
       }
       for (let items of this.lookList) {
         if (items.delFlag === '0') {
-          if (items.guardTime === '' || items.windTemp === '' || items.productTemp === '' || items.windSpeed === '' || items.windInFlag === '' || items.forceOutFlag === '' || items.jiashiFlag === '' || items.jiareFlag === '' || items.productTempUp === '' || items.productTempMid === '' || items.productTempDown === '' || items.thermometerOut === '' || items.thermometerInner === '') {
-          // if (!items.guardTime || items.guardTime === '' || !items.guardTime || items.guardTime === '' || !items.windTemp || items.windTemp === '' || !items.productTemp || items.productTemp === '' || !items.windSpeed || items.windSpeed === '' || !items.windInFlag || items.windInFlag === '' || !items.forceOutFlag || items.forceOutFlag === '' || !items.jiashiFlag || items.jiashiFlag === '' || !items.jiareFlag || items.jiareFlag === '' || !items.productTempUp || items.productTempUp === '' || !items.productTempMid || items.productTempMid === '' || !items.productTempDown || items.productTempDown === '' || !items.thermometerOut || items.thermometerOut === '' || !items.thermometerInner || items.thermometerInner === '') {
+          if (items.guardTime === '' || items.windTemp === '' || items.productTemp === '' || items.windSpeed === '' || items.windInFlag === '' || items.forceOutFlag === '' || items.jiashiFlag === '' || items.jiareFlag === '' || items.productTempOutsideUp === '' || items.productTempOutsideMid === '' || items.productTempOutsideDown === '' || items.thermometerOut === '' || items.thermometerInner === '' || items.productTempOutsideUp === '' || items.productTempOutsideMid === '' || items.productTempOutsideDown === '') {
+            // if (!items.guardTime || items.guardTime === '' || !items.guardTime || items.guardTime === '' || !items.windTemp || items.windTemp === '' || !items.productTemp || items.productTemp === '' || !items.windSpeed || items.windSpeed === '' || !items.windInFlag || items.windInFlag === '' || !items.forceOutFlag || items.forceOutFlag === '' || !items.jiashiFlag || items.jiashiFlag === '' || !items.jiareFlag || items.jiareFlag === '' || !items.productTempUp || items.productTempUp === '' || !items.productTempMid || items.productTempMid === '' || !items.productTempDown || items.productTempDown === '' || !items.thermometerOut || items.thermometerOut === '' || !items.thermometerInner || items.thermometerInner === '') {
             ty = false
-            this.$message.error('看曲记录必填项未填')
+            this.$warning_SHINHO('看曲记录必填项未填')
             return false
           }
         }
       }
       if (!this.tech.overStartWeight || !this.tech.overEndWeight || !this.tech.outStartWeight || !this.tech.outEndWeight || this.tech.overStartWeight === '' || this.tech.overEndWeight === '' || this.tech.outStartWeight === '' || this.tech.outEndWeight === '') {
         ty = false
-        this.$message.error('加水量记录全必填')
+        this.$warning_SHINHO('加水量记录全必填')
         return false
       }
       if (this.tech.overWeight < 0 || this.tech.outWeight < 0) {
         ty = false
-        this.$message.error('加水量不能为负数')
+        this.$warning_SHINHO('加水量不能为负数')
         return false
       }
       this.assessList.map((item) => {
         if (item.codeU === undefined || item.codeS === undefined || item.codeA === undefined) {
           ty = false
-          this.$message.error('感官评价记录必须全选')
+          this.$warning_SHINHO('感官评价记录必须全选')
           return false
         }
       })
@@ -458,7 +486,13 @@ export default {
       })
     },
     delrow (row) {
-      row.delFlag = '1'
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        row.delFlag = '1'
+      })
     },
     rowDelFlag ({row, rowIndex}) {
       if (row.delFlag === '1') {
@@ -474,7 +508,7 @@ export default {
       this.$http(`${KJM_API.DOULOOKSTATUS_API}`, 'POST', {status: this.statuss, orderHouseId: this.formHeader.orderHouseId}).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$message.error(data.msg)
+          this.$notify.error({title: '错误', message: data.msg})
         }
         if (resolve) {
           resolve('resolve')
@@ -495,7 +529,7 @@ export default {
       this.$http(`${KJM_API.DOULOOKZHUSAVE_API}`, 'POST', this.tech).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$message.error(data.msg)
+          this.$notify.error({title: '错误', message: data.msg})
         }
         if (resolve) {
           resolve('resolve')
@@ -510,7 +544,7 @@ export default {
       this.$http(`${KJM_API.DOULOOKKANQUSAVE_API}`, 'POST', this.lookList).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$message.error(data.msg)
+          this.$notify.error({title: '错误', message: data.msg})
         }
         if (resolve) {
           resolve('resolve')
@@ -537,7 +571,7 @@ export default {
       this.$http(`${KJM_API.DOULOOKGANGUANSAVE_API}`, 'POST', this.assessList).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$message.error(data.msg)
+          this.$notify.error({title: '错误', message: data.msg})
         }
         if (resolve) {
           resolve('resolve')
@@ -555,10 +589,10 @@ export default {
           this.assessList = data.feelList
           this.lookList = data.recordList
         } else {
-          this.$message.error(data.msg)
+          this.$notify.error({title: '错误', message: data.msg})
         }
       }).catch((error) => {
-        this.$message.error(error)
+        this.$notify.error({title: '错误', message: error})
       }).finally(() => {
         this.$emit('setApplyCraftState', this.tech.status)
       })
@@ -582,46 +616,47 @@ export default {
   components: {
     AbnRecord: resolve => {
       require(['@/views/components/abnRecord'], resolve)
-    }
+    },
+    LookEcharts
   }
 }
 </script>
 
 <style>
-.guard-form-input .el-input__inner {
-  border: 0 none;
-  border-bottom: 1px solid #ccc;
-  border-radius: 0px;
-  text-align: center
-}
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-input[type="number"]{
-  -moz-appearance: textfield;
-}
+  .guard-form-input .el-input__inner {
+    border: 0 none;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0px;
+    text-align: center
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+  input[type="number"]{
+    -moz-appearance: textfield;
+  }
 </style>
 <style lang="less" scoped>
-.rowDel{
-  display: none;
-}
-.htitle {
-  margin: 0 0 10px 0;
-  overflow: hidden;
-}
-.audit{
-  line-height: 32px;
-  margin: 0 0 10px 0;
-  i{
-    font-size: 22px;
-    float: left;
+  .rowDel{
+    display: none;
   }
-  span{
-    font-size: 16px;
+  .htitle {
+    margin: 0 0 10px 0;
+    overflow: hidden;
   }
-}
-.reqI{
-  color: red;
-}
+  .audit{
+    line-height: 32px;
+    margin: 0 0 10px 0;
+    i{
+      font-size: 22px;
+      float: left;
+    }
+    span{
+      font-size: 16px;
+    }
+  }
+  .reqI{
+    color: red;
+  }
 </style>
