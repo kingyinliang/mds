@@ -94,9 +94,14 @@
                     {{scope.row.ferDays}}
                   </template>
                 </el-table-column>
-                <el-table-column label="修改后结束日期" >
+                <el-table-column label="修改后结束日期" width="120">
                   <template slot-scope="scope">
                     {{scope.row.endDate}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="接口返回" width="100px" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    {{scope.row.sapContent}}
                   </template>
                 </el-table-column>
               </el-table>
