@@ -7,6 +7,7 @@
 <script>
 import echarts from 'echarts'
 import { KJM_API } from '@/api/api'
+import {ReadyanimationLookNone} from '@/net/validate'
 // import { dateFormat } from '@/net/validate'
 export default {
   data () {
@@ -75,6 +76,7 @@ export default {
           this.$notify.error({title: '错误', message: data.msg})
         }
       })
+      ReadyanimationLookNone(this.$)
     },
     test () {
       console.log('3')
@@ -163,7 +165,7 @@ export default {
         },
         'toolbox': {
           'feature': {
-            'saveAsImage': { }
+            // 'saveAsImage': { }
           }
         },
         'xAxis': {

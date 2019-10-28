@@ -56,7 +56,7 @@
               </el-col>
             </el-row>
             <el-row>
-              <el-table header-row-class-name="tableHead" @selection-change="handleSelectionChange" :data="dataList" border tooltip-effect="dark" >
+              <el-table ref='multipleTables' header-row-class-name="tableHead" @selection-change="handleSelectionChange" :data="dataList" border tooltip-effect="dark" >
                 <el-table-column type="selection" width="40"></el-table-column>
                 <el-table-column label="罐号" width="55" prop="holderNo"></el-table-column>
                 <el-table-column label="订单号" :show-overflow-tooltip="true">
@@ -212,6 +212,15 @@ export default {
     },
     'form.workShop' (n, o) {
       this.GetPotList(n)
+    },
+    'dataList' (n, o) {
+      this.$nextTick(function () {
+        this.dataList.forEach((ele, indexItem) => {
+          if (ele.judgeDays !== null && Number(ele.judgeDays) <= 130) {
+            this.$refs.multipleTables.toggleRowSelection(ele)
+          }
+        })
+      })
     }
   },
   methods: {

@@ -92,10 +92,12 @@
             </el-card>
             <el-card>
               <div class="htitle">
-                <span class="iconfont">&#xe606;</span> 看曲记录<el-button type="text" class="readyshiftBtn" name="lookar" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
+                <span class="iconfont">&#xe606;</span> 看曲记录<el-button type="text" class="readyshiftBtn" id="test1" style="margin-left: 30px">展开<i class="el-icon-caret-bottom"></i></el-button>
               </div>
-              <div class="lookarBox">
-                <look-echarts ref="LookEcharts"></look-echarts>
+              <div>
+                <div id="test1Content">
+                  <look-echarts ref="LookEcharts"></look-echarts>
+                </div>
                 <!-- <iframe src="#/lookEcharts" style="width:100%; height:460px" name="iframe_a" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe> -->
                 <!-- <iframe src="https://search-iot-m4krkhtzni6xjktkbymymhix5a.cn-north-1.es.amazonaws.com.cn/_plugin/kibana/app/kibana#/visualize/edit/e6382af0-adb4-11e9-8b6e-1f733cf01d7e?embed=true&_g=(refreshInterval%3A(pause%3A!f%2Cvalue%3A10000)%2Ctime%3A(from%3A'2019-07-23T14%3A52%3A42.616Z'%2Cmode%3Aabsolute%2Cto%3A'2019-07-26T14%3A12%3A20.186Z'))" style="width:100%;height:600px" name="iframe_a" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe> -->
                 <el-row style="line-height: 32px; margin-bottom:10px">
@@ -396,7 +398,7 @@
 
 <script>
 import {KJM_API, SYSTEMSETUP_API} from '@/api/api'
-import {headanimation, Readyanimation} from '@/net/validate'
+import {headanimation, Readyanimation, ReadyanimationLook} from '@/net/validate'
 import ExcRecord from '@/views/components/excRecord'
 import TextRecord from '@/views/components/textRecord'
 import LookEcharts from '@/views/components/lookEcharts'
@@ -474,6 +476,7 @@ export default {
   mounted () {
     headanimation(this.$)
     Readyanimation(this.$)
+    ReadyanimationLook(this.$)
     this.$nextTick(function () {
       if (this.omg === 0) {
         this.GetheadList()
@@ -486,7 +489,6 @@ export default {
     },
     GetheadList () {
       this.omg = 1
-      console.log('abc')
       this.$http(`${KJM_API.DOUHEAERLIST}`, `POST`, {orderHouseId: this.$store.state.common.ZQWorkshop.params.lookOrderHouseId, deptName: '看曲'}, false, false, false).then((res) => {
         if (res.data.code === 0) {
           this.formHeader = res.data.headList[0]
