@@ -121,11 +121,14 @@
         </el-table-column>
         <el-table-column label="罐号" prop="productDate" width="150" >
           <template slot-scope="scope">
+            <el-input v-model="scope.row.holderName" size="small" disabled></el-input>
+          </template>
+          <!-- <template slot-scope="scope">
             <el-select v-model="scope.row.holderId" size="small" @change="changeH(scope.row)" disabled>
               <el-option value=''>请选择</el-option>
               <el-option v-for="(item, index) in thrwHolderList" :key="index" :label="item.holderName" :value="item.holderId"></el-option>
             </el-select>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column label="类别" :show-overflow-tooltip="true" width="80" >
           <template slot-scope="scope">

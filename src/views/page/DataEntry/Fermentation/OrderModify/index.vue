@@ -33,7 +33,7 @@
                 - <el-date-picker type="date" v-model="form.endDate" value-format="yyyy-MM-dd" style="width:140px"></el-date-picker>
               </el-form-item>
               <el-form-item class="floatr">
-                <el-button type="primary" size="small" @click="GetList(true)" style="float: right" v-if="isAuth('fer:order:list')">查询</el-button>
+                <el-button type="primary" size="small" @click="GetList(true)" style="float: right" v-if="isAuth('fer:judge:isSapList')">查询</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -52,7 +52,7 @@
           <el-tab-pane name="0" label="未修改">
             <el-row>
               <el-col>
-                <el-button type='primary' size='small' style='float:right; margin-bottom:10px;' @click="ModifyOrder()" v-if="isAuth('fer:order:applyFerOrder')">订单修改</el-button>
+                <el-button type='primary' size='small' style='float:right; margin-bottom:10px;' @click="ModifyOrder()" v-if="isAuth('fer:judge:isSapUpdate')">订单修改</el-button>
               </el-col>
             </el-row>
             <el-row>
@@ -94,9 +94,14 @@
                     {{scope.row.ferDays}}
                   </template>
                 </el-table-column>
-                <el-table-column label="修改后结束日期" >
+                <el-table-column label="修改后结束日期" width="120">
                   <template slot-scope="scope">
                     {{scope.row.endDate}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="接口返回" width="100px" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    {{scope.row.sapContent}}
                   </template>
                 </el-table-column>
               </el-table>
@@ -292,6 +297,10 @@ export default {
       this.multipleSelection = val
     },
     ModifyOrder () {
+      if (this.multipleSelection.length === 0) {
+        this.$warning_SHINHO('请先勾选数据')
+        return false
+      }
       this.$http(`${FERMENTATION_API.ORDER_MODIFY_CHANGE_API}`, 'POST', this.multipleSelection).then(({data}) => {
         if (data.code === 0) {
           this.$success_SHINHO('修改成功')
