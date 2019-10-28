@@ -66,11 +66,11 @@
                   {{scope.row.productLineName}}
                 </template>
               </el-table-column>
-              <!-- <el-table-column fixed label="班次"  :show-overflow-tooltip="true" width="60">
+              <el-table-column fixed label="班次"  :show-overflow-tooltip="true" width="60">
                 <template slot-scope="scope">
                   {{scope.row.className}}
                 </template>
-              </el-table-column> -->
+              </el-table-column>
               <el-table-column fixed label="品项"  width="150"  :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                   {{scope.row.materialName}}
@@ -151,9 +151,9 @@
                   {{scope.row.allBad}}
                 </template>
               </el-table-column>
-              <el-table-column label="标准产能(件/h)" :show-overflow-tooltip="true" width="130">
+              <el-table-column label="有效产能(件/h)" :show-overflow-tooltip="true" width="130">
                 <template slot-scope="scope">
-                  {{scope.row.basicCapacity}}
+                  {{scope.row.effecCapacity}}
                 </template>
               </el-table-column>
               <el-table-column label="产出时间(h)" :show-overflow-tooltip="true" width="100">
@@ -263,9 +263,9 @@
                   {{scope.row.allBad}}
                 </template>
               </el-table-column>
-              <el-table-column label="标准产能(件/h)" :show-overflow-tooltip="true" width="130">
+              <el-table-column label="有效产能(件/h)" :show-overflow-tooltip="true" width="130">
                 <template slot-scope="scope">
-                  {{scope.row.basicCapacity}}
+                  {{scope.row.effecCapacity}}
                 </template>
               </el-table-column>
               <el-table-column label="标配人力数量(人/线)" :show-overflow-tooltip="true" width="130">

@@ -259,6 +259,7 @@
 </template>
 
 <script lang="ts">
+import ElementUI from 'element-ui'
 import {BASICDATA_API, FERMENTATION_API, SYSTEMSETUP_API, REP_API} from '@/api/api'
 import {Vue, Component, Watch} from 'vue-property-decorator'
 import {headanimation} from '@/net/validate'
@@ -287,7 +288,7 @@ export default class Index extends Vue {
   ExportTime = 0
   activeName = '1'
   searched: boolean = false
-  lodingS: boolean = false
+  lodingS
   mounted () {
     headanimation(Vue.prototype.$)
     // const now = dateFormat(new Date(), 'yyyy-MM-dd')
@@ -507,18 +508,24 @@ export default class Index extends Vue {
       Vue.prototype.$warning_SHINHO('请选择要申请的订单')
       return
     }
-    for (let item of this.selectedList) {
-      if (item.kjmAmount <= 0) {
-        Vue.prototype.$warning_SHINHO(item.holdName + ' 订单量需大于0')
-        return false
-      }
-    }
+    // for (let item of this.selectedList) {
+    //   if (item.kjmAmount <= 0) {
+    //     Vue.prototype.$warning_SHINHO(item.holdName + ' 订单量需大于0')
+    //     return false
+    //   }
+    // }
     this.$confirm('确认申请订单，是否继续?', '申请确认', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     }).then(() => {
-      this.lodingS = true
+      // this.lodingS = true
+      this.lodingS = ElementUI.Loading.service({
+        lock: true,
+        spinner: 'loadingGif',
+        text: '加载中……',
+        background: 'rgba(255, 255, 255, 0.7)'
+      })
       Vue.prototype.$http(`${FERMENTATION_API.ORDER_APPLY_API}`, `POST`, this.selectedList).then((res) => {
         if (res.data.code === 0) {
           // this.getOrderList()
@@ -526,7 +533,7 @@ export default class Index extends Vue {
             this.getStatus()
           }, 4000)
         } else {
-          this.lodingS = false
+          this.lodingS.close()
           this.$notify.error({title: '错误', message: res.data.msg})
         }
       })
@@ -537,23 +544,23 @@ export default class Index extends Vue {
       if (data.code === 0) {
         if (data.asyncRecord) {
           if (data.asyncRecord.asyncStatus === '0') {
-            this.lodingS = false
+            this.lodingS.close()
             clearInterval(this.ExportTime)
             this.$notify.error({title: '错误', message: data.asyncRecord.remark})
           } else if (data.asyncRecord.asyncStatus === '1') {
-            this.lodingS = false
+            this.lodingS.close()
             clearInterval(this.ExportTime)
             this.getOrderList()
             this.$notify({title: '成功', message: '申请成功', type: 'success'})
           }
         }
       } else {
-        this.lodingS = false
+        this.lodingS.close()
         clearInterval(this.ExportTime)
         this.$notify.error({title: '错误', message: data.msg})
       }
     }).catch(() => {
-      this.lodingS = false
+      this.lodingS.close()
       clearInterval(this.ExportTime)
     })
   }

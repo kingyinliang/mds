@@ -262,6 +262,14 @@ export function Readyanimation ($) {
     }
   })
 }
+export function ReadyanimationLook ($) {
+  $('#test1').click(function () {
+    $('#test1Content').toggle()
+  })
+}
+export function ReadyanimationLookNone ($) {
+  $('#test1Content').hide()
+}
 // 数据处理
 export function orderList (data) {
   let result = []

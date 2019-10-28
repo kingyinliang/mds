@@ -121,11 +121,14 @@
         </el-table-column>
         <el-table-column label="罐号" prop="productDate" width="150" >
           <template slot-scope="scope">
+            <el-input v-model="scope.row.holderName" size="small" disabled></el-input>
+          </template>
+          <!-- <template slot-scope="scope">
             <el-select v-model="scope.row.holderId" size="small" @change="changeH(scope.row)" disabled>
               <el-option value=''>请选择</el-option>
               <el-option v-for="(item, index) in thrwHolderList" :key="index" :label="item.holderName" :value="item.holderId"></el-option>
             </el-select>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column label="类别" :show-overflow-tooltip="true" width="80" >
           <template slot-scope="scope">
@@ -168,9 +171,10 @@
     </el-dialog>
     <el-dialog :visible.sync="RecordDialogTableVisible" width="400px" custom-class='dialog__class'>
       <div slot="title" style="line-hight:59px">记录</div>
-      <el-form :model="record" size="small" label-width="130px" :rules="recordrules" ref="record">
-        <el-form-item label="搅罐时间：" prop="stirringTime">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>
+      <el-form :model="record" size="small" label-width="140px" :rules="recordrules" ref="record">
+        <el-form-item label="搅罐时间（min）：" prop="stirringTime">
+          <el-input v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
+          <!--<el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>-->
         </el-form-item>
         <el-form-item label="送样时间：" prop="sampleTime">
           <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.sampleTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>
@@ -237,7 +241,7 @@ export default {
       RecordDialogTableVisible: false,
       recordrules: {
         stirringTime: [
-          { required: true, message: '请选择搅罐时间', trigger: 'blur' }
+          { required: true, message: '请输入搅罐时间', trigger: 'blur' }
         ],
         sampleTime: [
           { required: true, message: '请选择送样时间', trigger: 'blur' }
@@ -304,8 +308,20 @@ export default {
         if (this.thrwHolderList.filter(item => item.holderId === row.holderId).length > 0) {
           row.category = this.thrwHolderList.filter(item => item.holderId === row.holderId)[0].type
         } else {
-          this.$warning_SHINHO('BOM物料对应批次所需的原汁罐号不存在')
+          // this.$warning_SHINHO('BOM物料对应批次所需的原汁罐号不存在')
         }
+      }
+    },
+    CheckMessage () {
+      let tys = 0
+      for (let items of this.ItemList) {
+        if (this.thrwHolderList.filter(item => item.holderId === items.holderId).length > 0) {
+        } else {
+          tys = 1
+        }
+      }
+      if (tys === 1) {
+        this.$warning_SHINHO('BOM物料对应批次所需的原汁罐号不存在')
       }
     },
     // 获取不合格原因
@@ -416,6 +432,9 @@ export default {
           this.lineStatus = row.status
           this.ID = row.id
           this.orderTypeSign = data.orderTypeSign
+          setTimeout(() => {
+            this.CheckMessage()
+          }, 1000)
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -472,42 +491,32 @@ export default {
         return false
       }
       if (ty) {
-        this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {'tiaoHolder': this.dataList, 'params': this.ItemList}).then(({data}) => {
-          if (data.code === 0) {
-            this.$notify({title: '成功', message: '保存成功', type: 'success'})
-            this.SearchList()
-            // this.ThrowHolder(this.formHeader.workShop)
-            this.dialogTableVisible = false
-          } else {
-            if (data.mes.length === 0) {
-              this.$error_SHINHO(data.msg)
-            } else {
-              this.$error_SHINHO(data.mes.join(','))
-            }
-          }
-        })
+        this.SubmitFunction()
       } else {
         this.$confirm(`领用原汁非R&D原汁，请确认！`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {'tiaoHolder': this.dataList, 'params': this.ItemList}).then(({data}) => {
-            if (data.code === 0) {
-              this.$notify({title: '成功', message: '保存成功', type: 'success'})
-              this.SearchList()
-              // this.ThrowHolder(this.formHeader.workShop)
-              this.dialogTableVisible = false
-            } else {
-              if (data.mes.length === 0) {
-                this.$error_SHINHO(data.msg)
-              } else {
-                this.$error_SHINHO(data.mes.join(','))
-              }
-            }
-          })
+          this.SubmitFunction()
         })
       }
+    },
+    SubmitFunction () {
+      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {'tiaoHolder': this.dataList, 'params': this.ItemList}).then(({data}) => {
+        if (data.code === 0) {
+          this.$notify({title: '成功', message: '保存成功', type: 'success'})
+          this.SearchList()
+          // this.ThrowHolder(this.formHeader.workShop)
+          this.dialogTableVisible = false
+        } else {
+          if (data.mes.length === 0) {
+            this.$error_SHINHO(data.msg)
+          } else {
+            this.$error_SHINHO(data.mes.join(','))
+          }
+        }
+      })
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
