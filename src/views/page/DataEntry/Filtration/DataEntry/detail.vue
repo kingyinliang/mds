@@ -144,6 +144,7 @@ export default {
       this.$refs.tabs.setCurrentName(val.name)
     },
     setInstorageState (status) {
+      this.$refs.instorage.GetholderList(this.formHeader.factory, this.formHeader.workShop, this.formHeader.orderId)
       this.instorageState = status
       this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     },
@@ -167,7 +168,6 @@ export default {
           this.formHeader = data.list[0]
           this.orderStatus = data.list[0].orderStatus
           this.$refs.instorage.getList()
-          this.$refs.instorage.GetholderList(this.formHeader.factory, this.formHeader.workShop, this.formHeader.orderId)
           let params = {
             orderId: this.formHeader.orderId,
             deptId: this.formHeader.productLine,

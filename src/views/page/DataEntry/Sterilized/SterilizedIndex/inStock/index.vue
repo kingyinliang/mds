@@ -27,7 +27,14 @@
         <div class="inStorage_card">
           <div style="width: 158px" class="inStorage_card_left">
             <p>杀菌罐</p>
-            <div style="text-align: center;padding: 0 20px"><img src="@/assets/img/ferPot.png" alt="" style="width: 92px;height: 190px"></div>
+            <div style="text-align: center;padding: 0 20px;position: relative">
+              <img src="@/assets/img/ferPot.png" alt="" style="width: 92px;height: 190px">
+              <div class="potDetail">
+                <p>{{PotDetail.batch}}</p>
+                <p>{{PotDetail.amount}}</p>
+                <p>{{PotDetail.material}}</p>
+              </div>
+            </div>
             <el-button type="text" class="inStorage_card_left_btn" size="small" :disabled="!(isRedact && (orderStatus !== 'submit' && orderStatus !== 'checked'))" @click="showDialog()">入罐</el-button>
           </div>
           <div style="flex: 1">
@@ -146,6 +153,7 @@ export default {
           { required: true, message: '是否满罐不能为空', trigger: 'blur' }
         ]
       },
+      PotDetail: {},
       PotObject: {
         inTankAmount: false,
         batch: false,
@@ -167,6 +175,12 @@ export default {
         if (data.code === 0) {
           this.InStorageDate = data.list
           this.DataAudit = data.vList
+          let pot = this.PotList.filter(item => this.InStorageDate[0].holderId === item.holderId)[0]
+          this.PotDetail = {
+            amount: pot.amount,
+            batch: pot.batch,
+            material: pot.materialCode + ' ' + pot.materialName
+          }
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -261,6 +275,9 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.PotList = data.halfList
+          if (this.formHeader.status !== '') {
+            this.GetDataList()
+          }
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -386,7 +403,6 @@ export default {
           this.$refs.excrecord.GetequipmentType(this.formHeader.productLine)
           this.$refs.excrecord.getDataList(this.formHeader.factory)
           if (this.formHeader.status !== '') {
-            this.GetDataList()
             this.$refs.excrecord.GetExcDate({
               order_id: this.formHeader.orderId,
               sign: 'In'
@@ -442,6 +458,16 @@ export default {
       padding: 10px;
       font-size: 14px;
     }
+  }
+}
+.potDetail{
+  width: 92px;
+  position: absolute;
+  top: 40px;
+  left: 20px;
+  p{
+    line-height: 20px;
+    padding: 0;
   }
 }
 </style>
