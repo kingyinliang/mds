@@ -66,7 +66,7 @@
           </p>
           <div class="topBox_boxItem_popover" v-if="item.content !== 0">
             <p v-for="(i, ins) in Object.keys(item.content)" :key="ins">
-              <i class="dot" :style="{'background': ins === 0 ? '#1890FF' : ins === 1 ? '#FFBF00' : '#1890FF'}"></i>{{i}} <span style="float: right">{{item.content[i]}} 方</span>
+              <i class="dot" v-if="i!=''" :style="{'background': ins === 0 ? '#1890FF' : ins === 1 ? '#FFBF00' : '#1890FF'}"></i>{{i}} <span style="float: right" v-if="i!=''">{{item.content[i]}}方</span>
             </p>
             <i class="topBox_boxItem_popover_ar"></i>
           </div>
@@ -1001,7 +1001,7 @@ export default {
       top: -60px;
       min-width: 150px;
       min-height: 52px;
-      padding: 10px 10px;
+      padding: 5px;
       border-radius: 4px;
       font-size: 13px;
       line-height: 18px;
