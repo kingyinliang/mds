@@ -15,7 +15,7 @@
         <el-table-column label="TB罐数" show-overflow-tooltip prop="tb"></el-table-column>
         <el-table-column label="JYTB罐数" show-overflow-tooltip prop="jytb"></el-table-column>
         <el-table-column label="JY罐数" show-overflow-tooltip prop="jy"></el-table-column>
-        <el-table-column label="发酵一总罐数" show-overflow-tooltip prop="sum" width="100"></el-table-column>
+        <el-table-column label="发酵一总罐数" show-overflow-tooltip prop="sum" width="110"></el-table-column>
       </el-table>
       <div class="titleLeft" style="margin-top:15px">
         <i class="iconfont factory-icon_function_keyongkucun" style="color:#666666; margin-right:10px"></i>发酵总库存列表（单位:方）
