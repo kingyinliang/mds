@@ -66,7 +66,7 @@
               <el-button type="primary" size="small" @click="addresult()" style="float: right" :disabled="!isRedact" >新增</el-button>
             </el-row>
             <el-table header-row-class-name="tableHead" :data="crafData.result" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-              <el-table-column type="index" width="55" label="序号"></el-table-column>
+              <el-table-column width="55" label="序号" type="index"></el-table-column>
               <el-table-column label="屏显温度(℃)">
                 <template slot-scope="scope">
                   <el-input v-model="scope.row.temp" :disabled="!isRedact" placeholder="手工录入" size="small"></el-input>
@@ -74,7 +74,7 @@
               </el-table-column>
               <el-table-column label="记录时间">
                 <template slot-scope="scope">
-                  <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" size="small" placeholder="选择日期" v-model="scope.row.created" :disabled="!isRedact"></el-date-picker>
+                  <el-date-picker type="datetime" @change="changeDate(scope.row)" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" size="small" placeholder="选择日期" v-model="scope.row.logTime" :disabled="!isRedact"></el-date-picker>
                 </template>
               </el-table-column>
               <el-table-column label="备注">
@@ -171,6 +171,14 @@ export default {
     this.GetOrderHead()
   },
   methods: {
+    indexMethod (index) {
+      return index * 2
+    },
+    changeDate (row) {
+      if (row.logTime === null) {
+        row.logTime = ''
+      }
+    },
     // 获取工艺数据
     GetCraft () {
       this.$http(`${STERILIZED_API.STE_ENTER_CRAF_LIST_API}`, 'POST', {orderId: this.$store.state.common.sterilized.craftOrderId}).then(({data}) => {
@@ -178,7 +186,36 @@ export default {
           if (data.list) {
             this.crafData = data.list
             this.DataAudit = data.vList
+            if (this.crafData.result.length === 0) {
+              this.crafData.result.push({
+                changed: '',
+                changer: '',
+                created: '',
+                logTime: '',
+                creator: '',
+                delFlag: '0',
+                id: '',
+                remark: '',
+                serialNumber: '',
+                techId: '',
+                temp: ''
+              })
+            }
             this.crafData.hotMedium = this.crafData.hotMedium.split(',')
+          } else {
+            this.crafData.result.push({
+              changed: '',
+              changer: '',
+              created: '',
+              logTime: '',
+              creator: '',
+              delFlag: '0',
+              id: '',
+              remark: '',
+              serialNumber: '',
+              techId: '',
+              temp: ''
+            })
           }
         } else {
           this.$notify.error({title: '错误', message: data.msg})
@@ -187,18 +224,26 @@ export default {
     },
     // 新增
     addresult () {
-      this.crafData.result.push({
-        changed: '',
-        changer: '',
-        created: '',
-        creator: '',
-        delFlag: '0',
-        id: '',
-        remark: '',
-        serialNumber: '',
-        techId: '',
-        temp: ''
-      })
+      let NewDataList = this.crafData.result.filter(item => { return item.delFlag === '0' })
+      if (NewDataList.length === 0) {
+        this.crafData.result.push({
+          changed: '',
+          changer: '',
+          created: '',
+          logTime: '',
+          creator: '',
+          delFlag: '0',
+          id: '',
+          remark: '',
+          serialNumber: '',
+          techId: '',
+          temp: ''
+        })
+      } else {
+        let AddData = JSON.parse(JSON.stringify(NewDataList[NewDataList.length - 1]))
+        AddData.id = ''
+        this.crafData.result.push(AddData)
+      }
     },
     // 删除
     dellist (row) {
@@ -281,7 +326,7 @@ export default {
           ty = false
           this.$warning_SHINHO('屏显温度必填')
         }
-        if (!item.created) {
+        if (!item.logTime) {
           ty = false
           this.$warning_SHINHO('记录时间必填')
         }
