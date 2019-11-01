@@ -11,11 +11,6 @@ export default {
   name: 'home',
   data () {
     return {
-      form: {
-        currPage: 1,
-        pageSize: 10,
-        totalCount: 1000
-      }
     }
   },
   mounted () {

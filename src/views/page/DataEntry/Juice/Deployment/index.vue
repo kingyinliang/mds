@@ -200,6 +200,24 @@
         <el-form-item label="调整数量（方）：">
           <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
         </el-form-item>
+        <el-form-item label="不合格调整分类：">
+          <el-select v-model="record.nonReasonClass" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
+            <el-option value=''>请选择</el-option>
+            <el-option v-for="(item, index) of nonReasonClassList" :key="index" :value="item" :label="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="调整数量（方）：">
+          <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
+        </el-form-item>
+        <el-form-item label="不合格调整分类：">
+          <el-select v-model="record.nonReasonClass" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
+            <el-option value=''>请选择</el-option>
+            <el-option v-for="(item, index) of nonReasonClassList" :key="index" :value="item" :label="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="调整数量（方）：">
+          <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
+        </el-form-item>
         <el-form-item label="调前米数：">
           <el-input v-model="record.beforeMet" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
         </el-form-item>
