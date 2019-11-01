@@ -21,6 +21,9 @@
           <el-form-item label="调配单号：">
             <el-input v-model="formHeader.orderNo" style="width:150px"></el-input>
           </el-form-item>
+          <el-form-item label="订单号：">
+            <el-input v-model="formHeader.order_no" style="width:150px"></el-input>
+          </el-form-item>
           <el-form-item class="floatr" style="width:290px">
             <template style="float:right;">
               <el-button type="primary" size="small" v-if="isAuth('ste:allocate:allocateList')" @click="SearchList">查询</el-button>
@@ -200,24 +203,6 @@
         <el-form-item label="调整数量（方）：">
           <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
         </el-form-item>
-        <el-form-item label="不合格调整分类：">
-          <el-select v-model="record.nonReasonClass" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
-            <el-option value=''>请选择</el-option>
-            <el-option v-for="(item, index) of nonReasonClassList" :key="index" :value="item" :label="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="调整数量（方）：">
-          <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
-        </el-form-item>
-        <el-form-item label="不合格调整分类：">
-          <el-select v-model="record.nonReasonClass" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
-            <el-option value=''>请选择</el-option>
-            <el-option v-for="(item, index) of nonReasonClassList" :key="index" :value="item" :label="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="调整数量（方）：">
-          <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
-        </el-form-item>
         <el-form-item label="调前米数：">
           <el-input v-model="record.beforeMet" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
         </el-form-item>
@@ -276,7 +261,8 @@ export default {
       formHeader: {
         factory: '',
         workShop: '',
-        orderNo: ''
+        orderNo: '',
+        order_no: ''
       },
       pages: {
         currentTotal: 0, // 总条数
@@ -521,6 +507,10 @@ export default {
       }
     },
     SubmitFunction () {
+      this.ItemList.map((item) => {
+        item.receiveAmount = item.receiveAmount.toString()
+        item.planAmount = item.planAmount.toString()
+      })
       this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {'tiaoHolder': this.dataList, 'params': this.ItemList}).then(({data}) => {
         if (data.code === 0) {
           this.$notify({title: '成功', message: '保存成功', type: 'success'})
