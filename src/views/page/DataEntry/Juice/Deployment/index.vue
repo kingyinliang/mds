@@ -203,6 +203,24 @@
         <el-form-item label="调整数量（方）：">
           <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
         </el-form-item>
+        <el-form-item label="不合格调整分类：">
+          <el-select v-model="record.nonReasonClass" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
+            <el-option value=''>请选择</el-option>
+            <el-option v-for="(item, index) of nonReasonClassList" :key="index" :value="item" :label="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="调整数量（方）：">
+          <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
+        </el-form-item>
+        <el-form-item label="不合格调整分类：">
+          <el-select v-model="record.nonReasonClass" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
+            <el-option value=''>请选择</el-option>
+            <el-option v-for="(item, index) of nonReasonClassList" :key="index" :value="item" :label="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="调整数量（方）：">
+          <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
+        </el-form-item>
         <el-form-item label="调前米数：">
           <el-input v-model="record.beforeMet" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
         </el-form-item>
@@ -284,7 +302,8 @@ export default {
       userList: [],
       strList: [],
       strList1: [],
-      strList2: []
+      strList2: [],
+      Tdata: ''
     }
   },
   mounted () {
@@ -319,9 +338,11 @@ export default {
     CheckMessage () {
       let tys = 0
       for (let items of this.ItemList) {
-        if (this.thrwHolderList.filter(item => item.holderId === items.holderId).length > 0) {
-        } else {
-          tys = 1
+        if (items.holderId !== null) {
+          if (this.thrwHolderList.filter(item => item.holderId === items.holderId).length > 0) {
+          } else {
+            tys = 1
+          }
         }
       }
       if (tys === 1) {
@@ -421,7 +442,7 @@ export default {
       })
     },
     ShowDetail (row) {
-      // row.id = 'C57A2AE171024496AD26B0BEE8B0ACAD'
+      this.Tdata = row
       this.materialName = row.materialName
       this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMS}`, 'POST', {orderNo: row.id, factory: this.formHeader.factory, sign: 'oldMethod'}, false, false, false).then(({data}) => {
         if (data.code === 0) {
@@ -458,9 +479,11 @@ export default {
         isSplit: 1
       })
     },
+    // 调配 确定
     SaveSplit () {
       let batchList = []
       let ty = true
+      let strMsg = ''
       for (let item of this.ItemList) {
         batchList.push(item.batch)
         item.ID = this.ID
@@ -476,9 +499,12 @@ export default {
           this.$warning_SHINHO('批次应为10位')
           return false
         }
-        if (item.materialName.indexOf('原汁') !== -1 && (item.holderId === '' || !item.holderId)) {
-          this.$warning_SHINHO('原汁物料需选择罐号')
-          return false
+        // if (item.materialName.indexOf('原汁') !== -1 && (item.holderId === '' || !item.holderId)) {
+        //   this.$warning_SHINHO('原汁物料需选择罐号')
+        //   return false
+        // }
+        if (this.Tdata.cDay !== null && this.Tdata.cDay * 1 < 6) {
+          strMsg += `${this.Tdata.yzHolderName}，${this.Tdata.batch}批次原汁，沉淀天数不足，是否确认使用？`
         }
         if (this.orderTypeSign === '1' && item.holderId && this.thrwHolderList.filter(it => item.holderId === it.holderId)[0].isRdSign !== '1') {
           ty = false
@@ -490,21 +516,41 @@ export default {
         //   }
         // }
       }
-      if (new Set(batchList).size !== batchList.length) {
-        this.$warning_SHINHO('批次不能重复')
-        return false
-      }
-      if (ty) {
-        this.SubmitFunction()
-      } else {
-        this.$confirm(`领用原汁非R&D原汁，请确认！`, '提示', {
+      if (strMsg !== '') {
+        this.$confirm(strMsg, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.SubmitFunction()
+          if (ty) {
+            this.SubmitFunction()
+          } else {
+            this.$confirm(`领用原汁非R&D原汁，请确认！`, '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.SubmitFunction()
+            })
+          }
         })
+      } else {
+        if (ty) {
+          this.SubmitFunction()
+        } else {
+          this.$confirm(`领用原汁非R&D原汁，请确认！`, '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.SubmitFunction()
+          })
+        }
       }
+      // if (new Set(batchList).size !== batchList.length) {
+      //   this.$warning_SHINHO('批次不能重复')
+      //   return false
+      // }
     },
     SubmitFunction () {
       this.ItemList.map((item) => {
@@ -529,124 +575,20 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
+    // header saved
     SavedForm () {
-      if (this.multipleSelection.length === 0) {
-        this.$warning_SHINHO('请勾选数据')
-      } else {
-        let st = 0
-        this.multipleSelection.map((item) => {
-          if (item.status === '已生成') {
-            st = 1
-            return false
-          }
-        })
-        if (st === 1) {
-          let str = ''
-          this.strList = []
-          this.strList1 = []
-          this.strList2 = []
-          this.multipleSelection.forEach((item) => {
-            if (item.sbList === null) {
-              this.strList.push(item.orderNo)
-            } else {
-              item.sbList.map((items) => {
-                if (items.cDay === null) {
-                  this.strList.push(item.orderNo)
-                } else if (items.cDay === -999) {
-                  this.strList1.push(`${items.yzHolderName},${items.batch}`)
-                }
-                if (items.cDay * 1 < 6) {
-                  this.strList2.push(`${items.yzHolderName},${items.batch}`)
-                }
-              })
-            }
-          })
-          if (this.strList.length !== 0) {
-            this.$confirm(`请先保存调配单${this.strList.join(',')}的调配详情信息?`, '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {})
-            return false
-          }
-          if (this.strList1.length !== 0) {
-            this.$confirm(`请先确认${this.strList1.join(',')}批次原汁有库存?`, '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {})
-            return false
-          }
-          if (this.strList2.length !== 0) {
-            str = this.strList2.join(',')
-          }
-          // this.multipleSelection.forEach((item) => {
-          //   if (item.cDay === null) {
-          //     this.$confirm(`请先保存调配单${item.orderNo}的调配详情信息?`, '提示', {
-          //       confirmButtonText: '确定',
-          //       cancelButtonText: '取消',
-          //       type: 'warning'
-          //     }).then(() => {})
-          //     st = true
-          //   } else if (item.cDay === -999) {
-          //     this.$confirm(`请确认${item.yzHolderName}，${item.batch}批次原汁有库存?`, '提示', {
-          //       confirmButtonText: '确定',
-          //       cancelButtonText: '取消',
-          //       type: 'warning'
-          //     }).then(() => {})
-          //     st = true
-          //   } else if (item.cDay * 1 < 6) {
-          //     str += `${item.yzHolderName}，${item.batch}批次原汁，沉淀天数不足，是否确认使用？`
-          //   }
-          // })
-          if (str.length > 0) {
-            this.$confirm(`${str}批次原汁，沉淀天数不足，是否确认使用？`, '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.multipleSelection.forEach((item) => {
-                item.status = '已调配'
-              })
-              this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSAVE}`, 'POST', this.multipleSelection).then(({data}) => {
-                if (data.code === 0) {
-                  this.$notify({title: '成功', message: '保存成功', type: 'success'})
-                  this.isRedact = false
-                  this.SearchList()
-                } else {
-                  this.$notify.error({title: '错误', message: data.msg})
-                }
-              })
-            })
-          } else {
-            this.multipleSelection.forEach((item) => {
-              item.status = '已调配'
-            })
-            this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSAVE}`, 'POST', this.multipleSelection).then(({data}) => {
-              if (data.code === 0) {
-                this.$notify({title: '成功', message: '保存成功', type: 'success'})
-                this.isRedact = false
-                this.SearchList()
-              } else {
-                this.$notify.error({title: '错误', message: data.msg})
-              }
-            })
-          }
+      this.multipleSelection.forEach((item) => {
+        item.status = '已调配'
+      })
+      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSAVE}`, 'POST', this.multipleSelection).then(({data}) => {
+        if (data.code === 0) {
+          this.$notify({title: '成功', message: '保存成功', type: 'success'})
+          this.isRedact = false
+          this.SearchList()
         } else {
-          this.multipleSelection.forEach((item) => {
-            item.status = '已调配'
-          })
-          this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSAVE}`, 'POST', this.multipleSelection).then(({data}) => {
-            if (data.code === 0) {
-              this.$notify({title: '成功', message: '保存成功', type: 'success'})
-              this.isRedact = false
-              this.SearchList()
-            } else {
-              this.$notify.error({title: '错误', message: data.msg})
-            }
-          })
+          this.$notify.error({title: '错误', message: data.msg})
         }
-      }
+      })
     },
     SubmitForm () {
       if (this.multipleSelection.length === 0) {
@@ -663,102 +605,15 @@ export default {
           return false
         }
       }
-      // let str = ''
-      // let st = false
-      // this.multipleSelection.forEach((item) => {
-      //   if (item.cDay === null) {
-      //     this.$confirm(`请先保存调配单${item.orderNo}的调配详情信息?`, '提示', {
-      //       confirmButtonText: '确定',
-      //       cancelButtonText: '取消',
-      //       type: 'warning'
-      //     }).then(() => {})
-      //     st = true
-      //   } else if (item.cDay * 1 < 6) {
-      //     str += `${item.yzHolderName}，${item.batch}批次原汁，沉淀天数不足，是否确认使用？`
-      //   }
-      // })
-      // if (st) {
-      //   return false
-      // }
-      let str = ''
-      this.strList = []
-      this.strList1 = []
-      this.strList2 = []
-      this.multipleSelection.forEach((item) => {
-        if (item.sbList === null) {
-          this.strList.push(item.orderNo)
+      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSUBMIT}`, 'POST', this.multipleSelection).then(({data}) => {
+        if (data.code === 0) {
+          this.$notify({title: '成功', message: '提交成功', type: 'success'})
+          this.isRedact = false
+          this.SearchList()
         } else {
-          item.sbList.map((items) => {
-            if (items.cDay === null) {
-              this.strList.push(item.orderNo)
-            } else if (items.cDay === -999) {
-              this.strList1.push(`${items.yzHolderName},${items.batch}`)
-            }
-            if (items.cDay * 1 < 6) {
-              this.strList2.push(`${items.yzHolderName},${items.batch}`)
-            }
-          })
+          this.$notify.error({title: '错误', message: data.msg})
         }
       })
-      if (this.strList.length !== 0) {
-        this.$confirm(`请先保存调配单${this.strList.join(',')}的调配详情信息?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {})
-        return false
-      }
-      if (this.strList1.length !== 0) {
-        this.$confirm(`请先确认${this.strList1.join(',')}批次原汁有库存?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {})
-        return false
-      }
-      if (this.strList2.length !== 0) {
-        str = this.strList2.join(',')
-      }
-      if (str.length > 0) {
-        // this.$confirm(str > 0 ? str : '确认要提交数据吗?', '提示', {
-        this.$confirm(`${str}批次原汁，沉淀天数不足，是否确认使用？`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSAVE}`, 'POST', this.multipleSelection).then(({data}) => {
-            if (data.code === 0) {
-              this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSUBMIT}`, 'POST', this.multipleSelection).then(({data}) => {
-                if (data.code === 0) {
-                  this.$notify({title: '成功', message: '提交成功', type: 'success'})
-                  this.isRedact = false
-                  this.SearchList()
-                } else {
-                  this.$notify.error({title: '错误', message: data.msg})
-                }
-              })
-            } else {
-              this.$notify.error({title: '错误', message: data.msg})
-            }
-          })
-        })
-      } else {
-        this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSAVE}`, 'POST', this.multipleSelection).then(({data}) => {
-          if (data.code === 0) {
-            this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSUBMIT}`, 'POST', this.multipleSelection).then(({data}) => {
-              if (data.code === 0) {
-                this.$notify({title: '成功', message: '提交成功', type: 'success'})
-                this.isRedact = false
-                this.SearchList()
-              } else {
-                this.$notify.error({title: '错误', message: data.msg})
-              }
-            })
-          } else {
-            this.$notify.error({title: '错误', message: data.msg})
-          }
-        })
-      }
     },
     // 复选框初始状态
     CheckBoxInit (row, index) {
