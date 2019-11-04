@@ -481,6 +481,7 @@ export default {
     },
     // 调配 确定
     SaveSplit () {
+      console.log(this.Tdata)
       let batchList = []
       let ty = true
       let strMsg = ''
@@ -503,9 +504,6 @@ export default {
         //   this.$warning_SHINHO('原汁物料需选择罐号')
         //   return false
         // }
-        if (this.Tdata.cDay !== null && this.Tdata.cDay * 1 < 6) {
-          strMsg += `${this.Tdata.yzHolderName}，${this.Tdata.batch}批次原汁，沉淀天数不足，是否确认使用？`
-        }
         if (this.orderTypeSign === '1' && item.holderId && this.thrwHolderList.filter(it => item.holderId === it.holderId)[0].isRdSign !== '1') {
           ty = false
         }
@@ -516,6 +514,13 @@ export default {
         //   }
         // }
       }
+      // if (this.Tdata.cDay !== null && this.Tdata.cDay * 1 < 6) {
+      this.Tdata.sbList.map((items) => {
+        if (items.cDay !== null && items.cDay * 1 < 6) {
+          strMsg += `${this.Tdata.sbList[0].yzHolderName}，${this.Tdata.sbList[0].batch}批次原汁，沉淀天数不足，是否确认使用？`
+        }
+      })
+      // }
       if (strMsg !== '') {
         this.$confirm(strMsg, '提示', {
           confirmButtonText: '确定',
