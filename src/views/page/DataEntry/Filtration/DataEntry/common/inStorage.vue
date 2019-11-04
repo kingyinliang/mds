@@ -206,6 +206,7 @@ export default {
             batch: pot.batch,
             material: pot.materialCode + ' ' + pot.materialName
           }
+          console.log(this.PotList)
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }

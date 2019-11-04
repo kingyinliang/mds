@@ -318,6 +318,35 @@ export function orderList (data) {
   return result
 }
 /**
+ * 过滤车间 数据处理
+ * @param {*} data
+ */
+export function orderListNew (data) {
+  let orderArray = []
+  data.map(item => {
+    let findRow = orderArray.findIndex(items => items.productLineName === item.productLineName)
+    let orderList = {
+      orderNo: item.orderNo,
+      orderId: item.orderId,
+      materialName: item.materialName
+    }
+    if (findRow === -1) {
+      orderArray.push({
+        img: item.img,
+        productLine: item.productLine,
+        productLineName: item.productLineName,
+        orderNoList: [orderList],
+        productDate: item.productDate,
+        orderNo: '',
+        materialCode: ''
+      })
+    } else {
+      orderArray[findRow].orderNoList.push(orderList)
+    }
+  })
+  return orderArray
+}
+/**
  * 获取工厂
  */
 export function getFactory (Vue) {
