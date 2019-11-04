@@ -339,7 +339,7 @@ export default {
       let tys = 0
       for (let items of this.ItemList) {
         if (items.holderId !== null) {
-          if (this.thrwHolderList.filter(item => item.holderId === items.holderId).length > 0) {
+          if (this.thrwHolderList.filter(item => item.holderId === items.holderId && items.batch === item.batch).length > 0) {
           } else {
             tys = 1
           }
