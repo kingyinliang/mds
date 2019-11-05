@@ -71,7 +71,7 @@
                 </el-table-column>
                 <el-table-column label="结束日期" >
                   <template slot-scope="scope">
-                    {{scope.row.endDate}}
+                    {{scope.row.orderEndDate}}
                   </template>
                 </el-table-column>
                 <el-table-column label="判定时发酵天数" width="120">
@@ -123,7 +123,7 @@
                 </el-table-column>
                 <el-table-column label="结束日期" >
                   <template slot-scope="scope">
-                    {{scope.row.endDate}}
+                    {{scope.row.orderEndDate}}
                   </template>
                 </el-table-column>
                 <el-table-column label="判定时发酵天数" width="120">

@@ -122,13 +122,13 @@ export default {
     // this.GetstoppageType()
     // this.GetmaterialShort()
     // this.Getenery()
+    this.GetProductShift()
   },
   watch: {
     'order.factory' (n, o) {
       this.GetstoppageType(n)
       this.GetmaterialShort(n)
       this.Getenery(n)
-      this.GetProductShift(n)
     }
   },
   props: {
@@ -137,8 +137,8 @@ export default {
   },
   methods: {
     // 获取生产班次
-    GetProductShift (factory) {
-      this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {factory: factory, type: 'product_shift'}).then(({data}) => {
+    GetProductShift () {
+      this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {type: 'product_shift'}).then(({data}) => {
         if (data.code === 0) {
           this.productShift = data.dicList
         } else {

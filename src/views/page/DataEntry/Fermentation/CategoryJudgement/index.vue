@@ -197,7 +197,9 @@ export default {
         halfId: [
           {required: true, message: '请选择判定类别', trigger: 'change'}
         ]
-      }
+      },
+      beforeHalfId: '',
+      beforeFrozenStatus: ''
     }
   },
   mounted () {
@@ -351,13 +353,20 @@ export default {
         ferDays: row.order.ferDays,
         holderNo: row.order.holderNo,
         halfId: row.judge ? row.judge.halfId : defaulthalfId,
+        orderEndDate: row.judge.orderEndDate,
         oldCategory: JSON.parse(JSON.stringify(row.judge.halfName))
       }
+      this.beforeHalfId = JSON.parse(JSON.stringify(row.judge.halfId))
+      this.beforeFrozenStatus = JSON.parse(JSON.stringify(row.judge.frozenStatus))
       this.GetMaterialTypeListTan()
     },
     SaveJudge (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.beforeHalfId === this.judge.halfId && this.beforeFrozenStatus === this.judge.frozenStatus) {
+            this.$warning_SHINHO('没有数据变更，无法保存')
+            return false
+          }
           this.dialogVisible = false
           this.$http(`${FERMENTATION_API.CATEGORYJUDGEMENTTODO_API}`, 'POST', this.judge).then(({data}) => {
             if (data.code === 0) {

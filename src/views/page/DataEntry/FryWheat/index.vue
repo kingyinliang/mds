@@ -120,8 +120,8 @@
             <el-table-column label="序号" width="50" prop="id" type="index"></el-table-column>
             <el-table-column label="中/白/夜班" prop="classType" width="100">
               <template slot-scope="scope">
-                <el-select v-model="scope.row.classType" placeholder="请选择" size="small" :disabled="isdisabled">
-                  <el-option v-for="sole in dayTypeList" :key="sole.value" :value="sole.value" :label="sole.value"></el-option>
+                <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="isdisabled" size="small">
+                  <el-option :label="iteam.value" :value="iteam.code" v-for="(iteam, index) in productShift" :key="index"></el-option>
                 </el-select>
               </template>
             </el-table-column>
@@ -210,7 +210,7 @@
 </template>
 
 <script>
-import {BASICDATA_API, WHT_API} from '@/api/api'
+import {BASICDATA_API, WHT_API, SYSTEMSETUP_API} from '@/api/api'
 import {dateFormat, orderList} from '@/net/validate'
 import TemporaryWorker from '@/views/components/temporaryWorker'
 import LoanedPersonnel from '@/views/components/loanedPersonnel'
@@ -248,12 +248,14 @@ export default {
       arrList: [],
       pwshow: false,
       abnorsave: true,
-      totalList: ''
+      totalList: '',
+      productShift: []
     }
   },
   watch: {
     'plantList.factoryid' (n) {
       this.Getworkshop(n)
+      this.GetProductShift(n)
     },
     'plantList.workshopid' (n) {
       this.GetProcess(n)
@@ -272,6 +274,16 @@ export default {
     this.getTree()
   },
   methods: {
+    // 获取生产班次
+    GetProductShift (factory) {
+      this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {type: 'product_shift'}).then(({data}) => {
+        if (data.code === 0) {
+          this.productShift = data.dicList
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+    },
     go (item) {
       if (!item.productDate) {
         if (!this.plantList.productDate) {
