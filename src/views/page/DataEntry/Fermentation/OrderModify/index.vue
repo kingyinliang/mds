@@ -312,7 +312,11 @@ export default {
       }
       this.$http(`${FERMENTATION_API.ORDER_MODIFY_CHANGE_API}`, 'POST', this.multipleSelection).then(({data}) => {
         if (data.code === 0) {
-          this.$success_SHINHO('修改成功')
+          if (data.dataType.error > 0) {
+            this.$error_SHINHO(data.dataType.error + '个失败，' + data.dataType.succ + '个成功')
+          } else {
+            this.$success_SHINHO('修改成功')
+          }
           this.GetList(true)
         } else {
           this.$error_SHINHO(data.msg)
