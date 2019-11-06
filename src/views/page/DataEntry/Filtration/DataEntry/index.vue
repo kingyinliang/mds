@@ -32,7 +32,7 @@
       <el-col v-for="(item, index) in dataList" :key="index" id="normal" :span="12" style="margin-top:12px; padding-bottom:20px">
         <div class="title_left" style="font-size: 16px;font-weight: bold;margin-bottom: 8px;">工序： <font style="color:red">{{item.productLineName}}</font></div>
         <div class="sole_cont">
-          <el-form size="small" :inline="true" label-position="right" label-width="90px">
+          <el-form size="small" :inline="true" label-position="right" label-width="80px">
             <div class="itemImg">
               <img :src="'data:image/gif;base64,' + item.img" alt="" style="width:100%; min-height:181px">
             </div>
@@ -44,12 +44,12 @@
             </div>
             <div class="normal_bottom">
               <el-form-item label="订单号：" class="width50b">
-                <el-select v-model="item.orderNo" placeholder="请选择" :change="orderchange(item)" style="width:150px">
-                  <el-option :label="item" v-for="(item, index) in item.order_arr" :key="index" :value="item"></el-option>
+                <el-select v-model="item.orderNo" placeholder="请选择" filterable :change="orderchange(item)" style="width:180px">
+                  <el-option :label="item.orderNo + ' ' + item.materialName" v-for="(item, index) in item.orderNoList" :key="index" :value="item.orderNo"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="计划产量：" class="width50b">
-                <div style="width:152px; border-bottom:1px solid #ccc">&nbsp;{{(item.planOutput || '0') + ' ' + (item.outputUnit || '')}}</div>
+                <div style="width:180px; border-bottom:1px solid #ccc">&nbsp;{{(item.planOutput || '0') + ' ' + (item.outputUnit || '')}}</div>
               </el-form-item>
               <el-form-item label="品项：" class="width50b">
                 <el-tooltip class="item" effect="dark" :content="(item.materialCode || '') + ' ' + (item.materialName || '')" placement="top">
@@ -57,7 +57,7 @@
                 </el-tooltip>
               </el-form-item>
               <el-form-item label="实际产量：" class="width50b">
-                <div style="width:152px; border-bottom:1px solid #ccc">&nbsp;{{(item.countOutput || '0') + ' ' + (item.outputUnit || '')}}</div>
+                <div style="width:180px; border-bottom:1px solid #ccc">&nbsp;{{(item.countOutput || '0') + ' ' + (item.outputUnit || '')}}</div>
               </el-form-item>
             </div>
           </el-form>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import {getFactory, getWorkshop, orderList} from '@/net/validate'
+import {getFactory, getWorkshop, orderListNew} from '@/net/validate'
 import {FILTRATION_API} from '@/api/api'
 export default {
   name: 'index',
@@ -111,8 +111,8 @@ export default {
       }
       this.$http(`${FILTRATION_API.FILTER_HOME_LIST_API}`, 'POST', this.formHeader).then(({data}) => {
         if (data.code === 0) {
-          this.dataList = orderList(data.list)
-          console.log(this.dataList[0].img.length)
+          // this.dataList = orderList(data.list)
+          this.dataList = orderListNew(data.list)
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -147,7 +147,8 @@ export default {
         return
       }
       this.$store.state.common.orderNo = item.orderNo
-      this.$store.state.common.orderId = item.orderIdList[item.orderNo]
+      // this.$store.state.common.orderId = item.orderIdList[item.orderNo]
+      this.$store.state.common.orderId = item.orderNoList.find(items => items.orderNo === item.orderNo).orderId
       this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Filtration-DataEntry-detail')
       setTimeout(() => {
         this.$router.push({ name: `DataEntry-Filtration-DataEntry-detail` })
@@ -237,7 +238,7 @@ export default {
     width:120px;
   }
   .hiddenP{
-    width:150px;
+    width:180px;
     border-bottom: 1px solid #cccccc;
     overflow:hidden;
     text-overflow:ellipsis;

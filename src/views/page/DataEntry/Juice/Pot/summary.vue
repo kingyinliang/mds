@@ -27,6 +27,7 @@
             </template>
           </el-table-column>
           <el-table-column label="罐内总量" :show-overflow-tooltip="true" prop="amount" width="100"></el-table-column>
+          <el-table-column label="发酵罐号" :show-overflow-tooltip="true" prop="fermentationHolderName" width="100"></el-table-column>
           <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="fullDate" width="160"></el-table-column>
           <el-table-column label="车间" :show-overflow-tooltip="true" prop="workShop" width="70"></el-table-column>
           <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
@@ -82,6 +83,7 @@
             </template>
           </el-table-column>
           <el-table-column label="罐内总量" :show-overflow-tooltip="true" prop="amount" width="100"></el-table-column>
+          <el-table-column label="发酵罐号" :show-overflow-tooltip="true" prop="fermentationHolderName" width="100"></el-table-column>
           <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="fullDate" width="160"></el-table-column>
           <el-table-column label="车间" :show-overflow-tooltip="true" prop="workShop" width="70"></el-table-column>
           <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
