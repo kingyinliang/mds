@@ -125,6 +125,13 @@ export default {
   },
   mounted () {
   },
+  watch: {
+    'dataForm.inAmount' (n, o) {
+      if (this.dataForm.holderId) {
+        this.dataForm.holderRemaining = Number(n) + this.GetHolderSum(this.dataForm.holderId)
+      }
+    }
+  },
   methods: {
     getList () {
       this.$http(`${FILTRATION_API.FILTER_IN_LIST_API}`, 'POST', {
@@ -132,6 +139,9 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.InStorageDate = data.list
+          this.InStorageDate.map(item => {
+            item.uid = item.id
+          })
           this.instorageState = GetStatus(this.InStorageDate)
           this.DataAudit = data.vrlist
         } else {
@@ -175,7 +185,7 @@ export default {
           this.PotList.forEach(item => {
             if (item.holderId === this.dataForm.holderId) {
               this.dataForm.holderName = item.holderName
-              item.amount = this.dataForm.holderRemaining
+              // item.amount = this.dataForm.holderRemaining
               item.batch = this.dataForm.batch
             }
           })
@@ -188,6 +198,11 @@ export default {
           }
           this.isUpdate = false
           this.visible = false
+        }
+      })
+      this.InStorageDate.map((item) => {
+        if (item.holderId === this.dataForm.holderId) {
+          item.holderRemaining = this.dataForm.holderRemaining
         }
       })
     },
@@ -206,7 +221,6 @@ export default {
             batch: pot.batch,
             material: pot.materialCode + ' ' + pot.materialName
           }
-          console.log(this.PotList)
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -214,7 +228,11 @@ export default {
     },
     // 半成品罐下拉
     PotinTankAmount (id) {
-      this.dataForm.holderRemaining = this.PotList.filter(item => item.holderId === id)[0].amount / 1000
+      if (this.dataForm.inAmount !== '') {
+        this.dataForm.holderRemaining = Number(this.dataForm.inAmount) + this.GetHolderSum(id)
+      } else {
+        this.dataForm.holderRemaining = this.GetHolderSum(id)
+      }
       this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
       if (this.dataForm.holderRemaining) {
         this.PotObject.inTankAmount = true
@@ -231,6 +249,7 @@ export default {
     showDialog () {
       this.visible = true
       this.dataForm = {
+        uid: this.uuid(),
         id: '',
         status: '',
         isFull: '0',
@@ -275,6 +294,15 @@ export default {
         this.rowData = row
         this.PotinTankAmount(this.dataForm.holderId)
       }
+    },
+    GetHolderSum (holderId) {
+      let sumInAmount = 0
+      this.InStorageDate.map((item) => {
+        if (item.uid !== this.dataForm.uid && item.holderId === holderId) {
+          sumInAmount += Number(item.inAmount)
+        }
+      })
+      return sumInAmount + Number(this.PotList.find(items => items.holderId === holderId).amount)
     }
   },
   computed: {
