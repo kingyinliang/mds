@@ -881,7 +881,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.record.oneOffSuc === '否') {
-            if (this.record.nonReasons === '' || this.record.nonReasonClass === '') {
+            if (this.record.nonReasons === '' || this.record.Reason[0].nonReasonClass === '') {
               this.$notify({title: '警告', message: '请选择不合格原因，不合格调整分类', type: 'warning'})
               return false
             }
