@@ -582,6 +582,10 @@ export default {
     },
     // header saved
     SavedForm () {
+      if (this.multipleSelection.length === 0) {
+        this.$warning_SHINHO('请勾选数据')
+        return false
+      }
       this.multipleSelection.forEach((item) => {
         item.status = '已调配'
       })

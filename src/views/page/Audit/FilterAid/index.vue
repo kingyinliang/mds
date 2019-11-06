@@ -21,7 +21,7 @@
           <el-input type="text" v-model="formHeader.orderNo" clearable style="width: 140px"></el-input>
         </el-form-item>
         <el-form-item class="floatr">
-          <el-button type="primary" size="small" @click="GetDataList(true)" v-if="isAuth('ste:order:list')">查询</el-button>
+          <el-button type="primary" size="small" @click="GetDataList(true)">查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -34,8 +34,8 @@
           <el-input v-model="formHeader.headerTxt" placeholder="抬头文本" style="width: 160px"></el-input>
         </el-form-item>
         <el-form-item style="float: right">
-          <el-button type="primary" size="small" @click="subAutio()" v-if="isAuth('verify:material:update')">审核通过</el-button>
-          <el-button type="danger" size="small" @click="repulseAutios()" v-if="isAuth('verify:material:update')">审核不通过</el-button>
+          <el-button type="primary" size="small" @click="subAutio()">审核通过</el-button>
+          <el-button type="danger" size="small" @click="repulseAutios()">审核不通过</el-button>
         </el-form-item>
       </el-form>
       <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" @selection-change="handleSelectionChange" border tooltip-effect="dark" style="width: 100%;margin-bottom: 20px">
@@ -97,8 +97,8 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
-            <el-button class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)" v-if="!((scope.row.status === 'checked' && scope.row.interfaceReturnStatus === '1') || scope.row.status === 'noPass') && isAuth('verify:material:update')">{{ scope.row.redact? '保存' : '编辑'}}</el-button>
-            <el-button class="ra_btn" type="warning" round size="mini" @click="ResetD(scope.row)" v-if="scope.row.status === 'checked' && (scope.row.interfaceReturnStatus === '1' || scope.row.interfaceReturnStatus === null) && isAuth('verify:material:resetMaterial')">反审</el-button>
+            <el-button class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)" v-if="!((scope.row.status === 'checked' && scope.row.interfaceReturnStatus === '1') || scope.row.status === 'noPass')">{{ scope.row.redact? '保存' : '编辑'}}</el-button>
+            <el-button class="ra_btn" type="warning" round size="mini" @click="ResetD(scope.row)" v-if="scope.row.status === 'checked' && (scope.row.interfaceReturnStatus === '1' || scope.row.interfaceReturnStatus === null)">反审</el-button>
           </template>
         </el-table-column>
       </el-table>
