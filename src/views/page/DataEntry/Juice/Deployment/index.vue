@@ -309,6 +309,7 @@ export default {
       return (row.materialName.indexOf('原汁') === -1 || !(this.lineStatus !== '已提交' && this.lineStatus !== '审核通过' && this.isRedact !== false && row.status !== 'submit' && row.status !== 'checked'))
     },
     changeH (row) {
+      row.category = ''
       if (row.holderId) {
         if (this.thrwHolderList.filter(item => item.holderId === row.holderId).length > 0) {
           row.category = this.thrwHolderList.filter(item => item.holderId === row.holderId)[0].type
