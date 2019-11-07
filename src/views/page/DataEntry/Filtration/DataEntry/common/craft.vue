@@ -265,19 +265,14 @@ export default {
           currentRecord = this.techList.filter(data => data.uid === this.techInfo.uid)
           if (currentRecord && currentRecord.length > 0) {
             Object.assign(currentRecord[0], this.techInfo)
+            this.SupMaterDel(this.techInfo)
+            this.dialogVisible = false
+            return false
           } else {
             this.techList.push(this.techInfo)
-          }
-          if (this.techInfo.xiu === 0) {
             // 新增
             if (Number(this.techInfo.filterAidAdd) + Number(this.techInfo.filterAidBef) > 0) {
-              let p = -2
-              this.supMaterialList.map((item, index) => {
-                if (item.filterMachineId === this.techInfo.filterMachineId) {
-                  p = index
-                }
-              })
-              if (p === -2) {
+              if (this.supMaterialList.findIndex(item => item.filterMachineId === this.techInfo.filterMachineId) === -1) {
                 this.supMaterialList.push({
                   orderId: this.orderId,
                   deviceName: this.techInfo.deviceName,
@@ -294,44 +289,70 @@ export default {
                 this.dialogVisible = false
                 return false
               } else {
-                for (let item of this.supMaterialList) {
-                  if (item.filterMachineId === this.techInfo.filterMachineId && (item.batch === '' || item.batch === null)) {
-                    item.filterAidAmount = Number(item.filterAidAmount) + Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd)
-                    // let filterAidAmountss = 0
-                    // this.techList.map((itemss) => {
-                    //   if (itemss.delFlag === '0' && itemss.filterMachineId === this.techInfo.filterMachineId) {
-                    //     filterAidAmountss = Number(filterAidAmountss) + Number(itemss.filterAidBef) + Number(itemss.filterAidAdd)
-                    //   }
-                    // })
-                    // item.filterAidAmount = filterAidAmountss
-                    this.dialogVisible = false
-                    return false
+                // 是否拆分过
+                if (this.supMaterialList.findIndex(item => item.filterMachineId === this.techInfo.filterMachineId && item.isSplit === '1') === -1) {
+                  this.SupMaterDel(this.techInfo)
+                  this.dialogVisible = false
+                  return false
+                } else {
+                  for (let item of this.supMaterialList) {
+                    if (item.filterMachineId === this.techInfo.filterMachineId && (item.batch === '' || item.batch === null)) {
+                      item.filterAidAmount = Number(item.filterAidAmount) + Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd)
+                      this.dialogVisible = false
+                      return false
+                    }
                   }
                 }
-                this.supMaterialList.splice(Number(p) + 1, 0, {
-                  orderId: this.orderId,
-                  deviceName: this.techInfo.deviceName,
-                  filterAidAmount: Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd),
-                  materialCode: this.filterAidMaterialList[0].CODE,
-                  materialName: this.filterAidMaterialList[0].VALUE,
-                  unit: 'KG',
-                  batch: '',
-                  isSplit: '0',
-                  filterAidModel: this.filterAidModelList[0].VALUE,
-                  filterAidVender: this.filterAidVenderList[0].VALUE,
-                  filterMachineId: this.techInfo.filterMachineId
-                })
-                this.dialogVisible = false
-                return false
               }
+            //   let p = -2
+            //   this.supMaterialList.map((item, index) => {
+            //     if (item.filterMachineId === this.techInfo.filterMachineId) {
+            //       p = index
+            //     }
+            //   })
+            //   if (p === -2) {
+            //     this.supMaterialList.push({
+            //       orderId: this.orderId,
+            //       deviceName: this.techInfo.deviceName,
+            //       filterAidAmount: Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd),
+            //       materialCode: this.filterAidMaterialList[0].CODE,
+            //       materialName: this.filterAidMaterialList[0].VALUE,
+            //       unit: 'KG',
+            //       batch: '',
+            //       isSplit: '0',
+            //       filterAidModel: this.filterAidModelList[0].VALUE,
+            //       filterAidVender: this.filterAidVenderList[0].VALUE,
+            //       filterMachineId: this.techInfo.filterMachineId
+            //     })
+            //     this.dialogVisible = false
+            //     return false
+            //   } else {
+            //     for (let item of this.supMaterialList) {
+            //       if (item.filterMachineId === this.techInfo.filterMachineId && (item.batch === '' || item.batch === null)) {
+            //         item.filterAidAmount = Number(item.filterAidAmount) + Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd)
+            //         this.dialogVisible = false
+            //         return false
+            //       }
+            //     }
+            //     this.supMaterialList.splice(Number(p) + 1, 0, {
+            //       orderId: this.orderId,
+            //       deviceName: this.techInfo.deviceName,
+            //       filterAidAmount: Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd),
+            //       materialCode: this.filterAidMaterialList[0].CODE,
+            //       materialName: this.filterAidMaterialList[0].VALUE,
+            //       unit: 'KG',
+            //       batch: '',
+            //       isSplit: '0',
+            //       filterAidModel: this.filterAidModelList[0].VALUE,
+            //       filterAidVender: this.filterAidVenderList[0].VALUE,
+            //       filterMachineId: this.techInfo.filterMachineId
+            //     })
+            //     this.dialogVisible = false
+            //     return false
+            //   }
             } else {
               this.dialogVisible = false
             }
-          } else {
-            // 修改
-            this.SupMaterDel(this.techInfo)
-            this.dialogVisible = false
-            return false
           }
         } else {
           return false
@@ -455,34 +476,29 @@ export default {
         return ''
       }
     },
-    // 辅料删除，汇总一条
+    // 主料删除 辅料汇总一条
     SupMaterDel (row) {
-      let sum = 0
-      for (let item of this.techList) {
+      let filterAidAmount = 0
+      this.supMaterialList = this.supMaterialList.filter(item => item.filterMachineId !== row.filterMachineId)
+      this.techList.map(item => {
         if (row.filterMachineId === item.filterMachineId && item.delFlag === '0') {
-          sum = sum + 1
-        }
-      }
-      this.supMaterialListS = []
-      this.supMaterialList.map((item, index) => {
-        if (item.filterMachineId !== row.filterMachineId) {
-          this.supMaterialListS.push(item)
-        } else {
-          this.delSupMater = item
+          filterAidAmount += Number(item.filterAidBef) + Number(item.filterAidAdd)
         }
       })
-      this.supMaterialList = []
-      this.supMaterialList = this.supMaterialListS
-      if (sum !== 0) {
-        this.delSupMater['batch'] = ''
-        let filterAidAmount = 0
-        this.techList.map((item) => {
-          if (item.delFlag === '0' && item.filterMachineId === row.filterMachineId) {
-            filterAidAmount = filterAidAmount + Number(item.filterAidBef) + Number(item.filterAidAdd)
-          }
+      if (filterAidAmount > 0) {
+        this.supMaterialList.push({
+          orderId: row.orderId,
+          deviceName: row.deviceName,
+          filterAidAmount: filterAidAmount,
+          materialCode: this.filterAidMaterialList[0].CODE,
+          materialName: this.filterAidMaterialList[0].VALUE,
+          unit: 'KG',
+          batch: '',
+          isSplit: '0',
+          filterAidModel: this.filterAidModelList[0].VALUE,
+          filterAidVender: this.filterAidVenderList[0].VALUE,
+          filterMachineId: this.techInfo.filterMachineId
         })
-        this.delSupMater['filterAidAmount'] = filterAidAmount
-        this.supMaterialList.push(this.delSupMater)
       }
     },
     // 提交验证

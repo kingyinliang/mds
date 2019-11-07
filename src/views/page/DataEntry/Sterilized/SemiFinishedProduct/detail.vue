@@ -3,7 +3,7 @@
     <el-card class="searchCard  newCard">
       <el-row type="flex">
         <el-col class="header_pot" style="width: 160px">
-          <p class='header_pot_label'>罐号：{{formData.holderName ? formData.holderName : ''}}</p>
+          <p class='header_pot_label'>罐号：{{formData.HOLDER_NAME ? formData.HOLDER_NAME : ''}}</p>
           <div class="header_pot_image">
             <div class="header_pot_image_content">
             </div>
