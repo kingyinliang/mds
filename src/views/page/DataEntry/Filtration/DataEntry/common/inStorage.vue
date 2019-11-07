@@ -42,30 +42,31 @@
     <el-dialog width="400px" title="入罐开始" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible">
       <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="addIn()" @submit.native.prevent label-width="110px"  size="small" style="width: 300px;margin: auto">
         <el-form-item label="成品罐号：" prop="holderId">
-          <el-select v-model="dataForm.holderId" filterable placeholder="请选择" @change="PotinTankAmount" style="width: 100%">
+          <el-select v-model="dataForm.holderId" filterable placeholder="请选择" @change="PotinTankAmount" style="width: 100%" v-if="!dialogDisabled">
             <el-option :label="item.holderName" v-for="(item, index) in PotList" :key="index" :value="item.holderId"></el-option>
           </el-select>
+          <span v-if="dialogDisabled">{{dataForm.holderName}}</span>
         </el-form-item>
         <el-form-item label="批次：" prop="batch">
-          <el-input v-model="dataForm.batch" placeholder="请输入" :disabled="PotObject.batch" maxlength="10"></el-input>
+          <el-input v-model="dataForm.batch" placeholder="请输入" :disabled="PotObject.batch || dialogDisabled" maxlength="10"></el-input>
         </el-form-item>
-        <el-form-item label="入罐数量：">
+        <el-form-item label="入罐数量：" prop="inAmount">
           <el-input v-model="dataForm.inAmount" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="单位：">
           {{dataForm.unit = '方'}}
         </el-form-item>
         <el-form-item label="罐内库存：">
-          <el-input v-model="dataForm.holderRemaining" placeholder="请输入" :disabled="PotObject.inTankAmount"></el-input>
+          <el-input v-model="dataForm.holderRemaining" placeholder="请输入" :disabled="PotObject.inTankAmount || dialogDisabled"></el-input>
         </el-form-item>
         <el-form-item label="是否满罐：" prop="isFull">
-          <el-select v-model="dataForm.isFull" filterable placeholder="请选择" style="width: 100%">
+          <el-select v-model="dataForm.isFull" :disabled="dialogDisabled" filterable placeholder="请选择" style="width: 100%">
             <el-option label="是" value="1"></el-option>
             <el-option label="否" value="0"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="满罐时间：">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="dataForm.fullDate" style="width: 190px"></el-date-picker>
+          <el-date-picker type="datetime" :disabled="dialogDisabled" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="dataForm.fullDate" style="width: 190px"></el-date-picker>
         </el-form-item>
         <el-form-item label="备注：">
           <el-input v-model="dataForm.remark" placeholder="请输入"></el-input>
@@ -103,6 +104,21 @@ export default {
         holderId: [
           { required: true, message: '半成品罐号不能为空', trigger: 'blur' }
         ],
+        inAmount: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (value === '') {
+                callback(new Error('入罐数量不能为空'))
+              } else if (value * 1 <= 0) {
+                callback(new Error('入罐数量必须大于0'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'blur'
+          }
+        ],
         batch: [
           { required: true, message: '批次不能为空', trigger: 'blur' },
           { min: 10, max: 10, message: '批次长度为10 个字符', trigger: 'blur' }
@@ -111,6 +127,7 @@ export default {
           { required: true, message: '是否满罐不能为空', trigger: 'blur' }
         ]
       },
+      dialogDisabled: false,
       PotDetail: {},
       PotObject: {
         inTankAmount: false,
@@ -227,26 +244,36 @@ export default {
       })
     },
     // 半成品罐下拉
-    PotinTankAmount (id) {
-      if (this.dataForm.inAmount !== '') {
-        this.dataForm.holderRemaining = Number(this.dataForm.inAmount) + this.GetHolderSum(id)
+    PotinTankAmount (id, st) {
+      if (this.PotList.filter(item => item.holderId === id).length === 0) {
+        this.dialogDisabled = true
+      } else if (st) {
+        if (this.PotList.filter(item => item.holderId === id)[0].batch !== this.dataForm.batch) {
+          this.dialogDisabled = true
+        }
       } else {
-        this.dataForm.holderRemaining = this.GetHolderSum(id)
-      }
-      this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
-      if (this.dataForm.holderRemaining) {
-        this.PotObject.inTankAmount = true
-      } else {
-        this.PotObject.inTankAmount = false
-      }
-      if (this.dataForm.batch) {
-        this.PotObject.batch = true
-      } else {
-        this.PotObject.batch = false
+        if (this.dataForm.inAmount !== '') {
+          this.dataForm.holderRemaining = Number(this.dataForm.inAmount) + this.GetHolderSum(id)
+        } else {
+          this.dataForm.holderRemaining = this.GetHolderSum(id)
+        }
+        this.dataForm.holderRemaining = this.PotList.filter(item => item.holderId === id)[0].amount / 1000
+        this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
+        if (this.dataForm.holderRemaining) {
+          this.PotObject.inTankAmount = true
+        } else {
+          this.PotObject.inTankAmount = false
+        }
+        if (this.dataForm.batch) {
+          this.PotObject.batch = true
+        } else {
+          this.PotObject.batch = false
+        }
       }
     },
     // 入罐
     showDialog () {
+      this.dialogDisabled = false
       this.visible = true
       this.dataForm = {
         uid: this.uuid(),
@@ -290,9 +317,10 @@ export default {
       if ((row.status === '' || row.status === 'saved' || row.status === 'noPass') && this.isRedact) {
         this.visible = true
         this.isUpdate = true
+        this.dialogDisabled = false
         this.dataForm = JSON.parse(JSON.stringify(row))
         this.rowData = row
-        this.PotinTankAmount(this.dataForm.holderId)
+        this.PotinTankAmount(this.dataForm.holderId, true)
       }
     },
     GetHolderSum (holderId) {
