@@ -32,8 +32,7 @@
         <el-card class="dataList_item">
           <h3 class="dataList_item_tit">
             {{item.holderNo}} - <span style="color:rgb(51, 51, 51); font-weight:normal; font-size:14px;">{{item.holderStatus === '1' ? '入库中' : item.holderStatus === '0' ? '空罐' : item.holderStatus === '2' ? '满罐' : item.holderStatus === '3' ? '领用中' : ''}}</span>
-            <!--<span style="cursor:pointer; color:#1890FF; float:right; font-size:12px;">详情>></span>-->
-            <span style="cursor:pointer; color:#bbbbbb; float:right; font-size:12px;">详情>></span>
+            <span @click="godetails(item)" v-if="isAuth('filter:holder:list')" style="cursor:pointer; color:#1890FF; float:right; font-size:12px;">详情>></span>
           </h3>
           <div class="dataList_item_pot clearfix" style="position:relative;">
             <img src="@/assets/img/RD.png" alt="" v-if="item.isRdSign === '1'" style="position:absolute; left:10px; top:10px;">
@@ -278,6 +277,15 @@ export default {
     this.Getdeptcode()
   },
   methods: {
+    // 去详情
+    godetails (item) {
+      this.$store.state.common.sterilized.holderId = item.holderId
+      this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Sterilized-SemiFinishedProduct-detail')
+      let that = this
+      setTimeout(function () {
+        that.$router.push({ name: `DataEntry-Sterilized-SemiFinishedProduct-detail` })
+      }, 100)
+    },
     // 获取工厂
     Getdeptcode () {
       this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false).then(({data}) => {

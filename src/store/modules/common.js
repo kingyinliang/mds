@@ -209,7 +209,8 @@ export default {
       materialName: '',
       orderNoList: [],
       orderNo: '',
-      planOutputTotal: 0
+      planOutputTotal: 0,
+      holderId: ''
     },
     /**
      * 过滤车间

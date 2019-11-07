@@ -172,7 +172,7 @@
         </template>
       </span>
     </el-dialog>
-    <el-dialog :visible.sync="RecordDialogTableVisible" width="400px" custom-class='dialog__class'>
+    <el-dialog :visible.sync="RecordDialogTableVisible" width="550px" custom-class='dialog__class'>
       <div slot="title" style="line-hight:59px">记录</div>
       <el-form :model="record" size="small" label-width="140px" :rules="recordrules" ref="record">
         <el-form-item label="搅罐时间（min）：" prop="stirringTime">
@@ -180,63 +180,55 @@
           <!--<el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>-->
         </el-form-item>
         <el-form-item label="送样时间：" prop="sampleTime">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.sampleTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>
+          <el-date-picker class="width100" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.sampleTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>
         </el-form-item>
         <el-form-item label="一次性合格：" prop="oneOffSuc">
-          <el-select v-model="record.oneOffSuc" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
+          <el-select v-model="record.oneOffSuc" filterable class="width100" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
             <el-option value=''>请选择</el-option>
             <el-option v-for="(item, index) of oneOffSucList" :key="index" :value="item" :label="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="不合格原因：">
-          <el-select v-model="record.nonReasons" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
+          <el-select v-model="record.nonReasons" filterable class="width100" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
             <el-option value=''>请选择</el-option>
             <el-option v-for="(item, index) of nonReasonsList" :key="index" :value="item.code" :label="item.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="不合格调整分类：">
-          <el-select v-model="record.nonReasonClass" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
-            <el-option value=''>请选择</el-option>
-            <el-option v-for="(item, index) of nonReasonClassList" :key="index" :value="item" :label="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="调整数量（方）：">
-          <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
-        </el-form-item>
-        <el-form-item label="不合格调整分类：">
-          <el-select v-model="record.nonReasonClass" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
-            <el-option value=''>请选择</el-option>
-            <el-option v-for="(item, index) of nonReasonClassList" :key="index" :value="item" :label="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="调整数量（方）：">
-          <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
-        </el-form-item>
-        <el-form-item label="不合格调整分类：">
-          <el-select v-model="record.nonReasonClass" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
-            <el-option value=''>请选择</el-option>
-            <el-option v-for="(item, index) of nonReasonClassList" :key="index" :value="item" :label="item"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="调整数量（方）：">
-          <el-input v-model="record.adjustAmount" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
-        </el-form-item>
+        <el-row v-for="(item, index) in record.Reason" :key="index">
+          <el-col style="width: 260px">
+            <el-form-item label="不合格调整分类：">
+              <el-select v-model="item.nonReasonClass" filterable :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'">
+                <el-option value=''>请选择</el-option>
+                <el-option v-for="(item, index) of nonReasonClassList" :key="index" :value="item" :label="item"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col style="width: 210px">
+            <el-form-item label="调整数量（方）：" label-width="120px">
+              <el-input v-model="item.adjustAmount" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col style="width: 32px; margin-left: 8px">
+            <el-button type="primary" icon="el-icon-plus" circle @click="addReasons" size="small" v-if="index === 0"></el-button>
+            <el-button type="danger" icon="el-icon-delete" circle @click="delReason(index)" size="small" v-else></el-button>
+          </el-col>
+        </el-row>
         <el-form-item label="调前米数：">
-          <el-input v-model="record.beforeMet" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
+          <el-input v-model="record.beforeMet" class="width100" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
         </el-form-item>
         <el-form-item label="调后米数：">
-          <el-input v-model="record.afterMet" style="width:220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
+          <el-input v-model="record.afterMet" class="width100" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
         </el-form-item>
         <el-form-item label="合格时间：">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.qualTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>
+          <el-date-picker type="datetime" class="width100" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.qualTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>
         </el-form-item>
         <el-form-item label="白班操作人：">
-          <el-select v-model="record.dayOperator" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
+          <el-select v-model="record.dayOperator" filterable class="width100" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
             <el-option value=''>请选择</el-option>
             <el-option v-for="(item, index) of userList" :key="index" :value="item.realName+`(${item.userName})`" :label="item.realName+`(${item.userName})`"></el-option>
           </el-select>
         </el-form-item><el-form-item label="夜班操作人：">
-          <el-select v-model="record.nightOperator" filterable class="width220px" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
+          <el-select v-model="record.nightOperator" filterable class="width100" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'">
             <el-option value=''>请选择</el-option>
             <el-option v-for="(item, index) of userList" :key="index" :value="item.realName+`(${item.userName})`" :label="item.realName+`(${item.userName})`"></el-option>
           </el-select>
@@ -327,6 +319,7 @@ export default {
       return (row.materialName.indexOf('原汁') === -1 || !(this.lineStatus !== '已提交' && this.lineStatus !== '审核通过' && this.isRedact !== false && row.status !== 'submit' && row.status !== 'checked'))
     },
     changeH (row) {
+      row.category = ''
       if (row.holderId) {
         if (this.thrwHolderList.filter(item => item.holderId === row.holderId).length > 0) {
           row.category = this.thrwHolderList.filter(item => item.holderId === row.holderId)[0].type
@@ -421,7 +414,7 @@ export default {
     // 查询
     SearchList () {
       if (this.formHeader.factory === '') {
-        this.$notify({title: '警告', message: '请选择工厂', type: 'warning'})
+        this.$warning_SHINHO('请选择工厂')
         return false
       }
       this.ThrowHolder(this.formHeader.workShop)
@@ -481,7 +474,6 @@ export default {
     },
     // 调配 确定
     SaveSplit () {
-      console.log(this.Tdata)
       let batchList = []
       let ty = true
       let strMsg = ''
@@ -672,6 +664,16 @@ export default {
         }
       })
     },
+    addReasons () {
+      if (this.record.Reason.length === 3) {
+        this.$warning_SHINHO('最多三个调整框')
+        return
+      }
+      this.record.Reason.push({ adjustAmount: '', nonReasonClass: '' })
+    },
+    delReason (index) {
+      this.record.Reason.splice(index, 1)
+    },
     AddRecord (row) {
       this.soleRowstatus = row.status
       this.$http(`${STERILIZED_API.JUICEDLIST}`, 'POST', {aId: row.id}, false, false, false).then(({data}) => {
@@ -679,14 +681,15 @@ export default {
           if (data.list.length === 1) {
             this.record = {
               aId: row.id,
-              adjustAmount: data.list[0].adjustAmount,
+              // adjustAmount: data.list[0].adjustAmount,
+              // nonReasonClass: data.list[0].nonReasonClass,
+              Reason: data.list[0].Reason,
               afterMet: data.list[0].afterMet,
               beforeMet: data.list[0].beforeMet,
               dayOperator: data.list[0].dayOperator,
               delFlag: '0',
               id: data.list[0].id,
               nightOperator: data.list[0].nightOperator,
-              nonReasonClass: data.list[0].nonReasonClass,
               nonReasons: data.list[0].nonReasons,
               oneOffSuc: data.list[0].oneOffSuc,
               qualTime: data.list[0].qualTime,
@@ -703,6 +706,7 @@ export default {
               dayOperator: '',
               delFlag: '0',
               id: '',
+              Reason: [{ adjustAmount: '', nonReasonClass: '' }],
               nightOperator: '',
               nonReasonClass: '',
               nonReasons: '',
@@ -723,7 +727,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.record.oneOffSuc === '否') {
-            if (this.record.nonReasons === '' || this.record.nonReasonClass === '') {
+            if (this.record.nonReasons === '' || this.record.Reason[0].nonReasonClass === '') {
               this.$notify({title: '警告', message: '请选择不合格原因，不合格调整分类', type: 'warning'})
               return false
             }
