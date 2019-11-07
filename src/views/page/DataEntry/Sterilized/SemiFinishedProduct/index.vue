@@ -279,7 +279,7 @@ export default {
   methods: {
     // 去详情
     godetails (item) {
-      this.$store.state.common.filtrationPot = item
+      this.$store.state.common.sterilized.holderId = item.holderId
       this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Sterilized-SemiFinishedProduct-detail')
       let that = this
       setTimeout(function () {
