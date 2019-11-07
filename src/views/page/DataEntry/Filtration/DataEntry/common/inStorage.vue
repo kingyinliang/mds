@@ -144,7 +144,7 @@ export default {
   },
   watch: {
     'dataForm.inAmount' (n, o) {
-      if (this.dataForm.holderId) {
+      if (this.dataForm.holderId && this.PotList.filter(item => item.holderId === this.dataForm.holderId).length !== 0) {
         this.dataForm.holderRemaining = Number(n) + this.GetHolderSum(this.dataForm.holderId)
       }
     }
@@ -252,12 +252,13 @@ export default {
           this.dialogDisabled = true
         }
       } else {
+      }
+      if (this.PotList.filter(item => item.holderId === id).length !== 0) {
         if (this.dataForm.inAmount !== '') {
           this.dataForm.holderRemaining = Number(this.dataForm.inAmount) + this.GetHolderSum(id)
         } else {
           this.dataForm.holderRemaining = this.GetHolderSum(id)
         }
-        this.dataForm.holderRemaining = this.PotList.filter(item => item.holderId === id)[0].amount / 1000
         this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
         if (this.dataForm.holderRemaining) {
           this.PotObject.inTankAmount = true
