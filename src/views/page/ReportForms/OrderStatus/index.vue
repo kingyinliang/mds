@@ -1,5 +1,6 @@
 <template>
   <div class="header_main">
+    <query-table :queryFormData="queryFormData"></query-table>
     <el-card class="searchCard" style="margin-bottom: 5px">
       <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform multi_row">
         <el-form-item label="生产工厂：">
@@ -82,11 +83,59 @@
 
 <script>
 import {getFactory, getWorkshop, getParentline, getStatus, exportFile} from '@/net/validate'
-import { REP_API } from '@/api/api'
+import { REP_API, BASICDATA_API } from '@/api/api'
 export default {
   name: 'index',
   data () {
     return {
+      queryFormData: [
+        {
+          type: 'select',
+          label: '生产工厂',
+          prop: 'factory',
+          defaultOptionsFn: () => {
+            return this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false)
+          },
+          resVal: {
+            resData: 'typeList',
+            label: 'deptName',
+            value: 'deptId'
+          },
+          linkageProp: ['workShop']
+        },
+        {
+          type: 'select',
+          label: '生产车间',
+          prop: 'workShop',
+          optionsFn: (val) => {
+            return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: val, deptName: '' })
+          },
+          resVal: {
+            resData: 'typeList',
+            label: 'deptName',
+            value: 'deptId'
+          },
+          linkageProp: ['productline']
+        },
+        {
+          type: 'select',
+          label: '生产产线',
+          prop: 'productline',
+          resVal: {
+            resData: 'childList',
+            label: 'deptName',
+            value: 'deptId'
+          },
+          optionsFn: (val) => {
+            return this.$http(`${BASICDATA_API.FINDORGBYPARENTID_API}`, 'POST', { parentId: val })
+          }
+        },
+        {
+          type: 'input',
+          label: '生产订单',
+          prop: 'orderNo'
+        }
+      ],
       formHeader: {
         factory: '',
         workShop: '',
@@ -153,7 +202,11 @@ export default {
     }
   },
   computed: {},
-  components: {}
+  components: {
+    QueryTable: resolve => {
+      require(['@/views/page/ReportForms/common/QueryTable'], resolve)
+    }
+  }
 }
 </script>
 
