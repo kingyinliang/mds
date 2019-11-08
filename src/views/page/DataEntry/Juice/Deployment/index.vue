@@ -679,11 +679,19 @@ export default {
       this.$http(`${STERILIZED_API.JUICEDLIST}`, 'POST', {aId: row.id}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           if (data.list.length === 1) {
+            let Reason = []
+            Reason.push({ adjustAmount: data.list[0].adjustAmount, nonReasonClass: data.list[0].nonReasonClass })
+            if (data.list[0].nonReasonClassTwo || data.list[0].adjustAmountTwo) {
+              Reason.push({ adjustAmount: data.list[0].adjustAmount, nonReasonClass: data.list[0].nonReasonClass })
+            }
+            if (data.list[0].nonReasonClassThree || data.list[0].adjustAmountThree) {
+              Reason.push({ adjustAmount: data.list[0].adjustAmountThree, nonReasonClass: data.list[0].nonReasonClassThree })
+            }
             this.record = {
               aId: row.id,
               // adjustAmount: data.list[0].adjustAmount,
               // nonReasonClass: data.list[0].nonReasonClass,
-              Reason: data.list[0].Reason,
+              Reason: Reason,
               afterMet: data.list[0].afterMet,
               beforeMet: data.list[0].beforeMet,
               dayOperator: data.list[0].dayOperator,
@@ -732,6 +740,18 @@ export default {
               return false
             }
           }
+          this.record.Reason.forEach((item, index) => {
+            if (index === 0) {
+              this.record.nonReasonClass = item.nonReasonClass
+              this.record.adjustAmount = item.adjustAmount
+            } else if (index === 1) {
+              this.record.nonReasonClassTwo = item.nonReasonClass
+              this.record.adjustAmountTwo = item.adjustAmount
+            } else if (index === 2) {
+              this.record.nonReasonClassThree = item.nonReasonClass
+              this.record.adjustAmountThree = item.adjustAmount
+            }
+          })
           this.$http(`${STERILIZED_API.JUICEDRECORDSAVE}`, 'POST', this.record).then(({data}) => {
             if (data.code === 0) {
               this.$notify({title: '成功', message: '保存成功', type: 'success'})
