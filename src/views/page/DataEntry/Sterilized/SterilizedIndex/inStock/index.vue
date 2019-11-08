@@ -222,7 +222,11 @@ export default {
       //   this.PotObject.inTankAmount = false
       // }
       if (this.dataForm.batch) {
-        this.PotObject.batch = true
+        if (this.PotList.filter(item => item.holderId === id)[0].isEmpty === 1) {
+          this.PotObject.batch = false
+        } else {
+          this.PotObject.batch = true
+        }
       } else {
         this.PotObject.batch = false
       }
