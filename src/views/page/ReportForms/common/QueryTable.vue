@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <el-card class="searchCard">
+      <el-card class="searchCard" style="margin-bottom: 5px">
         <el-form :model="queryForm" :rules="rules" :inline="true" size="small" label-width="70px" class="topform multi_row">
           <template v-for="item in queryFormData" v-if="!item.hide">
             <el-form-item
@@ -33,7 +33,36 @@
                 v-model="queryForm[item.prop]"></el-input>
             </el-form-item>
           </template>
+          <el-form-item class="floatr">
+            <el-button type="primary" size="small" @click="GetDataList(true)">查询</el-button>
+            <slot name="mds-button"></slot>
+          </el-form-item>
         </el-form>
+      </el-card>
+      <el-card class="tableCard">
+        <el-table :data="tableData" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;margin-bottom: 20px">
+          <el-table-column
+            v-for="item in column"
+            v-if="!item.hide"
+            :key="item.name"
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width || ''"
+            :formatter="item.formatter"
+            :show-overflow-tooltip="true">
+          </el-table-column>
+        </el-table>
+        <el-row >
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="queryForm.currPage"
+            :page-sizes="[10, 20, 50]"
+            :page-size="queryForm.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="queryForm.totalCount">
+          </el-pagination>
+        </el-row>
       </el-card>
     </div>
   </div>
@@ -44,8 +73,13 @@ export default {
   name: 'QueryTable',
   data () {
     return {
-      queryForm: {},
-      optionLists: {}
+      queryForm: {
+        currPage: 1,
+        pageSize: 10,
+        totalCount: 0
+      },
+      optionLists: {},
+      tableData: []
     }
   },
   props: {
@@ -55,7 +89,21 @@ export default {
         return []
       }
     },
-    rules: {}
+    rules: {},
+    queryAuth: {
+      type: String,
+      default: ''
+    },
+    listInterface: {
+      type: Function,
+      default: () => {}
+    },
+    column: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    }
   },
   created () {
     this.init()
@@ -63,6 +111,7 @@ export default {
   mounted () {
   },
   methods: {
+    // 初始化
     init () {
       this.queryFormData.forEach((item) => {
         // 设置查询表单
@@ -74,7 +123,7 @@ export default {
           // 初始化下拉
           item.defaultOptionsFn().then(({data}) => {
             data[item.resVal.resData].forEach((resItem, index) => {
-              if (index === 0 && !item.defaultValue) {
+              if (index === 0 && !item.defaultValue && item.defaultValue !== '') {
                 this.$set(this.queryForm, item.prop, resItem[item.resVal.value])
                 this.$nextTick(function () {
                   this.$refs[item.prop][0].emitChange(resItem[item.resVal.value])
@@ -101,7 +150,13 @@ export default {
                 if (val) {
                   linkagePropItemObj.optionsFn(val).then(({data}) => {
                     if (data.code === 0) {
-                      data[linkagePropItemObj.resVal.resData].forEach((resItem) => {
+                      data[linkagePropItemObj.resVal.resData].forEach((resItem, index) => {
+                        if (index === 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
+                          this.$set(this.queryForm, linkagePropItemObj.prop, resItem[linkagePropItemObj.resVal.value])
+                          this.$nextTick(function () {
+                            this.$refs[linkagePropItemObj.prop][0].emitChange(resItem[linkagePropItemObj.resVal.value])
+                          })
+                        }
                         resItem.label = resItem[linkagePropItemObj.resVal.label]
                         resItem.value = resItem[linkagePropItemObj.resVal.value]
                       })
@@ -118,6 +173,37 @@ export default {
           })
         }
       })
+    },
+    // 获取table数据
+    GetDataList (st) {
+      if (!this.isAuth(this.queryAuth)) {
+        this.$warning_SHINHO('无查询权限')
+        return false
+      }
+      if (st) {
+        this.queryForm.currPage = 1
+      }
+      this.listInterface(this.queryForm).then(({data}) => {
+        if (data.code === 0) {
+          this.tableData = data.page.list
+          this.queryForm.currPage = data.page.currPage
+          this.queryForm.pageSize = data.page.pageSize
+          this.queryForm.totalCount = data.page.totalCount
+          this.$emit('get-data-success', data)
+        } else {
+          this.$error_SHINHO(data.msg)
+        }
+      })
+    },
+    // 改变每页条数
+    handleSizeChange (val) {
+      this.queryForm.pageSize = val
+      this.GetDataList()
+    },
+    // 跳转页数
+    handleCurrentChange (val) {
+      this.queryForm.currPage = val
+      this.GetDataList()
     }
   },
   computed: {},
