@@ -2,7 +2,7 @@
   <div>
     <div>
       <el-card class="searchCard" style="margin-bottom: 5px">
-        <el-form :model="queryForm" :rules="rules" :inline="true" size="small" label-width="70px" class="topform multi_row">
+        <el-form :model="queryForm" :rules="rules" :inline="true" size="small" label-width="70px" class="topform multi_row clearfix" style="font-size: 0;">
           <template v-for="item in queryFormData" v-if="!item.hide">
             <el-form-item
               v-if="item.type === 'select'"
@@ -12,14 +12,16 @@
               <el-select
                 style="width: 170px"
                 :ref="item.prop"
+                :filterable="item.filterable"
                 v-model="queryForm[item.prop]"
                 :disabled="item.disabled"
                 :placeholder="'请选择'+item.label">
+                <el-option label="请选择"  value=""></el-option>
                 <el-option
-                  v-for="opt in optionLists[item.prop]"
-                  :key="opt.value"
-                  :label="opt.label"
-                  :value="opt.value">
+                  v-for="(opt, optIndex) in optionLists[item.prop]"
+                  :key="optIndex"
+                  :label="setLabel(opt, item)"
+                  :value="opt[item.resVal.value]">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -32,14 +34,36 @@
                 style="width: 170px"
                 v-model="queryForm[item.prop]"></el-input>
             </el-form-item>
+            <el-form-item
+              class="dateinput"
+              v-if="item.type === 'date-interval'"
+              :label="`${item.label}：` || ''"
+              :prop="item.prop"
+              :key="item.prop">
+              <el-row>
+                <el-col :span="12">
+                  <el-date-picker v-model="queryForm[item.prop]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                  <span>-</span>
+                </el-col>
+                <el-col :span="12">
+                  <el-date-picker v-model="queryForm[item.propTwo]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                </el-col>
+              </el-row>
+            </el-form-item>
           </template>
           <el-form-item class="floatr">
             <el-button type="primary" size="small" @click="GetDataList(true)">查询</el-button>
             <slot name="mds-button"></slot>
           </el-form-item>
         </el-form>
+        <div class="toggleSearchBottom">
+          <i class="el-icon-caret-top"></i>
+        </div>
       </el-card>
       <el-card class="tableCard">
+        <div class="toggleSearchTop">
+          <i class="el-icon-caret-bottom"></i>
+        </div>
         <el-table :data="tableData" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;margin-bottom: 20px">
           <el-table-column
             v-for="item in column"
@@ -109,30 +133,38 @@ export default {
     this.init()
   },
   mounted () {
+    this.headanimation(this.$)
   },
   methods: {
+    // 设置下拉label
+    setLabel (opt, item) {
+      let label = ''
+      item.resVal.label.forEach(it => {
+        label += opt[it] + ' '
+      })
+      return label
+    },
     // 初始化
     init () {
       this.queryFormData.forEach((item) => {
         // 设置查询表单
         this.$set(this.queryForm, item.prop, item.defaultValue || '')
+        if (item.type === 'date-interval') {
+          this.$set(this.queryForm, item.propTwo, item.defaultValue || '')
+        }
         // 下拉框获取下拉
         if (item.options) {
           this.$set(this.optionLists, item.prop, item.options || [])
         } else if (item.defaultOptionsFn) {
           // 初始化下拉
           item.defaultOptionsFn().then(({data}) => {
-            data[item.resVal.resData].forEach((resItem, index) => {
-              if (index === 0 && !item.defaultValue && item.defaultValue !== '') {
-                this.$set(this.queryForm, item.prop, resItem[item.resVal.value])
-                this.$nextTick(function () {
-                  this.$refs[item.prop][0].emitChange(resItem[item.resVal.value])
-                })
-              }
-              resItem.label = resItem[item.resVal.label]
-              resItem.value = resItem[item.resVal.value]
-            })
             this.$set(this.optionLists, item.prop, data[item.resVal.resData])
+            if (data[item.resVal.resData].length > 0 && !item.defaultValue && item.defaultValue !== '') {
+              this.$set(this.queryForm, item.prop, data[item.resVal.resData][0][item.resVal.value])
+              this.$nextTick(function () {
+                this.$refs[item.prop][0].emitChange(data[item.resVal.resData][0][item.resVal.value])
+              })
+            }
           })
         }
         // 联动监听事件对象
@@ -150,17 +182,13 @@ export default {
                 if (val) {
                   linkagePropItemObj.optionsFn(val).then(({data}) => {
                     if (data.code === 0) {
-                      data[linkagePropItemObj.resVal.resData].forEach((resItem, index) => {
-                        if (index === 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
-                          this.$set(this.queryForm, linkagePropItemObj.prop, resItem[linkagePropItemObj.resVal.value])
-                          this.$nextTick(function () {
-                            this.$refs[linkagePropItemObj.prop][0].emitChange(resItem[linkagePropItemObj.resVal.value])
-                          })
-                        }
-                        resItem.label = resItem[linkagePropItemObj.resVal.label]
-                        resItem.value = resItem[linkagePropItemObj.resVal.value]
-                      })
                       this.$set(this.optionLists, linkagePropItemObj.prop, data[linkagePropItemObj.resVal.resData])
+                      if (data[linkagePropItemObj.resVal.resData].length > 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
+                        this.$set(this.queryForm, linkagePropItemObj.prop, data[linkagePropItemObj.resVal.resData][0][linkagePropItemObj.resVal.value])
+                        this.$nextTick(function () {
+                          this.$refs[linkagePropItemObj.prop][0].emitChange(data[linkagePropItemObj.resVal.resData][0][linkagePropItemObj.resVal.value])
+                        })
+                      }
                     } else {
                       this.$error_SHINHO(data.msg)
                     }
@@ -193,6 +221,26 @@ export default {
         } else {
           this.$error_SHINHO(data.msg)
         }
+      })
+    },
+    // 显示隐藏动画
+    headanimation ($) {
+      $('.toggleSearchBottom').parents('.searchCard').css('padding-bottom', '7px')
+      // 搜索切换显隐
+      $('.toggleSearchBottom').click(function () {
+        $('.toggleSearchBottom').parents('.searchCard').css('padding-bottom', '0')
+        $('.searchCard').animate({height: 0}, 300, () => {
+          $(this).hide()
+          $('.toggleSearchTop').show()
+        })
+      })
+      $('.toggleSearchTop').click(function () {
+        let hei = $('.searchCard .el-card__body').height()
+        $('.searchCard').animate({height: `${hei + 20}px`}, 300, () => {
+          $('.searchCard').css('padding-bottom', '15px')
+          $(this).hide()
+          $('.toggleSearchBottom').show()
+        })
       })
     },
     // 改变每页条数

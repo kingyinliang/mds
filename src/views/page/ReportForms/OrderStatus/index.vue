@@ -25,15 +25,10 @@ export default {
           },
           resVal: {
             resData: 'typeList',
-            label: 'deptName',
+            label: ['deptName'],
             value: 'deptId'
           },
           linkageProp: ['workShop']
-        },
-        {
-          type: 'input',
-          label: '生产订单',
-          prop: 'orderNo'
         },
         {
           type: 'select',
@@ -44,7 +39,7 @@ export default {
           },
           resVal: {
             resData: 'typeList',
-            label: 'deptName',
+            label: ['deptName'],
             value: 'deptId'
           },
           linkageProp: ['productline']
@@ -55,7 +50,7 @@ export default {
           prop: 'productline',
           resVal: {
             resData: 'childList',
-            label: 'deptName',
+            label: ['deptName'],
             value: 'deptId'
           },
           optionsFn: (val) => {
@@ -77,7 +72,7 @@ export default {
           },
           resVal: {
             resData: 'dicList',
-            label: 'value',
+            label: ['value'],
             value: 'code'
           }
         },
@@ -91,7 +86,7 @@ export default {
           },
           resVal: {
             resData: 'dicList',
-            label: 'value',
+            label: ['value'],
             value: 'code'
           }
         },
@@ -105,7 +100,7 @@ export default {
           },
           resVal: {
             resData: 'dicList',
-            label: 'value',
+            label: ['value'],
             value: 'code'
           }
         },
@@ -119,7 +114,7 @@ export default {
           },
           resVal: {
             resData: 'dicList',
-            label: 'value',
+            label: ['value'],
             value: 'code'
           }
         }
