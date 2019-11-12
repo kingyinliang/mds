@@ -17,7 +17,7 @@
 
 <script>
 import {BASICDATA_API, REP_API} from '@/api/api'
-import { exportFile, headanimation } from '@/net/validate'
+import { exportFile } from '@/net/validate'
 export default {
   name: 'index',
   data () {

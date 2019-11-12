@@ -64,7 +64,7 @@
   <el-card class="searchCard  newCard ferCard" style="margin-top: 5px"  v-show="fastS">
     <h3 style="color:black; margin-bottom:8px; line-height:20px;">
       <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>发酵罐列表
-      <i class="gotop" v-if="isAuth('report:production:fermentation')"><a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a></i>
+      <i class="gotop" @click="goSummary()" v-if="isAuth('report:production:fermentation')"><a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a></i>
     </h3>
     <el-row class="dataList" :gutter="10" style="min-height: 150px">
       <el-col :span="4" v-for="(item, index) in dataList" :key="index">
@@ -446,6 +446,15 @@ export default {
       let that = this
       setTimeout(function () {
         that.$router.push({ name: `DataEntry-Fermentation-Fermenter-details` })
+      }, 100)
+    },
+    // 发酵罐一览表
+    goSummary () {
+      this.$store.state.common.Fermentation.workShop = this.formHeader.workShop
+      this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Fermentation-Fermenter-summary')
+      let that = this
+      setTimeout(function () {
+        that.$router.push({ name: `DataEntry-Fermentation-Fermenter-summary` })
       }, 100)
     },
     toRouter (str, row) {
