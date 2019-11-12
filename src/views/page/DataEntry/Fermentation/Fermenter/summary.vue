@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     GetList () {
-      this.$http(`${FERMENTATION_API.FER_REPORT_LIST}`, 'POST', {}).then(({data}) => {
+      this.$http(`${FERMENTATION_API.FER_REPORT_LIST}`, 'POST', {workShop: this.$store.state.common.Fermentation.workShop}).then(({data}) => {
         if (data.code === 0) {
           // this.headerInfo = data.returnMap.head
           data.returnMap.head.map((item) => {

@@ -1464,6 +1464,10 @@ export const FERMENTATION_API = {
    */
   ORDER_IN_STOCK_SUBMIT_API: HOST + '/fer/inStore/submit',
   /**
+   * 入库管理删除接口
+   */
+  ORDER_IN_STOCK_DEL_API: HOST + '/fer/inStore/del',
+  /**
    * 审核日志接口
    */
   ORDER_IN_STOCK_AUDIT_API: HOST + '/fer/inStore/verifyRecordList',

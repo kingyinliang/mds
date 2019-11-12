@@ -66,6 +66,7 @@
           <template v-if="isEdit" style="float:right; margin-left: 10px;">
             <el-button type="primary" size="small" v-if="isAuth('fer:inStore:mySaveOrUpdate')" @click="save()">保存</el-button>
             <el-button type="primary" size="small" v-if="isAuth('fer:inStore:submit')" @click="submit()">提交</el-button>
+            <el-button type="danger" size="small" @click="remove">批量删除</el-button>
           </template>
         </el-row>
         <div class="toggleSearchBottom">
@@ -422,6 +423,32 @@ export default class Index extends Vue {
         }
       })
     }
+  }
+  remove () {
+    if (!this.selectedList.length) {
+      Vue.prototype.$warning_SHINHO('请选择订单')
+      return false
+    }
+    this.$confirm('确认删除, 是否继续?', '删除', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      for (let item of this.selectedList) {
+        if (!(item.orderType === '7120' && (item.status === 'noPass' || item.status === 'saved'))) {
+          Vue.prototype.$warning_SHINHO('只能删除“审核不通过”、“已保存”的7120订单')
+          return false
+        }
+      }
+      Vue.prototype.$http(`${FERMENTATION_API.ORDER_IN_STOCK_DEL_API}`, `POST`, this.selectedList).then((res) => {
+        if (res.data.code === 0) {
+          Vue.prototype.$success_SHINHO('删除成功')
+          this.retrieveOrderList()
+        } else {
+          this.$notify.error({title: '错误', message: res.data.msg})
+        }
+      })
+    })
   }
   submit () {
     if (this.validate()) {

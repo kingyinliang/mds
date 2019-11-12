@@ -17,13 +17,15 @@ import '@/assets/scss/index.scss'
 import { version } from '@/version'
 import App from './App.vue'
 // import 'script-loader!file-saver'
-import * as fundebug from 'fundebug-javascript'
+// funDebug
 import fundebugVue from 'fundebug-vue'
-fundebug.init({
-  apikey: '208950dc06f14c77de3e8b9ee5dcaf107f7586d95d5340696aa96bfd59d4a1d4'
-})
-fundebugVue(fundebug, Vue)
-require('fundebug-revideo')
+if (process.env.NODE_ENV === 'production') {
+  let fundebug = require('fundebug-javascript')
+  fundebug.apikey = '208950dc06f14c77de3e8b9ee5dcaf107f7586d95d5340696aa96bfd59d4a1d4'
+  fundebugVue(fundebug, Vue)
+  require('fundebug-revideo')
+}
+
 elementUi()
 // SentryUtil.init()
 Vue.config.productionTip = false

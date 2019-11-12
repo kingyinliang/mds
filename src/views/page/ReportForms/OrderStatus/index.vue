@@ -1,159 +1,181 @@
 <template>
   <div class="header_main">
-    <el-card class="searchCard" style="margin-bottom: 5px">
-      <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform multi_row">
-        <el-form-item label="生产工厂：">
-          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 170px">
-            <el-option label="请选择"  value=""></el-option>
-            <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="生产车间：">
-          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 170px">
-            <el-option label="请选择"  value=""></el-option>
-            <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="生产产线：">
-          <el-select v-model="formHeader.productline" placeholder="产线" style="width: 170px">
-            <el-option label="请选择"  value=""></el-option>
-            <el-option :label="item.deptName" v-for="(item, index) in productline" :key="index" :value="item.deptId"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="生产订单：">
-          <el-input type="text" v-model="formHeader.orderNo" clearable style="width: 170px"></el-input>
-        </el-form-item>
-        <el-form-item label="订单状态：">
-          <el-select v-model="formHeader.orderStatus" placeholder="请选择" style="width: 170px">
-            <el-option label="请选择"  value=""></el-option>
-            <el-option :label="iteam.value" :value="iteam.code" v-for="(iteam, index) in Status" :key="index"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="报工状态：">
-          <el-select v-model="formHeader.timeStatus" placeholder="请选择" style="width: 170px">
-            <el-option label="请选择"  value=""></el-option>
-            <el-option :label="iteam.value" :value="iteam.code" v-for="(iteam, index) in Status" :key="index"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="入库状态：">
-          <el-select v-model="formHeader.inStatus" placeholder="请选择" style="width: 170px">
-            <el-option label="请选择"  value=""></el-option>
-            <el-option :label="iteam.value" :value="iteam.code" v-for="(iteam, index) in Status" :key="index"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="发料状态：">
-          <el-select v-model="formHeader.matStatus" placeholder="请选择" style="width: 170px">
-            <el-option label="请选择"  value=""></el-option>
-            <el-option :label="iteam.value" :value="iteam.code" v-for="(iteam, index) in Status" :key="index"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item class="floatr">
-          <el-button type="primary" size="small" @click="GetDataList(true)" v-if="isAuth('report:formh:getAllStatusList')">查询</el-button>
-          <el-button type="primary" size="small" @click="ExportExcel(true)" v-if="isAuth('report:formh:getAllStatusList')">导出</el-button>
-        </el-form-item>
-        </el-form>
-    </el-card>
-    <el-card class="tableCard">
-      <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;margin-bottom: 20px">
-        <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="productLineName" label="产线" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="orderStatus" label="订单状态" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="timeStatus" label="报工审核状态" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="inStatus" label="入库审核状态" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="matStatus" label="发料审核状态" :show-overflow-tooltip="true"></el-table-column>
-      </el-table>
-      <el-row >
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="formHeader.currPage"
-          :page-sizes="[10, 20, 50]"
-          :page-size="formHeader.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="formHeader.totalCount">
-        </el-pagination>
-      </el-row>
-    </el-card>
+    <query-table :queryFormData="queryFormData" :list-interface="listInterface" :query-auth="'report:formh:getAllStatusList'" :column="column">
+      <template slot="mds-button">
+        <el-button size="small" type="primary" @click="ExportExcel(true)" v-if="isAuth('report:formh:getAllStatusList')">导出</el-button>
+      </template>
+    </query-table>
   </div>
 </template>
 
 <script>
-import {getFactory, getWorkshop, getParentline, getStatus, exportFile} from '@/net/validate'
-import { REP_API } from '@/api/api'
+import {exportFile} from '@/net/validate'
+import { REP_API, BASICDATA_API, SYSTEMSETUP_API } from '@/api/api'
 export default {
   name: 'index',
   data () {
     return {
-      formHeader: {
-        factory: '',
-        workShop: '',
-        productline: '',
-        orderNo: '',
-        orderStatus: '',
-        inStatus: '',
-        matStatus: '',
-        timeStatus: '',
-        currPage: 1,
-        pageSize: 10,
-        totalCount: 0
+      queryFormData: [
+        {
+          type: 'select',
+          label: '生产工厂',
+          prop: 'factory',
+          defaultOptionsFn: () => {
+            return this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false)
+          },
+          resVal: {
+            resData: 'typeList',
+            label: ['deptName'],
+            value: 'deptId'
+          },
+          linkageProp: ['workShop']
+        },
+        {
+          type: 'select',
+          label: '生产车间',
+          prop: 'workShop',
+          optionsFn: (val) => {
+            return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: val, deptName: '' })
+          },
+          resVal: {
+            resData: 'typeList',
+            label: ['deptName'],
+            value: 'deptId'
+          },
+          linkageProp: ['productline']
+        },
+        {
+          type: 'select',
+          label: '生产产线',
+          prop: 'productline',
+          resVal: {
+            resData: 'childList',
+            label: ['deptName'],
+            value: 'deptId'
+          },
+          optionsFn: (val) => {
+            return this.$http(`${BASICDATA_API.FINDORGBYPARENTID_API}`, 'POST', { parentId: val })
+          }
+        },
+        {
+          type: 'input',
+          label: '生产订单',
+          prop: 'orderNo'
+        },
+        {
+          type: 'select',
+          label: '订单状态',
+          prop: 'orderStatus',
+          defaultValue: '',
+          defaultOptionsFn: () => {
+            return this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {type: 'status_type'}, false, false, false)
+          },
+          resVal: {
+            resData: 'dicList',
+            label: ['value'],
+            value: 'code'
+          }
+        },
+        {
+          type: 'select',
+          label: '报工状态',
+          prop: 'timeStatus',
+          defaultValue: '',
+          defaultOptionsFn: () => {
+            return this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {type: 'status_type'}, false, false, false)
+          },
+          resVal: {
+            resData: 'dicList',
+            label: ['value'],
+            value: 'code'
+          }
+        },
+        {
+          type: 'select',
+          label: '入库状态',
+          prop: 'inStatus',
+          defaultValue: '',
+          defaultOptionsFn: () => {
+            return this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {type: 'status_type'}, false, false, false)
+          },
+          resVal: {
+            resData: 'dicList',
+            label: ['value'],
+            value: 'code'
+          }
+        },
+        {
+          type: 'select',
+          label: '发料状态',
+          prop: 'matStatus',
+          defaultValue: '',
+          defaultOptionsFn: () => {
+            return this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {type: 'status_type'}, false, false, false)
+          },
+          resVal: {
+            resData: 'dicList',
+            label: ['value'],
+            value: 'code'
+          }
+        }
+      ],
+      listInterface: (params) => {
+        return this.$http(`${REP_API.ORDER_STATUS_LIST_API}`, 'POST', params)
       },
-      factory: [],
-      workshop: [],
-      productline: [],
-      Status: [],
-      dataList: []
-    }
-  },
-  watch: {
-    'formHeader.factory' (n, o) {
-      this.formHeader.workShop = ''
-      getWorkshop(this, n, '')
-    },
-    'formHeader.workShop' (n, o) {
-      this.formHeader.productline = ''
-      getParentline(this, n)
+      column: [
+        {
+          prop: 'factoryName',
+          label: '工厂'
+        },
+        {
+          prop: 'workShopName',
+          label: '车间'
+        },
+        {
+          prop: 'productLineName',
+          label: '产线'
+        },
+        {
+          prop: 'productDate',
+          label: '生产日期'
+        },
+        {
+          prop: 'orderNo',
+          label: '生产订单'
+        },
+        {
+          prop: 'orderStatus',
+          label: '订单状态'
+        },
+        {
+          prop: 'timeStatus',
+          label: '报工审核状态'
+        },
+        {
+          prop: 'inStatus',
+          label: '入库审核状态'
+        },
+        {
+          prop: 'matStatus',
+          label: '发料审核状态'
+        }
+      ]
     }
   },
   mounted () {
-    getFactory(this)
-    getStatus(this)
   },
   methods: {
-    GetDataList (st) {
-      if (st) {
-        this.formHeader.currPage = 1
-      }
-      this.$http(`${REP_API.ORDER_STATUS_LIST_API}`, 'POST', this.formHeader).then(({data}) => {
-        if (data.code === 0) {
-          this.dataList = data.page.list
-          this.formHeader.currPage = data.page.currPage
-          this.formHeader.pageSize = data.page.pageSize
-          this.formHeader.totalCount = data.page.totalCount
-        } else {
-          this.$notify.error({title: '错误', message: data.msg})
-        }
-      })
-    },
     ExportExcel () {
       let that = this
       exportFile(`${REP_API.ORDER_STATUS_OUT_API}`, '订单状态报表数据导出', that)
-    },
-    // 改变每页条数
-    handleSizeChange (val) {
-      this.formHeader.pageSize = val
-      this.GetDataList()
-    },
-    // 跳转页数
-    handleCurrentChange (val) {
-      this.formHeader.currPage = val
-      this.GetDataList()
     }
   },
   computed: {},
-  components: {}
+  components: {
+    QueryTable: resolve => {
+      require(['@/views/page/ReportForms/common/QueryTable'], resolve)
+    }
+  }
 }
 </script>
 
