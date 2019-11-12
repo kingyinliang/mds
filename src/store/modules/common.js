@@ -156,6 +156,7 @@ export default {
     Fermentation: {
       orderId: '',
       details: {},
+      workShop: '',
       materia: {
         factory: '',
         workShop: '',
