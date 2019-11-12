@@ -174,7 +174,7 @@
     </el-dialog>
     <el-dialog :visible.sync="RecordDialogTableVisible" width="550px" custom-class='dialog__class'>
       <div slot="title" style="line-hight:59px">记录</div>
-      <el-form :model="record" size="small" label-width="140px" :rules="recordrules" ref="record">
+      <el-form :model="record" size="small" label-width="140px" :rules="recordrules" ref="record" style="width: 471px">
         <el-form-item label="搅罐时间（min）：" prop="stirringTime">
           <el-input v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
           <!--<el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>-->
@@ -194,8 +194,8 @@
             <el-option v-for="(item, index) of nonReasonsList" :key="index" :value="item.code" :label="item.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-row v-for="(item, index) in record.Reason" :key="index">
-          <el-col style="width: 260px">
+        <el-row style="width: 510px;" v-for="(item, index) in record.Reason" :key="index">
+          <el-col style="width: 300px">
             <el-form-item label="不合格调整分类：">
               <el-select v-model="item.nonReasonClass" filterable :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'">
                 <el-option value=''>请选择</el-option>
@@ -203,14 +203,14 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col style="width: 210px">
-            <el-form-item label="调整数量（方）：" label-width="120px">
+          <el-col style="width: 170px">
+            <el-form-item label="数量：" label-width="50px">
               <el-input v-model="item.adjustAmount" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'"></el-input>
             </el-form-item>
           </el-col>
           <el-col style="width: 32px; margin-left: 8px">
-            <el-button type="primary" icon="el-icon-plus" circle @click="addReasons" size="small" v-if="index === 0"></el-button>
-            <el-button type="danger" icon="el-icon-delete" circle @click="delReason(index)" size="small" v-else></el-button>
+            <el-button type="primary" icon="el-icon-plus" circle @click="addReasons" size="small" v-if="index === 0" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'"></el-button>
+            <el-button type="danger" icon="el-icon-delete" circle @click="delReason(index)" size="small" v-else :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'"></el-button>
           </el-col>
         </el-row>
         <el-form-item label="调前米数：">
@@ -681,10 +681,10 @@ export default {
           if (data.list.length === 1) {
             let Reason = []
             Reason.push({ adjustAmount: data.list[0].adjustAmount, nonReasonClass: data.list[0].nonReasonClass })
-            if (data.list[0].nonReasonClassTwo || data.list[0].adjustAmountTwo) {
-              Reason.push({ adjustAmount: data.list[0].adjustAmount, nonReasonClass: data.list[0].nonReasonClass })
+            if ((data.list[0].nonReasonClassTwo && data.list[0].nonReasonClassTwo !== '0') || data.list[0].adjustAmountTwo) {
+              Reason.push({ adjustAmount: data.list[0].adjustAmountTwo, nonReasonClass: data.list[0].nonReasonClassTwo })
             }
-            if (data.list[0].nonReasonClassThree || data.list[0].adjustAmountThree) {
+            if ((data.list[0].nonReasonClassThree && data.list[0].nonReasonClassThree !== '0') || data.list[0].adjustAmountThree) {
               Reason.push({ adjustAmount: data.list[0].adjustAmountThree, nonReasonClass: data.list[0].nonReasonClassThree })
             }
             this.record = {
@@ -752,6 +752,16 @@ export default {
               this.record.adjustAmountThree = item.adjustAmount
             }
           })
+          if (this.record.Reason.length === 1) {
+            this.record.nonReasonClassTwo = '0'
+            this.record.adjustAmountTwo = '0'
+            this.record.nonReasonClassThree = '0'
+            this.record.adjustAmountThree = '0'
+          }
+          if (this.record.Reason.length === 2) {
+            this.record.nonReasonClassThree = '0'
+            this.record.adjustAmountThree = '0'
+          }
           this.$http(`${STERILIZED_API.JUICEDRECORDSAVE}`, 'POST', this.record).then(({data}) => {
             if (data.code === 0) {
               this.$notify({title: '成功', message: '保存成功', type: 'success'})

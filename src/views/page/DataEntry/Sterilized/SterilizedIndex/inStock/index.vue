@@ -175,11 +175,13 @@ export default {
         if (data.code === 0) {
           this.InStorageDate = data.list
           this.DataAudit = data.vList
-          let pot = this.PotList.filter(item => this.InStorageDate[0].holderId === item.holderId)[0]
-          this.PotDetail = {
-            amount: pot.amount,
-            batch: pot.batch,
-            material: pot.materialCode + ' ' + pot.materialName
+          if (this.InStorageDate.length > 0) {
+            let pot = this.PotList.filter(item => this.InStorageDate[0].holderId === item.holderId)[0]
+            this.PotDetail = {
+              amount: pot.amount,
+              batch: pot.batch,
+              material: pot.materialCode + ' ' + pot.materialName
+            }
           }
         } else {
           this.$notify.error({title: '错误', message: data.msg})
@@ -222,7 +224,7 @@ export default {
       //   this.PotObject.inTankAmount = false
       // }
       if (this.dataForm.batch) {
-        if (this.PotList.filter(item => item.holderId === id)[0].isEmpty === 1) {
+        if (this.PotList.filter(item => item.holderId === id)[0].isEmpty === '1') {
           this.PotObject.batch = false
         } else {
           this.PotObject.batch = true

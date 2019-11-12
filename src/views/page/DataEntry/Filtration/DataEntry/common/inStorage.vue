@@ -232,11 +232,13 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.PotList = data.holderList
-          let pot = this.PotList.filter(item => this.InStorageDate[0].holderId === item.holderId)[0]
-          this.PotDetail = {
-            amount: pot.amount,
-            batch: pot.batch,
-            material: pot.materialCode + ' ' + pot.materialName
+          if (this.InStorageDate.length > 0) {
+            let pot = this.PotList.filter(item => this.InStorageDate[0].holderId === item.holderId)[0]
+            this.PotDetail = {
+              amount: pot.amount,
+              batch: pot.batch,
+              material: pot.materialCode + ' ' + pot.materialName
+            }
           }
         } else {
           this.$notify.error({title: '错误', message: data.msg})
@@ -259,7 +261,9 @@ export default {
         } else {
           this.dataForm.holderRemaining = this.GetHolderSum(id)
         }
-        this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
+        if (!st) {
+          this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
+        }
         if (this.dataForm.holderRemaining) {
           this.PotObject.inTankAmount = true
         } else {
