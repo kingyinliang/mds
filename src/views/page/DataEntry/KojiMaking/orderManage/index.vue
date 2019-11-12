@@ -376,7 +376,7 @@ export default class Index extends Vue {
   mounted () {
     this.getFactory()
     this.getWorkshop(this.params.factoryId)
-    this.retrieveHolders(this.params.workshopId, this.params.workshopName)
+    // this.retrieveHolders(this.params.workshopId, this.params.workshopName)
   }
   retrieveHolders (workshopId, workshopName) {
     if (workshopId) {
@@ -476,6 +476,7 @@ export default class Index extends Vue {
       Vue.prototype.$warning_SHINHO('请选择车间')
       return
     }
+    this.retrieveHolders(this.params.workshopId, this.params.workshopName)
     this.currPage = 1
     // if (this.params.orderDate === null || this.params.orderDate === '') {
     //   this.$message.error('请选择订单日期')
