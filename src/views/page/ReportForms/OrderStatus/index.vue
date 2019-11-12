@@ -173,7 +173,7 @@ export default {
   computed: {},
   components: {
     QueryTable: resolve => {
-      require(['@/views/page/ReportForms/common/QueryTable'], resolve)
+      require(['@/components/QueryTable'], resolve)
     }
   }
 }
