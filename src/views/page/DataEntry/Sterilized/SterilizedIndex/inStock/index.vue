@@ -176,11 +176,10 @@ export default {
           this.InStorageDate = data.list
           this.DataAudit = data.vList
           if (this.InStorageDate.length > 0) {
-            let pot = this.PotList.filter(item => this.InStorageDate[0].holderId === item.holderId)[0]
             this.PotDetail = {
-              amount: pot.amount,
-              batch: pot.batch,
-              material: pot.materialCode + ' ' + pot.materialName
+              amount: this.InStorageDate[0].holderRemaining,
+              batch: this.InStorageDate[0].batch,
+              material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
             }
           }
         } else {
@@ -259,6 +258,13 @@ export default {
           }
           this.isUpdate = false
           this.visible = false
+          if (this.InStorageDate.length > 0) {
+            this.PotDetail = {
+              amount: this.InStorageDate[0].holderRemaining,
+              batch: this.InStorageDate[0].batch,
+              material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
+            }
+          }
         }
       })
     },
