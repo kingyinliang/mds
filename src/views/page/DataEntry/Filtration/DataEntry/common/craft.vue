@@ -240,6 +240,7 @@ export default {
         uid: this.uuid(),
         deviceName: item.deviceName,
         filterMachineId: item.deviceId,
+        filterNo: item.deviceNo.substring(item.deviceNo.length - 2),
         filterAidAdd: 0,
         abnormal: '澄清',
         backPreNum: '',
@@ -273,8 +274,9 @@ export default {
             // 新增
             if (Number(this.techInfo.filterAidAdd) + Number(this.techInfo.filterAidBef) > 0) {
               if (this.supMaterialList.findIndex(item => item.filterMachineId === this.techInfo.filterMachineId) === -1) {
-                this.supMaterialList.push({
+                this.supMaterialList.splice(this.supMaterialList.filter(t => t.filterNo < this.techInfo.filterNo).length, 0, {
                   orderId: this.orderId,
+                  filterNo: this.techInfo.filterNo,
                   deviceName: this.techInfo.deviceName,
                   filterAidAmount: Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd),
                   materialCode: this.filterAidMaterialList[0].CODE,
@@ -286,6 +288,20 @@ export default {
                   filterAidVender: this.filterAidVenderList[0].VALUE,
                   filterMachineId: this.techInfo.filterMachineId
                 })
+                // this.supMaterialList.push({
+                //   orderId: this.orderId,
+                //   filterNo: this.techInfo.filterNo,
+                //   deviceName: this.techInfo.deviceName,
+                //   filterAidAmount: Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd),
+                //   materialCode: this.filterAidMaterialList[0].CODE,
+                //   materialName: this.filterAidMaterialList[0].VALUE,
+                //   unit: 'KG',
+                //   batch: '',
+                //   isSplit: '0',
+                //   filterAidModel: this.filterAidModelList[0].VALUE,
+                //   filterAidVender: this.filterAidVenderList[0].VALUE,
+                //   filterMachineId: this.techInfo.filterMachineId
+                // })
                 this.dialogVisible = false
                 return false
               } else {
@@ -304,52 +320,6 @@ export default {
                   }
                 }
               }
-            //   let p = -2
-            //   this.supMaterialList.map((item, index) => {
-            //     if (item.filterMachineId === this.techInfo.filterMachineId) {
-            //       p = index
-            //     }
-            //   })
-            //   if (p === -2) {
-            //     this.supMaterialList.push({
-            //       orderId: this.orderId,
-            //       deviceName: this.techInfo.deviceName,
-            //       filterAidAmount: Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd),
-            //       materialCode: this.filterAidMaterialList[0].CODE,
-            //       materialName: this.filterAidMaterialList[0].VALUE,
-            //       unit: 'KG',
-            //       batch: '',
-            //       isSplit: '0',
-            //       filterAidModel: this.filterAidModelList[0].VALUE,
-            //       filterAidVender: this.filterAidVenderList[0].VALUE,
-            //       filterMachineId: this.techInfo.filterMachineId
-            //     })
-            //     this.dialogVisible = false
-            //     return false
-            //   } else {
-            //     for (let item of this.supMaterialList) {
-            //       if (item.filterMachineId === this.techInfo.filterMachineId && (item.batch === '' || item.batch === null)) {
-            //         item.filterAidAmount = Number(item.filterAidAmount) + Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd)
-            //         this.dialogVisible = false
-            //         return false
-            //       }
-            //     }
-            //     this.supMaterialList.splice(Number(p) + 1, 0, {
-            //       orderId: this.orderId,
-            //       deviceName: this.techInfo.deviceName,
-            //       filterAidAmount: Number(this.techInfo.filterAidBef) + Number(this.techInfo.filterAidAdd),
-            //       materialCode: this.filterAidMaterialList[0].CODE,
-            //       materialName: this.filterAidMaterialList[0].VALUE,
-            //       unit: 'KG',
-            //       batch: '',
-            //       isSplit: '0',
-            //       filterAidModel: this.filterAidModelList[0].VALUE,
-            //       filterAidVender: this.filterAidVenderList[0].VALUE,
-            //       filterMachineId: this.techInfo.filterMachineId
-            //     })
-            //     this.dialogVisible = false
-            //     return false
-            //   }
             } else {
               this.dialogVisible = false
             }
@@ -369,6 +339,7 @@ export default {
     SplitData (row, index) {
       this.supMaterialList.splice(index + 1, 0, {
         orderId: this.orderId,
+        filterNo: row.filterNo,
         deviceName: row.deviceName,
         materialCode: row.materialCode,
         materialName: row.materialName,
@@ -486,9 +457,10 @@ export default {
         }
       })
       if (filterAidAmount > 0) {
-        this.supMaterialList.push({
+        this.supMaterialList.splice(this.supMaterialList.filter(t => t.filterNo < row.filterNo).length, 0, {
           orderId: row.orderId,
           deviceName: row.deviceName,
+          filterNo: row.filterNo,
           filterAidAmount: filterAidAmount,
           materialCode: this.filterAidMaterialList[0].CODE,
           materialName: this.filterAidMaterialList[0].VALUE,
@@ -499,6 +471,20 @@ export default {
           filterAidVender: this.filterAidVenderList[0].VALUE,
           filterMachineId: this.techInfo.filterMachineId
         })
+        // this.supMaterialList.push({
+        //   orderId: row.orderId,
+        //   deviceName: row.deviceName,
+        //   filterNo: row.filterNo,
+        //   filterAidAmount: filterAidAmount,
+        //   materialCode: this.filterAidMaterialList[0].CODE,
+        //   materialName: this.filterAidMaterialList[0].VALUE,
+        //   unit: 'KG',
+        //   batch: '',
+        //   isSplit: '0',
+        //   filterAidModel: this.filterAidModelList[0].VALUE,
+        //   filterAidVender: this.filterAidVenderList[0].VALUE,
+        //   filterMachineId: this.techInfo.filterMachineId
+        // })
       }
     },
     // 提交验证
