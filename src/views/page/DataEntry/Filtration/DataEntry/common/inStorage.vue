@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="inStorage_card">
-      <div style="width: 158px" class="inStorage_card_left">
+      <div style="width: 138px" class="inStorage_card_left">
         <p>过滤罐</p>
-        <div style="text-align: center;padding: 0 20px;position: relative">
-          <img src="@/assets/img/ferPot.png" alt="" style="width: 92px;height: 190px">
+        <div style="text-align: center;padding: 0 10px;position: relative">
+          <img src="@/assets/img/ferPot.png" alt="" style="width: 112px;height: 190px">
           <div class="potDetail">
             <p>{{PotDetail.batch}}</p>
             <p>{{PotDetail.amount}}</p>
@@ -17,9 +17,9 @@
         <el-table header-row-class-name="tableHead" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow" >
           <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="日期" width="80" prop="created"  :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="成品罐号" width="95" prop="holderName" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="成品批次" width="95" prop="batch" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="入罐数量" width="90" prop="inAmount" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="成品罐号" width="80" prop="holderName" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="成品批次" width="80" prop="batch" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="入罐数量" width="80" prop="inAmount" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="是否满罐" width="90" prop="isFull" :show-overflow-tooltip="true"><template slot-scope="scope">{{scope.row.isFull==='1'?'是':'否'}}</template></el-table-column>
           <el-table-column label="满罐时间" width="90" prop="fullDate" :show-overflow-tooltip="true"></el-table-column>
@@ -174,7 +174,7 @@ export default {
           this.InStorageDate = data.list
           if (this.InStorageDate.length > 0) {
             this.PotDetail = {
-              amount: this.InStorageDate[0].holderRemaining,
+              amount: this.InStorageDate[0].holderRemaining + this.InStorageDate[0].unit,
               batch: this.InStorageDate[0].batch,
               material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
             }
@@ -256,7 +256,7 @@ export default {
           }, 500)
           if (this.InStorageDate.length > 0) {
             this.PotDetail = {
-              amount: this.InStorageDate[0].holderRemaining,
+              amount: this.InStorageDate[0].holderRemaining + this.InStorageDate[0].unit,
               batch: this.InStorageDate[0].batch,
               material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
             }

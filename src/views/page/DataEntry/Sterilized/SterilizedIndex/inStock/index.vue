@@ -25,10 +25,10 @@
           杀菌入库
         </span>
         <div class="inStorage_card">
-          <div style="width: 158px" class="inStorage_card_left">
+          <div style="width: 138px" class="inStorage_card_left">
             <p>杀菌罐</p>
-            <div style="text-align: center;padding: 0 20px;position: relative">
-              <img src="@/assets/img/ferPot.png" alt="" style="width: 92px;height: 190px">
+            <div style="text-align: center;padding: 0 10px;position: relative">
+              <img src="@/assets/img/ferPot.png" alt="" style="width: 112px;height: 190px">
               <div class="potDetail">
                 <p>{{PotDetail.batch}}</p>
                 <p>{{PotDetail.amount}}</p>
@@ -177,7 +177,7 @@ export default {
           this.DataAudit = data.vList
           if (this.InStorageDate.length > 0) {
             this.PotDetail = {
-              amount: this.InStorageDate[0].holderRemaining,
+              amount: this.InStorageDate[0].inTankAmount + this.InStorageDate[0].unit,
               batch: this.InStorageDate[0].batch,
               material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
             }
@@ -260,7 +260,7 @@ export default {
           this.visible = false
           if (this.InStorageDate.length > 0) {
             this.PotDetail = {
-              amount: this.InStorageDate[0].holderRemaining,
+              amount: this.InStorageDate[0].inTankAmount+ this.InStorageDate[0].unit,
               batch: this.InStorageDate[0].batch,
               material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
             }
