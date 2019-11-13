@@ -610,6 +610,9 @@ export default {
       this.Getdeptbyid(n)
       this.GetProductShift(n)
       this.GetARtype(n)
+      if (n) {
+        this.getTree()
+      }
     },
     'plantList.workShop' (n, o) {
       this.GetParentline(n)
@@ -619,7 +622,6 @@ export default {
     this.Getdeptcode()
     this.GetProductShift()
     this.GetARtype()
-    this.getTree()
     headanimation(this.$)
   },
   methods: {
@@ -713,7 +715,7 @@ export default {
     },
     // 获取组织结构树
     getTree () {
-      this.$http(`${BASICDATA_API.ORGSTRUCTURE_API}`, 'GET', {}).then(({data}) => {
+      this.$http(`${BASICDATA_API.ORGSTRUCTURE_API}`, 'GET', {flag: this.plantList.factory}).then(({data}) => {
         if (data.code === 0) {
           this.OrgTree = data.deptList
           this.arrList = [this.OrgTree[0].children[0].deptId]
