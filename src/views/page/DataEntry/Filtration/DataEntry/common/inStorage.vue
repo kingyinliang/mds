@@ -172,6 +172,13 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.InStorageDate = data.list
+          if (this.InStorageDate.length > 0) {
+            this.PotDetail = {
+              amount: this.InStorageDate[0].holderRemaining,
+              batch: this.InStorageDate[0].batch,
+              material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
+            }
+          }
           this.InStorageDate.map(item => {
             item.uid = item.id
           })
@@ -247,6 +254,13 @@ export default {
           setTimeout(() => {
             this.dataForm.inAmount = 0
           }, 500)
+          if (this.InStorageDate.length > 0) {
+            this.PotDetail = {
+              amount: this.InStorageDate[0].holderRemaining,
+              batch: this.InStorageDate[0].batch,
+              material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
+            }
+          }
         }
       })
     },
@@ -259,14 +273,6 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.PotList = data.holderList
-          if (this.InStorageDate.length > 0) {
-            let pot = this.PotList.filter(item => this.InStorageDate[0].holderId === item.holderId)[0]
-            this.PotDetail = {
-              amount: pot.amount,
-              batch: pot.batch,
-              material: pot.materialCode + ' ' + pot.materialName
-            }
-          }
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
