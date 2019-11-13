@@ -64,7 +64,20 @@
         <div class="toggleSearchTop">
           <i class="el-icon-caret-bottom"></i>
         </div>
-        <el-table :data="tableData" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;margin-bottom: 20px">
+        <el-table :data="tableData" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;margin-bottom: 20px">
+          <el-table-column
+            v-if="showSelectColumn"
+            :selectable="selectableFn"
+            type="selection"
+            width="50px">
+          </el-table-column>
+          <el-table-column
+            v-if="showIndexColumn"
+            type="index"
+            :index="indexMethod"
+            label="序号"
+            width="50px">
+          </el-table-column>
           <el-table-column
             v-for="item in column"
             v-if="!item.hide"
@@ -74,6 +87,14 @@
             :width="item.width || ''"
             :formatter="item.formatter"
             :show-overflow-tooltip="true">
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            fixed="right"
+            v-if="showOperationColumn">
+            <template slot-scope="scope">
+              <slot :scope="scope" name="operation_column"/>
+            </template>
           </el-table-column>
         </el-table>
         <el-row >
@@ -103,7 +124,8 @@ export default {
         totalCount: 0
       },
       optionLists: {},
-      tableData: []
+      tableData: [],
+      multipleSelection: []
     }
   },
   props: {
@@ -127,6 +149,22 @@ export default {
       default: () => {
         return []
       }
+    },
+    showOperationColumn: {
+      type: Boolean,
+      default: false
+    },
+    showSelectColumn: {
+      type: Boolean,
+      default: false
+    },
+    showIndexColumn: {
+      type: Boolean,
+      default: false
+    },
+    selectableFn: {
+      type: Function,
+      default: () => true
     }
   },
   created () {
@@ -146,6 +184,7 @@ export default {
     },
     // 初始化
     init () {
+      console.time('组件初始化')
       this.queryFormData.forEach((item) => {
         // 设置查询表单
         this.$set(this.queryForm, item.prop, item.defaultValue || '')
@@ -201,6 +240,7 @@ export default {
           })
         }
       })
+      console.timeEnd('组件初始化')
     },
     // 获取table数据
     GetDataList (st) {
@@ -241,6 +281,17 @@ export default {
           $(this).hide()
           $('.toggleSearchBottom').show()
         })
+      })
+    },
+    // 序号
+    indexMethod (index) {
+      return index + 1 + (this.queryForm.currPage * 1 - 1) * (this.queryForm.pageSize * 1)
+    },
+    // 表格选中
+    handleSelectionChange (val) {
+      this.multipleSelection = []
+      val.forEach((item, index) => {
+        this.multipleSelection.push(item)
       })
     },
     // 改变每页条数
