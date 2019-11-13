@@ -149,10 +149,15 @@ export default {
     'dataForm.inAmount' (n, o) {
       if (this.dataForm.holderId && this.PotList.filter(item => item.holderId === this.dataForm.holderId).length !== 0) {
         if (this.updateS === false) {
+          let amounts = Number(this.PotList.find(item => item.holderId === this.dataForm.holderId).amount)
           if (this.InStorageDate.findIndex(item => item.uid === this.dataForm.uid) === -1) {
-            this.dataForm.holderRemaining = Number(n) + this.PotList.find(item => item.holderId === this.dataForm.holderId).amount
+            this.dataForm.holderRemaining = Number(n) + amounts
           } else {
-            this.dataForm.holderRemaining = Number(n) + this.PotList.find(item => item.holderId === this.dataForm.holderId).amount - this.oldInAmount
+            if (this.dataForm.holderId === this.oldHolderId) {
+              this.dataForm.holderRemaining = Number(n) + amounts - this.oldInAmount
+            } else {
+              this.dataForm.holderRemaining = Number(n) + amounts
+            }
           }
         } else {
           this.updateS = false
@@ -279,16 +284,15 @@ export default {
       }
       if (this.PotList.filter(item => item.holderId === id).length !== 0) {
         // 修改
+        let amount = Number(this.PotList.find(item => item.holderId === id).amount)
         if (this.InStorageDate.findIndex(item => item.uid === this.dataForm.uid) === -1) {
-          console.log('PotinTankAmount 新增')
           this.dataForm.inAmount = 0
-          this.dataForm.holderRemaining = this.PotList.find(item => item.holderId === id).amount
+          this.dataForm.holderRemaining = amount
         } else {
-          console.log('PotinTankAmount 修改')
           if (id === this.oldHolderId) {
-            this.dataForm.holderRemaining = this.PotList.find(item => item.holderId === id).amount
+            this.dataForm.holderRemaining = amount
           } else {
-            this.dataForm.holderRemaining = this.PotList.find(item => item.holderId === id).amount + Number(this.dataForm.inAmount)
+            this.dataForm.holderRemaining = amount + Number(this.dataForm.inAmount)
           }
         }
         if (!st) {
