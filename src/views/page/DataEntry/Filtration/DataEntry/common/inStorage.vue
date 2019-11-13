@@ -133,7 +133,10 @@ export default {
         inTankAmount: false,
         batch: false,
         maxStatus: false
-      }
+      },
+      oldInAmount: '',
+      oldHolderId: '',
+      updateS: false
     }
   },
   props: {
@@ -145,7 +148,20 @@ export default {
   watch: {
     'dataForm.inAmount' (n, o) {
       if (this.dataForm.holderId && this.PotList.filter(item => item.holderId === this.dataForm.holderId).length !== 0) {
-        this.dataForm.holderRemaining = Number(n) + this.GetHolderSum(this.dataForm.holderId)
+        if (this.updateS === false) {
+          let amounts = Number(this.PotList.find(item => item.holderId === this.dataForm.holderId).amount)
+          if (this.InStorageDate.findIndex(item => item.uid === this.dataForm.uid) === -1) {
+            this.dataForm.holderRemaining = Number(n) + amounts
+          } else {
+            if (this.dataForm.holderId === this.oldHolderId) {
+              this.dataForm.holderRemaining = Number(n) + amounts - this.oldInAmount
+            } else {
+              this.dataForm.holderRemaining = Number(n) + amounts
+            }
+          }
+        } else {
+          this.updateS = false
+        }
       }
     }
   },
@@ -202,7 +218,7 @@ export default {
           this.PotList.forEach(item => {
             if (item.holderId === this.dataForm.holderId) {
               this.dataForm.holderName = item.holderName
-              // item.amount = this.dataForm.holderRemaining
+              item.amount = this.dataForm.holderRemaining
               item.batch = this.dataForm.batch
             }
           })
@@ -211,15 +227,26 @@ export default {
               this.rowData[key] = this.dataForm[key]
             })
           } else {
-            this.InStorageDate.push(this.dataForm)
+            this.InStorageDate.push(JSON.parse(JSON.stringify(this.dataForm)))
           }
           this.isUpdate = false
           this.visible = false
-        }
-      })
-      this.InStorageDate.map((item) => {
-        if (item.holderId === this.dataForm.holderId) {
-          item.holderRemaining = this.dataForm.holderRemaining
+          let changeAmount = 0
+          if (this.oldHolderId !== '' && this.oldHolderId !== this.dataForm.holderId && this.InStorageDate.findIndex(item => item.uid === this.dataForm.uid) !== -1) {
+            changeAmount = Number(this.PotList.find(item => item.holderId === this.oldHolderId).amount) - Number(this.oldInAmount)
+            this.PotList.find(item => item.holderId === this.oldHolderId).amount = changeAmount
+          }
+          this.InStorageDate.map((item) => {
+            if (item.holderId === this.dataForm.holderId) {
+              item.holderRemaining = this.dataForm.holderRemaining
+            }
+            if (this.oldHolderId !== this.dataForm.holderId && item.holderId === this.oldHolderId) {
+              item.holderRemaining = changeAmount
+            }
+          })
+          setTimeout(() => {
+            this.dataForm.inAmount = 0
+          }, 500)
         }
       })
     },
@@ -256,10 +283,17 @@ export default {
       } else {
       }
       if (this.PotList.filter(item => item.holderId === id).length !== 0) {
-        if (this.dataForm.inAmount !== '') {
-          this.dataForm.holderRemaining = Number(this.dataForm.inAmount) + this.GetHolderSum(id)
+        // 修改
+        let amount = Number(this.PotList.find(item => item.holderId === id).amount)
+        if (this.InStorageDate.findIndex(item => item.uid === this.dataForm.uid) === -1) {
+          this.dataForm.inAmount = 0
+          this.dataForm.holderRemaining = amount
         } else {
-          this.dataForm.holderRemaining = this.GetHolderSum(id)
+          if (id === this.oldHolderId) {
+            this.dataForm.holderRemaining = amount
+          } else {
+            this.dataForm.holderRemaining = amount + Number(this.dataForm.inAmount)
+          }
         }
         if (!st) {
           this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
@@ -292,7 +326,7 @@ export default {
         serialNumber: '',
         holderId: '',
         batch: '',
-        inAmount: '',
+        inAmount: 0,
         fullAmount: '',
         unit: '',
         holderRemaining: '',
@@ -320,6 +354,16 @@ export default {
         type: 'warning'
       }).then(() => {
         row.delFlag = '1'
+        if (this.PotList.findIndex(item => item.holderId === row.holderId) !== -1) {
+          let changeAmount = 0
+          changeAmount = Number(this.PotList.find(item => item.holderId === row.holderId).amount) - Number(row.inAmount)
+          this.PotList.find(item => item.holderId === row.holderId).amount = changeAmount
+          this.InStorageDate.map((item) => {
+            if (item.holderId === row.holderId) {
+              item.holderRemaining = changeAmount
+            }
+          })
+        }
       })
     },
     updateRow (row) {
@@ -327,8 +371,11 @@ export default {
         this.visible = true
         this.isUpdate = true
         this.dialogDisabled = false
+        this.updateS = true
         this.dataForm = JSON.parse(JSON.stringify(row))
         this.rowData = row
+        this.oldInAmount = JSON.parse(JSON.stringify(this.dataForm.inAmount))
+        this.oldHolderId = this.dataForm.holderId
         this.PotinTankAmount(this.dataForm.holderId, true)
       }
     },
