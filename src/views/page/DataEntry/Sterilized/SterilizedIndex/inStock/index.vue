@@ -260,7 +260,7 @@ export default {
           this.visible = false
           if (this.InStorageDate.length > 0) {
             this.PotDetail = {
-              amount: this.InStorageDate[0].inTankAmount+ this.InStorageDate[0].unit,
+              amount: this.InStorageDate[0].inTankAmount + this.InStorageDate[0].unit,
               batch: this.InStorageDate[0].batch,
               material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
             }
