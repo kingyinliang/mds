@@ -37,6 +37,12 @@ module.exports = {
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
+  watch:true,
+  watchOptions:{
+    ignored:/node_modules/,
+    aggregateTimeout:500,
+    poll:800
+  },
   resolve: {
     modules: [ // 优化模块查找路径
       path.resolve('src'),
@@ -76,6 +82,10 @@ module.exports = {
         loader: 'ts-loader',
         exclude: /node_modules/,
         options: { appendTsSuffixTo: [/\.vue$/] }
+      },
+      {
+        test: /\.pug$/,
+        loader: ['raw-loader', 'pug-html-loader'],
       },
       {
         test: /\.js$/,
@@ -122,10 +132,6 @@ module.exports = {
     child_process: 'empty'
   },
   plugins: [
-    // new webpack.DllReferencePlugin({
-    //   context: __dirname,
-    //   manifest
-    // }),
     new HappyPack({ // 基础参数设置
       id: 'babel', // 上面loader?后面指定的id
       loaders: ['babel-loader?cacheDirectory'], // 实际匹配处理的loader

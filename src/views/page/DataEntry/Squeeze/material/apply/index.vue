@@ -321,8 +321,8 @@ export default class Index extends Vue {
   dataList = []
   // 暂存罐
   sdList = []
-  availableMap = new Map<string, string>()
-  matchedMap = new Map<string, string>()
+  availableMap = new Map()
+  matchedMap = new Map()
   // 发酵罐
   fermentPotList = []
   searched: boolean = false
