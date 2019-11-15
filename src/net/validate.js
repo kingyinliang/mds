@@ -177,7 +177,7 @@ export function exportFile (url, fileName, vue) {
   })
 }
 export function exportFileForm (url, fileName, vue) {
-  vue.$http(url, 'POST', vue.$refs.queryTable.plantList, false, true).then(({data}) => {
+  vue.$http(url, 'POST', vue.$refs.queryTable.queryForm, false, true).then(({data}) => {
     if (data.code === 0) {
       let elink = document.createElement('a')
       elink.download = `${fileName}${getNewDate()}.xls`
