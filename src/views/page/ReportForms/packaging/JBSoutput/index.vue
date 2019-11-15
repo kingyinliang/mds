@@ -17,7 +17,7 @@
 
 <script>
 import {BASICDATA_API, REP_API} from '@/api/api'
-import { exportFile } from '@/net/validate'
+import { exportFileForm } from '@/net/validate'
 export default {
   name: 'index',
   data () {
@@ -151,13 +151,10 @@ export default {
   methods: {
     ExportExcel () {
       let that = this
-      exportFile(`${REP_API.REPJBSOUTPUT_API}`, 'JBS产出明细报表数据导出', that)
+      exportFileForm(`${REP_API.REPJBSOUTPUT_API}`, 'JBS产出明细报表数据导出', that)
     }
   },
   components: {
-    QueryTable: resolve => {
-      require(['@/components/QueryTable'], resolve)
-    }
   }
 }
 </script>

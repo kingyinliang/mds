@@ -264,7 +264,11 @@ export const BASICDATA_API = {
   /**
    *  根据类型查容器号
    */
-  DROPDOWN_HOLDER_LIST: HOST + '/all/dropDown/getFilterHolder'
+  DROPDOWN_HOLDER_LIST: HOST + '/all/dropDown/getFilterHolder',
+  /**
+   *  调配物料
+   */
+  DEPLOY_MATERIAL_SELECT_LIST: HOST + '/ste/material/materielList'
 }
 /*
 *系统设置api

@@ -1,0 +1,80 @@
+doctype html
+html(lang="zh-cn")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport",content="width=device-width,initial-scale=1.0")
+    title 欣和-制造管理系统
+    link(rel="shortcut icon",type="image/x-icon",href="./static/img/favicon.ico")
+
+    // GrowingIO Analytics code version 2.1
+    // Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com
+    script(type='text/javascript').
+      !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.giocdn.com/2.1/gio.js","gio");
+      gio('init','8921d6cb6bcbe446', {});
+      gio('config', {'hashtag':true}); // 放在init和send之间
+      //custom page code begin here
+      //custom page code end here
+      gio('send');
+
+    // End GrowingIO Analytics code version: 2.1
+
+    script(type='text/javascript').
+      ;(function() {
+          handleAddListener('load', getTiming)
+
+          function handleAddListener(type, fn) {
+              if(window.addEventListener) {
+                  window.addEventListener(type, fn)
+              } else {
+                  window.attachEvent('on' + type, fn)
+              }
+          }
+
+          function getTiming() {
+              try {
+                  var time = performance.timing;
+                  var timingObj = {};
+
+                  var loadTime = (time.loadEventEnd - time.loadEventStart) / 1000;
+
+                  if(loadTime < 0) {
+                      setTimeout(function() {
+                          getTiming();
+                      }, 200);
+                      return;
+                  }
+
+                  timingObj['重定向时间'] = (time.redirectEnd - time.redirectStart) / 1000;
+                  timingObj['DNS解析时间'] = (time.domainLookupEnd - time.domainLookupStart) / 1000;
+                  timingObj['TCP完成握手时间'] = (time.connectEnd - time.connectStart) / 1000;
+                  timingObj['HTTP请求响应完成时间'] = (time.responseEnd - time.requestStart) / 1000;
+                  timingObj['DOM开始加载前所花费时间'] = (time.responseEnd - time.navigationStart) / 1000;
+                  timingObj['DOM加载完成时间'] = (time.domComplete - time.domLoading) / 1000;
+                  timingObj['DOM结构解析完成时间'] = (time.domInteractive - time.domLoading) / 1000;
+                  timingObj['脚本加载时间'] = (time.domContentLoadedEventEnd - time.domContentLoadedEventStart) / 1000;
+                  timingObj['onload事件时间'] = (time.loadEventEnd - time.loadEventStart) / 1000;
+                  timingObj['页面完全加载时间'] = (timingObj['重定向时间'] + timingObj['DNS解析时间'] + timingObj['TCP完成握手时间'] + timingObj['HTTP请求响应完成时间'] + timingObj['DOM结构解析完成时间'] + timingObj['DOM加载完成时间']);
+
+                  for(item in timingObj) {
+                      console.log(item + ":" + timingObj[item] + '毫秒(ms)');
+                  }
+
+                  console.log(performance.timing);
+
+              } catch(e) {
+                  console.log(timingObj)
+                  console.log(performance.timing);
+              }
+          }
+      })();
+
+    if (process.env.NODE_ENV === "production")
+      // prod-env
+    else
+      // dev-env
+      // script(src="./static/plugins/ueditor-1.4.3.3/ueditor.config.js")
+      
+    // script(src="./static/dll.vendor.js")
+  body
+    #app
+

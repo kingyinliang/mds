@@ -2,6 +2,7 @@
   <el-row>
     <div class="header_main">
       <query-table
+        ref="queryTable"
         :queryFormData="queryFormData"
         :list-interface="listInterface"
         :query-auth="'report:form:listMaterial'"
@@ -16,7 +17,7 @@
 
 <script>
 import {BASICDATA_API, REP_API} from '@/api/api'
-import { exportFile } from '@/net/validate'
+import { exportFileForm } from '@/net/validate'
 export default {
   name: 'index',
   data () {
@@ -206,14 +207,11 @@ export default {
   methods: {
     ExportExcel () {
       let that = this
-      exportFile(`${REP_API.REPSAPOUTPUT_API}`, '物料领用报表数据导出', that)
+      exportFileForm(`${REP_API.REPSAPOUTPUT_API}`, '物料领用报表数据导出', that)
     }
   },
   computed: {},
   components: {
-    QueryTable: resolve => {
-      require(['@/components/QueryTable'], resolve)
-    }
   }
 }
 </script>

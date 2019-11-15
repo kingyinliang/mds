@@ -60,7 +60,7 @@
           <i class="el-icon-caret-top"></i>
         </div>
       </el-card>
-      <el-card class="tableCard">
+      <el-card class="tableCard" style="min-height: 400px">
         <div class="toggleSearchTop">
           <i class="el-icon-caret-bottom"></i>
         </div>
@@ -197,11 +197,18 @@ export default {
         } else if (item.defaultOptionsFn) {
           // 初始化下拉
           item.defaultOptionsFn().then(({data}) => {
-            this.$set(this.optionLists, item.prop, data[item.resVal.resData])
-            if (data[item.resVal.resData].length > 0 && !item.defaultValue && item.defaultValue !== '') {
-              this.$set(this.queryForm, item.prop, data[item.resVal.resData][0][item.resVal.value])
+            if (/\./g.test(item.resVal.resData)) {
+              item.resVal.resData.split('.').forEach(resIt => {
+                data = data[resIt]
+              })
+            } else {
+              data = data[item.resVal.resData]
+            }
+            this.$set(this.optionLists, item.prop, data)
+            if (data.length > 0 && !item.defaultValue && item.defaultValue !== '') {
+              this.$set(this.queryForm, item.prop, data[0][item.resVal.value])
               this.$nextTick(function () {
-                this.$refs[item.prop][0].emitChange(data[item.resVal.resData][0][item.resVal.value])
+                this.$refs[item.prop][0].emitChange(data[0][item.resVal.value])
               })
             }
           })
@@ -221,11 +228,18 @@ export default {
                 if (val) {
                   linkagePropItemObj.optionsFn(val).then(({data}) => {
                     if (data.code === 0) {
-                      this.$set(this.optionLists, linkagePropItemObj.prop, data[linkagePropItemObj.resVal.resData])
-                      if (data[linkagePropItemObj.resVal.resData].length > 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
-                        this.$set(this.queryForm, linkagePropItemObj.prop, data[linkagePropItemObj.resVal.resData][0][linkagePropItemObj.resVal.value])
+                      if (/\./g.test(linkagePropItemObj.resVal.resData)) {
+                        linkagePropItemObj.resVal.resData.split('.').forEach(resIt => {
+                          data = data[resIt]
+                        })
+                      } else {
+                        data = data[linkagePropItemObj.resVal.resData]
+                      }
+                      this.$set(this.optionLists, linkagePropItemObj.prop, data)
+                      if (data.length > 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
+                        this.$set(this.queryForm, linkagePropItemObj.prop, data[0][linkagePropItemObj.resVal.value])
                         this.$nextTick(function () {
-                          this.$refs[linkagePropItemObj.prop][0].emitChange(data[linkagePropItemObj.resVal.resData][0][linkagePropItemObj.resVal.value])
+                          this.$refs[linkagePropItemObj.prop][0].emitChange(data[0][linkagePropItemObj.resVal.value])
                         })
                       }
                     } else {

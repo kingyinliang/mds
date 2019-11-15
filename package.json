@@ -7,14 +7,15 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "unit": "jest --config test/unit/jest.conf.js --coverage",
     "dll": "node build/dll.js",
+    "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node build/version.js && node build/build.js",
     "version": "node build/version.js",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "release": "standard-version"
   },
   "config": {
     "commitizen": {
@@ -23,12 +24,16 @@
   },
   "husky": {
     "hooks": {
+      "pre-commit": "lint-staged",
       "commit-msg": "commitlint -e $GIT_PARAMS"
     }
   },
-  "pre-commit": [
-    "lint"
-  ],
+  "lint-staged": {
+    "src/**/*.{js,vue}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "dependencies": {
     "axios": "^0.18.1",
     "babel-polyfill": "^6.26.0",
@@ -52,10 +57,10 @@
     "xlsx": "^0.14.0"
   },
   "devDependencies": {
-    "assets-webpack-plugin": "^3.9.10",
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.0.0",
     "@types/jquery": "^3.3.29",
+    "assets-webpack-plugin": "^3.9.10",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",
@@ -99,6 +104,7 @@
     "jest-serializer-vue": "^0.3.0",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
+    "lint-staged": "^9.4.2",
     "nightwatch": "^1.1.13",
     "node-notifier": "^5.1.2",
     "node-sass": "^4.11.0",
@@ -108,7 +114,10 @@
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.8",
     "postcss-url": "^7.2.1",
-    "pre-commit": "^1.2.2",
+    "pug": "^2.0.4",
+    "pug-html-loader": "^1.1.5",
+    "pug-loader": "^2.4.0",
+    "raw-loader": "^3.1.0",
     "rimraf": "^2.6.0",
     "sass-loader": "^7.0.3",
     "script-loader": "^0.7.2",

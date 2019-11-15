@@ -9,7 +9,7 @@
 npm install
 ## 找前端夥伴索取 host-development.js 放进 /src/api/ 下，方可顺利运行。
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at yourIP:8888
 npm run dev
 ## 找前端夥伴索取登入帐号密码
 
@@ -17,7 +17,7 @@ npm run dev
 npm run build
 
 # build for production and view the bundle analyzer report
-npm run build --report
+# npm run build --report
 
 # run unit tests
 # npm run unit

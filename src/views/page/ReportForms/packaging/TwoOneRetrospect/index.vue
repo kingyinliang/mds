@@ -1,6 +1,7 @@
 <template>
   <div class="header_main">
     <query-table
+      ref="queryTable"
       :queryFormData="queryFormData"
       :list-interface="listInterface"
       :query-auth="'report:formh:pkgOneAndTwoList'"
@@ -14,7 +15,7 @@
 
 <script>
 import { BASICDATA_API, REP_API } from '@/api/api'
-import { exportFile } from '@/net/validate'
+import { exportFileForm } from '@/net/validate'
 export default {
   name: 'TwoOneRetrospect',
   data () {
@@ -125,13 +126,10 @@ export default {
   methods: {
     ExportExcel () {
       let that = this
-      exportFile(`${REP_API.REPTWOONERETROSPECT_API}`, '二合一批次追溯报表', that)
+      exportFileForm(`${REP_API.REPTWOONERETROSPECT_API}`, '二合一批次追溯报表', that)
     }
   },
   components: {
-    QueryTable: resolve => {
-      require(['@/components/QueryTable'], resolve)
-    }
   }
 }
 </script>

@@ -3,10 +3,16 @@
 module.exports = {
   root: true,
   parserOptions: {
-    parser: 'typescript-eslint-parser'
+    // parser: 'typescript-eslint-parser'
+    parser: 'babel-eslint'
+    // 指定js版本。语法上的支持
+ 
   },
   env: {
     browser: true,
+    // 会自动开启es6语法支持。
+    es6: true,
+    node: true
   },
   extends: [
     // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
