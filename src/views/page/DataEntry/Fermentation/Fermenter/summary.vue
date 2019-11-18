@@ -3,6 +3,7 @@
     <el-card>
       <div class="titleLeft">
         <i class="iconfont factory-kucun" style="color:#666666; margin-right:10px"></i>发酵罐分布情况
+        <el-button type="primary" size="small" @click="ExportExcelA(true)"  v-if="isAuth('report:production:fermentationExport')" style="background-color:#1890FF; color:#FFFFFF; float:right">导出</el-button>
       </div>
       <el-table :data="headerInfo" border header-row-class-name="tableHead" style="margin-top:10px">
         <el-table-column label="区域" show-overflow-tooltip prop="holderArea"></el-table-column>
@@ -58,7 +59,7 @@
 
 <script>
 import {FERMENTATION_API} from '@/api/api'
-// import { exportFile } from '@/net/validate'
+import { exportFile } from '@/net/validate'
 export default {
   name: 'summarys',
   data () {
@@ -101,12 +102,11 @@ export default {
     },
     changeList () {
       this.dataList = this.dataListAll.slice((this.currentPage - 1) * this.pageSize, (this.currentPage - 1) * this.pageSize + this.pageSize)
-    }
+    },
     // 导出
-    // ExportExcelA () {
-    //   this.plantList.TYPE = 'all'
-    //   exportFile(`${FERMENTATION_API.JUICE_STOCKITEM_KUCUN}`, '原汁库存汇总', this)
-    // }
+    ExportExcelA () {
+      exportFile(`${FERMENTATION_API.FER_REPORT_EXPORTLIST}`, '发酵罐一览表', this)
+    }
   }
 }
 </script>

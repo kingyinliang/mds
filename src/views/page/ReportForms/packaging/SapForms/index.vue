@@ -212,9 +212,6 @@ export default {
   },
   computed: {},
   components: {
-    QueryTable: resolve => {
-      require(['@/components/QueryTable'], resolve)
-    }
   }
 }
 </script>
