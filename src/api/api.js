@@ -1440,7 +1440,8 @@ export const FERMENTATION_API = {
   FER_HALF_LIST_API: HOST + '/fer/holderManage/halfList', // 获取半成品
   FER_HOLDER_STATUS_API: HOST + '/fer/holderManage/ferHolderStatusList', // 发酵罐状态
   FER_RINSE_API: HOST + '/fer/clean/save', // 清洗
-  FER_REPORT_LIST: HOST + '/report/production/fermentation', // 发酵一览表
+  FER_REPORT_LIST: HOST + '/report/production/fermentation', // 发酵一览表,
+  FER_REPORT_EXPORTLIST: HOST + '/report/production/fermentationExport', // 发酵一览表导出
   /*
    * 订单申请
    */
@@ -1539,6 +1540,7 @@ export const STERILIZED_API = {
   DODEPLOYMENTHEADERSAVE: HOST + '/ste/allocate/allocateOrderSave',
   DODEPLOYMENTLISTSAVE: HOST + '/ste/allocate/allocateSave',
   DODEPLOYMENTALLOCATELIST: HOST + '/ste/allocate/allocateListInfo',
+  DODEPLOYMENTALLREVOCATION: HOST + '/ste/allocate/revocation', // 撤回
   /**
    *  订单分配
    */
