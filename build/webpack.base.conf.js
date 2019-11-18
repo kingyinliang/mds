@@ -37,12 +37,12 @@ module.exports = {
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
-  watch:true,
-  watchOptions:{
-    ignored:/node_modules/,
-    aggregateTimeout:500,
-    poll:800
-  },
+  // watch:true,
+  // watchOptions:{
+  //   ignored:/node_modules/,
+  //   aggregateTimeout:500,
+  //   poll:800
+  // },
   resolve: {
     modules: [ // 优化模块查找路径
       path.resolve('src'),
