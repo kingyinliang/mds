@@ -343,7 +343,11 @@ export function orderListNew (data) {
     let orderList = {
       orderNo: item.orderNo,
       orderId: item.orderId,
-      materialName: item.materialName
+      materialName: item.materialName,
+      materialCode: item.materialCode,
+      countOutput: item.countOutput,
+      planOutput: item.planOutput,
+      orderStatus: item.orderStatus
     }
     if (findRow === -1) {
       orderArray.push({
@@ -353,12 +357,23 @@ export function orderListNew (data) {
         orderNoList: [orderList],
         productDate: item.productDate,
         orderNo: '',
-        materialCode: ''
+        materialCode: '',
+        orderStatus: ''
       })
     } else {
       orderArray[findRow].orderNoList.push(orderList)
     }
   })
+  orderArray.map(t => {
+    if (t.orderNoList.length === 1) {
+      t.materialCode = t.orderNoList[0].materialCode + ' ' + t.orderNoList[0].materialName
+      t.countOutput = t.orderNoList[0].countOutput
+      t.planOutput = t.orderNoList[0].planOutput
+      t.orderNo = t.orderNoList[0].orderNo
+      t.orderStatus = t.orderNoList[0].orderStatus
+    }
+  })
+  console.log(orderArray)
   return orderArray
 }
 /**
