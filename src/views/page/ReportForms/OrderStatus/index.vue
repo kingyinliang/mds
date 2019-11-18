@@ -1,6 +1,6 @@
 <template>
   <div class="header_main">
-    <query-table :queryFormData="queryFormData" :list-interface="listInterface" :query-auth="'report:formh:getAllStatusList'" :column="column">
+    <query-table ref="queryTable" :queryFormData="queryFormData" :list-interface="listInterface" :query-auth="'report:formh:getAllStatusList'" :column="column">
       <template slot="mds-button">
         <el-button size="small" type="primary" @click="ExportExcel(true)" v-if="isAuth('report:formh:getAllStatusList')">导出</el-button>
       </template>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {exportFile} from '@/net/validate'
+import {exportFileForm} from '@/net/validate'
 import { REP_API, BASICDATA_API, SYSTEMSETUP_API } from '@/api/api'
 export default {
   name: 'index',
@@ -167,7 +167,7 @@ export default {
   methods: {
     ExportExcel () {
       let that = this
-      exportFile(`${REP_API.ORDER_STATUS_OUT_API}`, '订单状态报表数据导出', that)
+      exportFileForm(`${REP_API.ORDER_STATUS_OUT_API}`, '订单状态报表数据导出', that)
     }
   },
   computed: {},

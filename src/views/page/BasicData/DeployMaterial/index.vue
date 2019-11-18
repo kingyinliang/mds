@@ -32,6 +32,45 @@ export default {
             resData: 'typeList',
             label: ['deptName'],
             value: 'deptId'
+          },
+          linkageProp: ['productionMaterielCode', 'useMaterielCode']
+        },
+        {
+          type: 'select',
+          label: '生产物料',
+          prop: 'productionMaterielCode',
+          optionsFn: (val) => {
+            return this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_SELECT_LIST}`, 'POST', {factory: val})
+          },
+          defaultValue: '',
+          resVal: {
+            resData: 'materielList.productionMateriel',
+            label: ['MATERIAL_CODE', 'MATERIAL_NAME'],
+            value: 'MATERIAL_CODE'
+          }
+        },
+        {
+          type: 'select',
+          label: '领用物料',
+          prop: 'useMaterielCode',
+          optionsFn: (val) => {
+            return this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_SELECT_LIST}`, 'POST', {factory: val})
+          },
+          defaultValue: '',
+          resVal: {
+            resData: 'materielList.useMateriel',
+            label: ['MATERIAL_CODE', 'MATERIAL_NAME'],
+            value: 'MATERIAL_CODE'
+          }
+        },
+        {
+          type: 'select',
+          label: '标识',
+          prop: 'type',
+          options: [{label: 'BL', value: 'BL'}, {label: 'LY', value: 'LY'}, {label: 'BL_LY', value: 'BL_LY'}],
+          resVal: {
+            label: ['label'],
+            value: 'value'
           }
         }
       ],
