@@ -259,48 +259,84 @@ export default {
         that.$refs.material.SaveMaterial('saved', resolve)
       })
       let excSaveNet = new Promise((resolve, reject) => {
-        that.$refs.excrecord.saveOrSubmitExc(this.formHeader.orderId, str, resolve, reject)
+        that.$refs.excrecord.saveOrSubmitExc(that.formHeader.orderId, str, resolve, reject)
       })
       let textSaveNet = new Promise((resolve, reject) => {
-        that.$refs.textrecord.UpdateText(this.formHeader, str, resolve, reject)
+        that.$refs.textrecord.UpdateText(that.formHeader, str, resolve, reject)
       })
-      if (str === 'submit') {
-        let net201 = new Promise((resolve, reject) => {
-          that.$refs.craft.SubmitMaterial(str, resolve)
-        })
-        let net202 = new Promise((resolve, reject) => {
-          that.$refs.material.SaveMaterial(str, resolve)
-        })
-        let inSubmit = new Promise((resolve, reject) => {
-          that.$refs.instorage.UpdateIn(str, resolve, reject)
-        })
-        let net203 = new Promise((resolve, reject) => {
-          that.$refs.equworkinghours.SubmitEquWorking(str, resolve, reject)
-        })
-        let aidSubmit = new Promise((resolve, reject) => {
-          that.$refs.craft.aidSubmit(str, this.formHeader.workShop, resolve, reject)
-        })
-        Promise.all([headUpdate, net101, net102, net103, net104, inSubmit, excSaveNet, textSaveNet, aidSubmit]).then(function () {
-          Promise.all([net201, net202, net203]).then(function () {
-            that.$notify({title: '成功', message: '提交成功', type: 'success'})
-            that.GetOrder()
-            that.isRedact = false
-          }).catch(() => {
-            that.$error_SHINHO('网络请求失败，请刷新重试')
-          })
-        })
-      } else {
-        let inSave = new Promise((resolve, reject) => {
-          that.$refs.instorage.UpdateIn(str, resolve, reject)
-        })
-        Promise.all([headUpdate, net101, net102, net103, net104, inSave, excSaveNet, textSaveNet]).then(function () {
+      let inStorage = new Promise((resolve, reject) => {
+        that.$refs.instorage.UpdateIn(str, resolve, reject)
+      })
+      Promise.all([headUpdate, net101, net102, net103, net104, inStorage, excSaveNet, textSaveNet]).then(function () {
+        if (str === 'saved') {
           that.$notify({title: '成功', message: '保存成功', type: 'success'})
           that.GetOrder()
           that.isRedact = false
-        }).catch(function (reason) {
-          that.$error_SHINHO('网络请求失败，请刷新重试' + reason)
-        })
-      }
+        } else {
+          let aidSubmit = new Promise((resolve, reject) => {
+            that.$refs.craft.aidSubmit(str, that.formHeader.workShop, resolve, reject)
+          })
+          Promise.all([aidSubmit]).then(function () {
+            let net201 = new Promise((resolve, reject) => {
+              that.$refs.craft.SubmitMaterial(str, resolve)
+            })
+            let net202 = new Promise((resolve, reject) => {
+              that.$refs.material.SaveMaterial(str, resolve)
+            })
+            let net203 = new Promise((resolve, reject) => {
+              that.$refs.equworkinghours.SubmitEquWorking(str, resolve, reject)
+            })
+            Promise.all([net201, net202, net203]).then(function () {
+              that.$notify({title: '成功', message: '提交成功', type: 'success'})
+              that.GetOrder()
+              that.isRedact = false
+            }).catch(() => {
+              that.$error_SHINHO('1网络请求失败，请刷新重试')
+            })
+          }).catch(() => {
+            that.$error_SHINHO('2网络请求失败，请刷新重试')
+          })
+        }
+      }).catch(function (reason) {
+        that.$error_SHINHO('网络请求失败，请刷新重试' + reason)
+      })
+      // if (str === 'submit') {
+      //   let net201 = new Promise((resolve, reject) => {
+      //     that.$refs.craft.SubmitMaterial(str, resolve)
+      //   })
+      //   let net202 = new Promise((resolve, reject) => {
+      //     that.$refs.material.SaveMaterial(str, resolve)
+      //   })
+      //   let inSubmit = new Promise((resolve, reject) => {
+      //     that.$refs.instorage.UpdateIn(str, resolve, reject)
+      //   })
+      //   let net203 = new Promise((resolve, reject) => {
+      //     that.$refs.equworkinghours.SubmitEquWorking(str, resolve, reject)
+      //   })
+      //   let aidSubmit = new Promise((resolve, reject) => {
+      //     that.$refs.craft.aidSubmit(str, this.formHeader.workShop, resolve, reject)
+      //   })
+      //   Promise.all([headUpdate, net101, net102, net103, net104, inSubmit, excSaveNet, textSaveNet, aidSubmit]).then(function () {
+      //     Promise.all([net201, net202, net203]).then(function () {
+      //       that.$notify({title: '成功', message: '提交成功', type: 'success'})
+      //       that.GetOrder()
+      //       that.isRedact = false
+      //     }).catch(() => {
+      //       that.$error_SHINHO('网络请求失败，请刷新重试')
+      //     })
+      //   })
+      // } else {
+      //   let inSave = new Promise((resolve, reject) => {
+      //     that.$refs.instorage.UpdateIn(str, resolve, reject)
+      //   })
+      //   Promise.all([headUpdate, net101, net102, net103, net104, inSave, excSaveNet, textSaveNet]).then(function () {
+      //     that.$notify({title: '成功', message: '保存成功', type: 'success'})
+      //     that.GetOrder()
+      //     that.isRedact = false
+      //   }).catch(function (reason) {
+      //     that.$error_SHINHO('网络请求失败，请刷新重试' + reason)
+      //   })
+      // }
     }
   },
   components: {
