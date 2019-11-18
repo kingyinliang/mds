@@ -9,6 +9,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const SpeedMeasureWebpackPlugin=require('speed-measure-webpack-plugin')
+const smp=new SpeedMeasureWebpackPlugin()
+
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 // const SentryPlugin = require('@sentry/webpack-plugin')
 
@@ -157,4 +160,4 @@ if (config.build.bundleAnalyzerReport) {
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 
-module.exports = webpackConfig
+module.exports = smp.wrap(webpackConfig)
