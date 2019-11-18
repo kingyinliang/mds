@@ -150,6 +150,11 @@
                   {{scope.row.halfType}}
                 </template>
               </el-table-column>
+              <el-table-column label="数量（方）" width="100">
+                <template slot-scope="scope">
+                  {{scope.row.amount * 1 / 1000}}
+                </template>
+              </el-table-column>
               <el-table-column label="批次" width="110">
                 <template slot-scope="scope">
                   {{scope.row.batch}}
