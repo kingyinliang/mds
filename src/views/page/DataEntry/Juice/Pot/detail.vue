@@ -69,6 +69,8 @@
             <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="FULL_POT_DATE" width="160"></el-table-column>
             <el-table-column label="单号" :show-overflow-tooltip="true" prop="ORDER_NO" width="120"></el-table-column>
             <el-table-column label="订单类型" :show-overflow-tooltip="true" prop="ORDER_TYPE" width="80"></el-table-column>
+            <el-table-column label="领用人" :show-overflow-tooltip="true" prop="CHANGER" width="120"></el-table-column>
+            <el-table-column label="领用时间" :show-overflow-tooltip="true" prop="CHANGED" width="120"></el-table-column>
           </el-table>
           <el-row>
             <el-pagination
@@ -102,6 +104,8 @@
             <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="FULL_DATE" width="160"></el-table-column>
             <el-table-column label="单号" :show-overflow-tooltip="true" prop="ORDER_NO" width="120"></el-table-column>
             <el-table-column label="订单类型" :show-overflow-tooltip="true" prop="ORDER_TYPE" width="80"></el-table-column>
+            <el-table-column label="领用人" :show-overflow-tooltip="true" prop="CHANGER" width="120"></el-table-column>
+            <el-table-column label="领用时间" :show-overflow-tooltip="true" prop="CHANGED" width="120"></el-table-column>
           </el-table>
           <el-row>
             <el-pagination
