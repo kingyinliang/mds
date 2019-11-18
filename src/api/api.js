@@ -1537,6 +1537,7 @@ export const STERILIZED_API = {
   DODEPLOYMENTHEADERSAVE: HOST + '/ste/allocate/allocateOrderSave',
   DODEPLOYMENTLISTSAVE: HOST + '/ste/allocate/allocateSave',
   DODEPLOYMENTALLOCATELIST: HOST + '/ste/allocate/allocateListInfo',
+  DODEPLOYMENTALLREVOCATION: HOST + '/ste/allocate/revocation', // 撤回
   /**
    *  订单分配
    */
