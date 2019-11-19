@@ -475,7 +475,7 @@ export default {
     JsbSave (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.formJsb.receiveAmount > this.formJsb.amount) {
+          if (this.formJsb.receiveAmount * 1000 > this.formJsb.amount) {
             this.$warning_SHINHO('领用量不能大于库存')
             return false
           }
@@ -503,7 +503,7 @@ export default {
     ZcSave (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.formZc.receiveAmount > this.formZc.amount) {
+          if (this.formZc.receiveAmount * 1000 > this.formZc.amount) {
             this.$warning_SHINHO('领用量不能大于库存')
             return false
           }
