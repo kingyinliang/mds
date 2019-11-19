@@ -229,6 +229,9 @@ export default {
               item.batch = this.dataForm.batch
             }
           })
+          if (/repeat/g.test(this.dataForm.holderId)) {
+            this.dataForm.holderId = this.dataForm.holderId.substring(0, this.dataForm.holderId.indexOf('repeat'))
+          }
           if (this.isUpdate) {
             Reflect.ownKeys(this.dataForm).forEach((key) => {
               this.rowData[key] = this.dataForm[key]
@@ -273,6 +276,16 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.PotList = data.holderList
+          this.InStorageDate.forEach(item => {
+            if (this.PotList.filter(it => it.holderId === item.holderId).length > 0 && this.PotList.filter(it => it.holderId === item.holderId)[0].batch !== item.batch) {
+              this.PotList.push({
+                amount: item.holderRemaining,
+                batch: item.batch,
+                holderId: item.holderId + 'repeat',
+                holderName: item.holderName
+              })
+            }
+          })
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
