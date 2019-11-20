@@ -113,7 +113,7 @@
         <el-form-item label="领用罐号：">{{formJsb.holderName}}</el-form-item>
         <el-form-item label="物料：">{{formJsb.materialCode}} {{formJsb.materialName}}</el-form-item>
         <el-form-item label="批次：">{{formJsb.batch}}</el-form-item>
-        <el-form-item label="领用量（L）：" prop="receiveAmount">
+        <el-form-item label="领用量（方）：" prop="receiveAmount">
           <el-input v-model="formJsb.receiveAmount" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="打入罐类别：" prop="inHolderType">
@@ -151,7 +151,7 @@
         <el-form-item label="领用罐号：">{{formZc.holderName}}</el-form-item>
         <el-form-item label="物料：">{{formZc.materialCode}} {{formZc.materialName}}</el-form-item>
         <el-form-item label="批次：">{{formZc.batch}}</el-form-item>
-        <el-form-item label="领用量（L）：" prop="receiveAmount">
+        <el-form-item label="领用量（方）：" prop="receiveAmount">
           <el-input v-model="formZc.receiveAmount" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="打入罐类别：" prop="inHolderType">
@@ -495,7 +495,7 @@ export default {
     JsbSave (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.formJsb.receiveAmount > this.formJsb.amount) {
+          if (this.formJsb.receiveAmount * 1000 > this.formJsb.amount) {
             this.$warning_SHINHO('领用量不能大于库存')
             return false
           }
@@ -523,7 +523,7 @@ export default {
     ZcSave (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.formZc.receiveAmount > this.formZc.amount) {
+          if (this.formZc.receiveAmount * 1000 > this.formZc.amount) {
             this.$warning_SHINHO('领用量不能大于库存')
             return false
           }
