@@ -55,7 +55,7 @@
               <i class="reqI">*</i>
               <span>单位</span>
             </template>
-            <template slot-scope="scope">{{scope.row.unit}}</template>
+            <template slot-scope="scope">{{scope.row.unitName}}</template>
           </el-table-column>
           <el-table-column label="操作人" prop="changer" width="140px"></el-table-column>
           <el-table-column label="操作时间" prop="changed" width="160px"></el-table-column>
@@ -795,7 +795,8 @@ export default {
         materialDate: this.formHeader.inKjmDate,
         materialBatch: '',
         amount: '',
-        unit: '盒',
+        unit: 'BOX',
+        unitName: '盒',
         materialCode: '',
         materialName: '',
         productBatch: '',
