@@ -14,7 +14,7 @@
           <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="罐类型：" label-width="60px">
+      <el-form-item label="罐类型：">
         <el-select v-model="formHeader.potType" placeholder="请选择" @change="ChangeSearch()" style="width: 140px">
           <el-option label="请选择"  value=""></el-option>
           <el-option v-for="(sole, index) in this.potTypeList" :key="index" :value="sole.value" :label="sole.name"></el-option>
@@ -41,6 +41,12 @@
         <el-select v-model="formHeader.dump" placeholder="请选择" @change="ChangeSearch()" style="width: 140px">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.name" v-for="(item, index) in dumpList" :key="index" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="标识：">
+        <el-select v-model="formHeader.isF" placeholder="请选择" style="width: 140px">
+          <el-option label="请选择" value=""></el-option>
+          <el-option :label="item.name" v-for="(item, index) in isFList" :key="index" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item style="float:right">
@@ -303,8 +309,19 @@ export default {
         potNo: '',
         type: '',
         status: '',
-        dump: ''
+        dump: '',
+        isF: ''
       },
+      isFList: [{
+        name: '正常',
+        value: '0'
+      }, {
+        name: 'F0标识',
+        value: '1'
+      }, {
+        name: '原汁jbs',
+        value: '2'
+      }],
       potTypeList: [{
         name: '发酵罐',
         value: '001'

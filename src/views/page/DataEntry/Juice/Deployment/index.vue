@@ -592,28 +592,34 @@ export default {
       })
     },
     SubmitForm () {
-      if (this.multipleSelection.length === 0) {
-        this.$warning_SHINHO('请勾选数据')
-        return false
-      }
-      for (let item of this.multipleSelection) {
-        if (item.isUpdate === false) {
-          this.$warning_SHINHO('请先保存调配详情信息（调配单：' + item.orderNo + '）')
+      this.$confirm('确认提交该订单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        if (this.multipleSelection.length === 0) {
+          this.$warning_SHINHO('请勾选数据')
           return false
         }
-        if (!item.holderId || !item.allocateTime || item.holderId === '' || item.allocateTime === '') {
-          this.$warning_SHINHO('请填写必填项')
-          return false
+        for (let item of this.multipleSelection) {
+          if (item.isUpdate === false) {
+            this.$warning_SHINHO('请先保存调配详情信息（调配单：' + item.orderNo + '）')
+            return false
+          }
+          if (!item.holderId || !item.allocateTime || item.holderId === '' || item.allocateTime === '') {
+            this.$warning_SHINHO('请填写必填项')
+            return false
+          }
         }
-      }
-      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSUBMIT}`, 'POST', this.multipleSelection).then(({data}) => {
-        if (data.code === 0) {
-          this.$notify({title: '成功', message: '提交成功', type: 'success'})
-          this.isRedact = false
-          this.SearchList()
-        } else {
-          this.$notify.error({title: '错误', message: data.msg})
-        }
+        this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSUBMIT}`, 'POST', this.multipleSelection).then(({data}) => {
+          if (data.code === 0) {
+            this.$notify({title: '成功', message: '提交成功', type: 'success'})
+            this.isRedact = false
+            this.SearchList()
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
       })
     },
     // 复选框初始状态
