@@ -69,7 +69,10 @@ export default {
       total: 0,
       headerInfo: [],
       dataList: [],
-      dataListAll: []
+      dataListAll: [],
+      plantList: {
+        workShop: ''
+      }
     }
   },
   mounted () {
@@ -105,6 +108,7 @@ export default {
     },
     // 导出
     ExportExcelA () {
+      this.plantList.workShop = this.$store.state.common.Fermentation.workShop
       exportFile(`${FERMENTATION_API.FER_REPORT_EXPORTLIST}`, '发酵罐一览表', this)
     }
   }

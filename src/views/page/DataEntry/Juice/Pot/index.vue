@@ -266,6 +266,10 @@
         <el-form-item label="领用量（L）：" prop="amount">
           <el-input v-model="formBringOut.amount" style="width:200px"></el-input>
         </el-form-item>
+        <el-form-item label="领用人：">{{$store.state.user.realName + '（' + this.$store.state.user.name + '）'}}</el-form-item>
+        <el-form-item label="领用时间：">
+          <el-date-picker type="datetime" v-model="formBringOut.bringTime" value-format="yyyy-MM-dd hh:mm" format="yyyy-MM-dd hh:mm" placeholder="请选择" style="width:199px"></el-date-picker>
+        </el-form-item>
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -843,6 +847,7 @@ export default {
           materialName: item.MATERIAL_NAME,
           type: item.TYPE,
           batch: item.BATCH,
+          bringTime: '',
           amount: '',
           remark: ''
         }

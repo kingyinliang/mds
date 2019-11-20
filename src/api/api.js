@@ -268,7 +268,10 @@ export const BASICDATA_API = {
   /**
    *  调配物料
    */
-  DEPLOY_MATERIAL_SELECT_LIST: HOST + '/ste/material/materielList'
+  DEPLOY_MATERIAL_SELECT_LIST: HOST + '/ste/material/materielList',
+  DEPLOY_MATERIAL_LIST: HOST + '/ste/material/list',
+  DEPLOY_MATERIAL_SAVE: HOST + '/ste/material/save',
+  DEPLOY_MATERIAL_DEL: HOST + '/ste/material/del'
 }
 /*
 *系统设置api
@@ -1537,6 +1540,7 @@ export const STERILIZED_API = {
   DODEPLOYMENTHEADERSAVE: HOST + '/ste/allocate/allocateOrderSave',
   DODEPLOYMENTLISTSAVE: HOST + '/ste/allocate/allocateSave',
   DODEPLOYMENTALLOCATELIST: HOST + '/ste/allocate/allocateListInfo',
+  DODEPLOYMENTALLREVOCATION: HOST + '/ste/allocate/revocation', // 撤回
   /**
    *  订单分配
    */

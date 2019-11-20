@@ -31,6 +31,7 @@
               :prop="item.prop"
               :key="item.prop">
               <el-input
+                :ref="item.prop"
                 style="width: 170px"
                 v-model="queryForm[item.prop]"></el-input>
             </el-form-item>
@@ -42,11 +43,11 @@
               :key="item.prop">
               <el-row>
                 <el-col :span="12">
-                  <el-date-picker v-model="queryForm[item.prop]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                  <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
                   <span>-</span>
                 </el-col>
                 <el-col :span="12">
-                  <el-date-picker v-model="queryForm[item.propTwo]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                  <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
                 </el-col>
               </el-row>
             </el-form-item>
@@ -218,6 +219,7 @@ export default {
           this.$nextTick(function () {
             // 添加监听
             this.$refs[item.prop][0].emitChange = (val) => {
+              this.clearTableAndPage()
               item.linkageProp.forEach(linkagePropItem => {
                 // 联动的对象
                 let linkagePropItemObj = this.queryFormData.filter(it => it.prop === linkagePropItem)[0]
@@ -252,9 +254,27 @@ export default {
               })
             }
           })
+        } else {
+          this.$nextTick(function () {
+            this.$refs[item.prop][0].emitChange = (val) => {
+              this.clearTableAndPage()
+            }
+            if (item.propTwo) {
+              this.$refs[item.propTwo][0].emitChange = (val) => {
+                this.clearTableAndPage()
+              }
+            }
+          })
         }
       })
       console.timeEnd('组件初始化')
+    },
+    // 清空表格和分页
+    clearTableAndPage () {
+      this.tableData = []
+      this.queryForm.currPage = 1
+      this.queryForm.totalCount = 0
+      // this.GetDataList()
     },
     // 获取table数据
     GetDataList (st) {
