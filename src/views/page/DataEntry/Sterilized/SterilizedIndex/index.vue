@@ -160,11 +160,11 @@ export default {
         return
       }
       if (str === '1') {
-        let st = this.Materails.filter(items => items.code === item.materialCode)
-        if (st.length === 0) {
-          this.$warning_SHINHO('非特殊物料，不能跳转')
-          return
-        }
+        // let st = this.Materails.filter(items => items.code === item.materialCode)
+        // if (st.length === 0) {
+        //   this.$warning_SHINHO('非特殊物料，不能跳转')
+        //   return
+        // }
         if (!this.isAuth('ste:semiMaterial:list')) {
           this.$warning_SHINHO('没有分配权限')
           return
