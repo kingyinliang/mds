@@ -1,9 +1,9 @@
 <template>
-  <div class="main">
-    <el-card>
+  <div class="header_main">
+    <el-card class="searchCard">
       <el-row>
         <el-col :span="24">
-          <el-form :inline="true" label-width="96px" size="small">
+          <el-form :inline="true" label-width="96px" size="small" class="multi_row">
             <el-form-item label="生产工厂："><p class="bottomline" style="width:212px;">{{formHeader.FACTORY}}</p></el-form-item>
             <el-form-item label="生产车间："><p class="bottomline">{{formHeader.WORK_SHOP}}</p></el-form-item>
             <el-form-item label="申请编号："><p class="bottomline">{{formHeader.APPLY_NO}}</p></el-form-item>
@@ -23,7 +23,7 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top:15px">
+    <el-card style="margin-top:5px">
       <el-row>
         <el-col style="font-weight: bold;">
           <i class="iconfont factory-shouye"></i>
@@ -33,19 +33,19 @@
       <el-row style="margin-top:15px">
         <el-col :span="22">
           <el-form :inline="true" :model="searchform" size="small">
-            <el-form-item label="罐号">
+            <el-form-item label="罐号：">
               <el-select v-model="searchform.holder" filterable @change="Search()">
                 <el-option value="">请选择</el-option>
                 <el-option v-for="(item, index) of holderList" :key="index" :value="item" :label="item"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="类别">
+            <el-form-item label="类别：">
               <el-select v-model="searchform.types" filterable @change="Search()">
                 <el-option value="">请选择</el-option>
                 <el-option v-for="(item, index) of typesList" :key="index" :value="item" :label="item"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="状态">
+            <el-form-item label="状态：">
               <el-select v-model="searchform.status" @change="Search()">
                 <el-option value="">请选择</el-option>
                 <el-option v-for="(item, index) of statusList" :key="index" :value="item" :label="item"></el-option>
@@ -83,6 +83,7 @@
             <el-table-column label="发酵天数/天" prop="matureDays" width="100"></el-table-column>
             <el-table-column label="酱醪状态" prop="state"></el-table-column>
             <el-table-column label="数量" prop="inAmount" width="100"></el-table-column>
+            <el-table-column label="HD数量" prop="hdAmount" width="100" show-overflow-tooltip></el-table-column>
             <el-table-column label="单位" prop="inUnit" width="60"></el-table-column>
             <el-table-column label="入库日期" prop="created" show-overflow-tooltip width="100"></el-table-column>
             <el-table-column label="批次" prop="batch" width="110"></el-table-column>

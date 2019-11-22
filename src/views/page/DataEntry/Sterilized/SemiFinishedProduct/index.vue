@@ -20,6 +20,12 @@
           <el-option v-for="(item, index) in HolderList" :key="index" :value="item.holderId" :label="item.holderName"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="状态：" label-width="50px">
+        <el-select v-model="formHeader.holderStatus" placeholder="请选择" style="width: 140px">
+          <el-option label="请选择"  value=""></el-option>
+          <el-option v-for="(item, index) in holderStatusList" :label="item.name" :key="index" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item class="floatr">
         <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('ste:semi:list')">查询</el-button>
       </el-form-item>
@@ -107,7 +113,7 @@
         <el-form-item label="领用罐号：">{{formJsb.holderName}}</el-form-item>
         <el-form-item label="物料：">{{formJsb.materialCode}} {{formJsb.materialName}}</el-form-item>
         <el-form-item label="批次：">{{formJsb.batch}}</el-form-item>
-        <el-form-item label="领用量（L）：" prop="receiveAmount">
+        <el-form-item label="领用量（方）：" prop="receiveAmount">
           <el-input v-model="formJsb.receiveAmount" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="打入罐类别：" prop="inHolderType">
@@ -145,7 +151,7 @@
         <el-form-item label="领用罐号：">{{formZc.holderName}}</el-form-item>
         <el-form-item label="物料：">{{formZc.materialCode}} {{formZc.materialName}}</el-form-item>
         <el-form-item label="批次：">{{formZc.batch}}</el-form-item>
-        <el-form-item label="领用量（L）：" prop="receiveAmount">
+        <el-form-item label="领用量（方）：" prop="receiveAmount">
           <el-input v-model="formZc.receiveAmount" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="打入罐类别：" prop="inHolderType">
@@ -191,8 +197,22 @@ export default {
         holderId: '',
         currPage: 1,
         pageSize: 18,
-        totalCount: 0
+        totalCount: 0,
+        holderStatus: ''
       },
+      holderStatusList: [{
+        name: '空罐',
+        value: '0'
+      }, {
+        name: '入库中',
+        value: '1'
+      }, {
+        name: '满罐',
+        value: '2'
+      }, {
+        name: '领用中',
+        value: '3'
+      }],
       HolderList: [],
       DataList: [],
       GnDialogTableVisible: false,
@@ -475,7 +495,7 @@ export default {
     JsbSave (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.formJsb.receiveAmount > this.formJsb.amount) {
+          if (this.formJsb.receiveAmount * 1000 > this.formJsb.amount) {
             this.$warning_SHINHO('领用量不能大于库存')
             return false
           }
@@ -503,7 +523,7 @@ export default {
     ZcSave (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.formZc.receiveAmount > this.formZc.amount) {
+          if (this.formZc.receiveAmount * 1000 > this.formZc.amount) {
             this.$warning_SHINHO('领用量不能大于库存')
             return false
           }

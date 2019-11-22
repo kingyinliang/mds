@@ -231,6 +231,8 @@ export default {
           this.orderTime = setInterval(() => {
             this.GetOrderUpdateStatus(code)
           }, 4000)
+        } else {
+          this.loadings.close()
         }
       }).catch(() => {
         // this.loading = false
