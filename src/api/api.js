@@ -972,6 +972,7 @@ export const WHT_API = {
    * @property {string} INSTORAGESUBMIT_API 生产入库提交
    */
   INSTORAGESUBMIT_API: HOST + '/sys/whtInStorage/submit',
+  INSTORAGEBATCHLIST_API: HOST + '/all/dropDown/createBatch', // 批次
   /**
    * @property {string} MATERIELSAVEORDER_API pw小麦申请订单
    */
