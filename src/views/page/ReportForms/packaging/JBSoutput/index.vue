@@ -6,10 +6,9 @@
       :queryFormData="queryFormData"
       :list-interface="listInterface"
       :query-auth="'report:form:listJBS'"
-      :column="column">
-      <template slot="mds-button">
-        <el-button type="primary" size="small" @click="ExportExcel(true)" v-if="isAuth('report:form:exportJBS')">导出</el-button>
-      </template>
+      :column="column"
+      :export-excel="true"
+      :export-option="exportOption">
     </query-table>
   </div>
 </el-row>
@@ -17,7 +16,6 @@
 
 <script>
 import {BASICDATA_API, REP_API} from '@/api/api'
-import { exportFileForm } from '@/net/validate'
 export default {
   name: 'index',
   data () {
@@ -85,6 +83,11 @@ export default {
       listInterface: (params) => {
         return this.$http(`${REP_API.REPJBSLIST_API}`, 'POST', params)
       },
+      exportOption: {
+        exportInterface: REP_API.REPJBSOUTPUT_API,
+        auth: 'report:form:exportJBS',
+        text: 'JBS产出明细报表数据导出'
+      },
       column: [{
         prop: 'productDate',
         label: '生产日期',
@@ -149,10 +152,6 @@ export default {
     }
   },
   methods: {
-    ExportExcel () {
-      let that = this
-      exportFileForm(`${REP_API.REPJBSOUTPUT_API}`, 'JBS产出明细报表数据导出', that)
-    }
   },
   components: {
   }

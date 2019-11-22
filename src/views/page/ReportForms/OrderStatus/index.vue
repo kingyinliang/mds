@@ -1,15 +1,18 @@
 <template>
   <div class="header_main">
-    <query-table ref="queryTable" :queryFormData="queryFormData" :list-interface="listInterface" :query-auth="'report:formh:getAllStatusList'" :column="column">
-      <template slot="mds-button">
-        <el-button size="small" type="primary" @click="ExportExcel(true)" v-if="isAuth('report:formh:getAllStatusList')">导出</el-button>
-      </template>
+    <query-table
+      ref="queryTable"
+      :queryFormData="queryFormData"
+      :list-interface="listInterface"
+      :query-auth="'report:formh:getAllStatusList'"
+      :column="column"
+      :export-excel="true"
+      :export-option="exportOption">
     </query-table>
   </div>
 </template>
 
 <script>
-import {exportFileForm} from '@/net/validate'
 import { REP_API, BASICDATA_API, SYSTEMSETUP_API } from '@/api/api'
 export default {
   name: 'index',
@@ -122,6 +125,11 @@ export default {
       listInterface: (params) => {
         return this.$http(`${REP_API.ORDER_STATUS_LIST_API}`, 'POST', params)
       },
+      exportOption: {
+        exportInterface: REP_API.ORDER_STATUS_OUT_API,
+        auth: 'report:formh:getAllStatusList',
+        text: '订单状态报表数据导出'
+      },
       column: [
         {
           prop: 'factoryName',
@@ -165,10 +173,6 @@ export default {
   mounted () {
   },
   methods: {
-    ExportExcel () {
-      let that = this
-      exportFileForm(`${REP_API.ORDER_STATUS_OUT_API}`, '订单状态报表数据导出', that)
-    }
   },
   computed: {},
   components: {

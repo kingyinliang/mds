@@ -19,7 +19,7 @@
     </el-form-item>
     <el-form-item label="入罐号：">
       <el-select v-model="formHeader.inPotNo" placeholder="请选择" filterable size="small" style="width: 145px" :disabled="!(CraftControlStatus !== 'submit')">
-        <el-option :label="iteam.holderName" :value="iteam.holderId" v-for="iteam in InPot" :key="iteam.holderName"></el-option>
+        <el-option :label="iteam.holderName" :value="iteam.holderId" v-for="iteam in InPot" :key="iteam.holderId"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="连续蒸煮号：" label-width="85px">
