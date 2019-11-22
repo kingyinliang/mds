@@ -190,7 +190,6 @@ export default {
         return
       }
       this.isRedact = false
-      this.$refs.materielref.getPot(this.formHeader)
       this.getMaterial(this.formHeader.factory)
       this.getMaterialM(this.formHeader.factory)
       this.GetFunet()
@@ -215,14 +214,19 @@ export default {
             this.formHeader.changed = data.orderList[0].changed
             this.formHeader.changer = data.orderList[0].changer
           }
-          let list1 = new Promise((resolve, reject) => {
-            this.$refs.materielref.getMaterialList(this.formHeader, resolve, reject)
+          let list0 = new Promise((resolve, reject) => {
+            this.$refs.materielref.getPot(this.formHeader, resolve, reject)
           })
-          let list2 = new Promise((resolve, reject) => {
-            this.$refs.manhour.GetTimeList(this.formHeader, resolve, reject)
-          })
-          Promise.all([list1, list2]).then(() => {
-            this.GetOrderStatus()
+          Promise.all([list0]).then(() => {
+            let list1 = new Promise((resolve, reject) => {
+              this.$refs.materielref.getMaterialList(this.formHeader, resolve, reject)
+            })
+            let list2 = new Promise((resolve, reject) => {
+              this.$refs.manhour.GetTimeList(this.formHeader, resolve, reject)
+            })
+            Promise.all([list1, list2]).then(() => {
+              this.GetOrderStatus()
+            })
           })
         } else {
           this.$notify.error({title: '错误', message: data.msg})

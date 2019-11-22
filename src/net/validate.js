@@ -551,3 +551,7 @@ export function accDiv (arg1, arg2) {
   r2 = Number(arg2.toString().replace('.', ''))
   return (r1 / r2) * (Math.pow(10, t2 - t1))
 }
+// 深克隆
+export function DeepClone (str) {
+  return JSON.parse(JSON.stringify(str))
+}
