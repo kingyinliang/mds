@@ -35,7 +35,7 @@
       <el-table-column width="120">
         <template slot="header"><i class="reqI">*</i><span>发酵罐号</span></template>
         <template slot-scope="scope">
-          <el-select @change="PotChange(scope.row)" v-model="scope.row.material.childPotNo" filterable placeholder="请选择" :disabled="!(isRedact && (scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked'))" size="small">
+          <el-select @visible-change="PotChange($event, scope.row)" v-model="scope.row.material.childPotNo" filterable placeholder="请选择" :disabled="!(isRedact && (scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked'))" size="small">
             <el-option v-for="item in potList" :key="item.holderId" :label="item.holderName" :value="item.holderId"></el-option>
             <el-option :key="scope.row.material.childPotNo" :label="scope.row.material.holderName" :value="scope.row.material.childPotNo" :disabled="true" v-if="potSelect(scope.row.material)"></el-option>
           </el-select>
@@ -61,7 +61,7 @@
       </el-table-column>
       <el-table-column width="120">
         <template slot="header"><i class="reqI">*</i><span>当日用量</span></template>
-        <template slot-scope="scope"><el-input v-model="scope.row.material.childUsedAmount" size="small" placeholder="手工录入" :disabled="!(isRedact && (scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked'))"></el-input></template>
+        <template slot-scope="scope"><el-input v-model="scope.row.material.childUsedAmount" @focus="GetOldAmount(scope.row)" @blur="PostAmount(scope.row)" size="small" placeholder="手工录入" :disabled="!(isRedact && (scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked'))"></el-input></template>
       </el-table-column>
       <el-table-column label="单位" width="50">
         <template slot-scope="scope">{{scope.row.material.childUnit = 'L'}}</template>
@@ -92,6 +92,7 @@
 
 <script>
 import {SQU_API} from '@/api/api'
+import {accAdd, accSub, DeepClone} from '@/net/validate.js'
 export default {
   name: 'material',
   data () {
@@ -102,7 +103,9 @@ export default {
       sumAmount2: {},
       potList: [],
       materialS: '',
-      MaterialAudit: []
+      MaterialAudit: [],
+      oldHolderId: 0,
+      oldChildUsedAmount: 0
     }
   },
   props: {
@@ -120,7 +123,7 @@ export default {
     'fumet': {
       handler (n, o) {
         for (let i = 0; i < this.SumDate.length; i++) {
-          this.PotChange(this.SumDate[i])
+          this.PotChange('', this.SumDate[i])
         }
       },
       deep: true
@@ -160,7 +163,7 @@ export default {
               sav = sav + 1
             }
           })
-          console.log(this.sumAmount1)
+          // console.log(this.sumAmount1)
           if (no > 0) {
             this.materialS = 'noPass'
           } else if (sub > 0) {
@@ -232,7 +235,25 @@ export default {
         }
       })
     },
-    PotChange (row) {
+    PotChange (event, row) {
+      if (event !== '') {
+        if (event === true) {
+          this.oldHolderId = DeepClone(row.material.childPotNo)
+        } else if (event === false) {
+          if (this.oldHolderId === '' && row.material.childUsedAmount !== 0) { // 拆分
+            let PotsumAmount = this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount
+            let newAmount = DeepClone(accSub(PotsumAmount, row.material.childUsedAmount))
+            this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = newAmount
+            this.ChangeDataListFullAmount(row.material.childPotNo, newAmount)
+          } else if (this.oldHolderId !== '' && this.oldHolderId !== row.material.childPotNo) { // 变更
+            let OldAmountAdd = accAdd(this.potList.find(item => item.holderId === this.oldHolderId).sumAmount, row.material.childUsedAmount)
+            let NewAmountSub = accSub(this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount, row.material.childUsedAmount)
+            this.potList.find(item => item.holderId === this.oldHolderId).sumAmount = DeepClone(OldAmountAdd)
+            this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = DeepClone(NewAmountSub)
+            this.ChangeDataListFullAmount(row.material.childPotNo, NewAmountSub, this.oldHolderId, OldAmountAdd)
+          }
+        }
+      }
       let pot = this.potList.filter(it => it.holderId === row.material.childPotNo)[0]
       if (pot) {
         row.material.childMaterial = pot.materialCode + ' ' + pot.materialName
@@ -313,7 +334,7 @@ export default {
           childMaterialCode: '',
           childMaterialName: '',
           childPotNo: '',
-          childUsedAmount: '',
+          childUsedAmount: 0,
           childUnit: '',
           childBatch: '',
           childFullPotAmount: '',
@@ -341,6 +362,11 @@ export default {
           row.material.childDelFlag = '1'
           this.SumDate.splice(this.SumDate.length, 0, {})
           this.SumDate.splice(this.SumDate.length - 1, 1)
+          // 更改库存余量
+          let PotsumAmount = this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount
+          let newAmount = DeepClone(accAdd(PotsumAmount, row.material.childUsedAmount))
+          this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = newAmount
+          this.ChangeDataListFullAmount(row.material.childPotNo, newAmount)
         } else {
           this.$warning_SHINHO('此订单最后一条了，不能删除')
         }
@@ -354,14 +380,20 @@ export default {
       }
     },
     // 获取罐
-    getPot (formHeader) {
+    getPot (formHeader, resolve, reject) {
       this.$http(`${SQU_API.SUM_POT_LIST_API}`, 'POST', {
         factory: formHeader.factory,
         workShop: formHeader.workShop
       }).then(({data}) => {
         if (data.code === 0) {
           this.potList = data.holderInfo
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
+          if (reject) {
+            reject(data.msg)
+          }
           this.$notify.error({title: '错误', message: data.msg})
         }
       })
@@ -378,7 +410,7 @@ export default {
             childMaterialCode: '',
             childMaterialName: '',
             childPotNo: '',
-            childUsedAmount: '',
+            childUsedAmount: 0,
             childUnit: '',
             childBatch: '',
             childFullPotAmount: '',
@@ -391,6 +423,9 @@ export default {
         })
       } else {
         this.materialDate.forEach((item, index) => {
+          if (this.potList.find(items => items.holderId === item.childPotNo)) {
+            item.childFullPotAmount = this.potList.find(items => items.holderId === item.childPotNo).sumAmount
+          }
           item.childMaterial = item.childMaterialCode + ' ' + item.childMaterialName
           let tmp = this.fumet.find(items => items.id === item.midPrsOrderId)
           this.SumDate.push({fumet: tmp, material: item, delFlag: '0'})
@@ -404,7 +439,7 @@ export default {
               childMaterialCode: '',
               childMaterialName: '',
               childPotNo: '',
-              childUsedAmount: '',
+              childUsedAmount: 0,
               childUnit: '',
               childBatch: '',
               childFullPotAmount: '',
@@ -417,6 +452,29 @@ export default {
           }
         })
       }
+    },
+    GetOldAmount (row) {
+      this.oldChildUsedAmount = row.material.childUsedAmount
+    },
+    PostAmount (row) {
+      if (this.oldChildUsedAmount !== row.material.childUsedAmount && row.material.childPotNo !== '') {
+        let PotsumAmount = this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount
+        let newAmount = DeepClone(accSub(accAdd(PotsumAmount, this.oldChildUsedAmount), row.material.childUsedAmount))
+        this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = newAmount
+        this.ChangeDataListFullAmount(row.material.childPotNo, newAmount)
+      }
+    },
+    ChangeDataListFullAmount (newHolderId, newAmount, oldHolderId = '', oldAmount = '') {
+      this.SumDate.map((item) => {
+        if (item.material.childPotNo === newHolderId) {
+          item.material.childFullPotAmount = newAmount
+        }
+        if (item.oldHolderId !== '') {
+          if (item.material.childPotNo === oldHolderId) {
+            item.material.childFullPotAmount = oldAmount
+          }
+        }
+      })
     }
   },
   computed: {

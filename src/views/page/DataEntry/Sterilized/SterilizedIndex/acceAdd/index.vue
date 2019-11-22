@@ -204,7 +204,8 @@ export default {
       this.$http(`${STERILIZED_API.STE_ENTER_SUP_LIST_API}`, 'POST', {
         orderId: this.$store.state.common.sterilized.acceOrderId,
         factory: this.$store.state.common.sterilized.acceFactory,
-        orderNo: this.$store.state.common.sterilized.acceOrderNo
+        orderNo: this.$store.state.common.sterilized.acceOrderNo,
+        materialCode: this.formHeader.materialCode
       }).then(({data}) => {
         if (data.code === 0) {
           if (data.steSupMaterialBean.resultList) {

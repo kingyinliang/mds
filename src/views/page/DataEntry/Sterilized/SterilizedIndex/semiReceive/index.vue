@@ -114,7 +114,8 @@ export default {
       this.$http(`${STERILIZED_API.STE_ENTER_MATERIAL_LIST_API}`, 'POST', {
         orderId: this.$store.state.common.sterilized.seiOrderId,
         factory: this.$store.state.common.sterilized.seiFactory,
-        orderNo: this.$store.state.common.sterilized.seiOrderNo
+        orderNo: this.$store.state.common.sterilized.seiOrderNo,
+        materialCode: this.formHeader.materialCode
       }).then(({data}) => {
         if (data.code === 0) {
           this.MaterialDate = data.list

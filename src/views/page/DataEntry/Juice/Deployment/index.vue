@@ -109,7 +109,7 @@
     </div>
     <el-dialog :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
       <div slot="title" style="line-hight:59px">调配列表</div>
-      <el-table :data="ItemList" border header-row-class-name="tableHead">
+      <el-table :data="ItemList" border header-row-class-name="tableHead" v-for="item in 2" :key="item" :row-class-name="item === 1?RowDelFlag1:RowDelFlag2">
         <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
           <template slot-scope="scope">
             {{scope.row.materialCode}} {{scope.row.materialName}}
@@ -437,7 +437,7 @@ export default {
     ShowDetail (row) {
       this.Tdata = row
       this.materialName = row.materialName
-      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMS}`, 'POST', {orderNo: row.id, factory: this.formHeader.factory, sign: 'oldMethod'}, false, false, false).then(({data}) => {
+      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMS}`, 'POST', {materialCode: row.materialCode, orderNo: row.id, factory: this.formHeader.factory, sign: 'oldMethod'}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.ItemList = data.info
           this.ItemList.map((item) => {
@@ -592,28 +592,34 @@ export default {
       })
     },
     SubmitForm () {
-      if (this.multipleSelection.length === 0) {
-        this.$warning_SHINHO('请勾选数据')
-        return false
-      }
-      for (let item of this.multipleSelection) {
-        if (item.isUpdate === false) {
-          this.$warning_SHINHO('请先保存调配详情信息（调配单：' + item.orderNo + '）')
+      this.$confirm('确认提交该订单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        if (this.multipleSelection.length === 0) {
+          this.$warning_SHINHO('请勾选数据')
           return false
         }
-        if (!item.holderId || !item.allocateTime || item.holderId === '' || item.allocateTime === '') {
-          this.$warning_SHINHO('请填写必填项')
-          return false
+        for (let item of this.multipleSelection) {
+          if (item.isUpdate === false) {
+            this.$warning_SHINHO('请先保存调配详情信息（调配单：' + item.orderNo + '）')
+            return false
+          }
+          if (!item.holderId || !item.allocateTime || item.holderId === '' || item.allocateTime === '') {
+            this.$warning_SHINHO('请填写必填项')
+            return false
+          }
         }
-      }
-      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSUBMIT}`, 'POST', this.multipleSelection).then(({data}) => {
-        if (data.code === 0) {
-          this.$notify({title: '成功', message: '提交成功', type: 'success'})
-          this.isRedact = false
-          this.SearchList()
-        } else {
-          this.$notify.error({title: '错误', message: data.msg})
-        }
+        this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSUBMIT}`, 'POST', this.multipleSelection).then(({data}) => {
+          if (data.code === 0) {
+            this.$notify({title: '成功', message: '提交成功', type: 'success'})
+            this.isRedact = false
+            this.SearchList()
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
       })
     },
     // 复选框初始状态
@@ -730,6 +736,21 @@ export default {
           this.$notify.error({title: '错误', message: data.msg})
         }
       })
+    },
+    //  RowDelFlag
+    RowDelFlag1 ({row, rowIndex}) {
+      if (row.materielType === 'BL_LY') {
+        return 'rowDel'
+      } else {
+        return ''
+      }
+    },
+    RowDelFlag2 ({row, rowIndex}) {
+      if (row.materielType !== 'BL_LY') {
+        return 'rowDel'
+      } else {
+        return ''
+      }
     },
     RecordSave (formName) {
       this.$refs[formName].validate((valid) => {
