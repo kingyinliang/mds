@@ -208,6 +208,10 @@ export default {
         }
         this.$store.state.common.sterilized.craftOrderId = item.orderId
         url = 'DataEntry-Sterilized-SterilizedIndex-craftControl-index'
+        this.mainTabs = this.mainTabs.filter(item => item.name !== url)
+        setTimeout(() => {
+          this.$router.push({ name: url })
+        }, 100)
       } else if (str === '4') {
         if (!this.isAuth('ste:inStorage:list')) {
           this.$warning_SHINHO('没有分配权限')
