@@ -246,10 +246,10 @@ export default {
   .el-select-dropdown__wrap{
     max-height: 200px;
   }
-  .dataList_item .el-card__body{
+  .header_main  .dataList_item .el-card__body{
     padding: 0!important;
   }
-  .dataList_item_body_text .el-form-item{
+  .header_main .dataList_item_body_text .el-form-item{
     .el-form-item__label{
       font-size: 12px;
     }

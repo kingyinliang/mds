@@ -8,7 +8,7 @@
           <template slot="header"><i class="reqI">*</i><span>气垫车号</span></template>
         </el-table-column>
         <el-table-column label="布浆线" prop="deptName" width="80px" :key="Math.random()"></el-table-column>
-        <el-table-column label="布浆结束时间" prop="prePressEnd" width="80px"></el-table-column>
+        <el-table-column label="布浆结束时间" prop="pulpEndDate" width="120px" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="自淋时间(H)" prop="drenchTime" width="120px" :key="Math.random()"></el-table-column>
         <el-table-column width="120px" :key="Math.random()">
           <template slot="header"><i class="reqI">*</i><span>预压机号</span></template>
@@ -56,7 +56,7 @@
           <template slot="header"><i class="reqI">*</i><span>气垫车号</span></template>
         </el-table-column>
         <el-table-column label="布浆线" prop="deptName" width="80px" :key="Math.random()"></el-table-column>
-        <el-table-column label="布浆结束时间" prop="prePressEnd" width="80px"></el-table-column>
+        <el-table-column label="布浆结束时间" prop="pulpEndDate" width="120px" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column width="120px" :key="Math.random()">
           <template slot="header"><i class="reqI">*</i><span>终压机号</span></template>
           <template slot-scope="scope">
