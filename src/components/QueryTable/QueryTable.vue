@@ -2,7 +2,7 @@
   <div>
     <div>
       <el-card class="searchCard" style="margin-bottom: 5px">
-        <el-form :model="queryForm" :rules="rules" :inline="true" size="small" label-width="70px" class="topform multi_row clearfix" style="font-size: 0;">
+        <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
           <template v-for="item in queryFormData" v-if="!item.hide">
             <el-form-item
               v-if="item.type === 'select'"
@@ -51,9 +51,17 @@
                 </el-col>
               </el-row>
             </el-form-item>
+            <el-form-item
+              v-if="item.type === 'date-picker'"
+              :label="`${item.label}：` || ''"
+              :prop="item.prop"
+              :key="item.prop">
+              <el-date-picker :ref="item.prop" :type="item.dataType" v-model="queryForm[item.prop]" placeholder="请选择" :value-format="item.valueFormat" style="width: 170px"></el-date-picker>
+            </el-form-item>
           </template>
           <el-form-item class="floatr">
             <el-button type="primary" size="small" @click="GetDataList(true)">查询</el-button>
+            <el-button type="primary" size="small" @click="FormExportExcel" v-if="exportExcel">导出</el-button>
             <slot name="mds-button"></slot>
           </el-form-item>
         </el-form>
@@ -82,12 +90,20 @@
           <el-table-column
             v-for="item in column"
             v-if="!item.hide"
-            :key="item.name"
+            :key="item.prop"
             :prop="item.prop"
             :label="item.label"
             :width="item.width || ''"
             :formatter="item.formatter"
             :show-overflow-tooltip="true">
+            <el-table-column
+              v-for="chind in item.child"
+              v-if="item.child"
+              :key="chind.prop"
+              :prop="chind.prop"
+              :label="chind.label"
+              :formatter="chind.formatter">
+            </el-table-column>
           </el-table-column>
           <el-table-column
             label="操作"
@@ -115,6 +131,7 @@
 </template>
 
 <script>
+import {exportFileForm} from '@/net/validate'
 export default {
   name: 'QueryTable',
   data () {
@@ -124,6 +141,7 @@ export default {
         pageSize: 10,
         totalCount: 0
       },
+      queryFormRules: {},
       optionLists: {},
       tableData: [],
       multipleSelection: []
@@ -136,7 +154,38 @@ export default {
         return []
       }
     },
-    rules: {},
+    exportExcel: {
+      type: Boolean,
+      default: false
+    },
+    exportOption: {
+      type: Object,
+      default: () => {
+        return {
+          exportInterface: '',
+          auth: '',
+          text: ''
+        }
+      }
+    },
+    exportInterface: {
+      type: String,
+      default: ''
+    },
+    exportAuth: {
+      type: String,
+      default: ''
+    },
+    exportText: {
+      type: String,
+      default: ''
+    },
+    rules: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
     queryAuth: {
       type: String,
       default: ''
@@ -278,6 +327,14 @@ export default {
     },
     // 获取table数据
     GetDataList (st) {
+      if (this.rules.length) {
+        for (let item of this.rules) {
+          if (!this.queryForm[item.prop]) {
+            this.$warning_SHINHO(item.text)
+            return false
+          }
+        }
+      }
       if (!this.isAuth(this.queryAuth)) {
         this.$warning_SHINHO('无查询权限')
         return false
@@ -296,6 +353,23 @@ export default {
           this.$error_SHINHO(data.msg)
         }
       })
+    },
+    // 导出
+    FormExportExcel () {
+      if (this.rules.length) {
+        for (let item of this.rules) {
+          if (!this.queryForm[item.prop]) {
+            this.$warning_SHINHO(item.text)
+            return false
+          }
+        }
+      }
+      if (!this.isAuth(this.exportOption.auth)) {
+        this.$warning_SHINHO('无导出权限')
+        return false
+      }
+      let that = this
+      exportFileForm(`${this.exportOption.exportInterface}`, this.exportOption.text, that)
     },
     // 显示隐藏动画
     headanimation ($) {

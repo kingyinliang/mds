@@ -1,23 +1,19 @@
 <template>
-  <el-row>
-    <div class="header_main">
-      <query-table
-        ref="queryTable"
-        :queryFormData="queryFormData"
-        :list-interface="listInterface"
-        :query-auth="'report:form:listMaterial'"
-        :column="column">
-        <template slot="mds-button">
-          <el-button type="primary" size="small" @click="ExportExcel(true)" v-if="isAuth('report:form:exportMaterial')">导出</el-button>
-        </template>
-      </query-table>
-    </div>
-  </el-row>
+  <div class="header_main">
+    <query-table
+      ref="queryTable"
+      :queryFormData="queryFormData"
+      :list-interface="listInterface"
+      :query-auth="'report:form:listMaterial'"
+      :column="column"
+      :export-excel="true"
+      :export-option="exportOption">
+    </query-table>
+  </div>
 </template>
 
 <script>
 import {BASICDATA_API, REP_API} from '@/api/api'
-import { exportFileForm } from '@/net/validate'
 export default {
   name: 'index',
   data () {
@@ -93,6 +89,11 @@ export default {
       ],
       listInterface: (params) => {
         return this.$http(`${REP_API.REPSAPLIST_API}`, 'POST', params)
+      },
+      exportOption: {
+        exportInterface: REP_API.REPSAPOUTPUT_API,
+        auth: 'report:form:exportMaterial',
+        text: '物料领用报表数据导出'
       },
       column: [
         {
@@ -205,10 +206,6 @@ export default {
   mounted () {
   },
   methods: {
-    ExportExcel () {
-      let that = this
-      exportFileForm(`${REP_API.REPSAPOUTPUT_API}`, '物料领用报表数据导出', that)
-    }
   },
   computed: {},
   components: {
