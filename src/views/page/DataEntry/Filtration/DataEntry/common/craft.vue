@@ -375,9 +375,13 @@ export default {
         }
       })
     },
-    SaveTech (resolve, reject) {
-      this.techList.map((item) => {
-        item.status = 'saved'
+    SaveTech (str, resolve, reject) {
+      this.techList.forEach((item) => {
+        if (item.status) {
+          if (item.status === 'saved') { item.status = str } else if (item.status === 'noPass' && str === 'submit') { item.status = str }
+        } else {
+          item.status = str
+        }
       })
       this.$http(`${FILTRATION_API.FILTER_CRAFT_TECHSAVE}`, 'POST', this.techList).then(({data}) => {
         if (data.code === 0) {
