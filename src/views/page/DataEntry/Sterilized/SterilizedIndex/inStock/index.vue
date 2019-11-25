@@ -138,6 +138,7 @@ export default {
       dataForm: {},
       rowData: {},
       isUpdate: false,
+      oldInAmount: 0,
       PotList: [],
       InStorageDate: [],
       DataAudit: [],
@@ -190,6 +191,7 @@ export default {
     // 入罐弹窗
     showDialog () {
       this.visible = true
+      this.isUpdate = false
       this.dataForm = {
         holderId: '',
         batch: '',
@@ -214,7 +216,11 @@ export default {
       }
     },
     PotinTankAmount (id) {
-      this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1
+      if (this.isUpdate) {
+        this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 - this.oldInAmount : 0 + this.dataForm.inAmount * 1
+      } else {
+        this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1
+      }
       this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
       this.PotObject.inTankAmount = true
       // if (this.dataForm.inTankAmount) {
@@ -259,10 +265,18 @@ export default {
           this.isUpdate = false
           this.visible = false
           if (this.InStorageDate.length > 0) {
-            this.PotDetail = {
-              amount: this.InStorageDate[0].inTankAmount + this.InStorageDate[0].unit,
-              batch: this.InStorageDate[0].batch,
-              material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
+            if (this.InStorageDate.filter(item => item.delFlag !== '1').length > 0) {
+              this.PotDetail = {
+                amount: this.InStorageDate.filter(item => item.delFlag !== '1')[0].inTankAmount + this.InStorageDate[0].unit,
+                batch: this.InStorageDate.filter(item => item.delFlag !== '1')[0].batch,
+                material: this.InStorageDate.filter(item => item.delFlag !== '1')[0].materialCode + ' ' + this.InStorageDate.filter(item => item.delFlag !== '1')[0].materialName
+              }
+            } else {
+              this.PotDetail = {
+                amount: '',
+                batch: '',
+                material: ''
+              }
             }
           }
         }
@@ -273,6 +287,7 @@ export default {
       if ((row.status === '' || row.status === 'saved' || row.status === 'noPass') && this.isRedact) {
         this.visible = true
         this.isUpdate = true
+        this.oldInAmount = row.inAmount
         this.dataForm = JSON.parse(JSON.stringify(row))
         this.rowData = row
         this.PotinTankAmount(this.dataForm.holderId)
@@ -401,6 +416,11 @@ export default {
         type: 'warning'
       }).then(() => {
         row.delFlag = '1'
+        this.PotList.forEach(item => {
+          if (item.holderId === row.holderId) {
+            item.amount = Number(item.amount) - Number(row.inAmount)
+          }
+        })
       })
     },
     // 获取订单表头
