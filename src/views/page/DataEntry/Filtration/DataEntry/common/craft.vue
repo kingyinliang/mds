@@ -503,17 +503,12 @@ export default {
       }
       for (let item of this.techList) {
         if (item.delFlag === '0') {
-          if (item.filterBefTem === '' || item.filterBefTem === null || item.filterBefPre === '' || item.filterBefPre === null || item.filterEndPre === '' || item.filterEndPre === null || item.abnormal === '' || item.abnormal === null || item.backPreNum === '' || item.backPreNum === null || item.filterAidBef === '' || item.filterAidBef === null || item.filterAidAdd === '' || item.filterAidAdd === null) {
+          if (item.filterBefTem === '' || !item.filterBefTem || item.filterBefPre === '' || !item.filterBefPre || item.filterEndPre === '' || !item.filterEndPre || item.abnormal === '' || !item.abnormal || item.backPreNum === '' || !item.backPreNum || item.filterAidBef === '' || !item.filterAidBef || item.filterAidAdd === '' || !item.filterAidAdd) {
             ty = false
             this.$warning_SHINHO('请补全工艺必填项')
             return false
           }
         }
-      }
-      if (this.supMaterialList.length === 0) {
-        ty = false
-        this.$warning_SHINHO('辅料领用不能为空')
-        return false
       }
       for (let item of this.supMaterialList) {
         if (item.filterAidAmount === '' || !item.filterAidAmount || item.batch === '' || !item.batch) {
