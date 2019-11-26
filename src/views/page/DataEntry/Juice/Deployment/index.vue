@@ -109,7 +109,7 @@
     </div>
     <el-dialog :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
       <div slot="title" style="line-hight:59px">调配列表</div>
-      <el-table :data="ItemList" border header-row-class-name="tableHead" v-for="item in 2" :key="item" :row-class-name="item === 1?RowDelFlag1:RowDelFlag2">
+      <el-table :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
         <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
           <template slot-scope="scope">
             {{scope.row.materialCode}} {{scope.row.materialName}}
@@ -164,6 +164,16 @@
             <el-button type="danger" icon="el-icon-delete" circle size="small" :disabled="scope.row.isSplit === '0' || lineStatus === '已提交' || lineStatus === '审核通过' || isRedact === false || scope.row.status === 'checked' || scope.row.status === 'submit'"  @click="DelOrderNo(scope.row)"></el-button>
           </template>
         </el-table-column>
+      </el-table>
+      <el-table :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag2">
+        <el-table-column label="物料" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            {{scope.row.materialCode}} {{scope.row.materialName}}
+          </template>
+        </el-table-column>
+        <el-table-column label="数量" prop="planAmount" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="订单单位" prop="unit" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
         <template>
@@ -478,33 +488,35 @@ export default {
       let ty = true
       let strMsg = ''
       for (let item of this.ItemList) {
-        batchList.push(item.batch)
-        item.ID = this.ID
-        if (!item.receiveAmount || item.receiveAmount === '') {
-          this.$warning_SHINHO('请填写实际领料')
-          return false
+        if (item.materielType !== 'BL_LY') {
+          batchList.push(item.batch)
+          item.ID = this.ID
+          if (!item.receiveAmount || item.receiveAmount === '') {
+            this.$warning_SHINHO('请填写实际领料')
+            return false
+          }
+          if (!item.batch || item.batch === '') {
+            this.$warning_SHINHO('请填写批次')
+            return false
+          }
+          if (item.batch.length !== 10) {
+            this.$warning_SHINHO('批次应为10位')
+            return false
+          }
+          // if (item.materialName.indexOf('原汁') !== -1 && (item.holderId === '' || !item.holderId)) {
+          //   this.$warning_SHINHO('原汁物料需选择罐号')
+          //   return false
+          // }
+          if (this.orderTypeSign === '1' && item.holderId && this.thrwHolderList.filter(it => item.holderId === it.holderId)[0].isRdSign !== '1') {
+            ty = false
+          }
+          // if (/六月鲜/g.test(this.materialName)) {
+          //   if (/味极鲜/g.test(item.category)) {
+          //     this.$message.error('领用原汁与生产物料不匹配！无法保存，无法操作')
+          //     return false
+          //   }
+          // }
         }
-        if (!item.batch || item.batch === '') {
-          this.$warning_SHINHO('请填写批次')
-          return false
-        }
-        if (item.batch.length !== 10) {
-          this.$warning_SHINHO('批次应为10位')
-          return false
-        }
-        // if (item.materialName.indexOf('原汁') !== -1 && (item.holderId === '' || !item.holderId)) {
-        //   this.$warning_SHINHO('原汁物料需选择罐号')
-        //   return false
-        // }
-        if (this.orderTypeSign === '1' && item.holderId && this.thrwHolderList.filter(it => item.holderId === it.holderId)[0].isRdSign !== '1') {
-          ty = false
-        }
-        // if (/六月鲜/g.test(this.materialName)) {
-        //   if (/味极鲜/g.test(item.category)) {
-        //     this.$message.error('领用原汁与生产物料不匹配！无法保存，无法操作')
-        //     return false
-        //   }
-        // }
       }
       // if (this.Tdata.cDay !== null && this.Tdata.cDay * 1 < 6) {
       this.Tdata.sbList.map((items) => {
