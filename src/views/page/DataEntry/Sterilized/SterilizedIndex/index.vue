@@ -160,19 +160,34 @@ export default {
         return
       }
       if (str === '1') {
-        let st = this.Materails.filter(items => items.code === item.materialCode)
-        if (st.length === 0) {
-          this.$warning_SHINHO('非特殊物料，不能跳转')
-          return
-        }
+        // let st = this.Materails.filter(items => items.code === item.materialCode)
+        // if (st.length === 0) {
+        //   this.$warning_SHINHO('非特殊物料，不能跳转')
+        //   return
+        // }
         if (!this.isAuth('ste:semiMaterial:list')) {
           this.$warning_SHINHO('没有分配权限')
           return
         }
-        this.$store.state.common.sterilized.seiOrderId = item.orderId
-        this.$store.state.common.sterilized.seiFactory = item.factory
-        this.$store.state.common.sterilized.seiOrderNo = item.orderNo
-        url = 'DataEntry-Sterilized-SterilizedIndex-semiReceive-index'
+        this.$http(`${STERILIZED_API.STE_ENTER_MATERIAL_LIST_API}`, 'POST', {
+          orderId: item.orderId,
+          factory: item.factory,
+          orderNo: item.orderNo,
+          materialCode: item.materialCode
+        }).then(({data}) => {
+          if (data.code === 500) {
+            this.$warning_SHINHO(data.msg)
+          } else {
+            this.$store.state.common.sterilized.seiOrderId = item.orderId
+            this.$store.state.common.sterilized.seiFactory = item.factory
+            this.$store.state.common.sterilized.seiOrderNo = item.orderNo
+            url = 'DataEntry-Sterilized-SterilizedIndex-semiReceive-index'
+            this.mainTabs = this.mainTabs.filter(item => item.name !== url)
+            setTimeout(() => {
+              this.$router.push({ name: url })
+            }, 100)
+          }
+        })
       } else if (str === '2') {
         if (!this.isAuth('ste:supMaterial:list')) {
           this.$warning_SHINHO('没有分配权限')
@@ -182,6 +197,10 @@ export default {
         this.$store.state.common.sterilized.acceFactory = item.factory
         this.$store.state.common.sterilized.acceOrderNo = item.orderNo
         url = 'DataEntry-Sterilized-SterilizedIndex-acceAdd-index'
+        this.mainTabs = this.mainTabs.filter(item => item.name !== url)
+        setTimeout(() => {
+          this.$router.push({ name: url })
+        }, 100)
       } else if (str === '3') {
         if (!this.isAuth('ste:tec:list')) {
           this.$warning_SHINHO('没有分配权限')
@@ -189,6 +208,10 @@ export default {
         }
         this.$store.state.common.sterilized.craftOrderId = item.orderId
         url = 'DataEntry-Sterilized-SterilizedIndex-craftControl-index'
+        this.mainTabs = this.mainTabs.filter(item => item.name !== url)
+        setTimeout(() => {
+          this.$router.push({ name: url })
+        }, 100)
       } else if (str === '4') {
         if (!this.isAuth('ste:inStorage:list')) {
           this.$warning_SHINHO('没有分配权限')
@@ -198,11 +221,11 @@ export default {
         this.$store.state.common.sterilized.inFactory = item.factory
         this.$store.state.common.sterilized.inOrderNo = item.orderNo
         url = 'DataEntry-Sterilized-SterilizedIndex-inStock-index'
+        this.mainTabs = this.mainTabs.filter(item => item.name !== url)
+        setTimeout(() => {
+          this.$router.push({ name: url })
+        }, 100)
       }
-      this.mainTabs = this.mainTabs.filter(item => item.name !== url)
-      setTimeout(() => {
-        this.$router.push({ name: url })
-      }, 100)
     }
   },
   computed: {

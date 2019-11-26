@@ -177,7 +177,7 @@ export function exportFile (url, fileName, vue) {
   })
 }
 export function exportFileForm (url, fileName, vue) {
-  vue.$http(url, 'POST', vue.$refs.queryTable.queryForm, false, true).then(({data}) => {
+  vue.$http(url, 'POST', vue.queryForm, false, true).then(({data}) => {
     if (data.code === 0) {
       let elink = document.createElement('a')
       elink.download = `${fileName}${getNewDate()}.xls`
@@ -550,4 +550,8 @@ export function accDiv (arg1, arg2) {
   r1 = Number(arg1.toString().replace('.', ''))
   r2 = Number(arg2.toString().replace('.', ''))
   return (r1 / r2) * (Math.pow(10, t2 - t1))
+}
+// 深克隆
+export function DeepClone (str) {
+  return JSON.parse(JSON.stringify(str))
 }

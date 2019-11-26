@@ -8,6 +8,7 @@
           <template slot="header"><i class="reqI">*</i><span>气垫车号</span></template>
         </el-table-column>
         <el-table-column label="布浆线" prop="deptName" width="80px" :key="Math.random()"></el-table-column>
+        <el-table-column label="布浆结束时间" prop="prePressEnd" width="80px"></el-table-column>
         <el-table-column label="自淋时间(H)" prop="drenchTime" width="120px" :key="Math.random()"></el-table-column>
         <el-table-column width="120px" :key="Math.random()">
           <template slot="header"><i class="reqI">*</i><span>预压机号</span></template>
@@ -55,6 +56,7 @@
           <template slot="header"><i class="reqI">*</i><span>气垫车号</span></template>
         </el-table-column>
         <el-table-column label="布浆线" prop="deptName" width="80px" :key="Math.random()"></el-table-column>
+        <el-table-column label="布浆结束时间" prop="prePressEnd" width="80px"></el-table-column>
         <el-table-column width="120px" :key="Math.random()">
           <template slot="header"><i class="reqI">*</i><span>终压机号</span></template>
           <template slot-scope="scope">
@@ -178,7 +180,7 @@ export default {
         }
         this.$http(`${BASICDATA_API.DEVICELIST_API}`, 'POST', {
           param: presure,
-          deptId: this.formHeader.workShop,
+          deptId: this.formHeader.productLine,
           currPage: '1',
           pageSize: '50'
         }).then(({data}) => {
@@ -292,14 +294,17 @@ export default {
       }
       this.$http(`${configurl}`, 'POST', this.multipleSelection).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
+          if (reject) {
+            reject('reject')
+          }
           this.$notify.error({title: '错误', message: data.msg})
         }
-        if (resolve) {
-          resolve('resolve')
-        }
       }).catch(() => {
-        if (resolve) {
+        if (reject) {
           reject('reject')
         }
       })

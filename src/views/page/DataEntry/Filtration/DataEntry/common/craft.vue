@@ -104,28 +104,28 @@
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class='dialog__class'>
       <div slot="title" style="line-hight:59px">{{this.techInfo.deviceName}}</div>
-      <el-form :model="techInfo" size="small" label-width="160px" :rules="techInforules" ref="techInfo" @keyup.enter.native="SaveDialog('techInfo')">
-        <el-form-item label="过滤前温度(℃)：" prop="filterBefTem">
+      <el-form :model="techInfo" size="small" label-width="160px" ref="techInfo" @keyup.enter.native="SaveDialog('techInfo')">
+        <el-form-item label="过滤前温度(℃)：">
           <el-input v-model="techInfo.filterBefTem" style="width:220px"></el-input>
         </el-form-item>
-        <el-form-item label="过滤前压力(Mpa)：" prop="filterBefPre">
+        <el-form-item label="过滤前压力(Mpa)：">
           <el-input v-model="techInfo.filterBefPre" style="width:220px"></el-input>
         </el-form-item>
-        <el-form-item label="过滤后压力(Mpa)：" prop="filterEndPre">
+        <el-form-item label="过滤后压力(Mpa)：">
           <el-input v-model="techInfo.filterEndPre" style="width:220px"></el-input>
         </el-form-item>
-        <el-form-item label="感官指标有无异常：" prop="abnormal">
+        <el-form-item label="感官指标有无异常：">
           <el-select v-model="techInfo.abnormal" style="width:220px">
             <el-option v-for="(item, index) in abnormalList" :key="index" :value="item" :label="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="回压数量(方)：" prop="backPreNum">
+        <el-form-item label="回压数量(方)：">
           <el-input v-model="techInfo.backPreNum" style="width:220px"></el-input>
         </el-form-item>
-        <el-form-item label="助滤剂预涂量(kg)：" prop="filterAidBef">
+        <el-form-item label="助滤剂预涂量(kg)：">
           <el-input min="0" onkeyup="value=value.replace(/[^\d]+/g,'')" v-model="techInfo.filterAidBef" style="width:220px"></el-input>
         </el-form-item>
-        <el-form-item label="助滤剂添加量(kg)：" prop="filterAidAdd">
+        <el-form-item label="助滤剂添加量(kg)：">
           <el-input min="0" onkeyup="value=value.replace(/[^\d]+/g,'')" v-model="techInfo.filterAidAdd" style="width:220px"></el-input>
         </el-form-item>
         <el-form-item label="备注：">
@@ -375,9 +375,13 @@ export default {
         }
       })
     },
-    SaveTech (resolve, reject) {
-      this.techList.map((item) => {
-        item.status = 'saved'
+    SaveTech (str, resolve, reject) {
+      this.techList.forEach((item) => {
+        if (item.status) {
+          if (item.status === 'saved') { item.status = str } else if (item.status === 'noPass' && str === 'submit') { item.status = str }
+        } else {
+          item.status = str
+        }
       })
       this.$http(`${FILTRATION_API.FILTER_CRAFT_TECHSAVE}`, 'POST', this.techList).then(({data}) => {
         if (data.code === 0) {
@@ -499,6 +503,20 @@ export default {
       if (i === 0) {
         ty = false
         this.$warning_SHINHO('请录入工艺控制数据')
+        return false
+      }
+      for (let item of this.techList) {
+        if (item.delFlag === '0') {
+          if (item.filterBefTem === '' || item.filterBefTem === null || item.filterBefPre === '' || item.filterBefPre === null || item.filterEndPre === '' || item.filterEndPre === null || item.abnormal === '' || item.abnormal === null || item.backPreNum === '' || item.backPreNum === null || item.filterAidBef === '' || item.filterAidBef === null || item.filterAidAdd === '' || item.filterAidAdd === null) {
+            ty = false
+            this.$warning_SHINHO('请补全工艺必填项')
+            return false
+          }
+        }
+      }
+      if (this.supMaterialList.length === 0) {
+        ty = false
+        this.$warning_SHINHO('辅料领用不能为空')
         return false
       }
       for (let item of this.supMaterialList) {
