@@ -24,7 +24,7 @@
         <span slot="label" class="spanview">
           杀菌入库
         </span>
-        <div class="inStorage_card">
+        <div class="inStorage_card" style="min-width: 1128px">
           <div style="width: 138px" class="inStorage_card_left">
             <p>杀菌罐</p>
             <div style="text-align: center;padding: 0 10px;position: relative">
@@ -37,8 +37,8 @@
             </div>
             <el-button type="text" class="inStorage_card_left_btn" size="small" :disabled="!(isRedact && (orderStatus !== 'submit' && orderStatus !== 'checked'))" @click="showDialog()">入罐</el-button>
           </div>
-          <div style="flex: 1">
-            <el-table header-row-class-name="tableHead" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow" >
+          <div style="flex: 1;min-width: 990px;">
+            <el-table header-row-class-name="tableHead" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow">
               <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="日期" width="80" prop="date"  :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="半成品罐号" width="95" prop="holderName" :show-overflow-tooltip="true"></el-table-column>
@@ -48,10 +48,11 @@
               <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="罐内库存" width="80" prop="inTankAmount" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="满罐" width="60" prop="isFull" :show-overflow-tooltip="true"> <template slot-scope="scope">{{scope.row.isFull === '1'? '是' : '否'}}</template></el-table-column>
+              <el-table-column label="满罐时间" width="120" prop="fullDate" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="操作时间"  prop="changed" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="操作人" width="80" prop="changer" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column label="操作" width="50" prop="changer" :show-overflow-tooltip="true">
+              <el-table-column label="操作" fixed="right" width="50" prop="changer" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                   <el-button class="delBtn" type="text" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @click="delRow(scope.row)">删除</el-button>
                 </template>
