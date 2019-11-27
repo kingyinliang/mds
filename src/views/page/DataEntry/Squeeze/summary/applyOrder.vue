@@ -138,6 +138,17 @@ export default {
     fullPortChange () {
 
     },
+    applyorderRul () {
+      let ty = true
+      for (let item of this.fumet) {
+        if (!item.orderNo) {
+          ty = false
+          this.$warning_SHINHO('订单没有生产订单')
+          return false
+        }
+      }
+      return ty
+    },
     // 退回
     backIn (row) {
       this.$http(`${SQU_API.SUM_ORDER_BACK_API}`, 'POST', row).then(({data}) => {

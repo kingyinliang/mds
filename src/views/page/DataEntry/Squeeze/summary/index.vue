@@ -303,6 +303,9 @@ export default {
     },
     // 提交
     SubmitForm () {
+      if (!this.$refs.applyorder.applyorderRul()) {
+        return
+      }
       if (!this.$refs.materielref.materialRul()) {
         return
       }

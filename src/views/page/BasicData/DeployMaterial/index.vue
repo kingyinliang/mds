@@ -4,6 +4,7 @@
       ref="queryTable"
       :query-auth="'report:formh:getAllStatusList'"
       :show-operation-column="true"
+      :operation-column-width="70"
       :show-select-column="true"
       :list-interface="listInterface"
       :queryFormData="queryFormData"
