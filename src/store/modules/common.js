@@ -211,7 +211,8 @@ export default {
       orderNoList: [],
       orderNo: '',
       planOutputTotal: 0,
-      holderId: ''
+      holderId: '',
+      type: ''
     },
     /**
      * 过滤车间

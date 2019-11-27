@@ -59,7 +59,7 @@
         </div>
       </div>
       <el-card>
-        <el-table :data="dataList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">>
+        <el-table :data="dataList" :span-method="objectSpanMethod" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">>
           <el-table-column type="selection" width="35" :selectable="CheckBoxInit" fixed="left"></el-table-column>
           <el-table-column label="订单状态" width="100" prop="orderStatus" show-overflow-tooltip>
             <template slot-scope="scope">
@@ -76,8 +76,9 @@
           <el-table-column label="单位" width="50" prop="outputUnit"></el-table-column>
           <el-table-column label="订单开始日期" width="110" prop="startDate"></el-table-column>
           <el-table-column label="订单结束日期" width="110" prop="commitDate"></el-table-column>
-          <el-table-column label="调配罐号" width="110" prop="holderName"></el-table-column>
-          <el-table-column label="BL原汁量" width="110" prop="amount"></el-table-column>
+          <el-table-column label="调配/分配单号" width="130" prop="allocateNo"></el-table-column>
+          <el-table-column label="调配罐号" width="120" prop="holderName"></el-table-column>
+          <el-table-column label="BL原汁量" width="100" prop="amount"></el-table-column>
           <el-table-column width="160" prop="productDate">
             <template slot="header">
               <i class="reqI">*</i>
@@ -140,7 +141,8 @@ export default {
       workshop: [],
       holderList: [],
       dataList: [],
-      multipleSelection: []
+      multipleSelection: [],
+      spanOneArr: []
     }
   },
   mounted () {
@@ -156,6 +158,33 @@ export default {
     }
   },
   methods: {
+    merge (tableData) {
+      this.spanOneArr = []
+      let concatOne = 0
+      tableData.forEach((item, index) => {
+        if (index === 0) {
+          this.spanOneArr.push(1)
+        } else {
+          if (item.allocateNo === tableData[index - 1].allocateNo) { // 第一列需合并相同内容的判断条件
+            this.spanOneArr[concatOne] += 1
+            this.spanOneArr.push(0)
+          } else {
+            this.spanOneArr.push(1)
+            concatOne = index
+          }
+        }
+      })
+    },
+    objectSpanMethod ({ row, rowIndex, column, columnIndex }) {
+      if (columnIndex === 8 || columnIndex === 9) {
+        const _row = this.spanOneArr[rowIndex]
+        const _col = _row > 0 ? 1 : 0
+        return {
+          rowspan: _row,
+          colspan: _col
+        }
+      }
+    },
     // 获取工厂
     Getdeptcode () {
       this.workshop = []
@@ -224,6 +253,7 @@ export default {
         if (data.code === 0) {
           this.dataList = data.list.list
           this.formHeader.totalCount = data.list.totalCount
+          this.merge(this.dataList)
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
