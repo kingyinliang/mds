@@ -177,7 +177,6 @@ export default {
           }
         }
       })
-      console.log(this.spanOneArr)
     },
     objectSpanMethod ({ row, rowIndex, column, columnIndex }) {
       if (columnIndex === 8 || columnIndex === 9) {
