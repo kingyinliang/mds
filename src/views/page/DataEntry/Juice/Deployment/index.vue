@@ -109,7 +109,7 @@
     </div>
     <el-dialog :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
       <div slot="title" style="line-hight:59px">调配列表</div>
-      <el-table :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
+      <el-table style="margin-bottom: 20px" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
         <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
           <template slot-scope="scope">
             {{scope.row.materialCode}} {{scope.row.materialName}}
@@ -562,10 +562,15 @@ export default {
       // }
     },
     SubmitFunction () {
-      this.ItemList.map((item) => {
-        item.receiveAmount = item.receiveAmount.toString()
-        item.planAmount = item.planAmount.toString()
+      this.ItemList.forEach((item, index) => {
+        if (item.materielType === 'BL_LY') {
+          delete this.ItemList[index]
+        } else {
+          item.receiveAmount = item.receiveAmount.toString()
+          item.planAmount = item.planAmount.toString()
+        }
       })
+      this.ItemList = this.ItemList.filter(function (val) { return val })
       this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {'tiaoHolder': this.dataList, 'params': this.ItemList}).then(({data}) => {
         if (data.code === 0) {
           this.$notify({title: '成功', message: '保存成功', type: 'success'})

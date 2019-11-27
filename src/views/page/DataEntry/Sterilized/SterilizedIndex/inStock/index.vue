@@ -215,14 +215,14 @@ export default {
     },
     PotinTankAmount1 () {
       if (this.dataForm.holderId) {
-        this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount ? this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1
+        this.dataForm.inTankAmount = (this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount ? this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1).toFixed(2) * 1
       }
     },
     PotinTankAmount (id) {
       if (this.isUpdate) {
-        this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 - this.oldInAmount : 0 + this.dataForm.inAmount * 1
+        this.dataForm.inTankAmount = (this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 - this.oldInAmount : 0 + this.dataForm.inAmount * 1).toFixed(2) * 1
       } else {
-        this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1
+        this.dataForm.inTankAmount = (this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1).toFixed(2) * 1
       }
       this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
       this.PotObject.inTankAmount = true
