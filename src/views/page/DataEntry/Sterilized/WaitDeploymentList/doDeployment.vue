@@ -216,7 +216,8 @@ export default {
         materialCode: this.formHeader.materialCode,
         orderNo: orderArray,
         currPage: '1',
-        pageSize: '9000'
+        pageSize: '9000',
+        type: this.$store.state.common.Sterilized.type
       }
       this.$http(`${STERILIZED_API.WAITDEPLOYMENTLIST_API}`, 'POST', params).then(({data}) => {
         if (data.code === 0) {
@@ -321,7 +322,8 @@ export default {
           planAmount: this.planOutputTotal,
           unit: this.orderList[0].outputUnit,
           remark: this.remark,
-          id: this.allocateId
+          id: this.allocateId,
+          type: this.$store.state.common.Sterilized.type
         }
         this.$http(`${STERILIZED_API.DODEPLOYMENTHEADERSAVE}`, 'POST', params).then(({data}) => {
           if (data.code === 0) {
@@ -373,7 +375,8 @@ export default {
             planAmount: this.planOutputTotal,
             unit: this.orderList[0].outputUnit,
             remark: this.remark,
-            id: this.allocateId
+            id: this.allocateId,
+            type: this.$store.state.common.Sterilized.type
           }
           this.$http(`${STERILIZED_API.DODEPLOYMENTHEADERSAVE}`, 'POST', params).then(({data}) => {
             if (data.code === 0) {
