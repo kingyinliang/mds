@@ -2,7 +2,7 @@
   <div>
     <el-card>
       <el-table :data="materialList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" v-if="this.formHeader.pressure === 1">
-        <el-table-column type="selection" width="35"></el-table-column>
+        <el-table-column fixed="left" type="selection" width="35"></el-table-column>
         <el-table-column label="工序" width="50px">预压</el-table-column>
         <el-table-column width="120px" prop="deviceName" :key="Math.random()" show-overflow-tooltip>
           <template slot="header"><i class="reqI">*</i><span>气垫车号</span></template>
@@ -50,7 +50,7 @@
         <el-table-column label="挪笼人员" prop="moveOperator" :show-overflow-tooltip="true" width="150"></el-table-column>
       </el-table>
       <el-table :data="materialList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" v-if="this.formHeader.pressure === 2">
-        <el-table-column type="selection" width="35"></el-table-column>
+        <el-table-column fixed="left" type="selection" width="35"></el-table-column>
         <el-table-column label="工序" width="50px">终压</el-table-column>
         <el-table-column width="100px" prop="deviceName" :key="Math.random()" show-overflow-tooltip>
           <template slot="header"><i class="reqI">*</i><span>气垫车号</span></template>
@@ -256,8 +256,6 @@ export default {
         this.$warning_SHINHO('请勾选提交数据')
         return false
       }
-      console.log(this.formHeader)
-      console.log(this.formInline)
       for (let item of this.multipleSelection) {
         if (this.formHeader.pressure === 1) {
           if (!item.prePressNo || item.prePressNo === '' || !item.prePressStart || item.prePressStart === '' || !item.prePressEnd || item.prePressEnd === '') {
@@ -276,8 +274,8 @@ export default {
             }
           }
           if (this.formHeader.workShopName === '压榨一车间') {
-            if (this.formInline.destoryNumEast === '' || !this.formInline.destoryNumEast || this.formInline.destoryNumWest === '' || !this.formInline.destoryNumWest) {
-              this.$warning_SHINHO('请填写必填项')
+            if (this.formInline.destoryNumEast === '' || this.formInline.destoryNumEast === null || this.formInline.destoryNumWest === '' || this.formInline.destoryNumWest === null) {
+              this.$warning_SHINHO('请填写碎布数')
               return false
             } else {
               this.multipleSelection.map((item) => {
