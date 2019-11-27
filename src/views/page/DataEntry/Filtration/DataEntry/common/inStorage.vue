@@ -57,7 +57,8 @@
           {{dataForm.unit = '方'}}
         </el-form-item>
         <el-form-item label="罐内库存：">
-          <el-input v-model="dataForm.holderRemaining" placeholder="请输入" :disabled="PotObject.inTankAmount || dialogDisabled"></el-input>
+          <!--<el-input v-model="dataForm.holderRemaining" placeholder="请输入" :disabled="PotObject.inTankAmount || dialogDisabled"></el-input>-->
+          <el-input v-model="dataForm.holderRemaining" placeholder="请输入" disabled></el-input>
         </el-form-item>
         <el-form-item label="是否满罐：" prop="isFull">
           <el-select v-model="dataForm.isFull" :disabled="dialogDisabled" filterable placeholder="请选择" style="width: 100%">
@@ -375,8 +376,9 @@ export default {
         row.delFlag = '1'
         if (this.PotList.findIndex(item => item.holderId === row.holderId) !== -1) {
           let changeAmount = 0
-          changeAmount = Number(this.PotList.find(item => item.holderId === row.holderId).amount) - Number(row.inAmount)
-          this.PotList.find(item => item.holderId === row.holderId).amount = changeAmount
+          // changeAmount = Number(this.PotList.find(item => (item.holderId === row.holderId || item.holderId + 'repeat' === row.holderId) && item.batch === row.batch).amount) - Number(row.inAmount)
+          changeAmount = Number(row.holderRemaining) - Number(row.inAmount)
+          this.PotList.find(item => (item.holderId === row.holderId || item.holderId === (row.holderId + 'repeat')) && item.batch === row.batch).amount = changeAmount
           this.InStorageDate.map((item) => {
             if (item.holderId === row.holderId) {
               item.holderRemaining = changeAmount

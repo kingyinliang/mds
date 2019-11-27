@@ -274,7 +274,7 @@
         </el-form-item>
         <el-form-item label="领用人：">{{$store.state.user.realName + '（' + this.$store.state.user.name + '）'}}</el-form-item>
         <el-form-item label="领用时间：">
-          <el-date-picker type="datetime" v-model="formBringOut.bringTime" value-format="yyyy-MM-dd hh:mm" format="yyyy-MM-dd hh:mm" placeholder="请选择" style="width:199px"></el-date-picker>
+          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" v-model="formBringOut.bringTime" placeholder="请选择" style="width:199px"></el-date-picker>
         </el-form-item>
       </el-form>
     </div>
