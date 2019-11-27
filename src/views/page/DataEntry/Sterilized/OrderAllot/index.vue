@@ -165,7 +165,10 @@ export default {
         if (index === 0) {
           this.spanOneArr.push(1)
         } else {
-          if (item.allocateNo === tableData[index - 1].allocateNo) { // 第一列需合并相同内容的判断条件
+          if (item.allocateNo === '') {
+            this.spanOneArr.push(1)
+            concatOne = index
+          } else if (item.allocateNo === tableData[index - 1].allocateNo) { // 第一列需合并相同内容的判断条件
             this.spanOneArr[concatOne] += 1
             this.spanOneArr.push(0)
           } else {
@@ -174,6 +177,7 @@ export default {
           }
         }
       })
+      console.log(this.spanOneArr)
     },
     objectSpanMethod ({ row, rowIndex, column, columnIndex }) {
       if (columnIndex === 8 || columnIndex === 9) {
