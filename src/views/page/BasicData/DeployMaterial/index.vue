@@ -2,7 +2,7 @@
   <div class="header_main">
     <query-table
       ref="queryTable"
-      :query-auth="'report:formh:getAllStatusList'"
+      :query-auth="'ste:material:list'"
       :show-operation-column="true"
       :operation-column-width="70"
       :show-select-column="true"
@@ -10,11 +10,11 @@
       :queryFormData="queryFormData"
       :column="column">
       <template slot="mds-button">
-        <el-button type="primary" size="small" @click="addOrupdate()" v-if="isAuth('sys:holder:save')">新增</el-button>
-        <el-button type="danger" size="small" @click="remove" v-if="isAuth('sys:holder:delete')">批量删除</el-button>
+        <el-button type="primary" size="small" @click="addOrupdate()" v-if="isAuth('ste:material:dataInsert')">新增</el-button>
+        <el-button type="danger" size="small" @click="remove" v-if="isAuth('ste:material:del')">批量删除</el-button>
       </template>
       <template slot="operation_column" slot-scope="{scope}">
-        <el-button class="ra_btn" type="primary" round size="mini" @click="addOrupdate(scope.row)">编辑</el-button>
+        <el-button class="ra_btn" type="primary" round size="mini" @click="addOrupdate(scope.row)" v-if="isAuth('ste:material:dataInsert')">编辑</el-button>
       </template>
     </query-table>
     <el-dialog :visible.sync="AddDialogTableVisible" :close-on-click-modal="false" width="550px" custom-class='dialog__class'>
