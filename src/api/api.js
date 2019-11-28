@@ -271,6 +271,8 @@ export const BASICDATA_API = {
   DEPLOY_MATERIAL_SELECT_LIST: HOST + '/ste/material/materielList',
   DEPLOY_MATERIAL_LIST: HOST + '/ste/material/list',
   DEPLOY_MATERIAL_SAVE: HOST + '/ste/material/save',
+  DEPLOY_MATERIAL_UPDATE: HOST + '/ste/material/dataInsert',
+  DEPLOY_MATERIAL_ROWLIST: HOST + '/ste/material/updateList',
   DEPLOY_MATERIAL_DEL: HOST + '/ste/material/del'
 }
 /*
