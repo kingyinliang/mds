@@ -2,7 +2,7 @@
   <div>
     <div>
       <el-card class="searchCard" style="margin-bottom: 5px">
-        <el-form :model="queryForm" :rules="rules" :inline="true" size="small" label-width="70px" class="topform multi_row clearfix" style="font-size: 0;">
+        <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
           <template v-for="item in queryFormData" v-if="!item.hide">
             <el-form-item
               v-if="item.type === 'select'"
@@ -31,6 +31,7 @@
               :prop="item.prop"
               :key="item.prop">
               <el-input
+                :ref="item.prop"
                 style="width: 170px"
                 v-model="queryForm[item.prop]"></el-input>
             </el-form-item>
@@ -42,17 +43,25 @@
               :key="item.prop">
               <el-row>
                 <el-col :span="12">
-                  <el-date-picker v-model="queryForm[item.prop]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                  <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
                   <span>-</span>
                 </el-col>
                 <el-col :span="12">
-                  <el-date-picker v-model="queryForm[item.propTwo]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                  <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
                 </el-col>
               </el-row>
+            </el-form-item>
+            <el-form-item
+              v-if="item.type === 'date-picker'"
+              :label="`${item.label}：` || ''"
+              :prop="item.prop"
+              :key="item.prop">
+              <el-date-picker :ref="item.prop" :type="item.dataType" v-model="queryForm[item.prop]" placeholder="请选择" :value-format="item.valueFormat" style="width: 170px"></el-date-picker>
             </el-form-item>
           </template>
           <el-form-item class="floatr">
             <el-button type="primary" size="small" @click="GetDataList(true)">查询</el-button>
+            <el-button type="primary" size="small" @click="FormExportExcel" v-if="exportExcel">导出</el-button>
             <slot name="mds-button"></slot>
           </el-form-item>
         </el-form>
@@ -81,16 +90,25 @@
           <el-table-column
             v-for="item in column"
             v-if="!item.hide"
-            :key="item.name"
+            :key="item.prop"
             :prop="item.prop"
             :label="item.label"
             :width="item.width || ''"
             :formatter="item.formatter"
             :show-overflow-tooltip="true">
+            <el-table-column
+              v-for="chind in item.child"
+              v-if="item.child"
+              :key="chind.prop"
+              :prop="chind.prop"
+              :label="chind.label"
+              :formatter="chind.formatter">
+            </el-table-column>
           </el-table-column>
           <el-table-column
             label="操作"
             fixed="right"
+            :width="operationColumnWidth"
             v-if="showOperationColumn">
             <template slot-scope="scope">
               <slot :scope="scope" name="operation_column"/>
@@ -114,6 +132,7 @@
 </template>
 
 <script>
+import {exportFileForm} from '@/net/validate'
 export default {
   name: 'QueryTable',
   data () {
@@ -123,6 +142,7 @@ export default {
         pageSize: 10,
         totalCount: 0
       },
+      queryFormRules: {},
       optionLists: {},
       tableData: [],
       multipleSelection: []
@@ -135,7 +155,38 @@ export default {
         return []
       }
     },
-    rules: {},
+    exportExcel: {
+      type: Boolean,
+      default: false
+    },
+    exportOption: {
+      type: Object,
+      default: () => {
+        return {
+          exportInterface: '',
+          auth: '',
+          text: ''
+        }
+      }
+    },
+    exportInterface: {
+      type: String,
+      default: ''
+    },
+    exportAuth: {
+      type: String,
+      default: ''
+    },
+    exportText: {
+      type: String,
+      default: ''
+    },
+    rules: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
     queryAuth: {
       type: String,
       default: ''
@@ -153,6 +204,10 @@ export default {
     showOperationColumn: {
       type: Boolean,
       default: false
+    },
+    operationColumnWidth: {
+      type: Number,
+      default: 0
     },
     showSelectColumn: {
       type: Boolean,
@@ -218,6 +273,7 @@ export default {
           this.$nextTick(function () {
             // 添加监听
             this.$refs[item.prop][0].emitChange = (val) => {
+              this.clearTableAndPage()
               item.linkageProp.forEach(linkagePropItem => {
                 // 联动的对象
                 let linkagePropItemObj = this.queryFormData.filter(it => it.prop === linkagePropItem)[0]
@@ -252,12 +308,38 @@ export default {
               })
             }
           })
+        } else {
+          this.$nextTick(function () {
+            this.$refs[item.prop][0].emitChange = (val) => {
+              this.clearTableAndPage()
+            }
+            if (item.propTwo) {
+              this.$refs[item.propTwo][0].emitChange = (val) => {
+                this.clearTableAndPage()
+              }
+            }
+          })
         }
       })
       console.timeEnd('组件初始化')
     },
+    // 清空表格和分页
+    clearTableAndPage () {
+      this.tableData = []
+      this.queryForm.currPage = 1
+      this.queryForm.totalCount = 0
+      // this.GetDataList()
+    },
     // 获取table数据
     GetDataList (st) {
+      if (this.rules.length) {
+        for (let item of this.rules) {
+          if (!this.queryForm[item.prop]) {
+            this.$warning_SHINHO(item.text)
+            return false
+          }
+        }
+      }
       if (!this.isAuth(this.queryAuth)) {
         this.$warning_SHINHO('无查询权限')
         return false
@@ -276,6 +358,23 @@ export default {
           this.$error_SHINHO(data.msg)
         }
       })
+    },
+    // 导出
+    FormExportExcel () {
+      if (this.rules.length) {
+        for (let item of this.rules) {
+          if (!this.queryForm[item.prop]) {
+            this.$warning_SHINHO(item.text)
+            return false
+          }
+        }
+      }
+      if (!this.isAuth(this.exportOption.auth)) {
+        this.$warning_SHINHO('无导出权限')
+        return false
+      }
+      let that = this
+      exportFileForm(`${this.exportOption.exportInterface}`, this.exportOption.text, that)
     },
     // 显示隐藏动画
     headanimation ($) {

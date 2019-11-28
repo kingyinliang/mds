@@ -233,7 +233,7 @@
             <el-form-item label="调整量：" required>
               <el-input  type='number'  v-model.number="adjustForm.QUANTITY"  style='width:220px'/>
             </el-form-item>
-            <el-form-item label="说明：">
+            <el-form-item label="说明：" required>
               <el-input  type='text'  v-model.trim="adjustForm.REMARK" style='width:220px'/>
             </el-form-item>
           </el-form>
@@ -418,8 +418,12 @@ export default class Index extends Vue {
     })
   }
   saveAdjust () {
-    if (this.adjustForm.QUANTITY.toString() === '') {
-      Vue.prototype.$warning_SHINHO('调整数量不能为空')
+    if (this.adjustForm.QUANTITY.toString() === '' || this.adjustForm.QUANTITY.toString() === '0') {
+      Vue.prototype.$warning_SHINHO('请填写调整量')
+      return false
+    }
+    if (this.adjustForm.REMARK.toString() === '') {
+      Vue.prototype.$warning_SHINHO('请填写调整说明')
       return false
     }
     Vue.prototype.$http(`${GRANARY_API.WHEAT_ADJUST}`, `POST`, this.adjustForm).then((res) => {

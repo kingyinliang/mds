@@ -33,7 +33,7 @@
               <span>生产批次</span>
             </template>
             <template slot-scope="scope">
-              <el-input maxlength="12" v-model="scope.row.productBatch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>
+              <el-input maxlength="10" v-model="scope.row.productBatch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="物料批次" width="130px">
@@ -55,7 +55,7 @@
               <i class="reqI">*</i>
               <span>单位</span>
             </template>
-            <template slot-scope="scope">{{scope.row.unit}}</template>
+            <template slot-scope="scope">{{scope.row.unitName}}</template>
           </el-table-column>
           <el-table-column label="操作人" prop="changer" width="140px"></el-table-column>
           <el-table-column label="操作时间" prop="changed" width="160px"></el-table-column>
@@ -795,7 +795,8 @@ export default {
         materialDate: this.formHeader.inKjmDate,
         materialBatch: '',
         amount: '',
-        unit: '盒',
+        unit: 'BOX',
+        unitName: '盒',
         materialCode: '',
         materialName: '',
         productBatch: '',

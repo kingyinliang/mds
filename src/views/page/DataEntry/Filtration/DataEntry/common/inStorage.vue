@@ -57,7 +57,8 @@
           {{dataForm.unit = '方'}}
         </el-form-item>
         <el-form-item label="罐内库存：">
-          <el-input v-model="dataForm.holderRemaining" placeholder="请输入" :disabled="PotObject.inTankAmount || dialogDisabled"></el-input>
+          <!--<el-input v-model="dataForm.holderRemaining" placeholder="请输入" :disabled="PotObject.inTankAmount || dialogDisabled"></el-input>-->
+          <el-input v-model="dataForm.holderRemaining" placeholder="请输入" disabled></el-input>
         </el-form-item>
         <el-form-item label="是否满罐：" prop="isFull">
           <el-select v-model="dataForm.isFull" :disabled="dialogDisabled" filterable placeholder="请选择" style="width: 100%">
@@ -102,7 +103,7 @@ export default {
       instorageState: '',
       dataRule: {
         holderId: [
-          { required: true, message: '半成品罐号不能为空', trigger: 'blur' }
+          { required: true, message: '成品罐号不能为空', trigger: 'blur' }
         ],
         inAmount: [
           {
@@ -229,6 +230,9 @@ export default {
               item.batch = this.dataForm.batch
             }
           })
+          if (/repeat/g.test(this.dataForm.holderId)) {
+            this.dataForm.holderId = this.dataForm.holderId.substring(0, this.dataForm.holderId.indexOf('repeat'))
+          }
           if (this.isUpdate) {
             Reflect.ownKeys(this.dataForm).forEach((key) => {
               this.rowData[key] = this.dataForm[key]
@@ -273,6 +277,16 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.PotList = data.holderList
+          this.InStorageDate.forEach(item => {
+            if (this.PotList.filter(it => it.holderId === item.holderId).length > 0 && this.PotList.filter(it => it.holderId === item.holderId)[0].batch !== item.batch) {
+              this.PotList.push({
+                amount: item.holderRemaining,
+                batch: item.batch,
+                holderId: item.holderId + 'repeat',
+                holderName: item.holderName
+              })
+            }
+          })
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -362,8 +376,9 @@ export default {
         row.delFlag = '1'
         if (this.PotList.findIndex(item => item.holderId === row.holderId) !== -1) {
           let changeAmount = 0
-          changeAmount = Number(this.PotList.find(item => item.holderId === row.holderId).amount) - Number(row.inAmount)
-          this.PotList.find(item => item.holderId === row.holderId).amount = changeAmount
+          // changeAmount = Number(this.PotList.find(item => (item.holderId === row.holderId || item.holderId + 'repeat' === row.holderId) && item.batch === row.batch).amount) - Number(row.inAmount)
+          changeAmount = Number(row.holderRemaining) - Number(row.inAmount)
+          this.PotList.find(item => (item.holderId === row.holderId || item.holderId === (row.holderId + 'repeat')) && item.batch === row.batch).amount = changeAmount
           this.InStorageDate.map((item) => {
             if (item.holderId === row.holderId) {
               item.holderRemaining = changeAmount

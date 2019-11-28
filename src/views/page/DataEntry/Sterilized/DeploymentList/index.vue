@@ -16,19 +16,19 @@
                 <el-option v-for="(item, index) in workshop" :key="index" :value="item.deptId" :label="item.deptName"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="调配罐号：">
+            <el-form-item label="罐号：">
               <el-select v-model="formHeader.holderId" palceholder="请选择" class="width150px">
                 <el-option value="">请选择</el-option>
                 <el-option v-for="(item, index) in holderList" :key="index" :value="item.holderId" :label="item.holderName"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="调配日期：">
+            <el-form-item label="日期：">
               <el-date-picker v-model="formHeader.allocateDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择" style="width:140px"></el-date-picker>
             </el-form-item>
-            <el-form-item label="调配单号：">
+            <el-form-item label="单号：">
               <el-input style="width:150px" v-model="formHeader.orderNo"></el-input>
             </el-form-item>
-            <el-form-item label="调配单状态：" label-width="85px">
+            <el-form-item label="状态：">
               <el-select v-model="formHeader.status" palceholder="请选择" class="width150px">
                 <el-option value="">请选择</el-option>
                 <el-option v-for="(item, index) in statusList" :key="index" :value="item" :label="item"></el-option>
@@ -48,22 +48,17 @@
         <i class="el-icon-caret-top"></i>
       </div>
     </el-card>
-    <div class="secondcard" style="padding-top: 0">
-      <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
-          <i class="el-icon-caret-bottom"></i>
-        </div>
-      </div>
-      <el-card>
-        <el-row>
-          <el-col style="font-weight:bold;">调配列表</el-col>
-        </el-row>
+    <el-tabs ref='tabs' v-model="activeName" @tab-click="handleClick" id="DaatTtabs" class="NewDaatTtabs secondcard" type="border-card" style="border-radius: 15px;overflow: hidden">
+      <el-tab-pane name="BL">
+        <span slot="label" class="spanview">
+          <el-button>调配列表</el-button>
+        </span>
         <el-table :data="dataList" @row-dblclick="GetInfo" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
           <el-table-column type="selection" width="35" :selectable="CheckBoxInit" fixed="left"></el-table-column>
-          <el-table-column label="状态" prop="status"></el-table-column>
+          <el-table-column label="状态" prop="status" width="95"></el-table-column>
           <el-table-column label="调配单号" prop="orderNo" width="130"></el-table-column>
           <el-table-column label="生产车间" prop="workShopName" width="100"></el-table-column>
-          <el-table-column label="调配单日期" prop="allocateDate" width="170"></el-table-column>
+          <el-table-column label="调配单日期" prop="allocateDate" width="110"></el-table-column>
           <el-table-column label="杀菌物料" width="190" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               {{scope.row.materialCode}}{{scope.row.materialName}}
@@ -74,7 +69,7 @@
           <el-table-column label="单位" prop="unit" width="50"></el-table-column>
           <el-table-column label="调配罐号" width="130" prop="holderName" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="调配日期" width="110" prop="allocateTime"></el-table-column>
-          <el-table-column label="调配单备注" prop="remark" width="100" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="备注" prop="remark" width="100" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="创建人员" prop="creator" width="150"></el-table-column>
           <el-table-column label="创建时间" prop="created" width="170"></el-table-column>
           <el-table-column label="调配人员" prop="changer" width="150"></el-table-column>
@@ -85,15 +80,56 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pages.currPage"
-          :page-sizes="[10, 20, 50]"
-          :page-size="pages.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pages.totalCount">
-        </el-pagination>
+      </el-tab-pane>
+      <el-tab-pane name="LY">
+        <span slot="label" class="spanview">
+          <el-button>分配列表</el-button>
+        </span>
+        <el-table :data="dataList" @row-dblclick="GetInfo" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
+          <el-table-column type="selection" width="35" :selectable="CheckBoxInit" fixed="left"></el-table-column>
+          <!-- <el-table-column label="状态" prop="status" width="95"></el-table-column> -->
+          <el-table-column label="分配单号" prop="orderNo" width="130"></el-table-column>
+          <el-table-column label="生产车间" prop="workShopName" width="100"></el-table-column>
+          <el-table-column label="分配单日期" prop="allocateDate" width="110"></el-table-column>
+          <el-table-column label="杀菌物料" width="190" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              {{scope.row.materialCode}}{{scope.row.materialName}}
+            </template>
+          </el-table-column>
+          <el-table-column label="原汁总量" prop="planAmount"></el-table-column>
+          <!-- <el-table-column label="BL原汁总量" prop="blAmount"></el-table-column> -->
+          <el-table-column label="单位" prop="unit" width="50"></el-table-column>
+          <!-- <el-table-column label="调配罐号" width="130" prop="holderName" :show-overflow-tooltip="true"></!--> -->
+          <el-table-column label="分配日期" width="110" prop="allocateTime"></el-table-column>
+          <el-table-column label="备注" prop="remark" width="100" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="创建人员" prop="creator" width="150"></el-table-column>
+          <el-table-column label="创建时间" prop="created" width="170"></el-table-column>
+          <el-table-column label="分配人员" prop="changer" width="150"></el-table-column>
+          <el-table-column label="分配时间" prop="changed" width="170"></el-table-column>
+          <el-table-column width="80" fixed="right">
+            <template slot-scope="scope">
+              <el-button type="primary" size="small" @click="GoInfo(scope.row)">详情</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pages.currPage"
+        :page-sizes="[10, 20, 50]"
+        :page-size="pages.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pages.totalCount">
+      </el-pagination>
+    </el-tabs>
+    <div class="secondcard" style="padding-top: 0">
+      <div class="tableCard">
+        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+          <i class="el-icon-caret-bottom"></i>
+        </div>
+      </div>
+      <el-card>
         <el-row>
           <el-col style="font-weight:bold;">调配订单信息</el-col>
         </el-row>
@@ -123,12 +159,14 @@ export default {
   name: 'watiDeploymentList',
   data () {
     return {
+      activeName: 'BL',
       formHeader: {
         factory: '',
         workShop: '',
         holderId: '',
         orderId: '',
-        orderNo: ''
+        orderNo: '',
+        type: 'BL'
       },
       pages: {
         currPage: 1,
@@ -249,7 +287,8 @@ export default {
     GoInfo (row) {
       this.Sterilized = {
         orderNoList: [],
-        orderNo: row.id
+        orderNo: row.id,
+        type: this.formHeader.type
       }
       this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Sterilized-WaitDeploymentList-doDeployment')
       setTimeout(() => {
@@ -275,6 +314,12 @@ export default {
           }
         })
       })
+    },
+    handleClick (tab, event) {
+      this.formHeader.type = tab.name
+      this.GetList(true)
+      // this.formHeader.currPage = 1
+      // this.GetList(true)
     }
   },
   computed: {

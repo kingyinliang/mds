@@ -24,7 +24,7 @@
         <span slot="label" class="spanview">
           杀菌入库
         </span>
-        <div class="inStorage_card">
+        <div class="inStorage_card" style="min-width: 1128px">
           <div style="width: 138px" class="inStorage_card_left">
             <p>杀菌罐</p>
             <div style="text-align: center;padding: 0 10px;position: relative">
@@ -37,8 +37,8 @@
             </div>
             <el-button type="text" class="inStorage_card_left_btn" size="small" :disabled="!(isRedact && (orderStatus !== 'submit' && orderStatus !== 'checked'))" @click="showDialog()">入罐</el-button>
           </div>
-          <div style="flex: 1">
-            <el-table header-row-class-name="tableHead" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow" >
+          <div style="flex: 1;min-width: 990px;">
+            <el-table header-row-class-name="tableHead" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow">
               <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="日期" width="80" prop="date"  :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="半成品罐号" width="95" prop="holderName" :show-overflow-tooltip="true"></el-table-column>
@@ -48,10 +48,11 @@
               <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="罐内库存" width="80" prop="inTankAmount" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="满罐" width="60" prop="isFull" :show-overflow-tooltip="true"> <template slot-scope="scope">{{scope.row.isFull === '1'? '是' : '否'}}</template></el-table-column>
+              <el-table-column label="满罐时间" width="120" prop="fullDate" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="操作时间"  prop="changed" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column label="操作人" width="80" prop="changer" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column label="操作" width="50" prop="changer" :show-overflow-tooltip="true">
+              <el-table-column label="操作" fixed="right" width="50" prop="changer" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                   <el-button class="delBtn" type="text" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @click="delRow(scope.row)">删除</el-button>
                 </template>
@@ -107,10 +108,10 @@
           <el-input v-model="dataForm.remark" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="操作人：">
-          {{$store.state.user.realName + '（' + this.$store.state.user.name + '）'}}
+          {{dataForm.changer}}
         </el-form-item>
         <el-form-item label="操作时间：">
-          {{dataForm.date}}
+          {{dataForm.changed}}
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -138,6 +139,7 @@ export default {
       dataForm: {},
       rowData: {},
       isUpdate: false,
+      oldInAmount: 0,
       PotList: [],
       InStorageDate: [],
       DataAudit: [],
@@ -190,6 +192,7 @@ export default {
     // 入罐弹窗
     showDialog () {
       this.visible = true
+      this.isUpdate = false
       this.dataForm = {
         holderId: '',
         batch: '',
@@ -205,16 +208,22 @@ export default {
         delFlag: '0',
         materialCode: this.formHeader.materialCode,
         materialName: this.formHeader.materialName,
-        id: ''
+        id: '',
+        changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+        changer: this.$store.state.user.realName + '（' + this.$store.state.user.name + '）'
       }
     },
     PotinTankAmount1 () {
       if (this.dataForm.holderId) {
-        this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount ? this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1
+        this.dataForm.inTankAmount = (this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount ? this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1).toFixed(2) * 1
       }
     },
     PotinTankAmount (id) {
-      this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1
+      if (this.isUpdate) {
+        this.dataForm.inTankAmount = (this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 - this.oldInAmount : 0 + this.dataForm.inAmount * 1).toFixed(2) * 1
+      } else {
+        this.dataForm.inTankAmount = (this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1).toFixed(2) * 1
+      }
       this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
       this.PotObject.inTankAmount = true
       // if (this.dataForm.inTankAmount) {
@@ -259,10 +268,18 @@ export default {
           this.isUpdate = false
           this.visible = false
           if (this.InStorageDate.length > 0) {
-            this.PotDetail = {
-              amount: this.InStorageDate[0].inTankAmount + this.InStorageDate[0].unit,
-              batch: this.InStorageDate[0].batch,
-              material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
+            if (this.InStorageDate.filter(item => item.delFlag !== '1').length > 0) {
+              this.PotDetail = {
+                amount: this.InStorageDate.filter(item => item.delFlag !== '1')[0].inTankAmount + this.InStorageDate[0].unit,
+                batch: this.InStorageDate.filter(item => item.delFlag !== '1')[0].batch,
+                material: this.InStorageDate.filter(item => item.delFlag !== '1')[0].materialCode + ' ' + this.InStorageDate.filter(item => item.delFlag !== '1')[0].materialName
+              }
+            } else {
+              this.PotDetail = {
+                amount: '',
+                batch: '',
+                material: ''
+              }
             }
           }
         }
@@ -273,6 +290,7 @@ export default {
       if ((row.status === '' || row.status === 'saved' || row.status === 'noPass') && this.isRedact) {
         this.visible = true
         this.isUpdate = true
+        this.oldInAmount = row.inAmount
         this.dataForm = JSON.parse(JSON.stringify(row))
         this.rowData = row
         this.PotinTankAmount(this.dataForm.holderId)
@@ -401,6 +419,11 @@ export default {
         type: 'warning'
       }).then(() => {
         row.delFlag = '1'
+        this.PotList.forEach(item => {
+          if (item.holderId === row.holderId) {
+            item.amount = Number(item.amount) - Number(row.inAmount)
+          }
+        })
       })
     },
     // 获取订单表头

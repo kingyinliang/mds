@@ -109,7 +109,7 @@
     </div>
     <el-dialog :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
       <div slot="title" style="line-hight:59px">调配列表</div>
-      <el-table :data="ItemList" border header-row-class-name="tableHead">
+      <el-table style="margin-bottom: 20px" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
         <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
           <template slot-scope="scope">
             {{scope.row.materialCode}} {{scope.row.materialName}}
@@ -164,6 +164,16 @@
             <el-button type="danger" icon="el-icon-delete" circle size="small" :disabled="scope.row.isSplit === '0' || lineStatus === '已提交' || lineStatus === '审核通过' || isRedact === false || scope.row.status === 'checked' || scope.row.status === 'submit'"  @click="DelOrderNo(scope.row)"></el-button>
           </template>
         </el-table-column>
+      </el-table>
+      <el-table :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag2">
+        <el-table-column label="物料" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            {{scope.row.materialCode}} {{scope.row.materialName}}
+          </template>
+        </el-table-column>
+        <el-table-column label="数量" prop="planAmount" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="订单单位" prop="unit" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
         <template>
@@ -437,7 +447,7 @@ export default {
     ShowDetail (row) {
       this.Tdata = row
       this.materialName = row.materialName
-      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMS}`, 'POST', {orderNo: row.id, factory: this.formHeader.factory, sign: 'oldMethod'}, false, false, false).then(({data}) => {
+      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMS}`, 'POST', {materialCode: row.materialCode, orderNo: row.id, factory: this.formHeader.factory, sign: 'oldMethod'}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.ItemList = data.info
           this.ItemList.map((item) => {
@@ -478,33 +488,35 @@ export default {
       let ty = true
       let strMsg = ''
       for (let item of this.ItemList) {
-        batchList.push(item.batch)
-        item.ID = this.ID
-        if (!item.receiveAmount || item.receiveAmount === '') {
-          this.$warning_SHINHO('请填写实际领料')
-          return false
+        if (item.materielType !== 'BL_LY') {
+          batchList.push(item.batch)
+          item.ID = this.ID
+          if (!item.receiveAmount || item.receiveAmount === '') {
+            this.$warning_SHINHO('请填写实际领料')
+            return false
+          }
+          if (!item.batch || item.batch === '') {
+            this.$warning_SHINHO('请填写批次')
+            return false
+          }
+          if (item.batch.length !== 10) {
+            this.$warning_SHINHO('批次应为10位')
+            return false
+          }
+          // if (item.materialName.indexOf('原汁') !== -1 && (item.holderId === '' || !item.holderId)) {
+          //   this.$warning_SHINHO('原汁物料需选择罐号')
+          //   return false
+          // }
+          if (this.orderTypeSign === '1' && item.holderId && this.thrwHolderList.filter(it => item.holderId === it.holderId)[0].isRdSign !== '1') {
+            ty = false
+          }
+          // if (/六月鲜/g.test(this.materialName)) {
+          //   if (/味极鲜/g.test(item.category)) {
+          //     this.$message.error('领用原汁与生产物料不匹配！无法保存，无法操作')
+          //     return false
+          //   }
+          // }
         }
-        if (!item.batch || item.batch === '') {
-          this.$warning_SHINHO('请填写批次')
-          return false
-        }
-        if (item.batch.length !== 10) {
-          this.$warning_SHINHO('批次应为10位')
-          return false
-        }
-        // if (item.materialName.indexOf('原汁') !== -1 && (item.holderId === '' || !item.holderId)) {
-        //   this.$warning_SHINHO('原汁物料需选择罐号')
-        //   return false
-        // }
-        if (this.orderTypeSign === '1' && item.holderId && this.thrwHolderList.filter(it => item.holderId === it.holderId)[0].isRdSign !== '1') {
-          ty = false
-        }
-        // if (/六月鲜/g.test(this.materialName)) {
-        //   if (/味极鲜/g.test(item.category)) {
-        //     this.$message.error('领用原汁与生产物料不匹配！无法保存，无法操作')
-        //     return false
-        //   }
-        // }
       }
       // if (this.Tdata.cDay !== null && this.Tdata.cDay * 1 < 6) {
       this.Tdata.sbList.map((items) => {
@@ -550,24 +562,35 @@ export default {
       // }
     },
     SubmitFunction () {
-      this.ItemList.map((item) => {
-        item.receiveAmount = item.receiveAmount.toString()
-        item.planAmount = item.planAmount.toString()
-      })
-      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {'tiaoHolder': this.dataList, 'params': this.ItemList}).then(({data}) => {
-        if (data.code === 0) {
-          this.$notify({title: '成功', message: '保存成功', type: 'success'})
-          this.SearchList()
-          // this.ThrowHolder(this.formHeader.workShop)
-          this.dialogTableVisible = false
+      this.ItemList.forEach((item, index) => {
+        if (item.materielType === 'BL_LY') {
+          delete this.ItemList[index]
         } else {
-          if (data.mes.length === 0) {
-            this.$error_SHINHO(data.msg)
-          } else {
-            this.$error_SHINHO(data.mes.join(','))
-          }
+          item.receiveAmount = item.receiveAmount.toString()
+          item.planAmount = item.planAmount.toString()
         }
       })
+      this.ItemList = this.ItemList.filter(function (val) { return val })
+      if (this.ItemList.length) {
+        this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {'tiaoHolder': this.dataList, 'params': this.ItemList}).then(({data}) => {
+          if (data.code === 0) {
+            this.$notify({title: '成功', message: '保存成功', type: 'success'})
+            this.SearchList()
+            // this.ThrowHolder(this.formHeader.workShop)
+            this.dialogTableVisible = false
+          } else {
+            if (data.mes.length === 0) {
+              this.$error_SHINHO(data.msg)
+            } else {
+              this.$error_SHINHO(data.mes.join(','))
+            }
+          }
+        })
+      } else {
+        this.$notify({title: '成功', message: '保存成功', type: 'success'})
+        this.SearchList()
+        this.dialogTableVisible = false
+      }
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
@@ -592,28 +615,34 @@ export default {
       })
     },
     SubmitForm () {
-      if (this.multipleSelection.length === 0) {
-        this.$warning_SHINHO('请勾选数据')
-        return false
-      }
-      for (let item of this.multipleSelection) {
-        if (item.isUpdate === false) {
-          this.$warning_SHINHO('请先保存调配详情信息（调配单：' + item.orderNo + '）')
+      this.$confirm('确认提交该订单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        if (this.multipleSelection.length === 0) {
+          this.$warning_SHINHO('请勾选数据')
           return false
         }
-        if (!item.holderId || !item.allocateTime || item.holderId === '' || item.allocateTime === '') {
-          this.$warning_SHINHO('请填写必填项')
-          return false
+        for (let item of this.multipleSelection) {
+          if (item.isUpdate === false) {
+            this.$warning_SHINHO('请先保存调配详情信息（调配单：' + item.orderNo + '）')
+            return false
+          }
+          if (!item.holderId || !item.allocateTime || item.holderId === '' || item.allocateTime === '') {
+            this.$warning_SHINHO('请填写必填项')
+            return false
+          }
         }
-      }
-      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSUBMIT}`, 'POST', this.multipleSelection).then(({data}) => {
-        if (data.code === 0) {
-          this.$notify({title: '成功', message: '提交成功', type: 'success'})
-          this.isRedact = false
-          this.SearchList()
-        } else {
-          this.$notify.error({title: '错误', message: data.msg})
-        }
+        this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSUBMIT}`, 'POST', this.multipleSelection).then(({data}) => {
+          if (data.code === 0) {
+            this.$notify({title: '成功', message: '提交成功', type: 'success'})
+            this.isRedact = false
+            this.SearchList()
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
       })
     },
     // 复选框初始状态
@@ -730,6 +759,21 @@ export default {
           this.$notify.error({title: '错误', message: data.msg})
         }
       })
+    },
+    //  RowDelFlag
+    RowDelFlag1 ({row, rowIndex}) {
+      if (row.materielType === 'BL_LY') {
+        return 'rowDel'
+      } else {
+        return ''
+      }
+    },
+    RowDelFlag2 ({row, rowIndex}) {
+      if (row.materielType !== 'BL_LY') {
+        return 'rowDel'
+      } else {
+        return ''
+      }
     },
     RecordSave (formName) {
       this.$refs[formName].validate((valid) => {

@@ -5,17 +5,15 @@
       :queryFormData="queryFormData"
       :list-interface="listInterface"
       :query-auth="'report:formh:pkgOneAndTwoList'"
-      :column="column">
-      <template slot="mds-button">
-        <el-button type="primary" size="small" @click="ExportExcel(true)" v-if="isAuth('report:formh:exportPkgOneAndTwoList')">导出</el-button>
-      </template>
+      :column="column"
+      :export-excel="true"
+      :export-option="exportOption">
     </query-table>
   </div>
 </template>
 
 <script>
 import { BASICDATA_API, REP_API } from '@/api/api'
-import { exportFileForm } from '@/net/validate'
 export default {
   name: 'TwoOneRetrospect',
   data () {
@@ -77,6 +75,11 @@ export default {
       listInterface: (params) => {
         return this.$http(`${REP_API.TWOONERETROSPECT_LIST_API}`, 'POST', params)
       },
+      exportOption: {
+        exportInterface: REP_API.REPTWOONERETROSPECT_API,
+        auth: 'report:formh:exportPkgOneAndTwoList',
+        text: '二合一批次追溯报表'
+      },
       column: [{
         prop: 'productDate',
         label: '生产日期',
@@ -124,10 +127,6 @@ export default {
     }
   },
   methods: {
-    ExportExcel () {
-      let that = this
-      exportFileForm(`${REP_API.REPTWOONERETROSPECT_API}`, '二合一批次追溯报表', that)
-    }
   },
   components: {
   }

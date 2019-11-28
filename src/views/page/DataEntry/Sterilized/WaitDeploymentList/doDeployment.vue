@@ -2,7 +2,7 @@
   <div>
     <div class="header_main">
       <el-card class="searchCard">
-        <el-form :model="formHeader" :inline="true" size="small" label-width="80px">
+        <el-form :model="formHeader" :inline="true" size="small" label-width="75px">
           <el-row>
             <el-col :span="21">
               <el-form-item label="生产工厂：">
@@ -13,10 +13,10 @@
               <el-form-item label="生产车间：">
                 <p class="input_bottom">{{this.formHeader.workshop}}</p>
               </el-form-item>
-              <el-form-item label="调配单号：">
+              <el-form-item :label="typeString + '单号：'">
                 <p class="input_bottom">&nbsp;{{this.formHeaders.ORDER_NO}}</p>
               </el-form-item>
-              <el-form-item label="调配罐号：">
+              <el-form-item :label="typeString + '罐号：'" v-if="typeString === '调配'">
                 <p class="input_bottom">&nbsp;{{this.formHeaders.HOLDER_ID}}</p>
               </el-form-item>
               <el-form-item label="提交人员：">
@@ -25,7 +25,7 @@
               <el-form-item label="提交日期：">
                 <p class="input_bottom">&nbsp;{{this.formHeaders.CREATED}}</p>
               </el-form-item>
-              <el-form-item label="调配日期：">
+              <el-form-item :label="typeString + '日期：'">
                 <p class="input_bottom">&nbsp;{{this.formHeaders.ALLOCATE_DATE}}</p>
               </el-form-item>
               <el-form-item label="杀菌物料：">
@@ -37,20 +37,26 @@
                 <p class="input_bottom">&nbsp;{{this.formHeaders.STATUS}}</p>
               </el-form-item>
               <el-form-item>
-                <span style="color:#606266; width:162px; float:left; margin-left:15px;">计划BL原汁总量（L）：</span>
+                <span style="color:#606266; float:left; margin-left:5px;" v-if="typeString === '调配'">
+                  计划BL原汁总量（L）：
+                </span>
+                <span style="color:#606266; float:left; margin-left:5px;" v-else>
+                  原汁总量（L）：
+                </span>
                 <p style="float:left" class="input_bottom">{{this.planOutputTotal}}</p>
               </el-form-item>
               <el-form-item label="备注：">
-                <textarea v-model="remark" :disabled="!isRedact" style="width:887px; height:50px; background:rgba(255,255,255,1); border-radius:4px; border:1px solid rgba(217,217,217,1);"></textarea>
+                <textarea v-model="remark" :disabled="!isRedact" style="width:850px; height:50px; background:rgba(255,255,255,1); border-radius:4px; border:1px solid rgba(217,217,217,1);"></textarea>
               </el-form-item>
             </el-col>
             <el-col :span="3" style="text-align:right">
               <div style="width:100%">
                 <el-button type="primary" size="small" v-if="isAuth('ste:allocate:allocateOrderSave')" :disabled="(formHeaders.STATUS !== '已保存' && formHeaders.STATUS !== '')" @click="isRedact = !isRedact">{{isRedact === false? '编辑' : '取消'}}</el-button>
+                <el-button type="primary" size="small" @click="ReCall(true)" :disabled="revocation === 1" style="margin-left:5px;">撤回</el-button>
               </div>
               <div v-if="isRedact" style="margin-top:15px">
-                <el-button type="primary" size="small" @click="SaveOrderNo(true)">保存</el-button>
-                <el-button type="primary" size="small" @click="CreateOrder(true)">生成</el-button>
+                <el-button type="primary" size="small" @click="SaveOrderNo(true)" style="margin-left:0">保存</el-button>
+                <el-button type="primary" size="small" @click="CreateOrder(true)" style="margin-left:5px;">生成</el-button>
               </div>
             </el-col>
           </el-row>
@@ -136,6 +142,7 @@ export default {
   name: 'doDeployment',
   data () {
     return {
+      typeString: '调配',
       allocateId: '',
       formHeader: {
         factory: this.$store.state.common.Sterilized.factory,
@@ -161,11 +168,15 @@ export default {
         currPage: 1,
         pageSize: 10,
         totalCount: 0
-      }
+      },
+      revocation: 0
     }
   },
   mounted () {
     headanimation(this.$)
+    if (this.$store.state.common.Sterilized.type === 'LY') {
+      this.typeString = '分配'
+    }
     if (this.$store.state.common.Sterilized.orderNo !== '') {
       this.allocateId = this.$store.state.common.Sterilized.orderNo
       this.GetInfoList(this.$store.state.common.Sterilized.orderNo)
@@ -187,6 +198,7 @@ export default {
       this.$http(`${STERILIZED_API.DODEPLOYMENTALLOCATELIST}`, 'POST', {orderNo: orderNo}).then(({data}) => {
         if (data.code === 0) {
           this.formHeaders = data.allocateInfo
+          this.revocation = data.revocation
           this.formHeader.factory = this.formHeaders.FACTORYNAME
           this.formHeader.workshop = this.formHeaders.WORK_SHOPNAME
           this.formHeader.factoryId = this.formHeaders.FACTORY
@@ -213,11 +225,13 @@ export default {
         materialCode: this.formHeader.materialCode,
         orderNo: orderArray,
         currPage: '1',
-        pageSize: '9000'
+        pageSize: '9000',
+        type: this.$store.state.common.Sterilized.type
       }
       this.$http(`${STERILIZED_API.WAITDEPLOYMENTLIST_API}`, 'POST', params).then(({data}) => {
         if (data.code === 0) {
           this.orderList = data.orderInfo.list
+          this.revocation = data.revocation
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -317,7 +331,8 @@ export default {
           planAmount: this.planOutputTotal,
           unit: this.orderList[0].outputUnit,
           remark: this.remark,
-          id: this.allocateId
+          id: this.allocateId,
+          type: this.$store.state.common.Sterilized.type
         }
         this.$http(`${STERILIZED_API.DODEPLOYMENTHEADERSAVE}`, 'POST', params).then(({data}) => {
           if (data.code === 0) {
@@ -369,7 +384,8 @@ export default {
             planAmount: this.planOutputTotal,
             unit: this.orderList[0].outputUnit,
             remark: this.remark,
-            id: this.allocateId
+            id: this.allocateId,
+            type: this.$store.state.common.Sterilized.type
           }
           this.$http(`${STERILIZED_API.DODEPLOYMENTHEADERSAVE}`, 'POST', params).then(({data}) => {
             if (data.code === 0) {
@@ -428,6 +444,16 @@ export default {
               this.$notify.error({title: '错误', message: data.msg})
             }
           })
+        }
+      })
+    },
+    // 撤回
+    ReCall () {
+      this.$http(`${STERILIZED_API.DODEPLOYMENTALLREVOCATION}`, 'POST', {id: this.allocateId}).then(({data}) => {
+        if (data.code === 0) {
+          this.GetInfoList(this.allocateId)
+        } else {
+          this.$warning_SHINHO(data.msg)
         }
       })
     },

@@ -811,6 +811,7 @@ export default {
       this.$http(`${KJM_API.IOT_READ}`, 'POST', params).then(({data}) => {
         if (data.code === 0) {
           data.list.map((item) => {
+            item.guardTechId = this.tech.id
             this.lookList.push(item)
           })
           this.$nextTick(function () {
