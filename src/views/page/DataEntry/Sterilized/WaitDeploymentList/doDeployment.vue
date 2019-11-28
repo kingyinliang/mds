@@ -13,10 +13,10 @@
               <el-form-item label="生产车间：">
                 <p class="input_bottom">{{this.formHeader.workshop}}</p>
               </el-form-item>
-              <el-form-item label="调配单号：">
+              <el-form-item :label="typeString + '单号：'">
                 <p class="input_bottom">&nbsp;{{this.formHeaders.ORDER_NO}}</p>
               </el-form-item>
-              <el-form-item label="调配罐号：">
+              <el-form-item :label="typeString + '罐号：'" v-if="typeString === '调配'">
                 <p class="input_bottom">&nbsp;{{this.formHeaders.HOLDER_ID}}</p>
               </el-form-item>
               <el-form-item label="提交人员：">
@@ -25,7 +25,7 @@
               <el-form-item label="提交日期：">
                 <p class="input_bottom">&nbsp;{{this.formHeaders.CREATED}}</p>
               </el-form-item>
-              <el-form-item label="调配日期：">
+              <el-form-item :label="typeString + '日期：'">
                 <p class="input_bottom">&nbsp;{{this.formHeaders.ALLOCATE_DATE}}</p>
               </el-form-item>
               <el-form-item label="杀菌物料：">
@@ -37,7 +37,12 @@
                 <p class="input_bottom">&nbsp;{{this.formHeaders.STATUS}}</p>
               </el-form-item>
               <el-form-item>
-                <span style="color:#606266; width:162px; float:left; margin-left:15px;">计划BL原汁总量（L）：</span>
+                <span style="color:#606266; float:left; margin-left:5px;" v-if="typeString === '调配'">
+                  计划BL原汁总量（L）：
+                </span>
+                <span style="color:#606266; float:left; margin-left:5px;" v-else>
+                  原汁总量（L）：
+                </span>
                 <p style="float:left" class="input_bottom">{{this.planOutputTotal}}</p>
               </el-form-item>
               <el-form-item label="备注：">
@@ -137,6 +142,7 @@ export default {
   name: 'doDeployment',
   data () {
     return {
+      typeString: '调配',
       allocateId: '',
       formHeader: {
         factory: this.$store.state.common.Sterilized.factory,
@@ -168,6 +174,9 @@ export default {
   },
   mounted () {
     headanimation(this.$)
+    if (this.$store.state.common.Sterilized.type === 'LY') {
+      this.typeString = '分配'
+    }
     if (this.$store.state.common.Sterilized.orderNo !== '') {
       this.allocateId = this.$store.state.common.Sterilized.orderNo
       this.GetInfoList(this.$store.state.common.Sterilized.orderNo)
