@@ -114,6 +114,7 @@ export default {
           optionsFn: (val) => {
             return this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_SELECT_LIST}`, 'POST', {factory: val})
           },
+          filterable: true,
           defaultValue: '',
           resVal: {
             resData: 'materielList.productionMateriel',
@@ -129,6 +130,7 @@ export default {
             return this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_SELECT_LIST}`, 'POST', {factory: val})
           },
           defaultValue: '',
+          filterable: true,
           resVal: {
             resData: 'materielList.useMateriel',
             label: ['MATERIAL_CODE', 'MATERIAL_NAME'],
