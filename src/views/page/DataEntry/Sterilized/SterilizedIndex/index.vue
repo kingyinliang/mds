@@ -63,8 +63,9 @@
             </div>
             <el-row class="dataList_item_btn">
               <el-col :span="6" class="dataList_item_btn_item">
-                <el-tooltip class="item" effect="dark" :content="item.selectOrder.semiStatus === 'noPass'? '审核不通过':item.selectOrder.semiStatus === 'saved'? '已保存':item.selectOrder.semiStatus === 'submit' ? '已提交' : item.selectOrder.semiStatus === 'checked'? '通过':item.selectOrder.semiStatus === '已同步' ? '未录入' : '未录入'" placement="top" v-if="(Materails.filter(items => items.code === item.selectOrder.materialCode)).length"><p @click="toRouter('1', item.selectOrder)">半成品领用</p></el-tooltip>
-                <p @click="toRouter('1', item.selectOrder)" v-if="(Materails.filter(items => items.code === item.selectOrder.materialCode)).length === 0">半成品领用</p>
+                <el-tooltip class="item" effect="dark" :content="item.selectOrder.semiStatus === 'noPass'? '审核不通过':item.selectOrder.semiStatus === 'saved'? '已保存':item.selectOrder.semiStatus === 'submit' ? '已提交' : item.selectOrder.semiStatus === 'checked'? '通过':item.selectOrder.semiStatus === '已同步' ? '未录入' : '未录入'" placement="top"><p @click="toRouter('1', item.selectOrder)">半成品领用</p></el-tooltip>
+                <!--<el-tooltip class="item" effect="dark" :content="item.selectOrder.semiStatus === 'noPass'? '审核不通过':item.selectOrder.semiStatus === 'saved'? '已保存':item.selectOrder.semiStatus === 'submit' ? '已提交' : item.selectOrder.semiStatus === 'checked'? '通过':item.selectOrder.semiStatus === '已同步' ? '未录入' : '未录入'" placement="top" v-if="(Materails.filter(items => items.code === item.selectOrder.materialCode)).length"><p @click="toRouter('1', item.selectOrder)">半成品领用</p></el-tooltip>-->
+                <!--<p @click="toRouter('1', item.selectOrder)" v-if="(Materails.filter(items => items.code === item.selectOrder.materialCode)).length === 0">半成品领用</p>-->
               </el-col>
               <el-col :span="6" class="dataList_item_btn_item">
                 <el-tooltip class="item" effect="dark" :content="item.selectOrder.supmStatus === 'noPass'? '审核不通过':item.selectOrder.supmStatus === 'saved'? '已保存':item.selectOrder.supmStatus === 'submit' ? '已提交' : item.selectOrder.supmStatus === 'checked'? '通过':item.selectOrder.supmStatus === '已同步' ? '未录入' : '未录入'" placement="top"><p @click="toRouter('2', item.selectOrder)">辅料添加</p></el-tooltip>
