@@ -571,20 +571,26 @@ export default {
         }
       })
       this.ItemList = this.ItemList.filter(function (val) { return val })
-      this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {'tiaoHolder': this.dataList, 'params': this.ItemList}).then(({data}) => {
-        if (data.code === 0) {
-          this.$notify({title: '成功', message: '保存成功', type: 'success'})
-          this.SearchList()
-          // this.ThrowHolder(this.formHeader.workShop)
-          this.dialogTableVisible = false
-        } else {
-          if (data.mes.length === 0) {
-            this.$error_SHINHO(data.msg)
+      if (this.ItemList.length) {
+        this.$http(`${STERILIZED_API.JUICEDEPLOYMENTITEMSAVE}`, 'POST', {'tiaoHolder': this.dataList, 'params': this.ItemList}).then(({data}) => {
+          if (data.code === 0) {
+            this.$notify({title: '成功', message: '保存成功', type: 'success'})
+            this.SearchList()
+            // this.ThrowHolder(this.formHeader.workShop)
+            this.dialogTableVisible = false
           } else {
-            this.$error_SHINHO(data.mes.join(','))
+            if (data.mes.length === 0) {
+              this.$error_SHINHO(data.msg)
+            } else {
+              this.$error_SHINHO(data.mes.join(','))
+            }
           }
-        }
-      })
+        })
+      } else {
+        this.$notify({title: '成功', message: '保存成功', type: 'success'})
+        this.SearchList()
+        this.dialogTableVisible = false
+      }
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
