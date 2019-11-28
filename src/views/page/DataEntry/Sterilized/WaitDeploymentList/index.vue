@@ -66,7 +66,7 @@
         </span>
         <el-row>
           <el-col style="text-align: right">
-            <el-button type="primary" size="small" @click="DoDeploy" :disabled="!isRedact">调配</el-button>
+            <el-button type="primary" size="small" @click="DoDeploy" :disabled="!isRedact">分配</el-button>
           </el-col>
         </el-row>
         <el-table :data="dataList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
