@@ -87,7 +87,7 @@
         </span>
         <el-table :data="dataList" @row-dblclick="GetInfo" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
           <el-table-column type="selection" width="35" :selectable="CheckBoxInit" fixed="left"></el-table-column>
-          <el-table-column label="状态" prop="status" width="95"></el-table-column>
+          <!-- <el-table-column label="状态" prop="status" width="95"></el-table-column> -->
           <el-table-column label="分配单号" prop="orderNo" width="130"></el-table-column>
           <el-table-column label="生产车间" prop="workShopName" width="100"></el-table-column>
           <el-table-column label="分配单日期" prop="allocateDate" width="110"></el-table-column>
