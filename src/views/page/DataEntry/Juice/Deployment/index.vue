@@ -120,7 +120,7 @@
             {{scope.row.unit}}<span v-if="scope.row.materialName === 'Y010'">/{{scope.row.yunit}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="计划领料" prop="planAmount" width="80">
+        <el-table-column label="计划领料" prop="planAmount" width="120">
           <template slot-scope="scope">
             {{scope.row.planAmount}}<span v-if="scope.row.materialName === 'Y010'">/{{scope.row.yplanAmount}}</span>
           </template>
@@ -485,7 +485,7 @@ export default {
         planAmount: row.planAmount,
         yunit: row.yunit,
         yplanAmount: row.yplanAmount,
-        holderId: '',
+        holderId: null,
         receiveAmount: '',
         batch: '',
         remark: '',
@@ -534,8 +534,8 @@ export default {
       }
       // 实际领用数应小于计划领料
       if (this.ItemList.findIndex(item => item.materialName === 'Y010') !== -1) {
-        if (this.ItemList.find(item => item.materialName === 'Y010').planAmount < Y010) {
-          this.$warning_SHINHO('Y010物料实际领料数应小于计划领用数')
+        if (this.ItemList.find(item => item.materialName === 'Y010').planAmount !== Y010) {
+          this.$warning_SHINHO('Y010物料实际领料数总和应等于计划领用数')
           return false
         }
       }
