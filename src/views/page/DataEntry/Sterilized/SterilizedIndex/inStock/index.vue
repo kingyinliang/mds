@@ -126,7 +126,7 @@
 import ExcRecord from '@/views/components/excRecord'
 import TextRecord from '@/views/components/textRecord'
 import {STERILIZED_API} from '@/api/api'
-import {Stesave, dateFormat} from '@/net/validate'
+import {Stesave, dateFormat, accDiv} from '@/net/validate'
 export default {
   name: 'index',
   data () {
@@ -196,7 +196,7 @@ export default {
       this.dataForm = {
         holderId: '',
         batch: '',
-        inAmount: this.formHeader.planOutput,
+        inAmount: accDiv(this.formHeader.planOutput, 1000),
         unit: '',
         inTankAmount: '',
         isFull: '',
