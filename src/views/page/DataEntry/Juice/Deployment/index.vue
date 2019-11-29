@@ -117,12 +117,12 @@
         </el-table-column>
         <el-table-column label="订单单位" width="80" prop="unit">
           <template slot-scope="scope">
-            {{scope.row.unit}}<span v-if="scope.row.materialName === 'Y010'">/{{scope.row.Yunit}}</span>
+            {{scope.row.unit}}<span v-if="scope.row.materialName === 'Y010'">/{{scope.row.yunit}}</span>
           </template>
         </el-table-column>
         <el-table-column label="计划领料" prop="planAmount" width="80">
           <template slot-scope="scope">
-            {{scope.row.planAmount}}<span v-if="scope.row.materialName === 'Y010'">/{{scope.row.YplanAmount}}</span>
+            {{scope.row.planAmount}}<span v-if="scope.row.materialName === 'Y010'">/{{scope.row.yplanAmount}}</span>
           </template>
         </el-table-column>
         <el-table-column width="60">
@@ -483,8 +483,8 @@ export default {
         materialCode: row.materialCode,
         unit: row.unit,
         planAmount: row.planAmount,
-        Yunit: row.Yunit,
-        YplanAmount: row.YplanAmount,
+        yunit: row.yunit,
+        yplanAmount: row.yplanAmount,
         holderId: '',
         receiveAmount: '',
         batch: '',
