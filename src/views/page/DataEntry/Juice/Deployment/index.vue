@@ -503,15 +503,15 @@ export default {
         if (item.materielType !== 'BL_LY') {
           batchList.push(item.batch)
           item.ID = this.ID
-          if (!item.receiveAmount || item.receiveAmount === '') {
+          if ((!item.receiveAmount || item.receiveAmount === '') && item.delFlag === '0') {
             this.$warning_SHINHO('请填写实际领料')
             return false
           }
-          if (!item.batch || item.batch === '') {
+          if ((!item.batch || item.batch === '') && item.delFlag === '0') {
             this.$warning_SHINHO('请填写批次')
             return false
           }
-          if (item.batch.length !== 10) {
+          if ((item.batch.length !== 10) && item.delFlag === '0') {
             this.$warning_SHINHO('批次应为10位')
             return false
           }
