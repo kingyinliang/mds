@@ -489,7 +489,8 @@ export default {
         receiveAmount: '',
         batch: '',
         remark: '',
-        isSplit: '1'
+        isSplit: '1',
+        delFlag: '0'
       })
     },
     // 调配 确定
@@ -514,7 +515,7 @@ export default {
             this.$warning_SHINHO('批次应为10位')
             return false
           }
-          if (item.materialName === 'Y010') {
+          if (item.materialName === 'Y010' && item.delFlag === '0') {
             Y010 = accAdd(Y010, item.receiveAmount)
           }
           // if (item.materialName.indexOf('原汁') !== -1 && (item.holderId === '' || !item.holderId)) {
@@ -533,8 +534,8 @@ export default {
         }
       }
       // 实际领用数应小于计划领料
-      if (this.ItemList.findIndex(item => item.materialName === 'Y010') !== -1) {
-        if (this.ItemList.find(item => item.materialName === 'Y010').planAmount !== Y010) {
+      if (this.ItemList.findIndex(item => item.materialName === 'Y010' && item.delFlag === '0') !== -1) {
+        if (this.ItemList.find(item => item.materialName === 'Y010' && item.delFlag === '0').planAmount !== Y010) {
           this.$warning_SHINHO('Y010物料实际领料数总和应等于计划领用数')
           return false
         }
@@ -689,7 +690,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.ItemList.splice(this.ItemList.indexOf(row), 1)
+        row.delFlag = '1'
+        // this.ItemList.splice(this.ItemList.indexOf(row), 1)
       })
     },
     SplitStatus (row) {
@@ -785,6 +787,8 @@ export default {
     //  RowDelFlag
     RowDelFlag1 ({row, rowIndex}) {
       if (row.materielType === 'BL_LY') {
+        return 'rowDel'
+      } else if (row.delFlag === '1') {
         return 'rowDel'
       } else {
         return ''
