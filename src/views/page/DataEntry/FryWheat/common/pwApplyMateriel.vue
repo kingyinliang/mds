@@ -215,6 +215,10 @@ export default {
   methods: {
     // 申请订单
     saveOrderMateriel () {
+      if (this.materielDataList.length === 0) {
+        this.$warning_SHINHO('请先新增订单')
+        return false
+      }
       for (let sole of this.materielDataList) {
         if (this.BatchTotal.find((item) => item === sole.issueBatch) === undefined) {
           this.BatchTotal.push(sole.issueBatch)
@@ -391,6 +395,9 @@ export default {
         if (data.code === 0) {
           for (let dict of data.dicList) {
             this.$set(this.dictListObj, dict.shname, dict.prolist)
+          }
+          if (this.dictListObj['PW_FEVOR'].length > 0) {
+            this.dispatcherCode = this.dictListObj['PW_FEVOR'][0].code
           }
         } else {
           this.$notify.error({title: '错误', message: data.msg})
