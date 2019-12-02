@@ -422,6 +422,7 @@ export default {
             currentRecord = this.wheatDataList.filter(data => data.id === this.stockForm.id)
           }
           this.stockForm.inPortWeight = (this.stockForm.endWeight - this.stockForm.startWeight).toFixed(2)
+          this.stockForm.wheatDeviceName = this.wheatContainerList.find(item => item.holderId === this.stockForm.wheatDeviceId).holderName
           if (currentRecord && currentRecord.length > 0) {
             // modify
             Object.assign(currentRecord[0], this.stockForm)
