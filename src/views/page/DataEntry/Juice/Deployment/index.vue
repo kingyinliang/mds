@@ -459,6 +459,9 @@ export default {
         if (data.code === 0) {
           this.ItemList = data.info
           this.ItemList.map((item) => {
+            if (item.id === undefined) {
+              item.id = ''
+            }
             this.changeH(item)
             if (item.receiveAmount === '' || !item.receiveAmount) {
               item.receiveAmount = item.planAmount
@@ -490,7 +493,8 @@ export default {
         batch: '',
         remark: '',
         isSplit: '1',
-        delFlag: '0'
+        delFlag: '0',
+        id: ''
       })
     },
     // 调配 确定
