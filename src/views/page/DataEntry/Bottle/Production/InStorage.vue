@@ -19,7 +19,7 @@
       <el-table-column label="本班生产 " :show-overflow-tooltip="true" prop="production" width="190">
         <template slot="header"><i class="reqI">*</i><span>本班生产</span></template>
         <template slot-scope="scope">
-          <el-input v-model="scope.row.production" type="number" @change="ChangeNum()" placeholder="手工录入" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))"></el-input>
+          <el-input v-model="scope.row.production" type="number" placeholder="手工录入" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="单位" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="60">
@@ -49,7 +49,13 @@ export default {
   data () {
     return {
       InDataList: [],
-      InAudit: []
+      InAudit: [],
+      num: ''
+    }
+  },
+  watch: {
+    'num' (n, o) {
+      this.setAmount(n)
     }
   },
   props: {
@@ -64,6 +70,19 @@ export default {
   mounted () {
   },
   methods: {
+    setNum (num) {
+      let tmp = num
+      this.num = JSON.stringify(tmp)
+    },
+    setAmount (num) {
+      this.InDataList.forEach(item => {
+        if (!item.status) {
+          item.production = num
+        } else if (item.status === 'saved' || item.status === 'noPass') {
+          item.production = num
+        }
+      })
+    },
     // 获取生产入库
     getDataList () {
       let status = ''
