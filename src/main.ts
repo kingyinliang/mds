@@ -18,15 +18,15 @@ import '@/assets/scss/index.scss'
 import App from './App.vue'
 // import 'script-loader!file-saver'
 // funDebug
-import fundebugVue from 'fundebug-vue'
-let version = 'dev'
-if (process.env.NODE_ENV === 'production') {
-  version = require('@/version')
-  let fundebug = require('fundebug-javascript')
-  fundebug.apikey = '208950dc06f14c77de3e8b9ee5dcaf107f7586d95d5340696aa96bfd59d4a1d4'
-  fundebugVue(fundebug, Vue)
-  require('fundebug-revideo')
-}
+// import fundebugVue from 'fundebug-vue'
+// let version = 'dev'
+// if (process.env.NODE_ENV === 'production') {
+//   version = require('@/version')
+//   let fundebug = require('fundebug-javascript')
+//   fundebug.apikey = '208950dc06f14c77de3e8b9ee5dcaf107f7586d95d5340696aa96bfd59d4a1d4'
+//   fundebugVue(fundebug, Vue)
+//   require('fundebug-revideo')
+// }
 // queryTable
 import query_table from '@/components/QueryTable/index'
 Vue.use(query_table)
