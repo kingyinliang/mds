@@ -40,8 +40,8 @@
           <el-table-column width="130">
             <template slot="header"><i class="reqI">*</i><span>罐号</span></template>
             <template slot-scope="scope">
-              <el-select v-model="scope.row.hloderId" @change="setBatch(scope.row)" placeholder="请选择" filterable size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))">
-              <!--<el-select v-model="scope.row.hloderId" placeholder="请选择" filterable size="mini" disabled>-->
+              <el-select v-model="scope.row.holderId" @change="setBatch(scope.row)" placeholder="请选择" filterable size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))">
+              <!--<el-select v-model="scope.row.holderId" placeholder="请选择" filterable size="mini" disabled>-->
                 <el-option v-for="(sole, index) in PotList" :key="index" :value="sole.holderId" :label="sole.holderName"></el-option>
               </el-select>
             </template>
@@ -102,7 +102,8 @@ export default {
       orderStatus: '',
       PotList: [],
       DataAudit: [],
-      MaterialDate: []
+      MaterialDate: [],
+      MaterialDate1: []
     }
   },
   mounted () {
@@ -119,7 +120,19 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.MaterialDate = data.list
+          this.MaterialDate1 = JSON.parse(JSON.stringify(data.list))
           this.DataAudit = data.vList
+          this.MaterialDate.forEach(item => {
+            if (this.PotList.filter(it => item.holderId === it.holderId).length) {} else {
+              this.PotList.push({
+                type: '1',
+                amount: item.receiveAmount,
+                holderId: item.holderId,
+                holderName: item.holderName,
+                batch: item.batch
+              })
+            }
+          })
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -129,7 +142,7 @@ export default {
     addData (row, index) {
       this.MaterialDate.splice(index + 1, 0, {
         delFlag: '0',
-        hloderId: '',
+        holderId: '',
         id: '',
         indexNum: '',
         isSplit: '0',
@@ -153,11 +166,23 @@ export default {
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
+        if (this.formHeader.status !== '') {
+          this.GetDataList()
+          this.$refs.excrecord.GetExcDate({
+            order_id: this.formHeader.orderId,
+            sign: 'Semi'
+          })
+          this.$refs.textrecord.GetText({
+            order_id: this.formHeader.orderId,
+            sign: 'Semi'
+          })
+        }
       })
     },
     setBatch (row) {
-      row.batch = this.PotList.filter(items => items.holderId === row.hloderId)[0].batch
-      row.receiveAmount = this.PotList.filter(items => items.holderId === row.hloderId)[0].amount
+      row.batch = this.PotList.filter(items => items.holderId === row.holderId)[0].batch
+      row.holderName = this.PotList.filter(items => items.holderId === row.holderId)[0].holderName
+      // row.receiveAmount = this.PotList.filter(items => items.holderId === row.holderId)[0].amount
     },
     delRow (row) {
       this.$confirm('是否删除?', '提示', {
@@ -217,6 +242,36 @@ export default {
           return
         }
       }
+      for (let item of this.MaterialDate) {
+        if (/原汁/g.test(item.holderName)) {
+          if (item.id) {
+            if (this.PotList.filter(it => item.holderId === it.holderId)[0].type === '1') {
+              if (this.PotList.filter(it => item.holderId === it.holderId)[0].amount < item.receiveAmount) {
+                this.$warning_SHINHO(`${item.holderName}库存不足,请调整`)
+                return false
+              }
+            } else {
+              if (this.MaterialDate1.filter(it => it.holderId === item.holderId).length) {
+                console.log(Number(this.PotList.filter(it => item.holderId === it.holderId)[0].amount) + Number(this.MaterialDate1.filter(it => it.holderId === item.holderId)[0].receiveAmount))
+                if (Number(this.PotList.filter(it => item.holderId === it.holderId)[0].amount) + Number(this.MaterialDate1.filter(it => it.holderId === item.holderId)[0].receiveAmount) < item.receiveAmount) {
+                  this.$warning_SHINHO(`${item.holderName}库存不足,请调整`)
+                  return false
+                }
+              } else {
+                if (this.PotList.filter(it => item.holderId === it.holderId)[0].amount < item.receiveAmount) {
+                  this.$warning_SHINHO(`${item.holderName}库存不足,请调整`)
+                  return false
+                }
+              }
+            }
+          } else {
+            if (this.PotList.filter(it => item.holderId === it.holderId)[0].amount < item.receiveAmount) {
+              this.$warning_SHINHO(`${item.holderName}库存不足,请调整`)
+              return false
+            }
+          }
+        }
+      }
       let net1 = new Promise((resolve, reject) => {
         this.Stesave.excUpdate(this, 'Semi', resolve, reject)
       })
@@ -263,7 +318,7 @@ export default {
       let ty = true
       this.MaterialDate.forEach((item) => {
         if (!item.isT) {
-          if (!item.hloderId && /原汁/.test(item.materialName)) {
+          if (!item.holderId && /原汁/.test(item.materialName)) {
             ty = false
             this.$warning_SHINHO('罐号未填')
             return false
@@ -293,17 +348,6 @@ export default {
           this.Stesave = new Stesave(this.formHeader)
           this.$refs.excrecord.GetequipmentType(this.formHeader.productLine)
           this.$refs.excrecord.getDataList(this.formHeader.factory)
-          if (this.formHeader.status !== '') {
-            this.GetDataList()
-            this.$refs.excrecord.GetExcDate({
-              order_id: this.formHeader.orderId,
-              sign: 'Semi'
-            })
-            this.$refs.textrecord.GetText({
-              order_id: this.formHeader.orderId,
-              sign: 'Semi'
-            })
-          }
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }

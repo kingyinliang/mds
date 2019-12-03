@@ -29,7 +29,7 @@
             <el-option :label="item.MATERIAL_CODE + ' ' + item.MATERIAL_NAME" v-for="(item, index) in productionMaterielCode" :key="index" :value="item.MATERIAL_CODE"></el-option>
           </el-select>
         </el-form-item>
-        <el-row v-if="addAndupdate">
+        <el-row>
           <el-row style="width: 510px;" v-for="(item, index) in AddDialogTable.useMateriel" :key="index">
             <el-col style="width: 290px">
               <el-form-item label="领用物料：">
@@ -51,18 +51,18 @@
             </el-col>
           </el-row>
         </el-row>
-        <el-row v-else>
-          <el-form-item label="领用物料：">
-            <el-select v-model="AddDialogTable.useMaterielCode" filterable placeholder="请选择" style="width: 100%" @change="(e)=>{AddDialogTable.useMaterielName = useMaterielCode.filter(it => it.MATERIAL_CODE === e)[0].MATERIAL_NAME}">
-              <el-option :label="item.MATERIAL_CODE + ' ' + item.MATERIAL_NAME" v-for="(item, index) in useMaterielCode" :key="index" :value="item.MATERIAL_CODE"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="BL_LY标识：">
-            <el-select v-model="AddDialogTable.type" placeholder="请选择" style="width: 100%">
-              <el-option :label="item.label" v-for="(item, index) in queryFormData[3].options" :key="index" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-row>
+        <!--<el-row v-else>-->
+          <!--<el-form-item label="领用物料：">-->
+            <!--<el-select v-model="AddDialogTable.useMaterielCode" filterable placeholder="请选择" style="width: 100%" @change="(e)=>{AddDialogTable.useMaterielName = useMaterielCode.filter(it => it.MATERIAL_CODE === e)[0].MATERIAL_NAME}">-->
+              <!--<el-option :label="item.MATERIAL_CODE + ' ' + item.MATERIAL_NAME" v-for="(item, index) in useMaterielCode" :key="index" :value="item.MATERIAL_CODE"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="BL_LY标识：">-->
+            <!--<el-select v-model="AddDialogTable.type" placeholder="请选择" style="width: 100%">-->
+              <!--<el-option :label="item.label" v-for="(item, index) in queryFormData[3].options" :key="index" :value="item.value"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-form-item>-->
+        <!--</el-row>-->
         <el-form-item label="备注：">
           <el-input v-model="AddDialogTable.remark" placeholder="手动输入" clearable></el-input>
         </el-form-item>
@@ -212,7 +212,21 @@ export default {
       this.AddDialogTableVisible = true
       if (row) {
         this.addAndupdate = false
-        this.AddDialogTable = row
+        // this.AddDialogTable = JSON.parse(JSON.stringify(row))
+        this.AddDialogTable = {
+          id: row.id,
+          factory: row.factory,
+          productionMaterielCode: row.productionMaterielCode,
+          productionMaterielName: row.productionMaterielName,
+          useMateriel: [
+            {
+              useMaterielCode: row.useMaterielCode,
+              useMaterielName: row.useMaterielName,
+              type: row.type
+            }
+          ],
+          remark: row.remark
+        }
       } else {
         this.addAndupdate = true
         this.AddDialogTable = {
@@ -237,13 +251,13 @@ export default {
     submitForm () {
       this.$refs.AddDialogTable.validate((valid) => {
         if (valid) {
-          if (!this.addAndupdate) {
-            this.AddDialogTable.useMateriel = [{
-              useMaterielCode: this.AddDialogTable.useMaterielCode,
-              useMaterielName: this.AddDialogTable.useMaterielName,
-              type: this.AddDialogTable.type
-            }]
-          }
+          // if (!this.addAndupdate) {
+          //   this.AddDialogTable.useMateriel = [{
+          //     useMaterielCode: this.AddDialogTable.useMaterielCode,
+          //     useMaterielName: this.AddDialogTable.useMaterielName,
+          //     type: this.AddDialogTable.type
+          //   }]
+          // }
           this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_SAVE}`, 'POST', this.AddDialogTable).then(({data}) => {
             if (data.code === 0) {
               this.AddDialogTableVisible = false
@@ -278,6 +292,7 @@ export default {
     },
     addUseMateriel () {
       this.AddDialogTable.useMateriel.push({ useMaterielCode: '', useMaterielName: '', type: '' })
+      console.log(this.AddDialogTable.useMateriel)
     },
     delUseMateriel (index) {
       this.AddDialogTable.useMateriel.splice(index, 1)
