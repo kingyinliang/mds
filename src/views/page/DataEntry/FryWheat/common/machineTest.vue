@@ -1,5 +1,6 @@
 <template>
-<el-dialog :title="`${machineName}检测`" :visible.sync="visible" width="850px">
+<el-dialog :visible.sync="visible" width="850px" custom-class='dialog__class' :close-on-click-modal="false">
+  <div slot="title" style="line-hight:59px">{{machineName}}检测</div>
   <el-button type="primary" @click="AddMachineTest" size="small" style="float: right;margin-bottom: 15px">新增</el-button>
   <el-table :data="machineTest" header-row-class-name="tableHead" :row-class-name="RowDelFlag"  border tooltip-effect="dark">
     <el-table-column label="检测时间" width="160">
@@ -7,17 +8,26 @@
         <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="scope.row.checkTime" size="small"></el-date-picker>
       </template>
     </el-table-column>
-    <el-table-column label="焦糊率（%）*" width="120">
+    <el-table-column width="120">
+      <template slot="header">
+        <i class="reqI">*</i> 焦糊率（%）
+      </template>
       <template slot-scope="scope">
         <el-input v-model="scope.row.cokingRate" size="small"></el-input>
       </template>
     </el-table-column>
-    <el-table-column label="膨胀率*" width="120">
+    <el-table-column width="120">
+      <template slot="header">
+        <i class="reqI">*</i> 膨胀率
+      </template>
       <template slot-scope="scope">
         <el-input v-model="scope.row.expandRate" size="small"></el-input>
       </template>
     </el-table-column>
-    <el-table-column label="粉碎度*" width="120">
+    <el-table-column width="120">
+      <template slot="header">
+        <i class="reqI">*</i> 粉碎度
+      </template>
       <template slot-scope="scope">
         <el-input v-model="scope.row.piecesRate" size="small"></el-input>
       </template>
@@ -84,6 +94,7 @@ export default {
         remark: '',
         orderId: this.orderId,
         deviceId: this.machineId,
+        changer: this.$store.state.user.realName + '(' + this.$store.state.user.name + ')',
         delFlag: '0'
       })
     },

@@ -115,8 +115,16 @@
             {{scope.row.materialCode}} {{scope.row.materialName}}
           </template>
         </el-table-column>
-        <el-table-column label="订单单位" width="80" prop="unit"></el-table-column>
-        <el-table-column label="计划领料" prop="planAmount" width="80"></el-table-column>
+        <el-table-column label="订单单位" width="80" prop="unit">
+          <template slot-scope="scope">
+            {{scope.row.unit}}<span v-if="scope.row.materialName === 'Y010'">/{{scope.row.yunit}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="计划领料" prop="planAmount" width="120">
+          <template slot-scope="scope">
+            {{scope.row.planAmount}}<span v-if="scope.row.materialName === 'Y010'">/{{scope.row.yplanAmount}}</span>
+          </template>
+        </el-table-column>
         <el-table-column width="60">
           <template slot-scope="scope">
             <el-button type="text" :disabled="SplitStatus(scope.row)" @click="SplitDate(scope.row, scope.$index)"><i class="icons iconfont factory-chaifen"></i>拆分</el-button>
@@ -255,7 +263,7 @@
 </template>
 
 <script>
-import {headanimation, dateFormat} from '@/net/validate'
+import {headanimation, dateFormat, accAdd} from '@/net/validate'
 import {BASICDATA_API, STERILIZED_API, SYSTEMSETUP_API} from '@/api/api'
 export default {
   name: 'JuiceDeployment',
@@ -451,6 +459,9 @@ export default {
         if (data.code === 0) {
           this.ItemList = data.info
           this.ItemList.map((item) => {
+            if (item.id === undefined) {
+              item.id = ''
+            }
             this.changeH(item)
             if (item.receiveAmount === '' || !item.receiveAmount) {
               item.receiveAmount = item.planAmount
@@ -475,11 +486,15 @@ export default {
         materialCode: row.materialCode,
         unit: row.unit,
         planAmount: row.planAmount,
-        holderId: '',
+        yunit: row.yunit,
+        yplanAmount: row.yplanAmount,
+        holderId: null,
         receiveAmount: '',
         batch: '',
         remark: '',
-        isSplit: 1
+        isSplit: '1',
+        delFlag: '0',
+        id: ''
       })
     },
     // 调配 确定
@@ -487,21 +502,25 @@ export default {
       let batchList = []
       let ty = true
       let strMsg = ''
+      let Y010 = 0
       for (let item of this.ItemList) {
         if (item.materielType !== 'BL_LY') {
           batchList.push(item.batch)
           item.ID = this.ID
-          if (!item.receiveAmount || item.receiveAmount === '') {
+          if ((!item.receiveAmount || item.receiveAmount === '') && item.delFlag === '0') {
             this.$warning_SHINHO('请填写实际领料')
             return false
           }
-          if (!item.batch || item.batch === '') {
+          if ((!item.batch || item.batch === '') && item.delFlag === '0') {
             this.$warning_SHINHO('请填写批次')
             return false
           }
-          if (item.batch.length !== 10) {
+          if ((item.batch.length !== 10) && item.delFlag === '0') {
             this.$warning_SHINHO('批次应为10位')
             return false
+          }
+          if (item.materialName === 'Y010' && item.delFlag === '0') {
+            Y010 = accAdd(Y010, item.receiveAmount)
           }
           // if (item.materialName.indexOf('原汁') !== -1 && (item.holderId === '' || !item.holderId)) {
           //   this.$warning_SHINHO('原汁物料需选择罐号')
@@ -516,6 +535,13 @@ export default {
           //     return false
           //   }
           // }
+        }
+      }
+      // 实际领用数应小于计划领料
+      if (this.ItemList.findIndex(item => item.materialName === 'Y010' && item.delFlag === '0') !== -1) {
+        if (this.ItemList.find(item => item.materialName === 'Y010' && item.delFlag === '0').planAmount !== Y010) {
+          this.$warning_SHINHO('Y010物料实际领料数总和应等于计划领用数')
+          return false
         }
       }
       // if (this.Tdata.cDay !== null && this.Tdata.cDay * 1 < 6) {
@@ -655,6 +681,7 @@ export default {
     },
     handleSizeChange (val) {
       this.pages.pageSize = val
+      this.dataList = this.dataListAll.slice((this.pages.currentPage - 1) * this.pages.pageSize, this.pages.currentPage * this.pages.pageSize)
     },
     handleCurrentChange (val) {
       this.pages.currentPage = val
@@ -667,7 +694,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.ItemList.splice(this.ItemList.indexOf(row), 1)
+        row.delFlag = '1'
+        // this.ItemList.splice(this.ItemList.indexOf(row), 1)
       })
     },
     SplitStatus (row) {
@@ -763,6 +791,8 @@ export default {
     //  RowDelFlag
     RowDelFlag1 ({row, rowIndex}) {
       if (row.materielType === 'BL_LY') {
+        return 'rowDel'
+      } else if (row.delFlag === '1') {
         return 'rowDel'
       } else {
         return ''
