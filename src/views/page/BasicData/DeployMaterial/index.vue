@@ -2,18 +2,19 @@
   <div class="header_main">
     <query-table
       ref="queryTable"
-      :query-auth="'report:formh:getAllStatusList'"
+      :query-auth="'ste:material:list'"
       :show-operation-column="true"
+      :operation-column-width="70"
       :show-select-column="true"
       :list-interface="listInterface"
       :queryFormData="queryFormData"
       :column="column">
       <template slot="mds-button">
-        <el-button type="primary" size="small" @click="addOrupdate()" v-if="isAuth('sys:holder:save')">新增</el-button>
-        <el-button type="danger" size="small" @click="remove" v-if="isAuth('sys:holder:delete')">批量删除</el-button>
+        <el-button type="primary" size="small" @click="addOrupdate()" v-if="isAuth('ste:material:dataInsert')">新增</el-button>
+        <el-button type="danger" size="small" @click="remove" v-if="isAuth('ste:material:del')">批量删除</el-button>
       </template>
       <template slot="operation_column" slot-scope="{scope}">
-        <el-button class="ra_btn" type="primary" round size="mini" @click="addOrupdate(scope.row)">编辑</el-button>
+        <el-button class="ra_btn" type="primary" round size="mini" @click="addOrupdate(scope.row)" v-if="isAuth('ste:material:dataInsert')">编辑</el-button>
       </template>
     </query-table>
     <el-dialog :visible.sync="AddDialogTableVisible" :close-on-click-modal="false" width="550px" custom-class='dialog__class'>
@@ -113,6 +114,7 @@ export default {
           optionsFn: (val) => {
             return this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_SELECT_LIST}`, 'POST', {factory: val})
           },
+          filterable: true,
           defaultValue: '',
           resVal: {
             resData: 'materielList.productionMateriel',
@@ -128,6 +130,7 @@ export default {
             return this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_SELECT_LIST}`, 'POST', {factory: val})
           },
           defaultValue: '',
+          filterable: true,
           resVal: {
             resData: 'materielList.useMateriel',
             label: ['MATERIAL_CODE', 'MATERIAL_NAME'],
@@ -212,21 +215,20 @@ export default {
       this.AddDialogTableVisible = true
       if (row) {
         this.addAndupdate = false
-        // this.AddDialogTable = JSON.parse(JSON.stringify(row))
-        this.AddDialogTable = {
-          id: row.id,
-          factory: row.factory,
-          productionMaterielCode: row.productionMaterielCode,
-          productionMaterielName: row.productionMaterielName,
-          useMateriel: [
-            {
-              useMaterielCode: row.useMaterielCode,
-              useMaterielName: row.useMaterielName,
-              type: row.type
+        this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_ROWLIST}`, 'POST', {factory: row.factory, productionMaterielCode: row.productionMaterielCode}).then(({data}) => {
+          if (data.code === 0) {
+            this.AddDialogTable = {
+              id: row.id,
+              factory: row.factory,
+              productionMaterielCode: row.productionMaterielCode,
+              productionMaterielName: row.productionMaterielName,
+              useMateriel: data.page,
+              remark: row.remark
             }
-          ],
-          remark: row.remark
-        }
+          } else {
+            this.$error_SHINHO(data.msg)
+          }
+        })
       } else {
         this.addAndupdate = true
         this.AddDialogTable = {
@@ -258,7 +260,7 @@ export default {
           //     type: this.AddDialogTable.type
           //   }]
           // }
-          this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_SAVE}`, 'POST', this.AddDialogTable).then(({data}) => {
+          this.$http(`${!this.addAndupdate ? BASICDATA_API.DEPLOY_MATERIAL_SAVE : BASICDATA_API.DEPLOY_MATERIAL_UPDATE}`, 'POST', this.AddDialogTable).then(({data}) => {
             if (data.code === 0) {
               this.AddDialogTableVisible = false
               this.$success_SHINHO('操作成功')
@@ -291,8 +293,7 @@ export default {
       }
     },
     addUseMateriel () {
-      this.AddDialogTable.useMateriel.push({ useMaterielCode: '', useMaterielName: '', type: '' })
-      console.log(this.AddDialogTable.useMateriel)
+      this.AddDialogTable.useMateriel.push({ id: '', useMaterielCode: '', useMaterielName: '', type: '' })
     },
     delUseMateriel (index) {
       this.AddDialogTable.useMateriel.splice(index, 1)

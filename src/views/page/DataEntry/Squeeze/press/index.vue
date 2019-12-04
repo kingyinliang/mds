@@ -181,6 +181,7 @@ export default {
         this.$warning_SHINHO('请选择生产车间')
         return false
       }
+      this.formHeader.workShopName = this.workshop.find(item => item.deptId === this.formHeader.workShop).deptName
       if (!this.formHeader.productLine || this.formHeader.productLine === '') {
         this.$warning_SHINHO('请选择布浆线')
         return false

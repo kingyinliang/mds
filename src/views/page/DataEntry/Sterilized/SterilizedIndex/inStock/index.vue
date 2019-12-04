@@ -108,10 +108,10 @@
           <el-input v-model="dataForm.remark" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="操作人：">
-          {{$store.state.user.realName + '（' + this.$store.state.user.name + '）'}}
+          {{dataForm.changer}}
         </el-form-item>
         <el-form-item label="操作时间：">
-          {{dataForm.date}}
+          {{dataForm.changed}}
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -208,19 +208,21 @@ export default {
         delFlag: '0',
         materialCode: this.formHeader.materialCode,
         materialName: this.formHeader.materialName,
-        id: ''
+        id: '',
+        changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+        changer: this.$store.state.user.realName + '（' + this.$store.state.user.name + '）'
       }
     },
     PotinTankAmount1 () {
       if (this.dataForm.holderId) {
-        this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount ? this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1
+        this.dataForm.inTankAmount = (this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount ? this.PotList.filter(item => item.holderId === this.dataForm.holderId)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1).toFixed(2) * 1
       }
     },
     PotinTankAmount (id) {
       if (this.isUpdate) {
-        this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 - this.oldInAmount : 0 + this.dataForm.inAmount * 1
+        this.dataForm.inTankAmount = (this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 - this.oldInAmount : 0 + this.dataForm.inAmount * 1).toFixed(2) * 1
       } else {
-        this.dataForm.inTankAmount = this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1
+        this.dataForm.inTankAmount = (this.PotList.filter(item => item.holderId === id)[0].amount ? this.PotList.filter(item => item.holderId === id)[0].amount + this.dataForm.inAmount * 1 : 0 + this.dataForm.inAmount * 1).toFixed(2) * 1
       }
       this.dataForm.batch = this.PotList.filter(item => item.holderId === id)[0].batch
       this.PotObject.inTankAmount = true

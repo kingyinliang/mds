@@ -88,7 +88,7 @@
           <el-row  style="margin-top:20px;" >
             <el-col>
               <el-table @row-dblclick="modifyOldRecord" header-row-class-name="tableHead" :data="wheatDataList"  border tooltip-effect="dark" :row-class-name="rowDelFlag">
-                <el-table-column label="日期" width="130">
+                <el-table-column label="日期" width="100">
                   <template slot-scope="scope">
                     {{scope.row.inPortDate | formatDate}}
                   </template>
@@ -101,7 +101,7 @@
                     {{scope.row.flourDeviceName}}
                   </template>
                 </el-table-column>
-                <el-table-column width="80" label="粮仓">
+                <el-table-column label="粮仓" show-overflow-tooltip>
                   <template slot-scope="scope">
                     {{scope.row.wheatDeviceName}}
                   </template>
@@ -116,27 +116,27 @@
                     <span>{{scope.row.endWeight}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="入库数" width="120">
+                <el-table-column label="入库数" width="100">
                   <template slot-scope="scope">
                     <span>{{scope.row.inPortWeight}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="单位" width="80">
+                <el-table-column label="单位" width="50">
                   <template slot-scope="scope">
                      <span>{{scope.row.weightUnit = 'KG'}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="入库批次" width="150">
+                <el-table-column label="入库批次" width="110">
                   <template slot-scope="scope">
                      <span>{{scope.row.inPortBatch}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作人员" width="100">
+                <el-table-column label="操作人员" width="100" show-overflow-tooltip>
                   <template slot-scope="scope">
                      <span>{{scope.row.changer}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作时间" width="100">
+                <el-table-column label="操作时间" width="160" show-overflow-tooltip>
                   <template slot-scope="scope">
                      <span>{{scope.row.changed}}</span>
                   </template>
@@ -238,7 +238,8 @@ export default {
           {required: true, message: '必填', trigger: 'blur'},
           {max: 10, message: '长度不能超过10', trigger: 'blur'}
         ]
-      }
+      },
+      batchList: []
     }
   },
   mounted () {
@@ -421,6 +422,7 @@ export default {
             currentRecord = this.wheatDataList.filter(data => data.id === this.stockForm.id)
           }
           this.stockForm.inPortWeight = (this.stockForm.endWeight - this.stockForm.startWeight).toFixed(2)
+          this.stockForm.wheatDeviceName = this.wheatContainerList.find(item => item.holderId === this.stockForm.wheatDeviceId).holderName
           if (currentRecord && currentRecord.length > 0) {
             // modify
             Object.assign(currentRecord[0], this.stockForm)
@@ -489,14 +491,15 @@ export default {
       }
     },
     changeWheatContainer (value) {
-      let wheat = this.wheatContainerList.find((item) => item.holderId === value)
-      let holderNo = ''
-      if (wheat) {
-        this.stockForm.wheatDeviceName = wheat.holderName
-        holderNo = wheat.holderNo
-      }
-      let now = new Date()
-      this.stockForm.inPortBatch = dateFormat(now, 'yyMMdd') + holderNo
+      // let wheat = this.wheatContainerList.find((item) => item.holderId === value)
+      // let holderNo = ''
+      // if (wheat) {
+      //   this.stockForm.wheatDeviceName = wheat.holderName
+      //   holderNo = wheat.holderNo
+      // }
+      // let now = new Date()
+      // this.stockForm.inPortBatch = dateFormat(now, 'yyMMdd') + holderNo
+      this.stockForm.inPortBatch = this.batchList.find((item) => item.holderId === value && item.littleHolderId === this.stockForm.flourDeviceId).batch
     },
     // 删除
     dellistbomS (row) {
@@ -515,6 +518,16 @@ export default {
       } else {
         return ''
       }
+    },
+    // 那批次
+    getBatch (workshop) {
+      this.$http(`${WHT_API.INSTORAGEBATCHLIST_API}`, 'POST', {workShop: workshop}).then(({data}) => {
+        if (data.code === 0) {
+          this.batchList = data.list
+        } else {
+          this.$warning_SHINHO(data.msg)
+        }
+      })
     }
   },
   computed: {

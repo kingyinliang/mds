@@ -33,28 +33,58 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card class="secondcard">
-      <el-row>
-        <el-col style="text-align: right">
-          <el-button type="primary" size="small" @click="DoDeploy" :disabled="!isRedact">调配</el-button>
-        </el-col>
-      </el-row>
-      <el-table :data="dataList" :row-key="getRowKeys" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
-        <el-table-column type="selection" width="35" :selectable="CheckBoxInit"></el-table-column>
-        <el-table-column label="订单号" prop="orderNo" width="120"></el-table-column>
-        <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
-          <template slot-scope="scope">
-            {{scope.row.materialCode}} {{scope.row.materialName}}
-          </template>
-        </el-table-column>
-        <el-table-column label="订单数量" prop="planOutput" width="80"></el-table-column>
-        <el-table-column label="订单单位" prop="outputUnit" width="80"></el-table-column>
-        <el-table-column label="订单开始日期" prop="productDate"></el-table-column>
-        <!-- <el-table-column label="订单结束日期"></el-table-column> -->
-        <el-table-column label="生产调度员" prop="dispatchMan"></el-table-column>
-        <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column label="操作"></el-table-column>
-      </el-table>
+    <el-tabs ref='tabs' v-model="activeName" @tab-click="handleClick" id="DaatTtabs" class="NewDaatTtabs secondcard" type="border-card" style="border-radius: 15px;overflow: hidden">
+      <el-tab-pane name="BL">
+        <span slot="label" class="spanview">
+          <el-button>待调配</el-button>
+        </span>
+        <el-row>
+          <el-col style="text-align: right">
+            <el-button type="primary" size="small" @click="DoDeploy" :disabled="!isRedact">调配</el-button>
+          </el-col>
+        </el-row>
+        <el-table :data="dataList" :row-key="getRowKeys" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
+          <el-table-column type="selection" width="35" :selectable="CheckBoxInit"></el-table-column>
+          <el-table-column label="订单号" prop="orderNo" width="120"></el-table-column>
+          <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+            <template slot-scope="scope">
+              {{scope.row.materialCode}} {{scope.row.materialName}}
+            </template>
+          </el-table-column>
+          <el-table-column label="订单数量" prop="planOutput" width="80"></el-table-column>
+          <el-table-column label="订单单位" prop="outputUnit" width="80"></el-table-column>
+          <el-table-column label="订单开始日期" prop="productDate"></el-table-column>
+          <!-- <el-table-column label="订单结束日期"></el-table-column> -->
+          <el-table-column label="生产调度员" prop="dispatchMan"></el-table-column>
+          <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="操作"></el-table-column>
+        </el-table>
+      </el-tab-pane>
+      <el-tab-pane name="LY">
+        <span slot="label" class="spanview">
+          <el-button>待分配</el-button>
+        </span>
+        <el-row>
+          <el-col style="text-align: right">
+            <el-button type="primary" size="small" @click="DoDeploy" :disabled="!isRedact">分配</el-button>
+          </el-col>
+        </el-row>
+        <el-table :data="dataList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
+          <el-table-column type="selection" width="35" :selectable="CheckBoxInit"></el-table-column>
+          <el-table-column label="订单号" prop="orderNo" width="120"></el-table-column>
+          <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+            <template slot-scope="scope">
+              {{scope.row.materialCode}} {{scope.row.materialName}}
+            </template>
+          </el-table-column>
+          <el-table-column label="订单数量" prop="planOutput" width="80"></el-table-column>
+          <el-table-column label="订单单位" prop="outputUnit" width="80"></el-table-column>
+          <el-table-column label="订单开始日期" prop="productDate"></el-table-column>
+          <el-table-column label="生产调度员" prop="dispatchMan"></el-table-column>
+          <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="操作"></el-table-column>
+        </el-table>
+      </el-tab-pane>
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -64,7 +94,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="formHeader.totalCount">
       </el-pagination>
-    </el-card>
+    </el-tabs>
   </div>
 </template>
 
@@ -74,14 +104,17 @@ export default {
   name: 'watiDeploymentList',
   data () {
     return {
+      activeName: 'BL',
       isRedact: false,
       formHeader: {
         factory: '',
         workShop: '',
         materialCode: '',
+        created: '',
         currPage: 1,
         pageSize: 10,
-        totalCount: 0
+        totalCount: 0,
+        type: 'BL'
       },
       factory: [],
       workshop: [],
@@ -177,19 +210,12 @@ export default {
       if (st) {
         this.formHeader.currPage = 1
       }
-      let prarms = {
-        factory: this.formHeader.factory,
-        workShop: this.formHeader.workShop,
-        created: this.formHeader.created,
-        materialCode: this.formHeader.materialCode,
-        currPage: '1',
-        pageSize: '9000'
-      }
-      this.$http(`${STERILIZED_API.WAITDEPLOYMENTLIST_API}`, 'POST', prarms).then(({data}) => {
+      this.formHeader.type = this.activeName
+      this.$http(`${STERILIZED_API.WAITDEPLOYMENTLIST_API}`, 'POST', this.formHeader).then(({data}) => {
         if (data.code === 0) {
-          this.dataListAll = data.orderInfo.list
-          this.dataList = data.orderInfo.list.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, Number((this.formHeader.currPage - 1) * this.formHeader.pageSize) + Number(this.formHeader.pageSize))
-          this.formHeader.totalCount = this.dataListAll.length
+          this.dataList = data.orderInfo.list
+          // this.dataList = data.orderInfo.list.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, Number((this.formHeader.currPage - 1) * this.formHeader.pageSize) + Number(this.formHeader.pageSize))
+          this.formHeader.totalCount = data.orderInfo.totalCount
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -218,7 +244,7 @@ export default {
         }
         let planOutputTotal = 0
         this.checkList.map((item) => {
-          planOutputTotal = planOutputTotal + this.dataListAll.find(items => item === items.orderNo)['planOutput']
+          planOutputTotal = planOutputTotal + this.dataList.find(items => item === items.orderNo)['planOutput']
         })
         this.Sterilized = {
           factory: this.factory.find(item => item.deptId === this.formHeader.factory)['deptName'],
@@ -229,8 +255,10 @@ export default {
           orderNo: '',
           planOutputTotal: planOutputTotal,
           materialCode: materialCode,
-          materialName: this.multipleSelection[0].materialName
+          materialName: this.multipleSelection[0].materialName,
+          type: this.activeName
         }
+        console.log(this.Sterilized)
         this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Sterilized-WaitDeploymentList-doDeployment')
         setTimeout(() => {
           this.$router.push({ name: `DataEntry-Sterilized-WaitDeploymentList-doDeployment` })
@@ -239,14 +267,21 @@ export default {
     },
     handleSizeChange (val) {
       this.formHeader.pageSize = val
-      this.dataList = this.dataListAll.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, Number((this.formHeader.currPage - 1) * this.formHeader.pageSize) + Number(this.formHeader.pageSize))
+      this.GetList()
+      // this.dataList = this.dataListAll.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, Number((this.formHeader.currPage - 1) * this.formHeader.pageSize) + Number(this.formHeader.pageSize))
     },
     handleCurrentChange (val) {
       this.formHeader.currPage = val
-      this.dataList = this.dataListAll.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, Number((this.formHeader.currPage - 1) * this.formHeader.pageSize) + Number(this.formHeader.pageSize))
+      this.GetList()
+      // this.dataList = this.dataListAll.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, Number((this.formHeader.currPage - 1) * this.formHeader.pageSize) + Number(this.formHeader.pageSize))
     },
     getRowKeys (row) {
       return row.orderNo
+    },
+    handleClick (tab, event) {
+      this.formHeader.type = tab.name
+      this.formHeader.currPage = 1
+      this.GetList(true)
     }
   },
   computed: {

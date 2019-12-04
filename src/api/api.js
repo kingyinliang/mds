@@ -271,6 +271,8 @@ export const BASICDATA_API = {
   DEPLOY_MATERIAL_SELECT_LIST: HOST + '/ste/material/materielList',
   DEPLOY_MATERIAL_LIST: HOST + '/ste/material/list',
   DEPLOY_MATERIAL_SAVE: HOST + '/ste/material/save',
+  DEPLOY_MATERIAL_UPDATE: HOST + '/ste/material/dataInsert',
+  DEPLOY_MATERIAL_ROWLIST: HOST + '/ste/material/updateList',
   DEPLOY_MATERIAL_DEL: HOST + '/ste/material/del'
 }
 /*
@@ -972,6 +974,7 @@ export const WHT_API = {
    * @property {string} INSTORAGESUBMIT_API 生产入库提交
    */
   INSTORAGESUBMIT_API: HOST + '/sys/whtInStorage/submit',
+  INSTORAGEBATCHLIST_API: HOST + '/all/dropDown/createBatch', // 批次
   /**
    * @property {string} MATERIELSAVEORDER_API pw小麦申请订单
    */

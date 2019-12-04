@@ -2,9 +2,9 @@
   <div>
     <el-card>
       <el-table :data="materialList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" v-if="this.formHeader.pressure === 1">
-        <el-table-column type="selection" width="35"></el-table-column>
+        <el-table-column fixed="left" type="selection" width="35"></el-table-column>
         <el-table-column label="工序" width="50px">预压</el-table-column>
-        <el-table-column width="120px" prop="deviceName" :key="Math.random()">
+        <el-table-column width="120px" prop="deviceName" :key="Math.random()" show-overflow-tooltip>
           <template slot="header"><i class="reqI">*</i><span>气垫车号</span></template>
         </el-table-column>
         <el-table-column label="布浆线" prop="deptName" width="80px" :key="Math.random()"></el-table-column>
@@ -31,12 +31,12 @@
           </template>
         </el-table-column>
         <el-table-column label="预压时间(H)" prop="prePressTime" width="110px" :key="Math.random()"></el-table-column>
-        <el-table-column label="终止压力(Mpa)" width="180px" v-if="this.formHeader.workShop === 'C4F2B8DAD6C14D1C8DC44821F9E2636D'" :key="Math.random()">
+        <el-table-column label="终止压力(Mpa)" width="180px" v-if="this.formHeader.workShopName === '压榨二车间'" :key="Math.random()">
           <template slot-scope="scope">
             <el-input v-model="scope.row.endPress" size="small" :disabled="!isRedact"></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="调压人员" width="150px" :show-overflow-tooltip="true" v-if="this.formHeader.workShop === 'C4F2B8DAD6C14D1C8DC44821F9E2636D'" :key="Math.random()">
+        <el-table-column label="调压人员" width="150px" :show-overflow-tooltip="true" v-if="this.formHeader.workShopName === '压榨二车间'" :key="Math.random()">
           <template slot-scope="scope">
             <el-col v-if="!scope.row.suitOperator">
               <span :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">
@@ -50,9 +50,9 @@
         <el-table-column label="挪笼人员" prop="moveOperator" :show-overflow-tooltip="true" width="150"></el-table-column>
       </el-table>
       <el-table :data="materialList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" v-if="this.formHeader.pressure === 2">
-        <el-table-column type="selection" width="35"></el-table-column>
+        <el-table-column fixed="left" type="selection" width="35"></el-table-column>
         <el-table-column label="工序" width="50px">终压</el-table-column>
-        <el-table-column width="100px" prop="deviceName" :key="Math.random()">
+        <el-table-column width="100px" prop="deviceName" :key="Math.random()" show-overflow-tooltip>
           <template slot="header"><i class="reqI">*</i><span>气垫车号</span></template>
         </el-table-column>
         <el-table-column label="布浆线" prop="deptName" width="80px" :key="Math.random()"></el-table-column>
@@ -78,12 +78,12 @@
           </template>
         </el-table-column>
         <el-table-column label="终压时间(H)" prop="pressTime" width="110px" :key="Math.random()"></el-table-column>
-        <el-table-column label="终止压力(Mpa)" width="180px" v-if="this.formHeader.workShop === 'C4F2B8DAD6C14D1C8DC44821F9E2636D'" :key="Math.random()">
+        <el-table-column label="终止压力(Mpa)" width="180px" v-if="this.formHeader.workShopName === '压榨二车间'" :key="Math.random()">
           <template slot-scope="scope">
             <el-input v-model="scope.row.press" size="small" :disabled="!isRedact"></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="调压人员" width="150px" :show-overflow-tooltip="true" v-if="this.formHeader.workShop === 'C4F2B8DAD6C14D1C8DC44821F9E2636D'" :key="Math.random()">
+        <el-table-column label="调压人员" width="150px" :show-overflow-tooltip="true" v-if="this.formHeader.workShopName === '压榨二车间'" :key="Math.random()">
           <template slot-scope="scope">
             <el-col v-if="!scope.row.suitOperator">
               <span :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">
@@ -95,20 +95,20 @@
           </template>
         </el-table-column>
         <el-table-column label="挪笼人员" prop="moveOperator" :show-overflow-tooltip="true" width="150" :key="Math.random()"></el-table-column>
-        <el-table-column width="180px" v-if="this.formHeader.workShop === 'C4F2B8DAD6C14D1C8DC44821F9E2636D'" :key="Math.random()">
+        <el-table-column width="180px" v-if="this.formHeader.workShopName === '压榨二车间'" :key="Math.random()">
           <template slot="header"><i class="reqI">*</i><span>压榨二碎布数（个）</span></template>
           <template slot-scope="scope">
             <el-input v-model="scope.row.destoryNum" size="small" :disabled="!isRedact"></el-input>
           </template>
         </el-table-column>
       </el-table>
-      <el-form :inline="true" :model="formInline" style="margin-top:10px" v-if="this.formHeader.workShop === 'D79ECC0CBB1F483EB4136A3720B68B3D' && this.formHeader.pressure === 2">
+      <el-form :inline="true" :model="formInline" style="margin-top:10px" v-if="this.formHeader.workShopName === '压榨一车间' && this.formHeader.pressure === 2">
         <el-form-item>
-          <span slot="label">压榨一东碎布数（张）<i class="reqI">*</i>:</span>
+          <span slot="label">压榨一东碎布数（张）<i class="reqI">*</i>：</span>
           <el-input v-model="formInline.destoryNumEast" :disabled="!isRedact" size="small"></el-input>
         </el-form-item>
         <el-form-item>
-          <span slot="label">压榨一西碎布数（张）<i class="reqI">*</i>:</span>
+          <span slot="label">压榨一西碎布数（张）<i class="reqI">*</i>：</span>
           <el-input v-model="formInline.destoryNumWest" :disabled="!isRedact" size="small"></el-input>
         </el-form-item>
       </el-form>
@@ -197,7 +197,7 @@ export default {
       this.$http(`${SQU_API.PRESSLIST_API}`, 'POST', {factory: formHeader.factory, workShop: formHeader.workShop, pressure: formHeader.pressure, productLine: formHeader.productLine, productDate: formHeader.productDate}).then(({data}) => {
         if (data.code === 0) {
           this.materialList = data.pressInfo
-          if (this.formHeader.workShop === 'D79ECC0CBB1F483EB4136A3720B68B3D' && this.formHeader.pressure === 2) {
+          if (this.formHeader.workShop === '压榨一车间' && this.formHeader.pressure === 2) {
             this.formInline.destoryNumEast = this.materialList[0].destoryNumEast
             this.formInline.destoryNumWest = this.materialList[0].destoryNumWest
           }
@@ -267,15 +267,15 @@ export default {
             this.$warning_SHINHO('请填写必填项')
             return false
           }
-          if (this.formHeader.workShop === 'C4F2B8DAD6C14D1C8DC44821F9E2636D') {
+          if (this.formHeader.workShopName === '压榨二车间') {
             if (!item.destoryNum || item.destoryNum === '') {
               this.$warning_SHINHO('请填写必填项')
               return false
             }
           }
-          if (this.formHeader.workShop === 'D79ECC0CBB1F483EB4136A3720B68B3D') {
-            if (this.formInline.destoryNumEast === '' || !this.formInline.destoryNumEast || this.formInline.destoryNumWest === '' || !this.formInline.destoryNumWest) {
-              this.$warning_SHINHO('请填写必填项')
+          if (this.formHeader.workShopName === '压榨一车间') {
+            if (this.formInline.destoryNumEast === '' || this.formInline.destoryNumEast === null || this.formInline.destoryNumWest === '' || this.formInline.destoryNumWest === null) {
+              this.$warning_SHINHO('请填写碎布数')
               return false
             } else {
               this.multipleSelection.map((item) => {
@@ -316,7 +316,7 @@ export default {
       } else {
         configurl = SQU_API.ENDPRESSUPDATE_API
       }
-      if (this.formHeader.workShop === 'D79ECC0CBB1F483EB4136A3720B68B3D') {
+      if (this.formHeader.workShopName === '压榨一车间') {
         this.materialList.map((item) => {
           let destoryNumEast = 0
           let destoryNumWest = 0

@@ -108,6 +108,7 @@
           <el-table-column
             label="操作"
             fixed="right"
+            :width="operationColumnWidth"
             v-if="showOperationColumn">
             <template slot-scope="scope">
               <slot :scope="scope" name="operation_column"/>
@@ -203,6 +204,10 @@ export default {
     showOperationColumn: {
       type: Boolean,
       default: false
+    },
+    operationColumnWidth: {
+      type: Number,
+      default: 0
     },
     showSelectColumn: {
       type: Boolean,

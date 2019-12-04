@@ -51,6 +51,12 @@
                 <el-option v-for="(item, index) of statusList" :key="index" :value="item" :label="item"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="车间：">
+              <el-select v-model="searchform.workShopName" @change="Search()">
+                <el-option value="">请选择</el-option>
+                <el-option v-for="(item, index) of workShopList" :key="index" :value="item" :label="item"></el-option>
+              </el-select>
+            </el-form-item>
           </el-form>
         </el-col>
         <el-col :span="2">
@@ -60,12 +66,13 @@
       <el-row>
         <el-col>
           <el-table ref="multipleTable" @selection-change="handleSelectionChange" :data="newDataList" border header-row-class-name="tableHead">
-            <el-table-column type="selection" :selectable="CheckBoxInit" width="35"></el-table-column>
+            <el-table-column type="selection" :selectable="CheckBoxInit" width="35" fixed="left"></el-table-column>
             <el-table-column label="状态" width="65">
               <template slot-scope="scope">
                 {{scope.row.guan === '已开罐' ? '已开罐' : '未开罐'}}
               </template>
             </el-table-column>
+            <el-table-column label="车间" prop="workShopName" show-overflow-tooltip width="120"></el-table-column>
             <el-table-column label="罐号" prop="holderNo" show-overflow-tooltip width="70"></el-table-column>
             <el-table-column label="订单类型" prop="orderType" show-overflow-tooltip width="120">
               <template slot-scope="scope">
@@ -132,7 +139,8 @@ export default {
       isRedact: false,
       statusList: ['未成熟', '已成熟'],
       holderList: [],
-      typesList: []
+      typesList: [],
+      workShopList: []
     }
   },
   mounted () {
@@ -151,7 +159,7 @@ export default {
   },
   methods: {
     Getdetail () {
-      this.$http(`${FERMENTATION_API.FORRECIPIENTSDETAIL_API}`, 'POST', {id: this.$store.state.common.Fermentation.orderId}).then(({data}) => {
+      this.$http(`${FERMENTATION_API.FORRECIPIENTSDETAIL_API}`, 'POST', {id: this.$store.state.common.Fermentation.orderId}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.formHeader = data.openBasicsInfo
           if (data.openBasicsInfo.PRODUCT_DATE < dateFormat(new Date(), 'yyyy-MM-dd')) {
@@ -205,6 +213,15 @@ export default {
           this.newDataList = this.newsDataList
         })
       }
+      if (this.searchform.workShopName !== undefined && this.searchform.workShopName !== '') {
+        this.newsDataList = []
+        this.newDataList.map((item) => {
+          if (this.searchform.workShopName === item.workShopName) {
+            this.newsDataList.push(item)
+          }
+          this.newDataList = this.newsDataList
+        })
+      }
       this.searchform.currentTotal = this.newDataList.length
       this.searchform.currentPage = 1
       this.newDataList = this.newDataList.slice((this.searchform.currentPage - 1) * this.searchform.pageSize, this.searchform.currentPage * this.searchform.pageSize)
@@ -248,7 +265,7 @@ export default {
           this.$notify.error({title: '错误', message: data.msg})
         }
       })
-      this.$http(`${FERMENTATION_API.FORRECIPIENTSDETAILIST_API}`, 'POST', {deptId: '06AB4ABA9E7B4BCA9131E3A69D7E0B2A', pageSize: 10000, currPage: '1', halfType: this.formHeader.HALF_TYPE ? this.formHeader.HALF_TYPE : '', materialCode: this.formHeader.MATERIAL_CODE}).then(({data}) => {
+      this.$http(`${FERMENTATION_API.FORRECIPIENTSDETAILIST_API}`, 'POST', {deptId: '', pageSize: 10000, currPage: '1', halfType: this.formHeader.HALF_TYPE ? this.formHeader.HALF_TYPE : '', materialCode: this.formHeader.MATERIAL_CODE}).then(({data}) => {
         if (data.code === 0) {
           this.newDataList = []
           // this.dataList = data.openFermentationInfo.list
@@ -271,6 +288,9 @@ export default {
             }
             if (this.typesList.indexOf(item.halfName) === -1) {
               this.typesList.push(item.halfName)
+            }
+            if (this.workShopList.indexOf(item.workShopName) === -1) {
+              this.workShopList.push(item.workShopName)
             }
           })
         }
