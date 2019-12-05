@@ -308,19 +308,26 @@ export default {
     AmountRul () {
       this.sumAmount2 = {}
       let ty = true
-      this.SumDate.forEach((item) => {
-        if (item.material.childPotNo) {
-          this.sumAmount2[item.material.childPotNo] ? this.sumAmount2[item.material.childPotNo] += (item.material.childUsedAmount ? item.material.childUsedAmount : 0) * 1 : this.sumAmount2[item.material.childPotNo] = (item.material.childUsedAmount ? item.material.childUsedAmount : 0) * 1
-        }
-      })
-      Object.keys(this.sumAmount2).forEach((key) => {
-        console.log(key, this.sumAmount2[key], this.sumAmount1[key])
-        if (this.sumAmount2[key] - (this.sumAmount1[key] ? this.sumAmount1[key] : 0) > (this.potList.filter(it => it.holderId === key).length ? this.potList.filter(it => it.holderId === key)[0].sumAmount : 0)) {
+      // this.SumDate.forEach((item) => {
+      //   if (item.material.childPotNo) {
+      //     this.sumAmount2[item.material.childPotNo] ? this.sumAmount2[item.material.childPotNo] += (item.material.childUsedAmount ? item.material.childUsedAmount : 0) * 1 : this.sumAmount2[item.material.childPotNo] = (item.material.childUsedAmount ? item.material.childUsedAmount : 0) * 1
+      //   }
+      // })
+      // Object.keys(this.sumAmount2).forEach((key) => {
+      //   console.log(key, this.sumAmount2[key], this.sumAmount1[key])
+      //   if (this.sumAmount2[key] - (this.sumAmount1[key] ? this.sumAmount1[key] : 0) > (this.potList.filter(it => it.holderId === key).length ? this.potList.filter(it => it.holderId === key)[0].sumAmount : 0)) {
+      //     ty = false
+      //     this.$warning_SHINHO('剩余量不足')
+      //     return false
+      //   }
+      // })
+      for (let item of this.SumDate) {
+        if (item.material.childFullPotAmount < 0) {
           ty = false
           this.$warning_SHINHO('剩余量不足')
           return false
         }
-      })
+      }
       return ty
     },
     // 拆分

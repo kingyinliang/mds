@@ -1,4 +1,4 @@
-function MdsPromise (callback) {
+export function MdsPromise (callback) {
   this.status = 'pending'
   this.resolveArray = []
   this.rejectArray = []
@@ -31,4 +31,29 @@ MdsPromise.prototype.then = function (success, fail) {
   }
   return this
 }
-export default MdsPromise
+/**
+ * 函数节流方法 只加定时器叫防抖
+ * @param Function fn 延时调用函数
+ * @param Number delay 延迟多长时间
+ * @param Number atleast 至少多长时间触发一次
+ * @return Function 延迟执行的方法
+ */
+export function throttle (fn, delay, atleast) {
+  var timer = null
+  var previous = null
+  return function () {
+    var now = +new Date()
+    if (!previous) previous = now
+    if (atleast && now - previous > atleast) {
+      fn()
+      previous = now
+      clearTimeout(timer)
+    } else {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        fn()
+        previous = null
+      }, delay)
+    }
+  }
+}

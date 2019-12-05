@@ -194,14 +194,29 @@ export default {
           this.$warning_SHINHO('没有分配权限')
           return
         }
-        this.$store.state.common.sterilized.acceOrderId = item.orderId
-        this.$store.state.common.sterilized.acceFactory = item.factory
-        this.$store.state.common.sterilized.acceOrderNo = item.orderNo
-        url = 'DataEntry-Sterilized-SterilizedIndex-acceAdd-index'
-        this.mainTabs = this.mainTabs.filter(item => item.name !== url)
-        setTimeout(() => {
-          this.$router.push({ name: url })
-        }, 100)
+        this.$http(`${STERILIZED_API.STE_ENTER_SUP_LIST_API}`, 'POST', {
+          orderId: item.orderId,
+          factory: item.factory,
+          orderNo: item.orderNo,
+          materialCode: item.materialCode
+        }).then(({data}) => {
+          if (data.code === 0) {
+            if (!data.steSupMaterialBean.resultList.length && !data.steSupMaterialBean.supList.length) {
+              this.$warning_SHINHO('此订单无需辅料添加')
+            } else {
+              this.$store.state.common.sterilized.acceOrderId = item.orderId
+              this.$store.state.common.sterilized.acceFactory = item.factory
+              this.$store.state.common.sterilized.acceOrderNo = item.orderNo
+              url = 'DataEntry-Sterilized-SterilizedIndex-acceAdd-index'
+              this.mainTabs = this.mainTabs.filter(item => item.name !== url)
+              setTimeout(() => {
+                this.$router.push({ name: url })
+              }, 100)
+            }
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
       } else if (str === '3') {
         if (!this.isAuth('ste:tec:list')) {
           this.$warning_SHINHO('没有分配权限')

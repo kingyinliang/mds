@@ -118,7 +118,7 @@
             <el-col :span="4" class="dataList_item_btn_item"><p @click="JuiceJudgeProp(item)">判定</p></el-col>
             <el-col :span="4" class="dataList_item_btn_item"><p @click="ClearProp(item)">清洗</p></el-col>
             <el-col :span="4" class="dataList_item_btn_item"><p @click="AddProp(item)">HD</p></el-col>
-            <el-col :span="4" class="dataList_item_btn_item"><p @click="BringOutProp(item)">调拨</p></el-col>
+            <el-col :span="4" class="dataList_item_btn_item"><p @click="BringOutProp(item)">调整</p></el-col>
           </el-row>
           <!-- 转储:沉淀中 领用中 可以。  添加:领用中可添加  判定:空罐，领用中，待清洗不能判定   调拨:空罐跟领用中 不能调拨 -->
         </el-card>
@@ -262,18 +262,37 @@
     </span>
   </el-dialog>
   <el-dialog :visible.sync="BringOutDialogTableVisible" :close-on-click-modal="false" width="500px" custom-class='dialog__class'>
-    <div slot="title" style="line-hight:59px">调拨</div>
+    <div slot="title" style="line-hight:59px">调整</div>
     <div>
       <el-form size="small" :model="formBringOut" :rules="BringOutrulestar" ref="BringOutstar" label-width="150px">
         <el-form-item label="领用罐号：">{{formBringOut.holderName}}</el-form-item>
         <el-form-item label="物料：">{{formBringOut.materialCode}} {{formAdd.materialName}}</el-form-item>
         <el-form-item label="类别：">{{formBringOut.type}}</el-form-item>
         <el-form-item label="批次：">{{formBringOut.batch}}</el-form-item>
-        <el-form-item label="领用量（L）：" prop="amount">
+        <el-form-item label="出/入罐：" prop="amount">
+          <el-select v-model="formBringOut.type" @change="formBringOut.inHolderType = ''" placeholder="请选择" style="width: 200px">
+            <el-option label="出罐" value="0"></el-option>
+            <el-option label="入罐" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="调整类别：" prop="amount">
+          <el-select v-model="formBringOut.inHolderType" @change="setPot" placeholder="请选择" clearable>
+            <el-option v-for="(sole, index) in formBringOutType" :key="index" :value="sole.value" :label="sole.label" v-if="(sole.label === '调配转入' && formBringOut.type === '1') || (sole.label !== '调配转入' && formBringOut.type === '0') || sole.label === '其他'"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="发酵罐/工厂/调配罐：" prop="amount">
+          <el-select v-model="formBringOut.inHolderType" placeholder="请选择" clearable :disabled="!formBringOutPot.length">
+            <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.value" :label="sole.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="调整量（L）：" prop="amount">
           <el-input v-model="formBringOut.amount" style="width:200px"></el-input>
         </el-form-item>
-        <el-form-item label="领用人：">{{$store.state.user.realName + '（' + this.$store.state.user.name + '）'}}</el-form-item>
-        <el-form-item label="领用时间：">
+        <el-form-item label="说明：" prop="amount">
+          <el-input v-model="formBringOut.amount" style="width:200px"></el-input>
+        </el-form-item>
+        <el-form-item label="操作人：">{{$store.state.user.realName + '（' + this.$store.state.user.name + '）'}}</el-form-item>
+        <el-form-item label="操作时间：">
           <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" v-model="formBringOut.bringTime" placeholder="请选择" style="width:199px"></el-date-picker>
         </el-form-item>
       </el-form>
@@ -472,6 +491,29 @@ export default {
         ]
       },
       formBringOut: {},
+      formBringOutType: [
+        {
+          label: 'HD',
+          value: 'HD'
+        },
+        {
+          label: '调拨',
+          value: '调拨'
+        },
+        {
+          label: '调配盐水',
+          value: '调配盐水'
+        },
+        {
+          label: '调配转入',
+          value: '调配转入'
+        },
+        {
+          label: '其他',
+          value: '其他'
+        }
+      ],
+      formBringOutPot: [],
       a: true
     }
   },
@@ -504,6 +546,15 @@ export default {
     this.ani()
   },
   methods: {
+    setPot (val) {
+      if (val === 'HD' || val === '调拨') {
+        this.formBringOutPot = this.factory
+      } else if (val === '调配转入') {
+        this.formBringOutPot = this.guanList
+      } else {
+        this.formBringOutPot = []
+      }
+    },
     ani () {
       let $ = this.$
       this.$('.topBox_boxItem').hover(function () {
@@ -854,7 +905,7 @@ export default {
         return false
       }
       if (item.HOLDER_STATUS === '6' || item.HOLDER_STATUS === '9') {
-        this.$notify({title: '警告', message: '该罐当前不允许调拨', type: 'warning'})
+        this.$notify({title: '警告', message: '该罐当前不允许调整', type: 'warning'})
       } else {
         this.BringOutDialogTableVisible = true
         this.formBringOut = {
@@ -875,7 +926,7 @@ export default {
         if (valid) {
           this.$http(`${JUICE_API.JUICE_JUICE_BRINGOUT_SAVE}`, 'POST', this.formBringOut).then(({data}) => {
             if (data.code === 0) {
-              this.$notify({title: '成功', message: '调拨成功', type: 'success'})
+              this.$notify({title: '成功', message: '调整成功', type: 'success'})
               this.BringOutDialogTableVisible = false
               this.$refs[formName].resetFields()
               this.GetDataList(true)

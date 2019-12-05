@@ -26,7 +26,10 @@
       </el-form>
     </el-card>
     <el-card class="searchCard newCard ferCard" style="margin-top:5px" v-show="fastS">
-      <h3 style="color: black;margin-bottom: 8px"><i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>成品罐区</h3>
+      <h3 style="color: black;margin-bottom: 8px">
+        <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>成品罐区
+        <i class="gotop" @click="goPot"><a>原汁库存情况>></a></i>
+      </h3>
       <el-row class="dataList" :gutter="10" style="min-height: 150px">
         <el-col :span="4" v-for="(item, index) in dataList" :key="index">
           <el-card class="dataList_item">
@@ -237,6 +240,12 @@ export default {
     getFactory(this)
   },
   methods: {
+    goPot () {
+      this.$store.state.common.mainTabs = this.$store.state.common.mainTabs.filter(item => item.name !== 'DataEntry-PotReportForms-index')
+      setTimeout(() => {
+        this.$router.push({ name: `DataEntry-PotReportForms-index` })
+      }, 100)
+    },
     // 查询
     GetDataList () {
       if (!this.formHeader.factory) {
@@ -425,6 +434,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .ferCard{
+    .el-card__body{
+      padding: 7px;
+    }
+    .cardTit{
+      font-size: 16px;
+      color: black;
+      font-weight: 400;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #E9E9E9;
+    }
+    .gotop{
+      float: right;
+      color: #1890FF;
+      font-size: 14px;
+      cursor: pointer;
+      i{
+        :before{
+          color: #1890FF;
+        }
+      }
+    }
+  }
   .dataList{
     margin-top: 10px;
     &_item{

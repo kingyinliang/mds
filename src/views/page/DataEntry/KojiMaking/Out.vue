@@ -194,7 +194,7 @@ export default {
         this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {deptId: id, deptName: '制曲'}, false, false, false).then(res => {
           if (res.data.code === 0) {
             this.workshopList = res.data.typeList
-            if (!this.params.workShop) {
+            if (!this.params.workShop && res.data.typeList.length > 0) {
               this.params.workShop = res.data.typeList[0].deptId
             }
           } else {

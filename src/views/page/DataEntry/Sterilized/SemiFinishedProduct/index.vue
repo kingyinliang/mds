@@ -32,7 +32,10 @@
     </el-form>
   </el-card>
   <el-card class="searchCard  newCard ferCard" style="margin-top:5px; padding:0px !important;"  v-show="fastS">
-    <h3 style="color: black;margin-bottom: 8px"><i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>半成品罐列表</h3>
+    <h3 style="color: black;margin-bottom: 8px">
+      <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>半成品罐列表
+      <i class="gotop" @click="goPot"><a>原汁库存情况>></a></i>
+    </h3>
     <el-row class="dataList" :gutter="10" style="min-height: 150px">
       <el-col :span="4" v-for="(item, index) in DataList" :key="index">
         <el-card class="dataList_item">
@@ -297,6 +300,12 @@ export default {
     this.Getdeptcode()
   },
   methods: {
+    goPot () {
+      this.$store.state.common.mainTabs = this.$store.state.common.mainTabs.filter(item => item.name !== 'DataEntry-PotReportForms-index')
+      setTimeout(() => {
+        this.$router.push({ name: `DataEntry-PotReportForms-index` })
+      }, 100)
+    },
     // 去详情
     godetails (item) {
       this.$store.state.common.sterilized.holderId = item.holderId
