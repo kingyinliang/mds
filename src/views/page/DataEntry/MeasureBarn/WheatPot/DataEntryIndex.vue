@@ -1,12 +1,12 @@
 <template>
-  <div class="bean-pulp-data-entry">
+  <div class="wheat-pot-data-entry">
     <el-row>
       <el-col>
-        <div class="header_main bean-pulp__header">
+        <div class="header_main wheat-pot__header">
           <el-card>
             <el-row type="flex" class="header">
               <el-col class="header-pot">
-                <div class='header-pot__label'>豆粕罐号：{{formData.holderName ? formData.holderName : ''}}</div>
+                <div class='header-pot__label'>小麦仓罐号：{{formData.holderName ? formData.holderName : ''}}</div>
                 <div class="header-pot__image">
                   <div class="header-pot__image_content">
                   </div>
@@ -60,7 +60,7 @@
                     </el-table-column> -->
                     <el-table-column type="index" label="序号" width="55"></el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true">
-                      <template slot-scope="scope">
+                      <template slot-scope="scope" width="120">
                         {{scope.row.materialCode + ' ' + scope.row.materialName}}
                       </template>
                     </el-table-column>
@@ -87,7 +87,7 @@
                     <el-table-column label="操作" width="150">
                       <template slot-scope="scope">
                         <el-button type="text" size="small" @click="showLog(scope.row.batch)"><i class="iconfont factory-fangdajing-copy" style="font-size: 12px;margin-right: 5px"></i>查看</el-button>
-                        <el-button type="text" size="small" @click="makeAdjust(scope.row)" v-if="isAuth('Gra:adjust:material:soybeanUpdate')"><i class="iconfont factory-banshou" style="font-size: 12px;margin-right: 5px"></i>调整</el-button>
+                        <el-button type="text" size="small" @click="makeAdjust(scope.row)" v-if="isAuth('Gra:adjust:material:wheatUpdate')"><i class="iconfont factory-banshou" style="font-size: 12px;margin-right: 5px"></i>调整</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -182,7 +182,7 @@
               </el-table-column>
               <el-table-column label="领用量(KG)" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                  {{(scope.row.useWeight? scope.row.useWeight.toLocaleString() : '')}}
+                  {{(scope.row.wheatWeight? scope.row.wheatWeight.toLocaleString() : '')}}
                 </template>
               </el-table-column>
               <el-table-column label="领用订单" :show-overflow-tooltip="true" width="150" >
@@ -300,8 +300,8 @@ export default class Index extends Vue {
     REMARK: ''
   }
   mounted () {
-    this.factoryId = this.$store.state.common.BeanPulp.factory
-    this.holderId = this.$store.state.common.BeanPulp.holderId
+    this.factoryId = this.$store.state.common.GranaryWheatPot.factoryId
+    this.holderId = this.$store.state.common.GranaryWheatPot.holderId
     this.retrieveDetail()
     this.retrieveDataList()
     this.retrieveAdjustList()
@@ -365,7 +365,7 @@ export default class Index extends Vue {
       if (res.data.code === 0) {
         this.formData = res.data.data
       } else {
-        this.$notify.error({title: MSG.API.normalError.title, message: res.data.msg})
+        this.$notify.error({title: '错误', message: res.data.msg})
       }
     })
   }
@@ -410,7 +410,7 @@ export default class Index extends Vue {
     this.currPage = 1
     this.pageSize = 10
     this.totalCount = 0
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_APPLY_LIST}`, `POST`, {materielType: 'Soybean', batch}).then((res) => {
+    Vue.prototype.$http(`${GRANARY_API.WHEAT_APPLY_LIST}`, `POST`, {materielType: 'Wheat', batch}).then((res) => {
       if (res.data.code === 0) {
         this.totalList = res.data.collarUseInfo.list
         this.totalCount = this.totalList.length
@@ -427,7 +427,7 @@ export default class Index extends Vue {
     }
     Vue.prototype.$http(`${GRANARY_API.WHEAT_ADJUST}`, `POST`, this.adjustForm).then((res) => {
       if (res.data.code === 0) {
-        this.$notify({title: MSG.OPERATE.saveSuccess.title, message: MSG.OPERATE.saveSuccess.message, type: 'success'})
+        this.$notify({title: '成功', message: '保存成功', type: 'success'})
         this.retrieveDataList()
         this.retrieveAdjustList()
       } else {
@@ -444,7 +444,7 @@ export default class Index extends Vue {
 <style lang="scss">
 @import '@/assets/scss/_common.scss';
 @import '@/assets/scss/_share.scss';
-.bean-pulp-data-entry{
+.wheat-pot-data-entry{
   .header {
     height: 200px;
     .header-pot {
@@ -495,6 +495,7 @@ export default class Index extends Vue {
       }
     }
   }
+
   .topform{
     .el-form-item__content{
       height: 32px;
@@ -502,4 +503,5 @@ export default class Index extends Vue {
     }
   }
 }
+
 </style>

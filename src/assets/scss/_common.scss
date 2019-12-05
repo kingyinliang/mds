@@ -162,7 +162,6 @@ img {
   height: 32px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
   background-color: #002140;
-  margin-left: 170px;
 
   &--inverse {
     .site-navbar__body {
@@ -287,7 +286,7 @@ img {
 ------------------------------ */
 .site-sidebar {
   position: fixed;
-  top: 0px;
+  top: 50px;
   left: 0;
   bottom: 0;
   z-index: 1020;
