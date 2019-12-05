@@ -19,7 +19,7 @@
       <el-table-column label="生产使用量 " :show-overflow-tooltip="true" width="140">
         <template slot="header"><i class="reqI">*</i><span>生产使用量</span></template>
         <template slot-scope="scope">
-          <el-input v-model="scope.row.productUseAmount" placeholder="手工录入" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))"></el-input>
+          <el-input v-model="scope.row.productUseAmount" placeholder="手工录入" @change="ChangeNum()" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="本班损耗 " :show-overflow-tooltip="true" prop="kjmWorkShopName" width="100">
@@ -103,18 +103,21 @@ export default {
         this.$emit('setApplyMaterielState', status)
       })
     },
-    setNum (num) {
-      let tmp = num
-      this.num = JSON.stringify(tmp)
-    },
-    setAmount (num) {
-      this.MaterialList.forEach(item => {
-        if (!item.status) {
-          item.productUseAmount = num
-        } else if (item.status === 'saved' || item.status === 'noPass') {
-          item.productUseAmount = num
-        }
-      })
+    // setNum (num) {
+    //   let tmp = num
+    //   this.num = JSON.stringify(tmp)
+    // },
+    // setAmount (num) {
+    //   this.MaterialList.forEach(item => {
+    //     if (!item.status) {
+    //       item.productUseAmount = num
+    //     } else if (item.status === 'saved' || item.status === 'noPass') {
+    //       item.productUseAmount = num
+    //     }
+    //   })
+    // },
+    ChangeNum () {
+      this.$emit('SetMeaterielNum', this.sumNum)
     },
     // 保存提交
     SaveOrSubmitData (str, resolve, reject) {
@@ -198,7 +201,17 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    sumNum: function () {
+      let num = 0
+      this.MaterialList.forEach(item => {
+        if (item.delFlag !== '1') {
+          num += item.productUseAmount * 1
+        }
+      })
+      return num
+    }
+  },
   components: {
     AuditLog: resolve => {
       require(['@/views/components/AuditLog'], resolve)

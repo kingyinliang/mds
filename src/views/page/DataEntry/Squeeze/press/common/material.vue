@@ -173,14 +173,20 @@ export default {
     GetpulpMachine (formHeader) {
       if (this.formHeader.workShop) {
         let presure
+        let deptId
         if (this.formHeader.pressure === 1) {
           presure = '预压机'
         } else {
           presure = '终压机'
         }
+        if (this.formHeader.workShopName === '压榨一车间') {
+          deptId = this.formHeader.workShop
+        } else {
+          deptId = this.formHeader.productLine
+        }
         this.$http(`${BASICDATA_API.DEVICELIST_API}`, 'POST', {
           param: presure,
-          deptId: this.formHeader.productLine,
+          deptId: deptId,
           currPage: '1',
           pageSize: '50'
         }).then(({data}) => {
