@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { dateFormat } from '@/net/validate'
+import { dateFormat, accAdd } from '@/net/validate'
 import { FILTRATION_API, AUDIT_API } from '@/api/api'
 export default {
   name: 'equworkinghours',
@@ -505,6 +505,7 @@ export default {
         this.$warning_SHINHO('请录入工艺控制数据')
         return false
       }
+      let totalSum = 0
       for (let item of this.techList) {
         if (item.delFlag === '0') {
           if (item.filterBefTem === '' || item.filterBefTem === null || item.filterBefPre === '' || item.filterBefPre === null || item.filterEndPre === '' || item.filterEndPre === null || item.abnormal === '' || item.abnormal === null || item.backPreNum === '' || item.backPreNum === null || item.filterAidBef === '' || item.filterAidBef === null || item.filterAidAdd === '' || item.filterAidAdd === null) {
@@ -512,9 +513,11 @@ export default {
             this.$warning_SHINHO('请补全工艺必填项')
             return false
           }
+          totalSum = accAdd(accAdd(totalSum, item.filterAidBef), item.filterAidAdd)
         }
       }
-      if (this.supMaterialList.length === 0) {
+      console.log(totalSum)
+      if (totalSum !== 0 && this.supMaterialList.length === 0) {
         ty = false
         this.$warning_SHINHO('辅料领用不能为空')
         return false
