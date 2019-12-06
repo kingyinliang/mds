@@ -51,7 +51,7 @@
         <el-table-column label="参数" show-overflow-tooltip width="85" prop="parameter"></el-table-column>
         <el-table-column label="时间" width="200" prop="date">
           <template slot-scope="scope">
-            <el-date-picker type="datetime" v-model="scope.row.date" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width:180px"></el-date-picker>
+            <el-date-picker type="datetime" size="small" v-model="scope.row.date" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width:180px"></el-date-picker>
           </template>
         </el-table-column>
         <el-table-column label="1#" width="100">
@@ -162,6 +162,19 @@
             <el-input v-model="scope.row.twelveWell" :disabled="!isRedact" size="small" v-else></el-input>
           </template>
         </el-table-column>
+        <el-table-column label="检测人" show-overflow-tooltip width="150">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.changer" :disabled="!isRedact" size="small">
+              <el-option v-for="(data, index) in userlist" :key="index" :label="data.realName + '（' + ((data.workNum !== null && data.workNum !== '') ? data.workNum : data.workNumTemp) + '）'" :value="data.realName + '（' + ((data.workNum !== null && data.workNum !== '') ? data.workNum : data.workNumTemp) + '）'"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作时间" show-overflow-tooltip width="160">
+          <template slot-scope="scope">
+            {{scope.row.changed}}
+            <!--<el-date-picker size="small" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" v-model="scope.row.changed" style="width: 160px"></el-date-picker>-->
+          </template>
+        </el-table-column>
         <el-table-column width="70" fixed="right">
           <template slot-scope="scope">
             <el-button class="delBtn" type="text" icon="el-icon-delete" @click="DelRow(scope.row, scope.$index)" :disabled="!isRedact" v-if="scope.row.parameter === '外观'" size="mini">删除</el-button>
@@ -186,7 +199,7 @@
 
 <script>
 import {dateFormat} from '@/net/validate'
-import { BOTTLE_API } from '@/api/api'
+import { BOTTLE_API, SYSTEMSETUP_API } from '@/api/api'
 export default {
   name: 'qualityTest',
   data () {
@@ -202,6 +215,7 @@ export default {
         pageSize: 8,
         totalCount: 0
       },
+      userlist: [],
       isRedact: false,
       dataList: [],
       orderId: this.$store.state.common.bottle.ProOrderId,
@@ -217,7 +231,22 @@ export default {
       this.$http(`${BOTTLE_API.BOTTLE_PRO_HEAD}`, 'POST', {orderId: this.orderId, type: 'quality'}).then(({data}) => {
         if (data.code === 0) {
           this.formHeader = data.headInfo
+          this.getUsers()
           this.GetList()
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+    },
+    getUsers () {
+      this.$http(`${SYSTEMSETUP_API.USERLIST_API}`, 'POST', {
+        deptId: this.formHeader.workShop,
+        param: '',
+        currPage: '1',
+        pageSize: '1000'
+      }).then(({data}) => {
+        if (data.code === 0) {
+          this.userlist = data.page.list
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -250,6 +279,8 @@ export default {
           }
           this.dataList.push({
             id: '',
+            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+            changer: '',
             parameter: item,
             date: dateNow,
             oneWell: argument,
@@ -273,6 +304,8 @@ export default {
           if (index < 8) {
             this.dataList.splice(index, 0, {
               id: '',
+              changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+              changer: item.changer,
               parameter: item.parameter,
               date: dateNow,
               oneWell: item.oneWell,
