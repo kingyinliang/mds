@@ -189,6 +189,13 @@ export default {
      */
     juice: {},
     /**
+     * 罐区报表
+     */
+    PotReportForms: {
+      type: '',
+      workShop: ''
+    },
+    /**
      * 杀菌车间
      */
     sterilized: {

@@ -1689,6 +1689,13 @@ export const JUICE_API = {
   JUICE_SEARCH_POT_LIST: HOST + '/juice/pot/holderList'
 }
 /**
+ *  罐区报表api
+ */
+export const POTREPORTFORMS_API = {
+  POTREPORTFORMS_LIST: HOST + '/ste/semi/reportForm',
+  POTREPORTFORMS_OUT: HOST + '/ste/semi/reportFormExport'
+}
+/**
  *  看板接口
  */
 export const ECHARTS_API = {
