@@ -100,12 +100,12 @@
           <div class="dataList_item_pot clearfix" style="position:relative;">
             <img src="@/assets/img/F0.png" alt="" v-if="item.IS_F === '1'" style="position:absolute; left:10px; top:10px;">
             <img src="@/assets/img/RD.png" alt="" v-if="item.isRd === 1" style="position:absolute; left:10px; top:10px;">
+            <img src="@/assets/img/jbs.png" alt="" v-if="item.IS_F === '2'" style="width: 30px;height: 30px;position:absolute; left:10px; top:10px;">
             <div class="dataList_item_pot_box">
               <div class="dataList_item_pot_box1">
                 <div class="dataList_item_pot_box_item1" :style="`height:${item.AMOUNT? (item.AMOUNT*1000 / item.HOLDER_HOLD) * 100 : 0}%`" v-if="item.HOLDER_STATUS !== '6'"></div>
                 <div class="dataList_item_pot_box_detail" v-if="item.HOLDER_STATUS !== '6' && item.HOLDER_STATUS !== '10'">
                   <p>{{item.BATCH}}</p>
-                  <p v-if="item.IS_F === '2'">JBS</p>
                   <p>{{item.TYPE}}</p>
                   <p v-if="item.HOLDER_STATUS !== '7'">{{item.days}}天</p>
                   <p>{{item.AMOUNT}}方</p>
