@@ -36,10 +36,10 @@
           </el-select>
         </el-form-item>
         <div class="floatr">
-          <el-button type="primary" size="small" @click="GetDataList(true)" v-if="isAuth('ste:order:list')">查询</el-button>
+          <el-button type="primary" size="small" @click="GetDataList(true)" v-if="isAuth('juice:pot:juiceExamine')">查询</el-button>
           <!-- <el-button type="primary" size="small" @click="TurnSave(true)" v-if="isAuth('ste:order:list')">转储</el-button>
           <el-button type="primary" size="small" @click="Rework(true)" v-if="isAuth('ste:order:list')">返工</el-button> -->
-          <el-button type="primary" size="small" @click="ExportExcel(true)" v-if="isAuth('ste:order:list')">导出</el-button>
+          <el-button type="primary" size="small" @click="ExportExcel(true)" v-if="isAuth('juice:pot:juiceExamineExport')">导出</el-button>
         </div>
       </el-form>
     </el-card>
