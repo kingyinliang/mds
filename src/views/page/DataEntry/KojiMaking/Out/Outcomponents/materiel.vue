@@ -231,10 +231,17 @@ export default {
   computed: {
     BrineNum: function () {
       let num = 0
+      let SetMeaterielNum = 0
+      let a = this.brine.filter(item => item.code === 'M040000001')[0]
       this.MaterielDate.forEach((item) => {
         num = num + (item.delFlag === '0' ? item.amount * 1 : 0)
+        if (a) {
+          SetMeaterielNum = SetMeaterielNum + (item.delFlag === '0' ? (item.material === (a.code + ' ' + a.value) ? 0 : item.amount * 1) : 0)
+        } else {
+          SetMeaterielNum = SetMeaterielNum + (item.delFlag === '0' ? item.amount * 1 : 0)
+        }
       })
-      this.$emit('SetMeaterielNum', num)
+      this.$emit('SetMeaterielNum', SetMeaterielNum)
       return num
     }
   },
