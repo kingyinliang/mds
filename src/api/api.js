@@ -446,7 +446,16 @@ export const SYSTEMSETUP_API = {
   /**
    * @property {string} PASSWORDRESET_API 用户管理重置密码
    */
-  PASSWORDRESET_API: HOST + '/sys/user/reset'
+  PASSWORDRESET_API: HOST + '/sys/user/reset',
+  /**
+   * IOT换算
+   */
+  IOTHEADSEARCHLIST_API: HOST + '/iot/import/headList', // 头部查询
+  IOTDATALIST_API: HOST + '/iot/import/iotList', // 数据拉取
+  IOTDATADEL_API: HOST + '/iot/import/iotDel', // 删除
+  IOTDATALISTEXPORT_API: HOST + '/iot/import/exportIot', // 导出
+  IOTDATAUPDATE_API: HOST + '/iot/import/iotUpdate', // 修改
+  IOTDATALISTIMPORT_API: HOST + '/iot/import/iotImport' // 导入
 }
 /*
 *包装车间api
