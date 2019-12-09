@@ -283,13 +283,11 @@ export default {
               item.resVal.resData.split('.').forEach(resIt => {
                 let dataSole = data.iotListInfo[resIt]
                 // console.log(dataSole)
-                if (dataSole.length > 0) {
-                  if (dataSole[0][item.resVal.value] !== undefined) {
-                    this.$set(this.queryForm, item.prop, dataSole[0][item.resVal.value])
-                    this.$nextTick(function () {
-                      this.$refs[item.prop][0].emitChange(dataSole[0][item.resVal.value])
-                    })
-                  }
+                if (dataSole.length > 0 && resIt === 'factory') {
+                  this.$set(this.queryForm, resIt, dataSole[0][item.resVal.value])
+                  this.$nextTick(function () {
+                    this.$refs[item.prop][0].emitChange(dataSole[0][item.resVal.value])
+                  })
                 }
                 this.$set(this.optionLists, resIt, dataSole)
               })
