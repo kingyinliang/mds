@@ -1686,7 +1686,9 @@ export const JUICE_API = {
   JUICE_JUICE_DETAIL: HOST + '/juice/pot/juiceItem', // 详情
   JUICE_JUICE_STOCKITEM: HOST + '/juice/pot/juiceStockItem', // 库存详情
   JUICE_STOCKITEM_KUCUN: HOST + '/juice/pot/juiceStockItemExport', // 导出
-  JUICE_SEARCH_POT_LIST: HOST + '/juice/pot/holderList'
+  JUICE_SEARCH_POT_LIST: HOST + '/juice/pot/holderList',
+  JUICE_BRINGOUTPROP_FA_LIST: HOST + '/juice/pot/addPotList',
+  JUICE_BRINGOUTPROP_TIAO_LIST: HOST + '/juice/pot/allocateHolderList'
 }
 /**
  *  罐区报表api
