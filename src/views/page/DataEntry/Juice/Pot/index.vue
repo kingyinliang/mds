@@ -269,27 +269,29 @@
         <el-form-item label="物料：">{{formBringOut.materialCode}} {{formAdd.materialName}}</el-form-item>
         <el-form-item label="类别：">{{formBringOut.type}}</el-form-item>
         <el-form-item label="批次：">{{formBringOut.batch}}</el-form-item>
-        <el-form-item label="出/入罐：" prop="amount">
-          <el-select v-model="formBringOut.type" @change="formBringOut.inHolderType = ''" placeholder="请选择" style="width: 200px">
-            <el-option label="出罐" value="0"></el-option>
+        <el-form-item label="出/入罐：" prop="inType">
+          <el-select v-model="formBringOut.inType" @change="formBringOut.adjustType = '',formBringOut.factoryHolder = '',formBringOutLable = ''" placeholder="请选择" style="width: 200px">
+            <el-option label="出罐" value="2"></el-option>
             <el-option label="入罐" value="1"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="调整类别：" prop="amount">
-          <el-select v-model="formBringOut.inHolderType" @change="setPot" placeholder="请选择" clearable>
-            <el-option v-for="(sole, index) in formBringOutType" :key="index" :value="sole.value" :label="sole.label" v-if="(sole.label === '调配转入' && formBringOut.type === '1') || (sole.label !== '调配转入' && formBringOut.type === '0') || sole.label === '其他'"></el-option>
+        <el-form-item label="调整类别：" prop="adjustType">
+          <el-select v-model="formBringOut.adjustType" @change="setPot" placeholder="请选择" clearable>
+            <el-option v-for="(sole, index) in formBringOutType" :key="index" :value="sole.value" :label="sole.label" v-if="(sole.label === '调配转入' && formBringOut.inType === '1') || (sole.label !== '调配转入' && formBringOut.inType === '2') || sole.label === '其他'"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="发酵罐/工厂/调配罐：" prop="amount">
-          <el-select v-model="formBringOut.inHolderType" placeholder="请选择" clearable :disabled="!formBringOutPot.length">
-            <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.value" :label="sole.name"></el-option>
+        <el-form-item :label="formBringOutLable + '：'" v-if="formBringOutLable">
+          <el-select v-model="formBringOut.factoryHolder" placeholder="请选择" filterable clearable :disabled="!formBringOutPot.length">
+            <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.code" :label="sole.value" v-if="formBringOut.adjustType === '调拨'"></el-option>
+            <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.holderId" :label="sole.holderName" v-if="formBringOut.adjustType === '调配转入'"></el-option>
+            <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.holderId" :label="sole.HOLDER_NAME" v-if="formBringOut.adjustType === 'HD'"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="调整量（L）：" prop="amount">
           <el-input v-model="formBringOut.amount" style="width:200px"></el-input>
         </el-form-item>
-        <el-form-item label="说明：" prop="amount">
-          <el-input v-model="formBringOut.amount" style="width:200px"></el-input>
+        <el-form-item label="说明：">
+          <el-input v-model="formBringOut.remark" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="操作人：">{{$store.state.user.realName + '（' + this.$store.state.user.name + '）'}}</el-form-item>
         <el-form-item label="操作时间：">
@@ -486,11 +488,18 @@ export default {
       dialogData: {},
       BringOutDialogTableVisible: false,
       BringOutrulestar: {
+        inType: [
+          { required: true, message: '请填写出/入罐', trigger: 'blur' }
+        ],
+        adjustType: [
+          { required: true, message: '请填写调整类别', trigger: 'blur' }
+        ],
         amount: [
           { required: true, message: '请填写领用量', trigger: 'blur' }
         ]
       },
       formBringOut: {},
+      formBringOutLable: '',
       formBringOutType: [
         {
           label: 'HD',
@@ -513,6 +522,9 @@ export default {
           value: '其他'
         }
       ],
+      formBringOutFa: [],
+      formBringOutFaPot: [],
+      formBringOutTPot: [],
       formBringOutPot: [],
       a: true
     }
@@ -547,11 +559,19 @@ export default {
   },
   methods: {
     setPot (val) {
-      if (val === 'HD' || val === '调拨') {
-        this.formBringOutPot = this.factory
+      this.formBringOut.factoryHolder = ''
+      this.formBringOutLable = ''
+      if (val === '调拨') {
+        this.formBringOutLable = '工厂'
+        this.formBringOutPot = this.formBringOutFa
+      } else if (val === 'HD') {
+        this.formBringOutLable = '发酵罐'
+        this.formBringOutPot = this.formBringOutFaPot
       } else if (val === '调配转入') {
-        this.formBringOutPot = this.guanList
+        this.formBringOutLable = '调配罐'
+        this.formBringOutPot = this.formBringOutTPot
       } else {
+        this.formBringOutLable = ''
         this.formBringOutPot = []
       }
     },
@@ -607,6 +627,29 @@ export default {
         if (data.code === 0) {
           this.factory = data.typeList
           this.formHeader.factory = data.typeList[0].deptId
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+    },
+    getFa () {
+      this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {type: 'Bring_out_factory'}, false, false, false).then(({data}) => {
+        if (data.code === 0) {
+          this.formBringOutFa = data.dicList
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+      this.$http(`${JUICE_API.JUICE_BRINGOUTPROP_FA_LIST}`, 'POST', {}, false, false, false).then(({data}) => {
+        if (data.code === 0) {
+          this.formBringOutFaPot = data.addPotList
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+      this.$http(`${JUICE_API.JUICE_BRINGOUTPROP_TIAO_LIST}`, 'POST', {}, false, false, false).then(({data}) => {
+        if (data.code === 0) {
+          this.formBringOutTPot = data.allocateHolderList
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -914,11 +957,15 @@ export default {
           materialCode: item.MATERIAL_CODE,
           materialName: item.MATERIAL_NAME,
           type: item.TYPE,
+          inType: item.inType,
+          factoryHolder: item.factoryHolder,
+          adjustType: item.adjustType,
           batch: item.BATCH,
           bringTime: '',
           amount: '',
           remark: ''
         }
+        this.getFa()
       }
     },
     FormBringOutSave (formName) {
