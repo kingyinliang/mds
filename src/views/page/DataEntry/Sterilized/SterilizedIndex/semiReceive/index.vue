@@ -88,8 +88,8 @@
 </template>
 
 <script>
-import ExcRecord from '@/views/components/excRecord'
-import TextRecord from '@/views/components/textRecord'
+import ExcRecord from '@/views/components/ExcRecord'
+import TextRecord from '@/views/components/TextRecord'
 import {STERILIZED_API} from '@/api/api'
 import {Stesave} from '@/net/validate'
 export default {

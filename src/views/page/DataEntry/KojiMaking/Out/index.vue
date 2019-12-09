@@ -83,8 +83,8 @@ import FormHead from './Outcomponents/formHead'
 import Meateriel from './Outcomponents/materiel'
 import InStock from './Outcomponents/inStock'
 import CraftControl from './Outcomponents/craftControl'
-import ExcRecord from '@/views/components/excRecord'
-import TextRecord from '@/views/components/textRecord'
+import ExcRecord from '@/views/components/ExcRecord'
+import TextRecord from '@/views/components/TextRecord'
 export default {
   name: 'index',
   data () {

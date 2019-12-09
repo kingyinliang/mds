@@ -578,7 +578,7 @@ export default {
   },
   components: {
     AbnRecord: resolve => {
-      require(['@/views/components/abnRecord'], resolve)
+      require(['@/views/components/AbnRecord'], resolve)
     }
   }
 }

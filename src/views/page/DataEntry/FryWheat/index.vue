@@ -212,9 +212,9 @@
 <script>
 import {BASICDATA_API, WHT_API, SYSTEMSETUP_API} from '@/api/api'
 import {dateFormat, orderList} from '@/net/validate'
-import TemporaryWorker from '@/views/components/temporaryWorker'
-import LoanedPersonnel from '@/views/components/loanedPersonnel'
-import officialWorker from '@/views/components/officialWorker'
+import TemporaryWorker from '@/views/components/TemporaryWorker'
+import LoanedPersonnel from '@/views/components/LoanedPersonnel'
+import officialWorker from '@/views/components/OfficialWorker'
 export default {
   name: 'index',
   data () {

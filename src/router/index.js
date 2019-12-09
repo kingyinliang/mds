@@ -40,7 +40,7 @@ const mainRoutes = {
 // 看板路由
 const DataEchartsRoutes = {
   path: '/DataEcharts',
-  component: _import('page/DataEcharts/layout/index'),
+  component: _import('page/DataEcharts/Layout/index'),
   children: [
     { path: '/', redirect: '/DataEcharts/KojiMaking-DataScreening-index' }
   ],

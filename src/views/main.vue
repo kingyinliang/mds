@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import updatePass from '@/views/common/updatePass'
+import updatePass from '@/views/common/UpdatePass'
 import {MAIN_API} from '@/api/api'
 export default {
   name: 'mains',

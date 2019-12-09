@@ -70,8 +70,8 @@
 import { BASICDATA_API } from '@/api/api'
 import { headanimation, dateFormat } from '@/net/validate'
 import Material from './common/material'
-import ExcRecord from '@/views/components/excRecord'
-import TextRecord from '@/views/components/textRecord'
+import ExcRecord from '@/views/components/ExcRecord'
+import TextRecord from '@/views/components/TextRecord'
 export default {
   name: 'press',
   data () {

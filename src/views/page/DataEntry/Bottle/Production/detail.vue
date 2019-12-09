@@ -74,9 +74,9 @@
 </template>
 
 <script>
-import ExcRecord from '@/views/components/excRecord'
-import TextRecord from '@/views/components/textRecord'
-import Worker from '@/views/components/worker'
+import ExcRecord from '@/views/components/ExcRecord'
+import TextRecord from '@/views/components/TextRecord'
+import Worker from '@/views/components/Worker'
 import ReadyTimes from './ReadyTimes'
 import Record from './Record'
 import Material from './Material'

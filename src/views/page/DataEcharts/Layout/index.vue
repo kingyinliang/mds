@@ -84,7 +84,7 @@ export default {
   },
   components: {
     SubMenu: resolve => {
-      require(['./subMenu'], resolve)
+      require(['./SubMenu'], resolve)
     }
   }
 }

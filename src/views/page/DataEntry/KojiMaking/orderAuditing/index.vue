@@ -307,7 +307,7 @@
 <script lang="ts">
 import {Vue, Component} from 'vue-property-decorator'
 import {KJM_API} from '@/api/api'
-import TextRecord from '@/views/components/textRecord.vue'
+import TextRecord from '@/views/components/TextRecord.vue'
 import AuditLog from '@/views/components/AuditLog.vue'
 import {WorkHour, InStock, Material} from '../entity/WorkHour.ts'
 @Component({

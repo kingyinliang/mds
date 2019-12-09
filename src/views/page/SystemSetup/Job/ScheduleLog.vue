@@ -96,7 +96,7 @@
 <script>
 import {SYSTEMSETUP_API} from '@/api/api'
 export default {
-  name: 'schedule-log',
+  name: 'ScheduleLog',
   data () {
     return {
       visible: false,

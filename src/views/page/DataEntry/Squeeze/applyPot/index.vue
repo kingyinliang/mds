@@ -184,7 +184,7 @@
               :current-page="dataCurrPage"
               :page-sizes="[10, 20, 50]"
               :page-size="dataPageSize"
-              layout="total, sizes, prev, pager, next, jumper"
+              Layout="total, sizes, prev, pager, next, jumper"
               :total="dataTotalCount">
             </el-pagination> -->
           </el-row>

@@ -144,9 +144,9 @@
 <script>
 import { PACKAGING_API, SYSTEMSETUP_API, BASICDATA_API, BOTTLE_API } from '@/api/api'
 import { toDate } from '@/net/validate'
-import OfficialWorker from './officialWorker'
-import LoanedPersonnel from './loanedPersonnel'
-import TemporaryWorker from './temporaryWorker'
+import OfficialWorker from './OfficialWorker'
+import LoanedPersonnel from './LoanedPersonnel'
+import TemporaryWorker from './TemporaryWorker'
 export default {
   name: 'worker',
   data () {

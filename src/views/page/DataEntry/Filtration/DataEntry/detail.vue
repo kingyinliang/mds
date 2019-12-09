@@ -114,8 +114,8 @@ import EquWorkinghours from './common/equWorkingHours'
 import Craft from './common/craft'
 import Material from './common/material'
 import InStorage from './common/inStorage'
-import ExcRecord from '@/views/components/excRecord'
-import TextRecord from '@/views/components/textRecord'
+import ExcRecord from '@/views/components/ExcRecord'
+import TextRecord from '@/views/components/TextRecord'
 export default {
   name: 'FiltrationDetail',
   data () {

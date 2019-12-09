@@ -265,7 +265,7 @@ export default {
   computed: {},
   components: {
     Linkage: resolve => {
-      require(['@/views/page/ReportForms/common/linkage'], resolve)
+      require(['@/views/page/ReportForms/common/Linkage'], resolve)
     }
   }
 }

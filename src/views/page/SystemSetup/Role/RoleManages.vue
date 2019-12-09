@@ -103,7 +103,7 @@
 import RoleAdd from './RoleAdd'
 import UserManage from './UserManage'
 import RoleDept from './RoleDept'
-import RoleAddOrUpdate from './addRole'
+import RoleAddOrUpdate from './AddRole'
 import {SYSTEMSETUP_API} from '@/api/api'
 export default {
   name: 'RoleManages',

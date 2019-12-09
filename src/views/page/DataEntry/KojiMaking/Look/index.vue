@@ -399,9 +399,9 @@
 <script>
 import {KJM_API, SYSTEMSETUP_API} from '@/api/api'
 import {headanimation, Readyanimation, ReadyanimationLook} from '@/net/validate'
-import ExcRecord from '@/views/components/excRecord'
-import TextRecord from '@/views/components/textRecord'
-import LookEcharts from '@/views/components/lookEcharts'
+import ExcRecord from '@/views/components/ExcRecord'
+import TextRecord from '@/views/components/TextRecord'
+import LookEcharts from '@/views/components/LookEcharts'
 export default {
   name: 'look',
   data () {
@@ -827,7 +827,7 @@ export default {
     ExcRecord,
     TextRecord,
     AbnRecord: resolve => {
-      require(['@/views/components/abnRecord'], resolve)
+      require(['@/views/components/AbnRecord'], resolve)
     },
     LookEcharts
   },

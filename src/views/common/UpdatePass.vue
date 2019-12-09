@@ -27,7 +27,7 @@
 <script>
 import {MAIN_API} from '@/api/api'
 export default {
-  name: 'updatePass',
+  name: 'UpdatePass',
   data () {
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {

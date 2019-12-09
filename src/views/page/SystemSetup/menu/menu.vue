@@ -105,7 +105,7 @@
 <script>
 import TableTreeColumn from '@/views/components/table-tree-column'
 import { treeDataTranslate } from '@/net/validate'
-import AddOrUpdate from './menuAdd'
+import AddOrUpdate from './MenuAdd'
 import {MAIN_API, SYSTEMSETUP_API} from '@/api/api'
 export default {
   name: 'menuManage',
