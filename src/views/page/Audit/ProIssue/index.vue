@@ -24,6 +24,12 @@
                     <el-option :label="item.deptName" v-for="(item, index) in productline" :key="index" :value="item.deptId"></el-option>
                   </el-select>
                 </el-form-item>
+                <el-form-item label="组件物料：">
+                  <el-select v-model="plantList.materialCode" filterable placeholder="请选择" style="width: 160px">
+                    <el-option label="请选择"  value=""></el-option>
+                    <el-option :label="item.materialCode + ' ' + item.materialName" v-for="(item, index) in materialList" :key="index" :value="item.materialCode"></el-option>
+                  </el-select>
+                </el-form-item>
                 <el-form-item label="订单号：">
                   <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 160px"></el-input>
                 </el-form-item>
@@ -106,7 +112,7 @@
             <el-table-column
               label="生产物料"
               :show-overflow-tooltip="true"
-              width="360">
+              width="200">
               <template slot-scope="scope">
                 {{`${scope.row.materialCodeH} ${scope.row.materialNameH}`}}
               </template>
@@ -121,10 +127,12 @@
               label="单位"
               width="50">
             </el-table-column>
+            <el-table-column prop="inAmount" label="入库数量" show-overflow-tooltip width="100"></el-table-column>
+            <el-table-column prop="countOutputUnitName" label="单位" width="50"></el-table-column>
             <el-table-column
               label="组件物料"
               :show-overflow-tooltip="true"
-              width="450">
+              width="200">
               <template slot-scope="scope">
                 {{`${scope.row.materialCode} ${scope.row.materialName}`}}
               </template>
@@ -316,10 +324,12 @@ export default {
         status: '',
         currPage: 1,
         pageSize: 10,
-        totalCount: 0
+        totalCount: 0,
+        materialCode: ''
       },
       AuditList: [],
-      multipleSelection: []
+      multipleSelection: [],
+      materialList: []
     }
   },
   watch: {
@@ -327,6 +337,7 @@ export default {
       this.plantList.orderType = ''
       this.Getdeptbyid(n)
       this.getDictList(n)
+      this.getMaterial(n)
     },
     'plantList.workShop' (n, o) {
       this.GetParentline(n)
@@ -340,6 +351,15 @@ export default {
     headanimation(this.$)
   },
   methods: {
+    getMaterial (factory) {
+      this.$http(`${AUDIT_API.AUDIT_ISSUE_MATERIAL_API}`, 'POST', {factory: factory}, false, false, false).then(({data}) => {
+        if (data.code === 0) {
+          this.materialList = data.list
+        } else {
+          this.$warning_SHINHO(data.msg)
+        }
+      })
+    },
     getDictList (factory) {
       let params = {types: ['order_type'], factory}
       this.$http(`${SYSTEMSETUP_API.PARAMETERSLIST_API}`, 'POST', params).then(({data}) => {

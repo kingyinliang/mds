@@ -665,6 +665,7 @@ export const AUDIT_API = {
    * @property {string} AUDIT_ISSUE_RESET_API 生产发料反审
    */
   AUDIT_ISSUE_RESET_API: HOST + '/verify/material/resetMaterial',
+  AUDIT_ISSUE_MATERIAL_API: HOST + '/all/dropDown/getVerifyMaterial', // 物料组件
   /**
    * 调整明细
   */
