@@ -277,6 +277,22 @@ export default {
               })
             }
           })
+        } else if (item.defaultOptionsMore) {
+          item.defaultOptionsMore().then(({data}) => {
+            if (/\./g.test(item.resVal.resData)) {
+              item.resVal.resData.split('.').forEach(resIt => {
+                let dataSole = data.iotListInfo[resIt]
+                // console.log(dataSole)
+                if (dataSole.length > 0 && resIt === 'factory') {
+                  this.$set(this.queryForm, resIt, dataSole[0][item.resVal.value])
+                  this.$nextTick(function () {
+                    this.$refs[item.prop][0].emitChange(dataSole[0][item.resVal.value])
+                  })
+                }
+                this.$set(this.optionLists, resIt, dataSole)
+              })
+            }
+          })
         }
         // 联动监听事件对象
         if (item.linkageProp) {
@@ -350,7 +366,7 @@ export default {
           }
         }
       }
-      if (!this.isAuth(this.queryAuth) && this.queryAuth !== false) {
+      if (!this.isAuth(this.queryAuth) && this.queryAuth !== '') {
         this.$warning_SHINHO('无查询权限')
         return false
       }
