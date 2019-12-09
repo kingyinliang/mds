@@ -301,6 +301,8 @@ export default {
   },
   methods: {
     goPot () {
+      this.$store.state.common.PotReportForms.workShop = this.formHeader.workShop
+      this.$store.state.common.PotReportForms.type = 'steHolder'
       this.$store.state.common.mainTabs = this.$store.state.common.mainTabs.filter(item => item.name !== 'DataEntry-PotReportForms-index')
       setTimeout(() => {
         this.$router.push({ name: `DataEntry-PotReportForms-index` })
@@ -739,6 +741,29 @@ export default {
 }
 </style>
 <style lang="less">
+  .ferCard{
+    .el-card__body{
+      padding: 7px;
+    }
+    .cardTit{
+      font-size: 16px;
+      color: black;
+      font-weight: 400;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #E9E9E9;
+    }
+    .gotop{
+      float: right;
+      color: #1890FF;
+      font-size: 14px;
+      cursor: pointer;
+      i{
+        :before{
+          color: #1890FF;
+        }
+      }
+    }
+  }
 .dialog__class{
   border-radius:6px 6px 6px 6px !important;
   .el-dialog__header{
