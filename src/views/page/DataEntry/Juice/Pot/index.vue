@@ -199,7 +199,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="打入罐号：" prop="inHolderId">
-          <el-select v-model="formAdd.inHolderId">
+          <el-select v-model="formAdd.inHolderId" filterable>
             <el-option v-for="(item, index) in AddPotList" :key="index" :value="item.holderId" :label="item.HOLDER_NAME"></el-option>
           </el-select>
         </el-form-item>

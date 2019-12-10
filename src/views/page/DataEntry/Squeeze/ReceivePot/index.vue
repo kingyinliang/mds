@@ -14,60 +14,44 @@
           <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="罐号：" label-width="50px">
-        <el-select v-model="formHeader.holderNo" placeholder="请选择" multiple filterable allow-create default-first-op style="width: 140px">
-          <el-option v-for="(sole, index) in this.guanList" :key="index" :value="sole.holderNo" :label="sole.holderName"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="类别：" label-width="50px">
-        <el-select v-model="formHeader.halfType" placeholder="请选择" style="width: 140px">
-          <el-option label="请选择"  value=""></el-option>
-          <el-option :label="item.value" v-for="(item, index) in halfList" :key="index" :value="item.value"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态：" label-width="50px">
-        <el-select v-model="formHeader.holderStatus" placeholder="请选择" style="width: 140px">
-          <el-option label="请选择"  value=""></el-option>
-          <el-option :label="item.value" v-for="(item, index) in holderStatusList" :key="index" :value="item.code" v-if="item.code !== '2' && item.code !== '3'"></el-option>
-          <el-option label="发酵中" v-for="(item, index) in holderStatusList" :key="index" value="2,3" v-if="item.code === '2'"></el-option>
-        </el-select>
-      </el-form-item>
+      <!--<el-form-item label="罐号：" label-width="50px">-->
+        <!--<el-select v-model="formHeader.holderId" placeholder="请选择" filterable style="width: 140px">-->
+          <!--<el-option v-for="(sole, index) in this.guanList" :key="index" :value="sole.holderNo" :label="sole.holderName"></el-option>-->
+        <!--</el-select>-->
+      <!--</el-form-item>-->
       <el-form-item style="float:right; margin-right:0;">
-        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('fer:holderManage:list')">查询</el-button>
+        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('fer:openholderg:holderInfo')">查询</el-button>
       </el-form-item>
     </el-form>
   </el-card>
   <el-card class="searchCard newCard ferCard" style="margin-top:5px;">
     <h3 style="color: black;margin-bottom: 8px">
-      <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>原汁罐列表
+      <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>领用罐列表
     </h3>
     <el-row class="dataList" :gutter="10" style="min-height: 150px">
       <el-col :span="4" v-for="(item, index) in dataList" :key="index">
         <el-card class="dataList_item" style="padding:0!important;">
           <h3 class="dataList_item_tit">
-            {{item.HOLDER_NO}}
+            {{item.holderNo}}
             <span style="color: #333333;font-weight: normal;font-size: 14px">
-              -{{item.HOLDER_STATUS === '6' ? '空罐' : item.HOLDER_STATUS === '7' ? '入料中' : item.HOLDER_STATUS === '8' ? '沉淀中' : item.HOLDER_STATUS === '9' ? '领用中' : item.HOLDER_STATUS === '10' ? '待清洗' : ''}}
+              -领用中
             </span>
           </h3>
           <div class="dataList_item_pot clearfix" style="position:relative;">
-            <img src="@/assets/img/F0.png" alt="" v-if="item.IS_F === '1'" style="position:absolute; left:10px; top:10px;">
-            <img src="@/assets/img/RD.png" alt="" v-if="item.isRd === 1" style="position:absolute; left:10px; top:10px;">
             <div class="dataList_item_pot_box">
               <div class="dataList_item_pot_box1">
-                <div class="dataList_item_pot_box_item1" :style="`height:${item.AMOUNT? (item.AMOUNT*1000 / item.HOLDER_HOLD) * 100 : 0}%`" v-if="item.HOLDER_STATUS !== '6'"></div>
-                <div class="dataList_item_pot_box_detail" v-if="item.HOLDER_STATUS !== '6' && item.HOLDER_STATUS !== '10'">
-                  <p>{{item.BATCH}}</p>
-                  <p v-if="item.IS_F === '2'">JBS</p>
-                  <p>{{item.TYPE}}</p>
-                  <p v-if="item.HOLDER_STATUS !== '7'">{{item.days}}天</p>
-                  <p>{{item.AMOUNT}}方</p>
+                <div class="dataList_item_pot_box_item1" :style="`height:${item.sumAmount? (item.sumAmount*1000 / item.holderHold) * 100 : 0}%`"></div>
+                <div class="dataList_item_pot_box_detail">
+                  <p>{{item.batch}}</p>
+                  <p>{{item.materialName}}</p>
+                  <p>{{item.FER_DAYS || 0}}天</p>
+                  <p>{{item.sumAmount || 0}}方</p>
                 </div>
               </div>
             </div>
           </div>
           <el-row class="dataList_item_btn">
-            <el-col :span="24" class="dataList_item_btn_item"><p @click="TransferProp(item)">还罐</p></el-col>
+            <el-col :span="24" class="dataList_item_btn_item"><p @click="repayPot(item)">还罐</p></el-col>
           </el-row>
         </el-card>
       </el-col>
@@ -87,7 +71,7 @@
 </template>
 
 <script>
-import { BASICDATA_API } from '@/api/api'
+import { BASICDATA_API, SQU_API } from '@/api/api'
 export default {
   name: 'index',
   data () {
@@ -95,25 +79,71 @@ export default {
       formHeader: {
         factory: '',
         workShop: '',
-        holderNo: [],
-        halfType: '',
-        holderStatus: '',
-        dateFlag: '',
+        // holderId: '',
         currPage: 1,
         pageSize: 42,
         totalCount: 0
       },
       factory: [],
       workshop: [],
-      guanList: [],
-      halfList: [],
-      holderStatusList: [],
-      dataList: [{}]
+      // guanList: [],
+      dataList: []
+    }
+  },
+  watch: {
+    'formHeader.factory' (n, o) {
+      this.formHeader.workShop = ''
+      this.Getdeptbyid(n)
+    },
+    'formHeader.workShop' (n, o) {
+      // this.formHeader.holderId = ''
+      // this.HolderList(n)
     }
   },
   mounted () {
+    this.Getdeptcode()
   },
   methods: {
+    GetDataList () {
+      if (this.formHeader.factory === '') {
+        this.$notify({title: '警告', message: '请选择工厂', type: 'warning'})
+        return false
+      }
+      if (this.formHeader.workShop === '') {
+        this.$notify({title: '警告', message: '请选择车间', type: 'warning'})
+        return false
+      }
+      this.$http(`${SQU_API.POT_LIST_API}`, 'POST', this.formHeader).then(({data}) => {
+        if (data.code === 0) {
+          this.dataList = data.holderInfo
+          if (!this.dataList.length) {
+            this.$notify({title: '警告', message: '暂无数据', type: 'warning'})
+          }
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+    },
+    repayPot (item) {
+      if (!this.isAuth('fer:openholderg:revertHolder')) {
+        this.$notify({title: '警告', message: '无权限操作', type: 'warning'})
+        return false
+      }
+      this.$confirm('确认还罐, 是否继续?', '还罐', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http(`${SQU_API.POT_REPAY_API}`, 'POST', item).then(({data}) => {
+          if (data.code === 0) {
+            this.$success_SHINHO('还罐成功')
+            this.GetDataList()
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
+      })
+    },
     // 获取工厂
     Getdeptcode () {
       this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false).then(({data}) => {
@@ -128,7 +158,7 @@ export default {
     // 获取车间
     Getdeptbyid (id) {
       if (id) {
-        this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {deptId: id, deptName: '发酵'}, false, false, false).then(({data}) => {
+        this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {deptId: id, deptName: '压榨'}, false, false, false).then(({data}) => {
           if (data.code === 0) {
             this.workshop = data.typeList
             if (data.typeList.length) {
@@ -139,6 +169,12 @@ export default {
           }
         })
       }
+    },
+    // 罐号
+    HolderList (id) {
+      this.$http(`${BASICDATA_API.DROPDOWN_HOLDER_LIST}`, 'POST', {factory: this.formHeader.factory, workShop: id, holderType: '001'}).then(({data}) => {
+        this.guanList = data.holderList
+      })
     },
     // 改变每页条数
     handleSizeChange (val) {
