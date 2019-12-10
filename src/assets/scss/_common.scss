@@ -109,7 +109,6 @@ img {
   .site-navbar__header,
   .site-navbar__brand,
   .site-sidebar,
-  .site-sidebar__inner,
   .el-menu.site-sidebar__menu {
     width: 64px;
   }
@@ -125,9 +124,9 @@ img {
       display: inline-block;
     }
   }
-  .site-sidebar,
-  .site-sidebar__inner {
-    overflow: initial;
+  .site-sidebar__inner{
+    width: 84px;
+    overflow-y: scroll;
   }
   .site-sidebar__menu-icon {
     margin-right: 0;
