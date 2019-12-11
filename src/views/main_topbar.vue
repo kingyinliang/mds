@@ -4,7 +4,7 @@
       <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
         <a class="site-navbar__brand-lg" href="javascript:;"><img src="@/assets/img/logohead1.png" alt="" style="width: 140px"></a>
         <!--<a class="site-navbar__brand-mini" href="javascript:;"><img src="@/assets/img/logo.png" alt="" style="width: 47px"></a>-->
-        <a class="site-navbar__brand-mini" href="javascript:;"><img src="@/assets/img/logoHead2.png" alt="" style="width: 47px"></a>
+        <a class="site-navbar__brand-mini" href="javascript:;"><img src="@/assets/img/logohead2.png" alt="" style="width: 47px"></a>
       </h1>
     </div>
     <div class="site-navbar__body clearfix">
