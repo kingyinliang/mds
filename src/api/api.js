@@ -1213,6 +1213,14 @@ export const KJM_API = {
  */
 export const SQU_API = {
   /**
+   * 领用罐列表
+   */
+  POT_LIST_API: HOST + '/fer/openHolder/holderInfo',
+  /**
+   * 还罐
+   */
+  POT_REPAY_API: HOST + '/fer/openHolder/revertHolder',
+  /**
    * 开罐申请列表
    */
   POT_APPLY_LIST_API: HOST + '/fer/openHolder/list',
