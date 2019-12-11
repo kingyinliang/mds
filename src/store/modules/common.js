@@ -237,6 +237,25 @@ export default {
     bottle: {
       orderNo: '',
       ProOrderId: ''
+    },
+    /**
+     * 计量仓小麦罐
+     */
+    MeasureBarnWheatPot: {
+      factoryId: '',
+      factoryName: '',
+      workshopId: '',
+      workshopName: '',
+      holderId: '',
+      holderName: ''
+    },
+    /**
+     * 计量仓豆粕罐
+     */
+    MeasureBarnBeanPulp: {
+      holderId: '',
+      factory: '',
+      deptId: ''
     }
   },
   mutations: {
@@ -394,6 +413,14 @@ export default {
     },
     updateBottle (state, params) {
       state.Bottle = params
+    },
+    /** 计量仓小麦罐 */
+    updatemMeasureBarnWheatPot (state, params) {
+      state.MeasureBarnWheatPot = params
+    },
+    /** 计量仓豆粕罐 */
+    updateMeasureBarnBeanPulp (state, params) {
+      state.MeasureBarnBeanPulp = params
     }
   }
 }

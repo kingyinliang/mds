@@ -14,6 +14,20 @@ export default {
         message: '该搜索条件内无任何数据'
       }
     },
+    WheatPot: {
+      getFactoryError: {
+        title: '工厂获取错误',
+        message: ''
+      },
+      getWorkshopError: {
+        title: '车间获取错误',
+        message: ''
+      },
+      searchResult: {
+        title: '查询结果',
+        message: '该搜索条件内无任何数据'
+      }
+    },
     normalError: {
       title: '错误',
       message: ''
