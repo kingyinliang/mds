@@ -276,12 +276,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="调整类别：" prop="adjustType">
-          <el-select v-model="formBringOut.adjustType" @change="setPot" placeholder="请选择" clearable>
+          <el-select v-model="formBringOut.adjustType" @change="setPot" placeholder="请选择" clearable style="width: 200px">
             <el-option v-for="(sole, index) in formBringOutType" :key="index" :value="sole.value" :label="sole.label" v-if="(sole.label === '调配转入' && formBringOut.inType === '1') || (sole.label !== '调配转入' && formBringOut.inType === '2') || sole.label === '其他'"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="formBringOutLable + '：'" v-if="formBringOutLable">
-          <el-select v-model="formBringOut.factoryHolder" placeholder="请选择" filterable clearable :disabled="!formBringOutPot.length">
+          <el-select v-model="formBringOut.factoryHolder" placeholder="请选择" filterable clearable :disabled="!formBringOutPot.length" style="width: 200px">
             <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.code" :label="sole.value" v-if="formBringOut.adjustType === '调拨'"></el-option>
             <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.holderId" :label="sole.holderName" v-if="formBringOut.adjustType === '调配转入'"></el-option>
             <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.holderId" :label="sole.HOLDER_NAME" v-if="formBringOut.adjustType === 'HD'"></el-option>
