@@ -1,6 +1,6 @@
 <template>
-  <div class="wheat-pot">
-    <div class="header_main wheat-pot__header">
+  <div class="measurebarn-wheat-pot">
+    <div class="header_main measurebarn-wheat-pot__header">
       <el-card>
         <el-row type="flex" :gutter="10">
           <el-col :span="22">
@@ -18,12 +18,12 @@
             </el-form>
           </el-col>
           <el-col :span="2" style="display:flex;align-items:flex-end;justify-content:flex-end">
-            <el-button type="primary" size="small" @click="getOrderList()" :disabled="plantList.factoryIDValue==='' && plantList.workshopIDValue==='' || workshopList.length === 0">查询</el-button>
+            <el-button type="primary" size="small" @click="getOrderList()" :disabled="plantList.factoryIDValue==='' && plantList.workshopIDValue==='' || workshopList.length === 0" v-if="isAuth('realTime:wheat:wheatMeasuringBin')">查询</el-button>
           </el-col>
         </el-row>
       </el-card>
     </div>
-    <div class="main wheat-pot__body" v-if="isMainAreaShow">
+    <div class="main measurebarn-wheat-pot__body" v-if="isMainAreaShow">
       <el-card class="newCard area-to-bottom">
         <el-row :gutter="10">
           <el-col :span="12" v-for="(item, index) in dataList" :key="index">
@@ -32,15 +32,15 @@
               <div style="display: flex">
                 <div class="card-item_img">
                   <div class="card-item_img_box">
-                    <div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.stocks) / (item.holderHold*1), 100)}%`}"></div>
+                    <div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.wheatList) / (item.holderHold*1), 100)}%`}"></div>
                   </div>
                   <img src="@/assets/img/granary.png" alt="">
                 </div>
                 <div class="card-item_text">
                   <el-card style="margin-top: 25px">
-                    <div slot="header">库存明细 <span style="float: right">合计：{{sumBatch(item.stocks).toLocaleString()}} KG</span></div>
+                    <div slot="header">库存明细 <span style="float: right">合计：{{sumBatch(item.wheatList).toLocaleString()}} KG</span></div>
                     <el-table
-                      :data="item.stocks"
+                      :data="item.wheatList"
                       stripe
                       size="medium"
                       height="200"
@@ -52,32 +52,18 @@
                         width="auto">
                       </el-table-column>
                       <el-table-column
-                        prop="currentQuantity"
+                        prop="amount"
                         label="数量"
                         width="auto"
                         align="right"
                         header-align="left">
                         <template slot-scope="scope">
                           <div>
-                            {{(scope.row.currentQuantity*1).toLocaleString()}} KG
+                            {{(scope.row.amount*1).toLocaleString()}} KG
                           </div>
                         </template>
                       </el-table-column>
                     </el-table>
-                    <!-- <div style="position: relative">
-                      <el-row  class="card-item_text_item bgbox" style="padding-top: 0">
-                        <el-col :span="15">批次</el-col>
-                        <el-col :span="9">数量</el-col>
-                      </el-row >
-                      <div class="card-item_text_box_bg1"></div>
-                      <div class="card-item_text_box">
-                        <el-row class="card-item_text_item" v-for="(items, index) in item.stocks" :key="index">
-                          <el-col :span="15">{{items.batch}}</el-col>
-                          <el-col :span="9">{{(items.currentQuantity*1).toLocaleString()}} KG</el-col>
-                        </el-row>
-                      </div>
-                      <div class="card-item_text_box_bg2"></div>
-                    </div> -->
                   </el-card>
                 </div>
               </div>
@@ -90,7 +76,7 @@
 </template>
 
 <script>
-import {BASICDATA_API, GRANARY_API} from '@/api/api'
+import {BASICDATA_API, MEASUREBARN_WHEAT_API} from '@/api/api'
 import { isAuth } from '../../../../../net/validate'
 import MSG from '@/assets/js/hint-msg'
 export default {
@@ -111,10 +97,18 @@ export default {
       oriAPIData: []
     }
   },
-  // watch: {
-  // },
   mounted () {
-    this.getOriDataFromAPI()
+    this.getOriDataFromAPI().then(() => {
+      // 初始化搜寻条件
+      this.plantList.factoryIDValue = this.oriAPIData[0].deptId
+      if (this.oriAPIData[0].workshop.length !== 0) {
+        this.workshopList = this.oriAPIData[0].workshop
+        this.plantList.workshopIDValue = this.oriAPIData[0].workshop[0].deptId
+      } else {
+        this.workshopList = []
+        this.plantList.workshopIDValue = ''
+      }
+    })
   },
   methods: {
     // 改变选单数据
@@ -135,7 +129,7 @@ export default {
           if (data.code === 0) {
             resolve(data.typeList)
           } else {
-            this.$notify.error({title: MSG.API.getFactoryError.title, message: data.msg})
+            this.$notify.error({title: MSG.API.WheatPot.getFactoryError.title, message: data.msg})
             reject(data.msg)
           }
         })
@@ -151,7 +145,7 @@ export default {
             if (data.code === 0) {
               resolve(data.typeList)
             } else {
-              this.$notify.error({title: MSG.API.getWorkshopError.title, message: data.msg})
+              this.$notify.error({title: MSG.API.WheatPot.getWorkshopError.title, message: data.msg})
               reject(data.msg)
             }
           })
@@ -160,29 +154,32 @@ export default {
     },
     // 获取工厂车间
     getOriDataFromAPI () {
-      this.getFactory().then((valueFactory) => {
-        this.oriAPIData = []
-        this.factoryList = []
-        for (let i = 0; i < valueFactory.length; i++) {
-          let dataTempF = {
-            deptId: valueFactory[i].deptId,
-            deptName: valueFactory[i].deptName,
-            workshop: []
-          }
-          this.factoryList.push({deptId: valueFactory[i].deptId, deptName: valueFactory[i].deptName})
-          this.getWorkshop(valueFactory[i].deptId).then((valueWorkshop) => {
-            if (valueWorkshop.length !== 0) {
-              for (let j = 0; j < valueWorkshop.length; j++) {
-                let dataTempW = {
-                  deptId: valueWorkshop[j].deptId,
-                  deptName: valueWorkshop[j].deptName
-                }
-                dataTempF.workshop.push(dataTempW)
-              }
+      return new Promise((resolve, reject) => {
+        this.getFactory().then((valueFactory) => {
+          this.oriAPIData = []
+          this.factoryList = []
+          for (let i = 0; i < valueFactory.length; i++) {
+            let dataTempF = {
+              deptId: valueFactory[i].deptId,
+              deptName: valueFactory[i].deptName,
+              workshop: []
             }
-            this.oriAPIData.push(dataTempF)
-          })
-        }
+            this.factoryList.push({deptId: valueFactory[i].deptId, deptName: valueFactory[i].deptName})
+            this.getWorkshop(valueFactory[i].deptId).then((valueWorkshop) => {
+              if (valueWorkshop.length !== 0) {
+                for (let j = 0; j < valueWorkshop.length; j++) {
+                  let dataTempW = {
+                    deptId: valueWorkshop[j].deptId,
+                    deptName: valueWorkshop[j].deptName
+                  }
+                  dataTempF.workshop.push(dataTempW)
+                }
+              }
+              this.oriAPIData.push(dataTempF)
+              resolve()
+            })
+          }
+        })
       })
     },
     // 获取列表
@@ -192,14 +189,12 @@ export default {
         this.$warning_SHINHO('请选择工厂')
         return
       }
-      this.$http(`${GRANARY_API.WHEAT_POT_LIST}/${this.plantList.factoryIDValue}?deptId=${this.plantList.workshopIDValue}&flag=002`, `GET`).then(({data}) => {
+      this.$http(`${MEASUREBARN_WHEAT_API.WHEAT_POT_LIST}`, `POST`, {factory: this.plantList.factoryIDValue, workShop: this.plantList.workshopIDValue}).then(({data}) => {
         if (data.code === 0) {
-          if (data.data.length !== 0) {
-            this.dataList = data.data.holders
-            console.log('dataList')
-            console.log(this.dataList)
+          if (data.infoList.length !== 0) {
+            this.dataList = data.infoList
           } else {
-            this.$notify.info({title: MSG.API.BeanPulp.searchResult.title, message: MSG.API.BeanPulp.searchResult.message})
+            this.$notify.info({title: MSG.API.WheatPot.BeanPulp.searchResult.title, message: MSG.API.WheatPot.BeanPulp.searchResult.message})
           }
         } else {
           this.$notify.error({title: '错误', message: data.msg})
@@ -208,7 +203,7 @@ export default {
     },
     // 去详请
     goTargetDetail (item) {
-      if (!isAuth('gra:material:list')) {
+      if (!isAuth('realTime:wheat:wheatMeasuringBin')) {
         this.$notify.error({title: MSG.AUTH.noAuthority.title, message: MSG.AUTH.noAuthority.message})
         return
       }
@@ -224,9 +219,10 @@ export default {
         holderId: item.holderId,
         holderName: item.holderName
       }
-      this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Granary-WheatPot-dataEntryIndex')
+      this.$store.state.common.MeasureBarnWheatPot = item
+      this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-MeasureBarn-WheatPot-DataEntryIndex')
       setTimeout(() => {
-        this.$router.push({name: 'DataEntry-Granary-WheatPot-dataEntryIndex'})
+        this.$router.push({name: 'DataEntry-MeasureBarn-WheatPot-DataEntryIndex'})
       }, 100)
     }
   },
@@ -238,7 +234,7 @@ export default {
       return function (items) {
         let sum = 0
         items.forEach((item) => {
-          sum = sum + (item.currentQuantity * 1)
+          sum = sum + (item.amount * 1)
         })
         return sum
       }
@@ -253,10 +249,10 @@ export default {
     },
     targetAugs: {
       get () {
-        return this.$store.state.common.GranaryWheatPot
+        return this.$store.state.common.MeasureBarnWheatPot
       },
       set (val) {
-        this.$store.commit('common/updateGranaryWheatPot', val)
+        this.$store.commit('common/updatemMeasureBarnWheatPot', val)
       }
     }
   },
@@ -267,11 +263,11 @@ export default {
 <style lang="scss">
 @import '@/assets/scss/_common.scss';
 @import '@/assets/scss/_share.scss';
-.wheat-pot{
+.measurebarn-wheat-pot{
   .area-to-bottom{
     min-height: calc(82vh);
   }
-  .wheat-pot__body{
+  .measurebarn-wheat-pot__body{
     .el-col-12{
       margin-bottom: 10px;
     }

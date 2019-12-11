@@ -13,7 +13,7 @@
                 </div>
               </el-col>
               <el-col class="header-form">
-                <el-form :inline="true" size="small" label-width="100px" class="topform">
+                <el-form :inline="true" size="small" label-width="auto" class="topform">
                   <el-form-item label="生产工厂：">
                     <p class="header-form_input">{{formData.factoryName ? formData.factoryName : ''}}</p>
                   </el-form-item>
@@ -30,7 +30,7 @@
                     <p class="header-form_input">{{formData.materialNo ? formData.materialNo : '' + ' ' + formData.materialName ? formData.materialName : ''}}</p>
                   </el-form-item>
                   <el-form-item label="当前总量：">
-                    <p class="header-form_input">{{total}} KG</p>
+                    <p class="header-form_input">{{formData.totalWeight.toLocaleString()}} KG</p>
                   </el-form-item>
                 </el-form>
               </el-col>
@@ -40,27 +40,18 @@
         <div class="main">
           <div class="tableCard">
             <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
-              <i class="el-icon-caret-bottom"></i>
+              <em class="el-icon-caret-bottom"></em>
             </div>
             <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px;overflow: hidden">
               <el-tab-pane name="1">
                 <span slot="label" class="spanview">
                   <el-button>当前库存信息</el-button>
                 </span>
-                <!-- <el-row style="margin-bottom:10px;">
-                  <el-col>
-                    <el-button type="primary" size="small" style="float:right;">数据处理</el-button>
-                  </el-col>
-                </el-row> -->
                 <el-row>
-                  <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" >
-                    <!-- <el-table-column
-                      type="selection"
-                      width="55">
-                    </el-table-column> -->
-                    <el-table-column type="index" label="序号" width="55"></el-table-column>
+                  <el-table header-row-class-name="" :data="dataList" border tooltip-effect="dark" class="datatTableHead-normal">
+                    <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true">
-                      <template slot-scope="scope" width="120">
+                      <template slot-scope="scope">
                         {{scope.row.materialCode + ' ' + scope.row.materialName}}
                       </template>
                     </el-table-column>
@@ -69,30 +60,30 @@
                         {{scope.row.batch}}
                       </template>
                     </el-table-column>
-                    <el-table-column label="入库日期" :show-overflow-tooltip="true" width="170">
+                    <!-- <el-table-column label="入库日期" :show-overflow-tooltip="true" width="170">
                       <template slot-scope="scope">
                         {{scope.row.postingDate}}
                       </template>
-                    </el-table-column>
-                    <el-table-column label="入库数量(KG)" :show-overflow-tooltip="true" width="160" >
+                    </el-table-column> -->
+                    <el-table-column label="入库数量 (KG)" :show-overflow-tooltip="true" width="160" align="right">
                       <template slot-scope="scope">
-                        {{(scope.row.quantity? scope.row.quantity.toLocaleString() : '')}}
+                        {{(scope.row.inAmount!==null? scope.row.inAmount.toLocaleString() : '')}}
                       </template>
                     </el-table-column>
-                    <el-table-column label="当前数量(KG)" width="160">
+                    <el-table-column label="当前数量 (KG)" width="160" align="right">
                       <template slot-scope="scope">
-                        {{(scope.row.currentQuantity ? scope.row.currentQuantity.toLocaleString() : '')}}
+                        {{(scope.row.amount!==null ? scope.row.amount.toLocaleString() : '')}}
                       </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="150">
+                    <el-table-column label="操作" width="150" align="center">
                       <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="showLog(scope.row.batch)"><i class="iconfont factory-fangdajing-copy" style="font-size: 12px;margin-right: 5px"></i>查看</el-button>
-                        <el-button type="text" size="small" @click="makeAdjust(scope.row)" v-if="isAuth('Gra:adjust:material:wheatUpdate')"><i class="iconfont factory-banshou" style="font-size: 12px;margin-right: 5px"></i>调整</el-button>
+                        <el-button type="text" size="small" @click="showMoreDetail(scope.row.batch)"><em class="iconfont factory-fangdajing-copy" style="font-size: 12px;margin-right: 5px"></em>查看</el-button>
+                        <el-button type="text" size="small" @click="makeAdjust(scope.row)" v-if="isAuth('Gra:adjust:material:wheatUpdate')"><em class="iconfont factory-banshou" style="font-size: 12px;margin-right: 5px"></em>调整</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
                 </el-row>
-                <el-row v-if="dataList.length!==0">
+                <!-- <el-row v-if="dataList.length!==0">
                   <el-pagination
                     @size-change="handleDataSizeChange"
                     @current-change="handleDataCurrentChange"
@@ -102,15 +93,15 @@
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="dataTotalCount">
                   </el-pagination>
-                </el-row>
+                </el-row> -->
               </el-tab-pane>
               <el-tab-pane name="2">
                 <span slot="label"  class="spanview">
                   <el-button>调整信息记录</el-button>
                 </span>
                 <el-row>
-                  <el-table header-row-class-name="tableHead" :data="adjustList" border tooltip-effect="dark" >
-                    <el-table-column type="index" label="序号" width="55"></el-table-column>
+                  <el-table header-row-class-name="" :data="adjustList" border tooltip-effect="dark" class="datatTableHead-normal">
+                    <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
                     <el-table-column label="物料" :show-overflow-tooltip="true"  width="200">
                       <template slot-scope="scope">
                         {{scope.row.materialCode + ' ' + scope.row.materialName}}
@@ -126,7 +117,7 @@
                         {{scope.row.adjustType === '0' ? '盘盈' : '盘亏'}}
                       </template>
                     </el-table-column>
-                    <el-table-column label="数量(KG)" :show-overflow-tooltip="true" width="120" >
+                    <el-table-column label="数量(KG)" :show-overflow-tooltip="true" width="120" align="right">
                       <template slot-scope="scope">
                         {{(scope.row.quantity?scope.row.quantity.toLocaleString() : '')}}
                       </template>
@@ -156,91 +147,145 @@
                     :page-sizes="[10, 20, 50]"
                     :page-size="adjustPageSize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="adjustTotalCount">
+                    :total="adjustTotalCount"
+                    v-if="adjustList.length !==0">
                   </el-pagination>
                 </el-row>
               </el-tab-pane>
             </el-tabs>
           </div>
         </div>
-        <el-dialog :visible.sync="dialogFormVisible" width="900px" custom-class='dialog__class'>
+        <el-dialog :visible.sync="isShowMessageBoxAdjust" width="900px" custom-class='dialog__class'>
           <div slot="title" class='title'>
-            <span>领用明细</span>
+            <span>查询明细</span>
           </div>
-          <div>
-            <el-table header-row-class-name="tableHead" :data="applyList" border tooltip-effect="dark" >
-              <el-table-column type="index" label="序号" width="55"></el-table-column>
-              <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
-                <template slot-scope="scope">
-                  {{scope.row.materialCode + ' ' + scope.row.materialName}}
-                </template>
-              </el-table-column>
-              <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
-                <template slot-scope="scope">
-                  {{scope.row.batch}}
-                </template>
-              </el-table-column>
-              <el-table-column label="领用量(KG)" :show-overflow-tooltip="true" width="100">
-                <template slot-scope="scope">
-                  {{(scope.row.wheatWeight? scope.row.wheatWeight.toLocaleString() : '')}}
-                </template>
-              </el-table-column>
-              <el-table-column label="领用订单" :show-overflow-tooltip="true" width="150" >
-                <template slot-scope="scope">
-                  {{scope.row.orderNo}}
-                </template>
-              </el-table-column>
-              <el-table-column label="领用时间">
-                <template slot-scope="scope">
-                  {{scope.row.changed}}
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-row v-if="applyList.length !== 0">
-              <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="currPage"
-                :page-sizes="[10, 20, 50]"
-                :page-size="pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="totalCount">
-              </el-pagination>
-            </el-row>
-          </div>
+          <el-tabs v-model="activeDialogFormName" type="card">
+            <el-tab-pane label="入库信息" name="inStorage">
+              <el-table header-row-class-name="" :data="applyInStorageList" border tooltip-effect="dark" class="datatTableHead-normal">
+                <el-table-column type="index" label="序号" width="55"></el-table-column>
+                <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
+                  <template slot-scope="scope">
+                    {{scope.row.materialCode + ' ' + scope.row.materialName}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
+                  <template slot-scope="scope">
+                    {{scope.row.inPortBatch}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="入库量(KG)" :show-overflow-tooltip="true" width="100">
+                  <template slot-scope="scope">
+                    {{(scope.row.inPortWeight? scope.row.inPortWeight.toLocaleString() : '')}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="入库订单" :show-overflow-tooltip="true" width="150" >
+                  <template slot-scope="scope">
+                    {{scope.row.orderNo}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="入库时间">
+                  <template slot-scope="scope">
+                    {{scope.row.created}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="入库人">
+                  <template slot-scope="scope">
+                    {{scope.row.creator}}
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-row v-if="applyInStorageList.length !== 0">
+                <el-pagination
+                  @size-change="handleInStorageListSizeChange"
+                  @current-change="handleInStorageListCurrentChange"
+                  :current-page="currPageInStorageList"
+                  :page-sizes="[10, 20, 50]"
+                  :page-size="pageSizeInStorageList"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="totalCountInStorageList">
+                </el-pagination>
+              </el-row>
+            </el-tab-pane>
+            <el-tab-pane label="领用信息" name="receive">
+              <el-table header-row-class-name="" :data="applyReceiveList" border tooltip-effect="dark" class="datatTableHead-normal">
+                <el-table-column type="index" label="序号" width="55"></el-table-column>
+                <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
+                  <template slot-scope="scope">
+                    {{scope.row.materialCode + ' ' + scope.row.materialName}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
+                  <template slot-scope="scope">
+                    {{scope.row.whtBatch}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="领用量(KG)" :show-overflow-tooltip="true" width="100">
+                  <template slot-scope="scope">
+                    {{(scope.row.userWeight? scope.row.userWeight.toLocaleString() : '')}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="领用订单" :show-overflow-tooltip="true" width="150" >
+                  <template slot-scope="scope">
+                    {{scope.row.orderNo}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="领用时间">
+                  <template slot-scope="scope">
+                    {{scope.row.created}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="领用人">
+                  <template slot-scope="scope">
+                    {{scope.row.creator}}
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-row v-if="applyReceiveList.length !== 0">
+                <el-pagination
+                  @size-change="handleReceiveListSizeChange"
+                  @current-change="handleReceiveListCurrentChange"
+                  :current-page="currPageReceiveList"
+                  :page-sizes="[10, 20, 50]"
+                  :page-size="pageSizeReceiveList"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="totalCountReceiveList">
+                </el-pagination>
+              </el-row>
+            </el-tab-pane>
+          </el-tabs>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="dialogFormVisible = false">取消</el-button>
-            <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="dialogFormVisible = false">确定</el-button>
+            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="isShowMessageBoxAdjust = false">取消</el-button>
+            <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="isShowMessageBoxAdjust = false">确定</el-button>
           </div>
         </el-dialog>
-        <el-dialog :visible.sync="dialogFormVisible2" width="400px" custom-class='dialog__class'>
+        <el-dialog :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class'>
           <div slot="title" class='title'>
             <span>盘点调整</span>
           </div>
           <div>
             <el-form :model="adjustForm" label-width="100px" size="small" ref="modifyForm">
               <el-form-item label="物料：">
-                <p>{{adjustForm.MATERIAL_CODE + ' ' + adjustForm.MATERIAL_NAME}}</p>
+                <p>{{adjustForm.materialCode + ' ' + adjustForm.materialName}}</p>
               </el-form-item>
               <el-form-item label="批次：" >
-                <p>{{adjustForm.BATCH}}</p>
+                <p>{{adjustForm.batch}}</p>
               </el-form-item>
               <el-form-item label="调整类型：" required>
-                <el-select  placeholder="请选择"  v-model="adjustForm.ADJUST_TYPE" style="width:220px" >
+                <el-select  placeholder="请选择"  v-model="adjustForm.adjustType" style="width:220px" >
                   <el-option label="盘亏" value="1" ></el-option>
                   <el-option label="盘盈" value="0" ></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="调整量：" required>
-                <el-input  type='number'  v-model.number="adjustForm.QUANTITY"  style='width:220px'/>
+                <el-input  type='number'  v-model.number="adjustForm.quantity"  style='width:220px'/>
               </el-form-item>
               <el-form-item label="说明：">
-                <el-input  type='text'  v-model.trim="adjustForm.REMARK" style='width:220px'/>
+                <el-input  type='text'  v-model.trim="adjustForm.remark" style='width:220px'/>
               </el-form-item>
             </el-form>
           </div>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="dialogFormVisible2 = false">取消</el-button>
+            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="isShowMessageBoxCheck = false">取消</el-button>
             <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveAdjust()">确定</el-button>
           </div>
         </el-dialog>
@@ -251,15 +296,16 @@
 
 <script lang="ts">
 import {Vue, Component} from 'vue-property-decorator'
-import {GRANARY_API} from '@/api/api'
+import {MEASUREBARN_WHEAT_API} from '@/api/api'
 import MSG from '@/assets/js/hint-msg'
 @Component({
   components: {
   }
 })
 export default class Index extends Vue {
-  factoryId = ''
-  holderId = ''
+  factoryId: string = ''
+  deptId: string = ''
+  holderId: string = ''
   activeName = '1'
   // 批次数据
   dataList = []
@@ -273,68 +319,117 @@ export default class Index extends Vue {
   adjustCurrPage: number = 1
   adjustPageSize: number = 10
   adjustTotalCount: number = 0
+  // 入库数据
+  applyInStorageList = []
+  totalInStorageList = []
+  currPageInStorageList: number = 1
+  pageSizeInStorageList: number = 10
+  totalCountInStorageList: number = 0
   // 领用数据
-  applyList = []
-  totalList = []
-  currPage: number = 1
-  pageSize: number = 10
-  totalCount: number = 0
-  dialogFormVisible : boolean = false
-  dialogFormVisible2 : boolean = false
-  formData = {}
-  adjustForm = {
-    MATERIAL_CODE: '',
-    MATERIAL_NAME: '',
-    BATCH: '',
-    MATERIAL_TYPE_NAME: '',
-    LOCATION: '',
-    MOVE_TYPE: '',
-    MATERIAL_TYPE_CODE: '',
-    POSTING_DATE: '',
-    CURRENT_QUANTITY: 0,
-    FACTORY: '',
-    HOLDER_ID: '',
-    ADJUST_TYPE: '0',
-    QUANTITY: 0,
-    UNIT: 'KG',
-    REMARK: ''
+  applyReceiveList = []
+  totalReceiveList = []
+  currPageReceiveList: number = 1
+  pageSizeReceiveList: number = 10
+  totalCountReceiveList: number = 0
+  isShowMessageBoxAdjust : boolean = false
+  isShowMessageBoxCheck : boolean = false
+  formData = {
+    area: '',
+    capacity: '',
+    factory: '',
+    factoryName: '',
+    holderNo: '',
+    holderName: '',
+    materialName: '',
+    materialNo: '',
+    totalWeight: 0
   }
+  adjustForm = {
+    materialCode: '',
+    materialName: '',
+    batch: '',
+    // MATERIAL_TYPE_NAME: '',
+    // LOCATION: '',
+    // MOVE_TYPE: '',
+    // MATERIAL_TYPE_CODE: '',
+    // POSTING_DATE: '',
+    // CURRENT_QUANTITY: 0,
+    factory: '',
+    holderId: '',
+    adjustType: '0',
+    quantity: 0,
+    // UNIT: 'KG',
+    deptId: '',
+    remark: ''
+  }
+  activeDialogFormName: string = 'inStorage'
   mounted () {
-    this.factoryId = this.$store.state.common.GranaryWheatPot.factoryId
-    this.holderId = this.$store.state.common.GranaryWheatPot.holderId
-    this.retrieveDetail()
-    this.retrieveDataList()
+    let orgData = this.$store.state.common.MeasureBarnWheatPot
+    this.factoryId = this.$store.state.common.MeasureBarnWheatPot.factory
+    this.holderId = this.$store.state.common.MeasureBarnWheatPot.holderId
+    this.deptId = this.$store.state.common.MeasureBarnWheatPot.deptId
+    // 获取基本讯息
+    // this.retrieveDetail()
+    this.formData.factoryName = orgData.factoryName // 生产工厂名
+    this.formData.area = orgData.holderArea // 物理区域
+    this.formData.holderName = orgData.holderName // 容器号/名称
+    this.formData.capacity = orgData.holderHold // 罐体容量
+    this.formData.materialName = orgData.wheatList[0] !== null ? orgData.wheatList[0].materialName : ''
+    this.formData.materialNo = orgData.wheatList[0] !== null ? orgData.wheatList[0].materialCode : ''
+    this.formData.factory = orgData.factory // 生产工厂 ID
+    this.formData.holderNo = orgData.holderNo
+    this.formData.totalWeight = orgData.wheatList.map((item) => item.amount).reduce((accumulator, currentValue) => accumulator + currentValue)
+
+    // 当前库存量
+    // this.retrieveDataList()
+    this.dataList = []
+    orgData.wheatList.map((item) => {
+      this.dataList.push({
+        'materialCode': item.materialCode,
+        'materialName': item.materialName,
+        'batch': item.batch, // 批次
+        'inAmount': item.inAmount, // 入库数量
+        'amount': item.amount // 当前数量
+      })
+    })
+    // 调整信息记录
     this.retrieveAdjustList()
   }
-  showLog (batch) {
+  showMoreDetail (batch) {
     this.retrieveLogList(batch)
-    this.dialogFormVisible = true
+    this.isShowMessageBoxAdjust = true
   }
   makeAdjust (row) {
     this.adjustForm = {
-      MATERIAL_CODE: row.materialCode,
-      MATERIAL_NAME: row.materialName,
-      BATCH: row.batch,
-      MATERIAL_TYPE_NAME: row.materialTypeName,
-      LOCATION: row.location,
-      MOVE_TYPE: row.moveType,
-      MATERIAL_TYPE_CODE: row.materialTypeCode,
-      POSTING_DATE: row.postingDate,
-      CURRENT_QUANTITY: row.currentQuantity,
-      FACTORY: row.factory,
-      HOLDER_ID: row.holderId,
-      ADJUST_TYPE: '0',
-      QUANTITY: 0,
-      UNIT: row.unit,
-      REMARK: ''
+      materialCode: row.materialCode,
+      materialName: row.materialName,
+      batch: row.batch,
+      // MATERIAL_TYPE_NAME: row.materialTypeName,
+      // LOCATION: row.location,
+      // MOVE_TYPE: row.moveType,
+      // MATERIAL_TYPE_CODE: row.materialTypeCode,
+      // POSTING_DATE: row.postingDate,
+      // CURRENT_QUANTITY: row.currentQuantity,
+      factory: this.factoryId,
+      holderId: this.holderId,
+      adjustType: '0',
+      quantity: 0,
+      deptId: this.deptId,
+      // UNIT: row.unit,
+      remark: ''
     }
-    this.dialogFormVisible2 = true
+    this.isShowMessageBoxCheck = true
   }
   // 改变每页条数
-  handleSizeChange (val: number) {
-    this.pageSize = val
-    this.currPage = 1
-    this.applyList = this.totalList.slice((this.currPage - 1) * this.pageSize, (this.currPage - 1) * this.pageSize + this.pageSize)
+  handleReceiveListSizeChange (val: number) {
+    this.pageSizeReceiveList = val
+    this.currPageReceiveList = 1
+    this.applyReceiveList = this.totalReceiveList.slice((this.currPageReceiveList - 1) * this.pageSizeReceiveList, (this.currPageReceiveList - 1) * this.pageSizeReceiveList + this.pageSizeReceiveList)
+  }
+  handleInStorageListSizeChange (val: number) {
+    this.pageSizeInStorageList = val
+    this.currPageInStorageList = 1
+    this.applyInStorageList = this.totalInStorageList.slice((this.currPageInStorageList - 1) * this.pageSizeInStorageList, (this.currPageInStorageList - 1) * this.pageSizeInStorageList + this.pageSizeInStorageList)
   }
   handleDataSizeChange (val: number) {
     this.dataPageSize = val
@@ -347,9 +442,13 @@ export default class Index extends Vue {
     this.adjustList = this.totalAdjustList.slice((this.adjustCurrPage - 1) * this.adjustPageSize, (this.adjustCurrPage - 1) * this.adjustPageSize + this.adjustPageSize)
   }
   // 跳转页数
-  handleCurrentChange (val: number) {
-    this.currPage = val
-    this.applyList = this.totalList.slice((this.currPage - 1) * this.pageSize, (val - 1) * this.pageSize + this.pageSize)
+  handleReceiveListCurrentChange (val: number) {
+    this.currPageReceiveList = val
+    this.applyReceiveList = this.totalReceiveList.slice((this.currPageReceiveList - 1) * this.pageSizeReceiveList, (val - 1) * this.pageSizeReceiveList + this.pageSizeReceiveList)
+  }
+  handleInStorageListCurrentChange (val: number) {
+    this.currPageInStorageList = val
+    this.applyInStorageList = this.totalInStorageList.slice((this.currPageInStorageList - 1) * this.pageSizeInStorageList, (val - 1) * this.pageSizeInStorageList + this.pageSizeInStorageList)
   }
   handleDataCurrentChange (val: number) {
     this.dataCurrPage = val
@@ -359,16 +458,17 @@ export default class Index extends Vue {
     this.adjustCurrPage = val
     this.adjustList = this.totalAdjustList.slice((this.adjustCurrPage - 1) * this.adjustPageSize, (val - 1) * this.adjustPageSize + this.adjustPageSize)
   }
-  retrieveDetail () {
-    this.formData = {}
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_POT_DETAIL}/${this.factoryId}/${this.holderId}`, `GET`).then((res) => {
-      if (res.data.code === 0) {
-        this.formData = res.data.data
-      } else {
-        this.$notify.error({title: '错误', message: res.data.msg})
-      }
-    })
-  }
+  // 获取基本讯息
+  // retrieveDetail () {
+  //   // this.formData = {}
+  //   Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_POT_DETAIL}/${this.factoryId}/${this.holderId}`, `GET`).then(({data}) => {
+  //     if (data.code === 0) {
+  //       this.formData = data.data
+  //     } else {
+  //       this.$notify.error({title: '错误', message: data.msg})
+  //     }
+  //   })
+  // }
   // 当前库存量
   retrieveDataList () {
     this.totalDataList = []
@@ -376,65 +476,76 @@ export default class Index extends Vue {
     this.dataTotalCount = 0
     this.dataCurrPage = 1
     this.dataPageSize = 10
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_BATCH_LIST}`, `POST`, {holderId: this.holderId}).then((res) => {
-      if (res.data.code === 0) {
-        this.totalDataList = res.data.page.list
+    Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_BATCH_LIST}`, `POST`, {holderId: this.holderId}).then(({data}) => {
+      if (data.code === 0) {
+        this.totalDataList = data.page.list
         this.dataTotalCount = this.totalDataList.length
         this.dataList = this.totalDataList.slice(0, this.dataPageSize)
       } else {
-        this.$notify.error({title: MSG.API.normalError.title, message: res.data.msg})
+        this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
       }
     })
   }
-  // 调整信息
+  // 调整信息记录
   retrieveAdjustList () {
     this.totalAdjustList = []
     this.adjustList = []
     this.adjustTotalCount = 0
     this.adjustCurrPage = 1
     this.adjustPageSize = 10
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_ADJSUT_LIST}`, `POST`, {factory: this.factoryId, holderId: this.holderId}).then((res) => {
-      if (res.data.code === 0) {
-        this.totalAdjustList = res.data.adjustInfo.list
+    Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_ADJSUT_LIST}`, `POST`, {factory: this.factoryId, holderId: this.holderId, currPage: this.adjustCurrPage, pageSize: this.adjustPageSize}).then(({data}) => {
+      if (data.code === 0) {
+        this.totalAdjustList = data.adjustInfo.list
         this.adjustTotalCount = this.totalAdjustList.length
         this.adjustList = this.totalAdjustList.slice(0, this.adjustPageSize)
       } else {
-        this.$notify.error({title: MSG.API.normalError.title, message: res.data.msg})
+        this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
       }
     })
   }
-  // 领用记录
+  // 查看（领用记录| 入库）
   retrieveLogList (batch) {
-    this.totalList = []
-    this.applyList = []
-    this.currPage = 1
-    this.pageSize = 10
-    this.totalCount = 0
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_APPLY_LIST}`, `POST`, {materielType: 'Wheat', batch}).then((res) => {
-      if (res.data.code === 0) {
-        this.totalList = res.data.collarUseInfo.list
-        this.totalCount = this.totalList.length
-        this.applyList = this.totalList.slice(0, this.pageSize)
+    this.activeDialogFormName = 'inStorage'
+    this.totalInStorageList = []
+    this.applyInStorageList = []
+    this.totalReceiveList = []
+    this.applyReceiveList = []
+    // 入库
+    // 领用记录
+    this.currPageInStorageList = 1
+    this.pageSizeInStorageList = 10
+    this.totalCountInStorageList = 0
+    this.currPageReceiveList = 1
+    this.pageSizeReceiveList = 10
+    this.totalCountReceiveList = 0
+    Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_APPLY_LIST}`, `POST`, {holderId: this.holderId, batch: batch}).then(({data}) => {
+      if (data.code === 0) {
+        this.totalInStorageList = data.detailListIn
+        this.totalReceiveList = data.detailListOut
+        this.totalCountInStorageList = data.detailListIn.length
+        this.totalCountReceiveList = data.detailListOut.length
+        this.applyInStorageList = data.detailListIn.slice(0, this.pageSizeInStorageList)
+        this.applyReceiveList = data.detailListOut.slice(0, this.pageSizeReceiveList)
       } else {
-        this.$notify.error({title: MSG.API.normalError.title, message: res.data.msg})
+        this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
       }
     })
   }
   saveAdjust () {
-    if (this.adjustForm.QUANTITY.toString() === '') {
+    if (this.adjustForm.quantity.toString() === '') {
       Vue.prototype.$warning_SHINHO(MSG.VALIDATE.updatNumNotEmpty)
       return false
     }
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_ADJUST}`, `POST`, this.adjustForm).then((res) => {
-      if (res.data.code === 0) {
-        this.$notify({title: '成功', message: '保存成功', type: 'success'})
+    Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_ADJUST_LIST}`, `POST`, this.adjustForm).then(({data}) => {
+      if (data.code === 0) {
+        this.$notify({title: MSG.OPERATE.saveSuccess.title, message: MSG.OPERATE.saveSuccess.message, type: 'success'})
         this.retrieveDataList()
         this.retrieveAdjustList()
       } else {
-        this.$notify.error({title: MSG.API.normalError.title, message: res.data.msg})
+        this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
       }
     })
-    this.dialogFormVisible2 = false
+    this.isShowMessageBoxCheck = false
   }
   get total () {
     return this.totalDataList.reduce((prev, next) => { return prev + (next.currentQuantity ? next.currentQuantity : 0) }, 0).toLocaleString()

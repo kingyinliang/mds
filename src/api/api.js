@@ -1727,3 +1727,61 @@ export const ECHARTS_API = {
   KOJIMAKING_WORKSHOP_HOUSEPHASE: HOST + '/zhiqu/board/houseUsedPhase',
   KOJIMAKING_DETAIL_LINE: HOST + '/zhiqu/board/lineChart'
 }
+/**
+ *  计粮仓 api
+ * /realTime/wheat/wheatMeasuringBin
+ * 传参:factory,workShop
+ * 权限：realTime:wheat:wheatMeasuringBin
+ */
+
+/**
+ * 计量仓 豆粕 API
+ */
+export const MEASUREBARN_BEAN_API = {
+  /**
+   * 豆粕罐首页 v
+   */
+  BEANPULP_POT_LIST: HOST + '/realTime/pulp/pulpMeasuringBin',
+  /**
+   * 豆粕仓库存 LIST v
+   */
+  BEANPULP_BATCH_LIST: HOST + '/gra/material/list',
+  /**
+   * 豆粕仓调整 LIST （共同接口）v
+   */
+  BEANPULP_ADJSUT_LIST: HOST + '/gra/adjust/adjustList',
+  /**
+   * 豆粕仓入库|领用记录 v
+   */
+  BEANPULP_APPLY_LIST: HOST + '/realTime/pulp/pulpBatchView',
+  /**
+   * 调整 v
+   */
+  BEANPULP_ADJUST: HOST + '/gra/adjust/adjustMeasuringBin'
+}
+
+/**
+ * 计量仓 小麦 API
+ */
+export const MEASUREBARN_WHEAT_API = {
+  /**
+   * 小麦仓首页 v
+   */
+  WHEAT_POT_LIST: HOST + '/realTime/wheat/wheatMeasuringBin',
+  /**
+   * 小麦仓库存 LIST v
+   */
+  WHEAT_BATCH_LIST: HOST + '/gra/material/list',
+  /**
+   * 小麦仓调整 LIST （共同接口）v
+   */
+  WHEAT_ADJSUT_LIST: HOST + '/gra/adjust/adjustList',
+  /**
+   * 小麦仓入库|领用记录 v
+   */
+  WHEAT_APPLY_LIST: HOST + '/realTime/wheat/wheatBatchView',
+  /**
+   * 调整 v
+   */
+  WHEAT_ADJUST_LIST: HOST + '/gra/adjust/adjustMeasuringBin'
+}
