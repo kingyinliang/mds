@@ -472,20 +472,20 @@ export default class Index extends Vue {
   // }
   // 当前库存量
   retrieveDataList () {
-    this.totalDataList = []
-    this.dataList = []
-    this.dataTotalCount = 0
-    this.dataCurrPage = 1
-    this.dataPageSize = 10
-    Vue.prototype.$http(`${MEASUREBARN_BEAN_API.BEANPULP_BATCH_LIST}`, `POST`, {holderId: this.holderId}).then(({data}) => {
-      if (data.code === 0) {
-        this.totalDataList = data.page.list
-        this.dataTotalCount = this.totalDataList.length
-        this.dataList = this.totalDataList.slice(0, this.dataPageSize)
-      } else {
-        this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
-      }
-    })
+    // this.totalDataList = []
+    // this.dataList = []
+    // this.dataTotalCount = 0
+    // this.dataCurrPage = 1
+    // this.dataPageSize = 10
+    // Vue.prototype.$http(`${MEASUREBARN_BEAN_API.BEANPULP_BATCH_LIST}`, `POST`, {holderId: this.holderId}).then(({data}) => {
+    //   if (data.code === 0) {
+    //     this.totalDataList = data.page.list
+    //     this.dataTotalCount = this.totalDataList.length
+    //     this.dataList = this.totalDataList.slice(0, this.dataPageSize)
+    //   } else {
+    //     this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
+    //   }
+    // })
   }
   // 调整信息
   retrieveAdjustList () {
@@ -540,7 +540,7 @@ export default class Index extends Vue {
     Vue.prototype.$http(`${MEASUREBARN_BEAN_API.BEANPULP_ADJUST}`, `POST`, this.adjustForm).then(({data}) => {
       if (data.code === 0) {
         this.$notify({title: MSG.OPERATE.saveSuccess.title, message: MSG.OPERATE.saveSuccess.message, type: 'success'})
-        this.retrieveDataList()
+        // this.retrieveDataList()
         this.retrieveAdjustList()
       } else {
         this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
