@@ -947,7 +947,7 @@ export default {
         this.$notify({title: '警告', message: '没有权限', type: 'warning'})
         return false
       }
-      if (item.HOLDER_STATUS === '6' || item.HOLDER_STATUS === '9') {
+      if (item.HOLDER_STATUS === '6') {
         this.$notify({title: '警告', message: '该罐当前不允许调整', type: 'warning'})
       } else {
         this.BringOutDialogTableVisible = true
@@ -961,7 +961,7 @@ export default {
           factoryHolder: item.factoryHolder,
           adjustType: item.adjustType,
           batch: item.BATCH,
-          bringTime: '',
+          bringTime: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
           amount: '',
           remark: ''
         }
@@ -971,6 +971,12 @@ export default {
     FormBringOutSave (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.formBringOut.adjustType === '其他') {
+            if (!this.formBringOut.remark) {
+              this.$notify({title: '警告', message: '说明必填', type: 'warning'})
+              return false
+            }
+          }
           this.$http(`${JUICE_API.JUICE_JUICE_BRINGOUT_SAVE}`, 'POST', this.formBringOut).then(({data}) => {
             if (data.code === 0) {
               this.$notify({title: '成功', message: '调整成功', type: 'success'})
