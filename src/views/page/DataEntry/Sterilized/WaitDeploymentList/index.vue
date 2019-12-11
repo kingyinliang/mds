@@ -1,6 +1,6 @@
 <template>
   <div class="header_main">
-    <el-card class="searchCards">
+    <el-card class="searchCard">
       <el-row>
         <el-col style="width:975px; float:left">
           <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="sole_row">

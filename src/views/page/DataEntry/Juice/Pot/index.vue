@@ -1,6 +1,6 @@
 <template>
 <div class="header_main">
-  <el-card class="searchCard  newCard ferCard">
+  <el-card class="searchCard ferCard">
     <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="multi_row">
       <el-form-item label="生产工厂：">
         <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 140px">

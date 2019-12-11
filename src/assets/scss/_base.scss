@@ -395,7 +395,7 @@ img {
     }
     > .el-tabs__content {
       //padding: 0 15px 15px;
-      padding-top: 44px;
+      padding-top: 40px;
       > .site-tabs__tools {
         position: fixed;
         top: 32px;
@@ -445,8 +445,8 @@ img {
     }
   }
   .el-tabs__item{
-    height: 50px;
-    line-height: 50px;
+    height: 40px;
+    line-height: 40px;
   }
   table{
     .el-form-item{
@@ -485,10 +485,6 @@ img {
   }
 }
 .NewDaatTtabs{
-  .el-tabs__item {
-    height: 40px!important;
-    line-height: 40px!important;
-  }
   .spanview{
     .el-button{
       background-color: inherit!important;
@@ -634,7 +630,7 @@ img {
 //   margin-bottom: 7px!important;
 // }
 .header_main{
-  padding: 5px 10px 0 10px;
+  padding: 10px;
   .searchCard .el-card__body {
     padding: 7px !important;
   }
