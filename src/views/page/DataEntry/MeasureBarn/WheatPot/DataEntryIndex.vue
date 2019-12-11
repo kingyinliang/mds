@@ -263,7 +263,7 @@
             <span>盘点调整</span>
           </div>
           <div>
-            <el-form :model="adjustForm" label-width="100px" size="small" ref="modifyForm">
+            <el-form :model="adjustForm" label-width="100px" size="small" ref="adjustForm">
               <el-form-item label="物料：">
                 <p>{{adjustForm.materialCode + ' ' + adjustForm.materialName}}</p>
               </el-form-item>
@@ -276,17 +276,31 @@
                   <el-option label="盘盈" value="0" ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="调整量：" required>
-                <el-input  type='number'  v-model.number="adjustForm.quantity"  style='width:220px'/>
+              <el-form-item
+                label="调整量："
+                required
+                prop="quantity"
+                :rules="[
+                  { required: true, validator: validatePassAdjustNum, message: '请填写调整量 ', trigger: 'blur' }
+                ]"
+              >
+                <el-input  type='number'  v-model.number="adjustForm.quantity" style='width:150px'/> KG
               </el-form-item>
-              <el-form-item label="说明：">
+              <el-form-item
+                  label="说明："
+                  required
+                  prop="remark"
+                  :rules="[
+                    { required: true, message: '请填写调整说明', trigger: 'blur' }
+                  ]"
+              >
                 <el-input  type='text'  v-model.trim="adjustForm.remark" style='width:220px'/>
               </el-form-item>
             </el-form>
           </div>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="isShowMessageBoxCheck = false">取消</el-button>
-            <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveAdjust()">确定</el-button>
+            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="cannalSaveAdjust('adjustForm')">取消</el-button>
+            <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveAdjust('adjustForm')">确定</el-button>
           </div>
         </el-dialog>
       </el-col>
@@ -297,6 +311,7 @@
 <script lang="ts">
 import {Vue, Component} from 'vue-property-decorator'
 import {MEASUREBARN_WHEAT_API} from '@/api/api'
+// import {deepClone} from '@/assets/js/util.js'
 import MSG from '@/assets/js/hint-msg'
 @Component({
   components: {
@@ -394,6 +409,13 @@ export default class Index extends Vue {
     })
     // 调整信息记录
     this.retrieveAdjustList()
+  }
+  validatePassAdjustNum = (rule, value, callback) => {
+    if (value === 0) {
+      callback(new Error('请填写调整量'))
+    } else {
+      callback()
+    }
   }
   showMoreDetail (batch) {
     this.retrieveLogList(batch)
@@ -497,7 +519,11 @@ export default class Index extends Vue {
       if (data.code === 0) {
         this.totalAdjustList = data.adjustInfo.list
         this.adjustTotalCount = this.totalAdjustList.length
+        console.log('=======')
+        console.log(this.totalAdjustList.slice(0, this.adjustPageSize))
+        // deepClone(this.adjustList, this.totalAdjustList.slice(0, this.adjustPageSize))
         this.adjustList = this.totalAdjustList.slice(0, this.adjustPageSize)
+        console.log(this.adjustList)
       } else {
         this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
       }
@@ -531,20 +557,32 @@ export default class Index extends Vue {
       }
     })
   }
-  saveAdjust () {
-    if (this.adjustForm.quantity.toString() === '') {
-      Vue.prototype.$warning_SHINHO(MSG.VALIDATE.updatNumNotEmpty)
-      return false
-    }
-    Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_ADJUST_LIST}`, `POST`, this.adjustForm).then(({data}) => {
-      if (data.code === 0) {
-        this.$notify({title: MSG.OPERATE.saveSuccess.title, message: MSG.OPERATE.saveSuccess.message, type: 'success'})
-        // this.retrieveDataList()
-        this.retrieveAdjustList()
+  saveAdjust (formName) {
+    const ref: any = this.$refs[formName]
+    ref.validate((valid) => {
+      if (valid) {
+        Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_ADJUST_LIST}`, `POST`, this.adjustForm).then(({data}) => {
+          if (data.code === 0) {
+            this.$notify({title: MSG.OPERATE.saveSuccess.title, message: MSG.OPERATE.saveSuccess.message, type: 'success'})
+            // this.retrieveDataList()
+            this.retrieveAdjustList()
+          } else {
+            this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
+          }
+        })
+        this.isShowMessageBoxCheck = false
       } else {
-        this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
+        return false
       }
     })
+    // if (this.adjustForm.quantity.toString() === '') {
+    //   Vue.prototype.$warning_SHINHO(MSG.VALIDATE.updatNumNotEmpty)
+    //   return false
+    // }
+  }
+  cannalSaveAdjust (formName) {
+    const ref: any = this.$refs[formName]
+    ref.resetFields()
     this.isShowMessageBoxCheck = false
   }
   get total () {
