@@ -5,7 +5,7 @@
       <span slot="label" class="spanview">半成品罐区报表</span>
       <div class="titleLeft">
         <i class="iconfont factory-kucun" style="color:#666666; margin-right:10px"></i>半成品罐区报表
-        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('juice:pot:juiceStockItemExport')" style="background-color:#1890FF; color:#FFFFFF; float:right">导出</el-button>
+        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color:#1890FF; color:#FFFFFF; float:right">导出</el-button>
       </div>
       <el-table :data="tableData1" header-row-class-name="tableHead" border tooltip-effect="dark">
         <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
@@ -26,7 +26,7 @@
       <span slot="label" class="spanview">成品罐区报表</span>
       <div class="titleLeft">
         <i class="iconfont factory-kucun" style="color:#666666; margin-right:10px"></i>成品罐区报表
-        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('juice:pot:juiceStockItemExport')" style="background-color:#1890FF; color:#FFFFFF; float:right">导出</el-button>
+        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color:#1890FF; color:#FFFFFF; float:right">导出</el-button>
       </div>
       <el-table :data="tableData2" header-row-class-name="tableHead" border tooltip-effect="dark">
         <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
