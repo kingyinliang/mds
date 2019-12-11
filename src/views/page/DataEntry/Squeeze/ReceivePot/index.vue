@@ -40,12 +40,12 @@
           <div class="dataList_item_pot clearfix" style="position:relative;">
             <div class="dataList_item_pot_box">
               <div class="dataList_item_pot_box1">
-                <div class="dataList_item_pot_box_item1" :style="`height:${item.sumAmount? (item.sumAmount*1000 / item.holderHold) * 100 : 0}%`"></div>
+                <div class="dataList_item_pot_box_item1" :style="`height:${item.sumAmount? (item.sumAmount / item.holderHold) * 100 : 0}%`"></div>
                 <div class="dataList_item_pot_box_detail">
                   <p>{{item.batch}}</p>
                   <p>{{item.materialName}}</p>
                   <p>{{item.FER_DAYS || 0}}天</p>
-                  <p>{{item.sumAmount || 0}}方</p>
+                  <p>{{item.sumAmount/1000 || 0}}方</p>
                 </div>
               </div>
             </div>
