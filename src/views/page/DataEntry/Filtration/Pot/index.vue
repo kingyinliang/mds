@@ -28,7 +28,7 @@
     <el-card class="searchCard newCard ferCard" style="margin-top:5px" v-show="fastS">
       <h3 style="color: black;margin-bottom: 8px">
         <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>成品罐区
-        <i class="gotop" @click="goPot"><a>杀菌罐区库存情况>></a></i>
+        <i class="gotop" @click="goPot" v-if="isAuth('ste:semi:reportForm')"><a>杀菌罐区库存情况>></a></i>
       </h3>
       <el-row class="dataList" :gutter="10" style="min-height: 150px">
         <el-col :span="4" v-for="(item, index) in dataList" :key="index">
