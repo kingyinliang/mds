@@ -1,6 +1,6 @@
 <template>
-  <div class="wheat-pot">
-    <div class="header_main wheat-pot__header">
+  <div class="granary-wheat-pot">
+    <div class="header_main granary-wheat-pot__header">
       <el-card>
         <el-row type="flex" :gutter="10">
           <el-col :span="22">
@@ -23,7 +23,7 @@
         </el-row>
       </el-card>
     </div>
-    <div class="main wheat-pot__body" v-if="isMainAreaShow">
+    <div class="main granary-wheat-pot__body" v-if="isMainAreaShow">
       <el-card class="newCard area-to-bottom">
         <el-row :gutter="10">
           <el-col :span="12" v-for="(item, index) in dataList" :key="index">
@@ -32,15 +32,15 @@
               <div style="display: flex">
                 <div class="card-item_img">
                   <div class="card-item_img_box">
-                    <div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.stocks) / (item.holderHold*1), 100)}%`}"></div>
+                    <div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.wheatList) / (item.holderHold*1), 100)}%`}"></div>
                   </div>
                   <img src="@/assets/img/granary.png" alt="">
                 </div>
                 <div class="card-item_text">
                   <el-card style="margin-top: 25px">
-                    <div slot="header">库存明细 <span style="float: right">合计：{{sumBatch(item.stocks).toLocaleString()}} KG</span></div>
+                    <div slot="header">库存明细 <span style="float: right">合计：{{sumBatch(item.wheatList).toLocaleString()}} KG</span></div>
                     <el-table
-                      :data="item.stocks"
+                      :data="item.wheatList"
                       stripe
                       size="medium"
                       height="200"
@@ -71,7 +71,7 @@
                       </el-row >
                       <div class="card-item_text_box_bg1"></div>
                       <div class="card-item_text_box">
-                        <el-row class="card-item_text_item" v-for="(items, index) in item.stocks" :key="index">
+                        <el-row class="card-item_text_item" v-for="(items, index) in item.wheatList" :key="index">
                           <el-col :span="15">{{items.batch}}</el-col>
                           <el-col :span="9">{{(items.currentQuantity*1).toLocaleString()}} KG</el-col>
                         </el-row>
@@ -114,7 +114,17 @@ export default {
   // watch: {
   // },
   mounted () {
-    this.getOriDataFromAPI()
+    this.getOriDataFromAPI().then(() => {
+      // 初始化搜寻条件
+      this.plantList.factoryIDValue = this.oriAPIData[0].deptId
+      if (this.oriAPIData[0].workshop.length !== 0) {
+        this.workshopList = this.oriAPIData[0].workshop
+        this.plantList.workshopIDValue = this.oriAPIData[0].workshop[0].deptId
+      } else {
+        this.workshopList = []
+        this.plantList.workshopIDValue = ''
+      }
+    })
   },
   methods: {
     // 改变选单数据
@@ -160,29 +170,32 @@ export default {
     },
     // 获取工厂车间
     getOriDataFromAPI () {
-      this.getFactory().then((valueFactory) => {
-        this.oriAPIData = []
-        this.factoryList = []
-        for (let i = 0; i < valueFactory.length; i++) {
-          let dataTempF = {
-            deptId: valueFactory[i].deptId,
-            deptName: valueFactory[i].deptName,
-            workshop: []
-          }
-          this.factoryList.push({deptId: valueFactory[i].deptId, deptName: valueFactory[i].deptName})
-          this.getWorkshop(valueFactory[i].deptId).then((valueWorkshop) => {
-            if (valueWorkshop.length !== 0) {
-              for (let j = 0; j < valueWorkshop.length; j++) {
-                let dataTempW = {
-                  deptId: valueWorkshop[j].deptId,
-                  deptName: valueWorkshop[j].deptName
-                }
-                dataTempF.workshop.push(dataTempW)
-              }
+      return new Promise((resolve, reject) => {
+        this.getFactory().then((valueFactory) => {
+          this.oriAPIData = []
+          this.factoryList = []
+          for (let i = 0; i < valueFactory.length; i++) {
+            let dataTempF = {
+              deptId: valueFactory[i].deptId,
+              deptName: valueFactory[i].deptName,
+              workshop: []
             }
-            this.oriAPIData.push(dataTempF)
-          })
-        }
+            this.factoryList.push({deptId: valueFactory[i].deptId, deptName: valueFactory[i].deptName})
+            this.getWorkshop(valueFactory[i].deptId).then((valueWorkshop) => {
+              if (valueWorkshop.length !== 0) {
+                for (let j = 0; j < valueWorkshop.length; j++) {
+                  let dataTempW = {
+                    deptId: valueWorkshop[j].deptId,
+                    deptName: valueWorkshop[j].deptName
+                  }
+                  dataTempF.workshop.push(dataTempW)
+                }
+              }
+              this.oriAPIData.push(dataTempF)
+              resolve()
+            })
+          }
+        })
       })
     },
     // 获取列表
@@ -196,8 +209,10 @@ export default {
         if (data.code === 0) {
           if (data.data.length !== 0) {
             this.dataList = data.data.holders
-            console.log('dataList')
-            console.log(this.dataList)
+            this.dataList.map((item) => {
+              item.wheatList = item.stocks
+              delete item.stocks
+            })
           } else {
             this.$notify.info({title: MSG.API.BeanPulp.searchResult.title, message: MSG.API.BeanPulp.searchResult.message})
           }
@@ -267,11 +282,11 @@ export default {
 <style lang="scss">
 @import '@/assets/scss/_common.scss';
 @import '@/assets/scss/_share.scss';
-.wheat-pot{
+.granary-wheat-pot{
   .area-to-bottom{
     min-height: calc(82vh);
   }
-  .wheat-pot__body{
+  .granary-wheat-pot__body{
     .el-col-12{
       margin-bottom: 10px;
     }

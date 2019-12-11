@@ -12,7 +12,7 @@
               </div>
             </el-col>
             <el-col class="header-form">
-              <el-form :inline="true" size="small" label-width="100px" class="topform">
+              <el-form :inline="true" size="small" label-width="auto" class="topform">
                 <el-form-item label="生产工厂：">
                   <p class="header-form_input">{{formData.factoryName ? formData.factoryName : ''}}</p>
                 </el-form-item>
@@ -39,7 +39,7 @@
       <div class="main">
         <div class="tableCard">
           <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
-            <i class="el-icon-caret-bottom"></i>
+            <em class="el-icon-caret-bottom"></em>
           </div>
           <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px;overflow: hidden">
             <el-tab-pane name="1">
@@ -52,7 +52,7 @@
                 </el-col>
               </el-row> -->
               <el-row>
-                <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" >
+                <el-table header-row-class-name="" :data="dataList" border tooltip-effect="dark" class="datatTableHead-normal">
                   <!-- <el-table-column
                     type="selection"
                     width="55">
@@ -85,8 +85,8 @@
                   </el-table-column>
                   <el-table-column label="操作" width="150">
                     <template slot-scope="scope">
-                      <el-button type="text" size="small" @click="showLog(scope.row.batch)"><i class="iconfont factory-fangdajing-copy" style="font-size: 12px;margin-right: 5px"></i>查看</el-button>
-                      <el-button type="text" size="small" @click="makeAdjust(scope.row)" v-if="isAuth('Gra:adjust:material:wheatUpdate')"><i class="iconfont factory-banshou" style="font-size: 12px;margin-right: 5px"></i>调整</el-button>
+                      <el-button type="text" size="small" @click="showLog(scope.row.batch)"><em class="iconfont factory-fangdajing-copy" style="font-size: 12px;margin-right: 5px"></em>查看</el-button>
+                      <el-button type="text" size="small" @click="makeAdjust(scope.row)" v-if="isAuth('Gra:adjust:material:wheatUpdate')"><em class="iconfont factory-banshou" style="font-size: 12px;margin-right: 5px"></em>调整</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -99,7 +99,8 @@
                   :page-sizes="[10, 20, 50]"
                   :page-size="dataPageSize"
                   layout="total, sizes, prev, pager, next, jumper"
-                  :total="dataTotalCount">
+                  :total="dataTotalCount"
+                  v-if="dataList.length !==0">
                 </el-pagination>
               </el-row>
             </el-tab-pane>
@@ -108,7 +109,7 @@
                 <el-button>调整信息记录</el-button>
               </span>
               <el-row>
-                <el-table header-row-class-name="tableHead" :data="adjustList" border tooltip-effect="dark" >
+                <el-table header-row-class-name="" :data="adjustList" border tooltip-effect="dark" class="datatTableHead-normal">
                   <el-table-column type="index" label="序号" width="55"></el-table-column>
                   <el-table-column label="物料" :show-overflow-tooltip="true"  width="200">
                     <template slot-scope="scope">
@@ -155,7 +156,8 @@
                   :page-sizes="[10, 20, 50]"
                   :page-size="adjustPageSize"
                   layout="total, sizes, prev, pager, next, jumper"
-                  :total="adjustTotalCount">
+                  :total="adjustTotalCount"
+                  v-if="adjustList.length !==0">
                 </el-pagination>
               </el-row>
             </el-tab-pane>
@@ -167,7 +169,7 @@
           <span>领用明细</span>
         </div>
         <div>
-          <el-table header-row-class-name="tableHead" :data="applyList" border tooltip-effect="dark" >
+          <el-table header-row-class-name="" :data="applyList" border tooltip-effect="dark" class="datatTableHead-normal">
             <el-table-column type="index" label="序号" width="55"></el-table-column>
             <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
               <template slot-scope="scope">
@@ -195,7 +197,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-row>
+          <el-row v-if="applyList.length !==0">
             <el-pagination
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
@@ -203,7 +205,8 @@
               :page-sizes="[10, 20, 50]"
               :page-size="pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="totalCount">
+              :total="totalCount"
+              >
             </el-pagination>
           </el-row>
         </div>
@@ -217,7 +220,7 @@
           <span>盘点调整</span>
         </div>
         <div>
-           <el-form :model="adjustForm" label-width="100px" size="small" ref="modifyForm">
+          <el-form :model="adjustForm" label-width="100px" size="small" ref="modifyForm">
             <el-form-item label="物料：">
               <p>{{adjustForm.MATERIAL_CODE + ' ' + adjustForm.MATERIAL_NAME}}</p>
             </el-form-item>
@@ -358,11 +361,11 @@ export default class Index extends Vue {
   }
   retrieveDetail () {
     this.formData = {}
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_POT_DETAIL}/${this.factoryId}/${this.holderId}`, `GET`).then((res) => {
-      if (res.data.code === 0) {
-        this.formData = res.data.data
+    Vue.prototype.$http(`${GRANARY_API.WHEAT_POT_DETAIL}/${this.factoryId}/${this.holderId}`, `GET`).then(({data}) => {
+      if (data.code === 0) {
+        this.formData = data.data
       } else {
-        this.$notify.error({title: '错误', message: res.data.msg})
+        this.$notify.error({title: '错误', message: data.msg})
       }
     })
   }
@@ -373,13 +376,13 @@ export default class Index extends Vue {
     this.dataTotalCount = 0
     this.dataCurrPage = 1
     this.dataPageSize = 10
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_BATCH_LIST}`, `POST`, {holderId: this.holderId}).then((res) => {
-      if (res.data.code === 0) {
-        this.totalDataList = res.data.page.list
+    Vue.prototype.$http(`${GRANARY_API.WHEAT_BATCH_LIST}`, `POST`, {holderId: this.holderId}).then(({data}) => {
+      if (data.code === 0) {
+        this.totalDataList = data.page.list
         this.dataTotalCount = this.totalDataList.length
         this.dataList = this.totalDataList.slice(0, this.dataPageSize)
       } else {
-        this.$notify.error({title: '错误', message: res.data.msg})
+        this.$notify.error({title: '错误', message: data.msg})
       }
     })
   }
@@ -390,13 +393,13 @@ export default class Index extends Vue {
     this.adjustTotalCount = 0
     this.adjustCurrPage = 1
     this.adjustPageSize = 10
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_ADJSUT_LIST}`, `POST`, {factory: this.factoryId, holderId: this.holderId}).then((res) => {
-      if (res.data.code === 0) {
-        this.totalAdjustList = res.data.adjustInfo.list
+    Vue.prototype.$http(`${GRANARY_API.WHEAT_ADJSUT_LIST}`, `POST`, {factory: this.factoryId, holderId: this.holderId}).then(({data}) => {
+      if (data.code === 0) {
+        this.totalAdjustList = data.adjustInfo.list
         this.adjustTotalCount = this.totalAdjustList.length
         this.adjustList = this.totalAdjustList.slice(0, this.adjustPageSize)
       } else {
-        this.$notify.error({title: '错误', message: res.data.msg})
+        this.$notify.error({title: '错误', message: data.msg})
       }
     })
   }
@@ -407,13 +410,13 @@ export default class Index extends Vue {
     this.currPage = 1
     this.pageSize = 10
     this.totalCount = 0
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_APPLY_LIST}`, `POST`, {materielType: 'Wheat', batch}).then((res) => {
-      if (res.data.code === 0) {
-        this.totalList = res.data.collarUseInfo.list
+    Vue.prototype.$http(`${GRANARY_API.WHEAT_APPLY_LIST}`, `POST`, {materielType: 'Wheat', batch}).then(({data}) => {
+      if (data.code === 0) {
+        this.totalList = data.collarUseInfo.list
         this.totalCount = this.totalList.length
         this.applyList = this.totalList.slice(0, this.pageSize)
       } else {
-        this.$notify.error({title: '错误', message: res.data.msg})
+        this.$notify.error({title: '错误', message: data.msg})
       }
     })
   }
@@ -426,13 +429,13 @@ export default class Index extends Vue {
       Vue.prototype.$warning_SHINHO('请填写调整说明')
       return false
     }
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_ADJUST}`, `POST`, this.adjustForm).then((res) => {
-      if (res.data.code === 0) {
+    Vue.prototype.$http(`${GRANARY_API.WHEAT_ADJUST}`, `POST`, this.adjustForm).then(({data}) => {
+      if (data.code === 0) {
         this.$notify({title: '成功', message: '保存成功', type: 'success'})
         this.retrieveDataList()
         this.retrieveAdjustList()
       } else {
-        this.$notify.error({title: '错误', message: res.data.msg})
+        this.$notify.error({title: '错误', message: data.msg})
       }
     })
     this.dialogFormVisible2 = false

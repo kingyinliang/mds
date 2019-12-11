@@ -1,6 +1,6 @@
 <template>
-  <div class="bean-pulp">
-    <div class="header_main bean-pulp__header">
+  <div class="granary-bean-pulp">
+    <div class="header_main granary-bean-pulp__header">
       <el-card>
         <el-row type="flex" :gutter="10">
           <el-col :span="22">
@@ -23,7 +23,7 @@
         </el-row>
       </el-card>
     </div>
-    <div class="main bean-pulp__body" v-if="isMainAreaShow" >
+    <div class="main granary-bean-pulp__body" v-if="isMainAreaShow" >
       <el-card class="newCard area-to-bottom">
         <el-row :gutter="10">
           <el-col :span="12" v-for="(item, index) in dataList" :key="index">
@@ -96,7 +96,17 @@ export default {
   watch: {
   },
   mounted () {
-    this.getOriDataFromAPI()
+    this.getOriDataFromAPI().then(() => {
+      // 初始化搜寻条件
+      this.plantList.factoryIDValue = this.oriAPIData[0].deptId
+      if (this.oriAPIData[0].workshop.length !== 0) {
+        this.workshopList = this.oriAPIData[0].workshop
+        this.plantList.workshopIDValue = this.oriAPIData[0].workshop[0].deptId
+      } else {
+        this.workshopList = []
+        this.plantList.workshopIDValue = ''
+      }
+    })
   },
   methods: {
     // 改变选单数据
@@ -141,29 +151,32 @@ export default {
     },
     // 获取工厂车间
     getOriDataFromAPI () {
-      this.getFactory().then((valueFactory) => {
-        this.oriAPIData = []
-        this.factoryList = []
-        for (let i = 0; i < valueFactory.length; i++) {
-          let dataTempF = {
-            deptId: valueFactory[i].deptId,
-            deptName: valueFactory[i].deptName,
-            workshop: []
-          }
-          this.factoryList.push({deptId: valueFactory[i].deptId, deptName: valueFactory[i].deptName})
-          this.getWorkshop(valueFactory[i].deptId).then((valueWorkshop) => {
-            if (valueWorkshop.length !== 0) {
-              for (let j = 0; j < valueWorkshop.length; j++) {
-                let dataTempW = {
-                  deptId: valueWorkshop[j].deptId,
-                  deptName: valueWorkshop[j].deptName
-                }
-                dataTempF.workshop.push(dataTempW)
-              }
+      return new Promise((resolve, reject) => {
+        this.getFactory().then((valueFactory) => {
+          this.oriAPIData = []
+          this.factoryList = []
+          for (let i = 0; i < valueFactory.length; i++) {
+            let dataTempF = {
+              deptId: valueFactory[i].deptId,
+              deptName: valueFactory[i].deptName,
+              workshop: []
             }
-            this.oriAPIData.push(dataTempF)
-          })
-        }
+            this.factoryList.push({deptId: valueFactory[i].deptId, deptName: valueFactory[i].deptName})
+            this.getWorkshop(valueFactory[i].deptId).then((valueWorkshop) => {
+              if (valueWorkshop.length !== 0) {
+                for (let j = 0; j < valueWorkshop.length; j++) {
+                  let dataTempW = {
+                    deptId: valueWorkshop[j].deptId,
+                    deptName: valueWorkshop[j].deptName
+                  }
+                  dataTempF.workshop.push(dataTempW)
+                }
+              }
+              this.oriAPIData.push(dataTempF)
+              resolve()
+            })
+          }
+        })
       })
     },
     // 获取列表
@@ -240,11 +253,11 @@ export default {
 <style lang="scss">
 @import '@/assets/scss/_common.scss';
 @import '@/assets/scss/_share.scss';
-.bean-pulp{
+.granary-bean-pulp{
   .area-to-bottom{
     min-height: calc(82vh);
   }
-  .bean-pulp__body{
+  .granary-bean-pulp__body{
     .el-col-12{
       margin-bottom: 10px;
     }
