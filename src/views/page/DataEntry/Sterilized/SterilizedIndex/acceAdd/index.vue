@@ -273,9 +273,9 @@ export default {
       } else {
         if (data.length > 0) {
           str === 'addSup' ? this.addSupOverData = data : this.SupOverData = data
-          if (!this.dataRul(this.SupOverData, 'SupDate', true)) {
-            return
-          }
+          // if (!this.dataRul(this.SupOverData, 'SupDate', true)) {
+          //   return
+          // }
           this.visible = true
         } else {
           this.$warning_SHINHO('请选择数据')
