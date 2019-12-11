@@ -48,14 +48,19 @@ export default {
   name: 'InStorage',
   data () {
     return {
+      selectChangePhaseTime: { // 只可以选择后三个月日期
+        disabledDate (time) {
+          const curDate = new Date().getTime()
+          // console.log(this.$route.query.courseStartTime)
+          alert(111)
+          const three = 90 * 24 * 3600 * 1000
+          const threeMonths = curDate + three
+          return time.getTime() < Date.now() || time.getTime() > threeMonths
+        }
+      },
       InDataList: [],
       InAudit: [],
       num: ''
-    }
-  },
-  watch: {
-    'num' (n, o) {
-      this.setAmount(n)
     }
   },
   props: {
@@ -68,6 +73,15 @@ export default {
     }
   },
   mounted () {
+    let that = this
+    this.selectChangePhaseTime.disabledDate = (time) => {
+      const curDate = new Date().getTime()
+      console.log(that.$route.query.courseStartTime)
+      alert(111)
+      const three = 90 * 24 * 3600 * 1000
+      const threeMonths = curDate + three
+      return time.getTime() < Date.now() || time.getTime() > threeMonths
+    }
   },
   methods: {
     setNum (num) {
@@ -150,6 +164,10 @@ export default {
       return ty
     },
     AddIn () {
+      let production = ''
+      if (this.InDataList.filter(item => item.delFlag === '0').length) {} else {
+        production = this.num
+      }
       this.InDataList.splice(0, 0, {
         id: '',
         orderId: this.$store.state.common.bottle.ProOrderId,
@@ -157,7 +175,7 @@ export default {
         status: '',
         classes: '',
         batch: '',
-        production: '',
+        production: production,
         unit: 'EA',
         remark: '',
         delFlag: '0',
