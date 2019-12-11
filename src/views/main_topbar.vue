@@ -12,7 +12,7 @@
         class="site-navbar__menu"
         mode="horizontal">
         <el-menu-item class="site-navbar__switch" index="0" @click="sidebarFold = !sidebarFold">
-          <i class="iconfont factory-shouqicaidan" style="font-size: 25px"></i>
+          <i class="iconfont factory-shouqicaidan switching" :class="{'open': sidebarFold, 'packUp': !sidebarFold}" style="font-size: 25px"></i>
         </el-menu-item>
       </el-menu>
       <el-menu
@@ -108,5 +108,15 @@ export default {
   .site-navbar {
     background: #002140!important;
     background-color: red;
+  }
+  .packUp{
+    transform: rotate(0deg);
+  }
+  .open{
+    transform: rotate(180deg);
+  }
+  .switching{
+    transition: 500ms;
+    display: block;
   }
 </style>
