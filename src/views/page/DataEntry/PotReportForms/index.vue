@@ -56,6 +56,7 @@ export default {
     return {
       activeName: this.$store.state.common.PotReportForms.type === 'steHolder' ? '1' : '2',
       plantList: {
+        factory: this.$store.state.common.PotReportForms.factory,
         workShop: this.$store.state.common.PotReportForms.workShop
       },
       queryForm1: {

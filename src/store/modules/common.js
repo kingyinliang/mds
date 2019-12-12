@@ -192,6 +192,7 @@ export default {
      * 罐区报表
      */
     PotReportForms: {
+      factory: '',
       type: '',
       workShop: ''
     },

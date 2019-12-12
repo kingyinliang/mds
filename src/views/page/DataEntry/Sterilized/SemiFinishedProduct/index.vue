@@ -301,6 +301,7 @@ export default {
   },
   methods: {
     goPot () {
+      this.$store.state.common.PotReportForms.factory = this.formHeader.factory
       this.$store.state.common.PotReportForms.workShop = this.formHeader.workShop
       this.$store.state.common.PotReportForms.type = 'steHolder'
       this.$store.state.common.mainTabs = this.$store.state.common.mainTabs.filter(item => item.name !== 'DataEntry-PotReportForms-index')
