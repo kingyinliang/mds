@@ -273,7 +273,6 @@
               </el-form-item>
               <el-form-item
                 label="调整量："
-                required
                 prop="quantity"
                 :rules="[
                   { required: true, validator: validatePassAdjustNum, message: '请填写调整量 ', trigger: 'blur' }
@@ -283,7 +282,6 @@
               </el-form-item>
               <el-form-item
                   label="说明："
-                  required
                   prop="remark"
                   :rules="[
                     { required: true, message: '请填写调整说明', trigger: 'blur' }
@@ -561,6 +559,7 @@ export default class Index extends Vue {
             this.$notify({title: MSG.OPERATE.saveSuccess.title, message: MSG.OPERATE.saveSuccess.message, type: 'success'})
             this.retrieveDataList()
             this.retrieveAdjustList()
+            ref.resetFields()
           } else {
             this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
           }

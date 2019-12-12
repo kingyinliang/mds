@@ -235,7 +235,6 @@
             </el-form-item>
             <el-form-item
               label="调整量："
-              required
               prop="QUANTITY"
               :rules="[
                 { required: true, validator: validatePassAdjustNum, message: '请填写调整量 ', trigger: 'blur' }
@@ -245,7 +244,6 @@
             </el-form-item>
             <el-form-item
                 label="说明："
-                required
                 prop="REMARK"
                 :rules="[
                     { required: true, message: '请填写调整说明', trigger: 'blur' }
@@ -450,6 +448,7 @@ export default class Index extends Vue {
             this.$notify({title: '成功', message: '保存成功', type: 'success'})
             this.retrieveDataList()
             this.retrieveAdjustList()
+            ref.resetFields()
           } else {
             this.$notify.error({title: '错误', message: data.msg})
           }
