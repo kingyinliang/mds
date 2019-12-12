@@ -60,11 +60,6 @@
                         {{scope.row.batch}}
                       </template>
                     </el-table-column>
-                    <!-- <el-table-column label="入库日期" :show-overflow-tooltip="true" width="170">
-                      <template slot-scope="scope">
-                        {{scope.row.postingDate}}
-                      </template>
-                    </el-table-column> -->
                     <el-table-column label="入库数量 (KG)" :show-overflow-tooltip="true" width="160" align="right">
                       <template slot-scope="scope">
                         {{(scope.row.inAmount!==null? scope.row.inAmount.toLocaleString() : '')}}
@@ -139,7 +134,7 @@
                     </el-table-column>
                   </el-table>
                 </el-row>
-                <el-row>
+                <el-row v-if="adjustList.length!==0">
                   <el-pagination
                     @size-change="handleAdjustSizeChange"
                     @current-change="handleAdjustCurrentChange"
@@ -162,7 +157,7 @@
           <el-tabs v-model="activeDialogFormName" type="card">
             <el-tab-pane label="入库信息" name="inStorage">
               <el-table header-row-class-name="" :data="applyInStorageList" border tooltip-effect="dark" class="datatTableHead-normal">
-                <el-table-column type="index" label="序号" width="55"></el-table-column>
+                <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
                   <template slot-scope="scope">
                     {{scope.row.materialCode + ' ' + scope.row.materialName}}
@@ -173,12 +168,12 @@
                     {{scope.row.inPortBatch}}
                   </template>
                 </el-table-column>
-                <el-table-column label="入库量(KG)" :show-overflow-tooltip="true" width="100">
+                <el-table-column label="入库量(KG)" :show-overflow-tooltip="true" width="100" align="right" header-align="center">
                   <template slot-scope="scope">
                     {{(scope.row.inPortWeight? scope.row.inPortWeight.toLocaleString() : '')}}
                   </template>
                 </el-table-column>
-                <el-table-column label="入库订单" :show-overflow-tooltip="true" width="150" >
+                <el-table-column label="入库订单" :show-overflow-tooltip="true" width="130" >
                   <template slot-scope="scope">
                     {{scope.row.orderNo}}
                   </template>
@@ -208,7 +203,7 @@
             </el-tab-pane>
             <el-tab-pane label="领用信息" name="receive">
               <el-table header-row-class-name="" :data="applyReceiveList" border tooltip-effect="dark" class="datatTableHead-normal">
-                <el-table-column type="index" label="序号" width="55"></el-table-column>
+                <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
                   <template slot-scope="scope">
                     {{scope.row.materialCode + ' ' + scope.row.materialName}}
@@ -219,12 +214,12 @@
                     {{scope.row.whtBatch}}
                   </template>
                 </el-table-column>
-                <el-table-column label="领用量(KG)" :show-overflow-tooltip="true" width="100">
+                <el-table-column label="领用量(KG)" :show-overflow-tooltip="true" width="100" align="right">
                   <template slot-scope="scope">
                     {{(scope.row.userWeight? scope.row.userWeight.toLocaleString() : '')}}
                   </template>
                 </el-table-column>
-                <el-table-column label="领用订单" :show-overflow-tooltip="true" width="150" >
+                <el-table-column label="领用订单" :show-overflow-tooltip="true" width="130" >
                   <template slot-scope="scope">
                     {{scope.row.orderNo}}
                   </template>
@@ -263,7 +258,7 @@
             <span>盘点调整</span>
           </div>
           <div>
-            <el-form :model="adjustForm" label-width="100px" size="small" ref="modifyForm">
+            <el-form :model="adjustForm" label-width="100px" size="small" ref="adjustForm">
               <el-form-item label="物料：">
                 <p>{{adjustForm.materialCode + ' ' + adjustForm.materialName}}</p>
               </el-form-item>
@@ -276,17 +271,29 @@
                   <el-option label="盘盈" value="0" ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="调整量：" required>
-                <el-input  type='number'  v-model.number="adjustForm.quantity"  style='width:220px'/>
+              <el-form-item
+                label="调整量："
+                prop="quantity"
+                :rules="[
+                  { required: true, validator: validatePassAdjustNum, message: '请填写调整量 ', trigger: 'blur' }
+                ]"
+              >
+                <el-input  type='number'  v-model.number="adjustForm.quantity" style='width:150px'/> KG
               </el-form-item>
-              <el-form-item label="说明：">
+              <el-form-item
+                  label="说明："
+                  prop="remark"
+                  :rules="[
+                    { required: true, message: '请填写调整说明', trigger: 'blur' }
+                  ]"
+              >
                 <el-input  type='text'  v-model.trim="adjustForm.remark" style='width:220px'/>
               </el-form-item>
             </el-form>
           </div>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="isShowMessageBoxCheck = false">取消</el-button>
-            <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveAdjust()">确定</el-button>
+            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="cannalSaveAdjust('adjustForm')">取消</el-button>
+            <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveAdjust('adjustForm')">确定</el-button>
           </div>
         </el-dialog>
       </el-col>
@@ -297,6 +304,7 @@
 <script lang="ts">
 import {Vue, Component} from 'vue-property-decorator'
 import {MEASUREBARN_WHEAT_API} from '@/api/api'
+import {deepCopy} from '@/assets/js/util.js'
 import MSG from '@/assets/js/hint-msg'
 @Component({
   components: {
@@ -308,25 +316,25 @@ export default class Index extends Vue {
   holderId: string = ''
   activeName = '1'
   // 批次数据
-  dataList = []
+  dataList:any = []
   totalDataList = []
   dataCurrPage: number = 1
   dataPageSize: number = 10
   dataTotalCount: number = 0
   // 调整数据
-  adjustList = []
+  adjustList:any = []
   totalAdjustList = []
   adjustCurrPage: number = 1
   adjustPageSize: number = 10
   adjustTotalCount: number = 0
   // 入库数据
-  applyInStorageList = []
+  applyInStorageList:any = []
   totalInStorageList = []
   currPageInStorageList: number = 1
   pageSizeInStorageList: number = 10
   totalCountInStorageList: number = 0
   // 领用数据
-  applyReceiveList = []
+  applyReceiveList:any = []
   totalReceiveList = []
   currPageReceiveList: number = 1
   pageSizeReceiveList: number = 10
@@ -381,19 +389,26 @@ export default class Index extends Vue {
     this.formData.totalWeight = orgData.wheatList.map((item) => item.amount).reduce((accumulator, currentValue) => accumulator + currentValue)
 
     // 当前库存量
-    // this.retrieveDataList()
-    this.dataList = []
-    orgData.wheatList.map((item) => {
-      this.dataList.push({
-        'materialCode': item.materialCode,
-        'materialName': item.materialName,
-        'batch': item.batch, // 批次
-        'inAmount': item.inAmount, // 入库数量
-        'amount': item.amount // 当前数量
-      })
-    })
+    this.retrieveDataList()
+    // this.dataList = []
+    // orgData.wheatList.map((item) => {
+    //   this.dataList.push({
+    //     'materialCode': item.materialCode,
+    //     'materialName': item.materialName,
+    //     'batch': item.batch, // 批次
+    //     'inAmount': item.inAmount, // 入库数量
+    //     'amount': item.amount // 当前数量
+    //   })
+    // })
     // 调整信息记录
     this.retrieveAdjustList()
+  }
+  validatePassAdjustNum = (rule, value, callback) => {
+    if (value === 0) {
+      callback(new Error('请填写调整量'))
+    } else {
+      callback()
+    }
   }
   showMoreDetail (batch) {
     this.retrieveLogList(batch)
@@ -424,39 +439,39 @@ export default class Index extends Vue {
   handleReceiveListSizeChange (val: number) {
     this.pageSizeReceiveList = val
     this.currPageReceiveList = 1
-    this.applyReceiveList = this.totalReceiveList.slice((this.currPageReceiveList - 1) * this.pageSizeReceiveList, (this.currPageReceiveList - 1) * this.pageSizeReceiveList + this.pageSizeReceiveList)
+    this.applyReceiveList = deepCopy(this.totalReceiveList.slice((this.currPageReceiveList - 1) * this.pageSizeReceiveList, (this.currPageReceiveList - 1) * this.pageSizeReceiveList + this.pageSizeReceiveList))
   }
   handleInStorageListSizeChange (val: number) {
     this.pageSizeInStorageList = val
     this.currPageInStorageList = 1
-    this.applyInStorageList = this.totalInStorageList.slice((this.currPageInStorageList - 1) * this.pageSizeInStorageList, (this.currPageInStorageList - 1) * this.pageSizeInStorageList + this.pageSizeInStorageList)
+    this.applyInStorageList = deepCopy(this.totalInStorageList.slice((this.currPageInStorageList - 1) * this.pageSizeInStorageList, (this.currPageInStorageList - 1) * this.pageSizeInStorageList + this.pageSizeInStorageList))
   }
   handleDataSizeChange (val: number) {
     this.dataPageSize = val
     this.dataCurrPage = 1
-    this.dataList = this.totalDataList.slice((this.dataCurrPage - 1) * this.dataPageSize, (this.dataCurrPage - 1) * this.dataPageSize + this.dataPageSize)
+    this.dataList = deepCopy(this.totalDataList.slice((this.dataCurrPage - 1) * this.dataPageSize, (this.dataCurrPage - 1) * this.dataPageSize + this.dataPageSize))
   }
   handleAdjustSizeChange (val: number) {
     this.adjustPageSize = val
     this.adjustCurrPage = 1
-    this.adjustList = this.totalAdjustList.slice((this.adjustCurrPage - 1) * this.adjustPageSize, (this.adjustCurrPage - 1) * this.adjustPageSize + this.adjustPageSize)
+    this.adjustList = deepCopy(this.totalAdjustList.slice((this.adjustCurrPage - 1) * this.adjustPageSize, (this.adjustCurrPage - 1) * this.adjustPageSize + this.adjustPageSize))
   }
   // 跳转页数
   handleReceiveListCurrentChange (val: number) {
     this.currPageReceiveList = val
-    this.applyReceiveList = this.totalReceiveList.slice((this.currPageReceiveList - 1) * this.pageSizeReceiveList, (val - 1) * this.pageSizeReceiveList + this.pageSizeReceiveList)
+    this.applyReceiveList = deepCopy(this.totalReceiveList.slice((this.currPageReceiveList - 1) * this.pageSizeReceiveList, (val - 1) * this.pageSizeReceiveList + this.pageSizeReceiveList))
   }
   handleInStorageListCurrentChange (val: number) {
     this.currPageInStorageList = val
-    this.applyInStorageList = this.totalInStorageList.slice((this.currPageInStorageList - 1) * this.pageSizeInStorageList, (val - 1) * this.pageSizeInStorageList + this.pageSizeInStorageList)
+    this.applyInStorageList = deepCopy(this.totalInStorageList.slice((this.currPageInStorageList - 1) * this.pageSizeInStorageList, (val - 1) * this.pageSizeInStorageList + this.pageSizeInStorageList))
   }
   handleDataCurrentChange (val: number) {
     this.dataCurrPage = val
-    this.dataList = this.totalDataList.slice((this.dataCurrPage - 1) * this.dataPageSize, (val - 1) * this.dataPageSize + this.dataPageSize)
+    this.dataList = deepCopy(this.totalDataList.slice((this.dataCurrPage - 1) * this.dataPageSize, (val - 1) * this.dataPageSize + this.dataPageSize))
   }
   handleAdjustCurrentChange (val: number) {
     this.adjustCurrPage = val
-    this.adjustList = this.totalAdjustList.slice((this.adjustCurrPage - 1) * this.adjustPageSize, (val - 1) * this.adjustPageSize + this.adjustPageSize)
+    this.adjustList = deepCopy(this.totalAdjustList.slice((this.adjustCurrPage - 1) * this.adjustPageSize, (val - 1) * this.adjustPageSize + this.adjustPageSize))
   }
   // 获取基本讯息
   // retrieveDetail () {
@@ -471,20 +486,23 @@ export default class Index extends Vue {
   // }
   // 当前库存量
   retrieveDataList () {
-    // this.totalDataList = []
-    // this.dataList = []
-    // this.dataTotalCount = 0
-    // this.dataCurrPage = 1
-    // this.dataPageSize = 10
-    // Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_BATCH_LIST}`, `POST`, {holderId: this.holderId}).then(({data}) => {
-    //   if (data.code === 0) {
-    //     this.totalDataList = data.page.list
-    //     this.dataTotalCount = this.totalDataList.length
-    //     this.dataList = this.totalDataList.slice(0, this.dataPageSize)
-    //   } else {
-    //     this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
-    //   }
-    // })
+    this.dataList = []
+    this.dataTotalCount = 0
+    this.dataCurrPage = 1
+    this.dataPageSize = 10
+    Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_POT_LIST}`, `POST`, {factory: this.factoryId, workShop: this.deptId, holderId: this.holderId}).then(({data}) => {
+      if (data.code === 0) {
+        if (data.infoList.length !== 0) {
+          this.totalDataList = data.infoList[0].wheatList
+          this.dataTotalCount = this.totalDataList.length
+          this.dataList = deepCopy(this.totalDataList.slice(0, this.dataPageSize))
+        } else {
+          this.$notify.info({title: MSG.API.WheatPot.BeanPulp.searchResult.title, message: MSG.API.WheatPot.BeanPulp.searchResult.message})
+        }
+      } else {
+        this.$notify.error({title: '错误', message: data.msg})
+      }
+    })
   }
   // 调整信息记录
   retrieveAdjustList () {
@@ -497,7 +515,7 @@ export default class Index extends Vue {
       if (data.code === 0) {
         this.totalAdjustList = data.adjustInfo.list
         this.adjustTotalCount = this.totalAdjustList.length
-        this.adjustList = this.totalAdjustList.slice(0, this.adjustPageSize)
+        this.adjustList = deepCopy(this.totalAdjustList.slice(0, this.adjustPageSize))
       } else {
         this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
       }
@@ -524,27 +542,40 @@ export default class Index extends Vue {
         this.totalReceiveList = data.detailListOut
         this.totalCountInStorageList = data.detailListIn.length
         this.totalCountReceiveList = data.detailListOut.length
-        this.applyInStorageList = data.detailListIn.slice(0, this.pageSizeInStorageList)
-        this.applyReceiveList = data.detailListOut.slice(0, this.pageSizeReceiveList)
+        this.applyInStorageList = deepCopy(data.detailListIn.slice(0, this.pageSizeInStorageList))
+        this.applyReceiveList = deepCopy(data.detailListOut.slice(0, this.pageSizeReceiveList))
       } else {
         this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
       }
     })
   }
-  saveAdjust () {
-    if (this.adjustForm.quantity.toString() === '') {
-      Vue.prototype.$warning_SHINHO(MSG.VALIDATE.updatNumNotEmpty)
-      return false
-    }
-    Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_ADJUST_LIST}`, `POST`, this.adjustForm).then(({data}) => {
-      if (data.code === 0) {
-        this.$notify({title: MSG.OPERATE.saveSuccess.title, message: MSG.OPERATE.saveSuccess.message, type: 'success'})
-        // this.retrieveDataList()
-        this.retrieveAdjustList()
+  saveAdjust (formName) {
+    const ref: any = this.$refs[formName]
+    ref.validate((valid) => {
+      if (valid) {
+        Vue.prototype.$http(`${MEASUREBARN_WHEAT_API.WHEAT_ADJUST_LIST}`, `POST`, this.adjustForm).then(({data}) => {
+          if (data.code === 0) {
+            this.$notify({title: MSG.OPERATE.saveSuccess.title, message: MSG.OPERATE.saveSuccess.message, type: 'success'})
+            this.retrieveDataList()
+            this.retrieveAdjustList()
+            ref.resetFields()
+          } else {
+            this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
+          }
+        })
+        this.isShowMessageBoxCheck = false
       } else {
-        this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
+        return false
       }
     })
+    // if (this.adjustForm.quantity.toString() === '') {
+    //   Vue.prototype.$warning_SHINHO(MSG.VALIDATE.updatNumNotEmpty)
+    //   return false
+    // }
+  }
+  cannalSaveAdjust (formName) {
+    const ref: any = this.$refs[formName]
+    ref.resetFields()
     this.isShowMessageBoxCheck = false
   }
   get total () {
