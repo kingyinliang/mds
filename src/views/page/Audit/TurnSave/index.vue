@@ -155,7 +155,7 @@ export default {
     GetPostLost (data) {
       console.log(data)
       let obj = {}
-      if (data) {
+      if (data.length) {
         obj = {
           holderType: data
         }

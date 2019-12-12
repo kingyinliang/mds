@@ -393,7 +393,7 @@ export default {
         diffAmount: '',
         id: '',
         isOperation: '',
-        isSplit: '1',
+        isSplit: '0',
         isSupplement: '1',
         materialCode: '',
         materialName: '',
