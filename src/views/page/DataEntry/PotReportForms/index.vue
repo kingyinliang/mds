@@ -123,6 +123,16 @@ export default {
           label: '是否超期',
           prop: 'IS_OVERDUE',
           width: ''
+        },
+        {
+          label: '数量',
+          prop: 'AMOUNT',
+          width: ''
+        },
+        {
+          label: '单位',
+          prop: 'UNIT',
+          width: ''
         }
       ]
     }
