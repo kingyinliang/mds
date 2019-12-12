@@ -85,7 +85,6 @@ exports.styleLoaders = function (options) {
 
 exports.createNotifierCallback = () => {
   const notifier = require('node-notifier')
-
   return (severity, errors) => {
     if (severity !== 'error') return
 
@@ -99,20 +98,4 @@ exports.createNotifierCallback = () => {
       icon: path.join(__dirname, 'logo.png')
     })
   }
-}
-// 深拷贝
-exports.deepCopy = function(obj){
-  //判断是否是简单数据类型，
-  let result
-  if(typeof obj == "object"){
-      //复杂数据类型
-      result = obj.constructor == Array ? [] : {};
-      for(let i in obj){
-          result[i] = typeof obj[i] == "object" ? deepCopy(obj[i]) : obj[i];
-      }
-  }else {
-      //简单数据类型 直接 == 赋值
-      result = obj;
-  }
-  return result;
 }
