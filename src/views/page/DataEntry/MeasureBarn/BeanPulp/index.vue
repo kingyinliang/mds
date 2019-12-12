@@ -80,7 +80,7 @@ import { BASICDATA_API, MEASUREBARN_BEAN_API } from '@/api/api'
 import { isAuth } from '../../../../../net/validate'
 import MSG from '@/assets/js/hint-msg'
 export default {
-  name: 'BeanPulpIndex',
+  name: 'MeasureBarnBeanPulpIndex',
   data () {
     return {
       factoryList: [],

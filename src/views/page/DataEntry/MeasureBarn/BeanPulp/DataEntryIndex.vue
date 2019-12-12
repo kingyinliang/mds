@@ -308,7 +308,8 @@ import {deepCopy} from '@/assets/js/util.js'
 import MSG from '@/assets/js/hint-msg'
 @Component({
   components: {
-  }
+  },
+  name: 'MeasureBarnBeanPulpDataEntryIndex'
 })
 export default class Index extends Vue {
   factoryId: string = ''
