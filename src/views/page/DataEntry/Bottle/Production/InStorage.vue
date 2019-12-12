@@ -36,13 +36,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--<el-date-picker-->
-      <!--v-model="value2"-->
-      <!--type="datetime"-->
-      <!--placeholder="选择日期时间"-->
-      <!--align="right"-->
-      <!--:picker-options="pickerOptions">-->
-    <!--</el-date-picker>-->
     <p style="font-size: 14px;line-height: 32px">产量数合计：{{sumNum}}个</p>
     <auditLog :tableData="InAudit"></auditLog>
   </div>
@@ -56,18 +49,6 @@ export default {
   data () {
     return {
       value2: '',
-      pickerOptions: {
-        selectChangePhaseTime: { // 只可以选择后三个月日期
-          disabledDate (time) {
-            const curDate = new Date().getTime()
-            // console.log(this.$route.query.courseStartTime)
-            alert(111)
-            const three = 90 * 24 * 3600 * 1000
-            const threeMonths = curDate + three
-            return time.getTime() < Date.now() || time.getTime() > threeMonths
-          }
-        }
-      },
       InDataList: [],
       InAudit: [],
       num: ''
@@ -83,15 +64,6 @@ export default {
     }
   },
   mounted () {
-    // let that = this
-    // this.pickerOptions.selectChangePhaseTime.disabledDate = (time) => {
-    //   const curDate = new Date().getTime()
-    //   console.log(that.$route.query.courseStartTime)
-    //   alert(111)
-    //   const three = 90 * 24 * 3600 * 1000
-    //   const threeMonths = curDate + three
-    //   return time.getTime() < Date.now() || time.getTime() > threeMonths
-    // }
   },
   methods: {
     setNum (num) {

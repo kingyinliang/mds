@@ -29,11 +29,7 @@
         <el-table-column label="投料数量(M³)" show-overflow-tooltip prop="realInAmount" width="120"></el-table-column>
         <el-table-column label="入库数量(M³)" show-overflow-tooltip prop="ferAmount" width="120"></el-table-column>
         <el-table-column label="库存数量(M³)" show-overflow-tooltip prop="stockAmount"></el-table-column>
-        <el-table-column label="类别" show-overflow-tooltip width="110">
-          <template slot-scope="scope">
-            {{scope.row.materialCode}} {{scope.row.materialName}}
-          </template>
-        </el-table-column>
+        <el-table-column label="类别" prop="halfType" show-overflow-tooltip width="110"></el-table-column>
         <el-table-column label="投料开始时间" show-overflow-tooltip prop="feedingDate" width="120"></el-table-column>
         <el-table-column label="发酵开始时间" show-overflow-tooltip prop="fermentDate" width="120"></el-table-column>
         <el-table-column label="发酵结束时间" show-overflow-tooltip prop="fermentEndDate" width="120"></el-table-column>

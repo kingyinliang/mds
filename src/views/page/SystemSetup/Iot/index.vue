@@ -144,6 +144,7 @@ export default {
           type: 'select',
           label: '参数名称',
           prop: 'parameterCode',
+          filterable: true,
           resVal: {
             resData: 'parameterCode',
             label: ['PARAMETER_NAME'],

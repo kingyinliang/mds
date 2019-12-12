@@ -273,9 +273,9 @@ export default {
       } else {
         if (data.length > 0) {
           str === 'addSup' ? this.addSupOverData = data : this.SupOverData = data
-          // if (!this.dataRul(this.SupOverData, 'SupDate', true)) {
-          //   return
-          // }
+          if (!this.dataRul(this.SupOverData, 'SupDate', true)) {
+            return
+          }
           this.visible = true
         } else {
           this.$warning_SHINHO('请选择数据')
@@ -499,9 +499,15 @@ export default {
             }
           } else if (data1 === 'SupDate') {
             console.log(sum)
-            if (sum !== item.addAmount * 1) {
-              ty = false
-              this.$warning_SHINHO('领用数量不等于添加数量')
+            if (item.isSplit === '0') {
+              let addAmount = 0
+              dataArr.filter(row => row.materialCode === item.materialCode && row.isSplit === '0').forEach(row => {
+                addAmount += row.addAmount * 1
+              })
+              if (sum !== addAmount) {
+                ty = false
+                this.$warning_SHINHO('领用数量不等于添加数量')
+              }
             }
           }
         }

@@ -56,6 +56,7 @@ export default {
     return {
       activeName: this.$store.state.common.PotReportForms.type === 'steHolder' ? '1' : '2',
       plantList: {
+        factory: this.$store.state.common.PotReportForms.factory,
         workShop: this.$store.state.common.PotReportForms.workShop
       },
       queryForm1: {
@@ -121,6 +122,16 @@ export default {
         {
           label: '是否超期',
           prop: 'IS_OVERDUE',
+          width: ''
+        },
+        {
+          label: '数量',
+          prop: 'AMOUNT',
+          width: ''
+        },
+        {
+          label: '单位',
+          prop: 'UNIT',
           width: ''
         }
       ]
