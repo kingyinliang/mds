@@ -166,7 +166,7 @@
         <auditLog :tableData="readAudit"></auditLog>
       </el-col>
     </el-row>
-    <el-dialog :title="this.stockForm.flourDeviceName" :visible.sync="dialogFormVisible" width="450px">
+    <el-dialog :title="this.stockForm.flourDeviceName" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="450px">
       <el-form :model="stockForm" :rules="dataRule" ref="stockForm">
         <el-form-item label="粮仓" :label-width="formLabelWidth" required prop="wheatDeviceId">
           <el-select @change="changeWheatContainer"  v-model="stockForm.wheatDeviceId" value-key="wheatDeviceId" placeholder="请选择粮仓" style="width:220px" :disabled="!isRedact">
@@ -174,10 +174,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="起始(KG)" :label-width="formLabelWidth" required prop="startWeight">
-          <el-input type='number' v-model.number="stockForm.startWeight"  style="width:220px;" :disabled="!isRedact"></el-input>
+          <el-input type='number' v-model.number="stockForm.startWeight" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width:220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
         <el-form-item label="结束(KG)" :label-width="formLabelWidth" required prop="endWeight">
-          <el-input type='number' v-model.number="stockForm.endWeight"  style="width:220px;" :disabled="!isRedact"></el-input>
+          <el-input type='number' v-model.number="stockForm.endWeight" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width:220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
         <el-form-item label="入库批次" :label-width="formLabelWidth" required prop="inPortBatch">
           <el-input  maxlength='10' v-model="stockForm.inPortBatch"  style="width:220px;" :disabled="!isRedact"></el-input>
@@ -201,7 +201,7 @@
 </template>
 
 <script>
-import { dateFormat } from '@/net/validate'
+import { dateFormat, accSub } from '@/net/validate'
 import { WHT_API, BASICDATA_API } from '@/api/api'
 export default {
   data () {
@@ -421,7 +421,7 @@ export default {
             // 原有行
             currentRecord = this.wheatDataList.filter(data => data.id === this.stockForm.id)
           }
-          this.stockForm.inPortWeight = (this.stockForm.endWeight - this.stockForm.startWeight).toFixed(2)
+          this.stockForm.inPortWeight = accSub(this.stockForm.endWeight, this.stockForm.startWeight)
           this.stockForm.wheatDeviceName = this.wheatContainerList.find(item => item.holderId === this.stockForm.wheatDeviceId).holderName
           if (currentRecord && currentRecord.length > 0) {
             // modify
