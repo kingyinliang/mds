@@ -92,7 +92,7 @@
                     :page-size="dataPageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="dataTotalCount"
-                    v-if="dataList.length !==0">
+                    >
                   </el-pagination>
                 </el-row>
               </el-tab-pane>
@@ -140,7 +140,7 @@
                     </el-table-column>
                   </el-table>
                 </el-row>
-                <el-row>
+                <el-row v-if="adjustList.length !==0">
                   <el-pagination
                     @size-change="handleAdjustSizeChange"
                     @current-change="handleAdjustCurrentChange"
@@ -149,7 +149,7 @@
                     :page-size="adjustPageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="adjustTotalCount"
-                    v-if="adjustList.length !==0">
+                    >
                   </el-pagination>
                 </el-row>
               </el-tab-pane>
@@ -162,7 +162,7 @@
           </div>
           <div>
             <el-table header-row-class-name="" :data="applyList" border tooltip-effect="dark" class="datatTableHead-normal">
-              <el-table-column type="index" label="序号" width="55"></el-table-column>
+              <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
               <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
                 <template slot-scope="scope">
                   {{scope.row.materialCode + ' ' + scope.row.materialName}}
@@ -173,7 +173,7 @@
                   {{scope.row.batch}}
                 </template>
               </el-table-column>
-              <el-table-column label="领用量(KG)" :show-overflow-tooltip="true" width="100">
+              <el-table-column label="领用量(KG)" :show-overflow-tooltip="true" width="100" align="right" header-align="center">
                 <template slot-scope="scope">
                   {{(scope.row.useWeight? scope.row.useWeight.toLocaleString() : '')}}
                 </template>
