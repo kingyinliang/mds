@@ -267,7 +267,8 @@ import {Vue, Component} from 'vue-property-decorator'
 import {GRANARY_API} from '@/api/api'
 @Component({
   components: {
-  }
+  },
+  name: 'GranaryWheatPotDataEntryIndex'
 })
 export default class Index extends Vue {
   factoryId = ''

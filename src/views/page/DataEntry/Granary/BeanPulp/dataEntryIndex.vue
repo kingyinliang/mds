@@ -226,7 +226,6 @@
               </el-form-item>
               <el-form-item
                 label="调整量："
-                required
                 prop="QUANTITY"
                 :rules="[
                   { required: true, validator: validatePassAdjustNum, message: '请填写调整量 ', trigger: 'blur' }
@@ -236,7 +235,6 @@
               </el-form-item>
               <el-form-item
                 label="说明："
-                required
                 prop="REMARK"
                 :rules="[
                     { required: true, message: '请填写调整说明', trigger: 'blur' }
@@ -262,7 +260,8 @@ import {GRANARY_API} from '@/api/api'
 import MSG from '@/assets/js/hint-msg'
 @Component({
   components: {
-  }
+  },
+  name: 'GranaryBeanPulpDataEntryIndex'
 })
 export default class Index extends Vue {
   factoryId = ''
@@ -443,6 +442,7 @@ export default class Index extends Vue {
             this.$notify({title: MSG.OPERATE.saveSuccess.title, message: MSG.OPERATE.saveSuccess.message, type: 'success'})
             this.retrieveDataList()
             this.retrieveAdjustList()
+            ref.resetFields()
           } else {
             this.$notify.error({title: MSG.API.normalError.title, message: data.msg})
           }

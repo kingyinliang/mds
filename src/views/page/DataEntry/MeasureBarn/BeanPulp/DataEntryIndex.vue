@@ -60,7 +60,7 @@
                         {{scope.row.batch}}
                       </template>
                     </el-table-column>
-                    <el-table-column label="入库数量(KG)" :show-overflow-tooltip="true" width="160" align="right">
+                    <el-table-column label="入罐数量(KG)" :show-overflow-tooltip="true" width="160" align="right">
                       <template slot-scope="scope">
                         {{(scope.row.inAmount!==null? scope.row.inAmount.toLocaleString() : '')}}
                       </template>
@@ -155,7 +155,7 @@
             <span>查询明细</span>
           </div>
           <el-tabs v-model="activeDialogFormName" type="card">
-            <el-tab-pane label="入库信息" name="inStorage">
+            <el-tab-pane label="入罐信息" name="inStorage">
               <el-table header-row-class-name="" :data="applyInStorageList" border tooltip-effect="dark" class="datatTableHead-normal">
                 <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
@@ -165,25 +165,25 @@
                 </el-table-column>
                 <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
                   <template slot-scope="scope">
-                    {{scope.row.inPortBatch}}
+                    {{scope.row.batch}}
                   </template>
                 </el-table-column>
-                <el-table-column label="入库量(KG)" :show-overflow-tooltip="true" width="100" align="right" header-align="center">
+                <el-table-column label="入罐量(KG)" :show-overflow-tooltip="true" width="100" align="right" header-align="center">
                   <template slot-scope="scope">
-                    {{(scope.row.inPortWeight? scope.row.inPortWeight.toLocaleString() : '')}}
+                    {{(scope.row.useWeight? scope.row.useWeight.toLocaleString() : '')}}
                   </template>
                 </el-table-column>
-                <el-table-column label="入库订单" :show-overflow-tooltip="true" width="130" >
+                <el-table-column label="粮仓号" :show-overflow-tooltip="true" width="130" >
                   <template slot-scope="scope">
-                    {{scope.row.orderNo}}
+                    {{scope.row.foodHolderNo}}
                   </template>
                 </el-table-column>
-                <el-table-column label="入库时间">
+                <el-table-column label="入罐时间">
                   <template slot-scope="scope">
                     {{scope.row.created}}
                   </template>
                 </el-table-column>
-                <el-table-column label="入库人">
+                <el-table-column label="入罐人">
                   <template slot-scope="scope">
                     {{scope.row.creator}}
                   </template>
@@ -211,12 +211,12 @@
                 </el-table-column>
                 <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
                   <template slot-scope="scope">
-                    {{scope.row.whtBatch}}
+                    {{scope.row.batch}}
                   </template>
                 </el-table-column>
                 <el-table-column label="领用量(KG)" :show-overflow-tooltip="true" width="100" align="right">
                   <template slot-scope="scope">
-                    {{(scope.row.userWeight? scope.row.userWeight.toLocaleString() : '')}}
+                    {{(scope.row.useWeight? scope.row.useWeight.toLocaleString() : '')}}
                   </template>
                 </el-table-column>
                 <el-table-column label="领用订单" :show-overflow-tooltip="true" width="130" >
@@ -308,7 +308,8 @@ import {deepCopy} from '@/assets/js/util.js'
 import MSG from '@/assets/js/hint-msg'
 @Component({
   components: {
-  }
+  },
+  name: 'MeasureBarnBeanPulpDataEntryIndex'
 })
 export default class Index extends Vue {
   factoryId: string = ''
@@ -327,7 +328,7 @@ export default class Index extends Vue {
   adjustCurrPage: number = 1
   adjustPageSize: number = 10
   adjustTotalCount: number = 0
-  // 入库数据
+  // 入罐数据
   applyInStorageList:any = []
   totalInStorageList = []
   currPageInStorageList: number = 1
@@ -396,7 +397,7 @@ export default class Index extends Vue {
     //     'materialCode': item.materialCode,
     //     'materialName': item.materialName,
     //     'batch': item.batch, // 批次
-    //     'inAmount': item.inAmount, // 入库数量
+    //     'inAmount': item.inAmount, // 入罐数量
     //     'amount': item.amount // 当前数量
     //   })
     // })
@@ -522,14 +523,14 @@ export default class Index extends Vue {
       }
     })
   }
-  // 查看（领用记录| 入库）
+  // 查看（领用记录| 入罐）
   retrieveLogList (batch) {
     this.activeDialogFormName = 'inStorage'
     this.totalInStorageList = []
     this.applyInStorageList = []
     this.totalReceiveList = []
     this.applyReceiveList = []
-    // 入库
+    // 入罐
     // 领用记录
     this.currPageInStorageList = 1
     this.pageSizeInStorageList = 10

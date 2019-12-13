@@ -80,7 +80,7 @@ import { BASICDATA_API, GRA_API } from '@/api/api'
 import { isAuth } from '../../../../../net/validate'
 import MSG from '@/assets/js/hint-msg'
 export default {
-  name: 'BeanPulpIndex',
+  name: 'GranaryBeanPulpIndex',
   data () {
     return {
       factoryList: [],

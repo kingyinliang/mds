@@ -94,7 +94,7 @@ import {BASICDATA_API, GRANARY_API} from '@/api/api'
 import { isAuth } from '../../../../../net/validate'
 import MSG from '@/assets/js/hint-msg'
 export default {
-  name: 'WheatPotIndex',
+  name: 'GranaryWheatPotIndex',
   data () {
     return {
       factoryList: [],
