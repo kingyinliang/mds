@@ -100,6 +100,16 @@ export default {
           width: ''
         },
         {
+          label: '数量',
+          prop: 'AMOUNT',
+          width: ''
+        },
+        {
+          label: '单位',
+          prop: 'UNIT',
+          width: ''
+        },
+        {
           label: '存储时间（H）',
           prop: 'STORAGE_DATE',
           width: '150px'
@@ -123,16 +133,6 @@ export default {
           label: '是否超期',
           prop: 'IS_OVERDUE',
           width: ''
-        },
-        {
-          label: '数量',
-          prop: 'AMOUNT',
-          width: ''
-        },
-        {
-          label: '单位',
-          prop: 'UNIT',
-          width: ''
         }
       ]
     }
@@ -144,14 +144,14 @@ export default {
     setType (tab, event) {
       if (this.activeName === '1') {
         this.$store.state.common.PotReportForms.type = 'steHolder'
-        this.column[7] = {
+        this.column[9] = {
           label: '搅罐',
           prop: 'GN_END_TIME',
           width: ''
         }
       } else if (this.activeName === '2') {
         this.$store.state.common.PotReportForms.type = 'filterHolder'
-        this.column[7] = {
+        this.column[9] = {
           label: '满罐',
           prop: 'FULL_DATE',
           width: ''
