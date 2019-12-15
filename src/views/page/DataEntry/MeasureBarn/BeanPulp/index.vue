@@ -28,7 +28,7 @@
         <el-row :gutter="10">
           <el-col :span="12" v-for="(item, index) in dataList" :key="index">
             <el-card class="card-item">
-              <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span></div>
+              <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span> <span class="card-item_detail" @click="goParn(item)">入罐</span></div>
               <div style="display: flex">
                 <div class="card-item_img">
                   <div class="card-item_img_box">
@@ -72,6 +72,90 @@
         </el-row>
       </el-card>
     </div>
+    <div>
+      <el-dialog :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class'>
+          <div slot="title" class='title'>
+            <span>豆粕罐入罐</span>
+          </div>
+          <div>
+            <el-form :model="inParnForm" label-width="100px" size="small" ref="inParnForm">
+              <!-- <el-form-item label="领用粮仓：">
+                <p>{{inParnForm.materialCode + ' ' + inParnForm.materialName}}</p>
+              </el-form-item> -->
+              <el-form-item
+                label="领用粮仓："
+                required
+                prop="foodHolderId"
+                :rules="[
+                  { required: true, message: '请选择领用粮仓', trigger: 'blur' }
+                ]"
+                >
+                <el-select  placeholder="请选择"  v-model="inParnForm.foodHolderId" style="width:220px" @change="changeInParnHolderOptions(inParnForm.foodHolderId)">
+                  <el-option v-for="sole in inParnHolder" :key="sole.holderNo" :label="sole.holderName" :value="sole.holderId"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                label="批次："
+                required
+                prop="batch"
+                :rules="[
+                  { required: true, message: '请选择批次', trigger: 'blur' }
+                ]"
+                >
+                <el-select  placeholder="请选择"  v-model="inParnForm.batch" style="width:220px" @change="changeInParnBatchOptions(inParnForm.foodHolderId,inParnForm.batch)">
+                  <el-option v-for="sole in inParn.holdList" :key="sole.batch" :label="sole.batch" :value="sole.batch"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="物料：">
+                <template slot-scope="scope">
+                  {{inParnForm.materialCode + ' ' + inParnForm.materialName}}
+                </template>
+              </el-form-item>
+              <el-form-item label="剩馀数：" :disabled="true">
+                <template slot-scope="scope">
+                  {{inParnForm.currentQuantity}}
+                </template>
+              </el-form-item>
+              <el-form-item
+                label="起始数："
+                required
+                prop="startWeight"
+                :rules="[
+                  { required: true, validator: validateCheckStartWeight, message: '起始数不可大于等于结束数', trigger: 'blur' }
+                ]"
+              >
+                <el-input  type='text' v-model.number="inParnForm.startWeight" style='width:150px' :disabled="isInputWeight" @change="countWeight('startWeight')"/> KG
+              </el-form-item>
+              <el-form-item
+                label="结束数："
+                prop="endWeight"
+                required
+                :rules="[
+                  { required: true, validator: validateCheckEndWeight, message: '结束数不可小于等于起始数', trigger: 'blur' }
+                ]"
+                >
+                <el-input  type='text' v-model.number="inParnForm.endWeight" style='width:150px' :disabled="isInputWeight" @change="countWeight('endWeight')"/> KG
+              </el-form-item>
+              <el-form-item label="领用数量：">
+                <template slot-scope="scope">
+                  {{inParnForm.useWeight}} KG
+                </template>
+                <!-- <el-input  type='text' v-model.trim="inParnForm.useWeight" style='width:150px' :disabled="true" /> KG -->
+              </el-form-item>
+              <el-form-item label="操作时间：" >
+                <el-input  type='text' v-model.trim="inParnForm.changed" style='width:220px' :disabled="true"/>
+              </el-form-item>
+              <el-form-item label="操作人：">
+                <el-input  type='text' v-model.trim="inParnForm.changer" style='width:220px' :disabled="true"/>
+              </el-form-item>
+            </el-form>
+          </div>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="cannalInParn('inParnForm')">取消</el-button>
+            <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveInParn('inParnForm')">确定</el-button>
+          </div>
+        </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -79,6 +163,7 @@
 import { BASICDATA_API, MEASUREBARN_BEAN_API } from '@/api/api'
 import { isAuth } from '../../../../../net/validate'
 import MSG from '@/assets/js/hint-msg'
+import {dateFormat} from '@/net/validate.js'
 export default {
   name: 'MeasureBarnBeanPulpIndex',
   data () {
@@ -90,7 +175,33 @@ export default {
         workshopIDValue: ''
       },
       dataList: [],
-      oriAPIData: []
+      oriAPIData: [],
+      isShowMessageBoxCheck: false,
+      isInputWeight: true,
+      inParnForm: {
+        foodHolderId: '',
+        batch: '',
+        materialCode: '',
+        materialName: '',
+        currentQuantity: 0,
+        startWeight: 0,
+        endWeight: 0,
+        // pulpBatch: '',
+        pulpHolderId: '',
+        useWeight: 0,
+        unit: 'KG',
+        changed: '',
+        changer: this.$store.state.user.realName + '（' + this.$store.state.user.name + '）'
+      },
+      inParnHolder: [], // API 进来数据
+      inParn: {
+        holderId: '',
+        pulpBatch: '',
+        holdList: [],
+        startWeight: 0,
+        endWeight: 0,
+        finishWeight: this.endWeight - this.endWeight
+      }
     }
   },
   mounted () {
@@ -107,6 +218,26 @@ export default {
     })
   },
   methods: {
+    validateCheckStartWeight (rule, value, callback) {
+      if (value >= this.inParnForm.endWeight) {
+        callback(new Error('起始数不可大于等于结束数'))
+      } else {
+        callback()
+      }
+    },
+    validateCheckEndWeight (rule, value, callback) {
+      if (value <= this.inParnForm.startWeight) {
+        callback(new Error('结束数不可小于等于起始数'))
+      } else {
+        callback()
+      }
+    },
+    countWeight (flag) {
+      if (flag === 'startWeight') {
+        this.inParnForm.endWeight = this.inParnForm.startWeight + 1
+      }
+      this.inParnForm.useWeight = this.inParnForm.endWeight - this.inParnForm.startWeight
+    },
     // 改变选单数据
     changeSearchOptions (flag) {
       let item = this.oriAPIData.find(ele => ele.deptId === flag)
@@ -116,6 +247,121 @@ export default {
         this.workshopList = []
         this.plantList.workshopIDValue = ''
       }
+    },
+    changeInParnHolderOptions (flag) {
+      let item = this.inParnHolder.find(ele => ele.holderId === flag)
+      // this.inParnForm.pulpHolderId = '7E0AA796139E46738A949E88E1272578'
+      this.isInputWeight = true
+      this.inParn.holdList = []
+      this.inParnForm.batch = ''
+      this.inParnForm.materialCode = ''
+      this.inParnForm.materialName = ''
+      this.inParnForm.currentQuantity = 0
+      this.inParnForm.startWeight = 0
+      this.inParnForm.endWeight = 0
+      if (item.pulpData.length !== 0) {
+        this.inParn.holdList = item.pulpData
+        // this.inParnForm.materialCode = item.pulpData
+        // this.inParnForm.materialName = item.pulpData
+      } else {
+        this.inParn.holdList = []
+        this.inParnForm.batch = ''
+      }
+    },
+    changeInParnBatchOptions (holder, batch) {
+      let item = this.inParnHolder.find(ele => ele.holderId === holder)
+      if (item.pulpData.length !== 0) {
+        this.isInputWeight = false
+        let itemW = item.pulpData.find(ele => ele.batch === batch)
+        // this.inParn.holdList = item.pulpData
+        this.inParnForm.materialCode = itemW.materialCode
+        this.inParnForm.materialName = itemW.materialName
+        this.inParnForm.currentQuantity = itemW.currentQuantity
+        this.inParnForm.pulpHolderId = itemW.id
+      } else {
+        // this.inParn.holdList = []
+        this.isInputWeight = true
+        this.inParnForm.materialCode = ''
+        this.inParnForm.materialName = ''
+        this.inParnForm.currentQuantity = 0
+      }
+    },
+    goParn (item) {
+      console.log(`${MEASUREBARN_BEAN_API.BEANPULP_INPARN}`)
+      this.isShowMessageBoxCheck = true
+      this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_INPARN}`, 'POST', {factory: this.plantList.factoryIDValue, workShop: this.plantList.workshopIDValue}).then(({data}) => {
+        if (data.code === 0) {
+          console.log('data======')
+          console.log(data)
+          data.holder.map(item => {
+            this.inParnHolder.push({deptId: item.deptId, holderName: item.holderName, holderId: item.holderId, pulpData: item.pulpData})
+          })
+          this.isInputWeight = true
+          this.inParnForm.changed = dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+          // this.inParnForm = data.holder
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+      // let temp = {
+      //   batch: '1902240101',
+      //   changed: '2019-06-18 11:06:46',
+      //   changer: 'SAP_SYNC',
+      //   currentQuantity: 95945,
+      //   endWeight: 21,
+      //   foodHolderId: '3321240',
+      //   materialCode: 'M020200001',
+      //   materialName: '脱脂大豆1#',
+      //   pulpHolderId: '7E0AA796139E46738A949E88E1272578',
+      //   startWeight: 20,
+      //   unit: 'KG',
+      //   useWeight: 1
+      // }
+      // this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_SAVE_INPARN}`, 'POST', temp).then(({data}) => {
+      //   if (data.code === 0) {
+      //     console.log('datadatadatadatadata')
+      //     console.log(data)
+      //   } else {
+      //     this.$notify.error({title: '错误', message: data.msg})
+      //   }
+      // })
+    },
+    cannalInParn (formName) {
+      this.$refs[formName].resetFields()
+      this.inParn.holdList = []
+      this.inParnForm.foodHolderId = ''
+      this.inParnForm.batch = ''
+      this.inParnForm.materialCode = ''
+      this.inParnForm.materialName = ''
+      this.inParnForm.currentQuantity = 0
+      this.inParnForm.startWeight = 0
+      this.inParnForm.endWeight = 0
+      this.inParnForm.useWeight = 0
+      this.isShowMessageBoxCheck = false
+    },
+    saveInParn (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_SAVE_INPARN}`, 'POST', this.inParnForm).then(({data}) => {
+            if (data.code === 0) {
+              this.inParnForm.foodHolderId = ''
+              this.inParnForm.batch = ''
+              this.inParnForm.materialCode = ''
+              this.inParnForm.materialName = ''
+              this.inParnForm.currentQuantity = 0
+              this.inParnForm.startWeight = 0
+              this.inParnForm.endWeight = 0
+              this.inParnForm.useWeight = 0
+              this.isShowMessageBoxCheck = false
+              this.$refs[formName].resetFields()
+            } else {
+              this.$notify.error({title: '错误', message: data.msg})
+            }
+          })
+        } else {
+          return false
+        }
+      })
     },
     // 获取工厂
     getFactory () {
@@ -216,6 +462,9 @@ export default {
     }
   },
   computed: {
+    // countWeight: function () {
+    //   return Number(this.endWeight) - Number(this.startWeight)
+    // },
     isMainAreaShow: function () {
       return this.dataList.length !== 0
     },
@@ -245,7 +494,11 @@ export default {
       }
     }
   },
-  components: {}
+  components: {
+    realName: {
+      get () { return this.$store.state.user.realName }
+    }
+  }
 }
 </script>
 
@@ -262,8 +515,10 @@ export default {
     }
   }
   .card-item_detail{
+    margin-right: 5px;
     &::after{
-      content: " >>"
+      content: " >>";
+      font-size: 12px;
     }
   }
   .card-item{

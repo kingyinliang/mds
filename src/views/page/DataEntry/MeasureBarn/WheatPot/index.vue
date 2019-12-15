@@ -274,7 +274,8 @@ export default {
   }
   .card-item_detail{
     &::after{
-      content: " >>"
+      content: " >>";
+      font-size: 12px;
     }
   }
   .card-item{
