@@ -1757,7 +1757,15 @@ export const MEASUREBARN_BEAN_API = {
   /**
    * 调整 v
    */
-  BEANPULP_ADJUST: HOST + '/gra/adjust/adjustMeasuringBin'
+  BEANPULP_ADJUST: HOST + '/gra/adjust/adjustMeasuringBin',
+  /**
+   * 入罐呼叫 v
+ */
+  BEANPULP_INPARN: HOST + '/kjm/bean/pulpList',
+  /**
+   * 入罐储存 v
+ */
+  BEANPULP_SAVE_INPARN: HOST + '/kjm/pulpIn/save'
 }
 
 /**
