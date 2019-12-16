@@ -26,7 +26,7 @@
     <div class="main measurebarn-bean-pulp__body" v-if="isMainAreaShow" >
       <el-card class="newCard area-to-bottom">
         <el-row :gutter="10">
-          <el-col :span="12" v-for="(item, index) in dataList" :key="index">
+          <el-col :span="12" v-for="(item, index) in dataList" :key="'h'+index">
             <el-card class="card-item">
               <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span><el-button type="primary" size="small" style="margin-left:10px;" @click="goParn(item)">入罐</el-button></div>
               <div style="display: flex">
@@ -118,7 +118,6 @@
               </el-form-item>
               <el-form-item
                 label="起始数："
-                required
                 prop="startWeight"
                 :rules="[
                   { required: true, validator: validateCheckStartWeight, message: '起始数不可大于等于结束数', trigger: 'blur' }
@@ -129,7 +128,6 @@
               <el-form-item
                 label="结束数："
                 prop="endWeight"
-                required
                 :rules="[
                   { required: true, validator: validateCheckEndWeight, message: '结束数不可小于等于起始数', trigger: 'blur' }
                 ]"
@@ -304,6 +302,9 @@ export default {
       this.inParnForm.pulpHolderId = item.holderId
       this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_INPARN}`, 'POST', {factory: item.factory, workShop: item.deptId}).then(({data}) => {
         if (data.code === 0) {
+          // console.log('data')
+          // console.log(data)
+          this.inParnHolder = []
           data.holder.map(item => {
             this.inParnHolder.push({deptId: item.deptId, holderName: item.holderName, holderId: item.holderId, pulpData: item.pulpData})
           })
@@ -311,8 +312,8 @@ export default {
           this.inParnForm.changed = dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
           // this.inParnForm = data.holder
 
-          console.log('this.inParnHolder')
-          console.log(this.inParnHolder)
+          // console.log('this.inParnHolder')
+          // console.log(this.inParnHolder)
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -370,6 +371,7 @@ export default {
               this.inParnForm.useWeight = 0
               this.isShowMessageBoxCheck = false
               this.$refs[formName].resetFields()
+              this.getOrderList()
             } else {
               this.$notify.error({title: '错误', message: data.msg})
             }
