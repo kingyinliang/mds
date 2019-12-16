@@ -361,6 +361,7 @@ export default {
           // this.inParnForm.pulpHolderId = this.dataList.holderId
           this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_SAVE_INPARN}`, 'POST', this.inParnForm).then(({data}) => {
             if (data.code === 0) {
+              this.$notify({title: MSG.OPERATE.saveSuccess.title, message: MSG.OPERATE.saveSuccess.message, type: 'success'})
               this.inParnForm.foodHolderId = ''
               this.inParnForm.batch = ''
               this.inParnForm.materialCode = ''
