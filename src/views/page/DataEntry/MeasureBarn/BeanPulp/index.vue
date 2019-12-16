@@ -28,7 +28,7 @@
         <el-row :gutter="10">
           <el-col :span="12" v-for="(item, index) in dataList" :key="index">
             <el-card class="card-item">
-              <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span> <span class="card-item_detail" @click="goParn(item)">入罐</span></div>
+              <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span><el-button type="primary" size="small" style="margin-left:10px;" @click="goParn(item)">入罐</el-button></div>
               <div style="display: flex">
                 <div class="card-item_img">
                   <div class="card-item_img_box">
@@ -73,7 +73,7 @@
       </el-card>
     </div>
     <div>
-      <el-dialog :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class'>
+      <el-dialog :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class' @close="closeInParnDialog()">
           <div slot="title" class='title'>
             <span>豆粕罐入罐</span>
           </div>
@@ -165,7 +165,7 @@ import { isAuth } from '../../../../../net/validate'
 import MSG from '@/assets/js/hint-msg'
 import {dateFormat} from '@/net/validate.js'
 export default {
-  name: 'MeasureBarnBeanPulpIndex',
+  name: 'MeasureBarnBeanPulpIndex4',
   data () {
     return {
       factoryList: [],
@@ -218,6 +218,18 @@ export default {
     })
   },
   methods: {
+    closeInParnDialog () {
+      this.inParn.holdList = []
+      this.inParnForm.foodHolderId = ''
+      this.inParnForm.batch = ''
+      this.inParnForm.materialCode = ''
+      this.inParnForm.materialName = ''
+      this.inParnForm.currentQuantity = 0
+      this.inParnForm.startWeight = 0
+      this.inParnForm.endWeight = 0
+      this.inParnForm.useWeight = 0
+      this.cannalInParn('inParnForm')
+    },
     validateCheckStartWeight (rule, value, callback) {
       if (value >= this.inParnForm.endWeight) {
         callback(new Error('起始数不可大于等于结束数'))
@@ -250,7 +262,7 @@ export default {
     },
     changeInParnHolderOptions (flag) {
       let item = this.inParnHolder.find(ele => ele.holderId === flag)
-      // this.inParnForm.pulpHolderId = '7E0AA796139E46738A949E88E1272578'
+
       this.isInputWeight = true
       this.inParn.holdList = []
       this.inParnForm.batch = ''
@@ -277,7 +289,6 @@ export default {
         this.inParnForm.materialCode = itemW.materialCode
         this.inParnForm.materialName = itemW.materialName
         this.inParnForm.currentQuantity = itemW.currentQuantity
-        this.inParnForm.pulpHolderId = itemW.id
       } else {
         // this.inParn.holdList = []
         this.isInputWeight = true
@@ -287,9 +298,14 @@ export default {
       }
     },
     goParn (item) {
-      console.log(`${MEASUREBARN_BEAN_API.BEANPULP_INPARN}`)
+      console.log('item')
+      console.log(item)
+      this.plantList.factoryIDValue = item.factory
+      this.plantList.workshopIDValue = item.deptId
       this.isShowMessageBoxCheck = true
-      this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_INPARN}`, 'POST', {factory: this.plantList.factoryIDValue, workShop: this.plantList.workshopIDValue}).then(({data}) => {
+      this.inParnForm.pulpHolderId = item.holderId
+      console.log(item.holderId)
+      this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_INPARN}`, 'POST', {factory: item.factory, workShop: item.deptId}).then(({data}) => {
         if (data.code === 0) {
           console.log('data======')
           console.log(data)
@@ -342,6 +358,7 @@ export default {
     saveInParn (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          // this.inParnForm.pulpHolderId = this.dataList.holderId
           this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_SAVE_INPARN}`, 'POST', this.inParnForm).then(({data}) => {
             if (data.code === 0) {
               this.inParnForm.foodHolderId = ''
@@ -432,6 +449,8 @@ export default {
       }
       this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_POT_LIST}`, 'POST', {factory: this.plantList.factoryIDValue, workShop: this.plantList.workshopIDValue}).then(({data}) => {
         if (data.code === 0) {
+          console.log('======2222=====')
+          console.log(data)
           if (data.infoList.length !== 0) {
             this.dataList = data.infoList
           } else {
@@ -516,6 +535,7 @@ export default {
   }
   .card-item_detail{
     margin-right: 5px;
+    margin-top: 5px;
     &::after{
       content: " >>";
       font-size: 12px;
