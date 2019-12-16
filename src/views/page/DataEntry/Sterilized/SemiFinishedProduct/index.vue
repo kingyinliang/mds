@@ -32,7 +32,10 @@
     </el-form>
   </el-card>
   <el-card class="searchCard  newCard ferCard" style="margin-top:5px; padding:0px !important;"  v-show="fastS">
-    <h3 style="color: black;margin-bottom: 8px"><i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>半成品罐列表</h3>
+    <h3 style="color: black;margin-bottom: 8px">
+      <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>半成品罐列表
+      <i class="gotop" @click="goPot" v-if="isAuth('ste:semi:reportForm')"><a>杀菌罐区库存情况>></a></i>
+    </h3>
     <el-row class="dataList" :gutter="10" style="min-height: 150px">
       <el-col :span="4" v-for="(item, index) in DataList" :key="index">
         <el-card class="dataList_item">
@@ -297,6 +300,15 @@ export default {
     this.Getdeptcode()
   },
   methods: {
+    goPot () {
+      this.$store.state.common.PotReportForms.factory = this.formHeader.factory
+      this.$store.state.common.PotReportForms.workShop = this.formHeader.workShop
+      this.$store.state.common.PotReportForms.type = 'steHolder'
+      this.$store.state.common.mainTabs = this.$store.state.common.mainTabs.filter(item => item.name !== 'DataEntry-PotReportForms-index')
+      setTimeout(() => {
+        this.$router.push({ name: `DataEntry-PotReportForms-index` })
+      }, 100)
+    },
     // 去详情
     godetails (item) {
       this.$store.state.common.sterilized.holderId = item.holderId
@@ -730,6 +742,29 @@ export default {
 }
 </style>
 <style lang="less">
+  .ferCard{
+    .el-card__body{
+      padding: 7px;
+    }
+    .cardTit{
+      font-size: 16px;
+      color: black;
+      font-weight: 400;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #E9E9E9;
+    }
+    .gotop{
+      float: right;
+      color: #1890FF;
+      font-size: 14px;
+      cursor: pointer;
+      i{
+        :before{
+          color: #1890FF;
+        }
+      }
+    }
+  }
 .dialog__class{
   border-radius:6px 6px 6px 6px !important;
   .el-dialog__header{

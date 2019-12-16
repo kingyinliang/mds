@@ -3,7 +3,8 @@
     <div class="site-navbar__header">
       <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
         <a class="site-navbar__brand-lg" href="javascript:;"><img src="@/assets/img/logohead1.png" alt="" style="width: 140px"></a>
-        <a class="site-navbar__brand-mini" href="javascript:;"><img src="@/assets/img/logo.png" alt="" style="width: 47px"></a>
+        <!--<a class="site-navbar__brand-mini" href="javascript:;"><img src="@/assets/img/logo.png" alt="" style="width: 47px"></a>-->
+        <a class="site-navbar__brand-mini" href="javascript:;"><img src="@/assets/img/logoHead2.png" alt="" style="width: 47px"></a>
       </h1>
     </div>
     <div class="site-navbar__body clearfix">
@@ -11,7 +12,7 @@
         class="site-navbar__menu"
         mode="horizontal">
         <el-menu-item class="site-navbar__switch" index="0" @click="sidebarFold = !sidebarFold">
-          <i class="iconfont factory-shouqicaidan" style="font-size: 25px"></i>
+          <i class="iconfont factory-shouqicaidan switching" :class="{'open': sidebarFold, 'packUp': !sidebarFold}" style="font-size: 25px"></i>
         </el-menu-item>
       </el-menu>
       <el-menu
@@ -107,5 +108,15 @@ export default {
   .site-navbar {
     background: #002140!important;
     background-color: red;
+  }
+  .packUp{
+    transform: rotate(0deg);
+  }
+  .open{
+    transform: rotate(180deg);
+  }
+  .switching{
+    transition: 500ms;
+    display: block;
   }
 </style>

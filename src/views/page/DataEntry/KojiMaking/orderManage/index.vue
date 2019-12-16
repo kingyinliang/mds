@@ -2,7 +2,7 @@
   <el-row>
     <el-col >
       <div class="header_main">
-        <el-card>
+        <el-card class="searchCard">
           <el-row type="flex">
             <el-col>
               <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
@@ -476,6 +476,8 @@ export default class Index extends Vue {
       Vue.prototype.$warning_SHINHO('请选择车间')
       return
     }
+    let item = this.workshopList.find(ele => ele.deptId === this.params.workshopId)
+    this.params.workshopName = item ? item.deptName : ''
     this.retrieveHolders(this.params.workshopId, this.params.workshopName)
     this.currPage = 1
     // if (this.params.orderDate === null || this.params.orderDate === '') {

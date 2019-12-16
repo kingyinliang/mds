@@ -2,7 +2,7 @@
   <el-row>
     <el-col >
       <div class="header_main">
-        <el-card class="newCard">
+        <el-card class="searchCard">
           <el-row type="flex">
             <el-col>
               <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
@@ -194,7 +194,7 @@ export default {
         this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {deptId: id, deptName: '制曲'}, false, false, false).then(res => {
           if (res.data.code === 0) {
             this.workshopList = res.data.typeList
-            if (!this.params.workShop) {
+            if (!this.params.workShop && res.data.typeList.length > 0) {
               this.params.workShop = res.data.typeList[0].deptId
             }
           } else {

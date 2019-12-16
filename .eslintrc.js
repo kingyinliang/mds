@@ -20,10 +20,12 @@ module.exports = {
     'plugin:vue/essential', 
     // https://github.com/standard/standard/blob/master/docs/RULES-en.md
     'standard'
+    // 'airbnb-base'
   ],
   // required to lint *.vue files
   plugins: [
-    'vue'
+    'vue',
+    'html'
   ],
   // add your custom rules here
   rules: {

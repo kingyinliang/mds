@@ -253,7 +253,7 @@ export default {
   computed: {},
   components: {
     EchartsHead: resolve => {
-      require(['../../layout/EchartsHead'], resolve)
+      require(['../../Layout/EchartsHead'], resolve)
     }
   }
 }

@@ -155,8 +155,8 @@
 </template>
 
 <script>
-import ExcRecord from '@/views/components/excRecord'
-import TextRecord from '@/views/components/textRecord'
+import ExcRecord from '@/views/components/ExcRecord'
+import TextRecord from '@/views/components/TextRecord'
 import {STERILIZED_API} from '@/api/api'
 import {Stesave} from '@/net/validate'
 export default {
@@ -499,9 +499,15 @@ export default {
             }
           } else if (data1 === 'SupDate') {
             console.log(sum)
-            if (sum !== item.addAmount * 1) {
-              ty = false
-              this.$warning_SHINHO('领用数量不等于添加数量')
+            if (item.isSplit === '0') {
+              let addAmount = 0
+              dataArr.filter(row => row.materialCode === item.materialCode && row.isSplit === '0').forEach(row => {
+                addAmount += row.addAmount * 1
+              })
+              if (sum !== addAmount) {
+                ty = false
+                this.$warning_SHINHO('领用数量不等于添加数量')
+              }
             }
           }
         }

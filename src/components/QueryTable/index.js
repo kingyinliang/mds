@@ -18,6 +18,8 @@ export default function (Vue) {
  *   resVal 下拉框的获取下拉值接口的响应体取值字段 resData响应体取值字段 label下拉框中的lable数组 value下拉绑定的值字段
  *   linkageProp 联动的下拉框字段名数组
  * @param {Fn} listInterface 查询接口函数
+ * @param {String} returnColumnType 查询接口返回list传参字段, 默认page
+ * @param {String} queryAuth 权限，默认false不校验
  * @param {array} column 表格数组
  *   prop 字段名
  *   label 表头名

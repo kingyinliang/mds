@@ -1,92 +1,83 @@
 <template>
-  <div>
-    <div class="header_main">
+  <div class="granary-wheat-pot">
+    <div class="header_main granary-wheat-pot__header">
       <el-card>
-        <el-row type="flex">
-          <el-col>
-            <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
+        <el-row type="flex" :gutter="10">
+          <el-col :span="22">
+            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="auto" class="sole_row">
               <el-form-item label="生产工厂：">
-                <el-select v-model="params.factoryId" class="selectwpx" @change="changeOptions('factory')">
-                  <el-option label="请选择" value=""></el-option>
+                <el-select v-model="plantList.factoryIDValue" class="w300" placeholder="请选择" @change="changeSearchOptions(plantList.factoryIDValue)">
                   <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="生产车间：">
-                <el-select v-model="params.workshopId" class="selectwpx" @change="changeOptions('workshop')">
-                  <el-option label="请选择" value=""></el-option>
+                <el-select v-model="plantList.workshopIDValue" class="w200" clearable placeholder="请选择" :disabled="plantList.factoryIDValue ==='' || workshopList.length === 0">
                   <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                 </el-select>
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col style="width: 80px">
-            <el-button type="primary" size="small" @click="getOrderList()" style="float:right">查询</el-button>
+          <el-col :span="2" style="display:flex;align-items:flex-end;justify-content:flex-end">
+            <el-button type="primary" size="small" @click="getOrderList()" :disabled="plantList.factoryIDValue==='' && plantList.workshopIDValue==='' || workshopList.length === 0">查询</el-button>
           </el-col>
         </el-row>
       </el-card>
     </div>
-    <div class="main" style="padding-top: 8px">
-      <el-card class="newCard" v-if="searched">
-        <el-row :gutter="10" v-for="(item, index) in dataList" :key="index" v-if="index%2===0" style="margin-top:10px;">
-          <el-col :span="12" v-if="index < dataList.length">
-            <el-card class="Card_item" >
-              <div slot="header">小麦罐号：{{dataList[index].holderName}} <span class="Card_item_detail" @click="goDetail(dataList[index].holderId, dataList[index].holderName)">详情>></span></div>
+    <div class="main granary-wheat-pot__body" v-if="isMainAreaShow">
+      <el-card class="newCard area-to-bottom">
+        <el-row :gutter="10">
+          <el-col :span="12" v-for="(item, index) in dataList" :key="index">
+            <el-card class="card-item">
+              <div slot="header">小麦罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span></div>
               <div style="display: flex">
-                <div class="Card_item_img">
-                  <div class="Card_item_img_box">
-                    <div class="Card_item_img_box_bg" :style="`height:${Math.min(dataList[index].total/5000,100)}%`"></div>
+                <div class="card-item_img">
+                  <div class="card-item_img_box">
+                    <div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.wheatList) / (item.holderHold*1), 100)}%`}"></div>
                   </div>
                   <img src="@/assets/img/granary.png" alt="">
                 </div>
-                <div class="Card_item_text">
+                <div class="card-item_text">
                   <el-card style="margin-top: 25px">
-                    <div slot="header">库存明细 <span style="float: right">合计：{{dataList[index].total.toLocaleString() + ' ' + dataList[index].unit}}</span></div>
-                    <div style="position: relative" >
-                      <el-row  class="Card_item_text_item bgbox" style="padding-top: 0">
-                        <el-col :span="12">批次</el-col>
-                        <el-col :span="12">数量</el-col>
+                    <div slot="header">库存明细 <span style="float: right">合计：{{sumBatch(item.wheatList).toLocaleString()}} KG</span></div>
+                    <el-table
+                      :data="item.wheatList"
+                      stripe
+                      size="medium"
+                      height="200"
+                      min-width="300"
+                      style="width: 100%">
+                      <el-table-column
+                        prop="batch"
+                        label="批次"
+                        width="auto">
+                      </el-table-column>
+                      <el-table-column
+                        prop="currentQuantity"
+                        label="数量"
+                        width="auto"
+                        align="right"
+                        header-align="left">
+                        <template slot-scope="scope">
+                          <div>
+                            {{(scope.row.currentQuantity*1).toLocaleString()}} KG
+                          </div>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                    <!-- <div style="position: relative">
+                      <el-row  class="card-item_text_item bgbox" style="padding-top: 0">
+                        <el-col :span="15">批次</el-col>
+                        <el-col :span="9">数量</el-col>
                       </el-row >
-                      <div class="Card_item_text_box_bg1"></div>
-                      <div class="Card_item_text_box">
-                        <el-row class="Card_item_text_item" v-for="(item1, index1) in dataList[index].stocks" :key="index1">
-                          <el-col :span="12">{{item1.batch}}</el-col>
-                          <el-col :span="12">{{(item1.currentQuantity ? item1.currentQuantity.toLocaleString() : '') + ' ' + item1.unit}}</el-col>
+                      <div class="card-item_text_box_bg1"></div>
+                      <div class="card-item_text_box">
+                        <el-row class="card-item_text_item" v-for="(items, index) in item.wheatList" :key="index">
+                          <el-col :span="15">{{items.batch}}</el-col>
+                          <el-col :span="9">{{(items.currentQuantity*1).toLocaleString()}} KG</el-col>
                         </el-row>
                       </div>
-                      <div class="Card_item_text_box_bg2"></div>
-                    </div>
-                  </el-card>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="12" v-if="index + 1 < dataList.length">
-            <el-card class="Card_item" >
-              <div slot="header">小麦罐号：{{dataList[index + 1].holderName}} <span class="Card_item_detail" @click="goDetail(dataList[index + 1].holderId, dataList[index + 1].holderName)">详情>></span></div>
-              <div style="display: flex">
-                <div class="Card_item_img">
-                  <div class="Card_item_img_box">
-                    <div class="Card_item_img_box_bg" :style="`height:${Math.min(dataList[index + 1].total/5000, 100)}%`"></div>
-                  </div>
-                  <img src="@/assets/img/granary.png" alt="">
-                </div>
-                <div class="Card_item_text">
-                  <el-card style="margin-top: 25px">
-                    <div slot="header">库存明细 <span style="float: right">合计：{{dataList[index + 1].total.toLocaleString() + ' ' + dataList[index + 1].unit}}</span></div>
-                    <div style="position: relative" >
-                      <el-row  class="Card_item_text_item bgbox" style="padding-top: 0">
-                        <el-col :span="12">批次</el-col>
-                        <el-col :span="12">数量</el-col>
-                      </el-row >
-                      <div class="Card_item_text_box_bg1"></div>
-                      <div class="Card_item_text_box">
-                        <el-row class="Card_item_text_item" v-for="(item1, index1) in dataList[index + 1].stocks" :key="index1">
-                          <el-col :span="12">{{item1.batch}}</el-col>
-                          <el-col :span="12">{{(item1.currentQuantity ? item1.currentQuantity.toLocaleString() : '') + ' ' + item1.unit}}</el-col>
-                        </el-row>
-                      </div>
-                      <div class="Card_item_text_box_bg2"></div>
-                    </div>
+                      <div class="card-item_text_box_bg2"></div>
+                    </div> -->
                   </el-card>
                 </div>
               </div>
@@ -98,257 +89,309 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import {BASICDATA_API, GRANARY_API} from '@/api/api'
-import {Vue, Component, Watch} from 'vue-property-decorator'
-
-@Component({
-  components: {
-  }
-})
-
-export default class Index extends Vue {
-  // 将common中的参数复制一份到本地
-  params = JSON.parse(JSON.stringify(this.$store.state.common.GranaryWheatPot))
-  factoryList = []
-  workshopList = []
-  dataList = []
-  searched: boolean = false
-  mounted () {
-    this.getFactory()
-    this.getWorkshop(this.params.factoryId)
-  }
-  isAuth (key) {
-    return Vue.prototype.isAuth(key)
-  }
-  get mainTabs () {
-    return this.$store.state.common.mainTabs
-  }
-  set mainTabs (val) {
-    this.$store.commit('common/updateMainTabs', val)
-  }
-  changeOptions (flag: string) {
-    if (flag === 'factory') {
-      let item = this.factoryList.find(ele => ele.deptId === this.params.factoryId)
-      this.params.factoryName = item ? item.deptName : ''
-    } else if (flag === 'workshop') {
-      let item = this.workshopList.find(ele => ele.deptId === this.params.workshopId)
-      this.params.workshopName = item ? item.deptName : ''
+import { isAuth } from '../../../../../net/validate'
+import MSG from '@/assets/js/hint-msg'
+export default {
+  name: 'GranaryWheatPotIndex',
+  data () {
+    return {
+      factoryList: [],
+      workshopList: [],
+      plantList: {
+        factoryIDValue: '',
+        factoryName: '',
+        workshopIDValue: '',
+        workshopName: '',
+        holderId: '',
+        holderName: ''
+      },
+      dataList: [],
+      oriAPIData: []
     }
-  }
-  // 获取工厂
-  getFactory () {
-    this.factoryList = []
-    Vue.prototype.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, `POST`, {}, false, false, false).then((res) => {
-      if (res.data.code === 0) {
-        this.factoryList = res.data.typeList
-        if (!this.params.factoryId) {
-          this.params.factoryId = res.data.typeList[0].deptId
-          this.params.factoryName = res.data.typeList[0].deptName
-        }
+  },
+  // watch: {
+  // },
+  mounted () {
+    this.getOriDataFromAPI().then(() => {
+      // 初始化搜寻条件
+      this.plantList.factoryIDValue = this.oriAPIData[0].deptId
+      if (this.oriAPIData[0].workshop.length !== 0) {
+        this.workshopList = this.oriAPIData[0].workshop
+        this.plantList.workshopIDValue = this.oriAPIData[0].workshop[0].deptId
       } else {
-        this.$notify.error({title: '错误', message: res.data.msg})
+        this.workshopList = []
+        this.plantList.workshopIDValue = ''
       }
     })
-  }
-  // 根据工厂获车间
-  getWorkshop (fid: string) {
-    this.workshopList = []
-    if (fid) {
-      Vue.prototype.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {deptId: fid, deptName: '炒麦'}, false, false, false).then(res => {
-        if (res.data.code === 0) {
-          this.workshopList = res.data.typeList
-          if (!this.params.workshopId && res.data.typeList.length > 0) {
-            this.params.workshopId = res.data.typeList[0].deptId
-            this.params.workshopName = res.data.typeList[0].deptName
-          }
-        } else {
-          this.$notify.error({title: '错误', message: res.data.msg})
-        }
-      })
-    }
-  }
-  setStore (params) {
-    this.$store.commit('common/updateGranaryWheatPot', params)
-  }
-  getOrderList () {
-    if (this.params.factoryId === '') {
-      Vue.prototype.$warning_SHINHO('请选择工厂')
-      return
-    }
-    this.searched = true
-    // 保存选项值到common store
-    this.setStore(this.params)
-    let queryParams = {
-      factory: this.params.factoryId,
-      deptId: this.params.workshopId,
-      flag: '002'
-    }
-    this.retrieveOrderList(queryParams)
-  }
-  retrieveOrderList (params) {
-    this.dataList = []
-    Vue.prototype.$http(`${GRANARY_API.WHEAT_POT_LIST}/${params.factory}?deptId=${params.deptId}&flag=${params.flag}`, `GET`).then((res) => {
-      if (res.data.code === 0) {
-        this.dataList = res.data.data ? res.data.data.holders : []
-        this.dataList.forEach((item) => {
-          item.total = 0
-          item.unit = 'KG'
-          if (item.stocks && item.stocks.length > 0) {
-            item.total = item.stocks.reduce((prev, next) => { return prev + (next.currentQuantity ? next.currentQuantity : 0) }, 0)
-            item.unit = item.stocks[0].unit
+  },
+  methods: {
+    // 改变选单数据
+    changeSearchOptions (flag) {
+      let item = this.oriAPIData.find(ele => ele.deptId === flag)
+      if (item.workshop.length !== 0) {
+        this.workshopList = item.workshop
+      } else {
+        this.workshopList = []
+        this.plantList.workshopIDValue = ''
+      }
+    },
+    // 获取工厂
+    getFactory () {
+      return new Promise((resolve, reject) => {
+        this.factoryList = []
+        this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, `POST`, {}, false, false, false).then(({data}) => {
+          if (data.code === 0) {
+            resolve(data.typeList)
+          } else {
+            this.$notify.error({title: MSG.API.getFactoryError.title, message: data.msg})
+            reject(data.msg)
           }
         })
-      } else {
-        this.$notify.error({title: '错误', message: res.data.msg})
+      })
+    },
+    // 根据工厂获车间
+    getWorkshop (id) {
+      return new Promise((resolve, reject) => {
+        this.plantList.workshopIDValue = ''
+        this.workshopList = []
+        if (id) {
+          this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {deptId: id, deptName: '炒麦'}, false, false, false).then(({data}) => {
+            if (data.code === 0) {
+              resolve(data.typeList)
+            } else {
+              this.$notify.error({title: MSG.API.getWorkshopError.title, message: data.msg})
+              reject(data.msg)
+            }
+          })
+        }
+      })
+    },
+    // 获取工厂车间
+    getOriDataFromAPI () {
+      return new Promise((resolve, reject) => {
+        this.getFactory().then((valueFactory) => {
+          this.oriAPIData = []
+          this.factoryList = []
+          for (let i = 0; i < valueFactory.length; i++) {
+            let dataTempF = {
+              deptId: valueFactory[i].deptId,
+              deptName: valueFactory[i].deptName,
+              workshop: []
+            }
+            this.factoryList.push({deptId: valueFactory[i].deptId, deptName: valueFactory[i].deptName})
+            this.getWorkshop(valueFactory[i].deptId).then((valueWorkshop) => {
+              if (valueWorkshop.length !== 0) {
+                for (let j = 0; j < valueWorkshop.length; j++) {
+                  let dataTempW = {
+                    deptId: valueWorkshop[j].deptId,
+                    deptName: valueWorkshop[j].deptName
+                  }
+                  dataTempF.workshop.push(dataTempW)
+                }
+              }
+              this.oriAPIData.push(dataTempF)
+              resolve()
+            })
+          }
+        })
+      })
+    },
+    // 获取列表
+    getOrderList () {
+      this.dataList = []
+      if (!this.plantList.factoryIDValue) {
+        this.$warning_SHINHO('请选择工厂')
+        return
       }
-    })
-  }
-  goDetail (holderId, holderName) {
-    if (!this.isAuth('gra:material:list')) {
-      this.$notify.error({title: '错误', message: '您无权限查看详情'})
-      return
+      this.$http(`${GRANARY_API.WHEAT_POT_LIST}/${this.plantList.factoryIDValue}?deptId=${this.plantList.workshopIDValue}&flag=002`, `GET`).then(({data}) => {
+        if (data.code === 0) {
+          if (data.data.length !== 0) {
+            this.dataList = data.data.holders
+            this.dataList.map((item) => {
+              item.wheatList = item.stocks
+              delete item.stocks
+            })
+          } else {
+            this.$notify.info({title: MSG.API.BeanPulp.searchResult.title, message: MSG.API.BeanPulp.searchResult.message})
+          }
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+    },
+    // 去详请
+    goTargetDetail (item) {
+      if (!isAuth('gra:material:list')) {
+        this.$notify.error({title: MSG.AUTH.noAuthority.title, message: MSG.AUTH.noAuthority.message})
+        return
+      }
+      // ！！！！！！此部份逻辑不一样会需要送不同参数！！！！！！
+      let searchTarget = this.oriAPIData.find(ele => ele.deptId === this.plantList.factoryIDValue)
+      this.targetAugs = {
+        // holderId: item.holderId,
+        // factory: this.plantList.factoryIDValue
+        factoryId: this.plantList.factoryIDValue,
+        factoryName: searchTarget.deptName,
+        workshopId: item.deptId,
+        workshopName: searchTarget.workshop.find(ele => ele.deptId === item.deptId).deptName,
+        holderId: item.holderId,
+        holderName: item.holderName
+      }
+      this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Granary-WheatPot-dataEntryIndex')
+      setTimeout(() => {
+        this.$router.push({name: 'DataEntry-Granary-WheatPot-dataEntryIndex'})
+      }, 100)
     }
-    let p = Object.assign({}, this.params, {holderId, holderName})
-    this.setStore(p)
-    this.pushPage('DataEntry-Granary-WheatPot-dataEntryIndex')
-  }
-  pushPage (name) {
-    this.mainTabs = this.mainTabs.filter(item => item.name !== name)
-    let that = this
-    setTimeout(function () {
-      that.$router.push({name})
-    }, 100)
-  }
-  @Watch('params', {deep: true})
-  onChangeValue (newVal: string, oldVal: string) {
-    this.searched = false
-  }
-  @Watch('params.factoryId')
-  onFactoryValue (newVal: string, oldVal: string) {
-    this.params.workshopId = ''
-    this.params.workshopName = ''
-    this.getWorkshop(newVal)
-  }
+  },
+  computed: {
+    isMainAreaShow: function () {
+      return this.dataList.length !== 0
+    },
+    sumBatch: function () {
+      return function (items) {
+        let sum = 0
+        items.forEach((item) => {
+          sum = sum + (item.currentQuantity * 1)
+        })
+        return sum
+      }
+    },
+    mainTabs: {
+      get () {
+        return this.$store.state.common.mainTabs
+      },
+      set (val) {
+        this.$store.commit('common/updateMainTabs', val)
+      }
+    },
+    targetAugs: {
+      get () {
+        return this.$store.state.common.GranaryWheatPot
+      },
+      set (val) {
+        this.$store.commit('common/updateGranaryWheatPot', val)
+      }
+    }
+  },
+  components: {}
 }
 </script>
 
 <style lang="scss">
-.Card_item{
-  .el-card__header{
-    padding: 15px 20px;
-    font-size: 16px;
-    color: #666;
+@import '@/assets/scss/_common.scss';
+@import '@/assets/scss/_share.scss';
+.granary-wheat-pot{
+  .area-to-bottom{
+    min-height: calc(82vh);
   }
-  &_detail{
-    float: right;
-    cursor: pointer;
-    color: #1890FF;
-  }
-  &_img{
-    width: 250px;
-    position: relative;
-    img{
-      width: 250px;
+  .granary-wheat-pot__body{
+    .el-col-12{
+      margin-bottom: 10px;
     }
-    &_box{
-      width: 89px;
-      height: 161px;
-      position: absolute;
-      left: 83px;
-      top: 33px;
-      display: flex;
-      flex-wrap: wrap;
-      align-content: flex-end;
-      &_bg{
-        flex: 1;
+  }
+  .card-item_detail{
+    &::after{
+      content: " >>"
+    }
+  }
+  .card-item{
+    .el-card__header{
+      padding: 15px 20px;
+      font-size: 16px;
+      color: #666;
+    }
+    &_detail{
+      float: right;
+      cursor: pointer;
+      color: #1890FF;
+    }
+    &_img{
+      width: 250px;
+      position: relative;
+      img{
+        width: 250px;
+      }
+      &_box{
+        width: 89px;
         height: 161px;
-        align-items: center;
-        position: relative;
-        background: linear-gradient(#35C3FF,#1890FF);
-        overflow: hidden;
-        &:hover{
+        position: absolute;
+        left: 83px;
+        top: 33px;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-end;
+        &_bg{
+          flex: 1;
+          height: 161px;
+          align-items: center;
+          position: relative;
+          background: linear-gradient(#35C3FF,#1890FF);
+          overflow: hidden;
+          &:hover{
+            &::before,&::after{
+              animation: roateOne 10s linear infinite;
+            }
+          }
           &::before,&::after{
-            animation: roateOne 10s linear infinite;
+            content: "";
+            position: absolute;
+            left: 50%;
+            min-width: 155px;
+            min-height: 145px;
+            background: #fff;
+            animation: roateTwo 10s linear infinite;
+          }
+
+          &::before {
+            top: -138px;
+            border-radius: 45%;
+          }
+          &::after {
+            top: -132px;
+            opacity: 0.5;
+            border-radius: 47%;
           }
         }
-        &::before,&::after{
-          content: "";
+      }
+    }
+    &_text{
+      flex: 1;
+      margin-right:2em;
+      .el-card__header{
+        font-size: 14px;
+        padding: 10px 12px;
+        background: #1890FF;
+        color: white;
+      }
+      &_box{
+        position: relative;
+        padding-bottom: 6px;
+        max-height: 180px;
+        overflow: scroll;
+        &_bg1,&_bg2{
           position: absolute;
-          left: 50%;
-          min-width: 155px;
-          min-height: 145px;
-          background: #fff;
-          animation: roateTwo 10s linear infinite;
+          width: 100%;
+          height: 20px;
+          background: linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+          z-index: 999;
         }
+        &_bg2{
+          bottom: 0;
+          background: linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+        }
+      }
+      .card-item_text_box::-webkit-scrollbar {
+        display: none;
+      }
+      &_item{
+        color: #4A4A4A;
+        font-size: 14px;
+        padding-top: 10px;
+      }
+    }
+  }
+}
 
-        &::before {
-          top: -138px;
-          border-radius: 45%;
-        }
-        &::after {
-          top: -132px;
-          opacity: 0.5;
-          border-radius: 47%;
-        }
-      }
-    }
-  }
-  &_text{
-    flex: 1;
-    .el-card__header{
-      font-size: 14px;
-      padding: 10px 12px;
-      background: #1890FF;
-      color: white;
-    }
-    &_box{
-      position: relative;
-      padding-bottom: 6px;
-      max-height: 180px;
-      overflow: scroll;
-      &_bg1,&_bg2{
-        position: absolute;
-        width: 100%;
-        height: 20px;
-        background: linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
-        z-index: 999;
-      }
-      &_bg2{
-        bottom: 0;
-        background: linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-      }
-    }
-    .Card_item_text_box::-webkit-scrollbar {
-      display: none;
-    }
-    &_item{
-      color: #4A4A4A;
-      font-size: 14px;
-      padding-top: 10px;
-    }
-  }
-}
-@keyframes roateOne {
-  0% {
-    transform: translate(-50%, -0%) rotateZ(0deg);
-  }
-  50% {
-    transform: translate(-50%, -1%) rotateZ(180deg);
-  }
-  100% {
-    transform: translate(-50%, -0%) rotateZ(360deg);
-  }
-}
-@keyframes roateTwo {
-  0% {
-    transform: translate(-50%, -0%) rotateZ(0deg);
-  }
-  50% {
-    transform: translate(-50%, -0%) rotateZ(0deg);
-  }
-  100% {
-    transform: translate(-50%, -0%) rotateZ(0deg);
-  }
-}
 </style>

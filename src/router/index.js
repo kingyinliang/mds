@@ -12,7 +12,7 @@ const _import = require('./import-' + process.env.NODE_ENV)
 const globalRoutes = [
   { path: '/login', component: _import('common/login'), name: 'login', meta: { title: '登录' } },
   { path: '/echarts', component: _import('common/demo-echarts'), name: 'echarts', meta: { title: 'echarts' } },
-  { path: '/lookEcharts', component: _import('common/lookEcharts'), name: 'lookEcharts', meta: { title: 'lookEcharts' } }
+  { path: '/lookEcharts', component: _import('common/LookEcharts'), name: 'lookEcharts', meta: { title: 'lookEcharts' } }
 ]
 
 // 主入口路由(需嵌套上左右整体布局)
@@ -40,7 +40,7 @@ const mainRoutes = {
 // 看板路由
 const DataEchartsRoutes = {
   path: '/DataEcharts',
-  component: _import('page/DataEcharts/layout/index'),
+  component: _import('page/DataEcharts/Layout/index'),
   children: [
     { path: '/', redirect: '/DataEcharts/KojiMaking-DataScreening-index' }
   ],

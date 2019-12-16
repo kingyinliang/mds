@@ -63,7 +63,7 @@
             <el-button :style="{'color': applyMaterielState === 'noPass'? 'red' : ''}">物料领用</el-button>
           </el-tooltip>
         </span>
-        <material ref="material" :isRedact="isRedact" :Supplier="Supplier" @setApplyMaterielState='setApplyMaterielState'></material>
+        <material ref="material" :isRedact="isRedact" :Supplier="Supplier" @SetMeaterielNum="SetMeaterielNum" @setApplyMaterielState='setApplyMaterielState'></material>
       </el-tab-pane>
       <el-tab-pane name="7">
         <span slot="label" class="spanview">文本记录</span>
@@ -74,9 +74,9 @@
 </template>
 
 <script>
-import ExcRecord from '@/views/components/excRecord'
-import TextRecord from '@/views/components/textRecord'
-import Worker from '@/views/components/worker'
+import ExcRecord from '@/views/components/ExcRecord'
+import TextRecord from '@/views/components/TextRecord'
+import Worker from '@/views/components/Worker'
 import ReadyTimes from './ReadyTimes'
 import Record from './Record'
 import Material from './Material'
@@ -124,7 +124,8 @@ export default {
     },
     SetMeaterielNum (num) {
       // this.$refs.outtech.GetsaltWaterUsed(num)
-      this.$refs.material.setNum(num)
+      // this.$refs.material.setNum(num)
+      this.$refs.instorage.setNum(num)
     },
     // 获取表头
     getHead () {

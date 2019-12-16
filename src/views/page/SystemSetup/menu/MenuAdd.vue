@@ -78,7 +78,7 @@
 import { treeDataTranslate } from '@/net/validate'
 import { SYSTEMSETUP_API } from '@/api/api'
 export default {
-  name: 'menuAdd',
+  name: 'MenuAdd',
   data () {
     var validateUrl = (rule, value, callback) => {
       if (this.dataForm.type === 1 && !/\S/.test(value)) {

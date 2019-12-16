@@ -30,7 +30,7 @@
 <script>
 import {SYSTEMSETUP_API} from '@/api/api'
 export default {
-  name: 'schedule-add-or-update',
+  name: 'ScheduleAddOrUpdate',
   data () {
     return {
       visible: false,

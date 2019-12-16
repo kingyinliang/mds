@@ -119,14 +119,14 @@
 <script>
 import { PACKAGING_API } from '@/api/api'
 import { headanimation } from '@/net/validate'
-import FormHeader from '@/views/components/formHeader'
+import FormHeader from '@/views/components/FormHeader'
 import ReadyTimes from './common/readyTimes'
-import Worker from '@/views/components/worker'
-import ExcRecord from '@/views/components/excRecord'
+import Worker from '@/views/components/Worker'
+import ExcRecord from '@/views/components/ExcRecord'
 import InStorage from './common/inStorage'
 import ListBom from './common/listBom'
 import Germs from './common/Germs'
-import TextRecord from '@/views/components/textRecord'
+import TextRecord from '@/views/components/TextRecord'
 export default {
   name: 'ProDataIn',
   data () {

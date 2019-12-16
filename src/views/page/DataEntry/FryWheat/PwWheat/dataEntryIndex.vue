@@ -80,11 +80,11 @@
 <script>
 import {WHT_API} from '@/api/api'
 import { headanimation } from '@/net/validate'
-import FormHeader from '@/views/components/formHeader'
-import ExcRecord from '@/views/components/excRecord'
+import FormHeader from '@/views/components/FormHeader'
+import ExcRecord from '@/views/components/ExcRecord'
 import PwTime from '../common/pwTime'
 import PwApplyMateriel from '../common/pwApplyMateriel'
-import TextRecord from '@/views/components/textRecord'
+import TextRecord from '@/views/components/TextRecord'
 export default {
   name: 'dataEntryIndex',
   data () {

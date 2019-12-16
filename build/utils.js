@@ -85,7 +85,6 @@ exports.styleLoaders = function (options) {
 
 exports.createNotifierCallback = () => {
   const notifier = require('node-notifier')
-
   return (severity, errors) => {
     if (severity !== 'error') return
 

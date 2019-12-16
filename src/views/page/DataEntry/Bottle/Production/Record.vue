@@ -24,6 +24,14 @@
       <el-table-column label="单位" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="60">
         <template slot-scope="scope">{{scope.row.unit = '个'}}</template>
       </el-table-column>
+      <el-table-column label="是否除尘" :show-overflow-tooltip="true" prop="isDust" width="180">
+        <template slot-scope="scope">
+          <el-select v-model="scope.row.isDust" placeholder="请选择" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))">
+            <el-option label="是" value="1"></el-option>
+            <el-option label="否" value="0"></el-option>
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column label="供应商" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="180">
         <template slot-scope="scope">
           <el-select v-model="scope.row.supplier" placeholder="请选择" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))">
@@ -150,6 +158,7 @@ export default {
     AddRecord () {
       this.RecordList.splice(0, 0, {
         date: '',
+        isDust: '1',
         delFlag: '0',
         embryoAmount: this.RecordList.length > 0 ? this.RecordList[this.RecordList.length - 1].embryoAmount : '',
         embryoBatch: '',

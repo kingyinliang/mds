@@ -8,7 +8,7 @@ export default {
     // 侧边栏, 布局皮肤, light(浅色) / dark(黑色)
     sidebarLayoutSkin: 'dark',
     // 侧边栏, 折叠状态
-    sidebarFold: false,
+    sidebarFold: true,
     // 侧边栏, 菜单
     menuList: [],
     menuActiveName: '',
@@ -189,6 +189,14 @@ export default {
      */
     juice: {},
     /**
+     * 罐区报表
+     */
+    PotReportForms: {
+      factory: '',
+      type: '',
+      workShop: ''
+    },
+    /**
      * 杀菌车间
      */
     sterilized: {
@@ -230,6 +238,25 @@ export default {
     bottle: {
       orderNo: '',
       ProOrderId: ''
+    },
+    /**
+     * 计量仓小麦罐
+     */
+    MeasureBarnWheatPot: {
+      factoryId: '',
+      factoryName: '',
+      workshopId: '',
+      workshopName: '',
+      holderId: '',
+      holderName: ''
+    },
+    /**
+     * 计量仓豆粕罐
+     */
+    MeasureBarnBeanPulp: {
+      holderId: '',
+      factory: '',
+      deptId: ''
     }
   },
   mutations: {
@@ -387,6 +414,14 @@ export default {
     },
     updateBottle (state, params) {
       state.Bottle = params
+    },
+    /** 计量仓小麦罐 */
+    updatemMeasureBarnWheatPot (state, params) {
+      state.MeasureBarnWheatPot = params
+    },
+    /** 计量仓豆粕罐 */
+    updateMeasureBarnBeanPulp (state, params) {
+      state.MeasureBarnBeanPulp = params
     }
   }
 }

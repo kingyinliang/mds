@@ -10,7 +10,7 @@
 <script>
 import { MAIN_API } from '@/api/api'
 export default {
-  name: 'menuItem',
+  name: 'MenuItem',
   data () {
     return {
       container: []

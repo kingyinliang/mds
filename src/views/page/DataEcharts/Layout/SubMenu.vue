@@ -18,7 +18,7 @@
 <script>
 import { BASICDATA_API } from '@/api/api'
 export default {
-  name: 'subMenu',
+  name: 'SubMenu',
   data () {
     return {
       factory: [],
@@ -93,7 +93,7 @@ export default {
   },
   components: {
     MenuItem: resolve => {
-      require(['./menuItem'], resolve)
+      require(['./MenuItem'], resolve)
     }
   }
 }

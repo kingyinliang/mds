@@ -322,7 +322,7 @@
 <script>
 import { Readyanimation } from '@/net/validate'
 import { SYSTEMSETUP_API, KJM_API } from '@/api/api'
-import LookEcharts from '@/views/components/lookEcharts'
+import LookEcharts from '@/views/components/LookEcharts'
 export default {
   name: 'craft',
   data () {
@@ -615,7 +615,7 @@ export default {
   },
   components: {
     AbnRecord: resolve => {
-      require(['@/views/components/abnRecord'], resolve)
+      require(['@/views/components/AbnRecord'], resolve)
     },
     LookEcharts
   }

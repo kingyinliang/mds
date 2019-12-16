@@ -103,8 +103,8 @@ import {KJM_API, BASICDATA_API} from '@/api/api'
 import {headanimation} from '@/net/validate'
 import Material from './common/material'
 import Craft from './common/craft'
-import ExcRecord from '@/views/components/excRecord'
-import TextRecord from '@/views/components/textRecord'
+import ExcRecord from '@/views/components/ExcRecord'
+import TextRecord from '@/views/components/TextRecord'
 export default {
   name: 'boileIndex',
   data () {

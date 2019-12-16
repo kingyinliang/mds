@@ -446,7 +446,16 @@ export const SYSTEMSETUP_API = {
   /**
    * @property {string} PASSWORDRESET_API 用户管理重置密码
    */
-  PASSWORDRESET_API: HOST + '/sys/user/reset'
+  PASSWORDRESET_API: HOST + '/sys/user/reset',
+  /**
+   * IOT换算
+   */
+  IOTHEADSEARCHLIST_API: HOST + '/iot/import/headList', // 头部查询
+  IOTDATALIST_API: HOST + '/iot/import/iotList', // 数据拉取
+  IOTDATADEL_API: HOST + '/iot/import/iotDel', // 删除
+  IOTDATALISTEXPORT_API: HOST + '/iot/import/exportIot', // 导出
+  IOTDATAUPDATE_API: HOST + '/iot/import/iotUpdate', // 修改
+  IOTDATALISTIMPORT_API: HOST + '/iot/import/iotImport' // 导入
 }
 /*
 *包装车间api
@@ -656,6 +665,7 @@ export const AUDIT_API = {
    * @property {string} AUDIT_ISSUE_RESET_API 生产发料反审
    */
   AUDIT_ISSUE_RESET_API: HOST + '/verify/material/resetMaterial',
+  AUDIT_ISSUE_MATERIAL_API: HOST + '/all/dropDown/getVerifyMaterial', // 物料组件
   /**
    * 调整明细
   */
@@ -1203,6 +1213,14 @@ export const KJM_API = {
  */
 export const SQU_API = {
   /**
+   * 领用罐列表
+   */
+  POT_LIST_API: HOST + '/fer/openHolder/holderInfo',
+  /**
+   * 还罐
+   */
+  POT_REPAY_API: HOST + '/fer/openHolder/revertHolder',
+  /**
    * 开罐申请列表
    */
   POT_APPLY_LIST_API: HOST + '/fer/openHolder/list',
@@ -1686,7 +1704,16 @@ export const JUICE_API = {
   JUICE_JUICE_DETAIL: HOST + '/juice/pot/juiceItem', // 详情
   JUICE_JUICE_STOCKITEM: HOST + '/juice/pot/juiceStockItem', // 库存详情
   JUICE_STOCKITEM_KUCUN: HOST + '/juice/pot/juiceStockItemExport', // 导出
-  JUICE_SEARCH_POT_LIST: HOST + '/juice/pot/holderList'
+  JUICE_SEARCH_POT_LIST: HOST + '/juice/pot/holderList',
+  JUICE_BRINGOUTPROP_FA_LIST: HOST + '/juice/pot/addPotList',
+  JUICE_BRINGOUTPROP_TIAO_LIST: HOST + '/juice/pot/allocateHolderList'
+}
+/**
+ *  罐区报表api
+ */
+export const POTREPORTFORMS_API = {
+  POTREPORTFORMS_LIST: HOST + '/ste/semi/reportForm',
+  POTREPORTFORMS_OUT: HOST + '/ste/semi/reportFormExport'
 }
 /**
  *  看板接口
@@ -1699,4 +1726,70 @@ export const ECHARTS_API = {
   KOJIMAKING_WORKSHOP_HOUSEMATERIAL: HOST + '/zhiqu/board/houseUsedMaterial',
   KOJIMAKING_WORKSHOP_HOUSEPHASE: HOST + '/zhiqu/board/houseUsedPhase',
   KOJIMAKING_DETAIL_LINE: HOST + '/zhiqu/board/lineChart'
+}
+/**
+ *  计粮仓 api
+ * /realTime/wheat/wheatMeasuringBin
+ * 传参:factory,workShop
+ * 权限：realTime:wheat:wheatMeasuringBin
+ */
+
+/**
+ * 计量仓 豆粕 API
+ */
+export const MEASUREBARN_BEAN_API = {
+  /**
+   * 豆粕罐首页 v
+   */
+  BEANPULP_POT_LIST: HOST + '/realTime/pulp/pulpMeasuringBin',
+  /**
+   * 豆粕仓库存 LIST v
+   */
+  BEANPULP_BATCH_LIST: HOST + '/gra/material/list',
+  /**
+   * 豆粕仓调整 LIST （共同接口）v
+   */
+  BEANPULP_ADJSUT_LIST: HOST + '/gra/adjust/adjustList',
+  /**
+   * 豆粕仓入库|领用记录 v
+   */
+  BEANPULP_APPLY_LIST: HOST + '/realTime/pulp/pulpBatchView',
+  /**
+   * 调整 v
+   */
+  BEANPULP_ADJUST: HOST + '/gra/adjust/adjustMeasuringBin',
+  /**
+   * 入罐呼叫 v
+ */
+  BEANPULP_INPARN: HOST + '/kjm/bean/pulpList',
+  /**
+   * 入罐储存 v
+ */
+  BEANPULP_SAVE_INPARN: HOST + '/kjm/pulpIn/save'
+}
+
+/**
+ * 计量仓 小麦 API
+ */
+export const MEASUREBARN_WHEAT_API = {
+  /**
+   * 小麦仓首页 v
+   */
+  WHEAT_POT_LIST: HOST + '/realTime/wheat/wheatMeasuringBin',
+  /**
+   * 小麦仓库存 LIST v
+   */
+  WHEAT_BATCH_LIST: HOST + '/gra/material/list',
+  /**
+   * 小麦仓调整 LIST （共同接口）v
+   */
+  WHEAT_ADJSUT_LIST: HOST + '/gra/adjust/adjustList',
+  /**
+   * 小麦仓入库|领用记录 v
+   */
+  WHEAT_APPLY_LIST: HOST + '/realTime/wheat/wheatBatchView',
+  /**
+   * 调整 v
+   */
+  WHEAT_ADJUST_LIST: HOST + '/gra/adjust/adjustMeasuringBin'
 }

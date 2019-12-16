@@ -89,13 +89,13 @@
 <script>
 import {WHT_API} from '@/api/api'
 import { headanimation } from '@/net/validate'
-import FormHeader from '@/views/components/formHeader'
+import FormHeader from '@/views/components/FormHeader'
 import ReadyTime from '../common/readyTime'
-import Worker from '@/views/components/worker'
-import ExcRecord from '@/views/components/excRecord'
+import Worker from '@/views/components/Worker'
+import ExcRecord from '@/views/components/ExcRecord'
 import InStock from '../common/inStock'
 import ApplyMateriel from '../common/applyMateriel'
-import TextRecord from '@/views/components/textRecord'
+import TextRecord from '@/views/components/TextRecord'
 export default {
   name: 'dataEntryIndex',
   data () {

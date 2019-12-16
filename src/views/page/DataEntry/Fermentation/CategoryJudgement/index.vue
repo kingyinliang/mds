@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header_main">
-      <el-card>
+      <el-card class="searchCard">
         <el-row>
           <el-col :span="24">
             <el-form :inline="true" :model="form" size="small" label-width="70px" class="multi_row">

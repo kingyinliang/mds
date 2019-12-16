@@ -24,13 +24,13 @@
           <!--<el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="formHeader.productDate" style="width: 180px"></el-date-picker>-->
         </el-form-item>
         <el-form-item label="容器号：" label-width="70px">
-          <el-select v-model="formHeader.holderNo" placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.holderNo" filterable placeholder="请选择" style="width: 180px">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.HOLDER_NAME" v-for="(item, index) in PotList" :key="index" :value="item.HOLDER_NO"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产物料：" label-width="70px">
-          <el-select v-model="formHeader.materialCode" placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.materialCode" filterable placeholder="请选择" style="width: 180px">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.MATERIAL_NAME" v-for="(item, index) in MaterialList" :key="index" :value="item.MATERIAL_CODE"></el-option>
           </el-select>
@@ -140,6 +140,9 @@ export default {
       this.formHeader.workShop = ''
       getWorkshop(this, n, '原汁')
     },
+    'formHeader.holderTypes' (n, o) {
+      this.GetPostLost(n)
+    },
     'activeName' (n, o) {
       this.GetDataList(true)
     }
@@ -149,8 +152,15 @@ export default {
     this.GetPostLost()
   },
   methods: {
-    GetPostLost () {
-      this.$http(`${AUDIT_API.JUICT_POT_LIST}`, 'POST', {}, false, false, false).then(({data}) => {
+    GetPostLost (data) {
+      console.log(data)
+      let obj = {}
+      if (data.length) {
+        obj = {
+          holderType: data
+        }
+      }
+      this.$http(`${AUDIT_API.JUICT_POT_LIST}`, 'POST', obj, false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.PotList = data.materialPotList.pot
           this.MaterialList = data.materialPotList.material

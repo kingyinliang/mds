@@ -1,7 +1,7 @@
 <template>
   <el-col>
     <div class="header_main">
-      <el-card style="min-height: 480px">
+      <el-card class="searchCard" style="min-height: 480px">
         <el-row type="flex" style="border-bottom: 1px solid #E9E9E9;margin-bottom: 12px">
           <el-col>
             <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
@@ -212,9 +212,9 @@
 <script>
 import {BASICDATA_API, WHT_API, SYSTEMSETUP_API} from '@/api/api'
 import {dateFormat, orderList} from '@/net/validate'
-import TemporaryWorker from '@/views/components/temporaryWorker'
-import LoanedPersonnel from '@/views/components/loanedPersonnel'
-import officialWorker from '@/views/components/officialWorker'
+import TemporaryWorker from '@/views/components/TemporaryWorker'
+import LoanedPersonnel from '@/views/components/LoanedPersonnel'
+import officialWorker from '@/views/components/OfficialWorker'
 export default {
   name: 'index',
   data () {

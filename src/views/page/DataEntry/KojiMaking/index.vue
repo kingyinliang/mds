@@ -2,7 +2,7 @@
   <el-row>
     <el-col>
       <div class="header_main">
-        <el-card>
+        <el-card class="searchCard">
           <el-row type="flex">
             <el-col>
               <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
@@ -255,9 +255,9 @@
 import {BASICDATA_API, WHT_API, KJM_API} from '@/api/api'
 import {dateFormat} from '@/net/validate'
 import {Vue, Component, Watch} from 'vue-property-decorator'
-import TemporaryWorker from '@/views/components/temporaryWorker.vue'
-import LoanedPersonnel from '@/views/components/loanedPersonnel.vue'
-import officialWorker from '@/views/components/officialWorker.vue'
+import TemporaryWorker from '@/views/components/TemporaryWorker.vue'
+import LoanedPersonnel from '@/views/components/LoanedPersonnel.vue'
+import officialWorker from '@/views/components/OfficialWorker.vue'
 import {Employee} from './entity/Employee.ts'
 import {DayType, EMPType} from './entity/Enum.ts'
 import {House} from './entity/House.ts'

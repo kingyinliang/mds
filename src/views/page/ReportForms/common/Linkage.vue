@@ -64,7 +64,7 @@
 <script>
 import {BASICDATA_API} from '@/api/api'
 export default {
-  name: 'linkage',
+  name: 'Linkage',
   data () {
     return {
       factory: [],

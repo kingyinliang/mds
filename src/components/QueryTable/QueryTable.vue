@@ -73,6 +73,11 @@
         <div class="toggleSearchTop">
           <i class="el-icon-caret-bottom"></i>
         </div>
+        <el-row>
+          <el-col style="text-align:right; margin-bottom:10px;">
+            <slot name="mds-button-middle"></slot>
+          </el-col>
+        </el-row>
         <el-table :data="tableData" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;margin-bottom: 20px">
           <el-table-column
             v-if="showSelectColumn"
@@ -91,6 +96,7 @@
             v-for="item in column"
             v-if="!item.hide"
             :key="item.prop"
+            :fixed="item.fixed"
             :prop="item.prop"
             :label="item.label"
             :width="item.width || ''"
@@ -149,6 +155,10 @@ export default {
     }
   },
   props: {
+    returnColumnType: {
+      type: String,
+      default: 'page'
+    },
     queryFormData: {
       type: Array,
       default: () => {
@@ -267,6 +277,22 @@ export default {
               })
             }
           })
+        } else if (item.defaultOptionsMore) {
+          item.defaultOptionsMore().then(({data}) => {
+            if (/\./g.test(item.resVal.resData)) {
+              item.resVal.resData.split('.').forEach(resIt => {
+                let dataSole = data.iotListInfo[resIt]
+                // console.log(dataSole)
+                if (dataSole.length > 0 && resIt === 'factory') {
+                  this.$set(this.queryForm, resIt, dataSole[0][item.resVal.value])
+                  this.$nextTick(function () {
+                    this.$refs[item.prop][0].emitChange(dataSole[0][item.resVal.value])
+                  })
+                }
+                this.$set(this.optionLists, resIt, dataSole)
+              })
+            }
+          })
         }
         // 联动监听事件对象
         if (item.linkageProp) {
@@ -340,7 +366,7 @@ export default {
           }
         }
       }
-      if (!this.isAuth(this.queryAuth)) {
+      if (!this.isAuth(this.queryAuth) && this.queryAuth !== '') {
         this.$warning_SHINHO('无查询权限')
         return false
       }
@@ -349,10 +375,10 @@ export default {
       }
       this.listInterface(this.queryForm).then(({data}) => {
         if (data.code === 0) {
-          this.tableData = data.page.list
-          this.queryForm.currPage = data.page.currPage
-          this.queryForm.pageSize = data.page.pageSize
-          this.queryForm.totalCount = data.page.totalCount
+          this.tableData = data[this.returnColumnType].list
+          this.queryForm.currPage = data[this.returnColumnType].currPage
+          this.queryForm.pageSize = data[this.returnColumnType].pageSize
+          this.queryForm.totalCount = data[this.returnColumnType].totalCount
           this.$emit('get-data-success', data)
         } else {
           this.$error_SHINHO(data.msg)
@@ -369,7 +395,7 @@ export default {
           }
         }
       }
-      if (!this.isAuth(this.exportOption.auth)) {
+      if (!this.isAuth(this.exportOption.auth) && this.exportOption.auth !== '') {
         this.$warning_SHINHO('无导出权限')
         return false
       }
