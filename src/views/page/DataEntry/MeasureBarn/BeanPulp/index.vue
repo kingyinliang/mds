@@ -91,7 +91,7 @@
                 ]"
                 >
                 <el-select  placeholder="请选择"  v-model="inParnForm.foodHolderId" style="width:220px" @change="changeInParnHolderOptions(inParnForm.foodHolderId)">
-                  <el-option v-for="sole in inParnHolder" :key="sole.holderNo" :label="sole.holderName" :value="sole.holderId"></el-option>
+                  <el-option v-for="sole in inParnHolder" :key="sole.deptId+sole.holderId" :label="sole.holderName" :value="sole.holderId"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item
@@ -165,7 +165,7 @@ import { isAuth } from '../../../../../net/validate'
 import MSG from '@/assets/js/hint-msg'
 import {dateFormat} from '@/net/validate.js'
 export default {
-  name: 'MeasureBarnBeanPulpIndex4',
+  name: 'MeasureBarnBeanPulpIndex',
   data () {
     return {
       factoryList: [],
@@ -298,23 +298,21 @@ export default {
       }
     },
     goParn (item) {
-      console.log('item')
-      console.log(item)
       this.plantList.factoryIDValue = item.factory
       this.plantList.workshopIDValue = item.deptId
       this.isShowMessageBoxCheck = true
       this.inParnForm.pulpHolderId = item.holderId
-      console.log(item.holderId)
       this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_INPARN}`, 'POST', {factory: item.factory, workShop: item.deptId}).then(({data}) => {
         if (data.code === 0) {
-          console.log('data======')
-          console.log(data)
           data.holder.map(item => {
             this.inParnHolder.push({deptId: item.deptId, holderName: item.holderName, holderId: item.holderId, pulpData: item.pulpData})
           })
           this.isInputWeight = true
           this.inParnForm.changed = dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
           // this.inParnForm = data.holder
+
+          console.log('this.inParnHolder')
+          console.log(this.inParnHolder)
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -450,8 +448,6 @@ export default {
       }
       this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_POT_LIST}`, 'POST', {factory: this.plantList.factoryIDValue, workShop: this.plantList.workshopIDValue}).then(({data}) => {
         if (data.code === 0) {
-          console.log('======2222=====')
-          console.log(data)
           if (data.infoList.length !== 0) {
             this.dataList = data.infoList
           } else {
