@@ -473,7 +473,7 @@ export default {
         deptId: this.plantList.workshopIDValue
       }
       this.$store.state.common.MeasureBarnBeanPulp = item
-      this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-MeasureBarn-targetAugs-DataEntryIndex')
+      this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-MeasureBarn-BeanPulp-DataEntryIndex')
       setTimeout(() => {
         this.$router.push({ name: `DataEntry-MeasureBarn-BeanPulp-DataEntryIndex` })
       }, 100)
