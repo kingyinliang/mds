@@ -27,6 +27,13 @@
       "unicode_decimal": 58894
     },
     {
+      "icon_id": "549160",
+      "name": "类目",
+      "font_class": "zuzhijigouyiji",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
       "icon_id": "590668",
       "name": "放大镜",
       "font_class": "fangdajing-copy",
@@ -46,6 +53,13 @@
       "font_class": "liebiao",
       "unicode": "e65e",
       "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "876894",
+      "name": "现场人员",
+      "font_class": "xianchangrenyuan",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
     },
     {
       "icon_id": "1013216",
@@ -76,11 +90,25 @@
       "unicode_decimal": 58914
     },
     {
+      "icon_id": "1386576",
+      "name": "人员类型-公司职员",
+      "font_class": "renyuanleixing-gongsizhiyuan",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
       "icon_id": "1680702",
       "name": "仓库",
       "font_class": "cangku",
       "unicode": "e668",
       "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "1788843",
+      "name": "制造追溯",
+      "font_class": "zhizaozhuisu",
+      "unicode": "e640",
+      "unicode_decimal": 58944
     },
     {
       "icon_id": "1915200",
@@ -104,11 +132,25 @@
       "unicode_decimal": 59037
     },
     {
+      "icon_id": "2063220",
+      "name": "7生产车间",
+      "font_class": "shengchanchejian",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
       "icon_id": "2389662",
       "name": "制造商",
       "font_class": "zhizaoshang",
       "unicode": "e63c",
       "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "2480609",
+      "name": "日期",
+      "font_class": "riqi",
+      "unicode": "e768",
+      "unicode_decimal": 59240
     },
     {
       "icon_id": "2623867",
@@ -123,6 +165,13 @@
       "font_class": "guolv",
       "unicode": "e6e9",
       "unicode_decimal": 59113
+    },
+    {
+      "icon_id": "3098497",
+      "name": "存储容量",
+      "font_class": "cunchurongliang",
+      "unicode": "e675",
+      "unicode_decimal": 58997
     },
     {
       "icon_id": "3239725",
@@ -237,6 +286,20 @@
       "unicode_decimal": 58951
     },
     {
+      "icon_id": "6992539",
+      "name": "区域",
+      "font_class": "quyu",
+      "unicode": "e672",
+      "unicode_decimal": 58994
+    },
+    {
+      "icon_id": "7031441",
+      "name": "计算",
+      "font_class": "calc",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
       "icon_id": "7058633",
       "name": "液位",
       "font_class": "yewei",
@@ -279,6 +342,13 @@
       "unicode_decimal": 58899
     },
     {
+      "icon_id": "7712194",
+      "name": "订单",
+      "font_class": "dingdan",
+      "unicode": "e71f",
+      "unicode_decimal": 59167
+    },
+    {
       "icon_id": "7850695",
       "name": "拆分",
       "font_class": "chaifen",
@@ -291,6 +361,13 @@
       "font_class": "kucun",
       "unicode": "e600",
       "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "8095350",
+      "name": "线材轧制车间",
+      "font_class": "Avatar",
+      "unicode": "e69b",
+      "unicode_decimal": 59035
     },
     {
       "icon_id": "8157488",
@@ -349,6 +426,13 @@
       "unicode_decimal": 58890
     },
     {
+      "icon_id": "8729245",
+      "name": "品类管理",
+      "font_class": "pinleiguanli",
+      "unicode": "e6a4",
+      "unicode_decimal": 59044
+    },
+    {
       "icon_id": "8852943",
       "name": "空压机",
       "font_class": "kongyaji",
@@ -377,6 +461,20 @@
       "unicode_decimal": 58895
     },
     {
+      "icon_id": "9623511",
+      "name": "注意 (2)",
+      "font_class": "zhuyi",
+      "unicode": "e707",
+      "unicode_decimal": 59143
+    },
+    {
+      "icon_id": "9712601",
+      "name": "产线",
+      "font_class": "chanxian",
+      "unicode": "e6a5",
+      "unicode_decimal": 59045
+    },
+    {
       "icon_id": "9752391",
       "name": "贮罐_line",
       "font_class": "zhuguan_line",
@@ -391,6 +489,13 @@
       "unicode_decimal": 59530
     },
     {
+      "icon_id": "10128548",
+      "name": "制造业",
+      "font_class": "Group",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
       "icon_id": "10166286",
       "name": "面板2",
       "font_class": "mianban",
@@ -398,11 +503,74 @@
       "unicode_decimal": 58962
     },
     {
+      "icon_id": "10278859",
+      "name": "编号",
+      "font_class": "bianhao",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "10371827",
+      "name": "数据容量",
+      "font_class": "shujurongliang",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
       "icon_id": "10473103",
       "name": "吹瓶",
       "font_class": "chuiping",
       "unicode": "e616",
       "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "11116026",
+      "name": "生产线",
+      "font_class": "shengchanxian",
+      "unicode": "e86a",
+      "unicode_decimal": 59498
+    },
+    {
+      "icon_id": "11121525",
+      "name": "导入",
+      "font_class": "daoru",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    },
+    {
+      "icon_id": "11272242",
+      "name": "工厂",
+      "font_class": "gongchang",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "11365975",
+      "name": "车间管理",
+      "font_class": "chejianguanli",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "11948492",
+      "name": "日期",
+      "font_class": "riqi1",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "11982558",
+      "name": "每日计划产量配置",
+      "font_class": "-meirijihuachanliangpeizhi",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "12040080",
+      "name": "总产量",
+      "font_class": "menu-chanliangfenxi",
+      "unicode": "e6a6",
+      "unicode_decimal": 59046
     }
   ]
 }
