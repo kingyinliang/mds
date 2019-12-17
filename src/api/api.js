@@ -1508,7 +1508,8 @@ export const FERMENTATION_API = {
    * 订单修改
    */
   ORDER_MODIFY_LIST_API: HOST + '/sys/fer-sort-judge/isSapList',
-  ORDER_MODIFY_CHANGE_API: HOST + '/sys/fer-sort-judge/isSapUpdate'
+  ORDER_MODIFY_CHANGE_API: HOST + '/sys/fer-sort-judge/isSapUpdate',
+  ORDER_MODIFY_EXPORT_API: HOST + '/sys/fer-sort-judge/isSapListExport'
 }
 /**
  *  杀菌 api Sterilized

@@ -33,7 +33,8 @@
                 - <el-date-picker type="date" v-model="form.endDate" value-format="yyyy-MM-dd" style="width:140px"></el-date-picker>
               </el-form-item>
               <el-form-item class="floatr">
-                <el-button type="primary" size="small" @click="GetList(true)" style="float: right" v-if="isAuth('fer:judge:isSapList')">查询</el-button>
+                <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('fer:judge:isSapList')">查询</el-button>
+                <el-button type="primary" size="small" @click="ExportExcel(true)" v-if="isAuth('report:form:exportWorkshopWHoursM')">导出</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -104,6 +105,16 @@
                     {{scope.row.sapContent}}
                   </template>
                 </el-table-column>
+                <el-table-column label="判定时间" width="100px" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    {{scope.row.changed}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="判定人" width="100px" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    {{scope.row.changer}}
+                  </template>
+                </el-table-column>
               </el-table>
             </el-row>
           </el-tab-pane>
@@ -156,6 +167,16 @@
                     {{scope.row.sapContent}}
                   </template>
                 </el-table-column>
+                <el-table-column label="判定时间" width="100px" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    {{scope.row.changed}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="判定人" width="100px" :show-overflow-tooltip="true">
+                  <template slot-scope="scope">
+                    {{scope.row.changer}}
+                  </template>
+                </el-table-column>
               </el-table>
             </el-row>
           </el-tab-pane>
@@ -176,6 +197,7 @@
 
 <script>
 // import { dateFormat } from '@/net/validate'
+import { exportFile } from '@/net/validate'
 import { BASICDATA_API, FERMENTATION_API } from '@/api/api'
 export default {
   name: 'CategroyJudgement',
@@ -193,6 +215,7 @@ export default {
         pageSize: 10,
         totalCount: 0
       },
+      plantList: {},
       factory: '',
       workshop: '',
       activeName: '0',
@@ -255,6 +278,20 @@ export default {
       } else {
         this.workshop = []
       }
+    },
+    // 导出
+    ExportExcel () {
+      if (!this.form.factory) {
+        this.$warning_SHINHO('请选择工厂')
+        return false
+      }
+      if (!this.form.workShop) {
+        this.$warning_SHINHO('请选择车间')
+        return false
+      }
+      this.plantList = this.form
+      let that = this
+      exportFile(`${FERMENTATION_API.ORDER_MODIFY_EXPORT_API}`, '订单修改', that)
     },
     // 罐号
     GetPotList (id) {

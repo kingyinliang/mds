@@ -87,6 +87,7 @@ export default {
       factory: [],
       workshop: [],
       // guanList: [],
+      sumDataList: [],
       dataList: []
     }
   },
@@ -115,7 +116,10 @@ export default {
       }
       this.$http(`${SQU_API.POT_LIST_API}`, 'POST', this.formHeader).then(({data}) => {
         if (data.code === 0) {
-          this.dataList = data.holderInfo
+          this.sumDataList = data.holderInfo
+          this.formHeader.totalCount = data.holderInfo.length
+          this.formHeader.currPage = 1
+          this.dataList = this.sumDataList.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, (this.formHeader.currPage - 1) * this.formHeader.pageSize + this.formHeader.pageSize)
           if (!this.dataList.length) {
             this.$notify({title: '警告', message: '暂无数据', type: 'warning'})
           }
@@ -179,12 +183,12 @@ export default {
     // 改变每页条数
     handleSizeChange (val) {
       this.formHeader.pageSize = val
-      this.GetDataList()
+      this.dataList = this.sumDataList.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, (this.formHeader.currPage - 1) * this.formHeader.pageSize + this.formHeader.pageSize)
     },
     // 跳转页数
     handleCurrentChange (val) {
       this.formHeader.currPage = val
-      this.GetDataList()
+      this.dataList = this.sumDataList.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, (this.formHeader.currPage - 1) * this.formHeader.pageSize + this.formHeader.pageSize)
     }
   },
   computed: {},
