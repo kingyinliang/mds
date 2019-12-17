@@ -36,6 +36,7 @@ export default {
   },
   created () {
     this.menuList = JSON.parse(sessionStorage.getItem('menuList') || '[]')
+    console.log(this.menuList)
     this.dynamicMenuRoutes = JSON.parse(sessionStorage.getItem('dynamicMenuRoutes') || '[]')
     this.routeHandle(this.$route)
   },
@@ -59,7 +60,7 @@ export default {
     },
     // 路由操作
     routeHandle (route) {
-      console.log(this.menuActiveName)
+      // console.log(this.menuActiveName)
       // this.menuActiveName = (route.meta.menuId || route.name) + ''
       // this.mainTabsActiveName = route.name
     }

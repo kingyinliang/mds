@@ -117,7 +117,7 @@
             <el-col :span="4" class="dataList_item_btn_item"><p @click="TransferProp(item)">转储</p></el-col>
             <el-col :span="4" class="dataList_item_btn_item"><p @click="JuiceJudgeProp(item)">判定</p></el-col>
             <el-col :span="4" class="dataList_item_btn_item"><p @click="ClearProp(item)">清洗</p></el-col>
-            <el-col :span="4" class="dataList_item_btn_item"><p @click="AddProp(item)">HD</p></el-col>
+            <!--<el-col :span="4" class="dataList_item_btn_item"><p @click="AddProp(item)">HD</p></el-col>-->
             <el-col :span="4" class="dataList_item_btn_item"><p @click="BringOutProp(item)">调整</p></el-col>
           </el-row>
           <!-- 转储:沉淀中 领用中 可以。  添加:领用中可添加  判定:空罐，领用中，待清洗不能判定   调拨:空罐跟领用中 不能调拨 -->
