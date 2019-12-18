@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { REP_API, BASICDATA_API, SYSTEMSETUP_API } from '@/api/api'
+import { REP_API, BASICDATA_API } from '@/api/api'
 export default {
   name: 'JuiceOccupation',
   data () {
