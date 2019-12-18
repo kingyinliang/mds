@@ -473,11 +473,11 @@ export default {
             return false
           }
           if (!st) {
-            if (item.supStatus !== '已确认') {
-              ty = false
-              this.$warning_SHINHO('品保未确认')
-              return false
-            }
+            // if (item.supStatus !== '已确认') {
+            //   ty = false
+            //   this.$warning_SHINHO('品保未确认')
+            //   return false
+            // }
           }
           let sum = 0
           let dataArr = []

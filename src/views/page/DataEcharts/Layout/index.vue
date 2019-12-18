@@ -7,11 +7,7 @@
         <i class="site-sidebar__menu-icon iconfont factory-shouye"></i>
         <span slot="title">首页</span>
       </el-menu-item>
-      <el-menu-item :index="item.menuId" @click="goPageHome(item)" v-for="(item, index) in menuList.filter(it => it.type === '4')[0].list" :key="index" v-if="/总览/g.test(item.name)">
-        <i :class="item.icon || ''" class="site-sidebar__menu-icon iconfont"></i>
-        <span slot="title">{{item.name}}</span>
-      </el-menu-item>
-      <sub-menu v-for="(page, index) in menuList.filter(it => it.type === '4')[0].list" :key="index" :page="page" v-if="!(/总览/g.test(page.name))"></sub-menu>
+      <page-sub-menu v-for="(item, index) in menuList.filter(it => it.type === '4')[0].list" :page="item" :key="index"></page-sub-menu>
     </el-menu>
     <div class="DataEchartsContent">
       <router-view v-if="isRouterAlive"/>
@@ -36,21 +32,13 @@ export default {
   },
   created () {
     this.menuList = JSON.parse(sessionStorage.getItem('menuList') || '[]')
+    console.log(this.menuList)
     this.dynamicMenuRoutes = JSON.parse(sessionStorage.getItem('dynamicMenuRoutes') || '[]')
     this.routeHandle(this.$route)
   },
   mounted () {
   },
   methods: {
-    goPageHome (page) {
-      var route = this.dynamicMenuRoutes.filter(item => item.meta.menuId === page.menuId)
-      if (route.length >= 1) {
-        this.menuActiveName = page.menuId
-        this.$router.push({ path: route[0].path })
-      }
-      // this.menuActiveName = 'home'
-      // this.$router.push({ path: 'home' })
-    },
     reload () {
       this.isRouterAlive = false
       this.$nextTick(function () {
@@ -59,7 +47,7 @@ export default {
     },
     // 路由操作
     routeHandle (route) {
-      console.log(this.menuActiveName)
+      // console.log(this.menuActiveName)
       // this.menuActiveName = (route.meta.menuId || route.name) + ''
       // this.mainTabsActiveName = route.name
     }
@@ -85,6 +73,9 @@ export default {
   components: {
     SubMenu: resolve => {
       require(['./SubMenu'], resolve)
+    },
+    PageSubMenu: resolve => {
+      require(['./PageSubMenu'], resolve)
     }
   }
 }

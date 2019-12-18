@@ -17,6 +17,13 @@ module.exports = {
         pathRewrite: {
           '^/factory': '/'
         }
+      },
+      '/xj': {
+        target: 'http://10.10.1.22:8080/xhqy-fc',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/xj': '/'
+        }
       }
     },
     // Various Dev Server settings

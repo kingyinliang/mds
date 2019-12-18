@@ -43,6 +43,15 @@
         </el-pagination>
       </el-row>
     </el-tab-pane>
+    <el-tab-pane name="3">
+      <span slot="label" class="spanview">半成品库存汇总</span>
+    </el-tab-pane>
+    <el-tab-pane name="4">
+      <span slot="label" class="spanview">成品库存汇总</span>
+      <el-table :data="tableData4" :cell-style="cellStyle" header-row-class-name="tableHead" border tooltip-effect="dark">
+        <el-table-column v-for="(item, index) in column3" :class="{bg: item.classSt}" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
+      </el-table>
+    </el-tab-pane>
   </el-tabs>
 </div>
 </template>
@@ -73,6 +82,8 @@ export default {
       sumTableData2: [],
       tableData1: [],
       tableData2: [],
+      tableData3: [],
+      tableData4: [{MATERIAL_NAME: '1111'}],
       column: [
         {
           label: '车间',
@@ -134,6 +145,46 @@ export default {
           prop: 'IS_OVERDUE',
           width: ''
         }
+      ],
+      column3: [
+        {
+          label: '物料编码',
+          prop: 'MATERIAL_CODE',
+          width: ''
+        },
+        {
+          label: '物料名称',
+          prop: 'MATERIAL_NAME',
+          width: ''
+        },
+        {
+          label: '>36h',
+          prop: 'MATERIAL_NAME',
+          width: ''
+          // formatter: (row, column, value, index) => {
+          //   let h = this.$createElement
+          //   return h('div', {
+          //     // style: {
+          //     //   background: 'red'
+          //     // }
+          //   }, row.MATERIAL_NAME)
+          // }
+        },
+        {
+          label: '<=36h',
+          prop: 'MATERIAL_NAME',
+          width: ''
+        },
+        {
+          label: '<=30h',
+          prop: 'MATERIAL_NAME',
+          width: ''
+        },
+        {
+          label: '<=24H',
+          prop: 'MATERIAL_NAME',
+          width: ''
+        }
       ]
     }
   },
@@ -141,6 +192,13 @@ export default {
     this.GetDataList()
   },
   methods: {
+    cellStyle ({row, column, rowIndex, columnIndex}) {
+      if (columnIndex === 2) {
+        return 'background:pink'
+      } else {
+        return ''
+      }
+    },
     setType (tab, event) {
       if (this.activeName === '1') {
         this.$store.state.common.PotReportForms.type = 'steHolder'
@@ -202,5 +260,7 @@ export default {
 </script>
 
 <style scoped>
-
+.bg{
+  background: red;
+}
 </style>

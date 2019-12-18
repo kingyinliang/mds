@@ -42,7 +42,7 @@
               <template v-if="isRedact ">
                 <el-button type="primary" size="small" @click="SavedOr('已保存')" v-if="isAuth('ste:supMaterialQQA:mySaveOrUpdate')">保存</el-button>
                 <el-button type="primary" size="small" @click="pushData('已推送')" v-if="isAuth('ste:supMaterialQQA:pushInfo')">推送</el-button>
-                <el-button type="primary" size="small" @click="pushData('已确认')" v-if="isAuth('ste:supMaterialQQA:pushInfo')">确认</el-button>
+                <!--<el-button type="primary" size="small" @click="pushData('已确认')" v-if="isAuth('ste:supMaterialQQA:pushInfo')">确认</el-button>-->
               </template>
             </el-form-item>
           </el-form>
