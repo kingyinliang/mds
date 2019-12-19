@@ -34,6 +34,9 @@
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class='dialog__class' @keyup.enter.native="SaveDialog('receive')">
       <div slot="title" style="line-hight:59px">领用</div>
       <el-form :model="receive" size="small" label-width="160px" :rules="receiveRules" ref="receive">
+        <el-form-item label="BOM物料：">
+          {{this.BomMaterialCode + ' ' + this.BomMaterialName}}
+        </el-form-item>
         <el-form-item label="半成品罐号：" v-if="receive.id" prop="holderId">
           <el-input v-model="receive.holderId" :disabled="true" style="display:none"></el-input>
           <el-select v-model="receive.holderName" :disabled="true" ref="mySelect"></el-select>
@@ -90,7 +93,9 @@ export default {
       dataList: [],
       dataAList: [],
       readAudit: [],
-      repertory: []
+      repertory: [],
+      BomMaterialCode: '',
+      BomMaterialName: ''
     }
   },
   props: ['isRedact'],
@@ -127,6 +132,8 @@ export default {
       this.$http(`${FILTRATION_API.FILTER_MATERIAL_HOLDERLIST}`, 'POST', params).then(({data}) => {
         if (data.code === 0) {
           this.holderList = data.holderList
+          this.BomMaterialCode = data.bomMaterial.MATNR
+          this.BomMaterialName = data.bomMaterial.MATERIAL_NAME
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -149,6 +156,10 @@ export default {
       this.$refs.mySelect.handleClose()
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.BomMaterialCode !== this.receive.materialCode) {
+            this.$warning_SHINHO('领用物料与bom物料不一致，请确认！')
+            return false
+          }
           let currentRecord = []
           if (this.receive.hasOwnProperty('uid')) {
             // 新增行

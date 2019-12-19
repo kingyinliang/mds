@@ -74,6 +74,11 @@
         </div>
       </template>
     </el-table-column>
+    <el-table-column width="120" label="罐内物料">
+      <template slot-scope="scope">
+        {{scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName}}
+      </template>
+    </el-table-column>
     <el-table-column width="190" label="过滤日期">
       <template slot-scope="scope">
         <div class="required">
@@ -188,6 +193,8 @@ export default {
           item.delFlag = '0'
           item.id = ''
           item.orderId = data.list[0].orderId
+          item.holderMaterialCode = ''
+          item.holderMaterialName = ''
         })
         this.listbomP.forEach((item) => {
           item.id = ''
@@ -365,6 +372,19 @@ export default {
         //     }
         //   }
         // }
+      }
+      return ty
+    },
+    bomRule () {
+      let ty = true
+      for (let sole of this.listbomS) {
+        if (sole.potNo !== '') {
+          if (sole.materialCode !== sole.holderMaterialCode) {
+            ty = false
+            this.$warning_SHINHO('物料领用中' + sole.holderMaterialCode + '领用物料与BOM物料不一致，请确认！')
+            return false
+          }
+        }
       }
       return ty
     },
@@ -568,6 +588,11 @@ export default {
     },
     HolderChange (val, row) {
       let semiInfo = this.semiHolder.find(item => item.holderId === val)
+      if (semiInfo.materialCode !== row.materialCode) {
+        this.$warning_SHINHO('领用物料与BOM物料不一致，请确认！')
+      }
+      row.holderMaterialCode = semiInfo.materialCode
+      row.holderMaterialName = semiInfo.materialName
       row.filterDate = semiInfo.fullDate
       row.batch = semiInfo.batch
       row.holderType = semiInfo.holderType
@@ -601,7 +626,9 @@ export default {
         usePotDate: null,
         isSplit: '1',
         delFlag: '0',
-        useUsage: ''
+        useUsage: '',
+        holderMaterialCode: '',
+        holderMaterialName: ''
       })
     },
     // tableRowClassName
