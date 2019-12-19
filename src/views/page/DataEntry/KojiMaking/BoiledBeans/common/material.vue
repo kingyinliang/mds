@@ -213,7 +213,7 @@
         </el-form-item>
         <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
         <el-form-item label="起始数：" :label-width="formLabelWidth" prop="startWeight">
-          <el-input type="number" @mousewheel.native.prevent v-model.number="wheat.startWeight" autocomplete="off"></el-input>
+          <el-input type="number" disabled @mousewheel.native.prevent v-model.number="wheat.startWeight" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="操作时间：" :label-width="formLabelWidth">{{wheat.changed}}</el-form-item>
         <el-form-item label="操作人：" :label-width="formLabelWidth">{{wheat.changer}}</el-form-item>
@@ -249,7 +249,7 @@
         </el-form-item>
         <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
         <el-form-item label="起始数：" :label-width="formLabelWidth" prop="startWeight">
-          <el-input type="number" @mousewheel.native.prevent v-model.number="wheat.startWeight" autocomplete="off"></el-input>
+          <el-input type="number" disabled @mousewheel.native.prevent v-model.number="wheat.startWeight" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
           <el-input type="number" @mousewheel.native.prevent v-model.number="wheat.endWeight" autocomplete="off"></el-input>
@@ -918,6 +918,10 @@ export default {
         this.$set(this.wheat, 'userWeight', 0)
       } else {
         this.$set(this.wheat, 'userWeight', this.wheat.startWeight - this.wheat.endWeight)
+      }
+      if (this.wheat.endWeight > this.wheat.startWeight) {
+        this.$warning_SHINHO('结束数不能大于起始数')
+        return
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
