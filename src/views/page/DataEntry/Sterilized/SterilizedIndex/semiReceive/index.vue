@@ -30,7 +30,7 @@
             <template slot-scope="scope">{{scope.row.materialCode + ' ' + scope.row.materialName}}</template>
           </el-table-column>
           <el-table-column label="单位" width="50" prop="unit"></el-table-column>
-          <el-table-column label="计划领料" width="100" prop="planAmount"></el-table-column>
+          <el-table-column label="计划领料" width="90" prop="planAmount"></el-table-column>
           <el-table-column label="操作" width="70">
             <template slot-scope="scope">
               <!--<el-button type="text" size="mini" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @click="addData(scope.row, scope.$index)"><i class="icons iconfont factory-chaifen"></i>拆分</el-button>-->
@@ -44,6 +44,11 @@
               <!--<el-select v-model="scope.row.holderId" placeholder="请选择" filterable size="mini" disabled>-->
                 <el-option v-for="(sole, index) in PotList" :key="index" :value="sole.holderId" :label="sole.holderName"></el-option>
               </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column width="140" label="罐内物料" show-overflow-tooltip>
+            <template slot-scope="scope">
+              {{scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName}}
             </template>
           </el-table-column>
           <el-table-column width="130">
@@ -153,7 +158,9 @@ export default {
         receiveAmount: null,
         remark: '',
         status: '',
-        unit: row.unit
+        unit: row.unit,
+        holderMaterialCode: '',
+        holderMaterialName: ''
       })
     },
     GetPot () {
@@ -180,6 +187,14 @@ export default {
       })
     },
     setBatch (row) {
+      if (row.holderType !== '') {
+        let PotSole = this.PotList.find(item => item.holderId === row.holderId)
+        if (PotSole.materialCode !== row.materialCode) {
+          this.$warning_SHINHO('领用物料与BOM物料不一致，请确认！')
+          row.holderMaterialCode = PotSole.materialCode
+          row.holderMaterialName = PotSole.materialName
+        }
+      }
       row.batch = this.PotList.filter(items => items.holderId === row.holderId)[0].batch
       row.holderName = this.PotList.filter(items => items.holderId === row.holderId)[0].holderName
       // row.receiveAmount = this.PotList.filter(items => items.holderId === row.holderId)[0].amount
@@ -237,6 +252,12 @@ export default {
       })
     },
     savedOrSubmitForm (str) {
+      for (let sole of this.MaterialDate) {
+        if (sole.holderType !== '' && sole.materialCode !== sole.holderMaterialCode) {
+          this.$warning_SHINHO('领用物料与BOM物料不一致，请确认！')
+          return false
+        }
+      }
       if (str === 'submit') {
         if (!this.dataRul()) {
           return
