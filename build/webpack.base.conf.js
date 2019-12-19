@@ -138,6 +138,7 @@ module.exports = {
       threadPool: happyThreadPool,
       verbose: true
     }),
+    new webpack.BannerPlugin('file:[file] \n make 2019 by wangyinliang@shinho.net.cn \n Shinho MDS '),
     new webpack.optimize.CommonsChunkPlugin('common.js'),
     new webpack.ProvidePlugin({
       jQuery: "jquery",
