@@ -28,7 +28,7 @@
         <el-row :gutter="10">
           <el-col :span="12" v-for="(item, index) in dataList" :key="'h'+index">
             <el-card class="card-item">
-              <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span><el-button type="primary" size="small" style="margin-left:10px;" @click="goParn(item)">入罐</el-button></div>
+              <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span><el-button type="primary" size="small" style="margin-left:10px;" @click="goParn(item)" v-if="isAuth('kjm:pulpIn:save')">入罐</el-button></div>
               <div style="display: flex">
                 <div class="card-item_img">
                   <div class="card-item_img_box">
