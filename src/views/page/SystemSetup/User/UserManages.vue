@@ -272,5 +272,5 @@ export default {
 </script>
 
 <style scoped>
-.el-button {  }
+
 </style>

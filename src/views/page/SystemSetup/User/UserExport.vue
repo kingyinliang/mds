@@ -231,11 +231,11 @@ export default {
 </script>
 
 <style lang="scss">
-  .uaerD{
-    .el-transfer-panel{
-      width: 300px;
-    }
+.uaerD {
+  .el-transfer-panel {
+    width: 300px;
   }
+}
 </style>
 <style scoped>
 

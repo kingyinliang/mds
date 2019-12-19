@@ -227,16 +227,20 @@ export default {
         cursor: pointer;
       }
     }
+
     &__icon-popover {
       max-width: 370px;
     }
+
     &__icon-list {
       max-height: 180px;
       padding: 0;
       margin: -8px 0 0 -8px;
+
       > .el-button {
         padding: 8px;
         margin: 8px 0 0 8px;
+
         > span {
           display: inline-block;
           vertical-align: middle;
@@ -246,6 +250,7 @@ export default {
         }
       }
     }
+
     .icon-list__tips {
       font-size: 18px;
       text-align: center;

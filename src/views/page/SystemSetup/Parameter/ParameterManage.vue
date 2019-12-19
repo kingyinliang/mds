@@ -205,11 +205,13 @@ export default {
 </script>
 
 <style lang="scss">
-  .el-card__header{
+  .el-card__header {
     padding: 13px 15px;
   }
   .mainHeader .el-card__header { padding: 0 15px !important; }
 </style>
 <style scoped>
-.el-button[type='text'] { padding: 0; }
+.el-button[type="text"] {
+  padding: 0;
+}
 </style>

@@ -324,8 +324,7 @@ export default {
       })
     },
     savedOrSubmitForm (str) {
-      if (str === 'submit') {
-      }
+      if (str === 'submit') {}
       let net1 = new Promise((resolve, reject) => {
         this.Stesave.excUpdate(this, 'In', resolve, reject)
       })
@@ -468,39 +467,44 @@ export default {
 </script>
 
 <style lang="scss">
-  .inStorage_card_left_btn{
-    width: 100%;
-    margin-top: 10px!important;
-    border-radius: 0px 0px 6px 6px!important;
-  }
-  .inStorage_card_left_btn:hover{
-    color: white!important;
-    background: #1890FF!important;
-  }
+.inStorage_card_left_btn {
+  width: 100%;
+  margin-top: 10px !important;
+  border-radius: 0 0 6px 6px !important;
+}
+
+.inStorage_card_left_btn:hover {
+  color: white !important;
+  background: #1890ff !important;
+}
 </style>
 <style lang="scss" scoped>
-.inStorage_card{
+.inStorage_card {
   display: flex;
-  &_left{
+
+  &_left {
     padding: 0;
     margin-right: 5px;
-    width:158px;
-    background:rgba(255,255,255,1);
-    box-shadow:0px 4px 4px 0px rgba(0,0,0,0.09);
-    border-radius:6px;
-    border:1px solid rgba(0,0,0,0.09);
-    p{
+    width: 158px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.09);
+
+    p {
       padding: 10px;
       font-size: 14px;
     }
   }
 }
-.potDetail{
+
+.potDetail {
   width: 92px;
   position: absolute;
   top: 40px;
   left: 20px;
-  p{
+
+  p {
     line-height: 20px;
     padding: 0;
   }
