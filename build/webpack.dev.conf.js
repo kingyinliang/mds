@@ -64,10 +64,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         to: config.dev.assetsSubDirectory,
         ignore: ['.*']
       }
-    ]),
-    new StyleLintPlugin({
-      files: ['src/**/*.{vue,htm,html,css,sss,less,scss,sass}']
-    })
+    ])
   ]
 })
 
@@ -81,7 +78,12 @@ module.exports = new Promise((resolve, reject) => {
       process.env.PORT = port
       // add port to devServer config
       devWebpackConfig.devServer.port = port
-
+      // Add Stylelint
+      if (config.dev.useStylelint) {
+        devWebpackConfig.plugins.push(new StyleLintPlugin({
+          files: ['src/**/*.{vue,htm,html,css,sss,less,scss,sass}']
+        }))
+      }
       // Add FriendlyErrorsPlugin
       devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
         compilationSuccessInfo: {
