@@ -1005,108 +1005,125 @@ export default class Index extends Vue {
 }
 </script>
 <style lang="scss" >
-.dialog__class{
-  border-radius:6px 6px 0px 0px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+.dialog__class {
+  border-radius: 6px 6px 0 0 !important;
+
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
-  .reqI{
+
+  .reqI {
     color: red;
   }
 }
 </style>
 <style lang="scss" scoped>
-@import '@/assets/scss/_common.scss';
+@import "@/assets/scss/_common.scss";
+
 .pot-box {
-  width:217px;
-  height:250px;
-  border-radius:2px;
-  border:1px solid rgba(232,232,232,1);
+  width: 217px;
+  height: 250px;
+  border-radius: 2px;
+  border: 1px solid rgba(232, 232, 232, 1);
+
   .pot-box-header {
-    height:40px;
-    line-height:40px;
-    background:rgba(235,235,235,1);
-    border-radius:4px 4px 0px 0px;
+    height: 40px;
+    line-height: 40px;
+    background: rgba(235, 235, 235, 1);
+    border-radius: 4px 4px 0 0;
+
     .pot-box-title {
-      font-size:14px;
-      font-family:PingFangSC-Medium;
-      font-weight:500;color:rgba(0,0,0,0.65);
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.65);
     }
   }
+
   .pot-box-container {
-    width:120px;
-    height:120px;
-    margin:auto;
-    margin-top:16px;
+    width: 120px;
+    height: 120px;
+    margin: auto;
+    margin-top: 16px;
   }
+
   .img {
-    background: url('~@/assets/img/sq_G1.png')
+    background: url("~@/assets/img/sq_G1.png");
   }
+
   .pot-box-footer {
-    margin-top:20px;
-    display:flex;
-    justify-content:center;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+
     .pot-box-button {
-      width:72px;
-      height:24px;
-      border-radius:4px;
-      border:1px solid rgba(0,0,0,0.25);
-      text-align:center;
-      cursor:pointer;
+      width: 72px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      text-align: center;
+      cursor: pointer;
       margin-left: 4px;
       margin-right: 4px;
-      &:hover{
-        background:rgba(24,144,255,1);
+
+      &:hover {
+        background: rgba(24, 144, 255, 1);
       }
     }
+
     .pot-box-button-title {
-      line-height:24px;
-      font-size:14px;
-      font-family:PingFangSC-Regular;
-      font-weight:400;
-      color:#000;
-      &:hover{
-        color:#fff;
+      line-height: 24px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #000;
+
+      &:hover {
+        color: #fff;
       }
     }
-    .pot-box-button-disabled{
-      width:72px;
-      height:24px;
-      border-radius:4px;
-      border:1px solid rgba(0,0,0,0.25);
-      text-align:center;
-      cursor:pointer;
+
+    .pot-box-button-disabled {
+      width: 72px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      text-align: center;
+      cursor: pointer;
       margin-left: 4px;
       margin-right: 4px;
-      color:rgba(0, 0, 0, 0.6);
-      background:#F7F9FA;
-      &:hover{
-        cursor:not-allowed
+      color: rgba(0, 0, 0, 0.6);
+      background: #f7f9fa;
+
+      &:hover {
+        cursor: not-allowed;
       }
     }
+
     .pot-box-button-title-disabled {
-      line-height:24px;
-      font-size:14px;
-      font-family:PingFangSC-Regular;
-      font-weight:400;
-      color:rgba(0,0,0,0.6);
+      line-height: 24px;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.6);
     }
   }
 }
-.rowButton{
-  button{
-    margin: 0px 3px!important;
+
+.rowButton {
+  button {
+    margin: 0 3px !important;
   }
 }
+
 .el-row {
   margin-bottom: 20px;
+
   &:last-child {
     margin-bottom: 0;
   }

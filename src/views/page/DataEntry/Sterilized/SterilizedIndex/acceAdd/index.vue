@@ -573,23 +573,25 @@ export default {
 }
 </script>
 <style>
-  .yellowRow{
-    background-color: yellow!important;
+  .yellowRow {
+    background-color: yellow !important;
   }
 </style>
 <style lang="scss" scoped>
-  .reds{
+  .reds {
     color: red;
   }
-  .che{
+
+  .che {
     color: rgb(103, 194, 58);
   }
-.supStatus{
-  width: 100px;
-  height: 100px;
-  position: absolute;
-  right: 90px;
-  top: 20px;
-  transform: rotateZ(-30deg);
-}
+
+  .supStatus {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    right: 90px;
+    top: 20px;
+    transform: rotateZ(-30deg);
+  }
 </style>
