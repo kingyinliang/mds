@@ -24,7 +24,7 @@
             </el-form-item>
             <el-form-item label="连续蒸煮号：" label-width="85px">
               <p>
-                <el-select v-model="cookingNoId" :disabled="!isRedact" style="width:147px">
+                <el-select v-model="cookingNoId" :disabled="!isRedact" style="width: 147px;">
                   <el-option v-for="(item, index) in this.holderList" :key="index" :label="item.holderName" :value="item.holderName"></el-option>
                 </el-select>
               </p>
@@ -38,20 +38,20 @@
           </el-form>
         </el-col>
         <el-col :span="3">
-          <div style="float:right; line-height:31px;font-size: 14px">
-            <div style="float:left">
+          <div style="float: right; line-height: 31px; font-size: 14px;">
+            <div style="float: left;">
               <span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? '#1890f' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：
               <span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
             </div>
           </div>
         </el-col>
       </el-row>
-      <el-row style="text-align:right;" class="button_three_goup">
-        <template style="float:right; margin-left: 10px;">
+      <el-row style="text-align: right;" class="button_three_goup">
+        <template style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-index'})">返回</el-button>
           <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('kjm:bean:material:update')">{{isRedact?'取消':'编辑'}}</el-button>
         </template>
-        <template v-if="isRedact" style="float:right; margin-left: 10px;">
+        <template v-if="isRedact" style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('kjm:bean:material:update')">保存</el-button>
           <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('kjm:bean:material:update')">提交</el-button>
         </template>
@@ -61,10 +61,10 @@
       </div>
     </el-card>
     <div class="tableCard">
-      <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+      <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
         <i class="el-icon-caret-bottom"></i>
       </div>
-      <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" type="border-card" class="NewDaatTtabs" id="DaatTtabs" style="margin-top:15px">
+      <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" type="border-card" class="NewDaatTtabs" id="DaatTtabs" style="margin-top: 15px;">
         <el-tab-pane name="1">
           <span slot="label" class="spanview">
             <el-tooltip class="item" effect="dark"  :content="applyMaterielState === 'noPass'? '不通过':applyMaterielState === 'saved'? '已保存':applyMaterielState === 'submit' ? '已提交' : applyMaterielState === 'checked'? '通过':'未录入'" placement="top-start">
@@ -308,37 +308,41 @@ export default {
 </script>
 
 <style>
-.rowDel{display: none;}
+.rowDel {
+  display: none;
+}
 </style>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .input_bommom {
   width: 147px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 32px;
-  border-bottom: solid 1px #D8D8D8;
+  border-bottom: solid 1px #d8d8d8;
 }
-.el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
-  margin-bottom: 8px
+.el-form-item--mini.el-form-item,
+.el-form-item--small.el-form-item {
+  margin-bottom: 8px;
 }
 .searchCard {
-  .el-button--primary,.el-button--primary:focus{
-    color: #000000;
-    background-color: #FFFFFF;
-    border-color: #D9D9D9;
+  .el-button--primary,
+  .el-button--primary:focus {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
   }
-  .el-button--primary:hover{
-    background-color: #1890FF;
-    color: #FFFFFF
+  .el-button--primary:hover {
+    background-color: #1890ff;
+    color: #fff;
   }
-  .el-button--primary:first-child{
-    background-color: #1890FF;
-    color: #FFFFFF;
-    border-color: #1890FF;
+  .el-button--primary:first-child {
+    background-color: #1890ff;
+    color: #fff;
+    border-color: #1890ff;
   }
 }
-#DaatTtabs{
+#DaatTtabs {
   border-radius: 15px;
   overflow: hidden;
 }

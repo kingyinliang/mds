@@ -9,7 +9,7 @@
       <div class="main">
         <el-card>
           <div class="clearfix">
-            <el-row style="float: right">
+            <el-row style="float: right;">
               <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="querys(true)" @submit.native.prevent>
                 <el-form-item>
                   <el-input v-model="form.param" placeholder="物料/物料类型" suffix-icon="el-icon-search"></el-input>
@@ -28,12 +28,12 @@
               :data="saplist"
               border
               tooltip-effect="dark"
-              style="width: 100%;margin-bottom: 20px">
+              style="width: 100%; margin-bottom: 20px;">
               <el-table-column
                 :show-overflow-tooltip="true"
                 label="物料">
                 <template slot-scope="scope">
-                  <el-button style="padding: 0px;" type="text" @click="showdetail(scope.row.materialId)">{{scope.row.materialCode}} {{scope.row.materialName}}</el-button>
+                  <el-button style="padding: 0;" type="text" @click="showdetail(scope.row.materialId)">{{scope.row.materialCode}} {{scope.row.materialName}}</el-button>
                 </template>
               </el-table-column>
               <el-table-column :show-overflow-tooltip="true" label="工厂" width="180" prop="factoryName"></el-table-column>
@@ -202,9 +202,9 @@ export default {
 
 </style>
 <style lang="scss">
-.topforms2{
-  input{
-    width: 210px!important;
+.topforms2 {
+  input {
+    width: 210px !important;
   }
 }
 </style>

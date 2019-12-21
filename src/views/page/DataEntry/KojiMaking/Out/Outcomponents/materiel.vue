@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="primary" @click="AddMateriel(MaterielDate)" size="small" :disabled="!isRedact" style="float: right">新增</el-button>
+    <el-button type="primary" @click="AddMateriel(MaterielDate)" size="small" :disabled="!isRedact" style="float: right;">新增</el-button>
     <el-table header-row-class-name="tableHead" :data="MaterielDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
       <el-table-column type="index" width="50" label="序号"></el-table-column>
       <el-table-column label="盐水" width="140">
@@ -57,7 +57,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <p style="line-height: 32px">总数量：{{BrineNum}}</p>
+    <p style="line-height: 32px;">总数量：{{BrineNum}}</p>
     <audit-log :tableData="MaterielAuditlog"></audit-log>
   </div>
 </template>

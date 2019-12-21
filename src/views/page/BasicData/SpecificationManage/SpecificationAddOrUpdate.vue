@@ -12,7 +12,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="物料：" prop="material">
-          <el-select v-model="dataForm.material" filterable placeholder="请选择" style="width: 100%" @change="setBrand" v-if="!SpecificationId">
+          <el-select v-model="dataForm.material" filterable placeholder="请选择" style="width: 100%;" @change="setBrand" v-if="!SpecificationId">
             <el-option
               v-for="item in SerchSapList"
               :key="item.sapCode+' '+item.itemName+' '+item.kondm"
@@ -20,7 +20,7 @@
               :value="item.sapCode+' '+item.itemName+' '+item.kondm">
             </el-option>
           </el-select>
-          <el-select v-model="dataForm.material" filterable placeholder="请选择" style="width: 100%" @change="setBrand" v-else disabled>
+          <el-select v-model="dataForm.material" filterable placeholder="请选择" style="width: 100%;" @change="setBrand" v-else disabled>
             <el-option
               v-for="item in SerchSapList"
               :key="item.sapCode+' '+item.itemName+' '+item.kondm"
@@ -33,7 +33,7 @@
           <el-input v-model="dataForm.brand" placeholder="请先选择物料" disabled></el-input>
         </el-form-item>
         <el-form-item label="大类：" prop="largeClass">
-          <el-select v-model="dataForm.largeClass" filterable placeholder="请选择" style="width: 100%">
+          <el-select v-model="dataForm.largeClass" filterable placeholder="请选择" style="width: 100%;">
             <el-option v-for="item in largeClass" :key="item.code" :label="item.value" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
@@ -41,7 +41,7 @@
           <el-input v-model="dataForm.boxSpec" placeholder="手动输入"></el-input>
         </el-form-item>
         <el-form-item label="单位：" prop="boxSpecUnit">
-          <el-select v-model="dataForm.boxSpecUnit" filterable placeholder="请选择" style="width: 100%">
+          <el-select v-model="dataForm.boxSpecUnit" filterable placeholder="请选择" style="width: 100%;">
             <el-option v-for="item in Unit" :key="item.code" :label="item.value" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
@@ -49,7 +49,7 @@
           <el-input v-model="dataForm.productSpec" placeholder="手动输入"></el-input>
         </el-form-item>
         <el-form-item label="单位：">
-          <el-select v-model="dataForm.productSpecUnit" filterable placeholder="请选择" style="width: 100%">
+          <el-select v-model="dataForm.productSpecUnit" filterable placeholder="请选择" style="width: 100%;">
             <el-option v-for="item in Unit" :key="item.code" :label="item.value" :value="item.code"></el-option>
           </el-select>
         </el-form-item>

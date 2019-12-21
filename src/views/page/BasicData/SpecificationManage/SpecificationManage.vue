@@ -3,7 +3,7 @@
     <div class="main">
       <el-card>
         <div class="clearfix">
-          <el-row style="float: right">
+          <el-row style="float: right;">
             <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetList(true)" @submit.native.prevent>
               <el-form-item>
                 <el-input v-model="form.materialCode" placeholder="物料" suffix-icon="el-icon-search"></el-input>
@@ -26,7 +26,7 @@
             header-row-class-name="tableHead"
             :data="SpecificationList"
             tooltip-effect="dark"
-            style="width: 100%;margin-bottom: 20px">
+            style="width: 100%; margin-bottom: 20px;">
             <el-table-column
               type="selection"
               width="34">

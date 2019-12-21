@@ -16,7 +16,7 @@
                 </el-form-item>
               </el-form>
             </el-col>
-            <el-col style="width: 200px">
+            <el-col style="width: 200px;">
               <el-button type="primary" @click="GetRoleList(true)" size="small" v-if="isAuth('sys:role:list')">查询</el-button>
               <el-button type="primary" @click="roleAddOrUpdate()" size="small" v-if="isAuth('sys:role:save')">新增</el-button>
             </el-col>
@@ -28,7 +28,7 @@
               :data="role"
               border
               tooltip-effect="dark"
-              style="width: 100%;margin-bottom: 20px">
+              style="width: 100%; margin-bottom: 20px;">
               <el-table-column
                 type="selection"
                 width="34">

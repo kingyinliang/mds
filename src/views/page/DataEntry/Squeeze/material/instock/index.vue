@@ -7,19 +7,19 @@
             <el-col>
               <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
                 <el-form-item label="生产工厂：" >
-                  <el-select v-model="params.factoryId" style="width:150px" @change="changeOptions('factory')" >
+                  <el-select v-model="params.factoryId" style="width: 150px;" @change="changeOptions('factory')" >
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="生产车间：">
-                  <el-select v-model="params.workshopId"  style="width:150px" @change="changeOptions('workshop')">
+                  <el-select v-model="params.workshopId"  style="width: 150px;" @change="changeOptions('workshop')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="入罐日期：" >
-                  <el-date-picker type="date" v-model="params.applyDate" value-format="yyyy-MM-dd" style="width:150px"></el-date-picker>
+                  <el-date-picker type="date" v-model="params.applyDate" value-format="yyyy-MM-dd" style="width: 150px;"></el-date-picker>
                 </el-form-item>
                 <el-form-item class="floatr">
                   <el-button type="primary" size="small"  @click="getOrderList()"  v-if="isAuth('prs:inStorage:list')">查询</el-button>
@@ -31,13 +31,13 @@
             </el-col>
           </el-row>
         </el-card>
-        <el-row v-if="searched" style="margin-top:10px;background-color:#fff;padding-bottom:10px;">
+        <el-row v-if="searched" style="margin-top: 10px; background-color: #fff; padding-bottom: 10px;">
           <el-col :span="5" style="">
-            <el-row type="flex" justify="center" style="margin-top:20px">
+            <el-row type="flex" justify="center" style="margin-top: 20px;">
               <div  class="pot-box">
                 <div class="pot-box-header">
-                  <span class="pot-box-title" style="margin-left:5px;">原汁罐</span>
-                  <span class="pot-box-title" style="float:right;margin-right:5px;">{{isAvailable==='0'? '待入库': '入库中'}}</span>
+                  <span class="pot-box-title" style="margin-left: 5px;">原汁罐</span>
+                  <span class="pot-box-title" style="float: right; margin-right: 5px;">{{isAvailable==='0'? '待入库': '入库中'}}</span>
                 </div>
                 <div class='pot-box-container img'>
                 </div>
@@ -59,7 +59,7 @@
             </el-row>
           </el-col>
           <el-col :span="19">
-            <el-row  style="margin-top:20px">
+            <el-row  style="margin-top: 20px;">
               <el-table header-row-class-name="tableHead" :row-class-name="rowDelFlag" :data="dataList" border tooltip-effect="dark" @row-dblclick="modifyRecord" ref='table'>
                 <el-table-column label="状态" width='95'>
                   <template slot-scope="scope">
@@ -153,27 +153,27 @@
         <div >
           <el-form :model="startForm"  :label-width="formLabelWidth" size="small" ref="startForm">
             <el-form-item label="原汁罐号：" required>
-              <el-select @change="changeOptions('pot')"  v-model="startForm.potNo" value-key="holderId" placeholder="请选择" filterable style="width:220px" >
+              <el-select @change="changeOptions('pot')"  v-model="startForm.potNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" >
                 <el-option v-for="(item, index) in potList" :key="index" :label="item.holderName" :value="item.holderId" ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="物料：" required>
-              <el-select v-model="startForm.materialCode" :disabled="startForm.materialSt" @change="setmaterial(startForm)" filterable placeholder="请选择" size="small" style="width:220px" >
+              <el-select v-model="startForm.materialCode" :disabled="startForm.materialSt" @change="setmaterial(startForm)" filterable placeholder="请选择" size="small" style="width: 220px;" >
                 <el-option v-for="item in SerchSapList" :key="item.code" :label="item.code + ' ' + item.value" :value="item.code"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="混合罐类型：" required>
-              <el-select v-model="startForm.mixType" placeholder="请选择" :disabled="startForm.mixTypeSt" filterable style="width:220px" >
+              <el-select v-model="startForm.mixType" placeholder="请选择" :disabled="startForm.mixTypeSt" filterable style="width: 220px;" >
                 <el-option label="正常" value="正常"></el-option>
                 <el-option label="单用混合" value="单用混合"></el-option>
                 <el-option label="共用混合" value="共用混合"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="批次：" required>
-              <el-input v-model.trim="startForm.batch" maxlength="10" style='width:220px' :disabled="startForm.batchSt"/>
+              <el-input v-model.trim="startForm.batch" maxlength="10" style='width: 220px;' :disabled="startForm.batchSt"/>
             </el-form-item>
             <el-form-item label="起始数：" required>
-              <el-input  type='number' v-model.number="startForm.startAmount" style='width:220px'/>
+              <el-input  type='number' v-model.number="startForm.startAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="单位：" required>
               {{startForm.unit = 'L'}}
@@ -187,8 +187,8 @@
           </el-form>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveStart()">保存</el-button>
+          <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveStart()">保存</el-button>
         </div>
       </el-dialog>
       <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible2" width="500px" custom-class='dialog__class'>
@@ -204,25 +204,25 @@
               {{endForm.batch}}
             </el-form-item>
             <el-form-item label="结束数：" required>
-              <el-input  type='number' @change="abc" v-model.number="endForm.endAmount" style='width:220px'/>
+              <el-input  type='number' @change="abc" v-model.number="endForm.endAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="单位：" required>
               {{endForm.unit = 'L'}}
             </el-form-item>
             <el-form-item label="是否满罐：">
-              <el-select v-model="endForm.fullPot" placeholder="请选择" @change="setfullPotAmount('endForm')" filterable style="width:220px" >
+              <el-select v-model="endForm.fullPot" placeholder="请选择" @change="setfullPotAmount('endForm')" filterable style="width: 220px;" >
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="满罐数量：">
-              <el-input  type='number' disabled v-model.number="endForm.fullPotAmount" style='width:220px'/>
+              <el-input  type='number' disabled v-model.number="endForm.fullPotAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="满罐日期：">
-              <el-date-picker type="date" v-model="endForm.fulPotDate" value-format="yyyy-MM-dd" style="width:220px"></el-date-picker>
+              <el-date-picker type="date" v-model="endForm.fulPotDate" value-format="yyyy-MM-dd" style="width: 220px;"></el-date-picker>
             </el-form-item>
             <el-form-item label="备注：" >
-              <el-input v-model.trim="endForm.remark" style='width:220px'/>
+              <el-input v-model.trim="endForm.remark" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="操作时间：" >
               <label>{{endForm.changed}}</label>
@@ -233,8 +233,8 @@
           </el-form>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="dialogFormVisible2 = false">取消</el-button>
-          <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveEnd()">保存</el-button>
+          <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible2 = false">取消</el-button>
+          <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveEnd()">保存</el-button>
         </div>
       </el-dialog>
       <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible3" width="500px" custom-class='dialog__class'>
@@ -244,45 +244,45 @@
         <div >
           <el-form :model="modifyForm"  :label-width="formLabelWidth" size="small" ref="modifyForm">
             <el-form-item label="原汁罐号：" required>
-              <el-select @change="changeOptions('potModify')"  v-model="modifyForm.potNo" value-key="holderId" placeholder="请选择" filterable style="width:220px" >
+              <el-select @change="changeOptions('potModify')"  v-model="modifyForm.potNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" >
                 <el-option v-for="(item, index) in potList" :key="index" :label="item.holderName" :value="item.holderId" ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="物料：" required>
-              <el-select v-model="modifyForm.materialCode" :disabled="modifyForm.materialSt" @change="setmaterial(modifyForm)" filterable placeholder="请选择" size="small" style="width:220px" >
+              <el-select v-model="modifyForm.materialCode" :disabled="modifyForm.materialSt" @change="setmaterial(modifyForm)" filterable placeholder="请选择" size="small" style="width: 220px;" >
                 <el-option v-for="item in SerchSapList" :key="item.code" :label="item.code + ' ' + item.value" :value="item.code"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="混合罐类型：" required>
-              <el-select v-model="modifyForm.mixType" placeholder="请选择" :disabled="modifyForm.mixTypeSt" filterable style="width:220px" >
+              <el-select v-model="modifyForm.mixType" placeholder="请选择" :disabled="modifyForm.mixTypeSt" filterable style="width: 220px;" >
                 <el-option label="正常" value="正常"></el-option>
                 <el-option label="单用混合" value="单用混合"></el-option>
                 <el-option label="共用混合" value="共用混合"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="批次：" required>
-              <el-input v-model.trim="modifyForm.batch" style='width:220px' maxlength="10" :disabled="modifyForm.batchSt"/>
+              <el-input v-model.trim="modifyForm.batch" style='width: 220px;' maxlength="10" :disabled="modifyForm.batchSt"/>
             </el-form-item>
             <el-form-item label="起始数：" required>
-              <el-input  type='number' v-model.number="modifyForm.startAmount" style='width:220px'/>
+              <el-input  type='number' v-model.number="modifyForm.startAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="结束数：" required>
-              <el-input  type='number' v-model.number="modifyForm.endAmount" style='width:220px'/>
+              <el-input  type='number' v-model.number="modifyForm.endAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="是否满罐：">
-              <el-select v-model="modifyForm.fullPot" placeholder="请选择" @change="setfullPotAmount('modifyForm')"  filterable style="width:220px" >
+              <el-select v-model="modifyForm.fullPot" placeholder="请选择" @change="setfullPotAmount('modifyForm')"  filterable style="width: 220px;" >
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="满罐数量：">
-              <el-input  type='number' v-model.number="modifyForm.fullPotAmount" style='width:220px'/>
+              <el-input  type='number' v-model.number="modifyForm.fullPotAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="满罐日期：">
-              <el-date-picker type="date" v-model="modifyForm.fulPotDate" value-format="yyyy-MM-dd" style="width:220px"></el-date-picker>
+              <el-date-picker type="date" v-model="modifyForm.fulPotDate" value-format="yyyy-MM-dd" style="width: 220px;"></el-date-picker>
             </el-form-item>
             <el-form-item label="备注：" >
-              <el-input v-model.trim="modifyForm.remark" style='width:220px'/>
+              <el-input v-model.trim="modifyForm.remark" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="操作时间：">
               <label>{{modifyForm.changed}}</label>
@@ -293,8 +293,8 @@
           </el-form>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="dialogFormVisible3 = false">取消</el-button>
-          <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveModify()">保存</el-button>
+          <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible3 = false">取消</el-button>
+          <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveModify()">保存</el-button>
         </div>
       </el-dialog>
     </el-col>

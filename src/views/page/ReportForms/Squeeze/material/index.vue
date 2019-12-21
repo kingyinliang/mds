@@ -3,32 +3,32 @@
     <el-card class="reportForms">
       <el-form :inline="true" :model="plantList" size="small" label-width="70px" class="multi_row">
         <el-form-item label="生产工厂：">
-          <el-select v-model="plantList.factory" style="width: 150px">
+          <el-select v-model="plantList.factory" style="width: 150px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option v-for="sole in factory" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产车间：">
-          <el-select v-model="plantList.workShop" style="width: 150px">
+          <el-select v-model="plantList.workShop" style="width: 150px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option v-for="sole in workshop" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="原汁罐：">
-          <el-select v-model="plantList.potNo" filterable style="width: 150px">
+          <el-select v-model="plantList.potNo" filterable style="width: 150px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option v-for="sole in Pot" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产物料：">
-          <el-select v-model="plantList.materialCode" filterable style="width: 150px">
+          <el-select v-model="plantList.materialCode" filterable style="width: 150px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option v-for="item in SerchSapList" :key="item.code" :label="item.code+' '+item.value" :value="item.code">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产日期：">
-          <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width:150px"></el-date-picker> - <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width:150px"></el-date-picker>
+          <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 150px;"></el-date-picker> - <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 150px;"></el-date-picker>
         </el-form-item>
         <el-form-item class="floatr">
           <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('report:res:prsMaterial')">查询</el-button>
@@ -36,8 +36,8 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <el-card style="margin-top:5px">
-      <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;margin-bottom: 20px">
+    <el-card style="margin-top: 5px;">
+      <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
         <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" width="120"></el-table-column>
         <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="120"></el-table-column>
         <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="110"></el-table-column>

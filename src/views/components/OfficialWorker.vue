@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
     <el-row>
-      <el-col style="width: 500px">
+      <el-col style="width: 500px;">
         <el-transfer filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" v-model="selctId" :data="userlist"></el-transfer>
       </el-col>
     </el-row>

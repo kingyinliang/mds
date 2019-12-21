@@ -1,24 +1,24 @@
 <template>
   <div class="header_main">
-    <el-card class="searchCard  newCard" style="margin-bottom: 5px">
+    <el-card class="searchCard  newCard" style="margin-bottom: 5px;">
       <el-form :inline="true" size="small" :model="formHeader" label-width="80px" class="topform multi_row">
         <el-form-item label="生产工厂：">
-          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产车间：">
-          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产日期：">
-          <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="formHeader.productDate" style="width: 180px"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="formHeader.productDate" style="width: 180px;"></el-date-picker>
         </el-form-item>
         <el-form-item label="生产订单：">
-          <el-input type="text" v-model="formHeader.orderNo" clearable style="width: 140px"></el-input>
+          <el-input type="text" v-model="formHeader.orderNo" clearable style="width: 140px;"></el-input>
         </el-form-item>
         <el-form-item class="floatr">
           <el-button type="primary" size="small" @click="GetDataList(true)">查询</el-button>
@@ -28,17 +28,17 @@
     <el-card class="tableCard">
       <el-form ref="pstngDate" :model="formHeader" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="100px" class="topforms">
         <el-form-item label="记账日期：" prop="pstngDate">
-          <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="formHeader.pstngDate" style="width: 160px"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="formHeader.pstngDate" style="width: 160px;"></el-date-picker>
         </el-form-item>
         <el-form-item label="抬头文本：">
-          <el-input v-model="formHeader.headerTxt" placeholder="抬头文本" style="width: 160px"></el-input>
+          <el-input v-model="formHeader.headerTxt" placeholder="抬头文本" style="width: 160px;"></el-input>
         </el-form-item>
-        <el-form-item style="float: right">
+        <el-form-item style="float: right;">
           <el-button type="primary" size="small" @click="subAutio()">审核通过</el-button>
           <el-button type="danger" size="small" @click="repulseAutios()">审核不通过</el-button>
         </el-form-item>
       </el-form>
-      <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" @selection-change="handleSelectionChange" border tooltip-effect="dark" style="width: 100%;margin-bottom: 20px">
+      <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" @selection-change="handleSelectionChange" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
         <el-table-column type="selection" :selectable='checkboxT' width="34"></el-table-column>
         <el-table-column type="index" label="序号" :index="indexMethod" width="55"></el-table-column>
         <el-table-column label="审核状态" width="100">
@@ -107,8 +107,8 @@
       title="审核拒绝"
       :close-on-click-modal="false"
       :visible.sync="visible">
-      <p style="line-height: 42px">请填写不通过原因</p>
-      <el-input type="textarea" v-model="Text" :rows="6" class="textarea" style="width: 100%;height: 200px"></el-input>
+      <p style="line-height: 42px;">请填写不通过原因</p>
+      <el-input type="textarea" v-model="Text" :rows="6" class="textarea" style="width: 100%; height: 200px;"></el-input>
       <span slot="footer" class="dialog-footer">
           <el-button @click="visible = false">取消</el-button>
           <el-button type="primary" @click="repulseAutio()">确定</el-button>
@@ -118,8 +118,8 @@
       title="反审"
       :close-on-click-modal="false"
       :visible.sync="visibleRe">
-      <p style="line-height: 42px">请填写反审意见</p>
-      <el-input type="textarea" v-model="ReText" :rows="6" class="textarea" style="width: 100%;height: 200px"></el-input>
+      <p style="line-height: 42px;">请填写反审意见</p>
+      <el-input type="textarea" v-model="ReText" :rows="6" class="textarea" style="width: 100%; height: 200px;"></el-input>
       <span slot="footer" class="dialog-footer">
           <el-button @click="visibleRe = false">取消</el-button>
           <el-button type="primary" @click="ResetIs()">确定</el-button>

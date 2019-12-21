@@ -1,26 +1,59 @@
-/*公用CSS*/
-html, body, div, span, object, h1, h2, h3,
-h4, h5, h6, p, a, em, font, img, s, samp, small, strong,
-dt, ol, ul, li, fieldset, form, label, table,
-tbody, tfoot, thead, tr, th, td {
+/* 公用CSS */
+html,
+body,
+div,
+span,
+object,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+em,
+font,
+img,
+s,
+samp,
+small,
+strong,
+dt,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+table,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
   margin: 0;
   padding: 0;
   font-weight: inherit;
   font-style: inherit;
   font-size: 100%;
-  font-family: 'PingFang SC', '微软雅黑', '黑体' !important;
+  font-family: "PingFang SC", "微软雅黑", "黑体", sans-serif !important;
   box-sizing: border-box !important;
 }
 
 
-html,body,#app,#Router{
+html,
+body,
+#app,
+#Router {
   width: 100%;
   height: 100%;
   margin: 0;
 }
 
-p{
-  word-wrap:break-word
+p {
+  word-wrap: break-word;
 }
 
 i {
@@ -44,77 +77,92 @@ img {
 :focus {
   outline: 0;
 }
-a{
+a {
   cursor: pointer;
 }
-a, a:link, a:visited, a:hover, a:active {
-  text-decoration: none
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
 }
 
-/*清除浮动*/
-.clearfix:after {
+/* 清除浮动 */
+.clearfix::after {
   content: "";
   height: 0;
   line-height: 0;
   clear: both;
   display: block;
-  visibility: hidden
+  visibility: hidden;
 }
-.el-submenu .el-menu-item{
-  min-width: 170px!important;
+.el-submenu .el-menu-item {
+  min-width: 170px !important;
 }
 .clearfix {
-  zoom: 1; /*IE/7/6*/
+  zoom: 1; /* IE/7/6 */
 }
-.el-table{
+.el-table {
   border-radius: 6px 6px 0 0;
 }
-.tableHead,.tableHead th{
-  background-color: #f9f9f9!important;
+.tableHead,
+.tableHead th {
+  background-color: #f9f9f9 !important;
   text-align: center;
   color: black;
   font-weight: bold;
 }
-td{
-  /*text-align: left;*/
+td {
+  /* text-align: left; */
 }
-.site-sidebar__menu-icon{
-  font-size: 20px!important;
+.site-sidebar__menu-icon {
+  font-size: 20px !important;
 }
-.is-opened .el-submenu__title{
-  background-color: #000c17!important;
+.is-opened .el-submenu__title {
+  background-color: #000c17 !important;
 }
-.reqI{
+.reqI {
   color: red;
 }
 
-.rowDel{
+.rowDel {
   display: none;
 }
-.el-table td, .el-table th { padding: 6px 0 !important; }
-.el-tag--small { height: 22px !important; line-height: 20px !important; }
-
-.secondcard{
-  margin-top:5px
+.el-table td,
+.el-table th {
+  padding: 6px 0 !important;
+}
+.el-tag--small {
+  height: 22px !important;
+  line-height: 20px !important;
+}
+.secondcard {
+  margin-top: 5px;
 }
 .floatr {
   float: right;
 }
-.width140px{
-  width:140px
+.width140px {
+  width: 140px;
 }
-.width150px{
-  width:150px
+.width150px {
+  width: 150px;
 }
 .width180px {
-  width:180px
+  width: 180px;
 }
 .width220px {
-  width:220px
+  width: 220px;
 }
 .width100 {
-  width:100%!important;
+  width: 100% !important;
 }
 .points {
-  width:5px; height:5px;float:left; background:#1890FF; border-radius:50%; margin-right: 3px
+  width: 5px;
+  height: 5px;
+  float: left;
+  background: #1890ff;
+  border-radius: 50%;
+  margin-right: 3px;
 }

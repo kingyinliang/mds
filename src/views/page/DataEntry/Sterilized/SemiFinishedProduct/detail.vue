@@ -2,7 +2,7 @@
   <div class="header_main">
     <el-card class="searchCard  newCard">
       <el-row type="flex">
-        <el-col class="header_pot" style="width: 160px">
+        <el-col class="header_pot" style="width: 160px;">
           <p class='header_pot_label'>罐号：{{formData.HOLDER_NAME ? formData.HOLDER_NAME : ''}}</p>
           <div class="header_pot_image">
             <div class="header_pot_image_content">
@@ -34,7 +34,7 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-tabs v-model="activeName" class="NewDaatTtabs" type="border-card" style="margin-top:5px">
+    <el-tabs v-model="activeName" class="NewDaatTtabs" type="border-card" style="margin-top: 5px;">
       <el-tab-pane name="1">
         <span slot="label" class="spanview">当前数据</span>
         <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" >
@@ -123,18 +123,18 @@ export default {
 </script>
 
 <style lang="scss">
-  .topformsde{
-    .el-form-item__content{
+  .topformsde {
+    .el-form-item__content {
       height: 32px;
-      border-bottom: 1px solid #D8D8D8;
+      border-bottom: 1px solid #d8d8d8;
     }
-    .noneBorder{
-      .el-form-item__content{
+    .noneBorder {
+      .el-form-item__content {
         border-bottom: none;
       }
     }
-    .el-input{
-      width: 145px!important;
+    .el-input {
+      width: 145px !important;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -143,28 +143,28 @@ export default {
   }
 </style>
 <style lang="scss" scoped>
-  .header_pot{
+  .header_pot {
     width: 160px;
-    &_label{
+    &_label {
       font-size: 14px;
       font-weight: 400;
-      color: rgba(102,102,102,1);
+      color: rgba(102, 102, 102, 1);
       margin-bottom: 15px;
     }
-    &_image{
+    &_image {
       width: 70px;
       height: 100px;
       margin-left: 20px;
-      background: url('~@/assets/img/ferPot.png') no-repeat center center;
-      background-size:contain;
+      background: url("~@/assets/img/ferPot.png") no-repeat center center;
+      background-size: contain;
       display: flex;
-      align-items:flex-end;
+      align-items: flex-end;
       justify-content: center;
-      &_content{
+      &_content {
         margin-bottom: 4px;
         width: 42px;
         height: 45px;
-        background: linear-gradient(#35C3FF,#1890FF);
+        background: linear-gradient(#35c3ff, #1890ff);
       }
     }
   }

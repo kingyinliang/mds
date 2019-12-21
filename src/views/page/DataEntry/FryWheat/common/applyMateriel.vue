@@ -7,19 +7,19 @@
         <el-row :gutter="10">
           <el-col :span="12" v-for="(sole, index) in WheatCangList" :key="index">
             <el-card class="Card_item">
-              <div slot="header">小麦罐号：{{sole.holderName}} <el-button type="primary" size="small" @click="Receive(sole.holderName, sole.holderId)" :disabled="!isRedact || applyMaterielState == 'submit' || applyMaterielState == 'checked'" style="float:right; margin-top:-8px;">立即领用</el-button></div>
-              <div style="display: flex">
+              <div slot="header">小麦罐号：{{sole.holderName}} <el-button type="primary" size="small" @click="Receive(sole.holderName, sole.holderId)" :disabled="!isRedact || applyMaterielState == 'submit' || applyMaterielState == 'checked'" style="float: right; margin-top: -8px;">立即领用</el-button></div>
+              <div style="display: flex;">
                 <div class="Card_item_img">
                   <div class="Card_item_img_box">
-                    <div class="Card_item_img_box_bg" style="height: 50%"></div>
+                    <div class="Card_item_img_box_bg" style="height: 50%;"></div>
                   </div>
                   <img src="@/assets/img/granary.png" alt="">
                 </div>
                 <div class="Card_item_text">
-                  <el-card style="margin-top: 25px">
-                    <div slot="header">库存明细 <span style="float: right">合计：{{sole.cangtotal}}KG</span></div>
-                    <div style="position: relative">
-                      <el-row  class="Card_item_text_item bgbox" style="padding-top: 0">
+                  <el-card style="margin-top: 25px;">
+                    <div slot="header">库存明细 <span style="float: right;">合计：{{sole.cangtotal}}KG</span></div>
+                    <div style="position: relative;">
+                      <el-row  class="Card_item_text_item bgbox" style="padding-top: 0;">
                         <el-col :span="16">批次</el-col>
                         <el-col :span="8">数量</el-col>
                       </el-row >
@@ -41,7 +41,7 @@
 -->
         </el-row>
         <el-card body-style="padding-top:10px;">
-          <el-table ref="table1" header-row-class-name="tableHead" :data="materielDataList" @row-dblclick="EditReceive" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="width: 100%;  margin-bottom: 20px">
+          <el-table ref="table1" header-row-class-name="tableHead" :data="materielDataList" @row-dblclick="EditReceive" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
             <el-table-column label="物料">
               <template slot-scope="scope">{{scope.row.materialCode}} {{scope.row.materialName}}</template>
             </el-table-column>
@@ -56,7 +56,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-row style="margin-top:20px;">
+          <el-row style="margin-top: 20px;">
             <el-col>
               <div><span>领用数合计：</span>{{totalInstock}} KG</div>
             </el-col>
@@ -81,7 +81,7 @@
         <el-form-item label="物料：" :label-width="formLabelWidth">{{cang.materialCode}} {{cang.materialName}}</el-form-item>
         <el-form-item label="剩余量（KG）：" :label-width="formLabelWidth">{{cang.currentQuantity}}</el-form-item>
         <el-form-item label="数量（KG）：" :label-width="formLabelWidth" prop="wheatWeight">
-          <el-input v-model.number="cang.wheatWeight" @keyup.native="proving1" style="width:200px"></el-input>
+          <el-input v-model.number="cang.wheatWeight" @keyup.native="proving1" style="width: 200px;"></el-input>
         </el-form-item>
         <el-form-item label="操作时间：" :label-width="formLabelWidth">{{cang.changed}}</el-form-item>
         <el-form-item label="操作人：" :label-width="formLabelWidth">{{cang.changer}}</el-form-item>
@@ -513,24 +513,24 @@ export default {
 </script>
 
 <style lang="scss">
-.Card_item{
-  .el-card__header{
+.Card_item {
+  .el-card__header {
     padding: 15px 20px;
     font-size: 16px;
     color: #666;
   }
-  &_detail{
+  &_detail {
     float: right;
     cursor: pointer;
-    color: #1890FF;
+    color: #1890ff;
   }
-  &_img{
+  &_img {
     width: 250px;
     position: relative;
-    img{
+    img {
       width: 250px;
     }
-    &_box{
+    &_box {
       width: 89px;
       height: 161px;
       position: absolute;
@@ -539,28 +539,13 @@ export default {
       display: flex;
       flex-wrap: wrap;
       align-content: flex-end;
-      &_bg{
+      &_bg {
         flex: 1;
         height: 161px;
         align-items: center;
         position: relative;
-        background: linear-gradient(#35C3FF,#1890FF);
+        background: linear-gradient(#35c3ff, #1890ff);
         overflow: hidden;
-        &:hover{
-          &::before,&::after{
-            animation: roateOne 10s linear infinite;
-          }
-        }
-        &::before,&::after{
-          content: "";
-          position: absolute;
-          left: 50%;
-          min-width: 155px;
-          min-height: 145px;
-          background: #fff;
-          animation: roateTwo 10s linear infinite;
-        }
-
         &::before {
           top: -138px;
           border-radius: 45%;
@@ -570,44 +555,62 @@ export default {
           opacity: 0.5;
           border-radius: 47%;
         }
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          min-width: 155px;
+          min-height: 145px;
+          background: #fff;
+          animation: roateTwo 10s linear infinite;
+        }
+        &:hover {
+          &::before,
+          &::after {
+            animation: roateOne 10s linear infinite;
+          }
+        }
       }
     }
   }
-  &_text{
+  &_text {
     flex: 1;
-    .el-card__header{
+    .el-card__header {
       font-size: 14px;
       padding: 10px 12px;
-      background: #1890FF;
+      background: #1890ff;
       color: white;
     }
-    &_box{
+    &_box {
       position: relative;
       padding-bottom: 6px;
       max-height: 180px;
       overflow: scroll;
-      &_bg1,&_bg2{
+      &_bg1,
+      &_bg2 {
         position: absolute;
         width: 100%;
         height: 20px;
-        background: linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+        background: linear-gradient(rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
         z-index: 999;
       }
-      &_bg2{
+      &_bg2 {
         bottom: 0;
-        background: linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+        background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
       }
     }
     .Card_item_text_box::-webkit-scrollbar {
       display: none;
     }
-    &_item{
-      color: #4A4A4A;
+    &_item {
+      color: #4a4a4a;
       font-size: 14px;
       padding-top: 10px;
     }
   }
 }
+
 @keyframes roateOne {
   0% {
     transform: translate(-50%, -0%) rotateZ(0deg);
@@ -619,6 +622,7 @@ export default {
     transform: translate(-50%, -0%) rotateZ(360deg);
   }
 }
+
 @keyframes roateTwo {
   0% {
     transform: translate(-50%, -0%) rotateZ(0deg);

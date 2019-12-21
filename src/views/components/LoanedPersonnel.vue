@@ -1,24 +1,24 @@
 <template>
   <el-dialog width="850px" title="借调人员" :close-on-click-modal="false" :visible.sync="visible">
     <el-row>
-      <el-col style="width: 250px">
-        <el-card style="height: 303px;overflow-y: scroll">
-          <el-row style="font-size: 16px;color: black;margin-bottom: 10px">组织架构</el-row>
+      <el-col style="width: 250px;">
+        <el-card style="height: 303px; overflow-y: scroll;">
+          <el-row style="font-size: 16px; color: black; margin-bottom: 10px;">组织架构</el-row>
           <el-tree :data="OrgTree" node-key="deptId" :default-expanded-keys="arrList" @node-click="setdetail" ref="orgtree" :expand-on-click-node="false"></el-tree>
         </el-card>
       </el-col>
-      <el-col style="width: 250px">
-        <el-card style="height: 303px;overflow-y: scroll">
+      <el-col style="width: 250px;">
+        <el-card style="height: 303px; overflow-y: scroll;">
           <el-input v-model="filterText" size="small" placeholder="搜索人员"></el-input>
           <el-tree ref="userlistTree" :filter-node-method="filterNode" node-key="userId" @node-click="treeNodeClick" :data="userlist" show-checkbox :props="userListTreeProps"  :expand-on-click-node="false" @check-change="userTree"></el-tree>
         </el-card>
       </el-col>
-      <el-col style="width: 50px;padding: 70px 5px">
-        <el-button type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px" @click="delSelcted()" :disabled="!tree2Status"></el-button>
-        <el-button type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0" @click="addSelcted()" :disabled="!tree1Status"></el-button>
+      <el-col style="width: 50px; padding: 70px 5px;">
+        <el-button type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px;" @click="delSelcted()" :disabled="!tree2Status"></el-button>
+        <el-button type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0;" @click="addSelcted()" :disabled="!tree1Status"></el-button>
       </el-col>
-      <el-col style="width: 250px">
-        <el-card style="height: 303px;overflow-y: scroll">
+      <el-col style="width: 250px;">
+        <el-card style="height: 303px; overflow-y: scroll;">
           <el-input v-model="filterText1" size="small" placeholder="搜索人员"></el-input>
           <el-tree ref="userlistTree1" :filter-node-method="filterNode1" node-key="userId" @node-click="treeNodeClick1" :data="selctId"  show-checkbox :props="selctListTreeProps"  :expand-on-click-node="false" @check-change="userTree1"></el-tree>
         </el-card>

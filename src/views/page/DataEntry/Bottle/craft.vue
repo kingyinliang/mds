@@ -29,11 +29,11 @@
           <p class="bottom">&nbsp;{{formHeader.changed}}</p>
         </el-form-item>
         <el-form-item class="floatr">
-          <template style="float:right;">
+          <template style="float: right;">
             <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-Bottle-index'})">返回</el-button>
             <el-button type="primary" class="button" v-if="isAuth('bottle:workshop:techProductParameterSave')" size="small" @click="isRedact = !isRedact" >{{isRedact?'取消':'编辑'}}</el-button>
           </template>
-          <template v-if="isRedact" style="float:right;">
+          <template v-if="isRedact" style="float: right;">
             <el-button type="primary" size="small" v-if="isAuth('bottle:workshop:techProductParameterSave')" @click="savedOrSubmitForm('saved')" >保存</el-button>
             <!-- <el-button type="primary" size="small" @click="savedOrSubmitForm('submit')" >提交</el-button> -->
           </template>
@@ -43,16 +43,16 @@
     <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" type="border-card" class="NewDaatTtabs secondcard">
       <el-tab-pane name="1" label="产品参数">
         <el-row>
-          <el-col style="float:right">
-            <el-button type="primary" :disabled="!isRedact" @click="AddProductRow" size="small" style="float:right">新增</el-button>
+          <el-col style="float: right;">
+            <el-button type="primary" :disabled="!isRedact" @click="AddProductRow" size="small" style="float: right;">新增</el-button>
           </el-col>
         </el-row>
-        <el-table :data="productList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top:10px">
+        <el-table :data="productList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
           <el-table-column type="index" label="序号" width="50" fixed="left"></el-table-column>
           <el-table-column label="产品参数" fixed="left" show-overflow-tooltip width="85" prop="parameter"></el-table-column>
           <el-table-column label="时间" width="200">
             <template slot-scope="scope">
-              <el-date-picker type="datetime" v-model="scope.row.time" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width:180px" placeholder="请选择日期" size="small"></el-date-picker>
+              <el-date-picker type="datetime" v-model="scope.row.time" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="1#" width="100">
@@ -132,15 +132,15 @@
       </el-tab-pane>
       <el-tab-pane name="2" label="设备数据">
         <el-row>
-          <el-col style="float:right">
-            <el-button type="primary" :disabled="!isRedact" @click="AddEquipmentRow" size="small" style="float:right">新增</el-button>
+          <el-col style="float: right;">
+            <el-button type="primary" :disabled="!isRedact" @click="AddEquipmentRow" size="small" style="float: right;">新增</el-button>
           </el-col>
         </el-row>
-        <el-table :data="equipmentList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top:10px">
+        <el-table :data="equipmentList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
           <el-table-column type="index" label="序号" width="50"></el-table-column>
           <el-table-column label="时间">
             <template slot-scope="scope">
-              <el-date-picker type="datetime" v-model="scope.row.date" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width:180px" placeholder="请选择日期" size="small"></el-date-picker>
+              <el-date-picker type="datetime" v-model="scope.row.date" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="电压V" >
@@ -182,15 +182,15 @@
       </el-tab-pane>
       <el-tab-pane name="3" label="加温参数">
         <el-row>
-          <el-col style="float:right">
-            <el-button type="primary" :disabled="!isRedact" @click="AddWarmingRow" size="small" style="float:right">新增</el-button>
+          <el-col style="float: right;">
+            <el-button type="primary" :disabled="!isRedact" @click="AddWarmingRow" size="small" style="float: right;">新增</el-button>
           </el-col>
         </el-row>
-        <el-table :data="warmingList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top:10px">
+        <el-table :data="warmingList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
           <el-table-column type="index" label="序号" width="50"></el-table-column>
           <el-table-column label="时间" width="200">
             <template slot-scope="scope">
-              <el-date-picker type="datetime" v-model="scope.row.date" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width:180px" placeholder="请选择日期" size="small"></el-date-picker>
+              <el-date-picker type="datetime" v-model="scope.row.date" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="前1" width="100">
@@ -582,8 +582,10 @@ export default {
 
 <style>
 .bottom {
-  border-bottom: 1px solid #D8D8D8;
+  border-bottom: 1px solid #d8d8d8;
   width: 150px;
-  overflow: hidden; text-overflow:ellipsis; white-space:nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

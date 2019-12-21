@@ -19,7 +19,7 @@
       <el-popover
         ref="menuListPopover"
         placement="bottom-start"
-        trigger="click" style="height: 100%;overflow: auto">
+        trigger="click" style="height: 100%; overflow: auto;">
         <el-tree
           :data="menuList"
           :props="menuListTreeProps"
@@ -57,7 +57,7 @@
                 @click="iconActiveHandle(item)"
                 :class="{ 'is-active': item === dataForm.icon }">
                 <template>
-                  <i :class="item" class="iconfont" style="font-size: 20px"></i>
+                  <i :class="item" class="iconfont" style="font-size: 20px;"></i>
                 </template>
               </el-button>
             </div>
@@ -220,43 +220,40 @@ export default {
 </script>
 
 <style lang="scss">
-  .mod-menu {
-    .menu-list__input,
-    .icon-list__input {
-      > .el-input__inner {
-        cursor: pointer;
-      }
-    }
-
-    &__icon-popover {
-      max-width: 370px;
-    }
-
-    &__icon-list {
-      max-height: 180px;
-      padding: 0;
-      margin: -8px 0 0 -8px;
-
-      > .el-button {
-        padding: 8px;
-        margin: 8px 0 0 8px;
-
-        > span {
-          display: inline-block;
-          vertical-align: middle;
-          width: 18px;
-          height: 18px;
-          font-size: 18px;
-        }
-      }
-    }
-
-    .icon-list__tips {
-      font-size: 18px;
-      text-align: center;
-      color: #e6a23c;
+.mod-menu {
+  .menu-list__input,
+  .icon-list__input {
+    > .el-input__inner {
       cursor: pointer;
     }
   }
-  .el-dialog__body { padding: 10px 20px; }
+  &__icon-popover {
+    max-width: 370px;
+  }
+  &__icon-list {
+    max-height: 180px;
+    padding: 0;
+    margin: -8px 0 0 -8px;
+    > .el-button {
+      padding: 8px;
+      margin: 8px 0 0 8px;
+      > span {
+        display: inline-block;
+        vertical-align: middle;
+        width: 18px;
+        height: 18px;
+        font-size: 18px;
+      }
+    }
+  }
+  .icon-list__tips {
+    font-size: 18px;
+    text-align: center;
+    color: #e6a23c;
+    cursor: pointer;
+  }
+}
+.el-dialog__body {
+  padding: 10px 20px;
+}
 </style>

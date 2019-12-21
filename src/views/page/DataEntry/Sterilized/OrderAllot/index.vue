@@ -21,7 +21,7 @@
                 <el-input v-model="formHeader.orderNo"></el-input>
               </el-form-item>
               <el-form-item label="订单状态：">
-                <el-select v-model="formHeader.orderStatus" placeholder="请选择" style="width: 160px">
+                <el-select v-model="formHeader.orderStatus" placeholder="请选择" style="width: 160px;">
                   <el-option label="请选择"  value=""></el-option>
                   <el-option label="未录入"  value="未录入"></el-option>
                   <el-option label="已同步"  value="已同步"></el-option>
@@ -32,7 +32,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="生产日期：">
-                <el-date-picker v-model="formHeader.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="请选择" style="width:180px"></el-date-picker>
+                <el-date-picker v-model="formHeader.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="请选择" style="width: 180px;"></el-date-picker>
               </el-form-item>
               <el-form-item class="floatr">
                 <template>
@@ -54,12 +54,12 @@
     </div>
     <div class="main">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
       </div>
       <el-card>
-        <el-table :data="dataList" :span-method="objectSpanMethod" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">>
+        <el-table :data="dataList" :span-method="objectSpanMethod" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top: 10px;">>
           <el-table-column type="selection" width="35" :selectable="CheckBoxInit" fixed="left"></el-table-column>
           <el-table-column label="订单状态" width="100" prop="orderStatus" show-overflow-tooltip>
             <template slot-scope="scope">
@@ -85,7 +85,7 @@
               <span>生产日期</span>
             </template>
             <template slot-scope="scope">
-              <el-date-picker v-model="scope.row.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :disabled="ReturnStatus(scope.row)" size="small" type="date" placeholder="请选择" style="width:140px"></el-date-picker>
+              <el-date-picker v-model="scope.row.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :disabled="ReturnStatus(scope.row)" size="small" type="date" placeholder="请选择" style="width: 140px;"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column width="140">

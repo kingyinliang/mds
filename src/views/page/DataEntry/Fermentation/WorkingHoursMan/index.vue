@@ -27,21 +27,21 @@
               </el-select>
             </el-form-item>
             <el-form-item label="订单编号：">
-              <el-input v-model="form.orderNo" style="width:170px"></el-input>
+              <el-input v-model="form.orderNo" style="width: 170px;"></el-input>
             </el-form-item>
             <el-form-item label="订单日期：">
-              <el-date-picker v-model="form.startDate" type="date" placeholder="选择日期" style="width:170px" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker> - <el-date-picker v-model="form.endDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width:170px"></el-date-picker>
+              <el-date-picker v-model="form.startDate" type="date" placeholder="选择日期" style="width: 170px;" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker> - <el-date-picker v-model="form.endDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 170px;"></el-date-picker>
             </el-form-item>
-            <el-form-item style="float:right">
-              <template style="float:right; margin-left: 10px;">
+            <el-form-item style="float: right;">
+              <template style="float: right; margin-left: 10px;">
                 <el-button type="primary" size="small" @click="SearchList(true)" v-if="isAuth('fer:report:selectReports')">查询</el-button>
                 <el-button type="primary" class="button" size="small" v-if="isAuth('fer:report:workingSaveAndSubmit')" @click="isRedact = !isRedact">{{isRedact?'取消':'编辑'}}</el-button>
               </template>
-              <template v-if="isRedact" style="float:right; margin-left: 10px;">
+              <template v-if="isRedact" style="float: right; margin-left: 10px;">
                 <el-button type="primary" size="small" @click="SaveForm()">保存</el-button>
                 <el-button type="primary" size="small" @click="SubmitForm()">提交</el-button>
               </template>
-              <template style="float:right; margin-left: 10px;"><el-button type="primary" @click="DataSynchronism()" v-if="isAuth('fer:report:workingSaveAndSubmit')" size="small">报工同步</el-button></template>
+              <template style="float: right; margin-left: 10px;"><el-button type="primary" @click="DataSynchronism()" v-if="isAuth('fer:report:workingSaveAndSubmit')" size="small">报工同步</el-button></template>
             </el-form-item>
           </el-form>
         </el-col>
@@ -58,7 +58,7 @@
         <template style="float:right; margin-left: 10px;"><el-button type="primary" @click="DataSynchronism()" v-if="isAuth('fer:report:workingSaveAndSubmit')" size="small">报工同步</el-button></template>
       </el-row> -->
     </el-card>
-    <el-tabs v-model="activeName" @tab-click="tabClick" type="border-card" style="margin-top:15px">
+    <el-tabs v-model="activeName" @tab-click="tabClick" type="border-card" style="margin-top: 15px;">
       <el-tab-pane name="noMatureReport" label="未成熟">
         <el-table :data="dataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
           <el-table-column type="selection" :selectable="CheckBoxInit"></el-table-column>
@@ -101,12 +101,12 @@
           <el-table-column label="单位" :show-overflow-tooltip="true" prop="humanTimesUnit" width="50"></el-table-column>
           <el-table-column label="执行开始日期" width="150">
             <template slot-scope="scope">
-              <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="scope.row.startDate" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width:140px;"></el-date-picker>
+              <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="scope.row.startDate" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="执行结束日期" prop="amount" width="150">
             <template slot-scope="scope">
-              <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="scope.row.endDate" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width:140px;"></el-date-picker>
+              <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="scope.row.endDate" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="部分/完全报工" :show-overflow-tooltip="true" width="150">
@@ -172,12 +172,12 @@
           <el-table-column label="单位" :show-overflow-tooltip="true" prop="humanTimesUnit" width="50"></el-table-column>
           <el-table-column label="执行开始日期" width="150">
             <template slot-scope="scope">
-              <el-date-picker type="date" v-model="scope.row.startDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width:140px;"></el-date-picker>
+              <el-date-picker type="date" v-model="scope.row.startDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="执行结束日期" prop="amount" width="150">
             <template slot-scope="scope">
-              <el-date-picker type="date" v-model="scope.row.endDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width:140px;"></el-date-picker>
+              <el-date-picker type="date" v-model="scope.row.endDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="部分/完全报工" :show-overflow-tooltip="true" width="130">
@@ -243,12 +243,12 @@
           <el-table-column label="单位" :show-overflow-tooltip="true" prop="humanTimesUnit" width="50"></el-table-column>
           <el-table-column label="执行开始日期" width="150">
             <template slot-scope="scope">
-              <el-date-picker type="date" v-model="scope.row.startDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width:140px;"></el-date-picker>
+              <el-date-picker type="date" v-model="scope.row.startDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="执行结束日期" prop="amount" width="150">
             <template slot-scope="scope">
-              <el-date-picker type="date" v-model="scope.row.endDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width:140px;"></el-date-picker>
+              <el-date-picker type="date" v-model="scope.row.endDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="部分/完全报工" :show-overflow-tooltip="true" width="130">
@@ -270,7 +270,7 @@
         </el-pagination>
       </el-tab-pane>
     </el-tabs>
-    <el-card style="margin-top:15px">
+    <el-card style="margin-top: 15px;">
       <div class="audit"><i class="iconfont factory-shouqicaidan"></i><span>审核日志</span></div>
       <el-table border :data="LogList" header-row-class-name="tableHead">
         <el-table-column label="序号" type="index" width="50"></el-table-column>
@@ -529,36 +529,39 @@ export default {
 }
 </script>
 
-<style lang="less" >
-.width170px {width:170px}
-.audit{
+<style lang="scss" >
+.width170px {
+  width: 170px;
+}
+.audit {
   line-height: 40px;
-  i{
+  i {
     font-size: 22px;
     float: left;
   }
-  span{
+  span {
     margin-left: 12px;
     font-size: 16px;
     font-weight: bold;
   }
 }
 </style>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .searchCard {
-  .el-button--primary,.el-button--primary:focus{
-    color: #000000;
-    background-color: #FFFFFF;
-    border-color: #D9D9D9;
+  .el-button--primary,
+  .el-button--primary:focus {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
   }
-  .el-button--primary:hover{
-    background-color: #1890FF;
-    color: #FFFFFF
+  .el-button--primary:hover {
+    background-color: #1890ff;
+    color: #fff;
   }
-  .el-button--primary:first-child{
-    background-color: #1890FF;
-    color: #FFFFFF;
-    border-color: #1890FF;
+  .el-button--primary:first-child {
+    background-color: #1890ff;
+    color: #fff;
+    border-color: #1890ff;
   }
 }
 </style>

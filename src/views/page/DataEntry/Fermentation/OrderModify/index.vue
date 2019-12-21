@@ -17,20 +17,20 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="罐号：" >
-                <el-select v-model="form.holderId" class="selectwpx" filterable style="width: 140px">
+                <el-select v-model="form.holderId" class="selectwpx" filterable style="width: 140px;">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in potList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="生产物料：" >
-                <el-select v-model="form.materialCode" class="selectwpx" filterable style="width: 140px">
+                <el-select v-model="form.materialCode" class="selectwpx" filterable style="width: 140px;">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="订单日期：">
-                <el-date-picker type="date" v-model="form.startDate" value-format="yyyy-MM-dd" style="width:140px"></el-date-picker>
-                - <el-date-picker type="date" v-model="form.endDate" value-format="yyyy-MM-dd" style="width:140px"></el-date-picker>
+                <el-date-picker type="date" v-model="form.startDate" value-format="yyyy-MM-dd" style="width: 140px;"></el-date-picker>
+                - <el-date-picker type="date" v-model="form.endDate" value-format="yyyy-MM-dd" style="width: 140px;"></el-date-picker>
               </el-form-item>
               <el-form-item class="floatr">
                 <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('fer:judge:isSapList')">查询</el-button>
@@ -46,14 +46,14 @@
     </div>
     <div class="main">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
-        <el-tabs ref='multipleTable' @tab-click="handleClick" v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px;overflow: hidden">
+        <el-tabs ref='multipleTable' @tab-click="handleClick" v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px; overflow: hidden;">
           <el-tab-pane name="0" label="未修改">
             <el-row>
               <el-col>
-                <el-button type='primary' size='small' style='float:right; margin-bottom:10px;' @click="ModifyOrder()" v-if="isAuth('fer:judge:isSapUpdate')">订单修改</el-button>
+                <el-button type='primary' size='small' style='float: right; margin-bottom: 10px;' @click="ModifyOrder()" v-if="isAuth('fer:judge:isSapUpdate')">订单修改</el-button>
               </el-col>
             </el-row>
             <el-row>

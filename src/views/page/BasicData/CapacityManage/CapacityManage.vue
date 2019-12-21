@@ -3,7 +3,7 @@
     <div class="main">
       <el-card>
         <el-row class="clearfix">
-          <div style="float: right">
+          <div style="float: right;">
             <el-form :inline="true" :model="capacity" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetList()">
               <el-form-item>
                 <el-input v-model="capacity.capacity" placeholder="物料" suffix-icon="el-icon-search"></el-input>
@@ -29,8 +29,8 @@
                 <span>产能信息</span>
               </div>
               <div>
-                <el-button type="danger" @click="remove()" style="float: right;margin:0 20px 20px 0" size="small" v-if="isAuth('sys:capacity:deleteCapa')">批量删除</el-button>
-                <el-button type="primary" @click="addOrupdate()" style="float: right;margin:0 20px 20px 0" size="small" v-if="isAuth('sys:capacity:saveOrUpdateCapa')">增加</el-button>
+                <el-button type="danger" @click="remove()" style="float: right; margin: 0 20px 20px 0;" size="small" v-if="isAuth('sys:capacity:deleteCapa')">批量删除</el-button>
+                <el-button type="primary" @click="addOrupdate()" style="float: right; margin: 0 20px 20px 0;" size="small" v-if="isAuth('sys:capacity:saveOrUpdateCapa')">增加</el-button>
               </div>
               <el-table
                 ref="table1"
@@ -39,7 +39,7 @@
                 header-row-class-name="tableHead"
                 border
                 tooltip-effect="dark"
-                style="width: 100%;margin-bottom: 20px">
+                style="width: 100%; margin-bottom: 20px;">
                 <el-table-column
                   type="selection"
                   width="34" fixed="left">

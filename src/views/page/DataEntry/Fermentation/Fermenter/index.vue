@@ -3,45 +3,45 @@
   <el-card class="searchCard ferCard">
     <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="topform sole_row">
       <el-form-item label="生产工厂：">
-        <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 140px">
+        <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="生产车间：">
-        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 140px">
+        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="罐号：" label-width="50px">
-        <el-select v-model="formHeader.holderNo" placeholder="请选择" multiple filterable allow-create default-first-op style="width: 140px">
+        <el-select v-model="formHeader.holderNo" placeholder="请选择" multiple filterable allow-create default-first-op style="width: 140px;">
           <el-option v-for="(sole, index) in this.guanList" :key="index" :value="sole.holderNo" :label="sole.holderName"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="类别：" label-width="50px">
-        <el-select v-model="formHeader.halfType" placeholder="请选择" style="width: 140px">
+        <el-select v-model="formHeader.halfType" placeholder="请选择" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.value" v-for="(item, index) in halfList" :key="index" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="状态：" label-width="50px">
-        <el-select v-model="formHeader.holderStatus" placeholder="请选择" style="width: 140px">
+        <el-select v-model="formHeader.holderStatus" placeholder="请选择" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.value" v-for="(item, index) in holderStatusList" :key="index" :value="item.code" v-if="item.code !== '2' && item.code !== '3'"></el-option>
           <el-option label="发酵中" v-for="(item, index) in holderStatusList" :key="index" value="2,3" v-if="item.code === '2'"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item style="float:right; margin-right:0;">
-        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('fer:holderManage:list')">查询</el-button>
+      <el-form-item style="float: right; margin-right: 0;">
+        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right;" v-if="isAuth('fer:holderManage:list')">查询</el-button>
       </el-form-item>
     </el-form>
   </el-card>
-  <el-card class="searchCard  newCard ferCard" style="margin-top: 5px" v-show="fastS">
-    <h3 class="cardTit"><i class="iconfont factory-shujuzonglan" style="color: #666666;margin-right: 10px"></i>发酵情况总览 <i class="gotop" @click="gotop"><span>收起</span><i class="el-icon-caret-top"></i></i></h3>
+  <el-card class="searchCard  newCard ferCard" style="margin-top: 5px;" v-show="fastS">
+    <h3 class="cardTit"><i class="iconfont factory-shujuzonglan" style="color: #666; margin-right: 10px;"></i>发酵情况总览 <i class="gotop" @click="gotop"><span>收起</span><i class="el-icon-caret-top"></i></i></h3>
     <div class="sumbox">
     <div class="topBox clearfix">
-      <div class="clearfix" v-for="(item, index) in topBox" :key="index" style="float: left">
+      <div class="clearfix" v-for="(item, index) in topBox" :key="index" style="float: left;">
         <div class="topBox_boxItem" @click="topClick(item)">
           <div class="topBox_boxItem_bar">
             <div class="topBox_boxItem_bar_box" :style="{'background': `linear-gradient(to right,${item.startColor} 0%,${item.startColor} 10%,${item.endColor})`}"></div>
@@ -51,8 +51,8 @@
             总计: <span>{{item.num}}</span> 罐
           </p>
           <div class="topBox_boxItem_popover" v-if="index === 2 || index === 3">
-            <p class=""><i class="dot" style="background: #1890FF"></i>味极鲜<span style="float: right">{{item.wdm}} 罐</span></p>
-            <p class=""><i class="dot" style="background: #FFBF00"></i>六月鲜<span style="float: right">{{item.lyx}} 罐</span></p>
+            <p class=""><i class="dot" style="background: #1890ff;"></i>味极鲜<span style="float: right;">{{item.wdm}} 罐</span></p>
+            <p class=""><i class="dot" style="background: #ffbf00;"></i>六月鲜<span style="float: right;">{{item.lyx}} 罐</span></p>
             <i class="topBox_boxItem_popover_ar"></i>
           </div>
         </div>
@@ -61,24 +61,24 @@
     </div>
     </div>
   </el-card>
-  <el-card class="searchCard  newCard ferCard" style="margin-top: 5px"  v-show="fastS">
-    <h3 style="color:black; margin-bottom:8px; line-height:20px;">
-      <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>发酵罐列表
+  <el-card class="searchCard  newCard ferCard" style="margin-top: 5px;"  v-show="fastS">
+    <h3 style="color: black; margin-bottom: 8px; line-height: 20px;">
+      <i class="iconfont factory-liebiao" style="color: #666; margin-right: 10px;"></i>发酵罐列表
       <i class="gotop" @click="goSummary()" v-if="isAuth('report:production:fermentation')"><a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a></i>
     </h3>
-    <el-row class="dataList" :gutter="10" style="min-height: 150px">
+    <el-row class="dataList" :gutter="10" style="min-height: 150px;">
       <el-col :span="4" v-for="(item, index) in dataList" :key="index">
         <el-card class="dataList_item">
           <h3 class="dataList_item_tit">
             <!--{{item.holderName}}-->
             {{item.holderNo}}
-            <span style="color: #333333;font-weight: normal;font-size: 14px">
+            <span style="color: #333; font-weight: normal; font-size: 14px;">
               -{{item.holderStatus === '0' ? '空罐' : item.holderStatus === '1' ? '投料中' : item.holderStatus === '2' ? '发酵中' : item.holderStatus === '3' ? '发酵中' : item.holderStatus === '4' ? '领用中' : item.holderStatus === '5' ? '待清洗' : ''}}
             </span>
-            <span class="dataList_item_a" @click="godetails(item)" style="font-size: 14px" v-if="isAuth('fer:holderManage:detail')">详情>></span>
+            <span class="dataList_item_a" @click="godetails(item)" style="font-size: 14px;" v-if="isAuth('fer:holderManage:detail')">详情>></span>
           </h3>
-          <div class="dataList_item_pot clearfix" style="position: relative">
-            <img src="@/assets/img/RD.png" alt="" style="position:absolute; left:10px; top:10px;" v-if="item.ferOrderNo.slice(0,4) === RDorder">
+          <div class="dataList_item_pot clearfix" style="position: relative;">
+            <img src="@/assets/img/RD.png" alt="" style="position: absolute; left: 10px; top: 10px;" v-if="item.ferOrderNo.slice(0,4) === RDorder">
             <div class="dataList_item_pot_box">
               <div class="dataList_item_pot_box1">
                 <div class="dataList_item_pot_box_item1" :style="`height:${item.reWorkAmount? (item.reWorkAmount / item.holderAmout) * 100 : 0}%`" v-if="item.holderStatus !== '4'">
@@ -134,8 +134,8 @@
     :title="dialogData.holderName+'清洗'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <div style="display: flex">
-      <el-form label-width="100px" class="topform marbottom" style="margin: auto">
+    <div style="display: flex;">
+      <el-form label-width="100px" class="topform marbottom" style="margin: auto;">
         <el-form-item label="罐号：">
           <p>{{dialogData.holderNo}}</p>
         </el-form-item>
@@ -148,7 +148,7 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input v-model="dialogData.remark" size="small" placeholder="手工录入" style="width: 260px"></el-input>
+          <el-input v-model="dialogData.remark" size="small" placeholder="手工录入" style="width: 260px;"></el-input>
         </el-form-item>
         <el-form-item label="录入人员：">
           {{$store.state.user.realName + '（' + this.$store.state.user.name + '）'}}
@@ -543,63 +543,63 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ferCard{
-  .el-card__body{
+.ferCard {
+  .el-card__body {
     padding: 7px;
   }
-  .cardTit{
+  .cardTit {
     font-size: 16px;
     color: black;
     font-weight: 400;
     padding-bottom: 10px;
-    border-bottom: 1px solid #E9E9E9;
+    border-bottom: 1px solid #e9e9e9;
   }
-  .gotop{
+  .gotop {
     float: right;
-    color: #1890FF;
+    color: #1890ff;
     font-size: 14px;
     cursor: pointer;
-    i{
-      :before{
-        color: #1890FF;
+    i {
+      ::before {
+        color: #1890ff;
       }
     }
   }
 }
-.topBox{
+.topBox {
   width: 1160px;
   padding: 25px 25px 10px 25px;
   margin: auto;
-  &_boxItem{
+  &_boxItem {
     position: relative;
     cursor: pointer;
     width: 131px;
     float: left;
-    &_bar{
+    &_bar {
       width: 115px;
       height: 2px;
       margin: 15px 8px 0 8px;
       background: #f2f2f2;
-      &_box{
+      &_box {
         height: 2px;
       }
     }
-    &_tit{
+    &_tit {
       color: black;
       font-size: 16px;
       margin-top: 10px;
       text-align: center;
       line-height: 32px;
     }
-    &_detail{
+    &_detail {
       font-size: 14px;
       text-align: center;
-      color: #666666;
-      span{
+      color: #666;
+      span {
         color: black;
       }
     }
-    &_popover{
+    &_popover {
       display: none;
       top: -60px;
       min-width: 150px;
@@ -611,26 +611,26 @@ export default {
       position: absolute;
       z-index: 999999;
       background: white;
-      box-shadow: 0 2px 12px 0 rgba(0,0,0,.3);
-      .dot{
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+      .dot {
         width: 6px;
         height: 6px;
         float: left;
         margin: 4px 5px 0 0;
         border-radius: 50%;
       }
-      &_ar{
+      &_ar {
         position: absolute;
         bottom: -12px;
         width: 0;
         height: 0;
         border-width: 6px;
         border-style: solid;
-        border-color:#ffffff transparent transparent transparent;
+        border-color: #fff transparent transparent transparent;
       }
     }
   }
-  &_circle{
+  &_circle {
     width: 32px;
     height: 32px;
     float: left;
@@ -638,34 +638,34 @@ export default {
     text-align: center;
     color: white;
     border-radius: 50%;
-    background: #999999;
-    transition: all .5s;
+    background: #999;
+    transition: all 0.5s;
   }
 }
-.dataList{
+.dataList {
   margin-top: 10px;
-  &_item{
+  &_item {
     margin-bottom: 10px;
-    &_tit{
+    &_tit {
       font-weight: 600;
       color: black;
       font-size: 16px;
       padding: 0 10px;
       line-height: 45px;
-      border-bottom: 1px solid #E8E8E8;
+      border-bottom: 1px solid #e8e8e8;
     }
-    &_a{
+    &_a {
       cursor: pointer;
-      color: #1890FF;
+      color: #1890ff;
       float: right;
     }
-    &_pot{
+    &_pot {
       padding: 17px 10px 10px 10px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       overflow: hidden;
-      &_box1{
+      &_box1 {
         position: relative;
         overflow: hidden;
         width: 102px;
@@ -674,7 +674,7 @@ export default {
         flex-wrap: wrap;
         align-content: flex-end;
       }
-      &_box{
+      &_box {
         overflow: hidden;
         padding: 25px 9px 9px 9px;
         color: white;
@@ -685,9 +685,9 @@ export default {
         width: 120px;
         height: 229px;
         min-width: 120px;
-        background: url('~@/assets/img/ferPot.png') no-repeat;
-        background-size:contain;
-        &_detail{
+        background: url("~@/assets/img/ferPot.png") no-repeat;
+        background-size: contain;
+        &_detail {
           width: 100%;
           position: absolute;
           font-size: 14px;
@@ -695,19 +695,22 @@ export default {
           color: black;
           left: 3px;
         }
-        &_item1,&_item2{
+        &_item1,
+        &_item2 {
           width: 100%;
-          display:flex;
-          align-items:center;
+          display: flex;
+          align-items: center;
           justify-content: center;
           font-size: 14px;
         }
-        &_item2s,&_item1{
+        &_item2s,
+        &_item1 {
           height: 50px;
-          background: #69C0FF;
+          background: #69c0ff;
           position: relative;
           overflow: hidden;
-          &::before,&::after{
+          &::before,
+          &::after {
             content: "";
             position: absolute;
             left: 50%;
@@ -726,41 +729,46 @@ export default {
             border-radius: 47%;
           }
         }
-        &_item2{
+        &_item2 {
           height: 100px;
-          background: #1890FF;
+          background: #1890ff;
         }
-        &:hover &_item1::before,&:hover &_item1::after,&:hover &_item2s::before,&:hover &_item2s::after{
+        &:hover &_item1::before,
+        &:hover &_item1::after,
+        &:hover &_item2s::before,
+        &:hover &_item2s::after {
           animation: roateOne 10s linear infinite;
         }
       }
-      &_detail{
+      &_detail {
         max-width: 112px;
         height: auto;
         float: left;
         margin-top: 25px;
         margin-left: 10px;
-        color: #333333;
+        color: #333;
         font-size: 14px;
         line-height: 18px;
         padding: 5px;
         border-radius: 4px;
-        border: 1px solid #1890FF;
+        border: 1px solid #1890ff;
       }
     }
   }
 }
+
 @keyframes roateOne {
-   0% {
-     transform: translate(-50%, -0%) rotateZ(0deg);
-   }
-   50% {
-     transform: translate(-50%, -1%) rotateZ(180deg);
-   }
-   100% {
-     transform: translate(-50%, -0%) rotateZ(360deg);
-   }
- }
+  0% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
+  }
+  50% {
+    transform: translate(-50%, -1%) rotateZ(180deg);
+  }
+  100% {
+    transform: translate(-50%, -0%) rotateZ(360deg);
+  }
+}
+
 @keyframes roateTwo {
   0% {
     transform: translate(-50%, -0%) rotateZ(0deg);

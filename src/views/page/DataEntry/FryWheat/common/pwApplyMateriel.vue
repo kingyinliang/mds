@@ -6,7 +6,7 @@
       <el-row>
         <el-col :span="12">
           <el-form ref="form" label-width="100px">
-            <el-form-item label="生产调度员" style='margin-bottom:0px;'>
+            <el-form-item label="生产调度员" style='margin-bottom: 0;'>
               <el-select size="small" v-model="dispatcherCode" value-key="dispatcherCode" placeholder="请选择生产调度员" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'" >
                 <el-option v-for="(item, index) in this.dictListObj['PW_FEVOR']" :key="index" :label="item.code" :value="item.code" ></el-option>
               </el-select>
@@ -14,9 +14,9 @@
           </el-form>
         </el-col>
         <el-col :span="12">
-          <div class="btn" style="float:right;">
+          <div class="btn" style="float: right;">
             <el-button type="primary" size="small" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'" @click="addNewRecord">新增</el-button>
-            <el-button type="primary" style="margin-left:0px;" size="small" :disabled="!isRedact || !enableSubmit" @click="saveOrderMateriel">申请订单</el-button>
+            <el-button type="primary" style="margin-left: 0;" size="small" :disabled="!isRedact || !enableSubmit" @click="saveOrderMateriel">申请订单</el-button>
             <!-- <el-button type='primary' size="small" @click="saveMaterielList">baocun</el-button>
             <el-button type='primary' size="small" @click="submitMaterielList">tijiao</el-button> -->
           </div>
@@ -31,7 +31,7 @@
             :row-class-name="rowDelFlag"
             border
             tooltip-effect="dark"
-            style="width: 100%;margin-bottom: 20px">
+            style="width: 100%; margin-bottom: 20px;">
             <el-table-column
               label="生产物料"
               width="220">

@@ -39,10 +39,10 @@
         </div>
         <div class="main">
           <div class="tableCard">
-            <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+            <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
               <em class="el-icon-caret-bottom"></em>
             </div>
-            <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px;overflow: hidden">
+            <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px; overflow: hidden;">
               <el-tab-pane name="1">
                 <span slot="label" class="spanview">
                   <el-button>当前库存信息</el-button>
@@ -72,8 +72,8 @@
                     </el-table-column>
                     <el-table-column label="操作" width="150" align="center">
                       <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="showMoreDetail(scope.row.batch)"><em class="iconfont factory-fangdajing-copy" style="font-size: 12px;margin-right: 5px"></em>查看</el-button>
-                        <el-button type="text" size="small" @click="makeAdjust(scope.row)" v-if="isAuth('Gra:adjust:material:soybeanUpdate')"><em class="iconfont factory-banshou" style="font-size: 12px;margin-right: 5px"></em>调整</el-button>
+                        <el-button type="text" size="small" @click="showMoreDetail(scope.row.batch)"><em class="iconfont factory-fangdajing-copy" style="font-size: 12px; margin-right: 5px;"></em>查看</el-button>
+                        <el-button type="text" size="small" @click="makeAdjust(scope.row)" v-if="isAuth('Gra:adjust:material:soybeanUpdate')"><em class="iconfont factory-banshou" style="font-size: 12px; margin-right: 5px;"></em>调整</el-button>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -249,8 +249,8 @@
             </el-tab-pane>
           </el-tabs>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="isShowMessageBoxAdjust = false">取消</el-button>
-            <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="isShowMessageBoxAdjust = false">确定</el-button>
+            <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="isShowMessageBoxAdjust = false">取消</el-button>
+            <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="isShowMessageBoxAdjust = false">确定</el-button>
           </div>
         </el-dialog>
         <el-dialog :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class'>
@@ -266,7 +266,7 @@
                 <p>{{adjustForm.batch}}</p>
               </el-form-item>
               <el-form-item label="调整类型：" required>
-                <el-select  placeholder="请选择"  v-model="adjustForm.adjustType" style="width:220px" >
+                <el-select  placeholder="请选择"  v-model="adjustForm.adjustType" style="width: 220px;" >
                   <el-option label="盘亏" value="1" ></el-option>
                   <el-option label="盘盈" value="0" ></el-option>
                 </el-select>
@@ -278,7 +278,7 @@
                   { required: true, validator: validatePassAdjustNum, message: '请填写调整量 ', trigger: 'blur' }
                 ]"
               >
-                <el-input  type='number'  v-model.number="adjustForm.quantity" style='width:150px'/> KG
+                <el-input  type='number'  v-model.number="adjustForm.quantity" style='width: 150px;'/> KG
               </el-form-item>
               <el-form-item
                   label="说明："
@@ -287,13 +287,13 @@
                     { required: true, message: '请填写调整说明', trigger: 'blur' }
                   ]"
               >
-                <el-input  type='text'  v-model.trim="adjustForm.remark" style='width:220px'/>
+                <el-input  type='text'  v-model.trim="adjustForm.remark" style='width: 220px;'/>
               </el-form-item>
             </el-form>
           </div>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="cannalSaveAdjust('adjustForm')">取消</el-button>
-            <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveAdjust('adjustForm')">确定</el-button>
+            <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="cannalSaveAdjust('adjustForm')">取消</el-button>
+            <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveAdjust('adjustForm')">确定</el-button>
           </div>
         </el-dialog>
       </el-col>
@@ -586,9 +586,9 @@ export default class Index extends Vue {
 }
 </script>
 <style lang="scss">
-@import '@/assets/scss/_common.scss';
-@import '@/assets/scss/_share.scss';
-.measurebarn-bean-pulp-data-entry{
+@import "@/assets/scss/_common.scss";
+@import "@/assets/scss/_share.scss";
+.measurebarn-bean-pulp-data-entry {
   .header {
     height: 200px;
     .header-pot {
@@ -596,28 +596,28 @@ export default class Index extends Vue {
       .header-pot__label {
         font-size: 18px;
         font-weight: 400;
-        color: rgba(102,102,102,1);
-        line-height:30px;
+        color: rgba(102, 102, 102, 1);
+        line-height: 30px;
         height: 30px;
         width: 300px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-      };
+      }
       .header-pot__image {
         position: relative;
-        margin-top:10px;
-        height:160px;
-        width:250px;
-        background: url('~@/assets/img/pot.png') no-repeat top right;
-        background-size:contain;
+        margin-top: 10px;
+        height: 160px;
+        width: 250px;
+        background: url("~@/assets/img/pot.png") no-repeat top right;
+        background-size: contain;
         .header-pot__image_content {
           height: 65px;
           width: 46px;
           position: absolute;
           right: 40px;
           bottom: 61px;
-          background: linear-gradient(#35C3FF,#1890FF);
+          background: linear-gradient(#35c3ff, #1890ff);
         }
       }
     }
@@ -628,21 +628,21 @@ export default class Index extends Vue {
       justify-content: center;
       align-items: center;
       .header-form_input {
-        width:150px;
-        font-size:14px;
-        font-family:PingFangSC-Regular;
-        font-weight:400;
-        color:rgba(0,0,0,0.85);
+        width: 150px;
+        font-size: 14px;
+        font-family: PingFangSC-Regular, sans-serif;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.85);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
     }
   }
-  .topform{
-    .el-form-item__content{
+  .topform {
+    .el-form-item__content {
       height: 32px;
-      border-bottom: 1px solid #D8D8D8;
+      border-bottom: 1px solid #d8d8d8;
     }
   }
 }

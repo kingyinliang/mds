@@ -1,8 +1,8 @@
 <template>
 <div>
   <el-row class="clearfix">
-    <p style="float: left;font-size: 14px">布浆总量：</p>
-    <el-button type="primary" style="float: right" size="small" :disabled="true">酱醪领用</el-button>
+    <p style="float: left; font-size: 14px;">布浆总量：</p>
+    <el-button type="primary" style="float: right;" size="small" :disabled="true">酱醪领用</el-button>
   </el-row>
   <el-table ref="table1" header-row-class-name="tableHead" @row-dblclick="GetLog"  :data="SumDate" :row-class-name="RowDelFlag">
     <el-table-column label="原汁信息">

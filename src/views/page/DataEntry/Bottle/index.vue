@@ -15,18 +15,18 @@
           </el-select>
         </el-form-item>
         <el-form-item label="生产日期：">
-          <el-date-picker type="date" v-model="formHeader.productDate" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width:150px"></el-date-picker>
+          <el-date-picker type="date" v-model="formHeader.productDate" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 150px;"></el-date-picker>
         </el-form-item>
         <el-form-item label="生产订单：">
-          <el-input v-model.trim="formHeader.orderNo" style="width:150px"></el-input>
+          <el-input v-model.trim="formHeader.orderNo" style="width: 150px;"></el-input>
         </el-form-item>
         <el-form-item class="floatr">
           <el-button type="primary" size="small" @click="GetList" v-if="isAuth('bottle:workshop:indexList')" class="floatr">查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
-    <el-row :gutter="20" style="margin-top:5px">
-      <el-col :span="8" v-for="(item, index) in dataList" :key="index" style="margin-bottom:15px">
+    <el-row :gutter="20" style="margin-top: 5px;">
+      <el-col :span="8" v-for="(item, index) in dataList" :key="index" style="margin-bottom: 15px;">
         <div class="sole">
           <div class="top">
             <div>产线：{{item.name}}</div>
@@ -35,17 +35,17 @@
             </div>
           </div>
           <el-row class="content" :gutter="20">
-            <el-col class="img" :span="10"><img src="@/assets/img/bottle.png" style="width:95%"></el-col>
+            <el-col class="img" :span="10"><img src="@/assets/img/bottle.png" style="width: 95%;"></el-col>
             <el-col class="right" :span="14">
               <div class="lines">订单号：
-                <el-select v-model="item.orderNo" filterable @change="changeOrder($event, item)" size="mini" style="width:140px;">
+                <el-select v-model="item.orderNo" filterable @change="changeOrder($event, item)" size="mini" style="width: 140px;">
                   <el-option v-for="(items, index) in item.orderList" :key="index" :value="items.orderNo" :label="items.orderNo"></el-option>
                 </el-select>
               </div>
               <div class="lines">
-                <div style="float:left">品项：</div>
+                <div style="float: left;">品项：</div>
                 <el-tooltip class="item" effect="dark" :content="item.materialCode + item.materialName" placement="bottom-start">
-                  <div style="float:left; width:140px; color:rgba(0, 0, 0, 0.65);overflow: hidden; text-overflow:ellipsis; white-space:nowrap;">{{item.materialCode}}{{item.materialName}}</div>
+                  <div style="float: left; width: 140px; color: rgba(0, 0, 0, 0.65); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{item.materialCode}}{{item.materialName}}</div>
                 </el-tooltip>
               </div>
               <div class="lines">计划产量：<span>{{item.planOutput}} {{item.outputUnit}}</span></div>
@@ -230,11 +230,11 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
 .sole {
-  background:rgba(255,255,255,1);
-  border-radius:2px;
-  border:1px solid rgba(232,232,232,1);
+  background: rgba(255, 255, 255, 1);
+  border-radius: 2px;
+  border: 1px solid rgba(232, 232, 232, 1);
   .top {
     height: 40px;
     display: flex;
@@ -255,17 +255,16 @@ export default {
     }
     .right {
       height: 120px;
-      .lines{
-        color:rgba(0,0,0,0.45);
+      .lines {
+        color: rgba(0, 0, 0, 0.45);
         line-height: 26px;
-        font-size:12px;
+        font-size: 12px;
         overflow: hidden;
-        span{
-          color: rgba(0,0,0,0.65);
-          font-size: 12px
+        span {
+          color: rgba(0, 0, 0, 0.65);
+          font-size: 12px;
         }
       }
-      // display: flex;
     }
   }
   .bottom {
@@ -273,7 +272,7 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     height: 40px;
-    background:rgba(247,249,250,1);
+    background: rgba(247, 249, 250, 1);
     align-items: center;
     width: 100%;
     .bottom-item {
@@ -283,22 +282,24 @@ export default {
       line-height: 40px;
       background: #f7f9fa;
       border-radius: 0;
-      border:none; height:40px; padding:0;
-      &:hover{
-        color:#fff;
-        background:#1890FF;
+      border: none;
+      height: 40px;
+      padding: 0;
+      &:hover {
+        color: #fff;
+        background: #1890ff;
       }
-      &.is-disabled{
-        color: #606266
+      &.is-disabled {
+        color: #606266;
       }
-      &.is-disabled:hover{
-        color: #fff
+      &.is-disabled:hover {
+        color: #fff;
       }
     }
     .bottom-split {
-      width:1px;
-      height:16px;
-      background:rgba(232,232,232,1);
+      width: 1px;
+      height: 16px;
+      background: rgba(232, 232, 232, 1);
     }
   }
 }

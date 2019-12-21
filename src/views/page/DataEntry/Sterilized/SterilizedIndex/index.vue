@@ -1,30 +1,30 @@
 <template>
   <div class="header_main">
-    <el-card class="searchCard  newCard" style="margin-bottom: 5px">
+    <el-card class="searchCard  newCard" style="margin-bottom: 5px;">
       <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform sole_row">
         <el-form-item label="生产工厂：">
-          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产车间：">
-          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产日期：" label-width="70px">
-          <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="formHeader.productDate" style="width: 180px"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="formHeader.productDate" style="width: 180px;"></el-date-picker>
         </el-form-item>
         <el-form-item label="订单：">
           <el-input type="text" v-model="formHeader.orderNo" clearable ></el-input>
         </el-form-item>
-        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('ste:order:list')">查询</el-button>
+        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right;" v-if="isAuth('ste:order:list')">查询</el-button>
       </el-form>
     </el-card>
-    <el-card class="searchCard  newCard" style="min-height: 420px">
-      <el-row class="dataList" :gutter="6" style="min-height: 150px">
+    <el-card class="searchCard  newCard" style="min-height: 420px;">
+      <el-row class="dataList" :gutter="6" style="min-height: 150px;">
         <el-col :span="6" v-for="(item, index) in dataList" :key="index">
           <el-card class="dataList_item">
             <h3 class="dataList_item_tit">
@@ -38,13 +38,13 @@
               <div class="dataList_item_body_text">
                 <el-form :inline="true" size="mini">
                   <el-form-item label="订单编号：">
-                    <el-select class="orderSelect" v-model="item.selectOrderId" placeholder="请选择" style="width: 100px" @change="OrderChange($event, item)" value-key="orderId">
+                    <el-select class="orderSelect" v-model="item.selectOrderId" placeholder="请选择" style="width: 100px;" @change="OrderChange($event, item)" value-key="orderId">
                       <el-option :label="item1.orderNo" v-for="(item1, index1) in item.steList" :key="index1" :value="item1.orderId">
                         <div :style="{color:item1.orderStatus === 'noPass'? 'red' : ''}">{{item1.orderNo}}</div>
                       </el-option>
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="生产品项：" style="line-height: 22px">
+                  <el-form-item label="生产品项：" style="line-height: 22px;">
                     <el-tooltip class="item" effect="dark" :content="(item.selectOrder.materialCode || '') + ' ' + (item.selectOrder.materialName || '')" placement="top">
                       <p class="dataList_item_body_text_tit">{{(item.selectOrder.materialCode || '') + ' ' + (item.selectOrder.materialName || '')}}</p>
                     </el-tooltip>
@@ -257,154 +257,156 @@ export default {
   components: {}
 }
 </script>
-
-<style lang="scss">
-  .el-select-dropdown__wrap{
-    max-height: 200px;
-  }
-  .header_main  .dataList_item .el-card__body{
-    padding: 0!important;
-  }
-  .header_main .dataList_item_body_text .el-form-item{
-    .el-form-item__label{
-      font-size: 12px;
-    }
-  }
-</style>
 <style lang="scss" scoped>
-  .dataList {
-    margin-top: 10px;
-    &_item {
-      margin-bottom: 10px;
-      &_tit {
-        font-weight: normal;
-        color: black;
-        font-size: 16px;
-        padding: 0 10px;
-        line-height: 40px;
-        border-bottom: 1px solid #E8E8E8;
-        &_right{
-          float: right;
-          font-size: 14px;
-          position: relative;
-          padding-left: 8px;
-        }
-        &_dian{
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          position: absolute;
-          background: #1890FF;
-          left: 0;
-          top: 17px;
-        }
-      }
-      &_body{
+.dataList {
+  margin-top: 10px;
+  &_item {
+    margin-bottom: 10px;
+    &_tit {
+      font-weight: normal;
+      color: black;
+      font-size: 16px;
+      padding: 0 10px;
+      line-height: 40px;
+      border-bottom: 1px solid #e8e8e8;
+      &_right {
+        float: right;
+        font-size: 14px;
         position: relative;
-        padding-top: 10px;
-        display: flex;
-        justify-content: center;
-        &_ptobox{
-          width: 100px;
-          min-width: 100px;
-          height: 111px;
-          margin-top: 10px;
-          position: relative;
-          background: url('~@/assets/img/sterilized.png') no-repeat;
-          background-size:contain;
-          &_pto{
-            width: 41px;
-            border-bottom-right-radius: 53px 21px;
-            border-bottom-left-radius: 53px 21px;
-            height: 53px;
-            position: absolute;
-            top: 13px;
-            left: 28px;
-            display: flex;
-            flex-wrap: wrap;
-            align-content: flex-end;
+        padding-left: 8px;
+      }
+      &_dian {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        position: absolute;
+        background: #1890ff;
+        left: 0;
+        top: 17px;
+      }
+    }
+    &_body {
+      position: relative;
+      padding-top: 10px;
+      display: flex;
+      justify-content: center;
+      &_ptobox {
+        width: 100px;
+        min-width: 100px;
+        height: 111px;
+        margin-top: 10px;
+        position: relative;
+        background: url("~@/assets/img/sterilized.png") no-repeat;
+        background-size: contain;
+        &_pto {
+          width: 41px;
+          border-bottom-right-radius: 53px 21px;
+          border-bottom-left-radius: 53px 21px;
+          height: 53px;
+          position: absolute;
+          top: 13px;
+          left: 28px;
+          display: flex;
+          flex-wrap: wrap;
+          align-content: flex-end;
+          overflow: hidden;
+          &_bg {
+            flex: 1;
+            height: 40px;
+            align-items: center;
             overflow: hidden;
-            &_bg{
-              flex: 1;
-              height: 40px;
-              align-items: center;
-              overflow: hidden;
-              position: relative;
-              background: linear-gradient(#35C3FF,#1890FF);
-              &::before,&::after{
-                content: "";
-                position: absolute;
-                left: 50%;
-                min-width: 65px;
-                min-height: 60px;
-                background: #fff;
-                animation: roateTwo 10s linear infinite;
-              }
-
-              &::before {
-                top: -55px;
-                border-radius: 45%;
-              }
-              &::after {
-                top: -51px;
-                opacity: 0.5;
-                border-radius: 47%;
-              }
+            position: relative;
+            background: linear-gradient(#35c3ff, #1890ff);
+            &::before,
+            &::after {
+              content: "";
+              position: absolute;
+              left: 50%;
+              min-width: 65px;
+              min-height: 60px;
+              background: #fff;
+              animation: roateTwo 10s linear infinite;
+            }
+            &::before {
+              top: -55px;
+              border-radius: 45%;
+            }
+            &::after {
+              top: -51px;
+              opacity: 0.5;
+              border-radius: 47%;
             }
           }
-          &:hover &_pto_bg::before,&:hover &_pto_bg::after{
-            animation: roateOne 10s linear infinite;
-          }
         }
-        &_text{
-          width: 170px;
-          min-width: 170px;
-          position: relative;
-          .el-form-item{
-            margin-bottom: 4px!important;
-            margin-right: 0px!important;
-          }
-          &_tit{
-            width: 100px;
-            min-height: 29px;
-            font-size: 12px;
-            border-bottom: 1px solid #D8D8D8;
-            overflow:hidden;
-            text-overflow:ellipsis;
-            white-space:nowrap;
-          }
-          &_img{
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 45px;
-            height: 45px;
-            transform: rotateZ(-50deg);
-          }
+        &:hover &_pto_bg::before,
+        &:hover &_pto_bg::after {
+          animation: roateOne 10s linear infinite;
+        }
+      }
+      &_text {
+        width: 170px;
+        min-width: 170px;
+        position: relative;
+        .el-form-item {
+          margin-bottom: 4px !important;
+          margin-right: 0 !important;
+        }
+        &_tit {
+          width: 100px;
+          min-height: 29px;
+          font-size: 12px;
+          border-bottom: 1px solid #d8d8d8;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        &_img {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          width: 45px;
+          height: 45px;
+          transform: rotateZ(-50deg);
         }
       }
     }
   }
-  @keyframes roateOne {
-    0% {
-      transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    50% {
-      transform: translate(-50%, -1%) rotateZ(180deg);
-    }
-    100% {
-      transform: translate(-50%, -0%) rotateZ(360deg);
-    }
+}
+
+@keyframes roateOne {
+  0% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
   }
-  @keyframes roateTwo {
-    0% {
-      transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    50% {
-      transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    100% {
-      transform: translate(-50%, -0%) rotateZ(0deg);
+  50% {
+    transform: translate(-50%, -1%) rotateZ(180deg);
+  }
+  100% {
+    transform: translate(-50%, -0%) rotateZ(360deg);
+  }
+}
+
+@keyframes roateTwo {
+  0% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
+  }
+  50% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
+  }
+  100% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
+  }
+}
+</style>
+<style lang="scss">
+  .el-select-dropdown__wrap {
+    max-height: 200px;
+  }
+  .header_main .dataList_item .el-card__body {
+    padding: 0 !important;
+  }
+  .header_main .dataList_item_body_text .el-form-item {
+    .el-form-item__label {
+      font-size: 12px;
     }
   }
 </style>

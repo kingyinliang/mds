@@ -1,26 +1,26 @@
 <template>
   <el-col>
     <div class="main">
-      <el-card class="searchCard newCard" style="margin: 0">
+      <el-card class="searchCard newCard" style="margin: 0;">
         <el-row type="flex">
           <el-col :span="21">
           </el-col>
           <el-col :span="3" >
           </el-col>
         </el-row>
-        <el-row style="text-align:right" class="buttonCss">
+        <el-row style="text-align: right;" class="buttonCss">
         </el-row>
         <div class="toggleSearchBottom">
           <i class="el-icon-caret-top"></i>
         </div>
       </el-card>
     </div>
-    <div class="main" style="padding-top: 0px">
+    <div class="main" style="padding-top: 0;">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
-        <el-tabs  ref='tabs' v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px;overflow: hidden">
+        <el-tabs  ref='tabs' v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px; overflow: hidden;">
           <el-tab-pane name="1">
             <span slot="label" class="spanview">
               <el-tooltip class="item" effect="dark" :content="'haha'" placement="top-start">

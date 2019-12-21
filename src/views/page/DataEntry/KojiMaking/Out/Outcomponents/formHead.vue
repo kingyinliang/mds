@@ -18,7 +18,7 @@
       <p class="el-input">{{formHeader.productDate ? formHeader.productDate : ''}}</p>
     </el-form-item>
     <el-form-item label="入罐号：">
-      <el-select v-model="formHeader.inPotNo" placeholder="请选择" filterable size="small" style="width: 145px" :disabled="!(CraftControlStatus !== 'submit')">
+      <el-select v-model="formHeader.inPotNo" placeholder="请选择" filterable size="small" style="width: 145px;" :disabled="!(CraftControlStatus !== 'submit')">
         <el-option :label="iteam.holderName" :value="iteam.holderId" v-for="iteam in InPot" :key="iteam.holderId"></el-option>
       </el-select>
     </el-form-item>
@@ -73,19 +73,20 @@ export default {
 }
 </script>
 <style lang="scss">
-  .topform{
-    .el-form-item__content{
+  .topform {
+    .el-form-item__content {
       height: 32px;
-      border-bottom: 1px solid #D8D8D8;
+      border-bottom: 1px solid #d8d8d8;
     }
   }
 </style>
 <style lang="scss" scoped>
-  .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-    margin-bottom: 8px!important;
+  .el-form-item--mini.el-form-item,
+  .el-form-item--small.el-form-item {
+    margin-bottom: 8px !important;
   }
-  .el-input{
-    width: 145px!important;
+  .el-input {
+    width: 145px !important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

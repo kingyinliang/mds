@@ -6,7 +6,7 @@
           <el-form :inline="true" :model="dataForm" size="small" label-width="68px" >
             <el-form-item>
               <el-input placeholder="用户名" v-model="dataForm.workNum" class="input-with-select">
-                <el-select v-model="dataForm.isPermis" slot="prepend" placeholder="请选择" style="width: 90px">
+                <el-select v-model="dataForm.isPermis" slot="prepend" placeholder="请选择" style="width: 90px;">
                   <el-option label="有权限" value="0"></el-option>
                   <el-option label="无权限" value="1"></el-option>
                 </el-select>
@@ -27,7 +27,7 @@
             header-row-class-name="tableHead"
             :data="UserList"
             tooltip-effect="dark"
-            style="width: 100%;margin-bottom: 20px">
+            style="width: 100%; margin-bottom: 20px;">
             <el-table-column
               type="index"
               label="序号"

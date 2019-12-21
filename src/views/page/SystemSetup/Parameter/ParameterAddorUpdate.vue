@@ -3,7 +3,7 @@
     :title="type? id? '修改类型':'新增类型':id? '修改参数':'新增参数'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <div style="height: 330px;overflow: auto">
+    <div style="height: 330px; overflow: auto;">
       <el-form :model="dataForm" :rules="dataForm" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="125px">
         <el-form-item label="工厂：">
           <span v-if="!type">{{dataForm.factoryName}}</span>

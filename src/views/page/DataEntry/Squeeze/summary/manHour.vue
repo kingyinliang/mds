@@ -1,7 +1,7 @@
 <template>
 <div>
   <el-row class="clearfix">
-    <el-button type="primary" style="float: right" size="small" :disabled="!isRedact" @click="GetTime">获取工时</el-button>
+    <el-button type="primary" style="float: right;" size="small" :disabled="!isRedact" @click="GetTime">获取工时</el-button>
   </el-row>
   <el-table ref="table1" header-row-class-name="tableHead" @row-dblclick="GetLog" :data="timeDate" tooltip-effect="dark">
     <el-table-column label="状态" width='95'>

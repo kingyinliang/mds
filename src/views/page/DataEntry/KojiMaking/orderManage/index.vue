@@ -7,25 +7,25 @@
             <el-col>
               <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
-                  <el-select size="small" v-model="params.factoryId" class="selectwpx" style="width:150px" @change="changeOptions('factory')">
+                  <el-select size="small" v-model="params.factoryId" class="selectwpx" style="width: 150px;" @change="changeOptions('factory')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="生产车间：">
-                  <el-select size="small" v-model="params.workshopId" class="selectwpx" style="width:150px" @change="changeOptions('workshop')">
+                  <el-select size="small" v-model="params.workshopId" class="selectwpx" style="width: 150px;" @change="changeOptions('workshop')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="订单日期：" class="selectwpx">
-                  <el-date-picker size="small" type="date" v-model="params.orderDate" value-format="yyyy-MM-dd" style="width:150px"></el-date-picker>
+                  <el-date-picker size="small" type="date" v-model="params.orderDate" value-format="yyyy-MM-dd" style="width: 150px;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="订单号：" >
-                  <el-input size="small" type="text" v-model.trim="params.orderNo" placeholder='请输入' style="width:150px"/>
+                  <el-input size="small" type="text" v-model.trim="params.orderNo" placeholder='请输入' style="width: 150px;"/>
                 </el-form-item>
                 <el-form-item label="订单状态：">
-                  <el-select size="small" v-model="params.orderStatus" class="selectwpx" style="width:150px">
+                  <el-select size="small" v-model="params.orderStatus" class="selectwpx" style="width: 150px;">
                     <el-option label="请选择" value=""></el-option>
                     <el-option label="已同步" value="已同步"></el-option>
                     <el-option label="未录入" value="已拆分"></el-option>
@@ -37,17 +37,17 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item class="floatr">
-                  <el-button type="primary" size="small" @click="getOrderList()" style="float:right" v-if="isAuth('sys:order:orderlist')">查询</el-button>
+                  <el-button type="primary" size="small" @click="getOrderList()" style="float: right;" v-if="isAuth('sys:order:orderlist')">查询</el-button>
                 </el-form-item>
               </el-form>
             </el-col>
           </el-row>
         </el-card>
-        <el-row :gutter="5" v-if="searched" style="margin-top:5px;">
+        <el-row :gutter="5" v-if="searched" style="margin-top: 5px;">
           <el-col :span="12">
             <el-card>
-              <el-row style="margin-bottom:5px;" >
-                <el-col style="font-size:16px;font-weight:500;color:#000">订单管理</el-col>
+              <el-row style="margin-bottom: 5px;" >
+                <el-col style="font-size: 16px; font-weight: 500; color: #000;">订单管理</el-col>
               </el-row>
               <el-row>
                 <el-col>
@@ -126,12 +126,12 @@
           </el-col>
           <el-col :span="12" v-if="showdetails">
             <el-card>
-              <el-row  style="margin-bottom:5px;">
-                <el-col :span="12" style="font-size:16px;font-weight:500;color:#000">
+              <el-row  style="margin-bottom: 5px;">
+                <el-col :span="12" style="font-size: 16px; font-weight: 500; color: #000;">
                   订单明细
                 </el-col>
-                <el-col :span="12" class="rowButton" style='margin-top:-13px'>
-                   <el-button type="primary" size="small"  style="float:right" @click="delDetail">删除</el-button>
+                <el-col :span="12" class="rowButton" style='margin-top: -13px;'>
+                   <el-button type="primary" size="small"  style="float: right;" @click="delDetail">删除</el-button>
                 </el-col>
               </el-row>
               <el-row>
@@ -270,7 +270,7 @@
                 <span>制曲日期</span>
               </template>
               <template slot-scope="scope">
-                <el-date-picker v-model="scope.row.inKjmDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" size="small" style="width:135px" ></el-date-picker>
+                <el-date-picker v-model="scope.row.inKjmDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" size="small" style="width: 135px;" ></el-date-picker>
               </template>
             </el-table-column>
             <el-table-column label="生产日期" width="170">
@@ -279,7 +279,7 @@
                 <span>生产日期</span>
               </template>
               <template slot-scope="scope">
-                <el-date-picker v-model="scope.row.productDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" size="small"  style="width:135px"></el-date-picker>
+                <el-date-picker v-model="scope.row.productDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" size="small"  style="width: 135px;"></el-date-picker>
               </template>
             </el-table-column>
             <el-table-column
@@ -294,8 +294,8 @@
           </el-table>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="splitOrder()">保存</el-button>
+          <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="splitOrder()">保存</el-button>
         </div>
       </el-dialog>
       <el-dialog title="明细修改" :visible.sync="dialogFormVisible2" width="450px">
@@ -327,8 +327,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="dialogFormVisible2 = false">取消</el-button>
-          <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="modifyDetial()">保存</el-button>
+          <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible2 = false">取消</el-button>
+          <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="modifyDetial()">保存</el-button>
         </div>
       </el-dialog>
     </el-col>
@@ -772,166 +772,166 @@ export default class Index extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-@import '@/assets/scss/_common.scss';
+@import "@/assets/scss/_common.scss";
 </style>
 <style lang="scss" scoped>
-  .box-item{
-    height:220px;
-    box-sizing:border-box;
-    background:rgba(255,255,255,1);
-    border-radius:2px;
-    border:1px solid rgba(232,232,232,1);
-    .box-item-top{
-      height:178px;
-      padding:10px 10px;
-      padding-bottom:0px;
-      border-bottom: 1px solid rgba(232,232,232,1);
-      .box-item-title{
-        display:flex;
-        flex:1;
-        justify-content:space-between;
-        height:34px;
-        .box-item-title-name{
-          display:flex;
-          flex:1;
-          :first-child{
-            height:30px;
-            width:30px;
-            border-radius:15px;
-            background:#FFBF00;
-            font-size:12px;
-            font-weight:500;
-            color:#fff;
-            line-height:30px;
-            text-align:center;
-          }
-          :nth-child(2){
-            font-size:16px;
-            font-weight:400;
-            color:rgba(0,0,0,0.85);
-            line-height:22px;
-            margin-top:4px;
-            margin-left:5px;
-          }
+.box-item {
+  height: 220px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 2px;
+  border: 1px solid rgba(232, 232, 232, 1);
+  .box-item-top {
+    height: 178px;
+    padding: 10px 10px;
+    padding-bottom: 0;
+    border-bottom: 1px solid rgba(232, 232, 232, 1);
+    .box-item-title {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      height: 34px;
+      .box-item-title-name {
+        display: flex;
+        flex: 1;
+        :first-child {
+          height: 30px;
+          width: 30px;
+          border-radius: 15px;
+          background: #ffbf00;
+          font-size: 12px;
+          font-weight: 500;
+          color: #fff;
+          line-height: 30px;
+          text-align: center;
         }
-        .box-item-title-state{
-          flex:1;
-          font-size:14px;
-          font-weight:500;
-          color:rgba(0,0,0,0.65);
-          line-height:20px;
-          text-align:right;
-          margin-top:4px;
-          &:before{
-            content:'';
-            display: inline-block;
-            height:6px;
-            width:6px;
-            margin-right:10px;
-            margin-bottom:2px;
-            background:rgba(126,211,33,1)
-          }
+        :nth-child(2) {
+          font-size: 16px;
+          font-weight: 400;
+          color: rgba(0, 0, 0, 0.85);
+          line-height: 22px;
+          margin-top: 4px;
+          margin-left: 5px;
         }
       }
-      .box-item-container{
-        display:flex;
-        flex:1;
-        justify-content:space-between;
-        height:129px;
-        .box-item-container-left{
-          display:flex;
-          justify-content:center;
-          width:130px;
-          padding-top:10px;
-          .box-item-container-img{
-            width:94px;
-            height:86px;
-            background: url('~@/assets/img/fajiaoguan.png')
-          }
+      .box-item-title-state {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.65);
+        line-height: 20px;
+        text-align: right;
+        margin-top: 4px;
+        &::before {
+          content: "";
+          display: inline-block;
+          height: 6px;
+          width: 6px;
+          margin-right: 10px;
+          margin-bottom: 2px;
+          background: rgba(126, 211, 33, 1);
         }
-        .box-item-container-right{
-          flex:1;
-          display:flex;
-          flex-direction:column;
-          margin-left:10px;
-          .box-item-container-item{
-            flex:1;
-            display:flex;
-            justify-content:space-between;
-            .name{
-              width:60px;
-              font-size:12px;
-              font-weight:400;
-              color:rgba(0,0,0,0.45);
-              line-height:20px;
-            }
-            .detail{
-              flex:1;
-              font-size:14px;
-              font-weight:500;
-              color:rgba(0,0,0,0.65);
-              line-height:17px;
-            }
+      }
+    }
+    .box-item-container {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      height: 129px;
+      .box-item-container-left {
+        display: flex;
+        justify-content: center;
+        width: 130px;
+        padding-top: 10px;
+        .box-item-container-img {
+          width: 94px;
+          height: 86px;
+          background: url("~@/assets/img/fajiaoguan.png");
+        }
+      }
+      .box-item-container-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        .box-item-container-item {
+          flex: 1;
+          display: flex;
+          justify-content: space-between;
+          .name {
+            width: 60px;
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.45);
+            line-height: 20px;
+          }
+          .detail {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.65);
+            line-height: 17px;
           }
         }
       }
     }
-    .box-item-bottom{
-      height:40px;
-      box-sizing:border-box;
-      display:flex;
-      justify-content:space-between;
-      background:rgba(247,249,250,1);
-      border-radius:0px 0px 2px 2px;
-      .box-item-bottom-item{
-        flex:1;
-        text-align:center;
-        line-height:40px;
-        font-size:12px;
-        font-weight:500;
-        color:rgba(0,0,0,0.65);
-        &:hover{
-          color:#fff;
-          background:#1890FF;
-          cursor:pointer
-        }
-      }
-      .box-item-bottom-split{
-        width:1px;
-        height:16px;
-        background:rgba(232,232,232,1);
-        margin-top:12px;
+  }
+  .box-item-bottom {
+    height: 40px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    background: rgba(247, 249, 250, 1);
+    border-radius: 0 0 2px 2px;
+    .box-item-bottom-item {
+      flex: 1;
+      text-align: center;
+      line-height: 40px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.65);
+      &:hover {
+        color: #fff;
+        background: #1890ff;
+        cursor: pointer;
       }
     }
- }
-.rowButton{
-  button{
-    margin: 0px 3px!important;
+    .box-item-bottom-split {
+      width: 1px;
+      height: 16px;
+      background: rgba(232, 232, 232, 1);
+      margin-top: 12px;
+    }
   }
 }
-.operator{
-  font-size:14px;
-  font-weight:400;
-  color:rgba(24,144,255,1);
-  line-height:22px;
-  display:flex;
-  &:hover{
-    cursor:pointer
+.rowButton {
+  button {
+    margin: 0 3px !important;
   }
 }
-.operator .split{
-  height:22px;
-  width:14px;
-  background: url('~@/assets/img/chaifen.png');
-  background-position:center center;
-  background-repeat:no-repeat;
+.operator {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(24, 144, 255, 1);
+  line-height: 22px;
+  display: flex;
+  &:hover {
+    cursor: pointer;
+  }
 }
-.operator .check{
-  height:22px;
-  width:14px;
-  background:url('~@/assets/img/heshi.png');
-  background-position:center center;
-  background-repeat:no-repeat;
+.operator .split {
+  height: 22px;
+  width: 14px;
+  background: url("~@/assets/img/chaifen.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.operator .check {
+  height: 22px;
+  width: 14px;
+  background: url("~@/assets/img/heshi.png");
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 // .operator:nth-child(2){
 //   &:after{
@@ -944,22 +944,22 @@ export default class Index extends Vue {
 // }
 </style>
 <style lang='scss'>
-.dialog__class{
-  border-radius:6px 6px 0px 0px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+.dialog__class {
+  border-radius: 6px 6px 0 0 !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
-  .reqI{
+  .reqI {
     color: red;
   }
-  .rowDel{
+  .rowDel {
     display: none;
   }
 }

@@ -7,32 +7,32 @@
             <el-col>
               <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
-                  <el-select v-model="params.factoryId" class="selectwpx" style="width:140px" @change="changeOptions('factory')">
+                  <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="生产车间：">
-                  <el-select v-model="params.workshopId" class="selectwpx" style="width:140px" @change="changeOptions('workshop')">
+                  <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px;" @change="changeOptions('workshop')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="布浆线：">
-                  <el-select v-model="params.productlineId" class="selectwpx" style="width:140px" @change="changeOptions('productline')">
+                  <el-select v-model="params.productlineId" class="selectwpx" style="width: 140px;" @change="changeOptions('productline')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in productlineList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="发酵罐：">
-                  <el-select v-model="params.fermentPotNo" class="selectwpx" style="width:140px" @change="changeOptions('fermentPot')">
+                  <el-select v-model="params.fermentPotNo" class="selectwpx" style="width: 140px;" @change="changeOptions('fermentPot')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="(item, index) in fermentPotList" :key="index" :label="item.holderName" :value="item.holderId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                  <el-date-picker type="date" v-model="params.startDate" value-format="yyyy-MM-dd" style="width:140px"></el-date-picker>
-                  - <el-date-picker type="date" v-model="params.endDate" value-format="yyyy-MM-dd" style="width:140px"></el-date-picker>
+                  <el-date-picker type="date" v-model="params.startDate" value-format="yyyy-MM-dd" style="width: 140px;"></el-date-picker>
+                  - <el-date-picker type="date" v-model="params.endDate" value-format="yyyy-MM-dd" style="width: 140px;"></el-date-picker>
                 </el-form-item>
                 <el-form-item class="floatr">
                   <el-button type="primary" size="small" @click="getCompleteData()" v-if='isQueryAuth()'>查询</el-button>
@@ -42,8 +42,8 @@
             </el-col>
           </el-row>
         </el-card>
-        <el-row v-show="searched" style="margin-top:5px;">
-          <div style="min-height:320px">
+        <el-row v-show="searched" style="margin-top: 5px;">
+          <div style="min-height: 320px;">
             <el-table border  header-row-class-name="tableHead" :data="dataList">
               <el-table-column label="工厂"  width="180" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
@@ -96,7 +96,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            <el-row style="font-size:14px;line-height:30px;margin-top:10px">
+            <el-row style="font-size: 14px; line-height: 30px; margin-top: 10px;">
             </el-row>
           </div>
           <el-row>
@@ -333,7 +333,7 @@ export default class Index extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-@import '@/assets/scss/_common.scss';
+@import "@/assets/scss/_common.scss";
 </style>
 <style lang="scss" scoped>
 .box-item {
@@ -342,23 +342,19 @@ export default class Index extends Vue {
   background: rgba(255, 255, 255, 1);
   border-radius: 2px;
   border: 1px solid rgba(232, 232, 232, 1);
-
   .box-item-top {
     height: 178px;
     padding: 10px 10px;
-    padding-bottom: 0px;
+    padding-bottom: 0;
     border-bottom: 1px solid rgba(232, 232, 232, 1);
-
     .box-item-title {
       display: flex;
       justify-content: space-between;
       flex: 1;
       height: 34px;
-
       .box-item-title-name {
         display: flex;
         flex: 1;
-
         :first-child {
           height: 30px;
           width: 30px;
@@ -370,7 +366,6 @@ export default class Index extends Vue {
           line-height: 30px;
           text-align: center;
         }
-
         :nth-child(2) {
           font-size: 16px;
           font-weight: 400;
@@ -380,7 +375,6 @@ export default class Index extends Vue {
           margin-left: 5px;
         }
       }
-
       .box-item-title-state {
         flex: 1;
         font-size: 14px;
@@ -389,7 +383,6 @@ export default class Index extends Vue {
         line-height: 20px;
         text-align: right;
         margin-top: 4px;
-
         &::before {
           content: "";
           display: inline-block;
@@ -397,10 +390,9 @@ export default class Index extends Vue {
           width: 6px;
           margin-right: 10px;
           margin-bottom: 2px;
-          background: rgba(126, 211, 33, 1)
+          background: rgba(126, 211, 33, 1);
         }
       }
-
       .box-item-title-state-nopass {
         flex: 1;
         font-size: 14px;
@@ -409,7 +401,7 @@ export default class Index extends Vue {
         line-height: 20px;
         text-align: right;
         margin-top: 4px;
-        &:before {
+        &::before {
           content: "";
           display: inline-block;
           height: 6px;
@@ -420,37 +412,31 @@ export default class Index extends Vue {
         }
       }
     }
-
-    .box-item-container{
+    .box-item-container {
       display: flex;
       flex: 1;
       justify-content: space-between;
       height: 129px;
-
       .box-item-container-left {
         display: flex;
         justify-content: center;
         width: 130px;
         padding-top: 10px;
-
         .box-item-container-img {
           width: 94px;
           height: 86px;
           background: url("~@/assets/img/fajiaoguan.png");
         }
       }
-
       .box-item-container-right {
         flex: 1;
         display: flex;
         flex-direction: column;
         margin-left: 10px;
-
         .box-item-container-item {
           flex: 1;
           display: flex;
           justify-content: space-between;
-
           .name {
             width: 60px;
             font-size: 12px;
@@ -458,7 +444,6 @@ export default class Index extends Vue {
             color: rgba(0, 0, 0, 0.45);
             line-height: 20px;
           }
-
           .detail {
             flex: 1;
             font-size: 14px;
@@ -473,15 +458,13 @@ export default class Index extends Vue {
       }
     }
   }
-
   .box-item-bottom {
     height: 40px;
     box-sizing: border-box;
-    display:flex;
+    display: flex;
     justify-content: space-between;
     background: rgba(247, 249, 250, 1);
     border-radius: 0 0 2px 2px;
-
     .box-item-bottom-item {
       flex: 1;
       text-align: center;
@@ -489,14 +472,12 @@ export default class Index extends Vue {
       font-size: 12px;
       font-weight: 500;
       color: rgba(0, 0, 0, 0.65);
-
       &:hover {
         color: #fff;
         background: #1890ff;
         cursor: pointer;
       }
     }
-
     .box-item-bottom-split {
       width: 1px;
       height: 16px;
@@ -511,19 +492,22 @@ export default class Index extends Vue {
   }
 }
 .box-card {
-  .pro-line { border-bottom: 1px solid #dcdfe6; }
-  .pro-line p { color: red; font-size: 16px; letter-spacing: 0.1em; }
-
+  .pro-line {
+    border-bottom: 1px solid #dcdfe6;
+  }
+  .pro-line p {
+    color: red;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+  }
   b {
     font-size: 16px;
     line-height: 32px;
     float: left;
   }
-
   .item {
     margin-top: 20px;
     display: flex;
-
     img {
       float: left;
       width: 220px;
@@ -532,24 +516,19 @@ export default class Index extends Vue {
       border: 1px solid #dcdfe6;
       margin-right: 20px;
     }
-
     .itemForm {
       flex: 1;
-
       p {
         color: #8a979e;
       }
     }
-
     .margb20px {
       margin-bottom: 10px;
     }
   }
 }
-
 .el-row {
   margin-bottom: 20px;
-
   &:last-child {
     margin-bottom: 0;
   }

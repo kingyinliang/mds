@@ -33,7 +33,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="订单：">
-          <el-input v-model.trim="formHeader.orderNo" style="width:180px"></el-input>
+          <el-input v-model.trim="formHeader.orderNo" style="width: 180px;"></el-input>
         </el-form-item>
         <el-form-item label="移动类型：">
           <el-select v-model="formHeader.moveType" filterable class="width180px">
@@ -48,7 +48,7 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <el-tabs type="border-card" v-model="activeName" @tab-click="TabClick" class="NewDaatTtabs" style="margin-top:5px">
+    <el-tabs type="border-card" v-model="activeName" @tab-click="TabClick" class="NewDaatTtabs" style="margin-top: 5px;">
       <el-tab-pane name="1">
         <span slot="label" class="spanview">
           <el-button>待调整</el-button>
@@ -131,9 +131,9 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="pages.total">
       </el-pagination>
-      <el-row style="margin:20px 0">
-        <div style="display:block; float:left;">移动数量合计（方）：</div>
-        <div style="display:block; float:left; width:150px; border-bottom:solid 1px;">{{MoveTotal}}</div>
+      <el-row style="margin: 20px 0;">
+        <div style="display: block; float: left;">移动数量合计（方）：</div>
+        <div style="display: block; float: left; width: 150px; border-bottom: solid 1px;">{{MoveTotal}}</div>
       </el-row>
     </el-tabs>
   </div>
@@ -343,6 +343,6 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
 
 </style>

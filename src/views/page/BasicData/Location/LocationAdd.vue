@@ -4,7 +4,7 @@
       :close-on-click-modal="false"
       :visible.sync="visible"
       class="locationdialog1">
-      <div style="width: 400px;margin: auto">
+      <div style="width: 400px; margin: auto;">
         <el-form ref="addLo" :model="formatDate" :rules="dataRule" size="small" label-width="110px" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
           <el-form-item label="工厂：" prop="factory">
             <el-select v-model="formatDate.factory" @change="ChangeFactory">
@@ -208,11 +208,12 @@ export default {
 </script>
 
 <style lang="scss">
-  .locationdialog1{
-    .el-select,input{
-      width: 100%!important;
+  .locationdialog1 {
+    .el-select,
+    input {
+      width: 100% !important;
     }
-    .el-dialog{
+    .el-dialog {
       min-width: 450px;
     }
   }

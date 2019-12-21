@@ -182,7 +182,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .footer{
+  .footer {
     text-align: center;
     width: 100%;
     position: absolute;
@@ -190,7 +190,7 @@ export default {
     color: rgba(0, 0, 0, 0.45);
     line-height: 20px;
     font-size: 12px;
-    a{
+    a {
       font-size: 14px;
       color: rgba(0, 0, 0, 0.45);
       margin: 0 10px;
@@ -201,38 +201,41 @@ export default {
     0% {
       opacity: 0;
       -webkit-transform: translate3d(-100%, 0, 0) rotate(-0deg);
-      transform: translate3d(-100%, 0, 0) rotate(-0deg)
+      transform: translate3d(-100%, 0, 0) rotate(-0deg);
     }
     to {
       opacity: 1;
       -webkit-transform: none;
-      transform: none
+      transform: none;
     }
   }
 
   .rollIn {
     -webkit-animation-name: rollIn;
-    animation-name: rollIn
+    animation-name: rollIn;
   }
   .animated {
     -webkit-animation-duration: 1s;
     animation-duration: 1s;
     -webkit-animation-fill-mode: both;
-    animation-fill-mode: both
+    animation-fill-mode: both;
   }
 
   .animated.infinite {
     -webkit-animation-iteration-count: infinite;
-    animation-iteration-count: infinite
+    animation-iteration-count: infinite;
   }
 
   .animated.hinge {
     -webkit-animation-duration: 2s;
-    animation-duration: 2s
+    animation-duration: 2s;
   }
 
-  .animated.bounceIn, .animated.bounceOut, .animated.flipOutX, .animated.flipOutY {
-    -webkit-animation-duration: .75s;
-    animation-duration: .75s
+  .animated.bounceIn,
+  .animated.bounceOut,
+  .animated.flipOutX,
+  .animated.flipOutY {
+    -webkit-animation-duration: 0.75s;
+    animation-duration: 0.75s;
   }
 </style>

@@ -2,10 +2,10 @@
   <div class="main">
     <el-card>
       <div class="titleLeft">
-        <i class="iconfont factory-kucun" style="color:#666666; margin-right:10px"></i>发酵罐分布情况
-        <el-button type="primary" size="small" @click="ExportExcelA(true)"  v-if="isAuth('report:production:fermentationExport')" style="background-color:#1890FF; color:#FFFFFF; float:right">导出</el-button>
+        <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>发酵罐分布情况
+        <el-button type="primary" size="small" @click="ExportExcelA(true)"  v-if="isAuth('report:production:fermentationExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
       </div>
-      <el-table :data="headerInfo" border header-row-class-name="tableHead" style="margin-top:10px">
+      <el-table :data="headerInfo" border header-row-class-name="tableHead" style="margin-top: 10px;">
         <el-table-column label="区域" show-overflow-tooltip prop="holderArea"></el-table-column>
         <el-table-column label="空罐" show-overflow-tooltip prop="empty"></el-table-column>
         <el-table-column label="投料中" show-overflow-tooltip prop="feeding" ></el-table-column>
@@ -19,10 +19,10 @@
         <el-table-column label="JY罐数" show-overflow-tooltip prop="jy"></el-table-column>
         <el-table-column label="发酵一总罐数" show-overflow-tooltip prop="sum" width="110"></el-table-column>
       </el-table>
-      <div class="titleLeft" style="margin-top:15px">
-        <i class="iconfont factory-icon_function_keyongkucun" style="color:#666666; margin-right:10px"></i>发酵总库存列表
+      <div class="titleLeft" style="margin-top: 15px;">
+        <i class="iconfont factory-icon_function_keyongkucun" style="color: #666; margin-right: 10px;"></i>发酵总库存列表
       </div>
-      <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top:10px">
+      <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
         <el-table-column label="发酵罐编号" show-overflow-tooltip prop="holderNo" width="110"></el-table-column>
         <el-table-column label="状态" show-overflow-tooltip prop="holderStatus"></el-table-column>
         <el-table-column label="发酵罐容量(M³)" show-overflow-tooltip prop="holderHold"></el-table-column>
@@ -112,5 +112,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.titleLeft {font-weight:bold; margin:0; line-height:32px;}
+.titleLeft {
+  font-weight: bold;
+  margin: 0;
+  line-height: 32px;
+}
 </style>

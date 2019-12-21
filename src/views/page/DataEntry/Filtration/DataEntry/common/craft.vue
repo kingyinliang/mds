@@ -4,15 +4,15 @@
       <el-row :gutter="20">
         <el-col :span="8" v-for="(item, index) in filterList" :key="index">
           <div class="grid-content">
-            <el-row style="flex-grow:1">
-              <el-col :span="10" style="padding-left:16px;">
+            <el-row style="flex-grow: 1;">
+              <el-col :span="10" style="padding-left: 16px;">
                 <div class="title">{{item.deviceName}}</div>
                 <div class="content">
                   请点击下方操作按钮，<br>进行相应操作
                 </div>
               </el-col>
               <el-col :span="14">
-                <img src="@/assets/img/Filtration.png" alt="" style="width:92%; margin-top:19px;">
+                <img src="@/assets/img/Filtration.png" alt="" style="width: 92%; margin-top: 19px;">
               </el-col>
             </el-row>
             <el-row class="footer">
@@ -23,7 +23,7 @@
           </div>
         </el-col>
       </el-row>
-      <el-table :data="techList" @row-dblclick="EditTechInfo" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top:10px">
+      <el-table :data="techList" @row-dblclick="EditTechInfo" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
         <el-table-column type="index" label="序号" width="50"></el-table-column>
         <el-table-column label="过滤机号" show-overflow-tooltip width="120" prop="deviceName"></el-table-column>
         <el-table-column label="过滤前温度(°C)" prop="filterBefTem"></el-table-column>
@@ -45,7 +45,7 @@
     </el-card>
     <el-card>
       <div class="audit"><i class="iconfont factory-shouqicaidan"></i><span>辅料领用</span></div>
-      <el-table :data="supMaterialList" border header-row-class-name="tableHead" style="margin-top:10px">
+      <el-table :data="supMaterialList" border header-row-class-name="tableHead" style="margin-top: 10px;">
         <el-table-column type="index" label="序号" width="50"></el-table-column>
         <el-table-column label="过滤机号" show-overflow-tooltip width="120" prop="deviceName"></el-table-column>
         <el-table-column label="物料" show-overflow-tooltip width="200">
@@ -103,33 +103,33 @@
       </el-table>
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">{{this.techInfo.deviceName}}</div>
+      <div slot="title" style="line-height: 59px;">{{this.techInfo.deviceName}}</div>
       <el-form :model="techInfo" size="small" label-width="160px" ref="techInfo" @keyup.enter.native="SaveDialog('techInfo')">
         <el-form-item label="过滤前温度(℃)：">
-          <el-input v-model="techInfo.filterBefTem" style="width:220px"></el-input>
+          <el-input v-model="techInfo.filterBefTem" style="width: 220px;"></el-input>
         </el-form-item>
         <el-form-item label="过滤前压力(Mpa)：">
-          <el-input v-model="techInfo.filterBefPre" style="width:220px"></el-input>
+          <el-input v-model="techInfo.filterBefPre" style="width: 220px;"></el-input>
         </el-form-item>
         <el-form-item label="过滤后压力(Mpa)：">
-          <el-input v-model="techInfo.filterEndPre" style="width:220px"></el-input>
+          <el-input v-model="techInfo.filterEndPre" style="width: 220px;"></el-input>
         </el-form-item>
         <el-form-item label="感官指标有无异常：">
-          <el-select v-model="techInfo.abnormal" style="width:220px">
+          <el-select v-model="techInfo.abnormal" style="width: 220px;">
             <el-option v-for="(item, index) in abnormalList" :key="index" :value="item" :label="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="回压数量(方)：">
-          <el-input v-model="techInfo.backPreNum" style="width:220px"></el-input>
+          <el-input v-model="techInfo.backPreNum" style="width: 220px;"></el-input>
         </el-form-item>
         <el-form-item label="助滤剂预涂量(kg)：">
-          <el-input min="0" onkeyup="value=value.replace(/[^\d]+/g,'')" v-model="techInfo.filterAidBef" style="width:220px"></el-input>
+          <el-input min="0" onkeyup="value=value.replace(/[^\d]+/g,'')" v-model="techInfo.filterAidBef" style="width: 220px;"></el-input>
         </el-form-item>
         <el-form-item label="助滤剂添加量(kg)：">
-          <el-input min="0" onkeyup="value=value.replace(/[^\d]+/g,'')" v-model="techInfo.filterAidAdd" style="width:220px"></el-input>
+          <el-input min="0" onkeyup="value=value.replace(/[^\d]+/g,'')" v-model="techInfo.filterAidAdd" style="width: 220px;"></el-input>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input v-model="techInfo.remark" style="width:220px"></el-input>
+          <el-input v-model="techInfo.remark" style="width: 220px;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -582,44 +582,51 @@ export default {
 </script>
 
 <style lang="scss">
-.rowDel{
+.rowDel {
   display: none;
 }
 .grid-content {
-  height:176px;
-  border-radius:2px;
-  border:1px solid rgba(233,233,233,1);
+  height: 176px;
+  border-radius: 2px;
+  border: 1px solid rgba(233, 233, 233, 1);
   margin-bottom: 15px;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   .title {
     font-size: 14px;
-    font-weight:bold;
-    color:rgba(0,0,0,0.85);
-    line-height:24px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.85);
+    line-height: 24px;
     margin-top: 20px;
   }
-  .content{
+  .content {
     margin-top: 7px;
-    font-size:12px;
-    font-weight:400;
-    color:rgba(153,153,153,1);
-    line-height:22px;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(153, 153, 153, 1);
+    line-height: 22px;
   }
   .footer {
-    background:rgba(247,249,250,1);border-top:1px solid rgba(233,233,233,1);
+    background: rgba(247, 249, 250, 1);
+    border-top: 1px solid rgba(233, 233, 233, 1);
     .button {
-      border:none; background:none; padding:0px; border-right:1px solid #E8E8E8; width:100%; line-height:20px; margin: 10px 0;
+      border: none;
+      background: none;
+      padding: 0;
+      border-right: 1px solid #e8e8e8;
+      width: 100%;
+      line-height: 20px;
+      margin: 10px 0;
     }
   }
 }
-.audit{
+.audit {
   line-height: 40px;
-  i{
+  i {
     font-size: 22px;
     float: left;
   }
-  span{
+  span {
     margin-left: 12px;
     font-size: 16px;
     font-weight: bold;

@@ -39,7 +39,7 @@
             </div>
           </div>
           <div class="totalContainer_center_bottom">
-            <p class="totalContainer_dataItem_title" style="line-height: 30px">产量分布情况</p>
+            <p class="totalContainer_dataItem_title" style="line-height: 30px;">产量分布情况</p>
             <div id="pie" class="pie"></div>
           </div>
         </div>
@@ -260,60 +260,56 @@ export default {
 </script>
 
 <style lang="scss">
-  .DataEchartsContent{
-    background: url('~@/assets/img/echartsBg.png') no-repeat;
-    background-size:100% 100%;
-  }
+.DataEchartsContent {
+  background: url("~@/assets/img/echartsBg.png") no-repeat;
+  background-size: 100% 100%;
+}
 </style>
 
 <style lang="scss" scoped>
-  .DataEchartsContent{
-    background: url('~@/assets/img/echartsBg.png') no-repeat;
-    background-size:100% 100%;
-  }
-.pageMain{
+.pageMain {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
 }
-.totalContainer{
+.totalContainer {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding-left: 120px;
-  .totalContainer_box{
+  .totalContainer_box {
     display: flex;
     justify-content: left;
   }
-  &_dataItem{
+  &_dataItem {
     transition: all 1s;
-    background: url('~@/assets/img/echartsItemBg.png') no-repeat;
-    background-size:100% 100%;
-    &_title{
+    background: url("~@/assets/img/echartsItemBg.png") no-repeat;
+    background-size: 100% 100%;
+    &_title {
       font-size: 14px;
       font-weight: normal;
       font-stretch: normal;
       line-height: 26px;
       text-align: center;
-      letter-spacing: 0px;
+      letter-spacing: 0;
       color: #2fd5ff;
       margin-bottom: 10px;
     }
-    &_tit{
+    &_tit {
       width: 268px;
       margin: auto;
-      span{
+      span {
         float: left;
         font-size: 12px;
         color: #00dfff;
         padding-bottom: 4px;
         border-bottom: 2px transparent solid;
-        border-image: linear-gradient(to right,#2d77f3,#21e7ff) 1 10;
+        border-image: linear-gradient(to right, #2d77f3, #21e7ff) 1 10;
       }
-      img{
+      img {
         width: 98px;
         height: 8px;
         margin-top: 4px;
@@ -321,162 +317,198 @@ export default {
       }
     }
   }
-  &_center{
+
+  &_center {
     width: 558px;
-    &_top{
+
+    &_top {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      &_imgBox{
+
+      &_imgBox {
         position: relative;
-        &_img{
+
+        &_img {
           position: absolute;
           text-align: center;
           color: white;
-          background: url('~@/assets/img/echartsItemCircle.png') no-repeat;
-          background-size:100% 100%;
-          &:nth-child(1){
+          background: url("~@/assets/img/echartsItemCircle.png") no-repeat;
+          background-size: 100% 100%;
+
+          p {
+            font-weight: 400;
+          }
+
+          p span {
+            font-size: 24px;
+            font-weight: bold;
+            font-stretch: normal;
+            letter-spacing: 0;
+            color: #00ffd4;
+          }
+
+          &:nth-child(1) {
             left: -185px;
           }
-          &:nth-child(3){
+
+          &:nth-child(3) {
             left: 185px;
           }
-          p:nth-child(1){
+
+          p:nth-child(1) {
             padding-top: 45px;
           }
-          p:nth-child(2){
+
+          p:nth-child(2) {
             margin: 10px 0;
-          }
-          p{
-            font-weight: 400;
-            span{
-              font-size: 24px;
-              font-weight: bold;
-              font-stretch: normal;
-              letter-spacing: 0px;
-              color: #00ffd4;
-            }
           }
         }
       }
     }
-    &_bottom{
+
+    &_bottom {
       transition: all 2s;
       margin: auto;
-      background: url('~@/assets/img/echartsItemBottomBg.png') no-repeat;
-      background-size:100% 100%;
+      background: url("~@/assets/img/echartsItemBottomBg.png") no-repeat;
+      background-size: 100% 100%;
     }
   }
 }
-.smallBox{
+
+.smallBox {
   transform: scale(0.7);
   transition: all 2s;
 }
-.bigBox{
+
+.bigBox {
   transform: scale(1);
   transition: all 2s;
 }
+
 @media (max-width: 1367px) {
-  .NightingaleRose{
+  .NightingaleRose {
     width: 100%;
     height: 164px;
   }
-  .pillar{
+
+  .pillar {
     width: 100%;
     margin-top: 10px;
     height: 220px;
   }
-  .pie{
+
+  .pie {
     width: 100%;
     margin-top: 10px;
     height: 149px;
   }
+
   .totalContainer {
     &_box {
       width: 1153px;
     }
+
     &_dataItem {
       width: 297px;
       height: 479px;
     }
-    &_center{
+
+    &_center {
       width: 558px;
-      &_top{
+
+      &_top {
         width: 100%;
         height: 280px;
-        &_imgBox{
+
+        &_imgBox {
           width: 214px;
           height: 209px;
-          &_img{
+
+          &_img {
             width: 214px;
             height: 209px;
             font-size: 12px;
           }
         }
       }
-      &_bottom{
+
+      &_bottom {
         width: 518px;
         height: 199px;
       }
     }
   }
 }
+
 @media (min-width: 1367px) {
-  .NightingaleRose{
+  .NightingaleRose {
     width: 100%;
     height: 219px;
   }
-  .pillar{
+
+  .pillar {
     width: 100%;
     margin-top: 10px;
     height: 285px;
   }
-  .pie{
+
+  .pie {
     width: 100%;
     height: 179px;
   }
-  .totalContainer{
-    &_box{
+
+  .totalContainer {
+    &_box {
       width: 1406px;
     }
-    &_dataItem{
+
+    &_dataItem {
       width: 359px;
       height: 612px;
-      &_title{
+
+      &_title {
         margin-bottom: 20px;
       }
     }
-    &_center{
+
+    &_center {
       width: 688px;
-      &_top{
+
+      &_top {
         width: 100%;
         height: 357px;
-        &_imgBox{
+
+        &_imgBox {
           width: 285px;
           height: 280px;
-          &_img{
+
+          &_img {
             width: 285px;
             height: 280px;
             font-size: 16px;
-            &:nth-child(1){
+
+            &:nth-child(1) {
               left: -225px;
             }
-            &:nth-child(3){
+
+            &:nth-child(3) {
               left: 225px;
             }
-            p:nth-child(1){
+
+            p:nth-child(1) {
               padding-top: 60px;
             }
-            p{
-              span{
-                font-size: 28px;
-              }
+
+            p span {
+              font-size: 28px;
             }
           }
         }
       }
-      &_bottom{
+
+      &_bottom {
         width: 635px;
         height: 255px;
       }

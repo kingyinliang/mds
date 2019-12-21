@@ -1,21 +1,21 @@
 <template>
   <div class="header_main">
-    <el-card class="searchCard  newCard" style="margin-bottom: 5px">
+    <el-card class="searchCard  newCard" style="margin-bottom: 5px;">
       <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform multi_row">
         <el-form-item label="生产工厂：">
-          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产车间：">
-          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="容器类型：" label-width="70px">
-          <el-select v-model="formHeader.holderTypes" multiple filterable placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.holderTypes" multiple filterable placeholder="请选择" style="width: 180px;">
             <el-option label="请选择" value=""></el-option>
             <el-option label="发酵罐" value="001"></el-option>
             <el-option label="原汁罐" value="013"></el-option>
@@ -24,13 +24,13 @@
           <!--<el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="formHeader.productDate" style="width: 180px"></el-date-picker>-->
         </el-form-item>
         <el-form-item label="容器号：" label-width="70px">
-          <el-select v-model="formHeader.holderNo" filterable placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.holderNo" filterable placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.HOLDER_NAME" v-for="(item, index) in PotList" :key="index" :value="item.HOLDER_NO"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产物料：" label-width="70px">
-          <el-select v-model="formHeader.materialCode" filterable placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.materialCode" filterable placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.MATERIAL_NAME" v-for="(item, index) in MaterialList" :key="index" :value="item.MATERIAL_CODE"></el-option>
           </el-select>
@@ -46,7 +46,7 @@
     <el-tabs ref='tabs' v-model="activeName" class="NewDaatTtabs" type="border-card">
       <el-tab-pane name="1">
         <span slot="label" class="spanview">转储</span>
-        <el-table ref="table1" header-row-class-name="tableHead" :data="DataList.slice((formHeader.currPage-1)*formHeader.pageSize,formHeader.currPage*formHeader.pageSize)" @selection-change="handleSelectionChange" border tooltip-effect="dark" style="width: 100%;margin-bottom: 20px">
+        <el-table ref="table1" header-row-class-name="tableHead" :data="DataList.slice((formHeader.currPage-1)*formHeader.pageSize,formHeader.currPage*formHeader.pageSize)" @selection-change="handleSelectionChange" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
           <el-table-column type="selection" :selectable='checkboxT' width="34"></el-table-column>
           <el-table-column prop="holderName" label="领用罐号" width="100" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="verifyMan" label="物料" width="150" :show-overflow-tooltip="true"><template slot-scope="scope" width="120">{{scope.row.materialCode + ' ' + scope.row.materialName}}</template></el-table-column>
@@ -75,7 +75,7 @@
       </el-tab-pane>
       <el-tab-pane name="2">
         <span slot="label" class="spanview">返工</span>
-        <el-table ref="table1" header-row-class-name="tableHead" :data="DataList.slice((formHeader.currPage-1)*formHeader.pageSize,formHeader.currPage*formHeader.pageSize)" @selection-change="handleSelectionChange1" border tooltip-effect="dark" style="width: 100%;margin-bottom: 20px">
+        <el-table ref="table1" header-row-class-name="tableHead" :data="DataList.slice((formHeader.currPage-1)*formHeader.pageSize,formHeader.currPage*formHeader.pageSize)" @selection-change="handleSelectionChange1" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
           <el-table-column type="selection" :selectable='checkboxT' width="34"></el-table-column>
           <el-table-column prop="moveType" label="移动类型" width="100" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="holderName" label="领用罐号" width="100" :show-overflow-tooltip="true"></el-table-column>

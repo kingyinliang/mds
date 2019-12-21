@@ -15,32 +15,32 @@
             </el-select>
         </el-form-item>
         <el-form-item label="发酵罐号：">
-          <el-select v-model="formHeader.potNo" placeholder="请选择" multiple @change="ChangeSearch()" filterable allow-create default-first-op style="width: 140px">
+          <el-select v-model="formHeader.potNo" placeholder="请选择" multiple @change="ChangeSearch()" filterable allow-create default-first-op style="width: 140px;">
             <el-option v-for="(sole, index) in this.guanList" :key="index" :value="sole.holderNo" :label="sole.holderName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="类别：">
-          <el-select v-model="formHeader.type" placeholder="请选择" @change="ChangeSearch()" style="width: 140px">
+          <el-select v-model="formHeader.type" placeholder="请选择" @change="ChangeSearch()" style="width: 140px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.halfType" v-for="(item, index) in typeList" :key="index" :value="item.halfType"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态：">
-          <el-select v-model="formHeader.status" placeholder="请选择" @change="ChangeSearch()" style="width: 140px">
+          <el-select v-model="formHeader.status" placeholder="请选择" @change="ChangeSearch()" style="width: 140px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.value" v-for="(item, index) in holderStatusList" :key="index" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="发酵日期：">
-          <el-date-picker type="date" v-model="formHeader.commitDateOne" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width:140px"></el-date-picker> - <el-date-picker type="date" v-model="formHeader.commitDateTwo" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width:140px"></el-date-picker>
+          <el-date-picker type="date" v-model="formHeader.commitDateOne" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;"></el-date-picker> - <el-date-picker type="date" v-model="formHeader.commitDateTwo" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;"></el-date-picker>
         </el-form-item>
-        <el-form-item style="float:right">
-          <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('juice:pot:List')">查询</el-button>
+        <el-form-item style="float: right;">
+          <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right;" v-if="isAuth('juice:pot:List')">查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
     <el-card class="secondcard">
-      <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top:10px">
+      <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
         <el-table-column label="发酵罐编号" show-overflow-tooltip prop="productDate" width="110"></el-table-column>
         <el-table-column label="状态" show-overflow-tooltip prop="factoryName"></el-table-column>
         <el-table-column label="发酵罐容量(M³)" show-overflow-tooltip prop="workShopName"></el-table-column>

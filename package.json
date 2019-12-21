@@ -33,6 +33,10 @@
     "src/**/*.{js,vue}": [
       "eslint --fix",
       "git add"
+    ],
+    "src/**/*.{html,vue,css,sass,scss}": [
+        "stylelint --fix",
+        "git add"
     ]
   },
   "dependencies": {

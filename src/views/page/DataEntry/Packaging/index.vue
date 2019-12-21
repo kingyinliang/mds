@@ -15,27 +15,27 @@
             </el-select>
           </el-form-item>
           <el-form-item label="日期：" label-width="45px">
-            <el-date-picker type="date" placeholder="选择" v-model="plantList.productDate" value-format="yyyyMMdd" style="width:140px"></el-date-picker>
+            <el-date-picker type="date" placeholder="选择" v-model="plantList.productDate" value-format="yyyyMMdd" style="width: 140px;"></el-date-picker>
           </el-form-item>
           <el-form-item label="订单：" label-width="45px">
-            <el-input type="text" v-model="plantList.orderNo" clearable style="width:140px"></el-input>
+            <el-input type="text" v-model="plantList.orderNo" clearable style="width: 140px;"></el-input>
           </el-form-item>
           <el-form-item class="floatr">
             <el-button type="primary" @click="GetOrderList()">查询</el-button>
           </el-form-item>
         </el-form>
       </el-card>
-      <el-card style="margin-top:5px" v-if="list.length">
+      <el-card style="margin-top: 5px;" v-if="list.length">
         <el-row :gutter="10">
-          <el-col :span="12" v-for="(item, index) in list" :key="index" style="margin-bottom: 10px">
+          <el-col :span="12" v-for="(item, index) in list" :key="index" style="margin-bottom: 10px;">
             <el-card class="box-card">
             <el-form :model="item" size="small" label-position="right" label-width="85px">
               <div class="clearfix pro-line">
                 <el-form-item label="产线：">
                   <p>
                     {{item.productLineName}}
-                    <el-button @click="goPro(item)" type="primary" size="small" style="float: right" v-if="isAuth('pkg:order:list')">数据录入</el-button>
-                    <span style="float: right;color: #8a979e;font-size: 14px;min-width: 150px">订单状态：<i :style="{'color': item.orderStatus === 'noPass'? 'red': item.orderStatus === 'checked'? '#67C23A' : ''}">{{item.orderStatus === 'submit'? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass'?  '审核不通过' : item.orderStatus === 'saved'? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus}}</i></span>
+                    <el-button @click="goPro(item)" type="primary" size="small" style="float: right;" v-if="isAuth('pkg:order:list')">数据录入</el-button>
+                    <span style="float: right; color: #8a979e; font-size: 14px; min-width: 150px;">订单状态：<i :style="{'color': item.orderStatus === 'noPass'? 'red': item.orderStatus === 'checked'? '#67C23A' : ''}">{{item.orderStatus === 'submit'? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass'?  '审核不通过' : item.orderStatus === 'saved'? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus}}</i></span>
                   </p>
                 </el-form-item>
               </div>
@@ -279,24 +279,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.hiddenP{
+.hiddenP {
   max-height: 64px;
   overflow: hidden;
-  margin-top: 0!important;
+  margin-top: 0 !important;
 }
-.box-card{
-  .pro-line { border-bottom: 1px solid #dcdfe6; }
-  .pro-line p { color: red; font-size: 16px; letter-spacing: .1em; }
-  .pro-line .el-form-item__label { }
-  b{
+.box-card {
+  .pro-line {
+    border-bottom: 1px solid #dcdfe6;
+  }
+  .pro-line p {
+    color: red;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+  }
+  b {
     font-size: 16px;
     line-height: 32px;
     float: left;
   }
-  .item{
+  .item {
     margin-top: 20px;
     display: flex;
-    img{
+    img {
       float: left;
       width: 220px;
       height: 220px;
@@ -304,9 +309,9 @@ export default {
       border: 1px solid #dcdfe6;
       margin-right: 20px;
     }
-    .itemForm{
+    .itemForm {
       flex: 1;
-      p{
+      p {
         color: #8a979e;
       }
     }

@@ -3,7 +3,7 @@
   <el-col :span="24">
     <el-table
       :data="tableData"
-      style="width: 100%">
+      style="width: 100%;">
       <el-table-column
         label="日期"
         width="180">

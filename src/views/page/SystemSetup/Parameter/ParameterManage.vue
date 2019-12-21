@@ -2,21 +2,21 @@
   <el-col >
     <div class="main mainHeader">
       <el-card>
-        <el-row style="margin-bottom:10px;">
+        <el-row style="margin-bottom: 10px;">
           <el-select v-model="factory" >
             <el-option label="请选择" value="" ></el-option>
             <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
           </el-select>
-          <el-input v-model="searchType" placeholder="请输入" suffix-icon="el-icon-search" style="width: 200px"></el-input>
+          <el-input v-model="searchType" placeholder="请输入" suffix-icon="el-icon-search" style="width: 200px;"></el-input>
           <el-button type="primary" @click="getdictList">查询</el-button>
         </el-row>
         <el-row type="flex" :gutter="10">
-          <el-col :span="8" style="min-width: 400px">
+          <el-col :span="8" style="min-width: 400px;">
             <el-card>
               <div slot="header" class="clearfix">
                 <div slot="header" class="clearfix">
-                  <span style="float: left;line-height: 40px">参数类型</span>
-                  <el-button type="text" icon="el-icon-plus" style="display: inline-block;float: right; padding: 12px;" @click="addorupdate('type')" v-if="isAuth('sys:dict:save')"></el-button>
+                  <span style="float: left; line-height: 40px;">参数类型</span>
+                  <el-button type="text" icon="el-icon-plus" style="display: inline-block; float: right; padding: 12px;" @click="addorupdate('type')" v-if="isAuth('sys:dict:save')"></el-button>
                 </div>
               </div>
               <div>
@@ -26,7 +26,7 @@
                   border
                   @row-click="setTypeDetail"
                   tooltip-effect="dark"
-                  style="width: 100%;margin-bottom: 20px">
+                  style="width: 100%; margin-bottom: 20px;">
                   <el-table-column type="index" width="50" label="序号"></el-table-column>
                   <el-table-column :show-overflow-tooltip=true label="工厂" prop="factoryName"></el-table-column>
                   <el-table-column prop="type" :show-overflow-tooltip=true label="参数类型编码" width="110"></el-table-column>
@@ -52,11 +52,11 @@
           <el-col :span="16">
             <el-card>
               <div slot="header" class="clearfix">
-                <span style="float: left;line-height: 40px">参数</span>
-                <el-button type="text" icon="el-icon-plus" style="display: inline-block;float: right; padding: 12px;" @click="addorupdate('param',false,true)" v-if="isAuth('sys:dict:save')"></el-button>
+                <span style="float: left; line-height: 40px;">参数</span>
+                <el-button type="text" icon="el-icon-plus" style="display: inline-block; float: right; padding: 12px;" @click="addorupdate('param',false,true)" v-if="isAuth('sys:dict:save')"></el-button>
               </div>
               <div>
-                <el-table ref="table1" header-row-class-name="tableHead" :data="parameter" border tooltip-effect="dark" style="width: 100%;margin-bottom: 20px">
+                <el-table ref="table1" header-row-class-name="tableHead" :data="parameter" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                   <el-table-column type="index" width="50" label="序号"></el-table-column>
                   <el-table-column :show-overflow-tooltip=true label="工厂" prop="factoryName" width="100"></el-table-column>
                   <el-table-column prop="type" :show-overflow-tooltip=true label="参数类型编码"></el-table-column>
@@ -205,10 +205,12 @@ export default {
 </script>
 
 <style lang="scss">
-  .el-card__header {
-    padding: 13px 15px;
-  }
-  .mainHeader .el-card__header { padding: 0 15px !important; }
+.el-card__header {
+  padding: 13px 15px;
+}
+.mainHeader .el-card__header {
+  padding: 0 15px !important;
+}
 </style>
 <style scoped>
 .el-button[type="text"] {

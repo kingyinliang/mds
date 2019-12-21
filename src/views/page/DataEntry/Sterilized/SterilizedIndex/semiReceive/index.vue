@@ -1,19 +1,19 @@
 <template>
   <div class="header_main">
-    <el-card class="searchCard  newCard" style="margin-bottom: 5px">
+    <el-card class="searchCard  newCard" style="margin-bottom: 5px;">
       <el-row type="flex">
         <el-col>
           <form-head :formHeader="formHeader"></form-head>
         </el-col>
-        <el-col style="width: 100px">
-          <div style="padding-top: 0px;float: right" :style="{'color': orderStatus === 'noPass'? 'red' : '' }"><span style="width: 5px;height: 5px;float: left;background: #1890FF;border-radius: 50%;margin-top: 7px;margin-right: 3px" :style="{'background': orderStatus === 'noPass'? 'red' : '#1890FF' }"></span>{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : '未录入' }}</div>
+        <el-col style="width: 100px;">
+          <div style="padding-top: 0; float: right;" :style="{'color': orderStatus === 'noPass'? 'red' : '' }"><span style="width: 5px; height: 5px; float: left; background: #1890ff; border-radius: 50%; margin-top: 7px; margin-right: 3px;" :style="{'background': orderStatus === 'noPass'? 'red' : '#1890FF' }"></span>{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : '未录入' }}</div>
         </el-col>
       </el-row>
-      <el-row style="text-align:right;position: absolute;bottom:10px;right: 20px;" class="buttonCss">
-        <template style="float:right; margin-left: 10px;">
+      <el-row style="text-align: right; position: absolute; bottom: 10px; right: 20px;" class="buttonCss">
+        <template style="float: right; margin-left: 10px;">
           <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:semiMaterial:mySaveOrUpdate')">{{isRedact?'取消':'编辑'}}</el-button>
         </template>
-        <template v-if="isRedact" style="float:right; margin-left: 10px;">
+        <template v-if="isRedact" style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('ste:semiMaterial:mySaveOrUpdate')">保存</el-button>
           <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('ste:semiMaterial:submit')">提交</el-button>
         </template>

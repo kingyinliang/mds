@@ -23,11 +23,11 @@
               </el-select>
             </el-form-item>
             <el-form-item class="floatr">
-              <template style="float:right;">
+              <template style="float: right;">
                 <el-button type="primary" size="small" @click="SearchList" v-if="isAuth('prs:drench:drenchList')">查询</el-button>
                 <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('prs:dernchUpdate')">{{isRedact?'取消':'编辑'}}</el-button>
               </template>
-              <template v-if="isRedact" style="float:right;">
+              <template v-if="isRedact" style="float: right;">
                 <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('prs:dernchUpdate')">保存</el-button>
                 <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('prs:dernchUpdate')">提交</el-button>
               </template>
@@ -40,10 +40,10 @@
       </div>
     </el-card>
     <div class="tableCard">
-      <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+      <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
         <i class="el-icon-caret-bottom"></i>
       </div>
-      <el-card style="margin-top:5px" v-show="contentshow">
+      <el-card style="margin-top: 5px;" v-show="contentshow">
         <el-table :data="waterList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead">
           <el-table-column type="selection" width="35"></el-table-column>
           <el-table-column label="工序" width="50px">自淋</el-table-column>
@@ -57,7 +57,7 @@
           <el-table-column label="布浆结束时间" prop="pulpEndDate"></el-table-column>
           <el-table-column label="自淋结束时间" prop="drenchEndDate" width="200">
             <template slot-scope="scope">
-              <el-date-picker v-model="scope.row.drenchEndDate" type="datetime" @input="changedDranch(scope.row)" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width:175px" :disabled="!isRedact"></el-date-picker>
+              <el-date-picker v-model="scope.row.drenchEndDate" type="datetime" @input="changedDranch(scope.row)" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 175px;" :disabled="!isRedact"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="自淋时间(H)" prop="drenchTime"></el-table-column>
@@ -79,7 +79,7 @@
     </div>
     <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
       <el-row>
-        <el-col style="width: 500px">
+        <el-col style="width: 500px;">
           <el-transfer
             filterable
             :titles="['未分配人员', '已分配人员']"
@@ -299,24 +299,25 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .width180px {
   width: 180px;
 }
 .searchCard {
-  .el-button--primary,.el-button--primary:focus{
-    color: #000000;
-    background-color: #FFFFFF;
-    border-color: #D9D9D9;
+  .el-button--primary,
+  .el-button--primary:focus {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
   }
-  .el-button--primary:hover{
-    background-color: #1890FF;
-    color: #FFFFFF
+  .el-button--primary:hover {
+    background-color: #1890ff;
+    color: #fff;
   }
-  .el-button--primary:first-child{
-    background-color: #1890FF;
-    color: #FFFFFF;
-    border-color: #1890FF;
+  .el-button--primary:first-child {
+    background-color: #1890ff;
+    color: #fff;
+    border-color: #1890ff;
   }
 }
 </style>

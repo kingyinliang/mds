@@ -4,8 +4,8 @@
     <div>
       <el-form :model="dataForm" status-icon :rules="dataRule" ref="dataForm" size="small" @keyup.enter.native="dataFormSubmit()" label-width="100px">
         <el-form-item label="所属部门：">
-          <span style="margin-right: 10px" v-if="userId">{{dataForm.deptName}}</span>
-          <span style="margin-right: 10px" v-if="!userId">{{deptName}}</span>
+          <span style="margin-right: 10px;" v-if="userId">{{dataForm.deptName}}</span>
+          <span style="margin-right: 10px;" v-if="!userId">{{deptName}}</span>
           <el-button type="text" @click="UpdateOrg" size="small" v-if="userId">请选择</el-button>
         </el-form-item>
         <el-form-item label="人员工号：">
@@ -34,7 +34,7 @@
     </span>
   </el-dialog>
   <el-dialog title="选择组织架构" :close-on-click-modal="false" :visible.sync="visible1">
-    <p style="margin-bottom: 10px">右击组织架构选择该部门</p>
+    <p style="margin-bottom: 10px;">右击组织架构选择该部门</p>
     <el-tree :data="OrgTree" node-key="deptId" :expand-on-click-node="false" @node-contextmenu="SetDept"></el-tree>
   </el-dialog>
  </div>

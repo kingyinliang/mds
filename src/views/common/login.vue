@@ -4,16 +4,16 @@
       您的浏览器不支持 video 标签。
     </video>
     <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="loginForm" @keyup.enter.native="submitForm('ruleForm2')">
-      <img src="@/assets/img/MDSlogo.png" alt="" style="width: 300px;margin-bottom: 25px">
+      <img src="@/assets/img/MDSlogo.png" alt="" style="width: 300px; margin-bottom: 25px;">
       <el-form-item prop="user">
         <el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号"><i slot="prefix" class="iconfont factory-zhanghaodenglu"></i></el-input>
       </el-form-item>
       <el-form-item prop="pass">
         <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" placeholder="密码"><i slot="prefix" class="iconfont factory-mima"></i></el-input>
-        <el-button type="text" @click="resetForm('ruleForm2')" class="reset"><i class="iconfont factory-zhongzhi" style="font-size: 12px"></i>重置</el-button>
+        <el-button type="text" @click="resetForm('ruleForm2')" class="reset"><i class="iconfont factory-zhongzhi" style="font-size: 12px;"></i>重置</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm2')" style="width: 100%;margin-top: 20px">登录</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm2')" style="width: 100%; margin-top: 20px;">登录</el-button>
       </el-form-item>
     </el-form>
     <div class="loginFormBg"></div>
@@ -211,33 +211,29 @@ export default {
 </script>
 
 <style lang="scss">
-video{
+video {
   object-fit: fill;
 }
-.loginForm{
+.loginForm {
   width: 320px;
   height: 254px;
   position: fixed;
   top: 200px;
   right: 105px;
-  /*top: 50%;*/
-  /*left: 50%;*/
-  /*margin-left: -160px;*/
-  /*margin-top: -127px;*/
   z-index: 999;
-  label{
-    color: white!important;
+  label {
+    color: white !important;
   }
-  input{
-    background: #ffffff!important;
+  input {
+    background: #fff !important;
   }
-  .el-form-item__content{
-    margin-left: 0!important;
+  .el-form-item__content {
+    margin-left: 0 !important;
   }
-  .el-input__prefix{
+  .el-input__prefix {
     margin-left: 6px;
   }
-  .reset{
+  .reset {
     float: right;
     color: white;
     position: absolute;
@@ -247,21 +243,14 @@ video{
     font-size: 12px;
   }
 }
-.loginFormBg{
+.loginFormBg {
   border-radius: 10px;
   background-color: rgba(60, 60, 60, 0.6);
-  box-shadow: 0px 5px 19px 1px
-  rgba(214, 221, 237, 0.45);
-  /*width: 426px;*/
+  box-shadow: 0 5px 19px 1px rgba(214, 221, 237, 0.45);
   width: 405px;
-  /*height: 354px;*/
   height: 321px;
   position: fixed;
   top: 165px;
   right: 65px;
-  /*top: 50%;*/
-  /*left: 50%;*/
-  /*margin-left: -213px;*/
-  /*margin-top: -177px;*/
 }
 </style>

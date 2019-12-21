@@ -1,7 +1,7 @@
 module.exports = {
-  // 'defaultSeverity': 'error',
+  'defaultSeverity': 'error',
   'extends': [ 'stylelint-config-standard' ],
-  'processors': ["stylelint-processor-html"],
+  // 'processors': ["stylelint-processor-html"],
   'plugins': [ 'stylelint-scss' ],
   'rules': {
     "color-hex-case": "lower", // 颜色值为小写字母(stylelint-config-standard)
@@ -26,10 +26,11 @@ module.exports = {
     "no-empty-source": null, // 不允许空的来源
     // "at-rule-no-unknown": null, // 不允许at-rules不明
     // // "indentation": 2, // 指定缩进(stylelint-config-standard)
-    "max-nesting-depth": 5, // 允许嵌套的深度为3
+    "max-nesting-depth": 6, // 允许嵌套的深度为3
     // "no-duplicate-selectors": true, // 不允许重复的选择器
     "no-eol-whitespace": true, // 不允许行尾空白(stylelint-config-standard)
     // // "no-invalid-double-slash-comments": true // 不允许双斜杠注释(/ /…)不支持CSS(stylelint-config-standard)
-    "max-empty-lines": null // 设值 2 解决 html DOM 被误判问题
+    "max-empty-lines": null, // 设值 2 解决 html DOM 被误判问题
+    "rule-empty-line-before":null // 前面空行
   }
 };

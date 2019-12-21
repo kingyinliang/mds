@@ -9,10 +9,10 @@
               <el-form-item label="生产日期：" class="dateinput">
                 <el-row>
                   <el-col :span="12">
-                    <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                    <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
                   </el-col>
                   <el-col :span="12">
-                    <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                    <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
                   </el-col>
                 </el-row>
               </el-form-item>
@@ -38,7 +38,7 @@
           border
           tooltip-effect="dark"
           header-row-class-name="tableHead"
-          style="width: 100%;margin-bottom: 20px">
+          style="width: 100%; margin-bottom: 20px;">
           <el-table-column
             prop="productDate"
             label="生产日期"
