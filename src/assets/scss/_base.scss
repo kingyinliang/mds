@@ -703,3 +703,58 @@ img {
   top: 90px;
   z-index: 1000;
 }
+/* ui2.0 queryHead*/
+.header_main {
+  .queryHead {
+    .el-card__body {
+      padding: 16px 16px 8px 16px !important;
+    }
+    .el-form-item--mini.el-form-item,
+    .el-form-item--small.el-form-item {
+      margin-bottom: 8px !important;
+    }
+    .el-date-editor {
+      .el-input__inner {
+        padding-right: 46px;
+        padding-left: 15px;
+      }
+      .el-input__prefix {
+        right: 0;
+        left: auto;
+        background: #487BFF;
+        border-radius: 0 4px 4px 0;
+        .el-input__icon {
+          width: 32px;
+          color: white;
+        }
+      }
+      .el-input__suffix {
+        right: 26px;
+      }
+    }
+  }
+  .queryHead .el-select,
+  .cardList .el-select {
+    .el-input__inner {
+      padding-right: 32px;
+      padding-left: 15px;
+    }
+    .el-input__suffix {
+      right: 0;
+      background: #487BFF;
+      border-radius: 0 4px 4px 0;
+      .el-input__icon {
+        width: 32px;
+        color: white;
+      }
+    }
+  }
+  .cardList{
+    margin-top: 20px;
+    .el-card__body {
+      padding: 16px !important;
+    }
+  }
+}
+
+
