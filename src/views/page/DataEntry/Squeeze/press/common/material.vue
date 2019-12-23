@@ -21,13 +21,13 @@
         <el-table-column width="195px" :key="Math.random()">
           <template slot="header"><i class="reqI">*</i><span>预压开始时间</span></template>
           <template slot-scope="scope">
-            <el-date-picker v-model="scope.row.prePressStart" type="datetime" placeholder="选择日期" @input="changePrePress(scope.row)" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width:175px" :disabled="!isRedact"></el-date-picker>
+            <el-date-picker v-model="scope.row.prePressStart" type="datetime" placeholder="选择日期" @input="changePrePress(scope.row)" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 175px;" :disabled="!isRedact"></el-date-picker>
           </template>
         </el-table-column>
         <el-table-column width="200px" :key="Math.random()">
           <template slot="header"><i class="reqI">*</i><span>预压结束时间</span></template>
           <template slot-scope="scope">
-            <el-date-picker v-model="scope.row.prePressEnd" type="datetime" placeholder="选择日期" @input="changePrePress(scope.row)" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width:175px" :disabled="!isRedact"></el-date-picker>
+            <el-date-picker v-model="scope.row.prePressEnd" type="datetime" placeholder="选择日期" @input="changePrePress(scope.row)" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 175px;" :disabled="!isRedact"></el-date-picker>
           </template>
         </el-table-column>
         <el-table-column label="预压时间(H)" prop="prePressTime" width="110px" :key="Math.random()"></el-table-column>
@@ -68,13 +68,13 @@
         <el-table-column width="195px" :key="Math.random()">
           <template slot="header"><i class="reqI">*</i><span>终压开始时间</span></template>
           <template slot-scope="scope">
-            <el-date-picker v-model="scope.row.pressStart" type="datetime" placeholder="选择日期" @input="changendPrePress(scope.row)" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width:175px" :disabled="!isRedact"></el-date-picker>
+            <el-date-picker v-model="scope.row.pressStart" type="datetime" placeholder="选择日期" @input="changendPrePress(scope.row)" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 175px;" :disabled="!isRedact"></el-date-picker>
           </template>
         </el-table-column>
         <el-table-column width="200px" :key="Math.random()">
           <template slot="header"><i class="reqI">*</i><span>终压结束时间</span></template>
           <template slot-scope="scope">
-            <el-date-picker v-model="scope.row.pressEnd" type="datetime" placeholder="选择日期" @input="changendPrePress(scope.row)" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width:175px" :disabled="!isRedact"></el-date-picker>
+            <el-date-picker v-model="scope.row.pressEnd" type="datetime" placeholder="选择日期" @input="changendPrePress(scope.row)" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 175px;" :disabled="!isRedact"></el-date-picker>
           </template>
         </el-table-column>
         <el-table-column label="终压时间(H)" prop="pressTime" width="110px" :key="Math.random()"></el-table-column>
@@ -102,7 +102,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-form :inline="true" :model="formInline" style="margin-top:10px" v-if="this.formHeader.workShopName === '压榨一车间' && this.formHeader.pressure === 2">
+      <el-form :inline="true" :model="formInline" style="margin-top: 10px;" v-if="this.formHeader.workShopName === '压榨一车间' && this.formHeader.pressure === 2">
         <el-form-item>
           <span slot="label">压榨一东碎布数（张）<i class="reqI">*</i>：</span>
           <el-input v-model="formInline.destoryNumEast" :disabled="!isRedact" size="small"></el-input>
@@ -115,7 +115,7 @@
     </el-card>
     <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
       <el-row>
-        <el-col style="width: 500px">
+        <el-col style="width: 500px;">
           <el-transfer
             filterable
             :titles="['未分配人员', '已分配人员']"
@@ -127,8 +127,8 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-          <el-button @click="visible = false" style="background-color:#fff; color:#606266; border:1px solid #dcdfe6; font-weight:500; padding:12px 20px; font-size:14px; border-radius:4px;">取消</el-button>
-          <el-button type="primary" @click="updatauser(row)" style="background-color:#1890FF; color:#FFFFFF; border-color:#1890FF; font-weight:500; padding:12px 20px; font-size:14px;border-radius: 4px;">确定</el-button>
+          <el-button @click="visible = false" style="background-color: #fff; color: #606266; border: 1px solid #dcdfe6; font-weight: 500; padding: 12px 20px; font-size: 14px; border-radius: 4px;">取消</el-button>
+          <el-button type="primary" @click="updatauser(row)" style="background-color: #1890ff; color: #fff; border-color: #1890ff; font-weight: 500; padding: 12px 20px; font-size: 14px; border-radius: 4px;">确定</el-button>
         </span>
     </el-dialog>
   </div>
@@ -357,19 +357,19 @@ export default {
 }
 </script>
 
-<style>
-.dialog-footer .el-button--primary:focus{
-  color: #000000;
-  background-color: #FFFFFF;
-  border-color: #D9D9D9;
+<style lang="scss">
+.dialog-footer .el-button--primary {
+  background-color: #1890ff;
+  color: #fff;
+  border-color: #1890ff;
 }
-.dialog-footer .el-button--primary:hover{
-  background-color: #1890FF;
-  color: #FFFFFF
+.dialog-footer .el-button--primary:focus {
+  color: #000;
+  background-color: #fff;
+  border-color: #d9d9d9;
 }
-.dialog-footer .el-button--primary{
-  background-color: #1890FF;
-  color: #FFFFFF;
-  border-color: #1890FF;
+.dialog-footer .el-button--primary:hover {
+  background-color: #1890ff;
+  color: #fff;
 }
 </style>

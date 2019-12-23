@@ -30,7 +30,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="订单编号：">
-                <el-input v-model="form.orderNo" style="width:160px"></el-input>
+                <el-input v-model="form.orderNo" style="width: 160px;"></el-input>
               </el-form-item>
               <el-form-item label="物料：">
                 <el-select v-model="form.materialCode" filterable class="width160px">
@@ -39,7 +39,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="发酵天数：">
-                <el-input v-model="form.ferDays" class="width160px" style="width:160px"></el-input>
+                <el-input v-model="form.ferDays" class="width160px" style="width: 160px;"></el-input>
               </el-form-item>
               <el-form-item label="物料类别：">
                 <el-select v-model="form.halfId" filterable class="width160px">
@@ -48,7 +48,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item class="floatr">
-                <el-button type="primary" @click="GetList()" v-if="isAuth('fer:judge:list')" size="small" style="float:right">查询</el-button>
+                <el-button type="primary" @click="GetList()" v-if="isAuth('fer:judge:list')" size="small" style="float: right;">查询</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -127,7 +127,7 @@
       </el-card>
     </div>
     <el-dialog :visible.sync="dialogVisible" width="400px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">{{this.judge.holderNo}} 类别判定</div>
+      <div slot="title" style="line-height: 59px;">{{this.judge.holderNo}} 类别判定</div>
       <el-form :model="judge" size="small" label-width="130px" :rules="judgerules" ref="judge">
         <el-form-item label="订单编号：">{{this.judge.ferOrderNo}}</el-form-item>
         <el-form-item label="物料：">{{this.judge.ferMaterialCode}}{{this.judge.ferMaterialName}}</el-form-item>
@@ -384,18 +384,20 @@ export default {
 }
 </script>
 
-<style lang="less">
-.width160px{width:160px;}
-.dialog__class{
-  border-radius:6px 6px 6px 6px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+<style lang="scss">
+.width160px {
+  width: 160px;
+}
+.dialog__class {
+  border-radius: 6px 6px 6px 6px !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
 }

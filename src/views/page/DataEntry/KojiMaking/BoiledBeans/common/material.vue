@@ -3,11 +3,11 @@
     <el-card>
       <div>
         <span class="lh32px">种曲</span>
-        <el-button type="text" class="readyshiftBtn" name="zhongar" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
-        <el-button type="primary" size="small" @click="addmaterial" :disabled="!isRedact" style="float: right"> + 新增</el-button>
+        <el-button type="text" class="readyshiftBtn" name="zhongar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
+        <el-button type="primary" size="small" @click="addmaterial" :disabled="!isRedact" style="float: right;"> + 新增</el-button>
       </div>
         <div class="zhongarBox">
-        <el-table ref="materialTable" border max-height="267" style="margin-top:10px" header-row-class-name="tableHead" :data="materialList" :row-class-name="rowDelFlag">
+        <el-table ref="materialTable" border max-height="267" style="margin-top: 10px;" header-row-class-name="tableHead" :data="materialList" :row-class-name="rowDelFlag">
           <el-input type="index"></el-input>
           <el-table-column width="125px">
             <template slot="header">
@@ -76,10 +76,10 @@
             <el-option :label="item.code +' '+ item.value" v-for="(item, index) in wheatShort" :key="index" :value="item.code +' '+ item.value"></el-option>
           </el-select>
         </p> -->
-        <el-button type="text" class="readyshiftBtn" name="wheatar" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
+        <el-button type="text" class="readyshiftBtn" name="wheatar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
       </div>
       <div class="wheatarBox">
-        <el-row style="margin-top:10px">
+        <el-row style="margin-top: 10px;">
           <el-col class="box" v-for="(sole, indexss) in MaiHoldList" :key="indexss">
             <div class="boxTitle">{{sole.holderName}}</div>
             <div class="boxContent">
@@ -94,7 +94,7 @@
                     <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="(index-2)%3 === 0"></el-progress>
                   </div>
                 </div>
-                <div class="boxText" style="height:90px" slot="reference">
+                <div class="boxText" style="height: 90px;" slot="reference">
                   <div v-for="(soles, index) in sole.pici" :key="index">
                     <div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>
                     <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="index===0"></el-progress>
@@ -104,13 +104,13 @@
                 </div>
               </el-popover>
             </div>
-            <div style="width:100%; text-align:center">
-              <el-button class="boxButton" @click="startwheat(sole)" :disabled="!isRedact" style="margin:15px auto; width:75px; float:initial; line-height:30px; height:30px;">开始领用</el-button>
-              <el-button class="boxButton" @click="endwheat(sole)" :disabled="!isRedact" style="margin:15px auto; width:75px; float:initial; line-height:30px; height:30px;">结束领用</el-button>
+            <div style="width: 100%; text-align: center;">
+              <el-button class="boxButton" @click="startwheat(sole)" :disabled="!isRedact" style="margin: 15px auto; width: 75px; float: initial; line-height: 30px; height: 30px;">开始领用</el-button>
+              <el-button class="boxButton" @click="endwheat(sole)" :disabled="!isRedact" style="margin: 15px auto; width: 75px; float: initial; line-height: 30px; height: 30px;">结束领用</el-button>
             </div>
           </el-col>
         </el-row>
-        <el-table ref="wheatTable" max-height="276" border header-row-class-name="tableHead" :data="wheatList" style="margin-top:10px" @row-dblclick="editwheat" :row-class-name="rowDelFlag">
+        <el-table ref="wheatTable" max-height="276" border header-row-class-name="tableHead" :data="wheatList" style="margin-top: 10px;" @row-dblclick="editwheat" :row-class-name="rowDelFlag">
           <el-table-column label="日期" prop="useDate" width="100"></el-table-column>
           <el-table-column label="物料" prop="materialCode" width="160">
             <template slot-scope="scope">
@@ -142,10 +142,10 @@
             <el-option :label="item.code +' '+ item.value" v-for="(item, index) in soyShort" :key="index" :value="item.code +' '+ item.value"></el-option>
           </el-select>
         </p> -->
-        <el-button type="text" class="readyshiftBtn" name="soyar" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
+        <el-button type="text" class="readyshiftBtn" name="soyar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
       </div>
       <div class="soyarBox">
-        <el-row style="margin-top:10px">
+        <el-row style="margin-top: 10px;">
           <el-col class="box" v-for="sole in DouHoldList" :key="sole.holderid">
             <div class="boxTitle">{{sole.holderName}}</div>
             <div class="boxContent">
@@ -160,7 +160,7 @@
                     <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="(index-2)%3 === 0"></el-progress>
                   </div>
                 </div>
-                <div class="boxText" slot="reference" style="height:90px">
+                <div class="boxText" slot="reference" style="height: 90px;">
                   <div v-for="(soles, index) in sole.pici" :key="index">
                     <div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>
                     <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="index===0"></el-progress>
@@ -170,12 +170,12 @@
                 </div>
               </el-popover>
             </div>
-            <div style="text-align:center; width:140px; margin:5px auto; overflow:hidden;">
+            <div style="text-align: center; width: 140px; margin: 5px auto; overflow: hidden;">
               <el-button type="button" class="boxButton" @click="rusoyM(sole)" :disabled="!isRedact">入罐</el-button><el-button class="boxButton" @click="chusoyM(sole)" :disabled="!isRedact">出罐</el-button>
             </div>
           </el-col>
         </el-row>
-        <el-table border ref="pulpTable" max-height="275" header-row-class-name="tableHead" :data="soyList" @row-dblclick="editsoy" :row-class-name="rowDelFlag" style="margin-top:10px">
+        <el-table border ref="pulpTable" max-height="275" header-row-class-name="tableHead" :data="soyList" @row-dblclick="editsoy" :row-class-name="rowDelFlag" style="margin-top: 10px;">
           <el-table-column label="日期" prop="pulpDate" width="110"></el-table-column>
           <el-table-column label="物料" width="190">
             <template slot-scope="scope">
@@ -204,7 +204,7 @@
       <audit-log></audit-log>
     </el-card>
     <el-dialog :title="MTitle" :visible.sync="dialogFormVisibleMai" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">{{this.MTitle}}</div>
+      <div slot="title" style="line-height: 59px;">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrulestar" ref="wheatstar">
         <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">
           <el-select v-model="wheat.whtBatch" placeholder="请选择">
@@ -224,7 +224,7 @@
       </div>
     </el-dialog>
     <el-dialog :title="MTitle" :visible.sync="dialogFormVisibleMai2" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">{{this.MTitle}}</div>
+      <div slot="title" style="line-height: 59px;">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrulend" ref="wheatend">
         <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">{{wheat.whtBatch}}</el-form-item>
         <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
@@ -240,7 +240,7 @@
       </div>
     </el-dialog>
     <el-dialog :title="MTitle" :visible.sync="dialogFormVisibleMai3" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">{{this.MTitle}}</div>
+      <div slot="title" style="line-height: 59px;">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrules" ref="wheat">
         <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">
           <el-select v-model="wheat.whtBatch" placeholder="请选择">
@@ -264,7 +264,7 @@
       </div>
     </el-dialog>
     <el-dialog :title="DRTitle" :visible.sync="dialogFormVisibleDouRu" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">{{this.DRTitle}}</div>
+      <div slot="title" style="line-height: 59px;">{{this.DRTitle}}</div>
       <el-form :model="rusoy" size="small" :rules="rusoyrules" ref="rusoy">
         <el-form-item label="领用粮仓：" :label-width="formLabelWidth" prop="foodHolderId">
           <el-select v-model="rusoy.foodHolderId" @change="changCang()">
@@ -294,7 +294,7 @@
       </div>
     </el-dialog>
     <el-dialog :title="DCTitle" :visible.sync="dialogFormVisibleDouChu" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">{{this.DCTitle}}</div>
+      <div slot="title" style="line-height: 59px;">{{this.DCTitle}}</div>
       <el-form :model="chusoy" size="small" :rules="chusoyrules" ref="chusoy">
         <el-form-item label="批次：" :label-width="formLabelWidth" prop="batch">
           <!-- <el-input v-model="chusoy.batch" autocomplete="off" maxlength="10"></el-input> -->
@@ -1447,12 +1447,12 @@ export default {
 </script>
 
 <style>
-.boxContent{
+.boxContent {
   font-size: 12px;
   text-align: center;
   padding: 12px 10px 0 10px;
 }
-.boxText{
+.boxText {
   font-size: 12px;
   margin-top: 9px;
   text-align: left;
@@ -1461,33 +1461,35 @@ export default {
   line-height: 22px;
   overflow: hidden;
 }
-.boxText span{
+.boxText span {
   float: right;
 }
 </style>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .input_bommom {
   width: 147px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 32px;
-  border-bottom: solid 1px #D8D8D8;
+  border-bottom: solid 1px #d8d8d8;
 }
-.lh32px{
+.lh32px {
   line-height: 32px;
 }
 .solecontent {
   overflow: hidden;
-  p{ float: left;}
+  p {
+    float: left;
+  }
 }
-.box{
-  border:1px solid #E8E8E8;
+.box {
+  border: 1px solid #e8e8e8;
   width: 207px;
-  margin: 0px 4px 10px 4px;
-  .boxTitle{
+  margin: 0 4px 10px 4px;
+  .boxTitle {
     line-height: 32px;
-    background: #E9E9E9;
+    background: #e9e9e9;
     padding-left: 10px;
     font-weight: bold;
   }
@@ -1500,14 +1502,16 @@ export default {
     line-height: 24px;
     text-align: center;
     border-radius: 4px;
-    font-weight:400;
+    font-weight: 400;
     float: left;
-    background: #1890FF;
+    background: #1890ff;
     color: #fff;
     cursor: pointer;
-    padding: 0
+    padding: 0;
   }
-  .boxButton.is-disabled, .boxButton.is-disabled:focus, .boxButton.is-disabled:hover{
+  .boxButton.is-disabled,
+  .boxButton.is-disabled:focus,
+  .boxButton.is-disabled:hover {
     cursor: not-allowed;
     background-color: #a0cfff;
     border-color: #a0cfff;
@@ -1516,7 +1520,7 @@ export default {
 .chart-box {
   min-height: 140px;
 }
-.reqI{
+.reqI {
   color: red;
 }
 </style>

@@ -23,10 +23,10 @@
               </el-select>
             </el-form-item>
             <el-form-item label="日期：">
-              <el-date-picker v-model="formHeader.allocateDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择" style="width:140px"></el-date-picker>
+              <el-date-picker v-model="formHeader.allocateDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择" style="width: 140px;"></el-date-picker>
             </el-form-item>
             <el-form-item label="单号：">
-              <el-input style="width:150px" v-model="formHeader.orderNo"></el-input>
+              <el-input style="width: 150px;" v-model="formHeader.orderNo"></el-input>
             </el-form-item>
             <el-form-item label="状态：">
               <el-select v-model="formHeader.status" palceholder="请选择" class="width150px">
@@ -35,7 +35,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="订单号：">
-              <el-input style="width:150px" v-model="formHeader.orderId"></el-input>
+              <el-input style="width: 150px;" v-model="formHeader.orderId"></el-input>
             </el-form-item>
             <el-form-item class="floatr">
               <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('ste:allocate:allocateListTp')">查询</el-button>
@@ -48,12 +48,12 @@
         <i class="el-icon-caret-top"></i>
       </div>
     </el-card>
-    <el-tabs ref='tabs' v-model="activeName" @tab-click="handleClick" id="DaatTtabs" class="NewDaatTtabs secondcard" type="border-card" style="border-radius: 15px;overflow: hidden">
+    <el-tabs ref='tabs' v-model="activeName" @tab-click="handleClick" id="DaatTtabs" class="NewDaatTtabs secondcard" type="border-card" style="border-radius: 15px; overflow: hidden;">
       <el-tab-pane name="BL">
         <span slot="label" class="spanview">
           <el-button>调配列表</el-button>
         </span>
-        <el-table :data="dataList" @row-dblclick="GetInfo" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
+        <el-table :data="dataList" @row-dblclick="GetInfo" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top: 10px;">
           <el-table-column type="selection" width="35" :selectable="CheckBoxInit" fixed="left"></el-table-column>
           <el-table-column label="状态" prop="status" width="95"></el-table-column>
           <el-table-column label="调配单号" prop="orderNo" width="130"></el-table-column>
@@ -85,7 +85,7 @@
         <span slot="label" class="spanview">
           <el-button>分配列表</el-button>
         </span>
-        <el-table :data="dataList" @row-dblclick="GetInfo" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
+        <el-table :data="dataList" @row-dblclick="GetInfo" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top: 10px;">
           <el-table-column type="selection" width="35" :selectable="CheckBoxInit" fixed="left"></el-table-column>
           <!-- <el-table-column label="状态" prop="status" width="95"></el-table-column> -->
           <el-table-column label="分配单号" prop="orderNo" width="130"></el-table-column>
@@ -123,17 +123,17 @@
         :total="pages.totalCount">
       </el-pagination>
     </el-tabs>
-    <div class="secondcard" style="padding-top: 0">
+    <div class="secondcard" style="padding-top: 0;">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
       </div>
       <el-card>
         <el-row>
-          <el-col style="font-weight:bold;">调配订单信息</el-col>
+          <el-col style="font-weight: bold;">调配订单信息</el-col>
         </el-row>
-        <el-table :data="orderInfoList" border header-row-class-name="tableHead" style="margin-top:10px">
+        <el-table :data="orderInfoList" border header-row-class-name="tableHead" style="margin-top: 10px;">
           <el-table-column label="订单号" prop="orderNo" width="120"></el-table-column>
           <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
             <template slot-scope="scope">

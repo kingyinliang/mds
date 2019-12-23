@@ -1,21 +1,21 @@
 <template>
   <div class="header_main">
-    <el-card class="searchCard" style="margin-bottom: 5px">
+    <el-card class="searchCard" style="margin-bottom: 5px;">
       <el-row type="flex">
         <el-col>
           <form-head :formHeader="formHeader"></form-head>
         </el-col>
-        <el-col style="width: 100px">
-          <div style="padding-top: 0px;float: right" :style="{'color': orderStatus === 'noPass'? 'red' : '' }"><span style="width: 5px;height: 5px;float: left;background: #1890FF;border-radius: 50%;margin-top: 7px;margin-right: 3px" :style="{'background': orderStatus === 'noPass'? 'red' : '#1890FF' }"></span>{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : '未录入' }}</div>
+        <el-col style="width: 100px;">
+          <div style="padding-top: 0; float: right;" :style="{'color': orderStatus === 'noPass'? 'red' : '' }"><span style="width: 5px; height: 5px; float: left; background: #1890ff; border-radius: 50%; margin-top: 7px; margin-right: 3px;" :style="{'background': orderStatus === 'noPass'? 'red' : '#1890FF' }"></span>{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : '未录入' }}</div>
         </el-col>
         <img src="@/assets/img/zhang.png" alt="" class="supStatus" v-if="supStatus">
       </el-row>
-      <el-row style="text-align:right;position: absolute;bottom:10px;right: 20px;" class="buttonCss">
-        <template style="float:right; margin-left: 10px;">
+      <el-row style="text-align: right; position: absolute; bottom: 10px; right: 20px;" class="buttonCss">
+        <template style="float: right; margin-left: 10px;">
           <el-button type="primary" class="button" size="small" @click="Refresh">刷新</el-button>
           <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:supMaterial:mySaveOrUpdate')">{{isRedact?'取消':'编辑'}}</el-button>
         </template>
-        <template v-if="isRedact" style="float:right; margin-left: 10px;">
+        <template v-if="isRedact" style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('ste:supMaterial:mySaveOrUpdate')">保存</el-button>
           <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('ste:supMaterial:submit')">提交</el-button>
         </template>
@@ -27,9 +27,9 @@
           辅料添加
         </span>
         <el-card class="newCard">
-          <div class="clearfix" style="padding-top: 5px;padding-bottom: 5px">
-            <h3 style="line-height: 32px">辅料添加记录</h3>
-            <el-button type="primary" size="mini" style="float: right" :disabled="!isRedact" @click="addOver(multipleSelectionAddSup, 'addSup')" v-if="isAuth('ste:supMaterial:mySaveOrUpdate')">添加完成</el-button>
+          <div class="clearfix" style="padding-top: 5px; padding-bottom: 5px;">
+            <h3 style="line-height: 32px;">辅料添加记录</h3>
+            <el-button type="primary" size="mini" style="float: right;" :disabled="!isRedact" @click="addOver(multipleSelectionAddSup, 'addSup')" v-if="isAuth('ste:supMaterial:mySaveOrUpdate')">添加完成</el-button>
           </div>
           <el-table header-row-class-name="tableHead" :data="AddSupDate" @selection-change="handleSelectionChangeAddSup" :row-class-name="RowDelFlag" border tooltip-effect="dark">
             <el-table-column type="selection" :selectable="CheckBoxA" width="40"></el-table-column>
@@ -80,9 +80,9 @@
           </el-table>
         </el-card>
         <el-card class="newCard">
-          <div class="clearfix" style="padding-top: 5px;padding-bottom: 5px">
-            <h3 style="line-height: 32px">增补料记录</h3>
-            <el-button type="primary" size="mini" style="float: right" :disabled="!isRedact" @click="addOver(multipleSelectionSup, 'Sup')" v-if="isAuth('ste:supMaterial:mySaveOrUpdate')">添加完成</el-button>
+          <div class="clearfix" style="padding-top: 5px; padding-bottom: 5px;">
+            <h3 style="line-height: 32px;">增补料记录</h3>
+            <el-button type="primary" size="mini" style="float: right;" :disabled="!isRedact" @click="addOver(multipleSelectionSup, 'Sup')" v-if="isAuth('ste:supMaterial:mySaveOrUpdate')">添加完成</el-button>
           </div>
           <el-table header-row-class-name="tableHead" :data="SupDate" @selection-change="handleSelectionChangeSup" :row-class-name="RowDelFlag" border tooltip-effect="dark">
             <el-table-column type="selection" :selectable="CheckBoxA" width="34"></el-table-column>
@@ -142,9 +142,9 @@
       </el-tab-pane>
     </el-tabs>
     <el-dialog width="400px" title="添加确认" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible">
-      <div style="height: 160px;overflow-y: initial" :style="{'overflow-y':(addSupOverData.length > 5 || SupOverData.length > 5)? 'scroll' : 'initial'}">
-        <p style="line-height: 20px;margin-bottom: 8px" v-for="(item, index) in addSupOverData" :key="index">{{item.materialCode + ' ' + item.materialName}}已经添加{{item.receiveAmount + item.unit}},确认添加完成！</p>
-        <p style="line-height: 20px;margin-bottom: 8px" v-for="(item, index) in SupOverData" :key="index">{{item.materialCode + ' ' + item.materialName}}已经添加{{item.receiveAmount + item.unit}},确认添加完成！</p>
+      <div style="height: 160px; overflow-y: initial;" :style="{'overflow-y':(addSupOverData.length > 5 || SupOverData.length > 5)? 'scroll' : 'initial'}">
+        <p style="line-height: 20px; margin-bottom: 8px;" v-for="(item, index) in addSupOverData" :key="index">{{item.materialCode + ' ' + item.materialName}}已经添加{{item.receiveAmount + item.unit}},确认添加完成！</p>
+        <p style="line-height: 20px; margin-bottom: 8px;" v-for="(item, index) in SupOverData" :key="index">{{item.materialCode + ' ' + item.materialName}}已经添加{{item.receiveAmount + item.unit}},确认添加完成！</p>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="visible = false" size="small">取消</el-button>
@@ -573,23 +573,25 @@ export default {
 }
 </script>
 <style>
-  .yellowRow{
-    background-color: yellow!important;
+  .yellowRow {
+    background-color: yellow !important;
   }
 </style>
 <style lang="scss" scoped>
-  .reds{
+  .reds {
     color: red;
   }
-  .che{
+
+  .che {
     color: rgb(103, 194, 58);
   }
-.supStatus{
-  width: 100px;
-  height: 100px;
-  position: absolute;
-  right: 90px;
-  top: 20px;
-  transform: rotateZ(-30deg);
-}
+
+  .supStatus {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    right: 90px;
+    top: 20px;
+    transform: rotateZ(-30deg);
+  }
 </style>

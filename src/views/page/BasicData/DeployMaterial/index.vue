@@ -18,35 +18,35 @@
       </template>
     </query-table>
     <el-dialog :visible.sync="AddDialogTableVisible" :close-on-click-modal="false" width="550px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">{{addAndupdate? '新增调配物料' : '修改调配物料'}}</div>
+      <div slot="title" style="line-height: 59px;">{{addAndupdate? '新增调配物料' : '修改调配物料'}}</div>
       <el-form :model="AddDialogTable" label-width="100px" size="small" ref="AddDialogTable">
         <el-form-item label="工厂：">
-          <el-select v-model="AddDialogTable.factory" placeholder="请选择" style="width: 100%">
+          <el-select v-model="AddDialogTable.factory" placeholder="请选择" style="width: 100%;">
             <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产物料：">
-          <el-select v-model="AddDialogTable.productionMaterielCode" @change="(e)=>{AddDialogTable.productionMaterielName = productionMaterielCode.filter(it => it.MATERIAL_CODE === e)[0].MATERIAL_NAME}" filterable placeholder="请选择" style="width: 100%">
+          <el-select v-model="AddDialogTable.productionMaterielCode" @change="(e)=>{AddDialogTable.productionMaterielName = productionMaterielCode.filter(it => it.MATERIAL_CODE === e)[0].MATERIAL_NAME}" filterable placeholder="请选择" style="width: 100%;">
             <el-option :label="item.MATERIAL_CODE + ' ' + item.MATERIAL_NAME" v-for="(item, index) in productionMaterielCode" :key="index" :value="item.MATERIAL_CODE"></el-option>
           </el-select>
         </el-form-item>
         <el-row>
           <el-row style="width: 510px;" v-for="(item, index) in AddDialogTable.useMateriel" :key="index">
-            <el-col style="width: 290px">
+            <el-col style="width: 290px;">
               <el-form-item label="领用物料：">
-                <el-select v-model="item.useMaterielCode" filterable placeholder="请选择" style="width: 100%" @change="(e)=>{item.useMaterielName = useMaterielCode.filter(it => it.MATERIAL_CODE === e)[0].MATERIAL_NAME}">
+                <el-select v-model="item.useMaterielCode" filterable placeholder="请选择" style="width: 100%;" @change="(e)=>{item.useMaterielName = useMaterielCode.filter(it => it.MATERIAL_CODE === e)[0].MATERIAL_NAME}">
                   <el-option :label="item.MATERIAL_CODE + ' ' + item.MATERIAL_NAME" v-for="(item, index) in useMaterielCode" :key="index" :value="item.MATERIAL_CODE"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col style="width: 180px">
+            <el-col style="width: 180px;">
               <el-form-item label="BL_LY标识：" label-width="90px">
-                <el-select v-model="item.type" placeholder="请选择" style="width: 100%">
+                <el-select v-model="item.type" placeholder="请选择" style="width: 100%;">
                   <el-option :label="item.label" v-for="(item, index) in queryFormData[3].options" :key="index" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col style="width: 32px; margin-left: 8px">
+            <el-col style="width: 32px; margin-left: 8px;">
               <el-button type="primary" icon="el-icon-plus" circle @click="addUseMateriel" size="small" v-if="index === 0"></el-button>
               <el-button type="danger" icon="el-icon-delete" circle @click="delUseMateriel(index)" size="small" v-else ></el-button>
             </el-col>

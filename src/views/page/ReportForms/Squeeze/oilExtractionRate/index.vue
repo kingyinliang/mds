@@ -24,7 +24,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="生产日期：">
-                <el-date-picker v-model="plantList.startTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width:199px"></el-date-picker> - <el-date-picker v-model="plantList.endTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width:199px"></el-date-picker>
+                <el-date-picker v-model="plantList.startTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 199px;"></el-date-picker> - <el-date-picker v-model="plantList.endTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 199px;"></el-date-picker>
               </el-form-item>
               <el-form-item class="floatr">
                 <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('report:formPress:oilYieldList')">查询</el-button>

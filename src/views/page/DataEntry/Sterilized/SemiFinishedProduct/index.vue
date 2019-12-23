@@ -3,13 +3,13 @@
   <el-card class="searchCard  newCard ferCard">
     <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform sole_row">
       <el-form-item label="生产工厂：">
-        <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 160px">
+        <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 160px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="生产车间：">
-        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 160px">
+        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 160px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
         </el-select>
@@ -21,7 +21,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="状态：" label-width="50px">
-        <el-select v-model="formHeader.holderStatus" placeholder="请选择" style="width: 140px">
+        <el-select v-model="formHeader.holderStatus" placeholder="请选择" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option v-for="(item, index) in holderStatusList" :label="item.name" :key="index" :value="item.value"></el-option>
         </el-select>
@@ -31,22 +31,22 @@
       </el-form-item>
     </el-form>
   </el-card>
-  <el-card class="searchCard  newCard ferCard" style="margin-top:5px; padding:0px !important;"  v-show="fastS">
-    <h3 style="color: black;margin-bottom: 8px">
-      <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>半成品罐列表
+  <el-card class="searchCard  newCard ferCard" style="margin-top: 5px; padding: 0 !important;"  v-show="fastS">
+    <h3 style="color: black; margin-bottom: 8px;">
+      <i class="iconfont factory-liebiao" style="color: #666; margin-right: 10px;"></i>半成品罐列表
       <i class="gotop" @click="goPot" v-if="isAuth('ste:semi:reportForm')"><a>杀菌罐区库存情况>></a></i>
     </h3>
-    <el-row class="dataList" :gutter="10" style="min-height: 150px">
+    <el-row class="dataList" :gutter="10" style="min-height: 150px;">
       <el-col :span="4" v-for="(item, index) in DataList" :key="index">
         <el-card class="dataList_item">
           <h3 class="dataList_item_tit">
-            {{item.holderNo}} - <span style="color:rgb(51, 51, 51); font-weight:normal; font-size:14px;">{{item.holderStatus === '1' ? '入库中' : item.holderStatus === '0' ? '空罐' : item.holderStatus === '2' ? '满罐' : item.holderStatus === '3' ? '领用中' : ''}}</span>
-            <span @click="godetails(item)" v-if="isAuth('filter:holder:list')" style="cursor:pointer; color:#1890FF; float:right; font-size:12px;">详情>></span>
+            {{item.holderNo}} - <span style="color: rgb(51, 51, 51); font-weight: normal; font-size: 14px;">{{item.holderStatus === '1' ? '入库中' : item.holderStatus === '0' ? '空罐' : item.holderStatus === '2' ? '满罐' : item.holderStatus === '3' ? '领用中' : ''}}</span>
+            <span @click="godetails(item)" v-if="isAuth('filter:holder:list')" style="cursor: pointer; color: #1890ff; float: right; font-size: 12px;">详情>></span>
           </h3>
-          <div class="dataList_item_pot clearfix" style="position:relative;">
-            <img src="@/assets/img/RD.png" alt="" v-if="item.isRdSign === '1'" style="position:absolute; left:10px; top:10px;">
+          <div class="dataList_item_pot clearfix" style="position: relative;">
+            <img src="@/assets/img/RD.png" alt="" v-if="item.isRdSign === '1'" style="position: absolute; left: 10px; top: 10px;">
             <div class="dataList_item_pot_box">
-              <div class="dataList_item_pot_box1" style="display:flex; flex-wrap:wrap; align-content:flex-end; position:relative;">
+              <div class="dataList_item_pot_box1" style="display: flex; flex-wrap: wrap; align-content: flex-end; position: relative;">
                 <div v-if="item.holderStatus === '1' || item.holderStatus === '3'" class="dataList_item_pot_box_item1" :style="`height:${item.amount <= 0 ? '0' : (item.amount / item.holderHold) > 1 ? '100' : (item.amount / item.holderHold) * 100}%`"></div>
                 <div v-if="item.holderStatus === '2'" class="dataList_item_pot_box_item2 dataList_item_pot_box_item2s"  :style="`height:150%`"></div>
                 <div v-else class="dataList_item_pot_box_item1" :style="`height:0%`"><p></p></div>
@@ -54,19 +54,19 @@
                   <p>{{item.batch}}</p>
                   <p>{{item.materialName}}</p>
                   <p>{{(item.amount / 1000).toFixed(3)}}方</p>
-                  <p style="font-size:12px;">{{item.gnEndTime}}</p>
+                  <p style="font-size: 12px;">{{item.gnEndTime}}</p>
                   <p>{{item.timeLength}}<span v-if="item.timeLength !== '' && item.timeLength !== null">H</span></p>
                 </div>
               </div>
             </div>
           </div>
           <el-row class="bottom">
-            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" @click="GnProp(item)" style='border:none; padding:0px;'>GN搅罐</el-button>
+            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" @click="GnProp(item)" style='border: none; padding: 0;'>GN搅罐</el-button>
             <div class="bottom-split"></div>
             <!-- <el-col :span="12" class="dataList_item_btn_item"><p @click="GnProp(item)">GN搅罐</p></el-col> -->
-            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" @click="JsbProp(item)" style='border:none; padding:0px;'>JBS出库</el-button>
+            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" @click="JsbProp(item)" style='border: none; padding: 0;'>JBS出库</el-button>
             <div class="bottom-split"></div>
-            <el-button class="bottom-item" :disabled="!isAuth('ste:semi:dumpSemiMaterial') || item.holderStatus === '0'" @click="ZcProp(item)" style='border:none; padding:0px;'>转储</el-button>
+            <el-button class="bottom-item" :disabled="!isAuth('ste:semi:dumpSemiMaterial') || item.holderStatus === '0'" @click="ZcProp(item)" style='border: none; padding: 0;'>转储</el-button>
           </el-row>
         </el-card>
       </el-col>
@@ -84,18 +84,18 @@
     </el-row>
   </el-card>
   <el-dialog :visible.sync="GnDialogTableVisible" width="500px" custom-class='dialog__class'>
-    <div slot="title" style="line-hight:59px">GN搅罐</div>
+    <div slot="title" style="line-height: 59px;">GN搅罐</div>
     <div>
       <el-form size="small" :model="formGn" :rules="Gnrulestar" ref="Gnstar" label-width="150px">
         <el-form-item label="罐号：">{{formGn.holderName}}</el-form-item>
         <el-form-item label="搅罐开始时间：" prop="gnStartTime">
-          <el-date-picker v-model="formGn.gnStartTime" type="datetime" placeholder="请选择" style="width:200px" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
+          <el-date-picker v-model="formGn.gnStartTime" type="datetime" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
         </el-form-item>
         <el-form-item label="搅罐结束时间：" prop="gnEndTime">
-          <el-date-picker v-model="formGn.gnEndTime" type="datetime" placeholder="请选择" style="width:200px" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
+          <el-date-picker v-model="formGn.gnEndTime" type="datetime" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input v-model="formGn.remark" style="width:200px"></el-input>
+          <el-input v-model="formGn.remark" style="width: 200px;"></el-input>
         </el-form-item>
         <el-form-item label="操作人：" prop="operator">
           <el-select v-model="formGn.operator">
@@ -110,14 +110,14 @@
     </span>
   </el-dialog>
   <el-dialog :visible.sync="JsbDialogTableVisible" width="500px" custom-class='dialog__class'>
-    <div slot="title" style="line-hight:59px">JSB出库</div>
+    <div slot="title" style="line-height: 59px;">JSB出库</div>
     <div>
       <el-form size="small" :model="formJsb" :rules="Jsbrulestar" ref="Jsbstar" label-width="150px">
         <el-form-item label="领用罐号：">{{formJsb.holderName}}</el-form-item>
         <el-form-item label="物料：">{{formJsb.materialCode}} {{formJsb.materialName}}</el-form-item>
         <el-form-item label="批次：">{{formJsb.batch}}</el-form-item>
         <el-form-item label="领用量（方）：" prop="receiveAmount">
-          <el-input v-model="formJsb.receiveAmount" style="width:200px"></el-input>
+          <el-input v-model="formJsb.receiveAmount" style="width: 200px;"></el-input>
         </el-form-item>
         <el-form-item label="打入罐类别：" prop="inHolderType">
           <el-select v-model="formJsb.inHolderType" filterable>
@@ -135,10 +135,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="满灌时间：">
-          <el-date-picker v-model="formJsb.fullDate" type="datetime" placeholder="请选择" style="width:200px" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
+          <el-date-picker v-model="formJsb.fullDate" type="datetime" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input v-model="formJsb.remark" style="width:200px"></el-input>
+          <el-input v-model="formJsb.remark" style="width: 200px;"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -148,14 +148,14 @@
     </span>
   </el-dialog>
   <el-dialog :visible.sync="ZcDialogTableVisible" width="500px" custom-class='dialog__class'>
-    <div slot="title" style="line-hight:59px">转储</div>
+    <div slot="title" style="line-height: 59px;">转储</div>
     <div>
       <el-form size="small" :model="formZc" :rules="Zcrulestar" ref="Zcstar" label-width="150px">
         <el-form-item label="领用罐号：">{{formZc.holderName}}</el-form-item>
         <el-form-item label="物料：">{{formZc.materialCode}} {{formZc.materialName}}</el-form-item>
         <el-form-item label="批次：">{{formZc.batch}}</el-form-item>
         <el-form-item label="领用量（方）：" prop="receiveAmount">
-          <el-input v-model="formZc.receiveAmount" style="width:200px"></el-input>
+          <el-input v-model="formZc.receiveAmount" style="width: 200px;"></el-input>
         </el-form-item>
         <el-form-item label="打入罐类别：" prop="inHolderType">
           <el-select v-model="formZc.inHolderType" filterable @change="GetZhuanPot($event, formZc)">
@@ -173,10 +173,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="满灌时间：">
-          <el-date-picker v-model="formZc.fullDate" type="datetime" placeholder="请选择" style="width:200px" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
+          <el-date-picker v-model="formZc.fullDate" type="datetime" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input v-model="formZc.remark" style="width:200px"></el-input>
+          <el-input v-model="formZc.remark" style="width: 200px;"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -586,38 +586,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dataList{
+.dataList {
   margin-top: 10px;
-  &_item{
+  &_item {
     margin-bottom: 10px;
-    &_tit{
+    &_tit {
       font-weight: 600;
       color: black;
       font-size: 16px;
       padding: 0 10px;
       line-height: 45px;
-      border-bottom: 1px solid #E8E8E8;
+      border-bottom: 1px solid #e8e8e8;
     }
-    &_a{
+    &_a {
       cursor: pointer;
-      color: #1890FF;
+      color: #1890ff;
       float: right;
     }
-    &_pot{
+    &_pot {
       padding: 17px 10px 10px 10px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       overflow: hidden;
-      &_box1{
+      &_box1 {
         overflow: hidden;
         width: 102px;
         height: 197px;
       }
-      &_box{
+      &_box {
         overflow: hidden;
         padding: 25px 9px 9px 9px;
-        // color: white;
         float: left;
         display: flex;
         flex-wrap: wrap;
@@ -625,21 +624,24 @@ export default {
         width: 120px;
         height: 229px;
         min-width: 120px;
-        background: url('~@/assets/img/ferPot.png') no-repeat;
-        background-size:contain;
-        &_item1,&_item2{
+        background: url("~@/assets/img/ferPot.png") no-repeat;
+        background-size: contain;
+        &_item1,
+        &_item2 {
           width: 100%;
-          display:flex;
-          align-items:center;
+          display: flex;
+          align-items: center;
           justify-content: center;
           font-size: 14px;
         }
-        &_item2s,&_item1{
+        &_item2s,
+        &_item1 {
           height: 50px;
-          background: #69C0FF;
+          background: #69c0ff;
           position: relative;
           overflow: hidden;
-          &::before,&::after{
+          &::before,
+          &::after {
             content: "";
             position: absolute;
             left: 50%;
@@ -658,27 +660,26 @@ export default {
             border-radius: 47%;
           }
         }
-        &_item2{
+        &_item2 {
           height: 100px;
-          background: #69C0FF;
+          background: #69c0ff;
         }
-        &:hover &_item1::before,&:hover &_item1::after,&:hover &_item2s::before,&:hover &_item2s::after{
+        &:hover &_item1::before,
+        &:hover &_item1::after,
+        &:hover &_item2s::before,
+        &:hover &_item2s::after {
           animation: roateOne 10s linear infinite;
         }
       }
-      &_detail{
+      &_detail {
         max-width: 112px;
         position: absolute;
         height: auto;
         float: left;
-        // margin-top: 75px;
-        // margin-left: 10px;
-        color: #333333;
+        color: #333;
         font-size: 14px;
         line-height: 18px;
-        // padding: 5px 4px;
         border-radius: 4px;
-        // border: 1px solid #1890FF;
         left: 0;
         top: 66px;
       }
@@ -688,7 +689,7 @@ export default {
       flex-direction: row;
       justify-content: space-between;
       height: 40px;
-      background:rgba(247,249,250,1);
+      background: rgba(247, 249, 250, 1);
       align-items: center;
       width: 100%;
       .bottom-item {
@@ -698,37 +699,41 @@ export default {
         line-height: 40px;
         background: #f7f9fa;
         border-radius: 0;
-        border:none; height:40px; padding:0;
-        &:hover{
-          color:#fff;
-          background:#1890FF;
+        border: none;
+        height: 40px;
+        padding: 0;
+        &:hover {
+          color: #fff;
+          background: #1890ff;
         }
-        &.is-disabled{
-          color: #606266
+        &.is-disabled {
+          color: #606266;
         }
-        &.is-disabled:hover{
-          color: #fff
+        &.is-disabled:hover {
+          color: #fff;
         }
       }
       .bottom-split {
-        width:1px;
-        height:16px;
-        background:rgba(232,232,232,1);
+        width: 1px;
+        height: 16px;
+        background: rgba(232, 232, 232, 1);
       }
     }
   }
 }
+
 @keyframes roateOne {
-   0% {
-     transform: translate(-50%, -0%) rotateZ(0deg);
-   }
-   50% {
-     transform: translate(-50%, -1%) rotateZ(180deg);
-   }
-   100% {
-     transform: translate(-50%, -0%) rotateZ(360deg);
-   }
- }
+  0% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
+  }
+  50% {
+    transform: translate(-50%, -1%) rotateZ(180deg);
+  }
+  100% {
+    transform: translate(-50%, -0%) rotateZ(360deg);
+  }
+}
+
 @keyframes roateTwo {
   0% {
     transform: translate(-50%, -0%) rotateZ(0deg);
@@ -741,40 +746,40 @@ export default {
   }
 }
 </style>
-<style lang="less">
-  .ferCard{
-    .el-card__body{
-      padding: 7px;
-    }
-    .cardTit{
-      font-size: 16px;
-      color: black;
-      font-weight: 400;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #E9E9E9;
-    }
-    .gotop{
-      float: right;
-      color: #1890FF;
-      font-size: 14px;
-      cursor: pointer;
-      i{
-        :before{
-          color: #1890FF;
-        }
+<style lang="scss">
+.ferCard {
+  .el-card__body {
+    padding: 7px;
+  }
+  .cardTit {
+    font-size: 16px;
+    color: black;
+    font-weight: 400;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9e9e9;
+  }
+  .gotop {
+    float: right;
+    color: #1890ff;
+    font-size: 14px;
+    cursor: pointer;
+    i {
+      &::before {
+        color: #1890ff;
       }
     }
   }
-.dialog__class{
-  border-radius:6px 6px 6px 6px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+}
+.dialog__class {
+  border-radius: 6px 6px 6px 6px !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
 }

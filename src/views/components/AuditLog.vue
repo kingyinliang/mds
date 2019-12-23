@@ -5,7 +5,7 @@
     :data="tableData"
     header-row-class-name="tableHead"
     border
-    style="width: 100%">
+    style="width: 100%;">
     <el-table-column
       label="序号"
       type="index"
@@ -51,16 +51,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .audit{
-    line-height: 40px;
-  i{
+.audit {
+  line-height: 40px;
+  i {
     font-size: 22px;
     float: left;
   }
-  span{
+  span {
     margin-left: 12px;
     font-size: 16px;
     font-weight: bold;
   }
-  }
+}
 </style>

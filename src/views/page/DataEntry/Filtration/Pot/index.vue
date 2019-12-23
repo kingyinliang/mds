@@ -3,45 +3,45 @@
     <el-card class="searchCard">
       <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform marbottom sole_row">
         <el-form-item label="生产工厂：">
-          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产车间：">
-          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="罐号：">
-          <el-select v-model="formHeader.holderId" filterable placeholder="请选择" style="width: 180px">
+          <el-select v-model="formHeader.holderId" filterable placeholder="请选择" style="width: 180px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option v-for="(sole, index) in PotList" :key="index" :value="sole.holderId" :label="sole.holderName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item class="floatr">
-          <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('filter:holder:list')">查询</el-button>
+          <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right;" v-if="isAuth('filter:holder:list')">查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
-    <el-card class="searchCard newCard ferCard" style="margin-top:5px" v-show="fastS">
-      <h3 style="color: black;margin-bottom: 8px">
-        <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>成品罐区
+    <el-card class="searchCard newCard ferCard" style="margin-top: 5px;" v-show="fastS">
+      <h3 style="color: black; margin-bottom: 8px;">
+        <i class="iconfont factory-liebiao" style="color: #666; margin-right: 10px;"></i>成品罐区
         <i class="gotop" @click="goPot" v-if="isAuth('ste:semi:reportForm')"><a>杀菌罐区库存情况>></a></i>
       </h3>
-      <el-row class="dataList" :gutter="10" style="min-height: 150px">
+      <el-row class="dataList" :gutter="10" style="min-height: 150px;">
         <el-col :span="4" v-for="(item, index) in dataList" :key="index">
           <el-card class="dataList_item">
             <h3 class="dataList_item_tit">
               {{item.holderNo}}
-              <span style="color: #333333;font-weight: normal;font-size: 14px">
+              <span style="color: #333; font-weight: normal; font-size: 14px;">
                 -{{item.holderStatus === '0' ? '空罐' : item.holderStatus === '1' ? '入库中' : item.holderStatus === '2' ? '满罐' : item.holderStatus === '3' ? '领用中' : item.holderStatus === '4' ? '领用完' : ''}}
               </span>
-              <span class="dataList_item_a" @click="godetails(item)" style="font-size: 14px" v-if="isAuth('filter:holder:list')">详情>></span>
+              <span class="dataList_item_a" @click="godetails(item)" style="font-size: 14px;" v-if="isAuth('filter:holder:list')">详情>></span>
             </h3>
-            <div class="dataList_item_pot clearfix" style="position: relative">
-              <img src="@/assets/img/RD.png" alt="" v-if="item.isRdSign === '1'" style="position:absolute; left:10px; top:10px;">
+            <div class="dataList_item_pot clearfix" style="position: relative;">
+              <img src="@/assets/img/RD.png" alt="" v-if="item.isRdSign === '1'" style="position: absolute; left: 10px; top: 10px;">
               <div class="dataList_item_pot_box">
                 <div class="dataList_item_pot_box1">
                   <div class="dataList_item_pot_box_item2" :style="`height:${item.holderStatus === '0' ? 0 : item.amount < 0? 0 : ((item.amount * 1) / (item.holderHold * 1)) * 100}%`"></div>
@@ -64,7 +64,7 @@
       </el-row>
     </el-card>
     <el-dialog width="400px" title="JBS出库" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="JBSVisible">
-      <el-form :model="JBSdataForm" :rules="JBSdataRule" ref="JBSdataForm" @keyup.enter.native="JBS()" @submit.native.prevent label-width="110px"  size="small" style="width: 300px;margin: auto">
+      <el-form :model="JBSdataForm" :rules="JBSdataRule" ref="JBSdataForm" @keyup.enter.native="JBS()" @submit.native.prevent label-width="110px"  size="small" style="width: 300px; margin: auto;">
         <el-form-item label="领用罐号：" prop="receiveHolderId">
           <p>{{JBSdataForm.holderName}}</p>
         </el-form-item>
@@ -88,13 +88,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否满罐：">
-          <el-select v-model="JBSdataForm.isFull" filterable placeholder="请选择" style="width: 100%">
+          <el-select v-model="JBSdataForm.isFull" filterable placeholder="请选择" style="width: 100%;">
             <el-option label="是" value="1"></el-option>
             <el-option label="否" value="0"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="满罐日期：">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" v-model="JBSdataForm.fullDate" placeholder="请选择日期" style="width: 190px"></el-date-picker>
+          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" v-model="JBSdataForm.fullDate" placeholder="请选择日期" style="width: 190px;"></el-date-picker>
         </el-form-item>
         <el-form-item label="操作时间：">
           <p>{{JBSdataForm.changed}}</p>
@@ -109,7 +109,7 @@
       </span>
     </el-dialog>
     <el-dialog width="400px" title="转储" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="TurnSaveVisible">
-      <el-form :model="TurnSavedataForm" :rules="TurnSavedataRule" ref="TurnSavedataForm" @keyup.enter.native="TurnSave()" @submit.native.prevent label-width="110px"  size="small" style="width: 300px;margin: auto">
+      <el-form :model="TurnSavedataForm" :rules="TurnSavedataRule" ref="TurnSavedataForm" @keyup.enter.native="TurnSave()" @submit.native.prevent label-width="110px"  size="small" style="width: 300px; margin: auto;">
         <el-form-item label="领用罐号：" prop="receiveHolderId">
           <p>{{TurnSavedataForm.holderName}}</p>
         </el-form-item>
@@ -135,13 +135,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否满罐：">
-          <el-select v-model="TurnSavedataForm.isFull" filterable placeholder="请选择" style="width: 100%">
+          <el-select v-model="TurnSavedataForm.isFull" filterable placeholder="请选择" style="width: 100%;">
             <el-option label="是" value="1"></el-option>
             <el-option label="否" value="0"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="满罐日期：">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" v-model="TurnSavedataForm.fullDate" placeholder="请选择日期" style="width: 190px"></el-date-picker>
+          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" v-model="TurnSavedataForm.fullDate" placeholder="请选择日期" style="width: 190px;"></el-date-picker>
         </el-form-item>
         <el-form-item label="操作时间：">
           <p>{{TurnSavedataForm.changed}}</p>
@@ -437,159 +437,163 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .ferCard{
-    .el-card__body{
-      padding: 7px;
+.ferCard {
+  .el-card__body {
+    padding: 7px;
+  }
+  .cardTit {
+    font-size: 16px;
+    color: black;
+    font-weight: 400;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9e9e9;
+  }
+  .gotop {
+    float: right;
+    color: #1890ff;
+    font-size: 14px;
+    cursor: pointer;
+    i {
+      &::before {
+        color: #1890ff;
+      }
     }
-    .cardTit{
-      font-size: 16px;
+  }
+}
+.dataList {
+  margin-top: 10px;
+  &_item {
+    margin-bottom: 10px;
+    &_tit {
+      font-weight: 600;
       color: black;
-      font-weight: 400;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #E9E9E9;
+      font-size: 16px;
+      padding: 0 10px;
+      line-height: 45px;
+      border-bottom: 1px solid #e8e8e8;
     }
-    .gotop{
-      float: right;
-      color: #1890FF;
-      font-size: 14px;
+    &_a {
       cursor: pointer;
-      i{
-        :before{
-          color: #1890FF;
-        }
-      }
+      color: #1890ff;
+      float: right;
     }
-  }
-  .dataList{
-    margin-top: 10px;
-    &_item{
-      margin-bottom: 10px;
-      &_tit{
-        font-weight: 600;
-        color: black;
-        font-size: 16px;
-        padding: 0 10px;
-        line-height: 45px;
-        border-bottom: 1px solid #E8E8E8;
-      }
-      &_a{
-        cursor: pointer;
-        color: #1890FF;
-        float: right;
-      }
-      &_pot{
-        padding: 17px 10px 10px 10px;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
+    &_pot {
+      padding: 17px 10px 10px 10px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+      &_box1 {
+        position: relative;
         overflow: hidden;
-        &_box1{
-          position: relative;
-          overflow: hidden;
-          width: 102px;
-          height: 197px;
-          display: flex;
-          flex-wrap: wrap;
-          align-content: flex-end;
-        }
-        &_box{
-          overflow: hidden;
-          padding: 25px 9px 9px 9px;
-          color: white;
-          float: left;
-          display: flex;
-          flex-wrap: wrap;
-          align-content: flex-end;
-          width: 120px;
-          height: 229px;
-          min-width: 120px;
-          background: url('~@/assets/img/ferPot.png') no-repeat;
-          background-size:contain;
-          &_detail{
-            width: 100%;
-            position: absolute;
-            font-size: 14px;
-            top: 70px;
-            color: black;
-            left: 3px;
-          }
-          &_item1,&_item2{
-            width: 100%;
-            display:flex;
-            align-items:center;
-            justify-content: center;
-            font-size: 14px;
-          }
-          &_item2,&_item1{
-            width: 100%;
-            height: 50px;
-            background: #69C0FF;
-            position: absolute;
-            bottom: 0;
-            overflow: hidden;
-            &::before,&::after{
-              content: "";
-              position: absolute;
-              left: 50%;
-              min-width: 175px;
-              min-height: 165px;
-              background: #fff;
-              animation: roateTwo 10s linear infinite;
-            }
-            &::before {
-              top: -158px;
-              border-radius: 45%;
-            }
-            &::after {
-              top: -152px;
-              opacity: 0.5;
-              border-radius: 47%;
-            }
-          }
-          &_item2{
-            height: 100px;
-            background: #1890FF;
-          }
-          &:hover &_item1::before,&:hover &_item1::after,&:hover &_item2::before,&:hover &_item2::after{
-            animation: roateOne 10s linear infinite;
-          }
-        }
-        &_detail{
-          max-width: 112px;
-          height: auto;
-          float: left;
-          margin-top: 25px;
-          margin-left: 10px;
-          color: #333333;
+        width: 102px;
+        height: 197px;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-end;
+      }
+      &_box {
+        overflow: hidden;
+        padding: 25px 9px 9px 9px;
+        color: white;
+        float: left;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-end;
+        width: 120px;
+        height: 229px;
+        min-width: 120px;
+        background: url("~@/assets/img/ferPot.png") no-repeat;
+        background-size: contain;
+        &_detail {
+          width: 100%;
+          position: absolute;
           font-size: 14px;
-          line-height: 18px;
-          padding: 5px;
-          border-radius: 4px;
-          border: 1px solid #1890FF;
+          top: 70px;
+          color: black;
+          left: 3px;
         }
+        &_item2,
+        &_item1 {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+          width: 100%;
+          height: 50px;
+          background: #69c0ff;
+          position: absolute;
+          bottom: 0;
+          overflow: hidden;
+          &::before,
+          &::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            min-width: 175px;
+            min-height: 165px;
+            background: #fff;
+            animation: roateTwo 10s linear infinite;
+          }
+          &::before {
+            top: -158px;
+            border-radius: 45%;
+          }
+          &::after {
+            top: -152px;
+            opacity: 0.5;
+            border-radius: 47%;
+          }
+        }
+        &_item2 {
+          height: 100px;
+          background: #1890ff;
+        }
+        &:hover &_item1::before,
+        &:hover &_item1::after,
+        &:hover &_item2::before,
+        &:hover &_item2::after {
+          animation: roateOne 10s linear infinite;
+        }
+      }
+      &_detail {
+        max-width: 112px;
+        height: auto;
+        float: left;
+        margin-top: 25px;
+        margin-left: 10px;
+        color: #333;
+        font-size: 14px;
+        line-height: 18px;
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #1890ff;
       }
     }
   }
-  @keyframes roateOne {
-    0% {
-      transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    50% {
-      transform: translate(-50%, -1%) rotateZ(180deg);
-    }
-    100% {
-      transform: translate(-50%, -0%) rotateZ(360deg);
-    }
+}
+
+@keyframes roateOne {
+  0% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
   }
-  @keyframes roateTwo {
-    0% {
-      transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    50% {
-      transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    100% {
-      transform: translate(-50%, -0%) rotateZ(0deg);
-    }
+  50% {
+    transform: translate(-50%, -1%) rotateZ(180deg);
   }
+  100% {
+    transform: translate(-50%, -0%) rotateZ(360deg);
+  }
+}
+
+@keyframes roateTwo {
+  0% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
+  }
+  50% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
+  }
+  100% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
+  }
+}
 </style>

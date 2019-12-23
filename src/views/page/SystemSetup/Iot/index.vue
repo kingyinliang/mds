@@ -14,8 +14,8 @@
       queryAuth=''
     >
       <template slot="mds-button-middle">
-        <div style="width:220px; float:right">
-          <el-upload class="upload-demo" style="width:56px; float:left"
+        <div style="width: 220px; float: right;">
+          <el-upload class="upload-demo" style="width: 56px; float: left;"
             :action="uploadApi"
             :show-file-list="false"
             :headers="myHeaders"
@@ -34,7 +34,7 @@
       </template>
     </query-table>
     <el-dialog :visible.sync="DialogTableVisible" :close-on-click-modal="false" width="500px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">编辑</div>
+      <div slot="title" style="line-height: 59px;">编辑</div>
       <el-form ref="form" size="small" label-width="100px" :model="form">
         <el-form-item label="工厂编码：">
           <el-input v-model="form.factory"></el-input>

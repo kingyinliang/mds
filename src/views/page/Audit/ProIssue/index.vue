@@ -7,34 +7,34 @@
             <el-col>
               <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
-                  <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px">
+                  <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px;">
                     <el-option label="请选择"  value=""></el-option>
                     <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="生产车间：">
-                  <el-select v-model="plantList.workShop" placeholder="请选择" style="width: 160px">
+                  <el-select v-model="plantList.workShop" placeholder="请选择" style="width: 160px;">
                     <el-option label="请选择"  value=""></el-option>
                     <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="生产产线：">
-                  <el-select v-model="plantList.productLine" placeholder="产线" style="width: 160px">
+                  <el-select v-model="plantList.productLine" placeholder="产线" style="width: 160px;">
                     <el-option label="请选择"  value=""></el-option>
                     <el-option :label="item.deptName" v-for="(item, index) in productline" :key="index" :value="item.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="组件物料：">
-                  <el-select v-model="plantList.materialCode" filterable placeholder="请选择" style="width: 160px">
+                  <el-select v-model="plantList.materialCode" filterable placeholder="请选择" style="width: 160px;">
                     <el-option label="请选择"  value=""></el-option>
                     <el-option :label="item.materialCode + ' ' + item.materialName" v-for="(item, index) in materialList" :key="index" :value="item.materialCode"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="订单号：">
-                  <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 160px"></el-input>
+                  <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 160px;"></el-input>
                 </el-form-item>
                 <el-form-item label="订单状态：">
-                  <el-select v-model="plantList.status" placeholder="请选择" style="width: 160px">
+                  <el-select v-model="plantList.status" placeholder="请选择" style="width: 160px;">
                     <el-option label="请选择"  value=""></el-option>
                     <el-option label="未审核"  value="submit"></el-option>
                     <el-option label="审核通过"  value="checked"></el-option>
@@ -43,13 +43,13 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label="订单类型：">
-                  <el-select v-model="plantList.orderType" placeholder="请选择" style="width: 160px">
+                  <el-select v-model="plantList.orderType" placeholder="请选择" style="width: 160px;">
                     <el-option label="请选择"  value=""></el-option>
                     <el-option v-for="(item, index) in orderTypeList" :label="item.value"  :value="item.code" :key="index"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                  <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.productDate" style="width: 160px"></el-date-picker>
+                  <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.productDate" style="width: 160px;"></el-date-picker>
                 </el-form-item>
                 <el-form-item class="floatr">
                   <el-button type="primary" size="small" @click="GetAuditList(true)" v-if="isAuth('verify:material:list')">查询</el-button>
@@ -71,10 +71,10 @@
           </div>
           <el-form ref="pstngDate" :model="plantList" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="100px" class="topforms">
             <el-form-item label="过账日期：" prop="pstngDate">
-              <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.pstngDate" style="width: 160px"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.pstngDate" style="width: 160px;"></el-date-picker>
             </el-form-item>
             <el-form-item label="抬头文本：">
-              <el-input v-model="plantList.headerTxt" placeholder="抬头文本" style="width: 160px"></el-input>
+              <el-input v-model="plantList.headerTxt" placeholder="抬头文本" style="width: 160px;"></el-input>
             </el-form-item>
           </el-form>
           <el-table
@@ -84,7 +84,7 @@
             @selection-change="handleSelectionChange"
             border
             tooltip-effect="dark"
-            style="width: 100%;margin-bottom: 20px">
+            style="width: 100%; margin-bottom: 20px;">
             <el-table-column
               type="selection"
               :selectable='checkboxT'
@@ -266,8 +266,8 @@
         title="审核拒绝"
         :close-on-click-modal="false"
         :visible.sync="visible">
-        <p style="line-height: 42px">请填写不通过原因</p>
-        <el-input type="textarea" v-model="Text" :rows="6" class="textarea" style="width: 100%;height: 200px"></el-input>
+        <p style="line-height: 42px;">请填写不通过原因</p>
+        <el-input type="textarea" v-model="Text" :rows="6" class="textarea" style="width: 100%; height: 200px;"></el-input>
         <span slot="footer" class="dialog-footer">
           <el-button @click="visible = false">取消</el-button>
           <el-button type="primary" @click="repulseAutio()">确定</el-button>
@@ -277,8 +277,8 @@
         title="反审"
         :close-on-click-modal="false"
         :visible.sync="visibleRe">
-        <p style="line-height: 42px">请填写反审意见</p>
-        <el-input type="textarea" v-model="ReText" :rows="6" class="textarea" style="width: 100%;height: 200px"></el-input>
+        <p style="line-height: 42px;">请填写反审意见</p>
+        <el-input type="textarea" v-model="ReText" :rows="6" class="textarea" style="width: 100%; height: 200px;"></el-input>
         <span slot="footer" class="dialog-footer">
           <el-button @click="visibleRe = false">取消</el-button>
           <el-button type="primary" @click="ResetIs()">确定</el-button>
@@ -622,32 +622,45 @@ export default {
 </script>
 
 <style lang="scss">
-  .searchCard { margin-bottom: 0; }
-  .switching .el-card__body{
-    padding-bottom: 0px;
+.searchCard {
+  margin-bottom: 0;
+}
+.switching .el-card__body {
+  padding-bottom: 0;
+}
+.searchCard,
+.tableCard {
+  position: relative;
+  .toggleSearchTop {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    cursor: pointer;
+    display: none;
   }
-  .searchCard, .tableCard {
-    position: relative;
-    .toggleSearchTop {
-      width: 100%; position: absolute; top: 0; left: 0; text-align: center; cursor: pointer; display: none;
-    }
-    .toggleSearchBottom {
-      width: 100%; position: absolute; bottom: 0; left: 0; text-align: center; cursor: pointer;
-    }
-    .el-icon-caret-top:before,
-    .el-icon-caret-bottom:before {
-      color: #dcdfe6;
+  .toggleSearchBottom {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    cursor: pointer;
+  }
+  .el-icon-caret-top::before,
+  .el-icon-caret-bottom::before {
+    color: #dcdfe6;
+  }
+}
+.topforms {
+  .el-date-editor.el-input {
+    width: auto;
+  }
+  .formtextarea {
+    .el-form-item__content {
+      width: 500px;
     }
   }
-
-  .topforms{
-    .el-date-editor.el-input{
-      width: auto;
-    }
-    .formtextarea{
-      .el-form-item__content{
-        width: 500px;
-      }
-    }
-  }
+}
 </style>

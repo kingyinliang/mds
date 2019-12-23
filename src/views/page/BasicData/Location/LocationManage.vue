@@ -9,7 +9,7 @@
     <div class="main">
       <el-card>
         <div class="clearfix">
-          <el-row style="float: right">
+          <el-row style="float: right;">
             <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetLocationList(true)" @submit.native.prevent>
               <el-form-item>
                 <el-input v-model="form.deptName" placeholder="车间" suffix-icon="el-icon-search"></el-input>
@@ -31,7 +31,7 @@
             :data="list"
             border
             tooltip-effect="dark"
-            style="width: 100%;margin-bottom: 20px"
+            style="width: 100%; margin-bottom: 20px;"
             @row-dblclick="EditRow">
             <el-table-column
               type="selection"

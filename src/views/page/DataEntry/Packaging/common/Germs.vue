@@ -1,9 +1,9 @@
 <template>
 <div>
   <div class="clearfix topBox">
-    <el-button type="primary" @click="AddGermsDate(GermsDate)" size="small" :disabled="!isRedact" style="float: right">新增</el-button>
+    <el-button type="primary" @click="AddGermsDate(GermsDate)" size="small" :disabled="!isRedact" style="float: right;">新增</el-button>
   </div>
-  <el-table ref="table1" header-row-class-name="tableHead" :data="GermsDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%;margin-bottom: 20px">
+  <el-table ref="table1" header-row-class-name="tableHead" :data="GermsDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
     <el-table-column type="index" width="55" label="序号"></el-table-column>
     <el-table-column label="白/中/夜班">
       <template slot-scope="scope">
@@ -58,7 +58,7 @@
       </template>
     </el-table-column>
   </el-table>
-  <div><p style="line-height: 52px;font-size: 14px">待杀菌数量（L）：{{GermsNum}}</p></div>
+  <div><p style="line-height: 52px; font-size: 14px;">待杀菌数量（L）：{{GermsNum}}</p></div>
 </div>
 </template>
 

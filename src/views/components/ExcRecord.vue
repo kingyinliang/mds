@@ -2,7 +2,7 @@
   <div>
     <div class="clearfix topBox">
       <h3>录入数据单位：MIN</h3>
-      <div style="float: right;margin-bottom: 10px">
+      <div style="float: right; margin-bottom: 10px;">
         <el-button type="primary" @click="AddExcDate(ExcDate)" size="small" :disabled="!isRedact">新增</el-button>
       </div>
     </div>
@@ -45,7 +45,7 @@
           <span>异常开始时间</span>
         </template>
         <template slot-scope="scope">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.expStartDate" :disabled="!isRedact" size="small" style="width:195px"></el-date-picker>
+          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.expStartDate" :disabled="!isRedact" size="small" style="width: 195px;"></el-date-picker>
         </template>
       </el-table-column>
       <el-table-column width="241" label="异常结束时间">
@@ -54,7 +54,7 @@
           <span>异常结束时间</span>
         </template>
         <template slot-scope="scope">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.expEndDate" :disabled="!isRedact" size="small" style="width:195px"></el-date-picker>
+          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.expEndDate" :disabled="!isRedact" size="small" style="width: 195px;"></el-date-picker>
         </template>
       </el-table-column>
       <el-table-column label="异常时间" width="80">
@@ -99,7 +99,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div><p style="line-height: 52px;font-size: 14px">总停线时间：{{ExcNum}}</p></div>
+    <div><p style="line-height: 52px; font-size: 14px;">总停线时间：{{ExcNum}}</p></div>
   </div>
 </template>
 
@@ -374,7 +374,7 @@ export default {
 </script>
 
 <style>
-.rowDel{
+.rowDel {
   display: none;
 }
 </style>

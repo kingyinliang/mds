@@ -9,7 +9,7 @@
     <div class="main">
       <el-card>
         <el-row class="clearfix">
-          <div style="float: right">
+          <div style="float: right;">
             <el-form :inline="true" :model="param" size="small" label-width="68px" class="topforms2" @keyup.enter.native="getList(true)" @submit.native.prevent>
               <el-form-item>
                 <el-input v-model="param.param" placeholder="设备编号" suffix-icon="el-icon-search"></el-input>
@@ -35,8 +35,8 @@
                 <span>设备管理</span>
               </div>
               <div>
-                <el-button type="danger" size="small" @click="remove()" style="float: right;margin-bottom: 20px"  v-if="isAuth('sys:device:delete')">批量删除</el-button>
-                <el-button type="primary" size="small" @click="addOrupdate(deptId)" v-if="isAuth('sys:device:save')" style="float: right;margin-bottom: 20px;margin-right: 10px">新增</el-button>
+                <el-button type="danger" size="small" @click="remove()" style="float: right; margin-bottom: 20px;"  v-if="isAuth('sys:device:delete')">批量删除</el-button>
+                <el-button type="primary" size="small" @click="addOrupdate(deptId)" v-if="isAuth('sys:device:save')" style="float: right; margin-bottom: 20px; margin-right: 10px;">新增</el-button>
                 <el-table
                   ref="table1"
                   border
@@ -44,7 +44,7 @@
                   :data="deviceList"
                   @selection-change="handleSelectionChange"
                   tooltip-effect="dark"
-                  style="width: 100%;margin-bottom: 20px">
+                  style="width: 100%; margin-bottom: 20px;">
                   <el-table-column
                     type="selection"
                     width="34">
@@ -224,5 +224,7 @@ export default {
 </script>
 
 <style lang="scss">
-.el-table-column--selection .cell { padding-right: 0 !important; }
+.el-table-column--selection .cell {
+  padding-right: 0 !important;
+}
 </style>

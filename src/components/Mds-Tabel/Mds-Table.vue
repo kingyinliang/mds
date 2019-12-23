@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="tableData" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;margin-bottom: 20px">
+  <el-table :data="tableData" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
     <el-table-column
       v-if="showSelectColumn"
       :selectable="selectableFn"

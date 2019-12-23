@@ -24,20 +24,20 @@
           <el-input v-model="formHeader.orderNo"></el-input>
         </el-form-item>
         <el-form-item label="品项：">
-          <el-select v-model="formHeader.materialCode" filterable placeholder="请选择" style="width: 140px">
+          <el-select v-model="formHeader.materialCode" filterable placeholder="请选择" style="width: 140px;">
             <el-option v-for="(sole, index) in this.materiaList" :key="index" :value="sole.MATERIAL_CODE" :label="`${sole.MATERIAL_CODE}`+ ' ' +`${sole.MATERIAL_NAME}`"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产日期：">
-          <el-date-picker type="date" v-model="formHeader.orderStartDate" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width:140px"></el-date-picker> - <el-date-picker type="date" v-model="formHeader.orderEndDate" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width:140px"></el-date-picker>
+          <el-date-picker type="date" v-model="formHeader.orderStartDate" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;"></el-date-picker> - <el-date-picker type="date" v-model="formHeader.orderEndDate" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;"></el-date-picker>
         </el-form-item>
-        <el-form-item style="float:right">
-          <el-button type="primary" size="small" @click="GetList(true)" style="float: right" v-if="isAuth('report:production:materielTrace')">查询</el-button>
+        <el-form-item style="float: right;">
+          <el-button type="primary" size="small" @click="GetList(true)" style="float: right;" v-if="isAuth('report:production:materielTrace')">查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
     <el-card class="secondcard">
-      <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top:10px">
+      <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
         <el-table-column label="日期" show-overflow-tooltip prop="orderDate" width="110"></el-table-column>
         <el-table-column label="工厂" show-overflow-tooltip prop="factory"></el-table-column>
         <el-table-column label="车间" show-overflow-tooltip prop="workShopName"></el-table-column>

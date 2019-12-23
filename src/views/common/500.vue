@@ -26,33 +26,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .error{
-    padding: 30px 0;
-    width: 790px;
-    margin: auto;
-    margin-top: 120px;
-    img{
-      width: 419px;
-      height: 202px;
-      float: left;
-    }
-    .errortxt{
-      margin-top: 20px;
-      margin-left: 60px;
-      width: 300px;
-      float: left;
-    }
-    h3{
-      text-align: left;
-      font-size: 60px;
-      font-weight: bold;
-      letter-spacing: 5px;
-    }
-    p{
-      text-align: left;
-      font-size: 20px;
-      color: #8a979e;
-      line-height: 45px;
-    }
+.error {
+  padding: 30px 0;
+  width: 790px;
+  margin: auto;
+  margin-top: 120px;
+  img {
+    width: 419px;
+    height: 202px;
+    float: left;
   }
+  .errortxt {
+    margin-top: 20px;
+    margin-left: 60px;
+    width: 300px;
+    float: left;
+  }
+  h3 {
+    text-align: left;
+    font-size: 60px;
+    font-weight: bold;
+    letter-spacing: 5px;
+  }
+  p {
+    text-align: left;
+    font-size: 20px;
+    color: #8a979e;
+    line-height: 45px;
+  }
+}
 </style>

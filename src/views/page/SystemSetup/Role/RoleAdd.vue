@@ -3,7 +3,7 @@
     title="功能分配"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <div style="height: 300px;overflow: auto">
+    <div style="height: 300px; overflow: auto;">
       <el-tree
         :data="menuList"
         :props="menuListTreeProps"

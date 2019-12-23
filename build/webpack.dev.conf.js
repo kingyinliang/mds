@@ -9,6 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+const StyleLintPlugin = require('stylelint-webpack-plugin')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -77,7 +78,12 @@ module.exports = new Promise((resolve, reject) => {
       process.env.PORT = port
       // add port to devServer config
       devWebpackConfig.devServer.port = port
-
+      // Add Stylelint
+      if (config.dev.useStylelint) {
+        devWebpackConfig.plugins.push(new StyleLintPlugin({
+          files: ['src/**/*.{vue,htm,html,css,sss,less,scss,sass}']
+        }))
+      }
       // Add FriendlyErrorsPlugin
       devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
         compilationSuccessInfo: {

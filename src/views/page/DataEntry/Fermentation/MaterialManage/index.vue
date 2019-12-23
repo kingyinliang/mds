@@ -3,25 +3,25 @@
     <el-card class="searchCard">
       <el-form :inline="true" :model="formHeader" size="small" label-width="80px" class="multi_row">
         <el-form-item label="生产工厂：">
-          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 160px">
+          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 160px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产车间：">
-          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 160px">
+          <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 160px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="发料物料：" prop="holderId">
-          <el-select v-model="formHeader.ferMaterialCode" placeholder="请选择" filterable style="width: 160px">
+          <el-select v-model="formHeader.ferMaterialCode" placeholder="请选择" filterable style="width: 160px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option v-for="(sole, index) in this.material" :key="index" :value="sole.matnr" :label="sole.matnr+ ' ' + sole.material_name"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态：">
-          <el-select v-model="formHeader.approveStatus" placeholder="请选择" style="width: 160px">
+          <el-select v-model="formHeader.approveStatus" placeholder="请选择" style="width: 160px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option label="未录入"  value="1"></el-option>
             <el-option label="已保存"  value="saved"></el-option>
@@ -31,38 +31,38 @@
           </el-select>
         </el-form-item>
         <el-form-item label="订单类型：">
-          <el-select v-model="formHeader.orderType" placeholder="请选择" style="width: 160px">
+          <el-select v-model="formHeader.orderType" placeholder="请选择" style="width: 160px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option v-for="(item, index) in orderTypeList" :label="item.value"  :value="item.code" :key="index"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="订单编号：">
-          <el-select v-model="formHeader.ferOrderNos" placeholder="请选择" multiple filterable style="width: 160px">
+          <el-select v-model="formHeader.ferOrderNos" placeholder="请选择" multiple filterable style="width: 160px;">
             <el-option v-for="(sole, index) in OrderList" :key="index" :value="sole.ferOrderNo" :label="sole.ferOrderNo"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="罐号：" prop="holderId" label-width="82px">
-          <el-select v-model="formHeader.holderIds" placeholder="请选择" multiple filterable allow-create default-first-op style="width: 160px">
+          <el-select v-model="formHeader.holderIds" placeholder="请选择" multiple filterable allow-create default-first-op style="width: 160px;">
             <el-option v-for="(sole, index) in this.guanList" :key="index" :value="sole.holderId" :label="sole.holderName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="订单日期：">
-          <el-date-picker v-model="formHeader.productDateOne" type="date" placeholder="选择日期" style="width:160px;margin-right: 15px"></el-date-picker> - <el-date-picker v-model="formHeader.productDateTwo" type="date" placeholder="选择日期" style="width:160px;margin-left: 15px"></el-date-picker>
+          <el-date-picker v-model="formHeader.productDateOne" type="date" placeholder="选择日期" style="width: 160px; margin-right: 15px;"></el-date-picker> - <el-date-picker v-model="formHeader.productDateTwo" type="date" placeholder="选择日期" style="width: 160px; margin-left: 15px;"></el-date-picker>
         </el-form-item>
       </el-form>
-      <el-row style="text-align:right" class="button_three_goup">
-        <template style="float:right; margin-left: 10px;">
+      <el-row style="text-align: right;" class="button_three_goup">
+        <template style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="GetDataList()" v-if="isAuth('fer:shoot:list')">查 询</el-button>
           <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="isAuth('fer:shoot:update')">{{isRedact?'取消':'编辑'}}</el-button>
         </template>
-        <template v-if="isRedact" style="float:right; margin-left: 10px;">
+        <template v-if="isRedact" style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')">保存</el-button>
           <el-button type="primary" size="small" @click="SubmitForm">提交</el-button>
         </template>
       </el-row>
     </el-card>
-    <el-card class="searchCard  newCard" style="margin-top:5px">
-      <h2 style="font-size: 16px;font-weight: bolder;margin-bottom: 10px"><i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>发料列表</h2>
+    <el-card class="searchCard  newCard" style="margin-top: 5px;">
+      <h2 style="font-size: 16px; font-weight: bolder; margin-bottom: 10px;"><i class="iconfont factory-liebiao" style="color: #666; margin-right: 10px;"></i>发料列表</h2>
       <el-table :data="dataList" @selection-change="handleSelectionChange" @row-dblclick="GetLog" border tooltip-effect="dark" header-row-class-name="tableHead">
         <el-table-column type="selection" :selectable='checkboxT' width="34"></el-table-column>
         <el-table-column type="index" label="序号" width="55"></el-table-column>
@@ -114,7 +114,7 @@
         <el-table-column label="操作" width="112" fixed="right">
           <template slot-scope="scope">
             <el-button type="text" style="" size="mini" :disabled="!isRedact" @click="AddData(scope.row, scope.$index)" v-if="scope.row.approveStatus !=='submit' && scope.row.approveStatus !== 'checked'"><i class="icons iconfont factory-chaifen"></i>拆分</el-button>
-            <el-button type="text" style="color: red;margin-left: 0px" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="delData(scope.row)" v-if="scope.row.approveStatus !=='submit' && scope.row.approveStatus !== 'checked'">删除</el-button>
+            <el-button type="text" style="color: red; margin-left: 0;" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="delData(scope.row)" v-if="scope.row.approveStatus !=='submit' && scope.row.approveStatus !== 'checked'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -130,7 +130,7 @@
         </el-pagination>
       </el-row>
     </el-card>
-    <el-card class="searchCard  newCard" style="margin-top: 10px">
+    <el-card class="searchCard  newCard" style="margin-top: 10px;">
       <auditLog :tableData="Audit"></auditLog>
     </el-card>
   </div>
@@ -414,7 +414,7 @@ export default {
 </script>
 
 <style scoped>
-.reqI{
+.reqI {
   color: red;
 }
 </style>

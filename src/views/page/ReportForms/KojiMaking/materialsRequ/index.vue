@@ -31,7 +31,7 @@
               <el-input v-model="plantList.holderName" class="width158px"></el-input>
             </el-form-item>
             <el-form-item label="生产日期：">
-              <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width:135px"></el-date-picker> - <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width:135px"></el-date-picker>
+              <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;"></el-date-picker> - <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;"></el-date-picker>
             </el-form-item>
             <el-form-item class="floatr">
               <el-button type="primary" size="small" @click="GetList" v-if="isAuth('report:kjmORwht:kjmMaterialList')">查询</el-button>
@@ -41,8 +41,8 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top:5px">
-      <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="margin-bottom: 20px">
+    <el-card style="margin-top: 5px;">
+      <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="margin-bottom: 20px;">
         <el-table-column label="生产日期" width="100" prop="productDate"></el-table-column>
         <el-table-column label="工厂" width="120" prop="factoryName" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="车间" prop="workShopName" width="110" :show-overflow-tooltip="true"></el-table-column>
@@ -164,24 +164,31 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.width158px {width:158px;}
-.el-date-editor .el-range-input {width:100px;}
-.el-range-editor--small .el-range-separator {padding-right:20px}
+<style lang="scss" scoped>
+.width158px {
+  width: 158px;
+}
+.el-date-editor .el-range-input {
+  width: 100px;
+}
+.el-range-editor--small .el-range-separator {
+  padding-right: 20px;
+}
 .searchCard {
-  .el-button--primary,.el-button--primary:focus{
-    color: #000000;
-    background-color: #FFFFFF;
-    border-color: #D9D9D9;
+  .el-button--primary,
+  .el-button--primary:focus {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
   }
-  .el-button--primary:hover{
-    background-color: #1890FF;
-    color: #FFFFFF
+  .el-button--primary:hover {
+    background-color: #1890ff;
+    color: #fff;
   }
-  .el-button--primary:first-child{
-    background-color: #1890FF;
-    color: #FFFFFF;
-    border-color: #1890FF;
+  .el-button--primary:first-child {
+    background-color: #1890ff;
+    color: #fff;
+    border-color: #1890ff;
   }
 }
 </style>

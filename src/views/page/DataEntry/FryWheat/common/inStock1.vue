@@ -7,7 +7,7 @@
         <el-card>
           <!--录入-->
           <div>
-            <el-row  :gutter="36" v-for="(item, index) in flourContainerList" :key="index" v-if="index%4===0" style="margin-top:5px">
+            <el-row  :gutter="36" v-for="(item, index) in flourContainerList" :key="index" v-if="index%4===0" style="margin-top: 5px;">
               <el-col :span="6" v-if="index < flourContainerList.length">
                   <div class="stock-box">
                     <div class="stock-img"></div>
@@ -49,7 +49,7 @@
           <!--table-->
           <!-- <el-button type='primary' size="small" @click="saveStockList">baocun</el-button>
           <el-button type='primary' size="small" @click="submitStockList">tijiao</el-button> -->
-          <el-row  style="margin-top:20px;" >
+          <el-row  style="margin-top: 20px;" >
             <el-col>
               <el-table @row-dblclick="modifyOldRecord" header-row-class-name="tableHead" :data="wheatDataList"  border tooltip-effect="dark" :row-class-name="rowDelFlag">
                 <el-table-column label="日期" width="130">
@@ -128,18 +128,18 @@
     <el-dialog :title="this.stockForm.flourDeviceName" :visible.sync="dialogFormVisible" width="450px">
       <el-form :model="stockForm" :rules="dataRule" ref="stockForm">
         <el-form-item label="粮仓" :label-width="formLabelWidth" required prop="wheatDeviceId">
-          <el-select @change="changeWheatContainer"  v-model="stockForm.wheatDeviceId" value-key="wheatDeviceId" placeholder="请选择粮仓" style="width:220px" :disabled="!isRedact">
+          <el-select @change="changeWheatContainer"  v-model="stockForm.wheatDeviceId" value-key="wheatDeviceId" placeholder="请选择粮仓" style="width: 220px;" :disabled="!isRedact">
             <el-option v-for="(item, index) in wheatContainerList" :key="index" :label="item.holderName" :value="item.holderId" ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="起始(KG)" :label-width="formLabelWidth" required prop="startWeight">
-          <el-input tyle='number' v-model.number="stockForm.startWeight"  style="width:220px;" :disabled="!isRedact"></el-input>
+          <el-input tyle='number' v-model.number="stockForm.startWeight"  style="width: 220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
         <el-form-item label="结束(KG)" :label-width="formLabelWidth" required prop="endWeight">
-          <el-input tyle='number' v-model.number="stockForm.endWeight"  style="width:220px;" :disabled="!isRedact"></el-input>
+          <el-input tyle='number' v-model.number="stockForm.endWeight"  style="width: 220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
         <el-form-item label="入库批次" :label-width="formLabelWidth" required prop="inPortBatch">
-          <el-input  maxlength='10' v-model="stockForm.inPortBatch"  style="width:220px;" :disabled="!isRedact"></el-input>
+          <el-input  maxlength='10' v-model="stockForm.inPortBatch"  style="width: 220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
          <el-form-item label="操作时间" :label-width="formLabelWidth">
           <!-- <el-input v-model="stockForm.operateTime" ></el-input> -->
@@ -480,51 +480,51 @@ export default {
 <style lang="scss" scoped>
   // @import '~@/assets/scss/common.scss';
   // @import '../../../../../assets/scss/common.scss';
-  .stock-box{
+  .stock-box {
     height: 184px;
-    border: 1px solid #E9E9E9;
+    border: 1px solid #e9e9e9;
     border-radius: 2px;
-    .stock-img{
-      width:48px;
-      height:48px;
-      border-radius:24px;
-      float:left;
-      margin-left:24px;
-      margin-top:24px;
+    .stock-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 24px;
+      float: left;
+      margin-left: 24px;
+      margin-top: 24px;
       // background: url('../../../../../assets/img/wheat.png')
-      background: url('~@/assets/img/wheat.png')
+      background: url("~@/assets/img/wheat.png")
       // ~ 表示根目录，@表示src目录
     }
-    .stock-text{
-      float:left;
-      margin-left:20px;
-      margin-top:30px;
-      font-size:16px;
-      font-weight:500;
-      font-family:PingFangSC-Medium;
+    .stock-text {
+      float: left;
+      margin-left: 20px;
+      margin-top: 30px;
+      font-size: 16px;
+      font-weight: 500;
+      font-family: PingFangSC-Medium, sans-serif;
     }
-    .stock-button{
-      height:48px;
-      margin-top:62px;
-      font-size:14px;
-      line-height:48px;
-      text-align:center;
-      border-top:1px solid #e9e9e9;
+    .stock-button {
+      height: 48px;
+      margin-top: 62px;
+      font-size: 14px;
+      line-height: 48px;
+      text-align: center;
+      border-top: 1px solid #e9e9e9;
       border-radius: 0 0 2px 2px;
     }
-    .enabled{
-      background:#F7F9FA;
-      &:hover{
-        color:#fff;
-        background:#1890FF;
-        cursor:pointer
+    .enabled {
+      background: #f7f9fa;
+      &:hover {
+        color: #fff;
+        background: #1890ff;
+        cursor: pointer;
       }
     }
-    .disabled{
-      color:rgba(0, 0, 0, 0.6);
-      background:#F7F9FA;
-      &:hover{
-        cursor:not-allowed
+    .disabled {
+      color: rgba(0, 0, 0, 0.6);
+      background: #f7f9fa;
+      &:hover {
+        cursor: not-allowed;
       }
     }
   }

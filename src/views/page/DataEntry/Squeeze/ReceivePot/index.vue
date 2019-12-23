@@ -3,13 +3,13 @@
   <el-card class="searchCard ferCard">
     <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="topform sole_row">
       <el-form-item label="生产工厂：">
-        <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 140px">
+        <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="生产车间：">
-        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 140px">
+        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
         </el-select>
@@ -19,25 +19,25 @@
           <!--<el-option v-for="(sole, index) in this.guanList" :key="index" :value="sole.holderNo" :label="sole.holderName"></el-option>-->
         <!--</el-select>-->
       <!--</el-form-item>-->
-      <el-form-item style="float:right; margin-right:0;">
-        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('fer:openholderg:holderInfo')">查询</el-button>
+      <el-form-item style="float: right; margin-right: 0;">
+        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right;" v-if="isAuth('fer:openholderg:holderInfo')">查询</el-button>
       </el-form-item>
     </el-form>
   </el-card>
-  <el-card class="searchCard newCard ferCard" style="margin-top:5px;">
-    <h3 style="color: black;margin-bottom: 8px">
-      <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>领用罐列表
+  <el-card class="searchCard newCard ferCard" style="margin-top: 5px;">
+    <h3 style="color: black; margin-bottom: 8px;">
+      <i class="iconfont factory-liebiao" style="color: #666; margin-right: 10px;"></i>领用罐列表
     </h3>
-    <el-row class="dataList" :gutter="10" style="min-height: 150px">
+    <el-row class="dataList" :gutter="10" style="min-height: 150px;">
       <el-col :span="4" v-for="(item, index) in dataList" :key="index">
-        <el-card class="dataList_item" style="padding:0!important;">
+        <el-card class="dataList_item" style="padding: 0 !important;">
           <h3 class="dataList_item_tit">
             {{item.holderNo}}
-            <span style="color: #333333;font-weight: normal;font-size: 14px">
+            <span style="color: #333; font-weight: normal; font-size: 14px;">
               -领用中
             </span>
           </h3>
-          <div class="dataList_item_pot clearfix" style="position:relative;">
+          <div class="dataList_item_pot clearfix" style="position: relative;">
             <div class="dataList_item_pot_box">
               <div class="dataList_item_pot_box1">
                 <div class="dataList_item_pot_box_item1" :style="`height:${item.sumAmount? (item.sumAmount / item.holderHold) * 100 : 0}%`"></div>
@@ -197,63 +197,63 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .ferCard{
-    .el-card__body{
+  .ferCard {
+    .el-card__body {
       padding: 7px;
     }
-    .cardTit{
+    .cardTit {
       font-size: 16px;
       color: black;
       font-weight: 400;
       padding-bottom: 10px;
-      border-bottom: 1px solid #E9E9E9;
+      border-bottom: 1px solid #e9e9e9;
     }
-    .gotop{
+    .gotop {
       float: right;
-      color: #1890FF;
+      color: #1890ff;
       font-size: 14px;
       cursor: pointer;
-      i{
-        :before{
-          color: #1890FF;
+      i {
+        ::before {
+          color: #1890ff;
         }
       }
     }
   }
-  .topBox{
+  .topBox {
     width: 1160px;
     padding: 25px 25px 10px 25px;
     margin: auto;
-    &_boxItem{
+    &_boxItem {
       position: relative;
       cursor: pointer;
       width: 131px;
       float: left;
-      &_bar{
+      &_bar {
         width: 115px;
         height: 2px;
         margin: 15px 8px 0 8px;
         background: #f2f2f2;
-        &_box{
+        &_box {
           height: 2px;
         }
       }
-      &_tit{
+      &_tit {
         color: black;
         font-size: 16px;
         margin-top: 10px;
         text-align: center;
         line-height: 32px;
       }
-      &_detail{
+      &_detail {
         font-size: 14px;
         text-align: center;
-        color: #666666;
-        span{
+        color: #666;
+        span {
           color: black;
         }
       }
-      &_popover{
+      &_popover {
         display: none;
         top: -60px;
         min-width: 150px;
@@ -265,26 +265,26 @@ export default {
         position: absolute;
         z-index: 999999;
         background: white;
-        box-shadow: 0 2px 12px 0 rgba(0,0,0,.3);
-        .dot{
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+        .dot {
           width: 6px;
           height: 6px;
           float: left;
           margin: 4px 5px 0 0;
           border-radius: 50%;
         }
-        &_ar{
+        &_ar {
           position: absolute;
           bottom: -12px;
           width: 0;
           height: 0;
           border-width: 6px;
           border-style: solid;
-          border-color:#ffffff transparent transparent transparent;
+          border-color: #fff transparent transparent transparent;
         }
       }
     }
-    &_circle{
+    &_circle {
       width: 32px;
       height: 32px;
       float: left;
@@ -292,34 +292,34 @@ export default {
       text-align: center;
       color: white;
       border-radius: 50%;
-      background: #999999;
-      transition: all .5s;
+      background: #999;
+      transition: all 0.5s;
     }
   }
-  .dataList{
+  .dataList {
     margin-top: 10px;
-    &_item{
+    &_item {
       margin-bottom: 10px;
-      &_tit{
+      &_tit {
         font-weight: 600;
         color: black;
         font-size: 16px;
         padding: 0 10px;
         line-height: 45px;
-        border-bottom: 1px solid #E8E8E8;
+        border-bottom: 1px solid #e8e8e8;
       }
-      &_a{
+      &_a {
         cursor: pointer;
-        color: #1890FF;
+        color: #1890ff;
         float: right;
       }
-      &_pot{
+      &_pot {
         padding: 17px 10px 10px 10px;
         display: flex;
         justify-content: center;
         align-items: flex-start;
         overflow: hidden;
-        &_box1{
+        &_box1 {
           position: relative;
           overflow: hidden;
           width: 102px;
@@ -328,7 +328,7 @@ export default {
           flex-wrap: wrap;
           align-content: flex-end;
         }
-        &_box{
+        &_box {
           overflow: hidden;
           padding: 25px 9px 9px 9px;
           color: white;
@@ -339,9 +339,9 @@ export default {
           width: 120px;
           height: 229px;
           min-width: 120px;
-          background: url('~@/assets/img/ferPot.png') no-repeat;
-          background-size:contain;
-          &_detail{
+          background: url("~@/assets/img/ferPot.png") no-repeat;
+          background-size: contain;
+          &_detail {
             width: 100%;
             position: absolute;
             font-size: 14px;
@@ -349,19 +349,22 @@ export default {
             color: black;
             left: 3px;
           }
-          &_item1,&_item2{
+          &_item1,
+          &_item2 {
             width: 100%;
-            display:flex;
-            align-items:center;
+            display: flex;
+            align-items: center;
             justify-content: center;
             font-size: 14px;
           }
-          &_item2s,&_item1{
+          &_item2s,
+          &_item1 {
             height: 50px;
-            background: #69C0FF;
+            background: #69c0ff;
             position: relative;
             overflow: hidden;
-            &::before,&::after{
+            &::before,
+            &::after {
               content: "";
               position: absolute;
               left: 50%;
@@ -380,30 +383,34 @@ export default {
               border-radius: 47%;
             }
           }
-          &_item2{
+          &_item2 {
             height: 100px;
-            background: #1890FF;
+            background: #1890ff;
           }
-          &:hover &_item1::before,&:hover &_item1::after,&:hover &_item2s::before,&:hover &_item2s::after{
+          &:hover &_item1::before,
+          &:hover &_item1::after,
+          &:hover &_item2s::before,
+          &:hover &_item2s::after {
             animation: roateOne 10s linear infinite;
           }
         }
-        &_detail{
+        &_detail {
           max-width: 112px;
           height: auto;
           float: left;
           margin-top: 25px;
           margin-left: 10px;
-          color: #333333;
+          color: #333;
           font-size: 14px;
           line-height: 18px;
           padding: 5px;
           border-radius: 4px;
-          border: 1px solid #1890FF;
+          border: 1px solid #1890ff;
         }
       }
     }
   }
+
   @keyframes roateOne {
     0% {
       transform: translate(-50%, -0%) rotateZ(0deg);
@@ -415,6 +422,7 @@ export default {
       transform: translate(-50%, -0%) rotateZ(360deg);
     }
   }
+
   @keyframes roateTwo {
     0% {
       transform: translate(-50%, -0%) rotateZ(0deg);

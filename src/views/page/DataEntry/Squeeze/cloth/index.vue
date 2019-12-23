@@ -28,12 +28,12 @@
           </el-form>
         </el-col>
       </el-row>
-      <el-row style="text-align:right">
-        <template style="float:right; margin-left: 10px;">
+      <el-row style="text-align: right;">
+        <template style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="SearchList" v-if="isAuth('prs:pro:materialList')">查询</el-button>
           <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="isAuth('prs:pro:updatePro')">{{isRedact?'取消':'编辑'}}</el-button>
         </template>
-        <template v-if="isRedact" style="float:right; margin-left: 10px;">
+        <template v-if="isRedact" style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('prs:pro:updatePro')">保存</el-button>
           <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('prs:pro:updatePro')">提交</el-button>
         </template>
@@ -43,10 +43,10 @@
       </div>
     </el-card>
     <div class="tableCard">
-      <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+      <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
         <i class="el-icon-caret-bottom"></i>
       </div>
-      <el-tabs v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="margin-top:5px" :style="{'display':contentshow?'block':'none'}">
+      <el-tabs v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="margin-top: 5px;" :style="{'display':contentshow?'block':'none'}">
         <el-tab-pane name="1" label="物料领用">
           <Material ref="material" :isRedact="isRedact" :formHeader="formHeader"></Material>
         </el-tab-pane>
@@ -239,27 +239,28 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .width180px {
   width: 180px;
 }
 .searchCard {
-  .el-button--primary,.el-button--primary:focus{
-    color: #000000;
-    background-color: #FFFFFF;
-    border-color: #D9D9D9;
+  .el-button--primary,
+  .el-button--primary:focus {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
   }
-  .el-button--primary:hover{
-    background-color: #1890FF;
-    color: #FFFFFF
+  .el-button--primary:hover {
+    background-color: #1890ff;
+    color: #fff;
   }
-  .el-button--primary:first-child{
-    background-color: #1890FF;
-    color: #FFFFFF;
-    border-color: #1890FF;
+  .el-button--primary:first-child {
+    background-color: #1890ff;
+    color: #fff;
+    border-color: #1890ff;
   }
 }
-#DaatTtabs{
+#DaatTtabs {
   border-radius: 15px;
   overflow: hidden;
 }

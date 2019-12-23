@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-row class="clearfix">
-      <h3 style="color: rgba(0, 0, 0, 0.65);font-size: 14px;float: left">原汁信息</h3>
-      <el-button type="primary" style="float: right" size="small" :disabled="!isRedact" @click="ApplyOrder">申请订单</el-button>
+      <h3 style="color: rgba(0, 0, 0, 0.65); font-size: 14px; float: left;">原汁信息</h3>
+      <el-button type="primary" style="float: right;" size="small" :disabled="!isRedact" @click="ApplyOrder">申请订单</el-button>
     </el-row>
     <el-table ref="table1" :data="fumet" header-row-class-name="tableHead" @row-dblclick="GetLog" @selection-change="handleSelectionChange" border tooltip-effect="dark">
       <el-table-column type="selection" :selectable='checkboxApply' width="34"></el-table-column>
@@ -45,14 +45,14 @@
       <el-table-column label="原汁批次" width="140" prop="batch"></el-table-column>
       <el-table-column label="订单类型" width="120">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.orderType" placeholder="请选择" disabled size="mini" style="width: 100px">
+          <el-select v-model="scope.row.orderType" placeholder="请选择" disabled size="mini" style="width: 100px;">
             <el-option v-for="(item, index) in orderTypeList" :label="item.value"  :value="item.code" :key="index"></el-option>
           </el-select>
         </template>
       </el-table-column>
       <el-table-column label="生产版本" width="120">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px" :disabled="true">
+          <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px;" :disabled="true">
             <el-option v-for="(item, index) in VersionList" :label="item.value"  :value="item.code" :key="index"></el-option>
           </el-select>
         </template>

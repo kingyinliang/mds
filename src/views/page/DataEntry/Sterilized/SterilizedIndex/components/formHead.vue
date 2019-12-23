@@ -11,7 +11,7 @@
     </el-form-item>
     <el-form-item label="生产品项：">
       <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top-start">
-        <p class="el-input" style="font-size:12px">{{formHeader.materialCode + ' ' + formHeader.materialName}}</p>
+        <p class="el-input" style="font-size: 12px;">{{formHeader.materialCode + ' ' + formHeader.materialName}}</p>
       </el-tooltip>
     </el-form-item>
     <el-form-item label="生产日期：">
@@ -50,11 +50,12 @@ export default {
 </script>
 
 <style scoped>
-  .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-    margin-bottom: 8px!important;
+  .el-form-item--mini.el-form-item,
+  .el-form-item--small.el-form-item {
+    margin-bottom: 8px !important;
   }
-  .el-input{
-    width: 145px!important;
+  .el-input {
+    width: 145px !important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -63,10 +64,10 @@ export default {
 </style>
 
 <style lang="scss">
-.topform{
-  .el-form-item--small .el-form-item__content{
+.topform {
+  .el-form-item--small .el-form-item__content {
     height: 32px;
-    border-bottom: 1px solid #D8D8D8;
+    border-bottom: 1px solid #d8d8d8;
   }
 }
 </style>

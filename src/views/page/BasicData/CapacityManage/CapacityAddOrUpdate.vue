@@ -41,10 +41,10 @@
           <el-input v-model="dataForm.standardOfMan" placeholder="手动输入"></el-input>
         </el-form-item>
         <el-form-item label="有效开始日期：" prop="effecStartDate">
-          <el-date-picker type="date"  v-model="dataForm.effecStartDate" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%"></el-date-picker>
+          <el-date-picker type="date"  v-model="dataForm.effecStartDate" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="有效结束日期：" prop="effecEndDate">
-          <el-date-picker type="date"  v-model="dataForm.effecEndDate" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%"></el-date-picker>
+          <el-date-picker type="date"  v-model="dataForm.effecEndDate" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="维护人：" v-if="CapacityId">
           <el-input v-model="dataForm.changer" placeholder="手动输入" disabled></el-input>

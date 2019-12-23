@@ -15,7 +15,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="申请编码：">
-              <el-input v-model="form.applyNo" style="width:199px"></el-input>
+              <el-input v-model="form.applyNo" style="width: 199px;"></el-input>
             </el-form-item>
             <el-form-item label="生产物料：">
               <el-select v-model="form.materialCode">
@@ -24,19 +24,19 @@
               </el-select>
             </el-form-item>
             <el-form-item label="申请日期：">
-              <el-date-picker type="date" v-model="form.sqTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width:199px"></el-date-picker>
+              <el-date-picker type="date" v-model="form.sqTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 199px;"></el-date-picker>
             </el-form-item>
             <el-form-item label="生产日期：">
-              <el-date-picker type="date" v-model="form.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width:199px"></el-date-picker>
+              <el-date-picker type="date" v-model="form.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 199px;"></el-date-picker>
             </el-form-item>
             <el-form-item class="floatr">
-              <el-button type="primary" size="small" @click="SearchList(true)" v-if="isAuth('fer:openholderg:openHolderList')" style="float:right">查询</el-button>
+              <el-button type="primary" size="small" @click="SearchList(true)" v-if="isAuth('fer:openholderg:openHolderList')" style="float: right;">查询</el-button>
             </el-form-item>
           </el-form>
         </el-col>
       </el-row>
     </el-card>
-    <el-tabs v-model="activeName" @tab-click="tabClick" type="border-card" style="margin-top:5px">
+    <el-tabs v-model="activeName" @tab-click="tabClick" type="border-card" style="margin-top: 5px;">
       <el-tab-pane name="0" label="未确认">
         <el-table :data="dataList" border header-row-class-name="tableHead">
           <el-table-column label="车间" prop="workShopName"></el-table-column>

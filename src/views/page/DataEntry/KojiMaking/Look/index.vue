@@ -37,7 +37,7 @@
           </el-form>
         </el-col>
         <el-col :span="3">
-          <div style="float:right; line-height:31px;font-size: 14px">
+          <div style="float: right; line-height: 31px; font-size: 14px;">
             <div style="float: right;">
               <span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? 'rgb(103, 194, 58)' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：
               <span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
@@ -45,12 +45,12 @@
           </div>
         </el-col>
       </el-row>
-      <el-row style="text-align:right" class="button_three_goup">
-        <template style="float:right; margin-left: 10px;">
+      <el-row style="text-align: right;" class="button_three_goup">
+        <template style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-index'})">返回</el-button>
           <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('kjm:guard:tech:update')">{{isRedact?'取消':'编辑'}}</el-button>
         </template>
-        <template v-if="isRedact" style="float:right; margin-left: 10px;">
+        <template v-if="isRedact" style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('kjm:guard:tech:update')">保存</el-button>
           <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('kjm:guard:tech:update')">提交</el-button>
         </template>
@@ -60,10 +60,10 @@
       </div>
     </el-card>
     <div class="tableCard">
-      <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+      <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
         <i class="el-icon-caret-bottom"></i>
       </div>
-      <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" type="border-card" class="NewDaatTtabs" id="DaatTtabs" style="margin-top:5px">
+      <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" type="border-card" class="NewDaatTtabs" id="DaatTtabs" style="margin-top: 5px;">
         <el-tab-pane name="1">
           <span slot="label" class="spanview">
             <el-tooltip class="item" effect="dark"  :content="applyCraftState === 'noPass'? '不通过':applyCraftState === 'saved'? '已保存':applyCraftState === 'submit' ? '已提交' : applyCraftState === 'checked'? '通过':'未录入'" placement="top-start">
@@ -74,7 +74,7 @@
             <el-card>
               <el-form :inline="true" :model="tech" size="small" label-width="130px">
                 <el-form-item label="入曲检查：" :required="true">
-                  <el-input style="width:171px" v-model="tech.inCheck" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>
+                  <el-input style="width: 171px;" v-model="tech.inCheck" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>
                 </el-form-item>
                 <el-form-item label="检查人：" :required="true">
                   <el-select v-model="tech.inCheckMan" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')">
@@ -82,17 +82,17 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label="入曲开始时间：" :required="true">
-                  <el-date-picker v-model="tech.inStartTime" type="datetime" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width:171px"></el-date-picker>
+                  <el-date-picker v-model="tech.inStartTime" type="datetime" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 171px;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="入曲结束时间：" :required="true">
-                  <el-date-picker v-model="tech.inEndTime" type="datetime" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width:171px"></el-date-picker>
+                  <el-date-picker v-model="tech.inEndTime" type="datetime" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 171px;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="入曲时长：">{{timecha}}</el-form-item>
               </el-form>
             </el-card>
             <el-card>
               <div class="htitle">
-                <span class="iconfont">&#xe606;</span> 看曲记录<el-button type="text" class="readyshiftBtn" id="test1" style="margin-left: 30px">展开<i class="el-icon-caret-bottom"></i></el-button>
+                <span class="iconfont">&#xe606;</span> 看曲记录<el-button type="text" class="readyshiftBtn" id="test1" style="margin-left: 30px;">展开<i class="el-icon-caret-bottom"></i></el-button>
               </div>
               <div>
                 <div id="test1Content">
@@ -100,8 +100,8 @@
                 </div>
                 <!-- <iframe src="#/lookEcharts" style="width:100%; height:460px" name="iframe_a" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe> -->
                 <!-- <iframe src="https://search-iot-m4krkhtzni6xjktkbymymhix5a.cn-north-1.es.amazonaws.com.cn/_plugin/kibana/app/kibana#/visualize/edit/e6382af0-adb4-11e9-8b6e-1f733cf01d7e?embed=true&_g=(refreshInterval%3A(pause%3A!f%2Cvalue%3A10000)%2Ctime%3A(from%3A'2019-07-23T14%3A52%3A42.616Z'%2Cmode%3Aabsolute%2Cto%3A'2019-07-26T14%3A12%3A20.186Z'))" style="width:100%;height:600px" name="iframe_a" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe> -->
-                <el-row style="line-height: 32px; margin-bottom:10px">
-                  <el-col :span="5">第（<el-input size="small" v-model="tech.guardProcess" style="width:80px; padding:0;" class="guard-form-input">{{tech.guardProcess}}</el-input>）套程序</el-col>
+                <el-row style="line-height: 32px; margin-bottom: 10px;">
+                  <el-col :span="5">第（<el-input size="small" v-model="tech.guardProcess" style="width: 80px; padding: 0;" class="guard-form-input">{{tech.guardProcess}}</el-input>）套程序</el-col>
                   <el-col :span="15">
                     <el-radio-group v-model="tech.processType">
                       <el-radio label="自动" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')">自动</el-radio>
@@ -110,8 +110,8 @@
                     </el-radio-group>
                   </el-col>
                   <el-col :span="4">
-                    <el-button type="primary" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" @click="ReadRow" size="small" style="float: right">读取数据</el-button>
-                    <el-button type="primary" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" @click="addline" size="small" style="float: right; margin-right:10px"> + 新增</el-button>
+                    <el-button type="primary" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" @click="ReadRow" size="small" style="float: right;">读取数据</el-button>
+                    <el-button type="primary" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" @click="addline" size="small" style="float: right; margin-right: 10px;"> + 新增</el-button>
                   </el-col>
                 </el-row>
                 <el-table border ref="recordTable" max-height="315" header-row-class-name="tableHead" :data="lookList" :row-class-name="rowDelFlag" tooltip-effect="dark">
@@ -122,7 +122,7 @@
                       <span>看曲时间</span>
                     </template>
                     <template slot-scope="scope">
-                      <el-date-picker v-model="scope.row.guardTime" type="datetime" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width:175px"></el-date-picker>
+                      <el-date-picker v-model="scope.row.guardTime" type="datetime" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 175px;"></el-date-picker>
                     </template>
                   </el-table-column>
                   <el-table-column width="100">
@@ -296,11 +296,11 @@
             <el-card>
               <el-form :inline="true" :model="tech" size="small">
                 <div class="htitle">
-                  <span class="iconfont">&#xe609;</span> 加水量记录<el-button type="text" class="readyshiftBtn" name="shuiar" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
+                  <span class="iconfont">&#xe609;</span> 加水量记录<el-button type="text" class="readyshiftBtn" name="shuiar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
                 </div>
                 <div class="shuiarBox">
                   <div>
-                    <div style="line-height:32px;">翻曲加水</div>
+                    <div style="line-height: 32px;">翻曲加水</div>
                     <el-form-item label="起始数：" :required="true">
                       <el-input size="small" v-model="tech.overStartWeight" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>
                     </el-form-item>
@@ -312,7 +312,7 @@
                     </el-form-item>
                   </div>
                   <div>
-                    <div style="line-height:32px;">出曲加水</div>
+                    <div style="line-height: 32px;">出曲加水</div>
                     <el-form-item label="起始数：" :required="true">
                       <el-input size="small" v-model="tech.outStartWeight" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>
                     </el-form-item>
@@ -328,7 +328,7 @@
             </el-card>
             <el-card>
               <div class="htitle">
-                <span class="iconfont">&#xe602;</span> 感官评价记录<el-button type="text" class="readyshiftBtn" name="feelar" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
+                <span class="iconfont">&#xe602;</span> 感官评价记录<el-button type="text" class="readyshiftBtn" name="feelar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
               </div>
               <div class="feelarBox">
                 <el-table border header-row-class-name="tableHead" :data="assessList">
@@ -372,9 +372,9 @@
             <el-card>
               <el-form :inline="true" :model="tech" size="small">
                 <div class="htitle">
-                  <span class="iconfont">&#xe607;</span> 异常情况记录<el-button type="text" class="readyshiftBtn" name="excar" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
+                  <span class="iconfont">&#xe607;</span> 异常情况记录<el-button type="text" class="readyshiftBtn" name="excar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
                 </div>
-                <div class="excarBox"><el-input type="textarea" v-model="tech.guardException" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" class="textarea" style="width: 100%;height:40px"></el-input></div>
+                <div class="excarBox"><el-input type="textarea" v-model="tech.guardException" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" class="textarea" style="width: 100%; height: 40px;"></el-input></div>
               </el-form>
             </el-card>
           </div>
@@ -850,75 +850,73 @@ export default {
 </script>
 
 <style>
-.rowDel{display: none;}
+.rowDel {
+  display: none;
+}
 .guard-form-input .el-input__inner {
   border: 0 none;
   border-bottom: 1px solid #ccc;
-  border-radius: 0px;
-  text-align: center
+  border-radius: 0;
+  text-align: center;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
-input[type="number"]{
+input[type="number"] {
   -moz-appearance: textfield;
 }
 </style>
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .input_bommom {
   width: 147px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 32px;
-  border-bottom: solid 1px #D8D8D8;
+  border-bottom: solid 1px #d8d8d8;
 }
-.el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
-  margin-bottom: 8px
+.el-form-item--mini.el-form-item,
+.el-form-item--small.el-form-item {
+  margin-bottom: 8px;
 }
 .searchCard {
-  .el-button--primary,.el-button--primary:focus{
-    color: #000000;
-    background-color: #FFFFFF;
-    border-color: #D9D9D9;
+  .el-button--primary,
+  .el-button--primary:focus {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
   }
-  .el-button--primary:hover{
-    background-color: #1890FF;
-    color: #FFFFFF
+  .el-button--primary:hover {
+    background-color: #1890ff;
+    color: #fff;
   }
-  .el-button--primary:first-child{
-    background-color: #1890FF;
-    color: #FFFFFF;
-    border-color: #1890FF;
+  .el-button--primary:first-child {
+    background-color: #1890ff;
+    color: #fff;
+    border-color: #1890ff;
   }
 }
-#DaatTtabs{
+#DaatTtabs {
   border-radius: 15px;
   overflow: hidden;
 }
 .htitle {
   margin: 0 0 10px 0;
-}
-.rowDel{
-  display: none;
-}
-.htitle {
-  margin: 0 0 10px 0;
   overflow: hidden;
 }
-.audit{
+.audit {
   line-height: 32px;
   margin: 0 0 10px 0;
-  i{
+  i {
     font-size: 22px;
     float: left;
   }
-  span{
+  span {
     font-size: 16px;
   }
 }
-.reqI{
+.reqI {
   color: red;
 }
 </style>

@@ -3,28 +3,28 @@
     <el-card class="reportForms">
       <el-form :inline="true" :model="plantList" size="small" label-width="70px" class="multi_row">
         <el-form-item label="生产工厂：">
-          <el-select v-model="plantList.factory" style="width: 150px">
+          <el-select v-model="plantList.factory" style="width: 150px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option v-for="sole in factory" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="生产车间：">
-          <el-select v-model="plantList.workShop" style="width: 150px">
+          <el-select v-model="plantList.workShop" style="width: 150px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option v-for="sole in workshop" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="炒麦机：">
-          <el-select v-model="plantList.deviceId" style="width: 150px">
+          <el-select v-model="plantList.deviceId" style="width: 150px;">
             <el-option label="请选择"  value=""></el-option>
             <el-option v-for="sole in Machine" :key="sole.deviceId" :label="sole.deviceName" :value="sole.deviceId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="订单号：">
-          <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 150px"></el-input>
+          <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 150px;"></el-input>
         </el-form-item>
         <el-form-item label="生产日期：">
-          <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width:135px"></el-date-picker> - <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width:135px"></el-date-picker>
+          <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;"></el-date-picker> - <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;"></el-date-picker>
         </el-form-item>
         <el-form-item class="floatr">
           <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('report:kjmORwht:checkRecordList')">查询</el-button>
@@ -32,8 +32,8 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <el-card style="margin-top:5px">
-      <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width:100%; margin-bottom: 20px">
+    <el-card style="margin-top: 5px;">
+      <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
         <el-table-column label="工厂" width="150" prop="factoryName" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="车间" prop="workShopName" width="100" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="生产订单" prop="orderNo" width="120" :show-overflow-tooltip="true"></el-table-column>
@@ -178,9 +178,9 @@ export default {
 </script>
 
 <style>
-  .reportForms .el-card__body{
-    padding: 12px!important;
-  }
+.reportForms .el-card__body {
+  padding: 12px !important;
+}
 </style>
 <style scoped>
 

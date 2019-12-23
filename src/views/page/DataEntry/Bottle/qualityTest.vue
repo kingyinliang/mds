@@ -29,11 +29,11 @@
           <p class="bottom">&nbsp;{{formHeader.changed}}</p>
         </el-form-item>
         <el-form-item class="floatr">
-          <template style="float:right; margin-left: 10px;">
+          <template style="float: right; margin-left: 10px;">
             <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-Bottle-index'})">返回</el-button>
             <el-button type="primary" class="button" v-if="isAuth('bottle:workshop:techProductParameterList')" size="small" @click="isRedact = !isRedact" >{{isRedact?'取消':'编辑'}}</el-button>
           </template>
-          <template v-if="isRedact" style="float:right; margin-left: 10px;">
+          <template v-if="isRedact" style="float: right; margin-left: 10px;">
             <el-button type="primary" size="small" v-if="isAuth('bottle:workshop:techProductParameterList')" @click="savedOrSubmitForm('saved')" >保存</el-button>
             <!-- <el-button type="primary" size="small" @click="savedOrSubmitForm('submit')" >提交</el-button> -->
           </template>
@@ -42,16 +42,16 @@
     </el-card>
     <el-card class="secondcard">
       <el-row>
-        <el-col style="float:right">
-          <el-button type="primary" :disabled="!isRedact" @click="AddRow" size="small" style="float:right">新增</el-button>
+        <el-col style="float: right;">
+          <el-button type="primary" :disabled="!isRedact" @click="AddRow" size="small" style="float: right;">新增</el-button>
         </el-col>
       </el-row>
-      <el-table :data="dataList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top:10px">
+      <el-table :data="dataList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
         <el-table-column type="index" label="序号" width="50" fixed="left"></el-table-column>
         <el-table-column label="参数" show-overflow-tooltip width="85" prop="parameter" fixed="left"></el-table-column>
         <el-table-column label="时间" width="200" prop="date">
           <template slot-scope="scope">
-            <el-date-picker type="datetime" size="small" v-model="scope.row.date" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width:180px"></el-date-picker>
+            <el-date-picker type="datetime" size="small" v-model="scope.row.date" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width: 180px;"></el-date-picker>
           </template>
         </el-table-column>
         <el-table-column label="1#" width="100">
@@ -191,8 +191,8 @@
       </el-pagination>
     </el-card>
     <el-card class="secondcard">
-      <div style="font-weight:bold;">异常事项</div>
-      <el-input type="textarea" v-model="Textareas" :disabled="!isRedact" style="width:100%; margin:10px 0;"></el-input>
+      <div style="font-weight: bold;">异常事项</div>
+      <el-input type="textarea" v-model="Textareas" :disabled="!isRedact" style="width: 100%; margin: 10px 0;"></el-input>
     </el-card>
   </div>
 </template>
@@ -382,8 +382,10 @@ export default {
 
 <style>
 .bottom {
-  border-bottom: 1px solid #D8D8D8;
+  border-bottom: 1px solid #d8d8d8;
   width: 150px;
-  overflow: hidden; text-overflow:ellipsis; white-space:nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

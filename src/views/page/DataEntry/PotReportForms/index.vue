@@ -4,8 +4,8 @@
     <el-tab-pane name="1">
       <span slot="label" class="spanview">半成品罐区报表</span>
       <div class="titleLeft">
-        <i class="iconfont factory-kucun" style="color:#666666; margin-right:10px"></i>半成品罐区报表
-        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color:#1890FF; color:#FFFFFF; float:right">导出</el-button>
+        <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>半成品罐区报表
+        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
       </div>
       <el-table :data="tableData1" header-row-class-name="tableHead" border tooltip-effect="dark">
         <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
@@ -25,8 +25,8 @@
     <el-tab-pane name="2">
       <span slot="label" class="spanview">成品罐区报表</span>
       <div class="titleLeft">
-        <i class="iconfont factory-kucun" style="color:#666666; margin-right:10px"></i>成品罐区报表
-        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color:#1890FF; color:#FFFFFF; float:right">导出</el-button>
+        <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>成品罐区报表
+        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
       </div>
       <el-table :data="tableData2" header-row-class-name="tableHead" border tooltip-effect="dark">
         <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
@@ -260,7 +260,7 @@ export default {
 </script>
 
 <style scoped>
-.bg{
+.bg {
   background: red;
 }
 </style>

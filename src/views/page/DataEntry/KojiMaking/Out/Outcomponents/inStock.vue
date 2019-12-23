@@ -314,14 +314,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.icons{
+.icons {
   display: block;
   float: left;
-  height:14px;
-  width:14px;
+  height: 14px;
+  width: 14px;
   margin-right: 5px;
 }
-.reqI{
+.reqI {
   color: red;
 }
 </style>

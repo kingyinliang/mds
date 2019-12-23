@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-button type="primary" @click="AddRecord" size="small" :disabled="!(isRedact)" style="float: right;margin-bottom: 5px">新增</el-button>
+    <el-button type="primary" @click="AddRecord" size="small" :disabled="!(isRedact)" style="float: right; margin-bottom: 5px;">新增</el-button>
     <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="RecordList.filter(item => item.delFlag === '0').slice((currPage-1)*pageSize,currPage*pageSize)" border tooltip-effect="dark" >
       <el-table-column type="index" label="序号" width="55"></el-table-column>
       <el-table-column label="时间" prop="kjmWorkShopName">
         <template slot="header"><i class="reqI">*</i><span>时间</span></template>
         <template slot-scope="scope">
-          <el-date-picker style="width: 100%" size="mini" type="datetime" :disabled="!isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked')" value-format="yyyy-MM-dd  HH:mm:ss" format="yyyy-MM-dd  HH:mm" v-model="scope.row.date"></el-date-picker>
+          <el-date-picker style="width: 100%;" size="mini" type="datetime" :disabled="!isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked')" value-format="yyyy-MM-dd  HH:mm:ss" format="yyyy-MM-dd  HH:mm" v-model="scope.row.date"></el-date-picker>
         </template>
       </el-table-column>
       <el-table-column label="瓶胚批号" :show-overflow-tooltip="true" width="180">
@@ -59,7 +59,7 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="totalCount">
     </el-pagination>
-    <p style="font-size: 14px;line-height: 32px">合计数量：{{sumNum}}个</p>
+    <p style="font-size: 14px; line-height: 32px;">合计数量：{{sumNum}}个</p>
   </div>
 </template>
 

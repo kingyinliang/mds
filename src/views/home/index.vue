@@ -100,40 +100,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .row{
-    width: 100%;
+.row {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  .lefttab {
+    max-width: 200px;
+    min-width: 160px;
+    background: #545c64;
+    overflow: auto;
+  }
+  .lefttab::-webkit-scrollbar {
+    display: none;
+  }
+  .rightmain {
+    flex: 1;
     height: 100%;
-    display: flex;
-    .lefttab::-webkit-scrollbar {display:none}
-    .lefttab{
-      max-width:200px;
-      min-width: 160px;
-      background: #545c64;
+    .headfa {
+      width: 100%;
+      position: relative;
+    }
+    .head {
+      width: 100%;
+      position: absolute;
+      height: 50px;
+      line-height: 30px;
+      padding: 10px;
+      background: white;
+      box-shadow: 0 1px 4px 0 rgba(0, 21, 41, 0.12);
+    }
+    #childrenRouter {
+      height: 100%;
+      background: #f0f2f5;
+      padding-top: 50px;
       overflow: auto;
     }
-    .rightmain{
-      flex: 1;
-      height: 100%;
-      .headfa{
-        width: 100%;
-        position: relative;
-      }
-      .head{
-        width: 100%;
-        position: absolute;
-        height: 50px;
-        line-height: 30px;
-        padding: 10px;
-        background: white;
-        box-shadow: 0px 1px 4px 0px
-        rgba(0, 21, 41, 0.12);
-      }
-      #childrenRouter{
-        height: 100%;
-        background: #f0f2f5;
-        padding-top: 50px;
-        overflow: auto;
-      }
-    }
   }
+}
 </style>

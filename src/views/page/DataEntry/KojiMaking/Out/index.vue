@@ -6,19 +6,19 @@
           <el-col>
             <form-head :formHeader="formHeader" :isRedact="isRedact" :CraftControlStatus="CraftControlStatus"></form-head>
           </el-col>
-          <el-col style="width:180px;font-size: 14px;line-height: 32px">
+          <el-col style="width: 180px; font-size: 14px; line-height: 32px;">
             <div style="float: right;">
               <span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? '#1890f' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：
               <span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
             </div>
           </el-col>
         </el-row>
-        <el-row style="text-align:right" class="button_three_goup">
-          <template style="float:right; margin-left: 10px;">
+        <el-row style="text-align: right;" class="button_three_goup">
+          <template style="float: right; margin-left: 10px;">
             <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-index'})">返回</el-button>
             <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('sys:kjmOutMaterial:mySaveOrUpdate')">{{isRedact?'取消':'编辑'}}</el-button>
           </template>
-          <template v-if="isRedact" style="float:right; margin-left: 10px;">
+          <template v-if="isRedact" style="float: right; margin-left: 10px;">
             <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('sys:kjmOutMaterial:mySaveOrUpdate')">保存</el-button>
             <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('sys:kjmOutMaterial:mySaveOrUpdate')">提交</el-button>
           </template>
@@ -30,7 +30,7 @@
     </div>
     <div class="main">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
       </div>
