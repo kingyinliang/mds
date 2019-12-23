@@ -457,10 +457,12 @@ export default {
       let ty = true
       for (var item of data) {
         if (item.delFlag === '0') {
-          if (!item.batch) {
-            ty = false
-            this.$warning_SHINHO('批次必填')
-            return false
+          if (item.adjustAmount === '0') {} else {
+            if (!item.batch) {
+              ty = false
+              this.$warning_SHINHO('批次必填')
+              return false
+            }
           }
           if (item.batch.length !== 10) {
             ty = false
@@ -473,6 +475,11 @@ export default {
             return false
           }
           if (!st) {
+            if (item.addStatus !== '已添加') {
+              ty = false
+              this.$warning_SHINHO('有未添加完成的物料，无法提交！')
+              return false
+            }
             // if (item.supStatus !== '已确认') {
             //   ty = false
             //   this.$warning_SHINHO('品保未确认')
