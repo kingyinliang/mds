@@ -191,9 +191,9 @@ export default {
         let PotSole = this.PotList.find(item => item.holderId === row.holderId)
         if (PotSole.materialCode !== row.materialCode) {
           this.$warning_SHINHO('领用物料与BOM物料不一致，请确认！')
-          row.holderMaterialCode = PotSole.materialCode
-          row.holderMaterialName = PotSole.materialName
         }
+        row.holderMaterialCode = PotSole.materialCode
+        row.holderMaterialName = PotSole.materialName
       }
       row.batch = this.PotList.filter(items => items.holderId === row.holderId)[0].batch
       row.holderName = this.PotList.filter(items => items.holderId === row.holderId)[0].holderName

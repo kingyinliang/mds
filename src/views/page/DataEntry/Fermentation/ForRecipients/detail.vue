@@ -94,6 +94,7 @@
             <el-table-column label="单位" prop="inUnit" width="60"></el-table-column>
             <el-table-column label="入库日期" prop="created" show-overflow-tooltip width="100"></el-table-column>
             <el-table-column label="批次" prop="batch" width="110"></el-table-column>
+            <el-table-column label="实验备注" prop="syRemark"></el-table-column>
             <el-table-column label="备注" prop="remark">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.remark" :disabled="isRedact || scope.row.guan === '已开罐'" size="small"></el-input>
