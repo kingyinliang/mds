@@ -300,10 +300,16 @@ export default {
         if (!this.$refs.listbom.saprul(str)) {
           return false
         }
+        if (!this.$refs.listbom.bomRule(str)) {
+          return false
+        }
         if (!this.$refs.listbom.ListbomsRule(str)) {
           return false
         }
       } else if (str === 'saved') {
+        if (!this.$refs.listbom.bomRule(str)) {
+          return false
+        }
         if (!this.$refs.listbom.ListbomsRule(str)) {
           return false
         }
