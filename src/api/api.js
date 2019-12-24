@@ -868,6 +868,7 @@ export const REP_API = {
   OEE_EXCEL_API: HOST + '/report/formh/exportProductEfficiencyList',
   OEE_SUM_API: HOST + '/report/formh/productEfficiencySumList',
   OEE_PRODUCT_API: HOST + '/sys/dept/findListByParentParams',
+  DAYS_REPROT_LIST: HOST + '/report/fromEs/zhiquDaily', // 制曲日报表
   /**
    * OPE
    */
