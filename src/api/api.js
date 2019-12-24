@@ -1715,7 +1715,8 @@ export const JUICE_API = {
  */
 export const POTREPORTFORMS_API = {
   POTREPORTFORMS_LIST: HOST + '/ste/semi/reportForm',
-  POTREPORTFORMS_OUT: HOST + '/ste/semi/reportFormExport'
+  POTREPORTFORMS_OUT: HOST + '/ste/semi/reportFormExport',
+  POTREPORTFORMS_STOCK_LIST: HOST + '/ste/semi/steStock'
 }
 /**
  *  看板接口
