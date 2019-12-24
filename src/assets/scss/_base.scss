@@ -681,9 +681,9 @@ img {
   color: #fff;
 }
 .el-button--primary:first-child {
-  background-color: #1890ff;
+  background-color: #487BFF;
   color: #fff;
-  border-color: #1890ff;
+  border-color: #487BFF;
 }
 .el-button--primary.is-disabled {
   color: #fff;
@@ -715,8 +715,8 @@ img {
     }
     .el-date-editor {
       .el-input__inner {
-        padding-right: 46px;
-        padding-left: 15px;
+        padding-right: 46px !important;
+        padding-left: 15px !important;
       }
       .el-input__prefix {
         right: 0;
@@ -749,10 +749,39 @@ img {
       }
     }
   }
-  .cardList{
+  .cardList {
     margin-top: 20px;
+    .el-card__header {
+      padding: 16px !important;
+    }
     .el-card__body {
       padding: 16px !important;
+    }
+    .card-item-color-lump {
+      position: relative;
+      height: 180px;
+      box-shadow: 3px 3px 5px 0 rgba(214, 210, 196, 1);
+      border-radius: 8px;
+      background: #487BFF;
+      &_icon {
+        position: absolute;
+        right: 10px;
+        top: 16px;
+      }
+      p:last-child {
+        padding-top: 15px;
+        font-size: 18px;
+      }
+      p {
+        color: white;
+        padding-left: 20px;
+        padding-top: 60px;
+        font-size: 16px;
+        span {
+          font-size: 48px;
+          padding-right: 10px;
+        }
+      }
     }
   }
 }
