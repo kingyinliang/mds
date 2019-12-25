@@ -1,76 +1,103 @@
 <template>
   <div class="measurebarn-wheat-pot">
     <div class="header_main measurebarn-wheat-pot__header">
-      <el-card>
-        <el-row type="flex" :gutter="10">
-          <el-col :span="22">
-            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="auto" class="sole_row">
-              <el-form-item label="生产工厂：">
-                <el-select v-model="plantList.factoryIDValue" class="w300" placeholder="请选择" @change="changeSearchOptions(plantList.factoryIDValue)">
-                  <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="生产车间：">
-                <el-select v-model="plantList.workshopIDValue" class="w200" clearable placeholder="请选择" :disabled="plantList.factoryIDValue ==='' || workshopList.length === 0">
-                  <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-form>
-          </el-col>
-          <el-col :span="2" style="display: flex; align-items: flex-end; justify-content: flex-end;">
+      <el-card class="queryHead">
+        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="auto" class="sole_row">
+          <el-form-item label="生产工厂：">
+            <el-select v-model="plantList.factoryIDValue" class="w300" placeholder="请选择" @change="changeSearchOptions(plantList.factoryIDValue)">
+              <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="生产车间：">
+            <el-select v-model="plantList.workshopIDValue" class="w200" clearable placeholder="请选择" :disabled="plantList.factoryIDValue ==='' || workshopList.length === 0">
+              <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item style="float: right;">
             <el-button type="primary" size="small" @click="getOrderList()" :disabled="plantList.factoryIDValue==='' && plantList.workshopIDValue==='' || workshopList.length === 0" v-if="isAuth('realTime:wheat:wheatMeasuringBin')">查询</el-button>
-          </el-col>
-        </el-row>
+          </el-form-item>
+        </el-form>
       </el-card>
-    </div>
-    <div class="main measurebarn-wheat-pot__body" v-if="isMainAreaShow">
-      <el-card class="newCard area-to-bottom">
-        <el-row :gutter="10">
-          <el-col :span="12" v-for="(item, index) in dataList" :key="index">
-            <el-card class="card-item">
-              <div slot="header">小麦罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span></div>
-              <div style="display: flex;">
-                <div class="card-item_img">
-                  <div class="card-item_img_box">
-                    <div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.wheatList) / (item.holderHold*1), 100)}%`}"></div>
+      <el-row :gutter="10" v-if="isMainAreaShow" class="cardList">
+        <el-col :span="12" v-for="(item, index) in dataList" :key="index">
+          <el-card class="card-item">
+            <div slot="header">小麦罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span></div>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <div class="card-item-color-lump" style="background: #ffbf00;">
+                  <span class="card-item-color-lump_icon iconfont factory-chuguan"></span>
+                  <div class="card-item-color-lump__img">
+                    <div class="card-item-color-lump__img__box">
+                      <div class="card-item-color-lump__img__box__bg" :style="{height: `${Math.min(sumBatch(item.wheatList) / (item.holderHold*1), 100)}%`}"></div>
+                    </div>
+                    <img src="@/assets/img/ui2.0/pot.png" alt="">
                   </div>
-                  <img src="@/assets/img/granary.png" alt="">
                 </div>
-                <div class="card-item_text">
-                  <el-card style="margin-top: 25px;">
-                    <div slot="header">库存明细 <span style="float: right;">合计：{{sumBatch(item.wheatList).toLocaleString()}} KG</span></div>
-                    <el-table
-                      :data="item.wheatList"
-                      stripe
-                      size="medium"
-                      height="200"
-                      min-width="300"
-                      style="width: 100%;">
-                      <el-table-column
-                        prop="batch"
-                        label="批次"
-                        width="auto">
-                      </el-table-column>
-                      <el-table-column
-                        prop="amount"
-                        label="数量"
-                        width="auto"
-                        align="right"
-                        header-align="left">
-                        <template slot-scope="scope">
-                          <div>
-                            {{(scope.row.amount*1).toLocaleString()}} KG
-                          </div>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                  </el-card>
+              </el-col>
+              <el-col :span="12">
+                <div class="card-item-color-lump">
+                  <span class="card-item-color-lump_icon iconfont factory-zongliangguanli"></span>
+                  <p class="card-item-color-lump_text"><span>{{sumBatch(item.wheatList).toLocaleString()}}</span>KG</p>
+                  <p class="card-item-color-lump_text">库存总量</p>
                 </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-card>
+              </el-col>
+            </el-row>
+            <div class="card-item-color-lump_text">
+              <p class="card-item-color-lump_text__title">
+                <i class="card-item-color-lump_text__icon"></i>
+                <span>库存明细</span>
+              </p>
+              <el-table :data="item.wheatList" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="200">
+                <el-table-column prop="batch" width="auto"><template slot="header" slot-scope="scope"><i class="iconfont factory-pici" style="margin-right: 5px;"></i>批次</template></el-table-column>
+                <el-table-column prop="currentQuantity" width="auto" header-align="left">
+                  <template slot="header" slot-scope="scope"><i class="iconfont factory-shuliang" style="font-size: 18px; margin-right: 5px;"></i>数量</template>
+                  <template slot-scope="scope">
+                    {{(scope.row.amount*1).toLocaleString()}} KG
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <!--<div style="display: flex;">-->
+              <!--<div class="card-item_img">-->
+                <!--<div class="card-item_img_box">-->
+                  <!--<div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.wheatList) / (item.holderHold*1), 100)}%`}"></div>-->
+                <!--</div>-->
+                <!--<img src="@/assets/img/granary.png" alt="">-->
+              <!--</div>-->
+              <!--<div class="card-item_text">-->
+                <!--<el-card style="margin-top: 25px;">-->
+                  <!--<div slot="header">库存明细 <span style="float: right;">合计：{{sumBatch(item.wheatList).toLocaleString()}} KG</span></div>-->
+                  <!--<el-table-->
+                    <!--:data="item.wheatList"-->
+                    <!--stripe-->
+                    <!--size="medium"-->
+                    <!--height="200"-->
+                    <!--min-width="300"-->
+                    <!--style="width: 100%;">-->
+                    <!--<el-table-column-->
+                      <!--prop="batch"-->
+                      <!--label="批次"-->
+                      <!--width="auto">-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column-->
+                      <!--prop="amount"-->
+                      <!--label="数量"-->
+                      <!--width="auto"-->
+                      <!--align="right"-->
+                      <!--header-align="left">-->
+                      <!--<template slot-scope="scope">-->
+                        <!--<div>-->
+                          <!--{{(scope.row.amount*1).toLocaleString()}} KG-->
+                        <!--</div>-->
+                      <!--</template>-->
+                    <!--</el-table-column>-->
+                  <!--</el-table>-->
+                <!--</el-card>-->
+              <!--</div>-->
+            <!--</div>-->
+          </el-card>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
@@ -278,7 +305,6 @@ export default {
     color: #1890ff;
     &::after {
       content: " >>";
-      font-size: 12px;
     }
   }
   .card-item {

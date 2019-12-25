@@ -571,6 +571,34 @@
       "font_class": "menu-chanliangfenxi",
       "unicode": "e6a6",
       "unicode_decimal": 59046
+    },
+    {
+      "icon_id": "12496035",
+      "name": "储罐 ",
+      "font_class": "chuguan",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "12496045",
+      "name": "总量管理",
+      "font_class": "zongliangguanli",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "12504059",
+      "name": "批次",
+      "font_class": "pici",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "12504062",
+      "name": "数量",
+      "font_class": "shuliang",
+      "unicode": "e625",
+      "unicode_decimal": 58917
     }
   ]
 }

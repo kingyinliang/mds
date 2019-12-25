@@ -25,56 +25,76 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <div class="card-item-color-lump" style="background: #ffbf00;">
-                  <span class="card-item-color-lump_icon iconfont factory-zhuyi"></span>
+                  <span class="card-item-color-lump_icon iconfont factory-chuguan"></span>
+                  <div class="card-item-color-lump__img">
+                    <div class="card-item-color-lump__img__box">
+                      <div class="card-item-color-lump__img__box__bg" :style="{height: `${Math.min(sumBatch(item.stocks) / (item.holderHold*1), 100)}%`}"></div>
+                    </div>
+                    <img src="@/assets/img/ui2.0/pot.png" alt="">
+                  </div>
                 </div>
               </el-col>
               <el-col :span="12">
                 <div class="card-item-color-lump">
-                  <span class="card-item-color-lump_icon iconfont factory-zhuyi"></span>
-                  <p class="card-item-color-lump_text"><span>2712</span>kg</p>
+                  <span class="card-item-color-lump_icon iconfont factory-zongliangguanli"></span>
+                  <p class="card-item-color-lump_text"><span>{{sumBatch(item.stocks).toLocaleString()}}</span>KG</p>
                   <p class="card-item-color-lump_text">库存总量</p>
                 </div>
               </el-col>
             </el-row>
-            <div class="card-item-color-lump_text"></div>
-            <div style="display: flex;">
-              <div class="card-item_img">
-                <div class="card-item_img_box">
-                  <div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.stocks) / (item.holderHold*1), 100)}%`}"></div>
-                </div>
-                <img src="@/assets/img/granary.png" alt="">
-              </div>
-              <div class="card-item_text">
-                <el-card style="margin-top: 25px;">
-                  <div slot="header">库存明细 <span style="float: right;">合计：{{sumBatch(item.stocks).toLocaleString()}} KG</span></div>
-                  <el-table
-                    :data="item.stocks"
-                    stripe
-                    size="medium"
-                    height="200"
-                    min-width="300"
-                    style="width: 100%;">
-                    <el-table-column
-                      prop="batch"
-                      label="批次"
-                      width="auto">
-                    </el-table-column>
-                    <el-table-column
-                      prop="currentQuantity"
-                      label="数量"
-                      width="auto"
-                      align="right"
-                      header-align="left">
-                      <template slot-scope="scope">
-                        <div>
-                          {{(scope.row.currentQuantity*1).toLocaleString()}} KG
-                        </div>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                </el-card>
-              </div>
+            <div class="card-item-color-lump_text">
+              <p class="card-item-color-lump_text__title">
+                <i class="card-item-color-lump_text__icon"></i>
+                <span>库存明细</span>
+              </p>
+              <el-table :data="item.stocks" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="200">
+                <el-table-column prop="batch" width="auto"><template slot="header" slot-scope="scope"><i class="iconfont factory-pici" style="margin-right: 5px;"></i>批次</template></el-table-column>
+                <el-table-column prop="currentQuantity" width="auto" header-align="left">
+                  <template slot="header" slot-scope="scope"><i class="iconfont factory-shuliang" style="font-size: 18px; margin-right: 5px;"></i>数量</template>
+                  <template slot-scope="scope">
+                    {{(scope.row.currentQuantity*1).toLocaleString()}} KG
+                  </template>
+                </el-table-column>
+              </el-table>
             </div>
+            <!--<div style="display: flex;">-->
+              <!--<div class="card-item_img">-->
+                <!--<div class="card-item_img_box">-->
+                  <!--<div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.stocks) / (item.holderHold*1), 100)}%`}"></div>-->
+                <!--</div>-->
+                <!--<img src="@/assets/img/granary.png" alt="">-->
+              <!--</div>-->
+              <!--<div class="card-item_text">-->
+                <!--<el-card style="margin-top: 25px;">-->
+                  <!--<div slot="header">库存明细 <span style="float: right;">合计：{{sumBatch(item.stocks).toLocaleString()}} KG</span></div>-->
+                  <!--<el-table-->
+                    <!--:data="item.stocks"-->
+                    <!--stripe-->
+                    <!--size="medium"-->
+                    <!--height="200"-->
+                    <!--min-width="300"-->
+                    <!--style="width: 100%;">-->
+                    <!--<el-table-column-->
+                      <!--prop="batch"-->
+                      <!--label="批次"-->
+                      <!--width="auto">-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column-->
+                      <!--prop="currentQuantity"-->
+                      <!--label="数量"-->
+                      <!--width="auto"-->
+                      <!--align="right"-->
+                      <!--header-align="left">-->
+                      <!--<template slot-scope="scope">-->
+                        <!--<div>-->
+                          <!--{{(scope.row.currentQuantity*1).toLocaleString()}} KG-->
+                        <!--</div>-->
+                      <!--</template>-->
+                    <!--</el-table-column>-->
+                  <!--</el-table>-->
+                <!--</el-card>-->
+              <!--</div>-->
+            <!--</div>-->
           </el-card>
         </el-col>
       </el-row>

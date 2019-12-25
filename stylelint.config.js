@@ -32,5 +32,6 @@ module.exports = {
     // // "no-invalid-double-slash-comments": true // 不允许双斜杠注释(/ /…)不支持CSS(stylelint-config-standard)
     "max-empty-lines": null, // 设值 2 解决 html DOM 被误判问题
     "rule-empty-line-before":null // 前面空行
-  }
+  },
+  'ignoreFiles': ["/src/assets/icon/iconfont.css"]
 };
