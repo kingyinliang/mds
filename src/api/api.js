@@ -1716,7 +1716,8 @@ export const JUICE_API = {
 export const POTREPORTFORMS_API = {
   POTREPORTFORMS_LIST: HOST + '/ste/semi/reportForm',
   POTREPORTFORMS_OUT: HOST + '/ste/semi/reportFormExport',
-  POTREPORTFORMS_STOCK_LIST: HOST + '/ste/semi/steStock'
+  POTREPORTFORMS_STOCK_LIST: HOST + '/ste/semi/steStock',
+  POTREPORTFORMS_STOCK_OUT: HOST + '/ste/semi/steStockExport'
 }
 /**
  *  看板接口
@@ -1728,7 +1729,8 @@ export const ECHARTS_API = {
   KOJIMAKING_WORKSHOP_HOUSEDETAIL: HOST + '/zhiqu/board/houseDetail',
   KOJIMAKING_WORKSHOP_HOUSEMATERIAL: HOST + '/zhiqu/board/houseUsedMaterial',
   KOJIMAKING_WORKSHOP_HOUSEPHASE: HOST + '/zhiqu/board/houseUsedPhase',
-  KOJIMAKING_DETAIL_LINE: HOST + '/zhiqu/board/lineChart'
+  KOJIMAKING_DETAIL_LINE: HOST + '/zhiqu/board/lineChart',
+  OZONE_LINE: HOST + '/o3/board/boardList'
 }
 /**
  *  计粮仓 api

@@ -364,7 +364,7 @@ export default {
       exportFile(`${POTREPORTFORMS_API.POTREPORTFORMS_OUT}`, '罐区报表', this)
     },
     ExportExcelA () {
-      exportFile(`${POTREPORTFORMS_API.POTREPORTFORMS_OUT}`, '罐区报表', this)
+      exportFile(`${POTREPORTFORMS_API.POTREPORTFORMS_STOCK_OUT}`, '库存报表', this)
     },
     // 改变每页条数
     handleSizeChange1 (val) {
