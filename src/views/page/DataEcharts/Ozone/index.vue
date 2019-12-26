@@ -20,6 +20,7 @@
 import echarts from 'echarts'
 import { line } from './Line'
 import { ECHARTS_API } from '@/api/api'
+import { throttle } from '@/utils/index'
 export default {
   name: 'index',
   data () {
@@ -38,17 +39,10 @@ export default {
   },
   mounted () {
     this.getDataList()
-    // this.Line1 = echarts.init(document.getElementById('Line1'))
-    // this.Line1.setOption(line)
-    // window.addEventListener('resize', () => {
-    //   if (this.Line1) {
-    //     this.Line1.resize()
-    //   }
-    // })
   },
   methods: {
     getDataList () {
-      this.$http(`${ECHARTS_API.OZONE_LINE}`, 'POST', {}).then(({data}) => {
+      this.$http(`${ECHARTS_API.OZONE_LINE}`, 'POST', {}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           if (data.list.length) {
             this.dataList = data.list[0]
@@ -66,23 +60,36 @@ export default {
       this.dataList.forEach((item, index) => {
         this['Line' + index] = echarts.init(document.getElementById('Line' + index))
         this['Line' + index].setOption(this.setLine(item, index))
+        this['Line' + index].resize()
         if (index + 1 === this.dataList.length) {
-          window.addEventListener('resize', () => {
+          window.addEventListener('resize', throttle(() => {
             this.dataList.forEach((it, indexs) => {
               if (this['Line' + indexs]) {
                 this['Line' + indexs].resize()
               }
             })
-          })
+          }, 500, 2000))
         }
       })
     },
     setLine (data, index) {
       let option = JSON.parse(JSON.stringify(line))
       option.title[0].text = data.name
-      option.title[1].text = `最高浓度：${this.sumData[index].data}\n${this.sumData[index].time}`
       option.xAxis.data = data.time
       option.series[0].data = data.temp
+      if (/浓度/g.test(data.name)) {
+        option.yAxis.max = 120
+        option.yAxis.name = 'ppm'
+        option.title[1].text = `最高浓度：${this.sumData[index].data}\n${this.sumData[index].time}`
+      } else if (/温度/g.test(data.name)) {
+        option.yAxis.max = 100
+        option.yAxis.name = '℃'
+        option.title[1].text = `最高温度：${this.sumData[index].data}\n${this.sumData[index].time}`
+      } else {
+        option.yAxis.max = 100
+        option.yAxis.name = '%'
+        option.title[1].text = `最高湿度：${this.sumData[index].data}\n${this.sumData[index].time}`
+      }
       return option
     }
   },

@@ -17,6 +17,10 @@ export let line = {
     },
     text: '三楼更衣室浓度'
   }],
+  dataZoom: [{
+    type: 'inside',
+    throttle: 50
+  }],
   xAxis: {
     axisLine: {
       lineStyle: {
@@ -33,6 +37,8 @@ export let line = {
   },
   yAxis: {
     name: '浓度/°',
+    min: 0,
+    max: 120,
     nameTextStyle: {
       color: '#fff',
       fontSize: '18px'
