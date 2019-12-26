@@ -1,7 +1,16 @@
 export let line = {
   title: [{
     left: '15px',
-    top: '15px',
+    top: '10px',
+    textStyle: {
+      color: '#fff',
+      fontSize: '24px'
+    },
+    text: '三楼更衣室浓度'
+  }, {
+    right: '0px',
+    top: '10px',
+    lineHeight: '34px',
     textStyle: {
       color: '#fff',
       fontSize: '18px'
@@ -23,6 +32,11 @@ export let line = {
     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   },
   yAxis: {
+    name: '浓度/°',
+    nameTextStyle: {
+      color: '#fff',
+      fontSize: '18px'
+    },
     type: 'value',
     axisLine: {
       lineStyle: {

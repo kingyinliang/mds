@@ -6,25 +6,9 @@
       <div class="Container_box">
         <img src="@/assets/img/ozoneTitle.png" alt="" class="Container_box_title">
         <el-row class="Container_box_row" :gutter="10">
-          <el-col :span="8" class="Container_box_row_col">
+          <el-col :span="8" class="Container_box_row_col" v-for="(item, index) in dataList" :key="index">
             <img src="@/assets/img/ozoneItemBg.png" alt="">
-            <div class="Container_box_row_col_echarts" id="Line1"></div>
-          </el-col>
-          <el-col :span="8" class="Container_box_row_col">
-            <img src="@/assets/img/ozoneItemBg.png" alt="">
-            <div class="Container_box_row_col_echarts" id="Line2"></div>
-          </el-col>
-          <el-col :span="8" class="Container_box_row_col">
-            <img src="@/assets/img/ozoneItemBg.png" alt="">
-            <div class="Container_box_row_col_echarts"></div>
-          </el-col>
-          <el-col :span="8" class="Container_box_row_col">
-            <img src="@/assets/img/ozoneItemBg.png" alt="">
-            <div class="Container_box_row_col_echarts"></div>
-          </el-col>
-          <el-col :span="8" class="Container_box_row_col">
-            <img src="@/assets/img/ozoneItemBg.png" alt="">
-            <div class="Container_box_row_col_echarts"></div>
+            <div class="Container_box_row_col_echarts" :id="'Line' + index"></div>
           </el-col>
         </el-row>
       </div>
@@ -35,30 +19,73 @@
 <script>
 import echarts from 'echarts'
 import { line } from './Line'
+import { ECHARTS_API } from '@/api/api'
 export default {
   name: 'index',
   data () {
     return {
+      Line0: null,
       Line1: null,
       Line2: null,
-      Line3: null
+      Line3: null,
+      Line4: null,
+      Line5: null,
+      Line6: null,
+      Line7: null,
+      dataList: [],
+      sumData: []
     }
   },
   mounted () {
-    this.Line1 = echarts.init(document.getElementById('Line1'))
-    this.Line2 = echarts.init(document.getElementById('Line2'))
-    this.Line1.setOption(line)
-    this.Line2.setOption(line)
-    window.addEventListener('resize', () => {
-      if (this.Line1) {
-        this.Line1.resize()
-      }
-      if (this.Line2) {
-        this.Line2.resize()
-      }
-    })
+    this.getDataList()
+    // this.Line1 = echarts.init(document.getElementById('Line1'))
+    // this.Line1.setOption(line)
+    // window.addEventListener('resize', () => {
+    //   if (this.Line1) {
+    //     this.Line1.resize()
+    //   }
+    // })
   },
-  methods: {},
+  methods: {
+    getDataList () {
+      this.$http(`${ECHARTS_API.OZONE_LINE}`, 'POST', {}).then(({data}) => {
+        if (data.code === 0) {
+          if (data.list.length) {
+            this.dataList = data.list[0]
+            this.sumData = data.list[1]
+            this.$nextTick(() => {
+              this.setEcharts()
+            })
+          }
+        } else {
+          this.$error_SHINHO(data.msg)
+        }
+      })
+    },
+    setEcharts () {
+      this.dataList.forEach((item, index) => {
+        this['Line' + index] = echarts.init(document.getElementById('Line' + index))
+        this['Line' + index].setOption(this.setLine(item, index))
+        if (index + 1 === this.dataList.length) {
+          window.addEventListener('resize', () => {
+            this.dataList.forEach((it, indexs) => {
+              if (this['Line' + indexs]) {
+                this['Line' + indexs].resize()
+              }
+            })
+          })
+        }
+      })
+    },
+    setLine (data, index) {
+      let option = JSON.parse(JSON.stringify(line))
+      option.title[0].text = data.name
+      option.title[1].text = `最高浓度：${this.sumData[index].data}\n${this.sumData[index].time}`
+      option.xAxis.data = data.time
+      option.series[0].data = data.temp
+      return option
+    }
+  },
   computed: {},
   components: {
     EchartsHead: resolve => {
@@ -74,6 +101,7 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
+    transition: all 1s;
     .Container {
       position: relative;
       padding: 20px 30px 0 140px;

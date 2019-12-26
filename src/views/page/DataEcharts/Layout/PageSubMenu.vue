@@ -4,14 +4,14 @@
   </div>
   <div v-else>
     <el-submenu
-      v-if="page.list.length">
+      v-if="page.list.filter(it => it.type !== '2').length">
       <template slot="title">
         <div>
           <i :class="page.icon || ''" class="site-sidebar__menu-icon iconfont"></i>
           <span>{{ page.name }}</span>
         </div>
       </template>
-      <page-sub-menu v-for="(item, index) in page.list" :page="item" :key="index"></page-sub-menu>
+      <page-sub-menu v-for="(item, index) in page.list.filter(it => it.type !== '2')" :page="item" :key="index"></page-sub-menu>
     </el-submenu>
     <el-menu-item v-else @click="goPage(page)" :index="page.menuId">
       <i :class="page.icon || ''" class="site-sidebar__menu-icon iconfont"></i>

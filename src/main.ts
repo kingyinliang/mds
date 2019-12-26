@@ -30,6 +30,9 @@ if (process.env.NODE_ENV === 'production') {
 // queryTable
 import query_table from '@/components/QueryTable/index'
 Vue.use(query_table)
+// ScrollTop
+import ScrollTop from '@/components/ScrollToTop/index'
+Vue.use(ScrollTop)
 
 elementUi()
 // SentryUtil.init()
