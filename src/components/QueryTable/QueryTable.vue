@@ -78,7 +78,7 @@
             <slot name="mds-button-middle"></slot>
           </el-col>
         </el-row>
-        <el-table :data="tableData" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+        <el-table :data="tableData" ref="table" :height="tableHeight" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
           <el-table-column
             v-if="showSelectColumn"
             :selectable="selectableFn"
@@ -108,7 +108,9 @@
               :key="chind.prop"
               :prop="chind.prop"
               :label="chind.label"
-              :formatter="chind.formatter">
+              :formatter="chind.formatter"
+              :show-overflow-tooltip="chind.showOverFlowTooltip"
+              :width="chind.width || ''">
             </el-table-column>
           </el-table-column>
           <el-table-column
@@ -121,7 +123,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-row >
+        <el-row v-if="showPage === true">
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -151,7 +153,8 @@ export default {
       queryFormRules: {},
       optionLists: {},
       tableData: [],
-      multipleSelection: []
+      multipleSelection: [],
+      tableHeight: ''
     }
   },
   props: {
@@ -230,6 +233,14 @@ export default {
     selectableFn: {
       type: Function,
       default: () => true
+    },
+    showPage: {
+      type: Boolean,
+      default: true
+    },
+    fixTableHeightFromTop: {
+      type: Number,
+      default: 0
     }
   },
   created () {
@@ -237,6 +248,16 @@ export default {
   },
   mounted () {
     this.headanimation(this.$)
+    this.$nextTick(function () {
+      if (this.fixTableHeightFromTop !== 0) {
+        this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - this.fixTableHeightFromTop
+        // 监听窗口大小变化
+        let self = this
+        window.onresize = function () {
+          self.tableHeight = window.innerHeight - self.$refs.table.$el.offsetTop - this.fixTableHeightFromTop
+        }
+      }
+    })
   },
   methods: {
     // 设置下拉label

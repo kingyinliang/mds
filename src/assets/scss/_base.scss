@@ -156,6 +156,24 @@ img {
   .site-content__wrapper {
     margin-left: 64px;
   }
+  .site-content__wrapper {
+    height: 100%;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      width: 6px;
+      background: #ebeef5;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background: #ccc;
+      height: 120px;
+    }
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 1);
+    }
+  }
   .site-navbar__brand {
     &-lg {
       display: none;
@@ -370,7 +388,7 @@ img {
 /* Content
 ------------------------------ */
 .site-content {
-  //position: relative;
+  position: relative;
   padding-bottom: 40px;
   min-height: 558px;
   overflow: hidden;

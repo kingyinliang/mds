@@ -32,6 +32,9 @@ import query_table from '@/components/QueryTable/index'
 Vue.use(query_table)
 import DataEntry from '@/components/DataEntry/index'
 Vue.use(DataEntry)
+// ScrollTop
+import ScrollTop from '@/components/ScrollToTop/index'
+Vue.use(ScrollTop)
 
 elementUi()
 // SentryUtil.init()
