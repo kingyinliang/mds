@@ -1,5 +1,6 @@
 <template>
   <el-col>
+    <data-entry></data-entry>
     <div class="header_main">
       <el-card class="searchCard">
         <el-row type="flex">

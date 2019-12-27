@@ -30,6 +30,8 @@ if (process.env.NODE_ENV === 'production') {
 // queryTable
 import query_table from '@/components/QueryTable/index'
 Vue.use(query_table)
+import DataEntry from '@/components/DataEntry/index'
+Vue.use(DataEntry)
 
 elementUi()
 // SentryUtil.init()
