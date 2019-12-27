@@ -571,34 +571,7 @@ img {
     }
   }
 }
-.ShinHoDialog {
-  .el-dialog {
-    border-radius: 10px 10px 0 0;
-  }
-  .el-dialog__header {
-    border-radius: 10px 10px 0 0;
-    background: #3a8ee6;
-    span,
-    button,
-    i {
-      color: white !important;
-    }
-  }
-}
-// 弹框title样式
-.dialog__class {
-  border-radius: 6px 6px 6px 6px !important;
-  .el-dialog__header {
-    height: 59px;
-    background: rgba(24, 144, 255, 1);
-    border-radius: 6px 6px 0 0;
-    color: #fff;
-    font-size: 20px;
-    .el-dialog__headerbtn .el-dialog__close {
-      color: #fff;
-    }
-  }
-}
+
 .ra_btn {
   padding: 7px !important;
 }
@@ -703,8 +676,9 @@ img {
   top: 90px;
   z-index: 1000;
 }
-/* ui2.0 queryHead*/
+/* ui2.0 */
 .header_main {
+  /* 表头查询样式 */
   .queryHead {
     .el-card__body {
       padding: 16px 16px 8px 16px !important;
@@ -733,6 +707,7 @@ img {
       }
     }
   }
+  /* 类似炒麦首页 */
   .queryHead .el-select,
   .cardList .el-select {
     .el-input__inner {
@@ -749,10 +724,21 @@ img {
       }
     }
   }
+  /* 色块布局带批次的首页布局 */
   .cardList {
     margin-top: 20px;
     .el-card__header {
+      font-size: 16px;
+      color: #666;
       padding: 16px !important;
+      .card-item_detail {
+        float: right;
+        cursor: pointer;
+        color: #1890ff;
+        &::after {
+          content: " >>";
+        }
+      }
     }
     .el-card__body {
       padding: 16px !important;
@@ -764,6 +750,7 @@ img {
       border-radius: 8px;
       background: #487BFF;
       &_icon {
+        font-size: 22px;
         position: absolute;
         right: 10px;
         top: 16px;
@@ -864,6 +851,131 @@ img {
       }
     }
   }
+  /* 数据录入左右色块布局 */
+  .dataEntry-head-leftRight {
+    .card-left,.card-right {
+      height: 220px;
+      padding: 12px;
+      box-shadow:3px 3px 5px 1px rgba(214,210,196,1);
+      border-radius:8px;
+    }
+    &__title {
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      i {
+        font-weight: normal;
+        margin-right: 10px;
+      }
+    }
+    &-pot {
+      width: 150px;
+      padding-top: 10px;
+      margin: auto;
+      position: relative;
+      img {
+        width: 100%;
+      }
+      &__tank {
+        width: 44px;
+        height: 82px;
+        position: absolute;
+        top: 32px;
+        left: 51px;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-end;
+        overflow: hidden;
+        &__bg {
+          flex: 1;
+          width: 100%;
+          height: 50%;
+          box-shadow: 3px 3px 5px 0 #F7701F;
+          background-image: radial-gradient(at center top, #FAD961, #F76B1C);
+        }
+      }
+    }
+    &-message {
+      margin-top: 70px;
+      display: flex;
+      &__item {
+        flex: 1;
+        border-right: 1px solid white;
+        p {
+          height: 23px;
+          max-width: 164px;
+          margin: auto;
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          color: white;
+          text-align: center;
+          i {
+            margin-right: 5px;
+          }
+        }
+        p:first-child {
+          font-size: 20px;
+          margin-bottom: 15px;
+        }
+        p:last-child {
+          font-size: 14px;
+        }
+      }
+      &__item:last-child {
+        border-right: none;
+      }
+    }
+  }
+  /* 标签页样式 */
+  .tabsPages {
+    margin-top: 10px;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    .el-tabs__header {
+      background: none !important;
+      border-bottom: none !important;
+    }
+    .el-tabs__item {
+      height: auto !important;
+      line-height: 22px !important;
+      font-size: 16px;
+      color: #666666;
+      padding: 6px 8px !important;
+      background: rgba(235, 235, 235, 1);
+      border-radius: 8px 8px 0 0;
+      box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.1);
+      border: 1px solid rgba(226, 226, 226, 1);
+    }
+    .el-tabs__item.is-active {
+      border-bottom: 1px solid white;
+    }
+    .el-tabs__content {
+      min-height: 300px;
+      padding: 16px 10px;
+      background: white;
+      border-radius: 0 8px 0 0;
+      box-shadow:3px 3px 5px 0 rgba(0,0,0,0.1);
+    }
+  }
+  /* table样式 */
+  .newTable {
+    .el-table__header {
+      th {
+        text-align: center;
+        color: white;
+        background: #487BFF;
+        border: none;
+      }
+    }
+    .el-table__row:hover {
+      td:first-child {
+        border-left: 2px solid #487BFF;
+      }
+    }
+  }
 }
 /*table scrollbar*/
 .el-table__body-wrapper::-webkit-scrollbar {
@@ -879,5 +991,80 @@ img {
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 3px;
   background: rgba(255, 255, 255, 1);
+}
+/* dialog */
+.ShinHoDialog {
+  .el-dialog {
+    border-radius: 10px 10px 0 0;
+  }
+  .el-dialog__header {
+    border-radius: 10px 10px 0 0;
+    background: #3a8ee6;
+    span,
+    button,
+    i {
+      color: white !important;
+    }
+  }
+}
+.el-dialog {
+  border-radius: 6px 6px 6px 6px !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(72, 123, 255, 1);
+    border-radius: 6px 6px 0 0;
+    color: #fff;
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
+    }
+  }
+  .el-dialog__body {
+    padding: 20px 20px 0;
+  }
+  .disabled-text {
+    font-size: 13px;
+    height: 32px;
+    background: #f5f5f5;
+    padding-left: 10px;
+    border-radius: 4px;
+  }
+  .el-select {
+    .el-input__inner {
+      padding-right: 32px;
+      padding-left: 15px;
+    }
+    .el-input__suffix {
+      right: 0;
+      background: #487bff;
+      border-radius: 0 4px 4px 0;
+      .el-input__icon {
+        width: 32px;
+        color: white;
+      }
+    }
+  }
+  .el-date-editor {
+    .el-input__inner {
+      padding-right: 46px !important;
+      padding-left: 15px !important;
+    }
+    .el-input__prefix {
+      right: 0;
+      left: auto;
+      background: #487bff;
+      border-radius: 0 4px 4px 0;
+      .el-input__icon {
+        width: 32px;
+        color: white;
+      }
+    }
+    .el-input__suffix {
+      right: 26px;
+    }
+  }
+}
+.bg_dialog.el-dialog {
+  background: #f5f5f5;
 }
 
