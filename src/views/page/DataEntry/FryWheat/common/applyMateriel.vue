@@ -70,7 +70,7 @@
         <auditLog :tableData="readAudit"></auditLog>
       </el-col>
     </el-row>
-    <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" width="450px">
+    <el-dialog :close-on-click-modal="false" :title="dialogTitle" :visible.sync="dialogFormVisible" width="450px">
       <el-form :model="cang" size="small" :rules="cangrules" ref="cang">
         <el-form-item label="领用粮仓：" :label-width="formLabelWidth">{{cang.holderName}}</el-form-item>
         <el-form-item label="批次：" :label-width="formLabelWidth" prop="batch">

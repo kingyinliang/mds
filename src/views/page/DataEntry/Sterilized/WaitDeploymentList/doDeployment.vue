@@ -100,7 +100,7 @@
         </el-table>
       </el-card>
     </div>
-    <el-dialog :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
       <div slot="title" style="line-height: 59px;">订单分配</div>
       <el-table ref="multipleTable" :data="orderPropList" :row-key="getRowKeys" @selection-change="handleSelectionChange" border header-row-class-name="tableHead">
         <el-table-column type="selection" width="35" :reserve-selection="true" prop="orderNo"></el-table-column>

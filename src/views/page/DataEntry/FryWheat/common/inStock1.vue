@@ -125,7 +125,7 @@
         <auditLog :tableData="readAudit"></auditLog>
       </el-col>
     </el-row>
-    <el-dialog :title="this.stockForm.flourDeviceName" :visible.sync="dialogFormVisible" width="450px">
+    <el-dialog :close-on-click-modal="false" :title="this.stockForm.flourDeviceName" :visible.sync="dialogFormVisible" width="450px">
       <el-form :model="stockForm" :rules="dataRule" ref="stockForm">
         <el-form-item label="粮仓" :label-width="formLabelWidth" required prop="wheatDeviceId">
           <el-select @change="changeWheatContainer"  v-model="stockForm.wheatDeviceId" value-key="wheatDeviceId" placeholder="请选择粮仓" style="width: 220px;" :disabled="!isRedact">

@@ -96,7 +96,7 @@
             </el-card>
           </el-col>
         </el-row>
-        <el-dialog :visible.sync="dialogFormVisible1" @close="clearForm('addDep')" :title="sibling?'新增同级':'新增下级'" id="adddepform">
+        <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible1" @close="clearForm('addDep')" :title="sibling?'新增同级':'新增下级'" id="adddepform">
           <el-form :model="addDep" size="small" label-position="left" label-width="100px">
             <el-form-item label="部门编号：">
               <el-input v-model="addDep.deptCode" auto-complete="off"></el-input>
