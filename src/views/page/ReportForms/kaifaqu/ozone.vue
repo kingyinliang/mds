@@ -4,17 +4,17 @@
       ref="queryTable"
       :queryFormData="queryFormData"
       :list-interface="listInterface"
-      :query-auth="'report:formh:getAllStatusList'"
+      :query-auth="'o3:board:charList'"
       :column="column"
       :export-excel="true"
       :export-option="exportOption"
-      :showPage="false">
+      :showPage="true">
     </query-table>
   </div>
 </template>
 
 <script>
-import { REP_API, BASICDATA_API } from '@/api/api'
+import { REP_API, SYSTEMSETUP_API } from '@/api/api'
 export default {
   name: 'index',
   data () {
@@ -23,49 +23,48 @@ export default {
         {
           type: 'select',
           label: '名称',
-          prop: 'factory',
+          prop: 'paraName',
           defaultOptionsFn: () => {
-            return this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false)
+            return this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {type: 'O3'}, false, false, false)
           },
           resVal: {
-            resData: 'typeList',
-            label: ['deptName'],
-            value: 'deptId'
+            resData: 'dicList',
+            label: ['value'],
+            value: 'code'
           }
         },
         {
-          type: 'date-interval',
+          type: 'date-picker',
           label: '时间选择',
           dataType: 'month',
-          prop: 'productDate',
-          propTwo: 'productDate2'
+          prop: 'endTime',
+          valueFormat: 'yyyy-MM'
         },
         {
           type: 'input',
           label: '限定值',
-          dataType: 'month',
-          prop: 'productDate'
+          prop: 'v'
         }
       ],
       listInterface: (params) => {
-        return this.$http(`${REP_API.DAYS_REPROT_LIST}`, 'POST', params)
+        return this.$http(`${REP_API.OZONE_SEARCH_LIST}`, 'POST', params)
       },
       exportOption: {
-        exportInterface: REP_API.ORDER_STATUS_OUT_API,
-        auth: 'report:formh:getAllStatusList',
-        text: '制曲日报表数据导出'
+        exportInterface: REP_API.OZONE_SEARCH_EXPECT,
+        auth: 'o3:board:expectCharList',
+        text: '臭氧看板数据导出'
       },
       column: [
         {
-          prop: 'theDate',
+          prop: 'paraName',
           label: '名称'
         },
         {
-          prop: 'workShopName',
+          prop: 'v',
           label: '数值'
         },
         {
-          prop: 'productLineName',
+          prop: 'dateTime',
           label: '时间'
         }
       ]
