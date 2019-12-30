@@ -27,6 +27,7 @@ export default {
           defaultOptionsFn: () => {
             return this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {type: 'O3'}, false, false, false)
           },
+          defaultValue: '',
           resVal: {
             resData: 'dicList',
             label: ['value'],
