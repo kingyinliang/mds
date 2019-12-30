@@ -923,7 +923,9 @@ export const REP_API = {
   REP_ADJUST_LIST_API: HOST + '/ver/adjust/exportList',
   /** ******************** 通用报表  START *************************** */
   CURRENT_MATERIALTRACEABILITY_LIAT: HOST + '/report/production/materielTraceSelectInfo',
-  CURRENT_MATERIALTRACEABILITY_LIST: HOST + '/report/production/materielTrace'
+  CURRENT_MATERIALTRACEABILITY_LIST: HOST + '/report/production/materielTrace',
+  OZONE_SEARCH_LIST: HOST + '/o3/board/charList', // 臭氧看板
+  OZONE_SEARCH_EXPECT: HOST + '/o3/board/expectCharList' // 臭氧看板导出
 }
 /*
 *炒麦api
@@ -1706,6 +1708,7 @@ export const JUICE_API = {
   JUICE_JUICE_DETAIL: HOST + '/juice/pot/juiceItem', // 详情
   JUICE_JUICE_STOCKITEM: HOST + '/juice/pot/juiceStockItem', // 库存详情
   JUICE_STOCKITEM_KUCUN: HOST + '/juice/pot/juiceStockItemExport', // 导出
+  JUICE_POT_STOCKSUM: HOST + '/juice/pot/juiceStockSum', // 原汁库存汇报表
   JUICE_SEARCH_POT_LIST: HOST + '/juice/pot/holderList',
   JUICE_BRINGOUTPROP_FA_LIST: HOST + '/juice/pot/addPotList',
   JUICE_BRINGOUTPROP_TIAO_LIST: HOST + '/juice/pot/allocateHolderList'

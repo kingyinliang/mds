@@ -153,11 +153,14 @@ export default {
       queryFormRules: {},
       optionLists: {},
       tableData: [],
-      multipleSelection: [],
-      tableHeight: ''
+      multipleSelection: []
     }
   },
   props: {
+    tableHeight: {
+      type: String,
+      default: ''
+    },
     returnColumnType: {
       type: String,
       default: 'page'
