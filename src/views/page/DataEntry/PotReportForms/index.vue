@@ -301,21 +301,21 @@ export default {
   methods: {
     cellStyle1 ({row, column, rowIndex, columnIndex}) {
       if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
-        return 'background: #d9d9d9;'
+        return '' // return 'background: #d9d9d9;'
       } else {
         return ''
       }
     },
     cellStyle2 ({row, column, rowIndex, columnIndex}) {
       if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5 || columnIndex === 6) {
-        return 'background: #d9d9d9;'
+        return '' // return 'background: #d9d9d9;'
       } else {
         return ''
       }
     },
     cellStyle3 ({row, column, rowIndex, columnIndex}) {
       if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
-        return 'background: #d9d9d9;'
+        return '' // return 'background: #d9d9d9;'
       } else {
         return ''
       }

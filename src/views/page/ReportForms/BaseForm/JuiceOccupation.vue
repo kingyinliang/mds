@@ -70,7 +70,7 @@ export default {
           },
           defaultValue: '',
           defaultOptionsFn: (val) => {
-            return this.$http(`${BASICDATA_API.FINDSAP_API}`, 'POST', {params: ''}, false, false, false)
+            return this.$http(`${REP_API.JUICEOCCUPATION_SEMIPROD}`, 'POST', {params: ''}, false, false, false)
           }
         },
         {
@@ -103,7 +103,7 @@ export default {
         },
         {
           prop: 'material',
-          label: '生产物料',
+          label: '物料',
           width: '220'
         },
         {

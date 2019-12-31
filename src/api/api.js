@@ -928,6 +928,7 @@ export const REP_API = {
   OZONE_SEARCH_LIST: HOST + '/o3/board/charList', // 臭氧看板
   OZONE_SEARCH_EXPECT: HOST + '/o3/board/expectCharList', // 臭氧看板导出
   JUICEOCCUPATION_LIST: HOST + '/juiceOccupy/report',
+  JUICEOCCUPATION_SEMIPROD: HOST + '/sys/sapmaterialitem/semiProductList', // 原汁占用报表 - 品项
   JUICEOCCUPATION_OUT: HOST + '/juiceOccupy/export'
 
 }
