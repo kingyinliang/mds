@@ -63,6 +63,7 @@ export default {
           label: '选择月份',
           dataType: 'month',
           prop: 'productDate',
+          valueFormat: 'yyyy-MM',
           defaultValue: dateFormat(new Date(), 'yyyy-MM')
         }
       ],

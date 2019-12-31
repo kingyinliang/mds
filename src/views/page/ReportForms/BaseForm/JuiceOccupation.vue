@@ -103,7 +103,8 @@ export default {
         },
         {
           prop: 'material',
-          label: '生产物料'
+          label: '生产物料',
+          width: '220'
         },
         {
           prop: 'batch',
@@ -112,8 +113,7 @@ export default {
         },
         {
           prop: 'amount',
-          label: '数量',
-          width: '80'
+          label: '数量'
         },
         {
           prop: 'unit',
