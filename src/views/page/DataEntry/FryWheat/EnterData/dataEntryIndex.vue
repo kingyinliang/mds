@@ -1,6 +1,28 @@
 <template>
   <el-col>
-    <data-entry></data-entry>
+    <data-entry
+      :headerBase="headerBase"
+      :formHeader="formHeader"
+      :tabs="tabs">
+      <template slot="1" slot-scope="data">
+        <ready-time ref="readytime" :isRedact="data.isRedact" :formHeader="formHeader"></ready-time>
+      </template>
+      <template slot="2" slot-scope="data">
+        <worker ref="workerref" :isRedact="data.isRedact" :order="formHeader"></worker>
+      </template>
+      <template slot="3" slot-scope="data">
+        <exc-record ref="excrecord" :isRedact="data.isRedact" :order="formHeader"></exc-record>
+      </template>
+      <template slot="4" slot-scope="data">
+        <in-stock ref="instock" :isRedact="data.isRedact" :order="formHeader" ></in-stock>
+      </template>
+      <template slot="5" slot-scope="data">
+        <apply-materiel ref="applymateriel" :isRedact="data.isRedact" :order="formHeader" ></apply-materiel>
+      </template>
+      <template slot="6" slot-scope="data">
+        <text-record ref="textrecord" :isRedact="data.isRedact" ></text-record>
+      </template>
+    </data-entry>
     <div class="header_main">
       <el-card class="searchCard">
         <el-row type="flex">
@@ -43,7 +65,7 @@
                 <el-button :style="{'color': readyState === 'noPass'? 'red' : ''}">准备时间</el-button>
               </el-tooltip>
             </span>
-            <ready-time ref="readytime" :isRedact="isRedact" :formHeader="formHeader" @SetReadyStatus="SetReadyStatus"></ready-time>
+            <!--<ready-time ref="readytime" :isRedact="isRedact" :formHeader="formHeader" @SetReadyStatus="SetReadyStatus"></ready-time>-->
           </el-tab-pane>
           <el-tab-pane name="2">
             <span slot="label"  class="spanview">
@@ -73,7 +95,7 @@
                 <el-button :style="{'color': applyMaterielState === 'noPass'? 'red' : ''}">物料领用</el-button>
               </el-tooltip>
             </span>
-            <apply-materiel ref="applymateriel" :isRedact="isRedact" :order="formHeader" @setApplyMaterielState='setApplyMaterielState' :applyMaterielState='applyMaterielState'></apply-materiel>
+            <!--<apply-materiel ref="applymateriel" :isRedact="isRedact" :order="formHeader" @setApplyMaterielState='setApplyMaterielState' :applyMaterielState='applyMaterielState'></apply-materiel>-->
           </el-tab-pane>
           <el-tab-pane name="6">
             <span slot="label" class="spanview">
@@ -101,6 +123,64 @@ export default {
   name: 'dataEntryIndex',
   data () {
     return {
+      headerBase: [
+        {type: 'p',
+          icon: 'factory-shengchanchejian',
+          label: '生产车间',
+          value: 'workShopName'},
+        {type: 'p',
+          icon: 'factory-shengchanxian',
+          label: '生产产线',
+          value: 'productLineName'},
+        {type: 'p',
+          icon: 'factory-bianhao',
+          label: '订单编号',
+          value: 'orderNo'},
+        {type: 'p',
+          icon: 'factory-dingdan',
+          label: '订单日期',
+          value: 'orderDate'},
+        {type: 'p',
+          icon: 'factory-pinleiguanli',
+          label: '生产品项',
+          value: ['materialCode', 'materialName']},
+        {type: 'p',
+          icon: 'factory--meirijihuachanliangpeizhi',
+          label: '计划产量',
+          value: ['planOutput', 'outputUnit']},
+        {type: 'p',
+          icon: 'factory-xianchangrenyuan',
+          label: '提交人员',
+          value: 'operator'},
+        {type: 'p',
+          icon: 'factory-riqi',
+          label: '提交时间',
+          value: 'operDate'},
+        {type: 'date-picker',
+          icon: 'factory-riqi1',
+          label: '生产日期',
+          value: 'productDate'}
+      ],
+      tabs: [
+        {
+          label: '准备时间'
+        },
+        {
+          label: '人员'
+        },
+        {
+          label: '异常记录'
+        },
+        {
+          label: '生产入库'
+        },
+        {
+          label: '物料领用'
+        },
+        {
+          label: '文本记录'
+        }
+      ],
       orderStatus: '',
       isRedact: false,
       orderNo: '',

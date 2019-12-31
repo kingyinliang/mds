@@ -84,7 +84,7 @@ export default {
   height: 40px;
   background: rgba(72, 123, 255, 0.88);
   position: fixed;
-  bottom: 30px;
+  bottom: 47px;
   right: 30px;
   z-index: 99999;
   border-radius: 50%;
@@ -96,7 +96,8 @@ export default {
     display: block;
   }
   span {
-    font-size: 14px;
+    font-size: 12px;
+    display: block;
   }
 }
 </style>

@@ -141,6 +141,24 @@ img {
 .site-content--tabs > .el-tabs .el-tabs__header {
   transition: inline-block 0.3s, left 0.3s, width 0.3s, margin-left 0.3s, font-size 0.3s;
 }
+.site-content__wrapper {
+  height: 100%;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 6px;
+    background: #ebeef5;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: #ccc;
+    height: 120px;
+  }
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 1);
+  }
+}
 .site-sidebar--fold {
   .site-navbar__header,
   .site-navbar__brand,
@@ -155,24 +173,6 @@ img {
   .site-navbar__body,
   .site-content__wrapper {
     margin-left: 64px;
-  }
-  .site-content__wrapper {
-    height: 100%;
-    overflow-y: scroll;
-    &::-webkit-scrollbar {
-      width: 6px;
-      background: #ebeef5;
-    }
-    &::-webkit-scrollbar-thumb {
-      border-radius: 3px;
-      background: #ccc;
-      height: 120px;
-    }
-    &::-webkit-scrollbar-track {
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 1);
-    }
   }
   .site-navbar__brand {
     &-lg {
@@ -389,7 +389,7 @@ img {
 ------------------------------ */
 .site-content {
   position: relative;
-  padding-bottom: 40px;
+  padding-bottom: 80px;
   min-height: 558px;
   overflow: hidden;
   //padding: 15px;
@@ -694,6 +694,7 @@ img {
   top: 90px;
   z-index: 1000;
 }
+
 /* ui2.0 */
 .header_main {
   /* 表头查询样式 */
@@ -964,7 +965,7 @@ img {
       line-height: 22px !important;
       font-size: 16px;
       color: #666666;
-      padding: 6px 8px !important;
+      padding: 6px 16px !important;
       background: rgba(235, 235, 235, 1);
       border-radius: 8px 8px 0 0;
       box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.1);
@@ -998,6 +999,15 @@ img {
     }
   }
 }
+/* ui2.0 */
+// tabs加z-index
+$indexlist : (1: 11, 2: 10, 3: 9, 4: 8, 5: 7, 6: 6, 7: 5, 8: 4, 9: 3, 10: 2, 11: 1);
+@each $i, $index in $indexlist {
+  .tabsPages .el-tabs__item:nth-child(#{$i}) {
+    z-index: $index;
+  }
+}
+// tabs加z-index
 /*table scrollbar*/
 .el-table__body-wrapper::-webkit-scrollbar {
   width: 6px;
@@ -1013,6 +1023,7 @@ img {
   border-radius: 3px;
   background: rgba(255, 255, 255, 1);
 }
+/*table scrollbar*/
 /* dialog */
 .ShinHoDialog {
   .el-dialog {
@@ -1039,6 +1050,9 @@ img {
     .el-dialog__headerbtn .el-dialog__close {
       color: #fff;
     }
+  }
+  .el-dialog__title {
+    color: white;
   }
   .el-dialog__body {
     padding: 20px 20px 0;
@@ -1088,4 +1102,5 @@ img {
 .bg_dialog.el-dialog {
   background: #f5f5f5;
 }
+/* dialog */
 
