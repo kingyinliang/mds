@@ -1024,7 +1024,7 @@ export default {
               this.dataListAlls.push(item)
             }
           } else if (this.days !== '') {
-            if (this.days[0] <= parseInt(item.days) && parseInt(item.days) < this.days[1]) {
+            if (this.days[0] <= parseInt(item.days) && parseInt(item.days) < this.days[1] && item.HOLDER_STATUS !== '6') {
               this.dataListAlls.push(item)
             }
           }

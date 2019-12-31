@@ -2,9 +2,10 @@
   <div class="header_main">
     <query-table
       ref="queryTable"
+      :rules="rules"
       :queryFormData="queryFormData"
       :list-interface="listInterface"
-      :query-auth="'report:formh:getAllStatusList'"
+      :query-auth="'juice:occupy:report'"
       :column="column"
       :export-excel="true"
       :export-option="exportOption">
@@ -18,6 +19,12 @@ export default {
   name: 'JuiceOccupation',
   data () {
     return {
+      rules: [
+        {
+          prop: 'factory',
+          text: '请选择工厂'
+        }
+      ],
       queryFormData: [
         {
           type: 'select',
@@ -69,25 +76,25 @@ export default {
         {
           type: 'date-interval',
           label: '生产日期',
-          prop: 'commitDateOne',
-          propTwo: 'commitDateTwo'
+          prop: 'startDate',
+          propTwo: 'endDate'
         }
       ],
       listInterface: (params) => {
-        return this.$http(`${REP_API.ORDER_STATUS_LIST_API}`, 'POST', params)
+        return this.$http(`${REP_API.JUICEOCCUPATION_LIST}`, 'POST', params)
       },
       exportOption: {
-        exportInterface: REP_API.ORDER_STATUS_OUT_API,
-        auth: 'report:formh:getAllStatusList',
+        exportInterface: REP_API.JUICEOCCUPATION_OUT,
+        auth: 'juice:occupy:export',
         text: '原汁占用报表数据导出'
       },
       column: [
         {
-          prop: 'factoryName',
+          prop: 'factory',
           label: '工厂'
         },
         {
-          prop: 'workShopName',
+          prop: 'workShop',
           label: '车间'
         },
         {
@@ -95,12 +102,8 @@ export default {
           label: '生产日期'
         },
         {
-          prop: 'materialNameH',
-          label: '生产物料',
-          width: '180',
-          formatter: (row, column, value, index) => {
-            return row.materialCodeH + ' ' + row.materialNameH
-          }
+          prop: 'material',
+          label: '生产物料'
         },
         {
           prop: 'batch',
@@ -108,12 +111,12 @@ export default {
           width: '120'
         },
         {
-          prop: 'belowGradeNum',
+          prop: 'amount',
           label: '数量',
           width: '80'
         },
         {
-          prop: 'unitP',
+          prop: 'unit',
           label: '单位',
           width: '50'
         }

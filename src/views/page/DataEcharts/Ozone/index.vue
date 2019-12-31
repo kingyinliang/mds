@@ -60,7 +60,9 @@ export default {
       this.dataList.forEach((item, index) => {
         this['Line' + index] = echarts.init(document.getElementById('Line' + index))
         this['Line' + index].setOption(this.setLine(item, index))
-        this['Line' + index].resize()
+        setTimeout(() => {
+          this['Line' + index].resize()
+        }, 500)
         if (index + 1 === this.dataList.length) {
           window.addEventListener('resize', throttle(() => {
             this.dataList.forEach((it, indexs) => {
