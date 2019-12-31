@@ -153,14 +153,11 @@ export default {
       queryFormRules: {},
       optionLists: {},
       tableData: [],
-      multipleSelection: []
+      multipleSelection: [],
+      tableHeight: 0
     }
   },
   props: {
-    tableHeight: {
-      type: String,
-      default: ''
-    },
     returnColumnType: {
       type: String,
       default: 'page'
@@ -259,6 +256,8 @@ export default {
         window.onresize = function () {
           self.tableHeight = window.innerHeight - self.$refs.table.$el.offsetTop - this.fixTableHeightFromTop
         }
+      } else {
+        this.tableHeight = ''
       }
     })
   },

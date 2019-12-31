@@ -17,7 +17,7 @@
       </el-form-item>
     </el-form>
     <div class="loginFormBg"></div>
-    <el-dialog
+    <el-dialog :close-on-click-modal="false"
       width="500px"
       title="修改密码"
       :visible.sync="visible">

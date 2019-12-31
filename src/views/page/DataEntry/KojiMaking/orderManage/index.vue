@@ -195,7 +195,7 @@
           </el-col>
         </el-row>
       </div>
-      <el-dialog :visible.sync="dialogFormVisible" width="1200px" custom-class='dialog__class'>
+      <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="1200px" custom-class='dialog__class'>
         <div slot="title" class='title'>
           <span>订单分配</span>
         </div>
@@ -298,7 +298,7 @@
           <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="splitOrder()">保存</el-button>
         </div>
       </el-dialog>
-      <el-dialog title="明细修改" :visible.sync="dialogFormVisible2" width="450px">
+      <el-dialog :close-on-click-modal="false" title="明细修改" :visible.sync="dialogFormVisible2" width="450px">
         <el-form :model="detailForm"  ref="detailForm" class='orderForm'>
           <el-form-item label="订单号" :label-width="formLabelWidth">
             <label>{{detailForm.orderNo}}</label>

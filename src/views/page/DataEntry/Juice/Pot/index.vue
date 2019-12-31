@@ -211,7 +211,7 @@
       <el-button type="primary" @click="FormAddSave('Addstar')" size="small">确定</el-button>
     </span>
   </el-dialog>
-  <el-dialog :visible.sync="JudgeDialogTableVisible" width="400px" custom-class='dialog__class'>
+  <el-dialog :close-on-click-modal="false" :visible.sync="JudgeDialogTableVisible" width="400px" custom-class='dialog__class'>
     <div slot="title" style="line-height: 59px;">类别判定</div>
     <el-form :model="judge" size="small" label-width="130px" :rules="judgerules" ref="judge">
       <el-form-item label="物料：">{{this.judge.materialCode}}{{this.judge.materialName}}</el-form-item>
