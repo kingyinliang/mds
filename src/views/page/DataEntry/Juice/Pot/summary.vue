@@ -1,8 +1,39 @@
 <template>
   <div class="header_main">
     <el-tabs v-model="activeName" class="NewDaatTtabs" type="border-card">
-      <el-tab-pane name="1">
+      <el-tab-pane name="3">
         <span slot="label" class="spanview">原汁库存汇总</span>
+        <div class="titleLeft">
+          <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>原汁库存汇总表（单位：方）
+          <el-button type="primary" size="small" @click="ExportExcelC(true)"  v-if="isAuth('juice:pot:juiceStockItemExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
+        </div>
+        <el-table header-row-class-name="tableHead" :data="formDataTop" border tooltip-effect="dark" >
+          <el-table-column label="" :show-overflow-tooltip="true" prop="type"></el-table-column>
+          <el-table-column label=">=7天" :show-overflow-tooltip="true" prop="gtSevenDay" ></el-table-column>
+          <el-table-column label="6天" :show-overflow-tooltip="true" prop="sixDay"></el-table-column>
+          <el-table-column label="5天" :show-overflow-tooltip="true" prop="fiveDay"></el-table-column>
+          <el-table-column label="4天" :show-overflow-tooltip="true" prop="fourDay"></el-table-column>
+          <el-table-column label="3天" :show-overflow-tooltip="true" prop="threeDay"></el-table-column>
+          <el-table-column label="2天" :show-overflow-tooltip="true" prop="twoDay"></el-table-column>
+          <el-table-column label="1天" :show-overflow-tooltip="true" prop="oneDay"></el-table-column>
+          <el-table-column label="0天" :show-overflow-tooltip="true" prop="zeroDay"></el-table-column>
+          <el-table-column label="合计" :show-overflow-tooltip="true" prop="sumAmount"></el-table-column>
+        </el-table>
+        <el-table header-row-class-name="tableHead" :data="formData" border tooltip-effect="dark" style="margin-top: 25px;">
+          <el-table-column label="" :show-overflow-tooltip="true" prop="type"></el-table-column>
+          <el-table-column label=">=15天" :show-overflow-tooltip="true" prop="gtFifteenDay"></el-table-column>
+          <el-table-column label="14天" :show-overflow-tooltip="true" prop="fourteenDay"></el-table-column>
+          <el-table-column label="13天" :show-overflow-tooltip="true" prop="thirteenDay"></el-table-column>
+          <el-table-column label="12天" :show-overflow-tooltip="true" prop="twelveDay"></el-table-column>
+          <el-table-column label="11天" :show-overflow-tooltip="true" prop="elevenDay"></el-table-column>
+          <el-table-column label="10天" :show-overflow-tooltip="true" prop="tenDay"></el-table-column>
+          <el-table-column label="9天" :show-overflow-tooltip="true" prop="nineDay" ></el-table-column>
+          <el-table-column label="<9天" :show-overflow-tooltip="true" prop="ltNineDay" ></el-table-column>
+          <el-table-column label="合计" :show-overflow-tooltip="true" prop="sumAmount" ></el-table-column>
+        </el-table>
+      </el-tab-pane>
+      <el-tab-pane name="1">
+        <span slot="label" class="spanview">原汁库存明细</span>
         <div class="titleLeft">
           <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>原汁总库存（单位:方）
           <el-button type="primary" size="small" @click="ExportExcelA(true)"  v-if="isAuth('juice:pot:juiceStockItemExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
@@ -58,7 +89,7 @@
         </el-row>
       </el-tab-pane>
       <el-tab-pane name="2">
-        <span slot="label" class="spanview">可用原汁汇总</span>
+        <span slot="label" class="spanview">可用原汁明细</span>
         <div class="titleLeft">
           <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>原汁总库存（单位:方）
           <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('juice:pot:juiceStockItemExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
@@ -113,37 +144,6 @@
           </el-pagination>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane name="3">
-        <span slot="label" class="spanview">原汁库存汇报表</span>
-        <div class="titleLeft">
-          <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>原汁库存汇总表（单位：方）
-          <el-button type="primary" size="small" @click="ExportExcelA(true)"  v-if="isAuth('juice:pot:juiceStockItemExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
-        </div>
-        <el-table header-row-class-name="tableHead" :data="formDataTop" border tooltip-effect="dark" >
-          <el-table-column label="" :show-overflow-tooltip="true" prop="type"></el-table-column>
-          <el-table-column label=">=7天" :show-overflow-tooltip="true" prop="gtSevenDay" ></el-table-column>
-          <el-table-column label="6天" :show-overflow-tooltip="true" prop="sixDay"></el-table-column>
-          <el-table-column label="5天" :show-overflow-tooltip="true" prop="fiveDay"></el-table-column>
-          <el-table-column label="4天" :show-overflow-tooltip="true" prop="fourDay"></el-table-column>
-          <el-table-column label="3天" :show-overflow-tooltip="true" prop="threeDay"></el-table-column>
-          <el-table-column label="2天" :show-overflow-tooltip="true" prop="twoDay"></el-table-column>
-          <el-table-column label="1天" :show-overflow-tooltip="true" prop="oneDay"></el-table-column>
-          <el-table-column label="0天" :show-overflow-tooltip="true" prop="zeroDay"></el-table-column>
-          <el-table-column label="合计" :show-overflow-tooltip="true" prop="sumAmount"></el-table-column>
-        </el-table>
-        <el-table header-row-class-name="tableHead" :data="formData" border tooltip-effect="dark" style="margin-top: 25px;">
-          <el-table-column label="" :show-overflow-tooltip="true" prop="type"></el-table-column>
-          <el-table-column label=">=15天" :show-overflow-tooltip="true" prop="gtFifteenDay"></el-table-column>
-          <el-table-column label="14天" :show-overflow-tooltip="true" prop="fourteenDay"></el-table-column>
-          <el-table-column label="13天" :show-overflow-tooltip="true" prop="thirteenDay"></el-table-column>
-          <el-table-column label="12天" :show-overflow-tooltip="true" prop="twelveDay"></el-table-column>
-          <el-table-column label="11天" :show-overflow-tooltip="true" prop="elevenDay"></el-table-column>
-          <el-table-column label="10天" :show-overflow-tooltip="true" prop="tenDay"></el-table-column>
-          <el-table-column label="9天" :show-overflow-tooltip="true" prop="nineDay" ></el-table-column>
-          <el-table-column label="<9天" :show-overflow-tooltip="true" prop="ltNineDay" ></el-table-column>
-          <el-table-column label="合计" :show-overflow-tooltip="true" prop="sumAmount" ></el-table-column>
-        </el-table>
-      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -155,7 +155,7 @@ export default {
   name: 'summarys',
   data () {
     return {
-      activeName: '1',
+      activeName: '3',
       formLeftData: [],
       dataLeftListOrderTotal: [],
       dataLeftListOrder: [],
@@ -247,11 +247,14 @@ export default {
     // 导出
     ExportExcelA () {
       this.plantList.TYPE = 'all'
-      exportFile(`${JUICE_API.JUICE_STOCKITEM_KUCUN}`, '原汁库存汇总', this)
+      exportFile(`${JUICE_API.JUICE_STOCKITEM_KUCUN}`, '原汁库存明细', this)
     },
     ExportExcelB () {
       this.plantList.TYPE = 'alls'
-      exportFile(`${JUICE_API.JUICE_STOCKITEM_KUCUN}`, '可用原汁汇总', this)
+      exportFile(`${JUICE_API.JUICE_STOCKITEM_KUCUN}`, '可用原汁明细', this)
+    },
+    ExportExcelC () {
+      exportFile(`${JUICE_API.JUICE_POT_STOCKEXPORT}`, '可用原汁汇总', this)
     }
   }
 }
