@@ -254,7 +254,8 @@ export default {
       exportFile(`${JUICE_API.JUICE_STOCKITEM_KUCUN}`, '可用原汁明细', this)
     },
     ExportExcelC () {
-      exportFile(`${JUICE_API.JUICE_POT_STOCKEXPORT}`, '可用原汁汇总', this)
+      this.plantList.TYPE = 'alls'
+      exportFile(`${JUICE_API.JUICE_STOCKITEM_KUCUN}`, '可用原汁汇总', this)
     }
   }
 }
