@@ -923,7 +923,10 @@ export const REP_API = {
   REP_ADJUST_LIST_API: HOST + '/ver/adjust/exportList',
   /** ******************** 通用报表  START *************************** */
   CURRENT_MATERIALTRACEABILITY_LIAT: HOST + '/report/production/materielTraceSelectInfo',
-  CURRENT_MATERIALTRACEABILITY_LIST: HOST + '/report/production/materielTrace'
+  CURRENT_MATERIALTRACEABILITY_LIST: HOST + '/report/production/materielTrace',
+  JUICEOCCUPATION_LIST: HOST + '/juiceOccupy/report',
+  JUICEOCCUPATION_OUT: HOST + '/juiceOccupy/export'
+
 }
 /*
 *炒麦api
