@@ -869,6 +869,7 @@ export const REP_API = {
   OEE_SUM_API: HOST + '/report/formh/productEfficiencySumList',
   OEE_PRODUCT_API: HOST + '/sys/dept/findListByParentParams',
   DAYS_REPROT_LIST: HOST + '/report/fromEs/zhiquDaily', // 制曲日报表
+  DAYS_REPROT_EXOECT: HOST + '/report/fromEs/expectZhiquDaily', // 制曲日报表导出
   /**
    * OPE
    */
@@ -925,7 +926,10 @@ export const REP_API = {
   CURRENT_MATERIALTRACEABILITY_LIAT: HOST + '/report/production/materielTraceSelectInfo',
   CURRENT_MATERIALTRACEABILITY_LIST: HOST + '/report/production/materielTrace',
   OZONE_SEARCH_LIST: HOST + '/o3/board/charList', // 臭氧看板
-  OZONE_SEARCH_EXPECT: HOST + '/o3/board/expectCharList' // 臭氧看板导出
+  OZONE_SEARCH_EXPECT: HOST + '/o3/board/expectCharList', // 臭氧看板导出
+  JUICEOCCUPATION_LIST: HOST + '/juiceOccupy/report',
+  JUICEOCCUPATION_OUT: HOST + '/juiceOccupy/export'
+
 }
 /*
 *炒麦api

@@ -4,22 +4,34 @@
       ref="queryTable"
       :queryFormData="queryFormData"
       :list-interface="listInterface"
-      :query-auth="'report:formh:getAllStatusList'"
+      :query-auth="'report:fromEs:zhiquDaily'"
       :column="column"
       :export-excel="true"
       :export-option="exportOption"
       :fixTableHeightFromTop="180"
-      :showPage="false">
+      :showPage="false"
+      :rules="rules">
     </query-table>
   </div>
 </template>
 
 <script>
 import { REP_API, BASICDATA_API } from '@/api/api'
+import { dateFormat } from '@/net/validate.js'
 export default {
   name: 'index',
   data () {
     return {
+      rules: [{
+        prop: 'factory',
+        text: '请选择工厂'
+      }, {
+        prop: 'workShop',
+        text: '请选择车间'
+      }, {
+        prop: 'productDate',
+        text: '请选择月份'
+      }],
       queryFormData: [
         {
           type: 'select',
@@ -34,8 +46,7 @@ export default {
             value: 'deptId'
           },
           linkageProp: ['workShop']
-        },
-        {
+        }, {
           type: 'select',
           label: '生产车间',
           prop: 'workShop',
@@ -47,20 +58,21 @@ export default {
             label: ['deptName'],
             value: 'deptId'
           }
-        },
-        {
+        }, {
           type: 'date-picker',
           label: '选择月份',
           dataType: 'month',
-          prop: 'productDate'
+          prop: 'productDate',
+          valueFormat: 'yyyy-MM',
+          defaultValue: dateFormat(new Date(), 'yyyy-MM')
         }
       ],
       listInterface: (params) => {
         return this.$http(`${REP_API.DAYS_REPROT_LIST}`, 'POST', params)
       },
       exportOption: {
-        exportInterface: REP_API.ORDER_STATUS_OUT_API,
-        auth: 'report:formh:getAllStatusList',
+        exportInterface: REP_API.DAYS_REPROT_EXOECT,
+        auth: 'report:fromEs:expectZhiquDaily',
         text: '制曲日报表数据导出'
       },
       column: [
@@ -68,8 +80,7 @@ export default {
           prop: 'theDate',
           label: '工序',
           fixed: 'left'
-        },
-        {
+        }, {
           prop: 'workShopName',
           label: '炒麦',
           child: [{
@@ -88,8 +99,7 @@ export default {
             prop: 'wheatFlourLossRate',
             width: '120'
           }]
-        },
-        {
+        }, {
           prop: 'productLineName',
           label: 'PW小麦',
           child: [
@@ -164,8 +174,7 @@ export default {
     }
   },
   mounted () {},
-  methods: {
-  },
+  methods: {},
   computed: {},
   components: {
   }
