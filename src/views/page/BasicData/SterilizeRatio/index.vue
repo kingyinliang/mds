@@ -43,7 +43,7 @@
         <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
     </el-card>
-    <el-dialog :visible.sync="dialogVisibleAdd" width="400px" custom-class='dialog__class'>
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisibleAdd" width="400px" custom-class='dialog__class'>
       <div slot="title" style="line-height: 59px;">新增</div>
       <el-form :model="formAdd" :inline="true" size="small" :rules="Addrulestar" ref="Addstar" label-width="85px">
         <el-form-item label="工厂：">{{this.factoryName}}</el-form-item>

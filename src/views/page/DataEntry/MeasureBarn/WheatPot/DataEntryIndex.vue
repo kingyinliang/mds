@@ -150,7 +150,7 @@
             </el-tabs>
           </div>
         </div>
-        <el-dialog :visible.sync="isShowMessageBoxAdjust" width="900px" custom-class='dialog__class'>
+        <el-dialog :close-on-click-modal="false" :visible.sync="isShowMessageBoxAdjust" width="900px" custom-class='dialog__class'>
           <div slot="title" class='title'>
             <span>查询明细</span>
           </div>
@@ -253,7 +253,7 @@
             <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="isShowMessageBoxAdjust = false">确定</el-button>
           </div>
         </el-dialog>
-        <el-dialog :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class'>
+        <el-dialog :close-on-click-modal="false" :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class'>
           <div slot="title" class='title'>
             <span>盘点调整</span>
           </div>

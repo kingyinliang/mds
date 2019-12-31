@@ -83,7 +83,7 @@
       </el-pagination>
     </el-row>
   </el-card>
-  <el-dialog :visible.sync="GnDialogTableVisible" width="500px" custom-class='dialog__class'>
+  <el-dialog :close-on-click-modal="false" :visible.sync="GnDialogTableVisible" width="500px" custom-class='dialog__class'>
     <div slot="title" style="line-height: 59px;">GN搅罐</div>
     <div>
       <el-form size="small" :model="formGn" :rules="Gnrulestar" ref="Gnstar" label-width="150px">
@@ -109,7 +109,7 @@
       <el-button type="primary" @click="GnSave('Gnstar')" size="small">确定</el-button>
     </span>
   </el-dialog>
-  <el-dialog :visible.sync="JsbDialogTableVisible" width="500px" custom-class='dialog__class'>
+  <el-dialog :close-on-click-modal="false" :visible.sync="JsbDialogTableVisible" width="500px" custom-class='dialog__class'>
     <div slot="title" style="line-height: 59px;">JSB出库</div>
     <div>
       <el-form size="small" :model="formJsb" :rules="Jsbrulestar" ref="Jsbstar" label-width="150px">
@@ -147,7 +147,7 @@
       <el-button type="primary" @click="JsbSave('Jsbstar')" size="small">确定</el-button>
     </span>
   </el-dialog>
-  <el-dialog :visible.sync="ZcDialogTableVisible" width="500px" custom-class='dialog__class'>
+  <el-dialog :close-on-click-modal="false" :visible.sync="ZcDialogTableVisible" width="500px" custom-class='dialog__class'>
     <div slot="title" style="line-height: 59px;">转储</div>
     <div>
       <el-form size="small" :model="formZc" :rules="Zcrulestar" ref="Zcstar" label-width="150px">

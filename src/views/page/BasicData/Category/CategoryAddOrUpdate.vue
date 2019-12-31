@@ -4,7 +4,7 @@
     class="ShinHoDialog"
     :title="id?'修改类别':'新增类别'"
     @close="closeDialog"
-    :close-on-click-modal="closeDialog"
+    :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent label-width="155px"  size="small">
       <el-form-item label="生产工厂：" prop="factory">

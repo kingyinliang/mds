@@ -73,7 +73,7 @@
       </el-card>
     </div>
     <div>
-      <el-dialog :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class' @close="closeInParnDialog()">
+      <el-dialog :close-on-click-modal="false" :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class' @close="closeInParnDialog()">
           <div slot="title" class='title'>
             <span>豆粕罐入罐</span>
           </div>

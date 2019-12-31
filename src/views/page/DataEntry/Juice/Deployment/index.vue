@@ -107,7 +107,7 @@
         </el-pagination>
       </el-card>
     </div>
-    <el-dialog :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
       <div slot="title" style="line-height: 59px;">调配列表</div>
       <el-table style="margin-bottom: 20px;" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
         <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
@@ -190,7 +190,7 @@
         </template>
       </span>
     </el-dialog>
-    <el-dialog :visible.sync="RecordDialogTableVisible" width="550px" custom-class='dialog__class'>
+    <el-dialog :close-on-click-modal="false" :visible.sync="RecordDialogTableVisible" width="550px" custom-class='dialog__class'>
       <div slot="title" style="line-height: 59px;">记录</div>
       <el-form :model="record" size="small" label-width="140px" :rules="recordrules" ref="record" style="width: 471px;">
         <el-form-item label="搅罐时间（min）：" prop="stirringTime">

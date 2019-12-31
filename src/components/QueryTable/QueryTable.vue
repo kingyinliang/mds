@@ -154,7 +154,7 @@ export default {
       optionLists: {},
       tableData: [],
       multipleSelection: [],
-      tableHeight: ''
+      tableHeight: 0
     }
   },
   props: {
@@ -256,6 +256,8 @@ export default {
         window.onresize = function () {
           self.tableHeight = window.innerHeight - self.$refs.table.$el.offsetTop - this.fixTableHeightFromTop
         }
+      } else {
+        this.tableHeight = ''
       }
     })
   },
