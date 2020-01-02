@@ -457,7 +457,7 @@ export default {
       let ty = true
       for (var item of data) {
         if (item.delFlag === '0') {
-          if (item.adjustAmount === '0') {} else {
+          if (item.adjustAmount === '0' || item.adjustAmount === 0) {} else {
             if (!item.batch) {
               ty = false
               this.$warning_SHINHO('批次必填')

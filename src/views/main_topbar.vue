@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     goEacharts () {
-      this.$router.push({ path: '/DataEcharts/KojiMaking-DataScreening-index' })
+      this.$router.push({ path: `/DataEcharts/${this.menuList.filter(item => item.type === '4')[0].list[0].url.slice(12).replace(/\//g, '-')}` })
     },
     // 退出
     logoutHandle () {
