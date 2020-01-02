@@ -45,7 +45,7 @@ export default {
           label: '生产车间',
           prop: 'workShop',
           optionsFn: (val) => {
-            return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: val, deptName: '' })
+            return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: val, deptName: '杀菌' })
           },
           resVal: {
             resData: 'typeList',
@@ -72,6 +72,11 @@ export default {
           defaultOptionsFn: (val) => {
             return this.$http(`${REP_API.JUICEOCCUPATION_SEMIPROD}`, 'POST', {params: ''}, false, false, false)
           }
+        },
+        {
+          type: 'input',
+          label: '生产批次',
+          prop: 'batch'
         },
         {
           type: 'date-interval',
@@ -104,7 +109,7 @@ export default {
         {
           prop: 'material',
           label: '物料',
-          width: '220'
+          width: '200'
         },
         {
           prop: 'batch',
@@ -119,6 +124,11 @@ export default {
           prop: 'unit',
           label: '单位',
           width: '50'
+        },
+        {
+          prop: 'orderNo',
+          label: '订单号',
+          width: '220'
         }
       ]
     }
