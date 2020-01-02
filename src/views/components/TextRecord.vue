@@ -1,5 +1,5 @@
 <template>
-  <div><el-input type="textarea" v-model="textObj.pkgText" class="textarea" :disabled="!isRedact" style="width: 100%;height: 200px"></el-input></div>
+  <div><el-input type="textarea" v-model="textObj.pkgText" class="textarea" :disabled="!isRedact" style="width: 100%; height: 200px;"></el-input></div>
 </template>
 
 <script>
@@ -77,8 +77,8 @@ export default {
 </script>
 
 <style>
-.textarea textarea{
+.textarea textarea {
   width: 100%;
-  height: 100%!important;
+  height: 100% !important;
 }
 </style>

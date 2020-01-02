@@ -17,7 +17,7 @@
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col :span="2" style="display:flex;align-items:flex-end;justify-content:flex-end">
+          <el-col :span="2" style="display: flex; align-items: flex-end; justify-content: flex-end;">
             <el-button type="primary" size="small" @click="getOrderList()" :disabled="plantList.factoryIDValue==='' && plantList.workshopIDValue==='' || workshopList.length === 0" v-if="isAuth('realTime:pulp:pulpMeasuringBin')">查询</el-button>
           </el-col>
         </el-row>
@@ -28,8 +28,8 @@
         <el-row :gutter="10">
           <el-col :span="12" v-for="(item, index) in dataList" :key="'h'+index">
             <el-card class="card-item">
-              <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span><el-button type="primary" size="small" style="margin-left:10px;" @click="goParn(item)" v-if="isAuth('kjm:pulpIn:save')">入罐</el-button></div>
-              <div style="display: flex">
+              <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span><el-button type="primary" size="small" style="margin-left: 10px;" @click="goParn(item)" v-if="isAuth('kjm:pulpIn:save')">入罐</el-button></div>
+              <div style="display: flex;">
                 <div class="card-item_img">
                   <div class="card-item_img_box">
                     <div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.pulpList) / (item.holderHold*1), 100)}%`}"></div>
@@ -37,15 +37,15 @@
                   <img src="@/assets/img/granary.png" alt="">
                 </div>
                 <div class="card-item_text">
-                  <el-card style="margin-top: 25px">
-                    <div slot="header">库存明细 <span style="float: right">合计：{{sumBatch(item.pulpList).toLocaleString()}} KG</span></div>
+                  <el-card style="margin-top: 25px;">
+                    <div slot="header">库存明细 <span style="float: right;">合计：{{sumBatch(item.pulpList).toLocaleString()}} KG</span></div>
                     <el-table
                       :data="item.pulpList"
                       stripe
                       size="medium"
                       height="200"
                       min-width="300"
-                      style="width: 100%">
+                      style="width: 100%;">
                       <el-table-column
                         prop="batch"
                         label="批次"
@@ -73,7 +73,7 @@
       </el-card>
     </div>
     <div>
-      <el-dialog :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class' @close="closeInParnDialog()">
+      <el-dialog :close-on-click-modal="false" :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class' @close="closeInParnDialog()">
           <div slot="title" class='title'>
             <span>豆粕罐入罐</span>
           </div>
@@ -90,7 +90,7 @@
                   { required: true, message: '请选择领用粮仓', trigger: 'blur' }
                 ]"
                 >
-                <el-select  placeholder="请选择"  v-model="inParnForm.foodHolderId" style="width:220px" @change="changeInParnHolderOptions(inParnForm.foodHolderId)">
+                <el-select  placeholder="请选择"  v-model="inParnForm.foodHolderId" style="width: 220px;" @change="changeInParnHolderOptions(inParnForm.foodHolderId)">
                   <el-option v-for="sole in inParnHolder" :key="sole.deptId+sole.holderId" :label="sole.holderName" :value="sole.holderId"></el-option>
                 </el-select>
               </el-form-item>
@@ -102,7 +102,7 @@
                   { required: true, message: '请选择批次', trigger: 'blur' }
                 ]"
                 >
-                <el-select  placeholder="请选择"  v-model="inParnForm.batch" style="width:220px" @change="changeInParnBatchOptions(inParnForm.foodHolderId,inParnForm.batch)">
+                <el-select  placeholder="请选择"  v-model="inParnForm.batch" style="width: 220px;" @change="changeInParnBatchOptions(inParnForm.foodHolderId,inParnForm.batch)">
                   <el-option v-for="sole in inParn.holdList" :key="sole.batch" :label="sole.batch" :value="sole.batch"></el-option>
                 </el-select>
               </el-form-item>
@@ -123,7 +123,7 @@
                   { required: true, validator: validateCheckStartWeight, message: '起始数不可大于等于结束数', trigger: 'blur' }
                 ]"
               >
-                <el-input  type='text' v-model.number="inParnForm.startWeight" style='width:150px' :disabled="isInputWeight" @change="countWeight('startWeight')"/> KG
+                <el-input  type='text' v-model.number="inParnForm.startWeight" style='width: 150px;' :disabled="isInputWeight" @change="countWeight('startWeight')"/> KG
               </el-form-item>
               <el-form-item
                 label="结束数："
@@ -132,7 +132,7 @@
                   { required: true, validator: validateCheckEndWeight, message: '结束数不可小于等于起始数', trigger: 'blur' }
                 ]"
                 >
-                <el-input  type='text' v-model.number="inParnForm.endWeight" style='width:150px' :disabled="isInputWeight" @change="countWeight('endWeight')"/> KG
+                <el-input  type='text' v-model.number="inParnForm.endWeight" style='width: 150px;' :disabled="isInputWeight" @change="countWeight('endWeight')"/> KG
               </el-form-item>
               <el-form-item label="领用数量：">
                 <template slot-scope="scope">
@@ -141,16 +141,16 @@
                 <!-- <el-input  type='text' v-model.trim="inParnForm.useWeight" style='width:150px' :disabled="true" /> KG -->
               </el-form-item>
               <el-form-item label="操作时间：" >
-                <el-input  type='text' v-model.trim="inParnForm.changed" style='width:220px' :disabled="true"/>
+                <el-input  type='text' v-model.trim="inParnForm.changed" style='width: 220px;' :disabled="true"/>
               </el-form-item>
               <el-form-item label="操作人：">
-                <el-input  type='text' v-model.trim="inParnForm.changer" style='width:220px' :disabled="true"/>
+                <el-input  type='text' v-model.trim="inParnForm.changer" style='width: 220px;' :disabled="true"/>
               </el-form-item>
             </el-form>
           </div>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="cannalInParn('inParnForm')">取消</el-button>
-            <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveInParn('inParnForm')">确定</el-button>
+            <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="cannalInParn('inParnForm')">取消</el-button>
+            <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveInParn('inParnForm')">确定</el-button>
           </div>
         </el-dialog>
     </div>
@@ -521,43 +521,41 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/_common.scss';
-@import '@/assets/scss/_share.scss';
-.measurebarn-bean-pulp{
-  .area-to-bottom{
+@import "@/assets/scss/_common.scss";
+@import "@/assets/scss/_share.scss";
+.measurebarn-bean-pulp {
+  .area-to-bottom {
     min-height: calc(82vh);
   }
-  .measurebarn-bean-pulp__body{
-    .el-col-12{
+  .measurebarn-bean-pulp__body {
+    .el-col-12 {
       margin-bottom: 10px;
     }
   }
-  .card-item_detail{
+  .card-item_detail {
     margin-right: 5px;
     margin-top: 5px;
-    &::after{
+    float: right;
+    cursor: pointer;
+    color: #1890ff;
+    &::after {
       content: " >>";
       font-size: 12px;
     }
   }
-  .card-item{
-    .el-card__header{
+  .card-item {
+    .el-card__header {
       padding: 15px 20px;
       font-size: 16px;
       color: #666;
     }
-    &_detail{
-      float: right;
-      cursor: pointer;
-      color: #1890FF;
-    }
-    &_img{
+    &_img {
       width: 250px;
       position: relative;
-      img{
+      img {
         width: 250px;
       }
-      &_box{
+      &_box {
         width: 89px;
         height: 161px;
         position: absolute;
@@ -566,14 +564,15 @@ export default {
         display: flex;
         flex-wrap: wrap;
         align-content: flex-end;
-        &_bg{
+        &_bg {
           flex: 1;
           height: 161px;
           align-items: center;
           position: relative;
-          background: linear-gradient(#35C3FF,#1890FF);
+          background: linear-gradient(#35c3ff, #1890ff);
           overflow: hidden;
-          &::before,&::after{
+          &::before,
+          &::after {
             content: "";
             position: absolute;
             left: 50%;
@@ -593,42 +592,44 @@ export default {
             border-radius: 47%;
           }
         }
-        &:hover &_bg::before,&:hover &_bg::after{
+        &:hover &_bg::before,
+        &:hover &_bg::after {
           animation: roateOne 10s linear infinite;
         }
       }
     }
-    &_text{
+    &_text {
       flex: 1;
-      margin-right:2em;
-      .el-card__header{
+      margin-right: 2em;
+      .el-card__header {
         font-size: 14px;
         padding: 10px 12px;
-        background: #1890FF;
+        background: #1890ff;
         color: white;
       }
-      &_box{
+      &_box {
         position: relative;
         padding-bottom: 6px;
         max-height: 180px;
         overflow: scroll;
-        &_bg1,&_bg2{
+        &_bg1,
+        &_bg2 {
           position: absolute;
           width: 100%;
           height: 20px;
-          background: linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+          background: linear-gradient(rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
           z-index: 999;
         }
-        &_bg2{
+        &_bg2 {
           bottom: 0;
-          background: linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+          background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
         }
       }
       .card-item_text_box::-webkit-scrollbar {
         display: none;
       }
-      &_item{
-        color: #4A4A4A;
+      &_item {
+        color: #4a4a4a;
         font-size: 14px;
         padding-top: 10px;
       }

@@ -32,13 +32,13 @@
               </el-select>
             </el-form-item>
             <el-form-item label="制曲日期：" class="dateinput">
-              <el-row style="width: 300px">
+              <el-row style="width: 300px;">
                 <el-col :span="12">
-                  <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                  <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
                   <span>-</span>
                 </el-col>
                 <el-col :span="12">
-                  <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                  <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
                 </el-col>
               </el-row>
             </el-form-item>
@@ -50,8 +50,8 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top:5px">
-      <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width:100%; margin-bottom: 20px">
+    <el-card style="margin-top: 5px;">
+      <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
         <el-table-column label="工厂" width="120" prop="factoryName" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="车间" prop="workShopName" width="100" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="曲房" prop="houseNoName" width="100" :show-overflow-tooltip="true"></el-table-column>
@@ -229,23 +229,28 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.el-date-editor .el-range-input {width:100px;}
-.el-range-editor--small .el-range-separator {padding-right:20px}
+<style lang="scss" scoped>
+.el-date-editor .el-range-input {
+  width: 100px;
+}
+.el-range-editor--small .el-range-separator {
+  padding-right: 20px;
+}
 .searchCard {
-  .el-button--primary,.el-button--primary:focus{
-    color: #000000;
-    background-color: #FFFFFF;
-    border-color: #D9D9D9;
+  .el-button--primary,
+  .el-button--primary:focus {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
   }
-  .el-button--primary:hover{
-    background-color: #1890FF;
-    color: #FFFFFF
+  .el-button--primary:hover {
+    background-color: #1890ff;
+    color: #fff;
   }
-  .el-button--primary:first-child{
-    background-color: #1890FF;
-    color: #FFFFFF;
-    border-color: #1890FF;
+  .el-button--primary:first-child {
+    background-color: #1890ff;
+    color: #fff;
+    border-color: #1890ff;
   }
 }
 </style>

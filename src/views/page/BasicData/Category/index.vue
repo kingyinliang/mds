@@ -3,25 +3,25 @@
     <el-card class="searchCard  newCard">
       <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="sole_row">
         <el-form-item label="生产工厂：">
-          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 160px">
+          <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 160px;">
             <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="发酵物料：">
-          <el-select v-model="formHeader.materialCode" placeholder="请选择" filterable style="width: 160px">
+          <el-select v-model="formHeader.materialCode" placeholder="请选择" filterable style="width: 160px;">
             <el-option label="请选择" value=""></el-option>
             <el-option v-for="(sole, index) in this.material" :key="index" :value="sole.materialCode" :label="sole.materialCode+ ' ' + sole.materialName"></el-option>
           </el-select>
         </el-form-item>
-        <div style="float: right">
+        <div style="float: right;">
           <el-button type="primary" size="small" @click="GetDataList(true)" v-if="isAuth('fer:sort:list')">查 询</el-button>
           <el-button type="primary" size="small" @click="addOrupdate()" v-if="isAuth('fer:sort:save')">新 增</el-button>
           <el-button type="danger" size="small" @click="delList()" v-if="isAuth('fer:sort:delete')">批量删除</el-button>
         </div>
       </el-form>
     </el-card>
-    <el-card style="margin-top:5px">
-      <el-table ref="table1" header-row-class-name="tableHead" :data="DataList" @selection-change="handleSelectionChange" border tooltip-effect="dark" style="width: 100%;margin-bottom: 20px">
+    <el-card style="margin-top: 5px;">
+      <el-table ref="table1" header-row-class-name="tableHead" :data="DataList" @selection-change="handleSelectionChange" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
         <el-table-column type="selection" width="34"></el-table-column>
         <el-table-column label="工厂" prop="factoryName" width="140" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="发酵物料" :show-overflow-tooltip="true">

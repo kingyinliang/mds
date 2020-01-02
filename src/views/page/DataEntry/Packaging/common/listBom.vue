@@ -1,6 +1,6 @@
 <template>
 <div>
-  <el-table ref="table1" :row-class-name="tableRowClassName" header-row-class-name="tableHead" :data="listbomP" border tooltip-effect="dark" style="width: 100%;margin-bottom: 20px">
+  <el-table ref="table1" :row-class-name="tableRowClassName" header-row-class-name="tableHead" :data="listbomP" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
     <el-table-column type="index" width="50" label="序号"></el-table-column>
     <el-table-column width="240" :show-overflow-tooltip="true" label="物料">
       <template slot-scope="scope">{{ scope.row.materialCode + ' ' + scope.row.materialName }}</template>
@@ -52,7 +52,7 @@
       </template>
     </el-table-column>
   </el-table>
-  <el-table ref="table1" header-row-class-name="tableHead" :data="listbomS" :row-class-name="RowDelFlag" border v-if="order.properties !== '二合一&礼盒产线'" tooltip-effect="dark" style="width: 100%;margin-bottom: 20px">
+  <el-table ref="table1" header-row-class-name="tableHead" :data="listbomS" :row-class-name="RowDelFlag" border v-if="order.properties !== '二合一&礼盒产线'" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
     <el-table-column type="index" width="50" label="序号"></el-table-column>
     <el-table-column width="120" label="物料（半成品）">
       <template slot-scope="scope">{{ scope.row.materialCode + ' ' + scope.row.materialName }}</template>
@@ -72,6 +72,11 @@
             <el-option :label="iteam.holderName" :value="iteam.holderId" v-for="iteam in semiHolder" :key="iteam.holderId"></el-option>
           </el-select>
         </div>
+      </template>
+    </el-table-column>
+    <el-table-column width="120" label="罐内物料">
+      <template slot-scope="scope">
+        {{scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName}}
       </template>
     </el-table-column>
     <el-table-column width="190" label="过滤日期">
@@ -188,6 +193,8 @@ export default {
           item.delFlag = '0'
           item.id = ''
           item.orderId = data.list[0].orderId
+          item.holderMaterialCode = ''
+          item.holderMaterialName = ''
         })
         this.listbomP.forEach((item) => {
           item.id = ''
@@ -365,6 +372,19 @@ export default {
         //     }
         //   }
         // }
+      }
+      return ty
+    },
+    bomRule () {
+      let ty = true
+      for (let sole of this.listbomS) {
+        if (sole.potNo !== '' && sole.potNo !== null) {
+          if (sole.materialCode !== sole.holderMaterialCode) {
+            ty = false
+            this.$warning_SHINHO('物料领用中' + sole.holderMaterialCode + '领用物料与BOM物料不一致，请确认！')
+            return false
+          }
+        }
       }
       return ty
     },
@@ -568,6 +588,11 @@ export default {
     },
     HolderChange (val, row) {
       let semiInfo = this.semiHolder.find(item => item.holderId === val)
+      if (semiInfo.materialCode !== row.materialCode) {
+        this.$warning_SHINHO('领用物料与BOM物料不一致，请确认！')
+      }
+      row.holderMaterialCode = semiInfo.materialCode
+      row.holderMaterialName = semiInfo.materialName
       row.filterDate = semiInfo.fullDate
       row.batch = semiInfo.batch
       row.holderType = semiInfo.holderType
@@ -601,7 +626,9 @@ export default {
         usePotDate: null,
         isSplit: '1',
         delFlag: '0',
-        useUsage: ''
+        useUsage: '',
+        holderMaterialCode: '',
+        holderMaterialName: ''
       })
     },
     // tableRowClassName

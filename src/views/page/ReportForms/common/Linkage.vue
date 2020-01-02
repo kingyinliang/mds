@@ -26,7 +26,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="日期：" v-if="plantList.deptId !== undefined">
-      <el-date-picker type="month" v-model="plantList.productDate" placeholder="选择月份" value-format="yyyy-MM" style="width: 199px"></el-date-picker>
+      <el-date-picker type="month" v-model="plantList.productDate" placeholder="选择月份" value-format="yyyy-MM" style="width: 199px;"></el-date-picker>
     </el-form-item>
   </el-form>
   <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" v-if="lablewidth" class="multi_row">
@@ -55,7 +55,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="日期：" v-if="plantList.deptId !== undefined">
-      <el-date-picker type="month" v-model="plantList.productDate" placeholder="选择月份" value-format="yyyy-MM" style="width: 199px"></el-date-picker>
+      <el-date-picker type="month" v-model="plantList.productDate" placeholder="选择月份" value-format="yyyy-MM" style="width: 199px;"></el-date-picker>
     </el-form-item>
   </el-form>
 </el-col>

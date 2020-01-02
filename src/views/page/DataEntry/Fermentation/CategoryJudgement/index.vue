@@ -30,7 +30,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="订单编号：">
-                <el-input v-model="form.orderNo" style="width:160px"></el-input>
+                <el-input v-model="form.orderNo" style="width: 160px;"></el-input>
               </el-form-item>
               <el-form-item label="物料：">
                 <el-select v-model="form.materialCode" filterable class="width160px">
@@ -39,7 +39,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="发酵天数：">
-                <el-input v-model="form.ferDays" class="width160px" style="width:160px"></el-input>
+                <el-input v-model="form.ferDays" class="width160px" style="width: 160px;"></el-input>
               </el-form-item>
               <el-form-item label="物料类别：">
                 <el-select v-model="form.halfId" filterable class="width160px">
@@ -48,7 +48,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item class="floatr">
-                <el-button type="primary" @click="GetList()" v-if="isAuth('fer:judge:list')" size="small" style="float:right">查询</el-button>
+                <el-button type="primary" @click="GetList()" v-if="isAuth('fer:judge:list')" size="small" style="float: right;">查询</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -126,8 +126,8 @@
       </el-pagination>
       </el-card>
     </div>
-    <el-dialog :visible.sync="dialogVisible" width="400px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">{{this.judge.holderNo}} 类别判定</div>
+    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" custom-class='dialog__class'>
+      <div slot="title">类别判定</div>
       <el-form :model="judge" size="small" label-width="130px" :rules="judgerules" ref="judge">
         <el-form-item label="订单编号：">{{this.judge.ferOrderNo}}</el-form-item>
         <el-form-item label="物料：">{{this.judge.ferMaterialCode}}{{this.judge.ferMaterialName}}</el-form-item>
@@ -141,17 +141,20 @@
           <el-radio v-model="judge.frozenStatus" label="0">正常</el-radio>
           <el-radio v-model="judge.frozenStatus" label="1">冻结</el-radio>
         </el-form-item>
+        <el-form-item label="备注：">
+          <el-input type="textarea" :rows="2" v-model="judge.remark" style="width: 199px;"></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="SaveJudge('judge')">确 定</el-button>
+        <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="SaveJudge('judge')" size="small">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { dateFormat } from '@/net/validate'
+import { dateFormat, DeepClone } from '@/net/validate'
 import { BASICDATA_API, FERMENTATION_API } from '@/api/api'
 export default {
   name: 'CategroyJudgement',
@@ -342,6 +345,7 @@ export default {
         defaulthalfId = this.materialTypeList.find(item => item.halfName === '味极鲜').id
       }
       this.judge = {
+        id: row.judge.id,
         factory: this.form.factory,
         workShop: this.form.workShop,
         frozenStatus: row.judge ? row.judge.frozenStatus : '0',
@@ -354,22 +358,28 @@ export default {
         holderNo: row.order.holderNo,
         halfId: row.judge ? row.judge.halfId : defaulthalfId,
         orderEndDate: row.judge.orderEndDate,
-        oldCategory: JSON.parse(JSON.stringify(row.judge.halfName))
+        oldCategory: JSON.parse(JSON.stringify(row.judge.halfName)),
+        remark: row.judge.remark,
+        isChange: '0'
       }
       this.beforeHalfId = JSON.parse(JSON.stringify(row.judge.halfId))
       this.beforeFrozenStatus = JSON.parse(JSON.stringify(row.judge.frozenStatus))
+      this.beforeRemark = DeepClone(row.judge.remark)
       this.GetMaterialTypeListTan()
     },
     SaveJudge (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.beforeHalfId === this.judge.halfId && this.beforeFrozenStatus === this.judge.frozenStatus) {
+          if (this.beforeHalfId === this.judge.halfId && this.beforeFrozenStatus === this.judge.frozenStatus && this.beforeRemark === this.judge.remark) {
             this.$warning_SHINHO('没有数据变更，无法保存')
             return false
+          } else if (this.beforeHalfId === this.judge.halfId && this.beforeFrozenStatus === this.judge.frozenStatus) {
+            this.judge.isChange = '1'
           }
           this.dialogVisible = false
           this.$http(`${FERMENTATION_API.CATEGORYJUDGEMENTTODO_API}`, 'POST', this.judge).then(({data}) => {
             if (data.code === 0) {
+              this.$success_SHINHO('调整成功')
               this.GetList()
             } else {
               this.$notify.error({title: '错误', message: data.msg})
@@ -384,18 +394,20 @@ export default {
 }
 </script>
 
-<style lang="less">
-.width160px{width:160px;}
-.dialog__class{
-  border-radius:6px 6px 6px 6px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+<style lang="scss">
+.width160px {
+  width: 160px;
+}
+.dialog__class {
+  border-radius: 6px 6px 6px 6px !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
 }

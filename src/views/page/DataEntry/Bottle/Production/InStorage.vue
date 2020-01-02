@@ -1,11 +1,11 @@
 <template>
   <div>
-    <el-button type="primary" @click="AddIn" size="small" :disabled="!(isRedact)" style="float: right;margin-bottom: 5px">新增</el-button>
+    <el-button type="primary" @click="AddIn" size="small" :disabled="!(isRedact)" style="float: right; margin-bottom: 5px;">新增</el-button>
     <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="InDataList" border tooltip-effect="dark" >
       <el-table-column type="index" label="序号" width="55"></el-table-column>
       <el-table-column label="白/中/夜班" :show-overflow-tooltip="true" prop="kjmWorkShopName">
         <template slot-scope="scope">
-          <el-select style="width: 100%" size="mini" v-model="scope.row.classes" placeholder="请选择" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @change="ChangeProductShift(scope.row)">
+          <el-select style="width: 100%;" size="mini" v-model="scope.row.classes" placeholder="请选择" :disabled="!(isRedact && (scope.row.status !== 'submit' && scope.row.status !== 'checked'))" @change="ChangeProductShift(scope.row)">
             <el-option :label="iteam.value" :value="iteam.code" v-for="(iteam, index) in productShift" :key="index"></el-option>
           </el-select>
         </template>
@@ -36,7 +36,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <p style="font-size: 14px;line-height: 32px">产量数合计：{{sumNum}}个</p>
+    <p style="font-size: 14px; line-height: 32px;">产量数合计：{{sumNum}}个</p>
     <auditLog :tableData="InAudit"></auditLog>
   </div>
 </template>

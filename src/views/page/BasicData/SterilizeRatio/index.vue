@@ -31,7 +31,7 @@
       <div class="toggleSearchTop">
         <i class="el-icon-caret-bottom"></i>
       </div>
-      <el-table :data="dataList" @row-dblclick="EditInfo" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;margin-bottom: 20px">
+      <el-table :data="dataList" @row-dblclick="EditInfo" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="物料" :show-overflow-tooltip="true">
@@ -43,21 +43,21 @@
         <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
     </el-card>
-    <el-dialog :visible.sync="dialogVisibleAdd" width="400px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">新增</div>
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisibleAdd" width="400px" custom-class='dialog__class'>
+      <div slot="title" style="line-height: 59px;">新增</div>
       <el-form :model="formAdd" :inline="true" size="small" :rules="Addrulestar" ref="Addstar" label-width="85px">
         <el-form-item label="工厂：">{{this.factoryName}}</el-form-item>
         <el-form-item label="物料：" prop="materialCode">
-          <el-select v-model="formAdd.materialCode" filterable style="width:230px">
+          <el-select v-model="formAdd.materialCode" filterable style="width: 230px;">
             <el-option value="">请选择</el-option>
             <el-option v-for="(item, index) in materialList" :key="index" :label="item.materialCode + ` ${item.materialName}`" :value="item.materialCode"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="比例：" prop="ratio">
-          <el-input v-model="formAdd.ratio" style="width:230px"></el-input>
+          <el-input v-model="formAdd.ratio" style="width: 230px;"></el-input>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input v-model="formAdd.remark" style="width:230px"></el-input>
+          <el-input v-model="formAdd.remark" style="width: 230px;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -219,17 +219,17 @@ export default {
 }
 </script>
 
-<style scoped lang="less">
-.dialog__class{
-  border-radius:6px 6px 6px 6px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+<style scoped lang="scss">
+.dialog__class {
+  border-radius: 6px 6px 6px 6px !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
 }

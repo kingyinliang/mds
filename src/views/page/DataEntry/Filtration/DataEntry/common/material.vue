@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="inStorage_card">
-      <div style="width: 158px" class="inStorage_card_left">
+      <div style="width: 158px;" class="inStorage_card_left">
         <p>半成品罐</p>
-        <div style="text-align: center;padding: 0 20px"><img src="@/assets/img/ferPot.png" alt="" style="width: 92px;height: 190px"></div>
+        <div style="text-align: center; padding: 0 20px;"><img src="@/assets/img/ferPot.png" alt="" style="width: 92px; height: 190px;"></div>
         <el-button type="text" class="button" size="small" :disabled="!isRedact" @click="ShowDialog()">领用</el-button>
       </div>
-      <div style="flex: 1">
+      <div style="flex: 1;">
         <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @row-dblclick="updateRow" :row-class-name="rowDelFlag">
           <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="物料" :show-overflow-tooltip="true">
@@ -28,14 +28,17 @@
         </el-table>
       </div>
     </div>
-    <el-card style="margin-top: 25px">
+    <el-card style="margin-top: 25px;">
       <audit-log :tableData="readAudit"></audit-log>
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class='dialog__class' @keyup.enter.native="SaveDialog('receive')">
-      <div slot="title" style="line-hight:59px">领用</div>
+      <div slot="title" style="line-height: 59px;">领用</div>
       <el-form :model="receive" size="small" label-width="160px" :rules="receiveRules" ref="receive">
+        <el-form-item label="BOM物料：">
+          {{this.BomMaterialCode + ' ' + this.BomMaterialName}}
+        </el-form-item>
         <el-form-item label="半成品罐号：" v-if="receive.id" prop="holderId">
-          <el-input v-model="receive.holderId" :disabled="true" style="display:none"></el-input>
+          <el-input v-model="receive.holderId" :disabled="true" style="display: none;"></el-input>
           <el-select v-model="receive.holderName" :disabled="true" ref="mySelect"></el-select>
         </el-form-item>
         <el-form-item label="半成品罐号：" prop="holderId" v-else>
@@ -50,14 +53,14 @@
           {{this.receive.batch}}
         </el-form-item>
         <el-form-item label="领用数：" prop="receiveAmount">
-          <el-input v-model="receive.receiveAmount" style="width:220px"></el-input>
+          <el-input v-model="receive.receiveAmount" style="width: 220px;"></el-input>
         </el-form-item>
         <el-form-item label="单位：">
           <!--<el-input v-model="receive.unit" style="width:220px"></el-input>-->
           {{receive.unit}}
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input v-model="receive.remark" style="width:220px"></el-input>
+          <el-input v-model="receive.remark" style="width: 220px;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -90,7 +93,9 @@ export default {
       dataList: [],
       dataAList: [],
       readAudit: [],
-      repertory: []
+      repertory: [],
+      BomMaterialCode: '',
+      BomMaterialName: ''
     }
   },
   props: ['isRedact'],
@@ -127,6 +132,8 @@ export default {
       this.$http(`${FILTRATION_API.FILTER_MATERIAL_HOLDERLIST}`, 'POST', params).then(({data}) => {
         if (data.code === 0) {
           this.holderList = data.holderList
+          this.BomMaterialCode = data.bomMaterial.MATNR
+          this.BomMaterialName = data.bomMaterial.MATERIAL_NAME
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
@@ -149,6 +156,10 @@ export default {
       this.$refs.mySelect.handleClose()
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.BomMaterialCode !== this.receive.materialCode) {
+            this.$warning_SHINHO('领用物料与bom物料不一致，请确认！')
+            return false
+          }
           let currentRecord = []
           if (this.receive.hasOwnProperty('uid')) {
             // 新增行
@@ -286,33 +297,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.rowDel { display: none}
-.inStorage_card{
+.rowDel {
+  display: none;
+}
+.inStorage_card {
   display: flex;
   .button {
-    border:none; background:none;
-    padding: 0px;
+    border: none;
+    padding: 0;
     width: 100%;
     line-height: 32px;
     margin-top: 10px;
     background: #f7f9fa;
   }
-  &_left{
+  &_left {
     padding: 0;
     margin-right: 5px;
-    width:158px;
-    background:rgba(255,255,255,1);
-    box-shadow:0px 4px 4px 0px rgba(0,0,0,0.09);
-    border-radius:6px;
-    border:1px solid rgba(0,0,0,0.09);
-    p{
+    width: 158px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.09);
+    p {
       padding: 10px;
       font-size: 14px;
     }
-    &_btn{
+    &_btn {
       width: 100%;
       margin-top: 10px;
-      background: #F7F9FA;
+      background: #f7f9fa;
     }
   }
 }

@@ -9,7 +9,7 @@
       <div class="main">
         <el-card>
           <div class="clearfix">
-            <el-row style="float: right">
+            <el-row style="float: right;">
               <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="querys(true)" @submit.native.prevent>
                 <el-form-item>
                   <el-input v-model="form.orderNo" placeholder="订单号" suffix-icon="el-icon-search"></el-input>
@@ -31,7 +31,7 @@
               header-row-class-name="tableHead"
               :data="sapOrderlist"
               tooltip-effect="dark"
-              style="width: 100%;margin-bottom: 20px">
+              style="width: 100%; margin-bottom: 20px;">
               <el-table-column
                 width="122"
                 label="生产订单">
@@ -133,20 +133,20 @@
             <el-form-item label="基本开始日期：" class="times">
               <el-row>
                 <el-col :span="12">
-                  <el-date-picker v-model="form.startDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px"></el-date-picker>
+                  <el-date-picker v-model="form.startDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;"></el-date-picker>
                 </el-col>
                 <el-col :span="12">
-                  <el-date-picker v-model="form.startDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px"></el-date-picker>
+                  <el-date-picker v-model="form.startDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;"></el-date-picker>
                 </el-col>
               </el-row>
             </el-form-item>
             <el-form-item label="基本完成日期：" class="times">
               <el-row>
                 <el-col :span="12">
-                  <el-date-picker v-model="form.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px"></el-date-picker>
+                  <el-date-picker v-model="form.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;"></el-date-picker>
                 </el-col>
                 <el-col :span="12">
-                  <el-date-picker v-model="form.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px"></el-date-picker>
+                  <el-date-picker v-model="form.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;"></el-date-picker>
                 </el-col>
               </el-row>
             </el-form-item>
@@ -297,25 +297,27 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.formdata{
-  .times{
-    input{
-      width: 200px!important;
+<style lang="scss">
+.orderdialog {
+  margin: auto;
+
+  input {
+    width: 300px !important;
+  }
+
+  .times {
+    input {
+      width: 150px !important;
     }
   }
 }
 </style>
-<style lang="scss">
-  .orderdialog{
-    margin: auto;
-    input{
-      width: 300px!important;
-    }
-    .times{
-      input{
-        width: 150px!important;
-      }
+<style lang="scss" scoped>
+.formdata {
+  .times {
+    input {
+      width: 200px !important;
     }
   }
+}
 </style>

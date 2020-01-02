@@ -13,7 +13,7 @@
               </el-form-item>
               <el-form-item label="生产品项：">
                 <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top-start">
-                  <p class="input_bottom" style="font-size:12px">{{(formHeader.materialCode || '') + ' ' + (formHeader.materialName || '')}}</p>
+                  <p class="input_bottom" style="font-size: 12px;">{{(formHeader.materialCode || '') + ' ' + (formHeader.materialName || '')}}</p>
                 </el-tooltip>
               </el-form-item>
               <el-form-item label="计划产量：">
@@ -23,7 +23,7 @@
                 <p class="input_bottom">{{formHeader.orderDate}}</p>
               </el-form-item>
               <el-form-item label="生产日期：">
-                <el-date-picker size="small" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="formHeader.productDate" style="width: 145px"></el-date-picker>
+                <el-date-picker size="small" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="formHeader.productDate" style="width: 145px;"></el-date-picker>
               </el-form-item>
               <el-form-item label="提交人员：">
                 <p class="input_bottom">{{formHeader.changer}}</p>
@@ -33,15 +33,15 @@
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col style="max-width:210px; height:30px;">
-            <div style="padding-top: 0px;float: right;font-size: 14px" :style="{'color': orderStatus === 'noPass'? 'red' : '' }"><span style="width: 5px;height: 5px;float: left;background: #1890FF;border-radius: 50%;margin-top: 7px;margin-right: 3px" :style="{'background': orderStatus === 'noPass'? 'red' : '#1890FF' }"></span>订单状态：{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : '未录入' }}</div>
+          <el-col style="max-width: 210px; height: 30px;">
+            <div style="padding-top: 0; float: right; font-size: 14px;" :style="{'color': orderStatus === 'noPass'? 'red' : '' }"><span style="width: 5px; height: 5px; float: left; background: #1890ff; border-radius: 50%; margin-top: 7px; margin-right: 3px;" :style="{'background': orderStatus === 'noPass'? 'red' : '#1890FF' }"></span>订单状态：{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : '未录入' }}</div>
           </el-col>
         </el-row>
-        <el-row style="text-align:right; position:absolute; top:44px; right:7px;">
-          <template style="float:right; margin-left:10px;">
+        <el-row style="text-align: right; position: absolute; top: 44px; right: 7px;">
+          <template style="float: right; margin-left: 10px;">
             <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' &&  isAuth('filter:instorage:mySaveOrUpdate')">{{isRedact?'取消':'编辑'}}</el-button>
           </template>
-          <template v-if="isRedact" style="float:right; margin-left:10px;">
+          <template v-if="isRedact" style="float: right; margin-left: 10px;">
             <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')"  v-if="isAuth('filter:instorage:mySaveOrUpdate')">保存</el-button>
             <el-button type="primary" size="small" @click="SubmitForm"  v-if="isAuth('filter:instorage:submit')">提交</el-button>
           </template>
@@ -53,7 +53,7 @@
     </div>
     <div class="main">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
       </div>
@@ -350,13 +350,13 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
 .input_bottom {
-  width:150px;
-  border-bottom: 1px solid rgba(216,216,216,1);
+  width: 150px;
+  border-bottom: 1px solid rgba(216, 216, 216, 1);
   overflow: hidden;
   height: 33px;
-  white-space:nowrap;
-  text-overflow:ellipsis;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

@@ -38,7 +38,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="日期：">
-                <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.setDate" style="width: 200px"></el-date-picker>
+                <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.setDate" style="width: 200px;"></el-date-picker>
               </el-form-item>
               <el-form-item class="floatr">
                 <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('sys:att:listAtt')">查询</el-button>
@@ -68,7 +68,7 @@
             :data="datalist"
             border
             tooltip-effect="dark"
-            style="width: 100%;margin-bottom: 20px">
+            style="width: 100%; margin-bottom: 20px;">
             <el-table-column
               type="selection"
               :selectable='checkboxT'
@@ -175,11 +175,11 @@
               width="120">
               <template slot-scope="scope">
                 <el-col v-if="scope.row.redactStatus">
-                  <span style="cursor: pointer" @click="selectUser(scope.row)" v-if="scope.row.userType!=='临时工'">
+                  <span style="cursor: pointer;" @click="selectUser(scope.row)" v-if="scope.row.userType!=='临时工'">
                     <i>{{scope.row.userId}}</i>
                     <i>点击选择人员</i>
                   </span>
-                    <span style="cursor: pointer" @click="dayLaborer(scope.row)" v-if="scope.row.userType=='临时工'">
+                    <span style="cursor: pointer;" @click="dayLaborer(scope.row)" v-if="scope.row.userType=='临时工'">
                     <i>{{scope.row.userId}}</i>
                     <i>点击输入临时工</i>
                   </span>
@@ -271,7 +271,7 @@
           :data="datalist"
           border
           tooltip-effect="dark"
-          style="width: 100%;margin-bottom: 20px">
+          style="width: 100%; margin-bottom: 20px;">
           <el-table-column
             label="车间"
             :show-overflow-tooltip="true"
@@ -343,11 +343,11 @@
             :show-overflow-tooltip="true"
             width="120">
             <template slot-scope="scope">
-              <span style="cursor: pointer" @click="selectUser(scope.row)" v-if="scope.row.userType!=='临时工'">
+              <span style="cursor: pointer;" @click="selectUser(scope.row)" v-if="scope.row.userType!=='临时工'">
                 <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
                 <i>点击选择人员</i>
               </span>
-              <span style="cursor: pointer" @click="dayLaborer(scope.row)" v-if="scope.row.userType=='临时工'">
+              <span style="cursor: pointer;" @click="dayLaborer(scope.row)" v-if="scope.row.userType=='临时工'">
                 <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
                 <i>点击输入临时工</i>
               </span>
@@ -434,7 +434,7 @@
       :close-on-click-modal="false"
       :visible.sync="visible">
       <el-row>
-        <el-col style="width: 500px">
+        <el-col style="width: 500px;">
           <el-transfer
             filterable
             :titles="['未分配人员', '已分配人员']"
@@ -458,7 +458,7 @@
       :visible.sync="visible1">
       <el-form :model="form" size="small" label-width="120px" class="dialogform">
         <el-row>
-          <el-button type="primary" @click="addDayLaborer(selctId2)" size="small" style="float: right;margin-bottom: 10px" v-if="!clearStatus">新增</el-button>
+          <el-button type="primary" @click="addDayLaborer(selctId2)" size="small" style="float: right; margin-bottom: 10px;" v-if="!clearStatus">新增</el-button>
         </el-row>
         <el-form-item label="临时工姓名：" v-for="(item, index) in selctId2" :key="index">
           <el-col :span="20">
@@ -480,26 +480,26 @@
       :close-on-click-modal="false"
       :visible.sync="visible2">
       <el-row>
-        <el-col style="width: 250px">
-          <el-card style="height: 303px;overflow-y: scroll">
-            <h3 style="font-size: 16px;color: black;margin-bottom: 10px">组织架构</h3>
+        <el-col style="width: 250px;">
+          <el-card style="height: 303px; overflow-y: scroll;">
+            <h3 style="font-size: 16px; color: black; margin-bottom: 10px;">组织架构</h3>
             <el-tree :data="OrgTree" node-key="deptId" :default-expanded-keys="arrList" @node-click="setdetail" ref="tree2" :expand-on-click-node="false"></el-tree>
           </el-card>
         </el-col>
-        <el-col style="width: 250px">
-          <el-card style="height: 303px;overflow-y: scroll">
+        <el-col style="width: 250px;">
+          <el-card style="height: 303px; overflow-y: scroll;">
             <el-input v-model="filterText" size="small" placeholder="搜索人员"></el-input>
             <el-tree ref="userlistTree" :filter-node-method="filterNode" node-key="userId" @node-click="treeNodeClick" :data="userlist" show-checkbox :props="userListTreeProps"  :expand-on-click-node="false" @check-change="userTree"></el-tree>
           </el-card>
         </el-col>
-        <el-col style="width: 50px;padding: 70px 5px">
-          <el-button type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px" @click="delSelcted()" v-if="tree2Status"></el-button>
-          <el-button type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px" @click="delSelcted()" v-else disabled></el-button>
-          <el-button type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0" @click="addSelcted()" v-if="tree1Status"></el-button>
-          <el-button type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0" @click="addSelcted()" v-else disabled></el-button>
+        <el-col style="width: 50px; padding: 70px 5px;">
+          <el-button type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px;" @click="delSelcted()" v-if="tree2Status"></el-button>
+          <el-button type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px;" @click="delSelcted()" v-else disabled></el-button>
+          <el-button type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0;" @click="addSelcted()" v-if="tree1Status"></el-button>
+          <el-button type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0;" @click="addSelcted()" v-else disabled></el-button>
         </el-col>
-        <el-col style="width: 250px">
-          <el-card style="height: 303px;overflow-y: scroll">
+        <el-col style="width: 250px;">
+          <el-card style="height: 303px; overflow-y: scroll;">
             <el-input v-model="filterText1" size="small" placeholder="搜索人员"></el-input>
             <el-tree ref="userlistTree1" :filter-node-method="filterNode1" :data="selctId" show-checkbox :props="selctListTreeProps"  :expand-on-click-node="false" @check-change="userTree1"></el-tree>
           </el-card>
@@ -1209,18 +1209,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .searchCard { margin-bottom: 0; }
-  .searchCard, .tableCard {
-    position: relative;
-    .toggleSearchTop {
-      width: 100%; position: absolute; top: 0; left: 0; text-align: center; cursor: pointer; display: none;
-    }
-    .toggleSearchBottom {
-      width: 100%; position: absolute; bottom: 0; left: 0; text-align: center; cursor: pointer;
-    }
-    .el-icon-caret-top:before,
-    .el-icon-caret-bottom:before {
-      color: #dcdfe6;
-    }
+.searchCard {
+  margin-bottom: 0;
+}
+.searchCard,
+.tableCard {
+  position: relative;
+  .toggleSearchTop {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    cursor: pointer;
+    display: none;
   }
+  .toggleSearchBottom {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    cursor: pointer;
+  }
+  .el-icon-caret-top::before,
+  .el-icon-caret-bottom::before {
+    color: #dcdfe6;
+  }
+}
 </style>

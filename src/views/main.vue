@@ -8,6 +8,7 @@
       <div class="site-content__wrapper" :style="{ 'min-height': documentClientHeight + 'px' }">
         <main-content />
       </div>
+      <scroll-top></scroll-top>
     </template>
     <update-pass v-if="pasVisible" ref="upPass" id="upPass" :refreshDataList="refreshDataList"></update-pass>
   </div>

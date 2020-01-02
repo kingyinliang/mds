@@ -868,6 +868,8 @@ export const REP_API = {
   OEE_EXCEL_API: HOST + '/report/formh/exportProductEfficiencyList',
   OEE_SUM_API: HOST + '/report/formh/productEfficiencySumList',
   OEE_PRODUCT_API: HOST + '/sys/dept/findListByParentParams',
+  DAYS_REPROT_LIST: HOST + '/report/fromEs/zhiquDaily', // 制曲日报表
+  DAYS_REPROT_EXOECT: HOST + '/report/fromEs/expectZhiquDaily', // 制曲日报表导出
   /**
    * OPE
    */
@@ -922,7 +924,13 @@ export const REP_API = {
   REP_ADJUST_LIST_API: HOST + '/ver/adjust/exportList',
   /** ******************** 通用报表  START *************************** */
   CURRENT_MATERIALTRACEABILITY_LIAT: HOST + '/report/production/materielTraceSelectInfo',
-  CURRENT_MATERIALTRACEABILITY_LIST: HOST + '/report/production/materielTrace'
+  CURRENT_MATERIALTRACEABILITY_LIST: HOST + '/report/production/materielTrace',
+  OZONE_SEARCH_LIST: HOST + '/o3/board/charList', // 臭氧看板
+  OZONE_SEARCH_EXPECT: HOST + '/o3/board/expectCharList', // 臭氧看板导出
+  JUICEOCCUPATION_LIST: HOST + '/juiceOccupy/report',
+  JUICEOCCUPATION_SEMIPROD: HOST + '/sys/sapmaterialitem/semiProductList', // 原汁占用报表 - 品项
+  JUICEOCCUPATION_OUT: HOST + '/juiceOccupy/export'
+
 }
 /*
 *炒麦api
@@ -1508,7 +1516,8 @@ export const FERMENTATION_API = {
    * 订单修改
    */
   ORDER_MODIFY_LIST_API: HOST + '/sys/fer-sort-judge/isSapList',
-  ORDER_MODIFY_CHANGE_API: HOST + '/sys/fer-sort-judge/isSapUpdate'
+  ORDER_MODIFY_CHANGE_API: HOST + '/sys/fer-sort-judge/isSapUpdate',
+  ORDER_MODIFY_EXPORT_API: HOST + '/sys/fer-sort-judge/isSapListExport'
 }
 /**
  *  杀菌 api Sterilized
@@ -1704,6 +1713,8 @@ export const JUICE_API = {
   JUICE_JUICE_DETAIL: HOST + '/juice/pot/juiceItem', // 详情
   JUICE_JUICE_STOCKITEM: HOST + '/juice/pot/juiceStockItem', // 库存详情
   JUICE_STOCKITEM_KUCUN: HOST + '/juice/pot/juiceStockItemExport', // 导出
+  JUICE_POT_STOCKSUM: HOST + '/juice/pot/juiceStockSum', // 原汁库存汇报表
+  JUICE_POT_STOCKEXPORT: HOST + '/juice/pot/juiceStockSumExport', // 导出
   JUICE_SEARCH_POT_LIST: HOST + '/juice/pot/holderList',
   JUICE_BRINGOUTPROP_FA_LIST: HOST + '/juice/pot/addPotList',
   JUICE_BRINGOUTPROP_TIAO_LIST: HOST + '/juice/pot/allocateHolderList'
@@ -1713,7 +1724,9 @@ export const JUICE_API = {
  */
 export const POTREPORTFORMS_API = {
   POTREPORTFORMS_LIST: HOST + '/ste/semi/reportForm',
-  POTREPORTFORMS_OUT: HOST + '/ste/semi/reportFormExport'
+  POTREPORTFORMS_OUT: HOST + '/ste/semi/reportFormExport',
+  POTREPORTFORMS_STOCK_LIST: HOST + '/ste/semi/steStock',
+  POTREPORTFORMS_STOCK_OUT: HOST + '/ste/semi/steStockExport'
 }
 /**
  *  看板接口
@@ -1725,7 +1738,8 @@ export const ECHARTS_API = {
   KOJIMAKING_WORKSHOP_HOUSEDETAIL: HOST + '/zhiqu/board/houseDetail',
   KOJIMAKING_WORKSHOP_HOUSEMATERIAL: HOST + '/zhiqu/board/houseUsedMaterial',
   KOJIMAKING_WORKSHOP_HOUSEPHASE: HOST + '/zhiqu/board/houseUsedPhase',
-  KOJIMAKING_DETAIL_LINE: HOST + '/zhiqu/board/lineChart'
+  KOJIMAKING_DETAIL_LINE: HOST + '/zhiqu/board/lineChart',
+  OZONE_LINE: HOST + '/o3/board/boardList'
 }
 /**
  *  计粮仓 api

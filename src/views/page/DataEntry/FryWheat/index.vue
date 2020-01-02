@@ -1,38 +1,38 @@
 <template>
   <el-col>
     <div class="header_main">
-      <el-card class="searchCard" style="min-height: 480px">
-        <el-row type="flex" style="border-bottom: 1px solid #E9E9E9;margin-bottom: 12px">
+      <el-card class="searchCard" style="min-height: 480px;">
+        <el-row type="flex" style="border-bottom: 1px solid #e9e9e9; margin-bottom: 12px;">
           <el-col>
             <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
               <el-form-item label="生产工厂：">
-                <el-select v-model="plantList.factoryid" class="selectwpx" style="width: 140px">
+                <el-select v-model="plantList.factoryid" class="selectwpx" style="width: 140px;">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in factory" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="生产车间：">
-                <el-select v-model="plantList.workshopid" class="selectwpx" style="width:130px">
+                <el-select v-model="plantList.workshopid" class="selectwpx" style="width: 130px;">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in workshop" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="生产日期：">
-                <el-date-picker type="date" v-model="plantList.productDate" value-format="yyyy-MM-dd" style="width:135px"></el-date-picker>
+                <el-date-picker type="date" v-model="plantList.productDate" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
               </el-form-item>
               <el-form-item label="订单：" label-width="45px">
-                <el-input type="text" v-model="plantList.orderNo" clearable style="width:140px"></el-input>
+                <el-input type="text" v-model="plantList.orderNo" clearable style="width: 140px;"></el-input>
               </el-form-item>
               <el-form-item label="生产状态：">
-                <el-select v-model="plantList.status" class="selectwpx" style="width:140px">
+                <el-select v-model="plantList.status" class="selectwpx" style="width: 140px;">
                   <el-option label="正常生产" value="normal"></el-option>
                   <el-option label="无生产" value="abnormal" v-if="isAuth('wht:user:listUser')"></el-option>
                 </el-select>
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col style="width:342px;">
-            <el-row class="rowButton" style="margin-top:39px; text-align:right;">
+          <el-col style="width: 342px;">
+            <el-row class="rowButton" style="margin-top: 39px; text-align: right;">
               <el-button type="primary" size="small" @click="GetOrderList(true)">查询</el-button>
               <template v-if="type === 'abnormal'">
                 <el-button v-if="isdisabled === true && isAuth('wht:user:updateUser')" type="primary" size="small" @click="isdisabledFn" >编辑</el-button>
@@ -47,32 +47,32 @@
         </el-row>
         <el-row v-if="type === 'normal'" :gutter="20">
           <el-col v-for="(item, index) in FryWheatList" :key="index" id="normal" :span="12">
-            <div class="title_left" style="font-size: 16px;font-weight: bold;margin-bottom: 8px;">工序： <font style="color:red">{{item.productLineName}}</font></div>
+            <div class="title_left" style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">工序： <font style="color: red;">{{item.productLineName}}</font></div>
             <div class="sole_cont">
               <el-form size="small" :inline="true" label-position="right" label-width="90px">
                 <div class="itemImg">
-                  <img :src="'data:image/gif;base64,' + item.img" alt="" style="width:100%; min-height:181px">
+                  <img :src="'data:image/gif;base64,' + item.img" alt="" style="width: 100%; min-height: 181px;">
                 </div>
                 <div class="title_left">
-                  <div style="float: left;font-size: 14px;font-weight: normal;line-height: 60px">
+                  <div style="float: left; font-size: 14px; font-weight: normal; line-height: 60px;">
                     <span class="points" :style="{'background': item.orderStatus === 'noPass'? 'red': item.orderStatus === 'checked'? '#67C23A' : item.orderStatus === 'submit'? '#1890ff' : item.orderStatus === 'saved'? '#1890ff' : '#7ED321'}"></span>订单状态：<i :style="{'color': item.orderStatus === 'noPass'? 'red': item.orderStatus === 'checked'? '#67C23A' : ''}">{{item.orderStatus === 'submit'? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass'?  '审核不通过' : item.orderStatus === 'saved'? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus}}</i>
                   </div>
-                  <el-button @click="go(item)" type="primary" size="small" style="float: right; margin-top: 14px;background-color: #1890FF;color: white" v-if="isAuth('wht:order:list') || isAuth('sys:whtPwMaterial:list')">数据录入</el-button>
+                  <el-button @click="go(item)" type="primary" size="small" style="float: right; margin-top: 14px; background-color: #1890ff; color: white;" v-if="isAuth('wht:order:list') || isAuth('sys:whtPwMaterial:list')">数据录入</el-button>
                 </div>
                 <div class="normal_bottom">
                     <el-form-item label="订单号：" class="width50b">
-                      <el-select v-model="item.orderNo" placeholder="请选择" :change="orderchange(item)" style="width:150px">
+                      <el-select v-model="item.orderNo" placeholder="请选择" :change="orderchange(item)" style="width: 150px;">
                         <el-option :label="item" v-for="(item, index) in item.order_arr" :key="index" :value="item"></el-option>
                       </el-select>
                     </el-form-item>
                     <el-form-item label="计划产量：" class="width50b">
-                      <div style="width:152px; border-bottom:1px solid #ccc">&nbsp;{{(item.planOutput || 0) + ' ' + item.outputUnit}}</div>
+                      <div style="width: 152px; border-bottom: 1px solid #ccc;">&nbsp;{{(item.planOutput || 0) + ' ' + item.outputUnit}}</div>
                     </el-form-item>
                     <el-form-item label="品项：" class="width50b">
-                      <div style="width:150px; border-bottom:1px solid #ccc">&nbsp;{{item.materialCode + ' ' + item.materialName}}</div>
+                      <div style="width: 150px; border-bottom: 1px solid #ccc;">&nbsp;{{item.materialCode + ' ' + item.materialName}}</div>
                     </el-form-item>
                     <el-form-item label="实际产量：" class="width50b">
-                      <div style="width:152px; border-bottom:1px solid #ccc">&nbsp;{{(item.realOutput || 0) + ' ' + item.outputUnit}}</div>
+                      <div style="width: 152px; border-bottom: 1px solid #ccc;">&nbsp;{{(item.realOutput || 0) + ' ' + item.outputUnit}}</div>
                     </el-form-item>
                 </div>
               </el-form>
@@ -114,7 +114,7 @@
           </el-col> -->
         </el-row>
         <el-row v-else-if="type === 'abnormal'">
-          <div style="min-height: 340px">
+          <div style="min-height: 340px;">
           <el-table border  header-row-class-name="tableHead" :data="datalist">
             <!-- <el-table-column prop="orderId"></el-table-column> -->
             <el-table-column label="序号" width="50" prop="id" type="index"></el-table-column>
@@ -142,14 +142,14 @@
             <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <el-col>
-                  <span v-if="!isdisabled" style="cursor: pointer" @click="selectUser(scope.row)">
+                  <span v-if="!isdisabled" style="cursor: pointer;" @click="selectUser(scope.row)">
                     <i v-if="scope.row.userId!== undefined">{{scope.row.userId.join(",")}}</i>
                     <span>
                       <i v-if="scope.row.userType == '临时工'">点击输入临时工</i>
                       <i v-else>点击选择人员</i>
                     </span>
                   </span>
-                  <span v-else style="cursor: pointer">
+                  <span v-else style="cursor: pointer;">
                     <i v-if="scope.row.userId!== undefined">{{scope.row.userId.join(",")}}</i>
                     <span>
                       <i v-if="scope.row.userType == '临时工'">点击输入临时工</i>
@@ -161,7 +161,7 @@
             </el-table-column>
             <el-table-column label="开始时间" prop="startDate">
               <template slot-scope="scope">
-                <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width:175px" :disabled="isdisabled"></el-date-picker>
+                <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="isdisabled"></el-date-picker>
               </template>
             </el-table-column>
             <el-table-column label="用餐时间" prop="dinner" width="80">
@@ -171,7 +171,7 @@
             </el-table-column>
             <el-table-column label="结束时间" prop="endDate">
               <template slot-scope="scope">
-                <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width:175px" :disabled="isdisabled"></el-date-picker>
+                <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="isdisabled"></el-date-picker>
               </template>
             </el-table-column>
             <el-table-column label="备注" prop="remark" width="100px">
@@ -185,7 +185,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-row style="font-size:14px; line-height:30px; margin-top:10px">
+          <el-row style="font-size: 14px; line-height: 30px; margin-top: 10px;">
             实际作业人数: {{countMan}}
           </el-row>
           </div>
@@ -703,41 +703,45 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import '@/assets/scss/_common.scss';
+@import "@/assets/scss/_common.scss";
 </style>
 <style lang="scss" scoped>
-  .itemImg{
-    position: relative;
-    width:100%;
-    min-height:181px;
-    overflow: hidden;
-    cursor: pointer;
-    img{
-      transition:All 1s ease-in-out;
-    }
+.itemImg {
+  position: relative;
+  width: 100%;
+  min-height: 181px;
+  overflow: hidden;
+  cursor: pointer;
+  img {
+    transition: All 1s ease-in-out;
   }
-  .itemImg:hover{
-    img{
-      transform:scale(1.2);
-    }
+}
+.itemImg:hover {
+  img {
+    transform: scale(1.2);
   }
-  .rowButton{
-    button{
-      margin: 0px 3px!important;
-    }
+}
+.rowButton {
+  button {
+    margin: 0 3px !important;
   }
-.box-card{
+}
+.box-card {
   .pro-line { border-bottom: 1px solid #dcdfe6; }
-  .pro-line p { color: red; font-size: 16px; letter-spacing: .1em; }
-  b{
+  .pro-line p {
+    color: red;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+  }
+  b {
     font-size: 16px;
     line-height: 32px;
     float: left;
   }
-  .item{
+  .item {
     margin-top: 20px;
     display: flex;
-    img{
+    img {
       float: left;
       width: 220px;
       height: 220px;
@@ -745,32 +749,56 @@ export default {
       border: 1px solid #dcdfe6;
       margin-right: 20px;
     }
-    .itemForm{
+    .itemForm {
       flex: 1;
-      p{
+      p {
         color: #8a979e;
       }
     }
-    .margb20px{margin-bottom: 10px}
+    .margb20px { margin-bottom: 10px; }
   }
 }
-#normal{
-  .sole_cont{
-    border: #E9E9E9 1px solid;
-    .sole_status{
-      float: right;color: #565656;font-size: 14px;min-width: 150px; position: absolute; right: 15px;top: 20px;
+#normal {
+  .sole_cont {
+    border: #e9e9e9 1px solid;
+    .sole_status {
+      float: right;
+      color: #565656;
+      font-size: 14px;
+      min-width: 150px;
+      position: absolute;
+      right: 15px;
+      top: 20px;
     }
-    .points{width: 5px; height: 5px; border-radius: 50%; display: block; float: left;margin-top: 27px;margin-right: 8px}
-    .title_left{border-bottom:#E9E9E9 1px solid; padding:0 15px; font-weight: bold;height: 60px;line-height: 60px;display: block;}
-    .el-form-item__content{
+    .points {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      display: block;
+      float: left;
+      margin-top: 27px;
+      margin-right: 8px;
+    }
+    .title_left {
+      border-bottom: #e9e9e9 1px solid;
+      padding: 0 15px;
+      font-weight: bold;
+      height: 60px;
+      line-height: 60px;
+      display: block;
+    }
+    .el-form-item__content {
       width: 61%;
       border-bottom: #ccc solid 1px;
     }
-    .width50b{ width: 49%; margin: 5px 0}
-    .normal_bottom{padding: 5px 0}
+    .width50b {
+      width: 49%;
+      margin: 5px 0;
+    }
+    .normal_bottom { padding: 5px 0; }
   }
 }
-.selectwpx{
-  width:120px;
+.selectwpx {
+  width: 120px;
 }
 </style>

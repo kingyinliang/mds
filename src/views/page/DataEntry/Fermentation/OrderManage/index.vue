@@ -6,35 +6,35 @@
           <el-col>
             <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
               <el-form-item label="生产工厂：">
-                <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px" @change="changeOptions('factory')">
+                <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="生产车间：">
-                <el-select v-model="params.workshopId" class="selectwpx" style="width:140px"  @change="changeOptions('workshop')">
+                <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px;"  @change="changeOptions('workshop')">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="罐号：" >
-                <el-select v-model="params.potId" class="selectwpx" filterable style="width: 140px" @change="changeOptions('pot')">
+                <el-select v-model="params.potId" class="selectwpx" filterable style="width: 140px;" @change="changeOptions('pot')">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in potList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="物料：" >
-                <el-select v-model="params.materialCode" @change="changeOptions('material')" class="selectwpx" filterable style="width: 140px">
+                <el-select v-model="params.materialCode" @change="changeOptions('material')" class="selectwpx" filterable style="width: 140px;">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="订单日期：">
-                <el-date-picker type="date" v-model="params.startDate" value-format="yyyy-MM-dd" style="width:140px"></el-date-picker>
-                - <el-date-picker type="date" v-model="params.endDate" value-format="yyyy-MM-dd" style="width:140px"></el-date-picker>
+                <el-date-picker type="date" v-model="params.startDate" value-format="yyyy-MM-dd" style="width: 140px;"></el-date-picker>
+                - <el-date-picker type="date" v-model="params.endDate" value-format="yyyy-MM-dd" style="width: 140px;"></el-date-picker>
               </el-form-item>
               <el-form-item class="floatr">
-                <el-button type="primary" size="small" @click="getOrderList()" style="float: right" v-if="isAuth('fer:order:list')">查询</el-button>
+                <el-button type="primary" size="small" @click="getOrderList()" style="float: right;" v-if="isAuth('fer:order:list')">查询</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -46,17 +46,17 @@
     </div>
     <div class="main">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
-        <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px;overflow: hidden">
+        <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px; overflow: hidden;">
           <el-tab-pane name="1">
             <span slot="label" class="spanview">
               <el-button>未申请</el-button>
             </span>
             <el-row>
               <el-col>
-                <el-button type='primary' size='small' style='float:right; margin-bottom:10px;' @click="applyOrder()" v-if="isAuth('fer:order:applyFerOrder')">申请订单</el-button>
+                <el-button type='primary' size='small' style='float: right; margin-bottom: 10px;' @click="applyOrder()" v-if="isAuth('fer:order:applyFerOrder')">申请订单</el-button>
               </el-col>
             </el-row>
             <el-row>
@@ -88,7 +88,7 @@
                 </el-table-column>
                 <el-table-column label="订单类型" width="120">
                   <template slot-scope="scope">
-                    <el-select v-model="scope.row.ferOrderType" placeholder="请选择" size="mini" style="width: 100px">
+                    <el-select v-model="scope.row.ferOrderType" placeholder="请选择" size="mini" style="width: 100px;">
                       <el-option v-for="(item, index) in orderTypeList" :label="item.value"  :value="item.code" :key="index"></el-option>
                     </el-select>
                   </template>
@@ -188,7 +188,7 @@
                 </el-table-column>
                 <el-table-column label="订单类型" width="120">
                   <template slot-scope="scope">
-                    <el-select v-model="scope.row.ferOrderType" placeholder="请选择" size="mini" style="width: 100px" :disabled="true">
+                    <el-select v-model="scope.row.ferOrderType" placeholder="请选择" size="mini" style="width: 100px;" :disabled="true">
                       <el-option v-for="(item, index) in orderTypeList" :label="item.value"  :value="item.code" :key="index"></el-option>
                     </el-select>
                   </template>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="audit"><span>异常情况记录</span></div>
-    <div><el-input type="textarea" class="textarea" style="width: 100%;height:90px"></el-input></div>
+    <div><el-input type="textarea" class="textarea" style="width: 100%; height: 90px;"></el-input></div>
   </div>
 </template>
 
@@ -23,14 +23,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.audit{
+.audit {
   line-height: 32px;
   margin: 10px 0;
-  i{
+  i {
     font-size: 22px;
     float: left;
   }
-  span{
+  span {
     font-size: 16px;
   }
 }

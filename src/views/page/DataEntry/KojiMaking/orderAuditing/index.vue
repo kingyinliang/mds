@@ -35,16 +35,16 @@
             </el-form>
           </el-col>
           <el-col :span="3" >
-            <div style="float:right;line-height:31px;font-size:14px">
-              <div style="float:left">
+            <div style="float: right; line-height: 31px; font-size: 14px;">
+              <div style="float: left;">
                 <span class="point" :style="{'background': formHeader.orderStatus === 'noPass'? 'red' : formHeader.orderStatus === 'saved'? '#1890f' : formHeader.orderStatus === 'submit' ? '#1890ff' : formHeader.orderStatus === '已拆分' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：
               </div>
               <span :style="{'color': formHeader.orderStatus === 'noPass'? 'red' : '' }">{{formHeader.orderStatus === 'noPass'? '审核不通过' : formHeader.orderStatus === 'saved' ? '已保存' : formHeader.orderStatus === 'submit' ? '已提交' : formHeader.orderStatus === 'checked' ? '通过':formHeader.orderStatus === '已同步' ? '已同步' : formHeader.orderStatus === '已拆分' ? '未录入' :  formHeader.orderStatus === 'toBeAudited' ? '待审核' : formHeader.orderStatus}}</span>
             </div>
           </el-col>
         </el-row>
-        <el-row style="text-align:right" class="button_three_goup">
-          <template style="float:right;margin-left:10px;">
+        <el-row style="text-align: right;" class="button_three_goup">
+          <template style="float: right; margin-left: 10px;">
             <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-orderManage-index'})">返回</el-button>
             <el-button type="primary" size="small" @click="submitForm" v-if="formHeader.orderStatus !== 'submit' && formHeader.orderStatus !== 'checked' && isAuth('sys:midTimeSheet:udpate')">提交</el-button>
           </template>
@@ -56,10 +56,10 @@
     </div>
     <div class="main">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color:white;margin-bottom:8px;position:relative;border-radius:5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
-        <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius:15px;overflow:hidden">
+        <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px; overflow: hidden;">
           <el-tab-pane name="1">
             <span slot="label" class="spanview">
               <el-tooltip class="item" effect="dark" :content="readyState === 'noPass'? '不通过':readyState === 'saved'? '已保存':readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过': readyState === 'toBeAudited' ? '待审核' : '未录入'" placement="top-start">
@@ -67,7 +67,7 @@
               </el-tooltip>
             </span>
             <el-row>
-              <el-button type="primary" style="float: right" size="small" @click="GetTime" v-if="formHeader.orderStatus !== 'submit' && formHeader.orderStatus !== 'checked'&& isAuth('sys:midTimeSheet:udpate')">获取工时</el-button>
+              <el-button type="primary" style="float: right;" size="small" @click="GetTime" v-if="formHeader.orderStatus !== 'submit' && formHeader.orderStatus !== 'checked'&& isAuth('sys:midTimeSheet:udpate')">获取工时</el-button>
               <el-table header-row-class-name="tableHead" :data="workHourList"  border tooltip-effect="dark" >
                 <el-table-column type="index" width="55" label="序号"></el-table-column>
                 <el-table-column label="工序" width="140">
@@ -122,9 +122,9 @@
                   label="操作"
                   width="145">
                   <template slot-scope="scope">
-                    <el-button style='float:left' type="primary" size="small" @click="enbaleEdit(scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" v-if="scope.row.disabled && isAuth('sys:midTimeSheet:udpate')">编辑</el-button>
-                    <el-button style='float:left' type="primary" size="small" @click="saveWorkHour(scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" v-if="!scope.row.disabled && isAuth('sys:midTimeSheet:udpate')">保存</el-button>
-                    <el-button style='float:right' type="primary" size="small"  @click="goBack('报工工时', scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
+                    <el-button style='float: left;' type="primary" size="small" @click="enbaleEdit(scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" v-if="scope.row.disabled && isAuth('sys:midTimeSheet:udpate')">编辑</el-button>
+                    <el-button style='float: left;' type="primary" size="small" @click="saveWorkHour(scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" v-if="!scope.row.disabled && isAuth('sys:midTimeSheet:udpate')">保存</el-button>
+                    <el-button style='float: right;' type="primary" size="small"  @click="goBack('报工工时', scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -201,16 +201,16 @@
                   label="操作"
                   width="80">
                   <template slot-scope="scope">
-                    <el-button style='float:right' type="primary" size="small" @click="goBack('生产入库', scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
+                    <el-button style='float: right;' type="primary" size="small" @click="goBack('生产入库', scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
                   </template>
                 </el-table-column>
               </el-table>
             </el-row>
-            <el-row style="margin-top:20px;">
+            <el-row style="margin-top: 20px;">
               <el-col>
                 <div>
                   <span>入库数合计：</span>{{totalInstock}} L
-                  <span>&nbsp;&nbsp;实际入库数：</span><el-input size="small" type="number" v-model.number='realInAmount' style="display:inline-block; width:150px;" :disabled="!isEdit"></el-input> L
+                  <span>&nbsp;&nbsp;实际入库数：</span><el-input size="small" type="number" v-model.number='realInAmount' style="display: inline-block; width: 150px;" :disabled="!isEdit"></el-input> L
                 </div>
               </el-col>
             </el-row>
@@ -281,7 +281,7 @@
                   label="操作"
                   width="80">
                   <template slot-scope="scope">
-                    <el-button style='float:right' type="primary" size="small" @click="goBack('物料领用', scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
+                    <el-button style='float: right;' type="primary" size="small" @click="goBack('物料领用', scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -774,9 +774,10 @@ export default class Index extends Vue {
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 32px;
-  border-bottom: solid 1px #D8D8D8;
+  border-bottom: solid 1px #d8d8d8;
 }
-.el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
-  margin-bottom: 8px
+.el-form-item--mini.el-form-item,
+.el-form-item--small.el-form-item {
+  margin-bottom: 8px;
 }
 </style>

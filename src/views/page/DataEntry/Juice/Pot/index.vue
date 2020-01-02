@@ -3,65 +3,65 @@
   <el-card class="searchCard ferCard">
     <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="multi_row">
       <el-form-item label="生产工厂：">
-        <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 140px">
+        <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="生产车间：">
-        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 140px">
+        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.deptName" v-for="(item, index) in workshop" :key="index" :value="item.deptId"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="罐类型：">
-        <el-select v-model="formHeader.potType" placeholder="请选择" @change="ChangeSearch()" style="width: 140px">
+        <el-select v-model="formHeader.potType" placeholder="请选择" @change="ChangeSearch()" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option v-for="(sole, index) in this.potTypeList" :key="index" :value="sole.value" :label="sole.name"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="罐号：" label-width="50px">
-        <el-select v-model="formHeader.potNo" placeholder="请选择" multiple @change="ChangeSearch()" filterable allow-create default-first-op style="width: 140px">
+        <el-select v-model="formHeader.potNo" placeholder="请选择" multiple @change="ChangeSearch()" filterable allow-create default-first-op style="width: 140px;">
           <el-option v-for="(sole, index) in this.guanList" :key="index" :value="sole.holderNo" :label="sole.holderName"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="类别：" label-width="50px">
-        <el-select v-model="formHeader.type" placeholder="请选择" @change="ChangeSearch()" style="width: 140px">
+        <el-select v-model="formHeader.type" placeholder="请选择" @change="ChangeSearch()" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.halfType" v-for="(item, index) in typeList" :key="index" :value="item.halfType"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="状态：">
-        <el-select v-model="formHeader.status" placeholder="请选择" @change="ChangeSearch()" style="width: 140px">
+        <el-select v-model="formHeader.status" placeholder="请选择" @change="ChangeSearch()" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.value" v-for="(item, index) in holderStatusList" :key="index" :value="item.code"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="待转储：">
-        <el-select v-model="formHeader.dump" placeholder="请选择" @change="ChangeSearch()" style="width: 140px">
+        <el-select v-model="formHeader.dump" placeholder="请选择" @change="ChangeSearch()" style="width: 140px;">
           <el-option label="请选择"  value=""></el-option>
           <el-option :label="item.name" v-for="(item, index) in dumpList" :key="index" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="标识：">
-        <el-select v-model="formHeader.isF" placeholder="请选择" style="width: 140px">
+        <el-select v-model="formHeader.isF" placeholder="请选择" style="width: 140px;">
           <el-option label="请选择" value=""></el-option>
           <el-option :label="item.name" v-for="(item, index) in isFList" :key="index" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item style="float:right">
-        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right" v-if="isAuth('juice:pot:List')">查询</el-button>
+      <el-form-item style="float: right;">
+        <el-button type="primary" size="small" @click="GetDataList(true)" style="float: right;" v-if="isAuth('juice:pot:List')">查询</el-button>
       </el-form-item>
     </el-form>
   </el-card>
-  <el-card class="searchCard newCard ferCard" style="margin-top:5px" v-show="fastS">
+  <el-card class="searchCard newCard ferCard" style="margin-top: 5px;" v-show="fastS">
     <h3 class="cardTit">
-      <i class="iconfont factory-shujuzonglan" style="color: #666666;margin-right: 10px"></i>原汁情况总览
+      <i class="iconfont factory-shujuzonglan" style="color: #666; margin-right: 10px;"></i>原汁情况总览
       <i class="gotop" @click="gotop"><span>收起</span><i class="el-icon-caret-top"></i></i>
     </h3>
     <div class="sumbox">
     <div class="topBox clearfix">
-      <div class="clearfix" v-for="(item, index) in topBox" :key="index" style="float: left">
+      <div class="clearfix" v-for="(item, index) in topBox" :key="index" style="float: left;">
         <div class="topBox_boxItem" @click="topClick(item)">
           <div class="topBox_boxItem_bar">
             <div class="topBox_boxItem_bar_box" :style="{'background': `linear-gradient(to right,${item.startColor} 0%,${item.startColor} 10%,${item.endColor})`}"></div>
@@ -72,7 +72,7 @@
           </p>
           <div class="topBox_boxItem_popover" v-if="item.content !== 0">
             <p v-for="(i, ins) in Object.keys(item.content)" :key="ins">
-              <i class="dot" v-if="i!=''" :style="{'background': ins === 0 ? '#1890FF' : ins === 1 ? '#FFBF00' : '#1890FF'}"></i>{{i}} <span style="float: right" v-if="i!=''">{{item.content[i]}}方</span>
+              <i class="dot" v-if="i!=''" :style="{'background': ins === 0 ? '#1890FF' : ins === 1 ? '#FFBF00' : '#1890FF'}"></i>{{i}} <span style="float: right;" v-if="i!=''">{{item.content[i]}}方</span>
             </p>
             <i class="topBox_boxItem_popover_ar"></i>
           </div>
@@ -82,25 +82,25 @@
     </div>
     </div>
   </el-card>
-  <el-card class="searchCard newCard ferCard" style="margin-top:5px;"  v-show="fastS">
-    <h3 style="color: black;margin-bottom: 8px">
-      <i class="iconfont factory-liebiao" style="color: #666666;margin-right: 10px"></i>原汁罐列表
+  <el-card class="searchCard newCard ferCard" style="margin-top: 5px;"  v-show="fastS">
+    <h3 style="color: black; margin-bottom: 8px;">
+      <i class="iconfont factory-liebiao" style="color: #666; margin-right: 10px;"></i>原汁罐列表
       <i class="gotop" v-if="isAuth('juice:pot:juiceStockItem')"><a href="#/DataEntry-Juice-Pot-summary">原汁库存情况>></a></i>
     </h3>
-    <el-row class="dataList" :gutter="10" style="min-height: 150px">
+    <el-row class="dataList" :gutter="10" style="min-height: 150px;">
       <el-col :span="4" v-for="(item, index) in dataList" :key="index">
-        <el-card class="dataList_item" style="padding:0!important;">
+        <el-card class="dataList_item" style="padding: 0 !important;">
           <h3 class="dataList_item_tit">
             {{item.HOLDER_NO}}
-            <span style="color: #333333;font-weight: normal;font-size: 14px">
+            <span style="color: #333; font-weight: normal; font-size: 14px;">
               -{{item.HOLDER_STATUS === '6' ? '空罐' : item.HOLDER_STATUS === '7' ? '入料中' : item.HOLDER_STATUS === '8' ? '沉淀中' : item.HOLDER_STATUS === '9' ? '领用中' : item.HOLDER_STATUS === '10' ? '待清洗' : ''}}
             </span>
-            <span class="dataList_item_a" @click="godetails(item)" style="font-size: 14px" v-if="isAuth('juice:pot:juiceItem')">详情>></span>
+            <span class="dataList_item_a" @click="godetails(item)" style="font-size: 14px;" v-if="isAuth('juice:pot:juiceItem')">详情>></span>
           </h3>
-          <div class="dataList_item_pot clearfix" style="position:relative;">
-            <img src="@/assets/img/F0.png" alt="" v-if="item.IS_F === '1'" style="position:absolute; left:10px; top:10px;">
-            <img src="@/assets/img/RD.png" alt="" v-if="item.isRd === 1" style="position:absolute; left:10px; top:10px;">
-            <img src="@/assets/img/jbs.png" alt="" v-if="item.IS_F === '2'" style="position:absolute; left:10px; top:10px;">
+          <div class="dataList_item_pot clearfix" style="position: relative;">
+            <img src="@/assets/img/F0.png" alt="" v-if="item.IS_F === '1'" style="position: absolute; left: 10px; top: 10px;">
+            <img src="@/assets/img/RD.png" alt="" v-if="item.isRd === 1" style="position: absolute; left: 10px; top: 10px;">
+            <img src="@/assets/img/jbs.png" alt="" v-if="item.IS_F === '2'" style="position: absolute; left: 10px; top: 10px;">
             <div class="dataList_item_pot_box">
               <div class="dataList_item_pot_box1">
                 <div class="dataList_item_pot_box_item1" :style="`height:${item.AMOUNT? (item.AMOUNT*1000 / item.HOLDER_HOLD) * 100 : 0}%`" v-if="item.HOLDER_STATUS !== '6'"></div>
@@ -136,7 +136,7 @@
     </el-row>
   </el-card>
   <el-dialog :visible.sync="TransferDialogTableVisible" :close-on-click-modal="false" width="500px" custom-class='dialog__class'>
-    <div slot="title" style="line-hight:59px">转储</div>
+    <div slot="title" style="line-height: 59px;">转储</div>
     <div>
       <el-form size="small" :model="formTransfer" :rules="Transferulestar" ref="Transferstar" label-width="150px">
         <el-form-item label="领用罐号：">{{formTransfer.holderName}}</el-form-item>
@@ -144,7 +144,7 @@
         <el-form-item label="类别：">{{formTransfer.type}}</el-form-item>
         <el-form-item label="批次：">{{formTransfer.batch}}</el-form-item>
         <el-form-item label="领用量（L）：" prop="receiveAmount">
-          <el-input type="number" @mousewheel.native.prevent v-model="formTransfer.receiveAmount" style="width:200px" placeholder="大于0"></el-input>
+          <el-input type="number" @mousewheel.native.prevent v-model="formTransfer.receiveAmount" style="width: 200px;" placeholder="大于0"></el-input>
         </el-form-item>
         <el-form-item label="打入罐类别：" prop="inHolderType">
           <el-select v-model="formTransfer.inHolderType" placeholder="请选择" clearable>
@@ -164,7 +164,7 @@
         <el-form-item label="物料：">{{formTransfer.materialCode}} {{formTransfer.materialName}}</el-form-item>
         <el-form-item label="类别：">{{formTransfer.type}}</el-form-item>
         <el-form-item label="打入批次：" prop="inBatch">
-          <el-input v-model="formTransfer.inBatch" maxlength="10" style="width:200px"></el-input>
+          <el-input v-model="formTransfer.inBatch" maxlength="10" style="width: 200px;"></el-input>
         </el-form-item>
         <el-form-item label="是否满灌：">
           <el-select filterable v-model="formTransfer.isFull">
@@ -172,7 +172,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="满灌时间：">
-          <el-date-picker v-model="formTransfer.fullDate" type="datetime" placeholder="请选择" style="width:200px" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
+          <el-date-picker v-model="formTransfer.fullDate" type="datetime" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
         </el-form-item>
       </el-form>
     </div>
@@ -182,7 +182,7 @@
     </span>
   </el-dialog>
   <el-dialog :visible.sync="AddDialogTableVisible" :close-on-click-modal="false" width="500px" custom-class='dialog__class'>
-    <div slot="title" style="line-hight:59px">HD</div>
+    <div slot="title" style="line-height: 59px;">HD</div>
     <div>
       <el-form size="small" :model="formAdd" :rules="Addrulestar" ref="Addstar" label-width="150px">
         <el-form-item label="领用罐号：">{{formAdd.holderName}}</el-form-item>
@@ -190,7 +190,7 @@
         <el-form-item label="类别：">{{formAdd.type}}</el-form-item>
         <el-form-item label="批次：">{{formAdd.batch}}</el-form-item>
         <el-form-item label="领用量（L）：" prop="amount">
-          <el-input v-model="formAdd.amount" style="width:200px"></el-input>
+          <el-input v-model="formAdd.amount" style="width: 200px;"></el-input>
         </el-form-item>
         <el-form-item label="打入罐类别：" prop="inHolderType">
           <el-select v-model="formAdd.inHolderType" placeholder="请选择" clearable>
@@ -211,13 +211,13 @@
       <el-button type="primary" @click="FormAddSave('Addstar')" size="small">确定</el-button>
     </span>
   </el-dialog>
-  <el-dialog :visible.sync="JudgeDialogTableVisible" width="400px" custom-class='dialog__class'>
-    <div slot="title" style="line-hight:59px">类别判定</div>
+  <el-dialog :close-on-click-modal="false" :visible.sync="JudgeDialogTableVisible" width="400px" custom-class='dialog__class'>
+    <div slot="title" style="line-height: 59px;">类别判定</div>
     <el-form :model="judge" size="small" label-width="130px" :rules="judgerules" ref="judge">
       <el-form-item label="物料：">{{this.judge.materialCode}}{{this.judge.materialName}}</el-form-item>
       <el-form-item label="发酵天数：">{{this.judge.ferDays}} 天</el-form-item>
       <el-form-item label="半成品类别：">
-        <el-select v-model="judge.type" placeholder="请选择" style="width: 140px">
+        <el-select v-model="judge.type" placeholder="请选择" style="width: 140px;">
           <el-option :label="item.halfType" v-for="(item, index) in typeList" :key="index" :value="item.halfType"></el-option>
         </el-select>
       </el-form-item>
@@ -232,8 +232,8 @@
     </span>
   </el-dialog>
   <el-dialog width="450px" class="ShinHoDialog" :title="dialogData.HOLDER_NAME+'清洗'" :close-on-click-modal="false" :visible.sync="visible">
-    <div style="display: flex">
-      <el-form :model="dialogData" label-width="100px" class="topform marbottom" style="margin: auto">
+    <div style="display: flex;">
+      <el-form :model="dialogData" label-width="100px" class="topform marbottom" style="margin: auto;">
         <el-form-item label="罐号：">
           <p>{{dialogData.HOLDER_NAME}}</p>
         </el-form-item>
@@ -246,7 +246,7 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input v-model="dialogData.remark" size="small" placeholder="手工录入" style="width: 260px"></el-input>
+          <el-input v-model="dialogData.remark" size="small" placeholder="手工录入" style="width: 260px;"></el-input>
         </el-form-item>
         <el-form-item label="录入人员：">
           {{$store.state.user.realName + '（' + this.$store.state.user.name + '）'}}
@@ -262,7 +262,7 @@
     </span>
   </el-dialog>
   <el-dialog :visible.sync="BringOutDialogTableVisible" :close-on-click-modal="false" width="500px" custom-class='dialog__class'>
-    <div slot="title" style="line-hight:59px">调整</div>
+    <div slot="title" style="line-height: 59px;">调整</div>
     <div>
       <el-form size="small" :model="formBringOut" :rules="BringOutrulestar" ref="BringOutstar" label-width="150px">
         <el-form-item label="领用罐号：">{{formBringOut.holderName}}</el-form-item>
@@ -270,32 +270,32 @@
         <el-form-item label="类别：">{{formBringOut.type}}</el-form-item>
         <el-form-item label="批次：">{{formBringOut.batch}}</el-form-item>
         <el-form-item label="出/入罐：" prop="inType">
-          <el-select v-model="formBringOut.inType" @change="formBringOut.adjustType = '',formBringOut.factoryHolder = '',formBringOutLable = ''" placeholder="请选择" style="width: 200px">
+          <el-select v-model="formBringOut.inType" @change="formBringOut.adjustType = '',formBringOut.factoryHolder = '',formBringOutLable = ''" placeholder="请选择" style="width: 200px;">
             <el-option label="出罐" value="2"></el-option>
             <el-option label="入罐" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="调整类别：" prop="adjustType">
-          <el-select v-model="formBringOut.adjustType" @change="setPot" placeholder="请选择" clearable style="width: 200px">
+          <el-select v-model="formBringOut.adjustType" @change="setPot" placeholder="请选择" clearable style="width: 200px;">
             <el-option v-for="(sole, index) in formBringOutType" :key="index" :value="sole.value" :label="sole.label" v-if="(sole.label === '调配转入' && formBringOut.inType === '1') || (sole.label !== '调配转入' && formBringOut.inType === '2') || sole.label === '其他'"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="formBringOutLable + '：'" v-if="formBringOutLable">
-          <el-select v-model="formBringOut.factoryHolder" placeholder="请选择" filterable clearable :disabled="!formBringOutPot.length" style="width: 200px">
+          <el-select v-model="formBringOut.factoryHolder" placeholder="请选择" filterable clearable :disabled="!formBringOutPot.length" style="width: 200px;">
             <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.code" :label="sole.value" v-if="formBringOut.adjustType === '调拨'"></el-option>
             <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.holderId" :label="sole.holderName" v-if="formBringOut.adjustType === '调配转入'"></el-option>
             <el-option v-for="(sole, index) in formBringOutPot" :key="index" :value="sole.holderId" :label="sole.HOLDER_NAME" v-if="formBringOut.adjustType === 'HD'"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="调整量（L）：" prop="amount">
-          <el-input v-model="formBringOut.amount" style="width:200px"></el-input>
+          <el-input v-model="formBringOut.amount" style="width: 200px;"></el-input>
         </el-form-item>
         <el-form-item label="说明：">
-          <el-input v-model="formBringOut.remark" style="width:200px"></el-input>
+          <el-input v-model="formBringOut.remark" style="width: 200px;"></el-input>
         </el-form-item>
         <el-form-item label="操作人：">{{$store.state.user.realName + '（' + this.$store.state.user.name + '）'}}</el-form-item>
         <el-form-item label="操作时间：">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" v-model="formBringOut.bringTime" placeholder="请选择" style="width:199px"></el-date-picker>
+          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" v-model="formBringOut.bringTime" placeholder="请选择" style="width: 199px;"></el-date-picker>
         </el-form-item>
       </el-form>
     </div>
@@ -1024,7 +1024,7 @@ export default {
               this.dataListAlls.push(item)
             }
           } else if (this.days !== '') {
-            if (this.days[0] <= parseInt(item.days) && parseInt(item.days) < this.days[1]) {
+            if (this.days[0] <= parseInt(item.days) && parseInt(item.days) < this.days[1] && item.HOLDER_STATUS !== '6') {
               this.dataListAlls.push(item)
             }
           }
@@ -1063,66 +1063,66 @@ export default {
 </script>
 
 <style>
-.dataList_item .el-card__body{padding:0 !important}
+.dataList_item .el-card__body { padding: 0 !important; }
 </style>
 <style lang="scss" scoped>
-.ferCard{
-  .el-card__body{
+.ferCard {
+  .el-card__body {
     padding: 7px;
   }
-  .cardTit{
+  .cardTit {
     font-size: 16px;
     color: black;
     font-weight: 400;
     padding-bottom: 10px;
-    border-bottom: 1px solid #E9E9E9;
+    border-bottom: 1px solid #e9e9e9;
   }
-  .gotop{
+  .gotop {
     float: right;
-    color: #1890FF;
+    color: #1890ff;
     font-size: 14px;
     cursor: pointer;
-    i{
-      :before{
-        color: #1890FF;
+    i {
+      ::before {
+        color: #1890ff;
       }
     }
   }
 }
-.topBox{
+.topBox {
   width: 1142px;
   padding: 25px 25px 10px 25px;
   margin: auto;
-  &_boxItem{
+  &_boxItem {
     position: relative;
     cursor: pointer;
     width: 155px;
     float: left;
-    &_bar{
+    &_bar {
       width: 140px;
       height: 2px;
       margin: 15px 8px 0 8px;
       background: #f2f2f2;
-      &_box{
+      &_box {
         height: 2px;
       }
     }
-    &_tit{
+    &_tit {
       color: black;
       font-size: 16px;
       margin-top: 10px;
       text-align: center;
       line-height: 32px;
     }
-    &_detail{
+    &_detail {
       font-size: 14px;
       text-align: center;
-      color: #666666;
-      span{
+      color: #666;
+      span {
         color: black;
       }
     }
-    &_popover{
+    &_popover {
       display: none;
       top: -60px;
       min-width: 150px;
@@ -1134,26 +1134,26 @@ export default {
       position: absolute;
       z-index: 999999;
       background: white;
-      box-shadow: 0 2px 12px 0 rgba(0,0,0,.3);
-      .dot{
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+      .dot {
         width: 6px;
         height: 6px;
         float: left;
         margin: 4px 5px 0 0;
         border-radius: 50%;
       }
-      &_ar{
+      &_ar {
         position: absolute;
         bottom: -12px;
         width: 0;
         height: 0;
         border-width: 6px;
         border-style: solid;
-        border-color:#ffffff transparent transparent transparent;
+        border-color: #fff transparent transparent transparent;
       }
     }
   }
-  &_circle{
+  &_circle {
     width: 32px;
     height: 32px;
     float: left;
@@ -1161,36 +1161,34 @@ export default {
     text-align: center;
     color: white;
     border-radius: 50%;
-    background: #999999;
-    transition: all .5s;
+    background: #999;
+    transition: all 0.5s;
   }
 }
-.dataList{
+.dataList {
   margin-top: 10px;
-  &_item{
-    &_btn_item {
-    }
+  &_item {
     margin-bottom: 10px;
-    &_tit{
+    &_tit {
       font-weight: 600;
       color: black;
       font-size: 14px;
       line-height: 45px;
-      border-bottom: 1px solid #E8E8E8;
-      padding:0 5px;
+      border-bottom: 1px solid #e8e8e8;
+      padding: 0 5px;
     }
-    &_a{
+    &_a {
       cursor: pointer;
-      color: #1890FF;
+      color: #1890ff;
       float: right;
     }
-    &_pot{
+    &_pot {
       padding: 17px 10px 10px 10px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       overflow: hidden;
-      &_box1{
+      &_box1 {
         position: relative;
         overflow: hidden;
         width: 102px;
@@ -1199,7 +1197,7 @@ export default {
         flex-wrap: wrap;
         align-content: flex-end;
       }
-      &_box{
+      &_box {
         overflow: hidden;
         padding: 25px 9px 9px 9px;
         color: white;
@@ -1210,9 +1208,9 @@ export default {
         width: 120px;
         height: 229px;
         min-width: 120px;
-        background: url('~@/assets/img/ferPot.png') no-repeat;
-        background-size:contain;
-        &_detail{
+        background: url("~@/assets/img/ferPot.png") no-repeat;
+        background-size: contain;
+        &_detail {
           width: 100%;
           position: absolute;
           font-size: 14px;
@@ -1220,20 +1218,23 @@ export default {
           color: black;
           left: 3px;
         }
-        &_item1,&_item2{
+        &_item1,
+        &_item2 {
           width: 100%;
-          display:flex;
-          align-items:center;
+          display: flex;
+          align-items: center;
           justify-content: center;
           font-size: 14px;
         }
-        &_item2s,&_item1{
+        &_item2s,
+        &_item1 {
           height: 50px;
-          background: #69C0FF;
+          background: #69c0ff;
           position: absolute;
           bottom: 0;
           overflow: hidden;
-          &::before,&::after{
+          &::before,
+          &::after {
             content: "";
             position: absolute;
             left: 50%;
@@ -1252,41 +1253,46 @@ export default {
             border-radius: 47%;
           }
         }
-        &_item2{
+        &_item2 {
           height: 100px;
-          background: #1890FF;
+          background: #1890ff;
         }
-        &:hover &_item1::before,&:hover &_item1::after,&:hover &_item2s::before,&:hover &_item2s::after{
+        &:hover &_item1::before,
+        &:hover &_item1::after,
+        &:hover &_item2s::before,
+        &:hover &_item2s::after {
           animation: roateOne 10s linear infinite;
         }
       }
-      &_detail{
+      &_detail {
         max-width: 112px;
         height: auto;
         float: left;
         margin-top: 25px;
         margin-left: 10px;
-        color: #333333;
+        color: #333;
         font-size: 14px;
         line-height: 18px;
         padding: 5px;
         border-radius: 4px;
-        border: 1px solid #1890FF;
+        border: 1px solid #1890ff;
       }
     }
   }
 }
+
 @keyframes roateOne {
-   0% {
-     transform: translate(-50%, -0%) rotateZ(0deg);
-   }
-   50% {
-     transform: translate(-50%, -1%) rotateZ(180deg);
-   }
-   100% {
-     transform: translate(-50%, -0%) rotateZ(360deg);
-   }
- }
+  0% {
+    transform: translate(-50%, -0%) rotateZ(0deg);
+  }
+  50% {
+    transform: translate(-50%, -1%) rotateZ(180deg);
+  }
+  100% {
+    transform: translate(-50%, -0%) rotateZ(360deg);
+  }
+}
+
 @keyframes roateTwo {
   0% {
     transform: translate(-50%, -0%) rotateZ(0deg);

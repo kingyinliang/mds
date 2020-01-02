@@ -42,7 +42,6 @@ const DataEchartsRoutes = {
   path: '/DataEcharts',
   component: _import('page/DataEcharts/Layout/index'),
   children: [
-    { path: '/', redirect: '/DataEcharts/KojiMaking-DataScreening-index' }
   ],
   beforeEnter (to, from, next) {
     let token = Vue.cookie.get('token')

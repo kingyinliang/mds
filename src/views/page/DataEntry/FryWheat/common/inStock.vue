@@ -7,7 +7,7 @@
         <el-card>
           <!--录入-->
           <div>
-            <el-row  :gutter="36" v-for="(item, index) in flourContainerList" :key="index" v-if="index%6===0" style="margin-top:5px">
+            <el-row  :gutter="36" v-for="(item, index) in flourContainerList" :key="index" v-if="index%6===0" style="margin-top: 5px;">
               <el-col :span="4" v-if="index < flourContainerList.length">
                   <div class="stock-box">
                     <div class="stock-title">
@@ -85,7 +85,7 @@
           <!--table-->
           <!-- <el-button type='primary' size="small" @click="saveStockList">baocun</el-button>
           <el-button type='primary' size="small" @click="submitStockList">tijiao</el-button> -->
-          <el-row  style="margin-top:20px;" >
+          <el-row  style="margin-top: 20px;" >
             <el-col>
               <el-table @row-dblclick="modifyOldRecord" header-row-class-name="tableHead" :data="wheatDataList"  border tooltip-effect="dark" :row-class-name="rowDelFlag">
                 <el-table-column label="日期" width="100">
@@ -152,7 +152,7 @@
               </el-table>
             </el-col>
           </el-row>
-          <el-row style="margin-top:20px;">
+          <el-row style="margin-top: 20px;">
             <el-col>
               <div><span>入库数合计：</span>{{totalInstock}} KG</div>
             </el-col>
@@ -169,18 +169,18 @@
     <el-dialog :title="this.stockForm.flourDeviceName" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="450px">
       <el-form :model="stockForm" :rules="dataRule" ref="stockForm">
         <el-form-item label="粮仓" :label-width="formLabelWidth" required prop="wheatDeviceId">
-          <el-select @change="changeWheatContainer"  v-model="stockForm.wheatDeviceId" value-key="wheatDeviceId" placeholder="请选择粮仓" style="width:220px" :disabled="!isRedact">
+          <el-select @change="changeWheatContainer"  v-model="stockForm.wheatDeviceId" value-key="wheatDeviceId" placeholder="请选择粮仓" style="width: 220px;" :disabled="!isRedact">
             <el-option v-for="(item, index) in wheatContainerList" :key="index" :label="item.holderName" :value="item.holderId" ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="起始(KG)" :label-width="formLabelWidth" required prop="startWeight">
-          <el-input type='number' v-model.number="stockForm.startWeight" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width:220px;" :disabled="!isRedact"></el-input>
+          <el-input type='number' v-model.number="stockForm.startWeight" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width: 220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
         <el-form-item label="结束(KG)" :label-width="formLabelWidth" required prop="endWeight">
-          <el-input type='number' v-model.number="stockForm.endWeight" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width:220px;" :disabled="!isRedact"></el-input>
+          <el-input type='number' v-model.number="stockForm.endWeight" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width: 220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
         <el-form-item label="入库批次" :label-width="formLabelWidth" required prop="inPortBatch">
-          <el-input  maxlength='10' v-model="stockForm.inPortBatch"  style="width:220px;" :disabled="!isRedact"></el-input>
+          <el-input  maxlength='10' v-model="stockForm.inPortBatch"  style="width: 220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
          <el-form-item label="操作时间" :label-width="formLabelWidth">
           <!-- <el-input v-model="stockForm.operateTime" ></el-input> -->
@@ -563,59 +563,53 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  // @import '~@/assets/scss/common.scss';
-  // @import '../../../../../assets/scss/common.scss';
-  .stock-box{
+  .stock-box {
     height: 184px;
-    border: 1px solid #E9E9E9;
+    border: 1px solid #e9e9e9;
     border-radius: 4px;
     .stock-title {
       height: 40px;
       line-height: 40px;
-      border-radius: 4px 4px 0px 0px;
-      background-color: #EBEBEB;
+      border-radius: 4px 4px 0 0;
+      background-color: #ebebeb;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
-      .stock-text{
+      .stock-text {
         margin-left: 8px;
         font-size: 14px;
         font-weight: 500;
-        font-family: PingFangSC-Medium;
-        // EBEBEB
+        font-family: PingFangSC-Medium, sans-serif;
       }
     }
     .stock-container {
-      height:144px;
-      .stock-img{
+      height: 144px;
+      .stock-img {
         width: 82px;
         height: 82px;
         margin: auto;
         margin-top: 11px;
         border-radius: 41px;
-        // background: url('../../../../../assets/img/wheat.png')
-        // ~ 表示根目录，@表示src目录
-        // background: url('~@/assets/img/G1.png')
       }
       .stock-img.img1 {
-         background: url('~@/assets/img/G1.png')
+        background: url("~@/assets/img/G1.png");
       }
       .stock-img.img2 {
-         background: url('~@/assets/img/G2.png')
+        background: url("~@/assets/img/G2.png");
       }
       .stock-img.img3 {
-         background: url('~@/assets/img/G3.png')
+        background: url("~@/assets/img/G3.png");
       }
       .stock-img.img4 {
-         background: url('~@/assets/img/G4.png')
+        background: url("~@/assets/img/G4.png");
       }
       .stock-img.img5 {
-         background: url('~@/assets/img/G5.png')
+        background: url("~@/assets/img/G5.png");
       }
       .stock-img.img6 {
-         background: url('~@/assets/img/G6.png')
+        background: url("~@/assets/img/G6.png");
       }
-      .stock-button{
+      .stock-button {
         margin: auto;
         margin-top: 11px;
         height: 22px;
@@ -624,22 +618,22 @@ export default {
         line-height: 22px;
         text-align: center;
         border-radius: 4px;
-        font-weight:400;
+        font-weight: 400;
         border: 1px solid #e9e9e9;
       }
-      .enabled{
-        background:#F7F9FA;
-        &:hover{
-          color:#fff;
-          background:#1890FF;
-          cursor:pointer
+      .enabled {
+        background: #f7f9fa;
+        &:hover {
+          color: #fff;
+          background: #1890ff;
+          cursor: pointer;
         }
       }
-      .disabled{
-        color:rgba(0, 0, 0, 0.6);
-        background:#F7F9FA;
-        &:hover{
-          cursor:not-allowed
+      .disabled {
+        color: rgba(0, 0, 0, 0.6);
+        background: #f7f9fa;
+        &:hover {
+          cursor: not-allowed;
         }
       }
     }

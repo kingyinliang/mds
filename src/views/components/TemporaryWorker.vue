@@ -1,7 +1,7 @@
 <template>
   <el-dialog width="450px" ref="dayLaborer" title="新增临时工" :close-on-click-modal="false" :visible.sync="visible">
     <el-form :model="form" size="small" label-width="120px" class="dialogform">
-      <el-row><el-button type="primary" @click="addDayLaborer(dayLaborerArr)" size="small" style="float: right;margin-bottom: 10px">新增</el-button></el-row>
+      <el-row><el-button type="primary" @click="addDayLaborer(dayLaborerArr)" size="small" style="float: right; margin-bottom: 10px;">新增</el-button></el-row>
       <el-form-item label="临时工姓名：" v-for="(item, index) in dayLaborerArr" :key="index">
         <el-col :span="20">
           <el-input v-model="dayLaborerArr[index]"></el-input>

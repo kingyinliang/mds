@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-card>
-      <div style="overflow:hidden">
-        <el-button type="primary" size="small" @click="addmaterial" :disabled="!isRedact" style="float: right"> + 新增</el-button>
+      <div style="overflow: hidden;">
+        <el-button type="primary" size="small" @click="addmaterial" :disabled="!isRedact" style="float: right;"> + 新增</el-button>
       </div>
-      <div style="margin-top:10px" >
+      <div style="margin-top: 10px;" >
         <el-table :data="materialList" @selection-change="handleSelectionChange" @row-dblclick="editmaterial" border header-row-class-name="tableHead" :row-class-name="rowDelFlag">
           <el-table-column type="selection" width="35" :disabled="!isRedact"></el-table-column>
           <el-table-column type="index" label="序号" width="50px"></el-table-column>
@@ -59,11 +59,11 @@
     <el-card>
       <div>
         <span class="lh32px">布浆人员</span>
-        <el-button type="text" class="readyshiftBtn" name="people" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
-        <el-button type="primary" size="small" @click="addpeople" :disabled="!isRedact" style="float: right"> + 新增</el-button>
+        <el-button type="text" class="readyshiftBtn" name="people" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
+        <el-button type="primary" size="small" @click="addpeople" :disabled="!isRedact" style="float: right;"> + 新增</el-button>
       </div>
       <div class="peopleBox">
-        <el-table ref="peopleTable" border style="margin-top:10px" header-row-class-name="tableHead" :data="peopleList" :row-class-name="rowDelFlag">
+        <el-table ref="peopleTable" border style="margin-top: 10px;" header-row-class-name="tableHead" :data="peopleList" :row-class-name="rowDelFlag">
           <el-table-column label="白/中/夜班">
             <template slot="header"><i class="reqI">*</i><span>白/中/夜班</span></template>
             <template slot-scope="scope">
@@ -93,20 +93,20 @@
       </div>
     </el-card>
     <el-dialog :close-on-click-modal="false" custom-class='dialog__class' :visible.sync="dialogFormVisibleMai" width="450px">
-      <div slot="title" style="line-hight:59px">熟酱醪领用</div>
+      <div slot="title" style="line-height: 59px;">熟酱醪领用</div>
       <el-form :model="sauce" size="small" :rules="saucerule" ref="saucesbu">
         <el-form-item label="布浆机：" :label-width="formLabelWidth" prop="pulpMachine">
-          <el-select v-model="sauce.pulpMachine" filterable placeholder="请选择" style="width:310px">
+          <el-select v-model="sauce.pulpMachine" filterable placeholder="请选择" style="width: 310px;">
             <el-option :label="item.deviceName" v-for="(item, index) in pulpMachineList" :key="index" :value="item.deviceId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="气垫小车：" :label-width="formLabelWidth" prop="hovercraftNo" v-if="!this.sauce.id">
-          <el-select v-model="sauce.hovercraftNo" filterable placeholder="请选择" style="width:310px" :disabled="!isSelect">
+          <el-select v-model="sauce.hovercraftNo" filterable placeholder="请选择" style="width: 310px;" :disabled="!isSelect">
             <el-option :label="item.deviceName" v-for="(item, index) in hovercraftList" :key="index" :value="item.deviceId"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="气垫小车：" :label-width="formLabelWidth" prop="hovercraftNo" v-else>
-          <el-select v-model="sauce.hovercraftNo" filterable placeholder="请选择" style="width:310px" :disabled="!isSelect">
+          <el-select v-model="sauce.hovercraftNo" filterable placeholder="请选择" style="width: 310px;" :disabled="!isSelect">
             <el-option :label="item.deviceName" v-for="(item, index) in hovercraftAll" :key="index" :value="item.deviceId"></el-option>
           </el-select>
         </el-form-item>
@@ -114,10 +114,10 @@
           <el-input v-model="sauce.pulpNum"></el-input>
         </el-form-item>
         <el-form-item label="布浆开始时间：" :label-width="formLabelWidth" prop="pulpStartDate">
-          <el-date-picker v-model="sauce.pulpStartDate" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width:310px"></el-date-picker>
+          <el-date-picker v-model="sauce.pulpStartDate" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 310px;"></el-date-picker>
         </el-form-item>
         <el-form-item label="布浆结束时间：" :label-width="formLabelWidth" prop="pulpEndDate">
-          <el-date-picker v-model="sauce.pulpEndDate" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width:310px"></el-date-picker>
+          <el-date-picker v-model="sauce.pulpEndDate" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 310px;"></el-date-picker>
         </el-form-item>
         <el-form-item label="布浆量：" :label-width="formLabelWidth" prop="pulpAmount">
           <el-input v-model="sauce.pulpAmount"></el-input>
@@ -132,15 +132,15 @@
           <el-input v-model="sauce.clothNo"></el-input>
         </el-form-item>
         <el-form-item label="酱醪分类：" :label-width="formLabelWidth" prop="sauceClass">
-          <el-select v-model="sauce.sauceClass" filterable placeholder="请选择" style="width:310px">
+          <el-select v-model="sauce.sauceClass" filterable placeholder="请选择" style="width: 310px;">
             <el-option :label="item.code + ' ' + item.value" v-for="(item, index) in sauceClassList" :key="index" :value="item.code + ' ' + item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="发酵罐号：" :label-width="formLabelWidth" prop="potOne">
-          <el-input v-model="sauce.potOne" style="width:259px; float:left"></el-input><el-button @click="addGuan()" style="float:left; margin-left:10px">+</el-button>
+          <el-input v-model="sauce.potOne" style="width: 259px; float: left;"></el-input><el-button @click="addGuan()" style="float: left; margin-left: 10px;">+</el-button>
         </el-form-item>
         <el-form-item label="发酵罐号2：" :label-width="formLabelWidth" prop="potTwo" :style="{'display': guanTwoDisplayNo ? 'none' : ''}">
-          <el-input v-model="sauce.potTwo" style="width:259px; float:left"></el-input><el-button type="danger" icon="el-icon-delete" circle size="small" @click="delGuan()" style="float:left; margin-left:10px"></el-button>
+          <el-input v-model="sauce.potTwo" style="width: 259px; float: left;"></el-input><el-button type="danger" icon="el-icon-delete" circle size="small" @click="delGuan()" style="float: left; margin-left: 10px;"></el-button>
         </el-form-item>
         <el-form-item label="操作时间：" :label-width="formLabelWidth">{{sauce.changed}}</el-form-item>
         <el-form-item label="操作人：" :label-width="formLabelWidth">{{sauce.changer}}</el-form-item>
@@ -152,7 +152,7 @@
     </el-dialog>
     <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
       <el-row>
-        <el-col style="width: 500px">
+        <el-col style="width: 500px;">
           <el-transfer
             filterable
             :titles="['未分配人员', '已分配人员']"
@@ -164,8 +164,8 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-          <el-button @click="visible = false" style="border: 1px solid #dcdfe6;padding: 12px 20px;font-size: 14px;border-radius: 4px;">取消</el-button>
-          <el-button type="primary" @click="updatauser(row)" style="background-color: #1890FF;padding: 12px 20px;font-size: 14px;border-radius: 4px;">确定</el-button>
+          <el-button @click="visible = false" style="border: 1px solid #dcdfe6; padding: 12px 20px; font-size: 14px; border-radius: 4px;">取消</el-button>
+          <el-button type="primary" @click="updatauser(row)" style="background-color: #1890ff; padding: 12px 20px; font-size: 14px; border-radius: 4px;">确定</el-button>
         </span>
     </el-dialog>
   </div>
@@ -557,24 +557,24 @@ export default {
 </script>
 
 <style>
-.reqI{
+.reqI {
   color: red;
 }
 .rowDel {
-  display: none
+  display: none;
 }
-.dialog-footer .el-button--primary:focus{
-  color: #000000;
-  background-color: #FFFFFF;
-  border-color: #D9D9D9;
+.dialog-footer .el-button--primary {
+  background-color: #1890ff;
+  color: #fff;
+  border-color: #1890ff;
 }
-.dialog-footer .el-button--primary:hover{
-  background-color: #1890FF;
-  color: #FFFFFF
+.dialog-footer .el-button--primary:focus {
+  color: #000;
+  background-color: #fff;
+  border-color: #d9d9d9;
 }
-.dialog-footer .el-button--primary{
-  background-color: #1890FF;
-  color: #FFFFFF;
-  border-color: #1890FF;
+.dialog-footer .el-button--primary:hover {
+  background-color: #1890ff;
+  color: #fff;
 }
 </style>

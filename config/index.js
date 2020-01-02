@@ -17,6 +17,13 @@ module.exports = {
         pathRewrite: {
           '^/factory': '/'
         }
+      },
+      '/xj': {
+        target: 'http://10.10.1.22:8080/xhqy-fc',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/xj': '/'
+        }
       }
     },
     // Various Dev Server settings
@@ -33,6 +40,7 @@ module.exports = {
     // If true, your code will be linted during bundling and
     // linting errors and warnings will be shown in the console.
     useEslint: true,
+    useStylelint: true,
     // If true, eslint errors and warnings will also be shown in the error overlay
     // in the browser.
     showEslintErrorsInOverlay: false,

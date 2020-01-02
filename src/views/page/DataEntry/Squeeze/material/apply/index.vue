@@ -7,27 +7,27 @@
             <el-col>
               <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
                 <el-form-item label="生产工厂：" >
-                  <el-select v-model="params.factoryId" style="width:150px" @change="changeOptions('factory')" >
+                  <el-select v-model="params.factoryId" style="width: 150px;" @change="changeOptions('factory')" >
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="生产车间：">
-                  <el-select v-model="params.workshopId"  style="width:150px" @change="changeOptions('workshop')">
+                  <el-select v-model="params.workshopId"  style="width: 150px;" @change="changeOptions('workshop')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="布浆线：">
-                  <el-select v-model="params.productLineId" style="width:150px" @change="changeOptions('productline')" >
+                  <el-select v-model="params.productLineId" style="width: 150px;" @change="changeOptions('productline')" >
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in productlineList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="领用日期：" >
-                  <el-date-picker type="date" v-model="params.applyDate" value-format="yyyy-MM-dd" style="width:150px"></el-date-picker>
+                  <el-date-picker type="date" v-model="params.applyDate" value-format="yyyy-MM-dd" style="width: 150px;"></el-date-picker>
                 </el-form-item>
-                <el-form-item class="floatr" style="width:270px; text-align:right">
+                <el-form-item class="floatr" style="width: 270px; text-align: right;">
                   <el-button type="primary" size="small"  @click="getOrderList()"  v-if="isAuth('prs:material:list')">查询</el-button>
                   <el-button type="primary" size="small"  @click="setDisabled(!disabled)"  v-if="isAuth('prs:material:mySaveOrUpdate') && searched && orderStatus !== 'submit' &&  orderStatus !== 'checked'">{{disabled?'编辑':'返回'}}</el-button>
                   <el-button type="primary" size="small"  @click="save()"  v-if="isAuth('prs:material:mySaveOrUpdate') && searched && !disabled && orderStatus !== 'submit' &&  orderStatus !== 'checked'">保存</el-button>
@@ -51,13 +51,13 @@
             <el-button type="primary" size="small"  @click="submit()"  v-if="isAuth('prs:material:mySaveOrUpdate') && searched && !disabled && orderStatus !== 'submit' &&  orderStatus !== 'checked'">提交</el-button>
           </el-row> -->
         </el-card>
-        <el-row v-if="searched" style="margin-top:5px;background-color:#fff">
+        <el-row v-if="searched" style="margin-top: 5px; background-color: #fff;">
           <el-col :span="24">
-            <el-row type="flex" justify="center" style="margin-top:20px">
+            <el-row type="flex" justify="center" style="margin-top: 20px;">
               <div  class="pot-box"  v-for="(item, index) in sdList" :key="index" >
                 <div class="pot-box-header">
-                  <span class="pot-box-title" style="margin-left:5px;">{{item.deviceName}}</span>
-                  <span class="pot-box-title" style="float:right;margin-right:5px;">{{availableMap.get(item.deviceId)==='0'?'待领用':availableMap.get(item.deviceId)==='1'?'领用中':'不可用'}}</span>
+                  <span class="pot-box-title" style="margin-left: 5px;">{{item.deviceName}}</span>
+                  <span class="pot-box-title" style="float: right; margin-right: 5px;">{{availableMap.get(item.deviceId)==='0'?'待领用':availableMap.get(item.deviceId)==='1'?'领用中':'不可用'}}</span>
                 </div>
                 <div class='pot-box-container img'>
                 </div>
@@ -178,21 +178,21 @@
         <div >
           <el-form :model="startForm"  :label-width="formLabelWidth" size="small" ref="startForm">
             <el-form-item label="领用发酵罐：" required>
-              <el-select @change="changeOptions('fermentPotStart')"  v-model="startForm.fermentPotNo" value-key="holderId" placeholder="请选择" filterable style="width:220px" >
+              <el-select @change="changeOptions('fermentPotStart')"  v-model="startForm.fermentPotNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" >
                 <el-option v-for="(item, index) in fermentPotList" :key="index" :label="item.holderName" :value="item.holderId" ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="批次：" required>
-              <el-input v-model.trim="startForm.batch" style='width:220px'/>
+              <el-input v-model.trim="startForm.batch" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="发酵罐剩余量：">
-              <el-input type='number' v-model.number="startForm.remainAmount" style='width:220px'/>
+              <el-input type='number' v-model.number="startForm.remainAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="起始数(方)：" required>
-              <el-input  type='number' v-model.number="startForm.startAmount" style='width:220px'/>
+              <el-input  type='number' v-model.number="startForm.startAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="暂存量(L)：" >
-              <el-input  type='number' v-model.number="startForm.storageAmount" style='width:220px'/>
+              <el-input  type='number' v-model.number="startForm.storageAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="单位：" required>
               {{startForm.unit = 'L'}}
@@ -209,8 +209,8 @@
           </el-form>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveStart()">保存</el-button>
+          <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveStart()">保存</el-button>
         </div>
       </el-dialog>
       <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible2" width="500px" custom-class='dialog__class'>
@@ -229,7 +229,7 @@
               {{endForm.remainAmount}}
             </el-form-item>
             <el-form-item label="打料结束数(L)：" required>
-              <el-input  type='number' v-model.number="endForm.endAmount" style='width:220px'/>
+              <el-input  type='number' v-model.number="endForm.endAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="对应布浆线：">
               <label>{{endForm.productLineName}}</label>
@@ -238,7 +238,7 @@
               {{endForm.unit = 'L'}}
             </el-form-item>
             <el-form-item label="备注：" >
-              <el-input v-model.trim="endForm.remark" style='width:220px'/>
+              <el-input v-model.trim="endForm.remark" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="操作时间：" >
               <label>{{endForm.changed}}</label>
@@ -249,8 +249,8 @@
           </el-form>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="dialogFormVisible2 = false">取消</el-button>
-          <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveEnd()">保存</el-button>
+          <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible2 = false">取消</el-button>
+          <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveEnd()">保存</el-button>
         </div>
       </el-dialog>
       <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible3" width="500px" custom-class='dialog__class'>
@@ -260,27 +260,27 @@
         <div>
           <el-form :model="modifyForm"  :label-width="formLabelWidth" size="small" ref="modifyForm">
             <el-form-item label="领用发酵罐：" required>
-              <el-select @change="changeOptions('fermentPotModify')"  v-model="modifyForm.fermentPotNo" value-key="holderId" placeholder="请选择" filterable style="width:220px" >
+              <el-select @change="changeOptions('fermentPotModify')"  v-model="modifyForm.fermentPotNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" >
                 <el-option v-for="(item, index) in fermentPotList" :key="index" :label="item.holderName" :value="item.holderId" ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="批次：" required>
-              <el-input v-model.trim="modifyForm.batch" style='width:220px'/>
+              <el-input v-model.trim="modifyForm.batch" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="发酵罐剩余量：">
-              <el-input type='number' v-model.number="modifyForm.remainAmount" style='width:220px'/>
+              <el-input type='number' v-model.number="modifyForm.remainAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="起始数(方)：" required>
-              <el-input  type='number' v-model.number="modifyForm.startAmount" style='width:220px'/>
+              <el-input  type='number' v-model.number="modifyForm.startAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="打料结束数(L)：" required>
-              <el-input  type='number' v-model.number="modifyForm.endAmount" style='width:220px'/>
+              <el-input  type='number' v-model.number="modifyForm.endAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="暂存量(L)：" >
-              <el-input  type='number' v-model.number="modifyForm.storageAmount" style='width:220px'/>
+              <el-input  type='number' v-model.number="modifyForm.storageAmount" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="备注：" >
-              <el-input v-model.trim="modifyForm.remark" style='width:220px'/>
+              <el-input v-model.trim="modifyForm.remark" style='width: 220px;'/>
             </el-form-item>
             <el-form-item label="对应布浆线：">
               <label>{{modifyForm.productLineName}}</label>
@@ -294,8 +294,8 @@
           </el-form>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" size="small" style="color: #000000;background-color: #FFFFFF;border-color: #D9D9D9;" @click="dialogFormVisible3 = false">取消</el-button>
-          <el-button type="primary" size="small" style="background-color: #1890FF;color: #FFFFFF;border-color: #1890FF;" @click="saveModify()">保存</el-button>
+          <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible3 = false">取消</el-button>
+          <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveModify()">保存</el-button>
         </div>
       </el-dialog>
     </el-col>
@@ -869,105 +869,106 @@ export default class Index extends Vue {
 }
 </script>
 <style lang="scss" >
-.dialog__class{
-  border-radius:6px 6px 0px 0px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+.dialog__class {
+  border-radius: 6px 6px 0 0 !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
-  .reqI{
+  .reqI {
     color: red;
   }
 }
 </style>
 <style lang="scss" scoped>
-@import '@/assets/scss/_common.scss';
+@import "@/assets/scss/_common.scss";
 .pot-box {
-  width:217px;
-  height:250px;
-  border-radius:2px;
-  border:1px solid rgba(232,232,232,1);
-  margin-right:50px;
+  width: 217px;
+  height: 250px;
+  border-radius: 2px;
+  border: 1px solid rgba(232, 232, 232, 1);
+  margin-right: 50px;
   .pot-box-header {
-    height:40px;
-    line-height:40px;
-    background:rgba(235,235,235,1);
-    border-radius:4px 4px 0px 0px;
+    height: 40px;
+    line-height: 40px;
+    background: rgba(235, 235, 235, 1);
+    border-radius: 4px 4px 0 0;
     .pot-box-title {
-      font-size:14px;
-      font-family:PingFangSC-Medium;
-      font-weight:500;color:rgba(0,0,0,0.65);
+      font-size: 14px;
+      font-family: PingFangSC-Medium, sans-serif;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.65);
     }
   }
   .pot-box-container {
-    width:120px;
-    height:120px;
-    margin:auto;
-    margin-top:16px;
+    width: 120px;
+    height: 120px;
+    margin: auto;
+    margin-top: 16px;
   }
   .img {
-    background: url('~@/assets/img/sq_G1.png')
+    background: url("~@/assets/img/sq_G1.png");
   }
   .pot-box-footer {
-    margin-top:20px;
-    display:flex;
-    justify-content:center;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
     .pot-box-button {
-      width:72px;
-      height:24px;
-      border-radius:4px;
-      border:1px solid rgba(0,0,0,0.25);
-      text-align:center;
-      cursor:pointer;
+      width: 72px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      text-align: center;
+      cursor: pointer;
       margin-left: 4px;
       margin-right: 4px;
-      &:hover{
-        background:rgba(24,144,255,1);
+      &:hover {
+        background: rgba(24, 144, 255, 1);
       }
     }
     .pot-box-button-title {
-      line-height:24px;
-      font-size:14px;
-      font-family:PingFangSC-Regular;
-      font-weight:400;
-      color:#000;
-      &:hover{
-        color:#fff;
+      line-height: 24px;
+      font-size: 14px;
+      font-family: PingFangSC-Regular, sans-serif;
+      font-weight: 400;
+      color: #000;
+      &:hover {
+        color: #fff;
       }
     }
-    .pot-box-button-disabled{
-      width:72px;
-      height:24px;
-      border-radius:4px;
-      border:1px solid rgba(0,0,0,0.25);
-      text-align:center;
-      cursor:pointer;
+    .pot-box-button-disabled {
+      width: 72px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      text-align: center;
+      cursor: pointer;
       margin-left: 4px;
       margin-right: 4px;
-      color:rgba(0, 0, 0, 0.6);
-      background:#F7F9FA;
-      &:hover{
-        cursor:not-allowed
+      color: rgba(0, 0, 0, 0.6);
+      background: #f7f9fa;
+      &:hover {
+        cursor: not-allowed;
       }
     }
     .pot-box-button-title-disabled {
-      line-height:24px;
-      font-size:14px;
-      font-family:PingFangSC-Regular;
-      font-weight:400;
-      color:rgba(0,0,0,0.6);
+      line-height: 24px;
+      font-size: 14px;
+      font-family: PingFangSC-Regular, sans-serif;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.6);
     }
   }
 }
-.rowButton{
-  button{
-    margin: 0px 3px!important;
+.rowButton {
+  button {
+    margin: 0 3px !important;
   }
 }
 .el-row {

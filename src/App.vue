@@ -21,7 +21,8 @@ export default {
 <style>
 @import "assets/css/base.css";
 @import "assets/icon/iconfont.css";
-  /* html{
+
+/* html{
     visibility: hidden;
   } */
 </style>

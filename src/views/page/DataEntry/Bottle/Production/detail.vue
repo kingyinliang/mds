@@ -1,22 +1,22 @@
 <template>
   <div class="header_main">
-    <el-card class="searchCard newCard" style="margin-bottom: 5px">
+    <el-card class="searchCard newCard" style="margin-bottom: 5px;">
       <el-row type="flex">
         <el-col>
           <form-head :formHeader="formHeader" :isRedact="isRedact"></form-head>
         </el-col>
-        <el-col style="width:244px; position:relative" class="clearfix">
+        <el-col style="width: 244px; position: relative;" class="clearfix">
           <el-row class="clearfix">
-            <div style="float:right; line-height:31px;font-size: 14px">
+            <div style="float: right; line-height: 31px; font-size: 14px;">
               <span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? '#1890f' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：
               <span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
             </div>
           </el-row>
-          <el-row style="text-align:right;position: absolute;bottom: 10px;right: 0;">
-            <template style="float:right; margin-left: 10px;">
+          <el-row style="text-align: right; position: absolute; bottom: 10px; right: 0;">
+            <template style="float: right; margin-left: 10px;">
               <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('bottle:inStorage:mySaveOrUpdate')">{{isRedact?'取消':'编辑'}}</el-button>
             </template>
-            <template v-if="isRedact" style="float:right; margin-left: 10px;">
+            <template v-if="isRedact" style="float: right; margin-left: 10px;">
               <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('bottle:inStorage:mySaveOrUpdate')">保存</el-button>
               <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('bottle:inStorage:submit')">提交</el-button>
             </template>

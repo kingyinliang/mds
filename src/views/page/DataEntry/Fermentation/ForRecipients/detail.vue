@@ -4,15 +4,15 @@
       <el-row>
         <el-col :span="24">
           <el-form :inline="true" label-width="96px" size="small" class="multi_row">
-            <el-form-item label="生产工厂："><p class="bottomline" style="width:212px;">{{formHeader.FACTORY}}</p></el-form-item>
+            <el-form-item label="生产工厂："><p class="bottomline" style="width: 212px;">{{formHeader.FACTORY}}</p></el-form-item>
             <el-form-item label="生产车间："><p class="bottomline">{{formHeader.WORK_SHOP}}</p></el-form-item>
             <el-form-item label="申请编号："><p class="bottomline">{{formHeader.APPLY_NO}}</p></el-form-item>
             <el-form-item label="半成品类别："><p class="bottomline">{{formHeader.HALF_TYPE}}</p></el-form-item>
-            <el-form-item label="酱醪名称："><p class="bottomline" style="width:212px;">{{formHeader.MATERIAL_CODE}}{{formHeader.MATERIAL_NAME}}</p></el-form-item>
+            <el-form-item label="酱醪名称："><p class="bottomline" style="width: 212px;">{{formHeader.MATERIAL_CODE}}{{formHeader.MATERIAL_NAME}}</p></el-form-item>
             <el-form-item label="生产日期："><p class="bottomline">{{formHeader.PRODUCT_DATE}}</p></el-form-item>
             <el-form-item label="申请数量："><p class="bottomline">{{formHeader.AMOUNT}}</p></el-form-item>
             <el-form-item label="申请人员："><p class="bottomline">{{formHeader.CREATOR}}</p></el-form-item>
-            <el-form-item label="申请时间："><p class="bottomline" style="width:212px;">{{formHeader.CREATED}}</p></el-form-item>
+            <el-form-item label="申请时间："><p class="bottomline" style="width: 212px;">{{formHeader.CREATED}}</p></el-form-item>
             <el-form-item label="状态："><p class="bottomline">{{formHeader.CONFIRM_FLAG === '1' ? '已确认' : '未确认'}}</p></el-form-item>
             <el-form-item label="备注：">
               <el-tooltip class="item" effect="dark" :content="formHeader.REMARK" placement="top">
@@ -23,14 +23,14 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top:5px">
+    <el-card style="margin-top: 5px;">
       <el-row>
         <el-col style="font-weight: bold;">
           <i class="iconfont factory-shouye"></i>
           <span>开罐列表</span>
         </el-col>
       </el-row>
-      <el-row style="margin-top:15px">
+      <el-row style="margin-top: 15px;">
         <el-col :span="22">
           <el-form :inline="true" :model="searchform" size="small">
             <el-form-item label="罐号：">
@@ -60,7 +60,7 @@
           </el-form>
         </el-col>
         <el-col :span="2">
-          <el-button type="primary" @click="OpenHolder()" v-if="isAuth('fer:openholderg:openFermentation')" :disabled="isRedact" size="small" style="float:right">开罐</el-button>
+          <el-button type="primary" @click="OpenHolder()" v-if="isAuth('fer:openholderg:openFermentation')" :disabled="isRedact" size="small" style="float: right;">开罐</el-button>
         </el-col>
       </el-row>
       <el-row>
@@ -76,7 +76,7 @@
             <el-table-column label="罐号" prop="holderNo" show-overflow-tooltip width="70"></el-table-column>
             <el-table-column label="订单类型" prop="orderType" show-overflow-tooltip width="120">
               <template slot-scope="scope">
-                <el-select v-model="scope.row.orderType" :disabled="scope.row.guan === '已开罐'" size="small" placeholder="请选择" style="width: 100px">
+                <el-select v-model="scope.row.orderType" :disabled="scope.row.guan === '已开罐'" size="small" placeholder="请选择" style="width: 100px;">
                   <el-option :label="item.value" v-for="(item, index) in OrderType" :key="index" :value="item.code"></el-option>
                 </el-select>
               </template>
@@ -94,6 +94,7 @@
             <el-table-column label="单位" prop="inUnit" width="60"></el-table-column>
             <el-table-column label="入库日期" prop="created" show-overflow-tooltip width="100"></el-table-column>
             <el-table-column label="批次" prop="batch" width="110"></el-table-column>
+            <el-table-column label="实验备注" prop="syRemark"></el-table-column>
             <el-table-column label="备注" prop="remark">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.remark" :disabled="isRedact || scope.row.guan === '已开罐'" size="small"></el-input>
@@ -111,7 +112,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="searchform.currentTotal">
       </el-pagination>
-      <el-row style="margin-top:15px">
+      <el-row style="margin-top: 15px;">
         <el-col>可用数量：{{total}} 个，已选择：{{already}} 个</el-col>
       </el-row>
     </el-card>
@@ -356,9 +357,13 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
 .bottomline {
-  border-bottom: 1px solid #D8D8D8; width:152px; overflow:hidden; height:32px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  border-bottom: 1px solid #d8d8d8;
+  width: 152px;
+  overflow: hidden;
+  height: 32px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

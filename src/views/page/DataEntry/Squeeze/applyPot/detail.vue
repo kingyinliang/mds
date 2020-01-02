@@ -4,41 +4,41 @@
       <el-card class="searchCard">
         <el-row>
           <el-col>
-            <div style="line-height:40px;" ><i style="font-size: 22px;float:left;" class="iconfont factory-shouqicaidan"></i><span style="font-size:16px;font-weight:bold;margin-left:12px;">申请基本信息</span></div>
+            <div style="line-height: 40px;" ><i style="font-size: 22px; float: left;" class="iconfont factory-shouqicaidan"></i><span style="font-size: 16px; font-weight: bold; margin-left: 12px;">申请基本信息</span></div>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col class="header-form" :span="24">
             <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="100px" class="topform multi_row">
               <el-form-item label="生产工厂：" >
-                <el-select v-model="formHeader.factory" class="selectwpx" style="width: 140px" @change="changeOptions('factory')" :disabled="!isEdit">
+                <el-select v-model="formHeader.factory" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')" :disabled="!isEdit">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="生产车间：" >
-                <el-select v-model="formHeader.workShop" class="selectwpx" style="width: 140px" @change="changeOptions('workshop')" :disabled="!isEdit">
+                <el-select v-model="formHeader.workShop" class="selectwpx" style="width: 140px;" @change="changeOptions('workshop')" :disabled="!isEdit">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="酱醪名称：">
-                <el-select filterable v-model="formHeader.materialCode" class="selectwpx" style="width: 140px" @change="changeOptions('material')" :disabled="!isEdit">
+                <el-select filterable v-model="formHeader.materialCode" class="selectwpx" style="width: 140px;" @change="changeOptions('material')" :disabled="!isEdit">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item  label="半成品类别：" label-width="100px">
-                <el-select filterable v-model="formHeader.halfType" class="selectwpx" style="width: 140px" @change="changeOptions('halfType')" :disabled="!isEdit">
+                <el-select filterable v-model="formHeader.halfType" class="selectwpx" style="width: 140px;" @change="changeOptions('halfType')" :disabled="!isEdit">
                   <el-option label="请选择" value=""></el-option>
                   <el-option v-for="sole in halfTypeList" :key="sole.halfType" :label="sole.halfName" :value="sole.halfType"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="申请数量：" label-width="100px">
-                <el-input type="number" size="small" v-model.number="formHeader.amount" style="width: 140px" :disabled="!isEdit"></el-input>
+                <el-input type="number" size="small" v-model.number="formHeader.amount" style="width: 140px;" :disabled="!isEdit"></el-input>
               </el-form-item>
               <el-form-item label="生产日期：">
-                <el-date-picker type="date" v-model="formHeader.productDate" value-format="yyyy-MM-dd" style="width:140px" :disabled="!isEdit"></el-date-picker>
+                <el-date-picker type="date" v-model="formHeader.productDate" value-format="yyyy-MM-dd" style="width: 140px;" :disabled="!isEdit"></el-date-picker>
               </el-form-item>
               <el-form-item label="申请编号：">
                 <p class="header-form_input" >{{formHeader.applyNo}}</p>
@@ -60,7 +60,7 @@
                   type="textarea"
                   :rows="3"
                   v-model.trim="formHeader.remark"
-                  style="width:500px"
+                  style="width: 500px;"
                   :disabled="!isEdit"
                   placeholder="请输入内容">
                 </el-input>
@@ -68,8 +68,8 @@
             </el-form>
           </el-col>
         </el-row>
-        <el-row style="text-align:right" class="buttonCss">
-          <template style="float:right; margin-left: 10px;">
+        <el-row style="text-align: right;" class="buttonCss">
+          <template style="float: right; margin-left: 10px;">
             <el-button type="primary" size="small" :disabled="!isEdit" @click="save()" v-if="isAuth('fer:openHolder:mySaveOrUpdate')">保存</el-button>
             <el-button type="primary" size="small" :disabled="!isEdit" @click="submit()" v-if="isAuth('fer:openHolder:submit')">提交</el-button>
           </template>
@@ -81,12 +81,12 @@
     </div>
     <div class="main">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-card>
           <el-row>
-            <div style="line-height: 40px;" ><i style="font-size: 22px;float:left;" class="iconfont factory-shouqicaidan"></i><span style="font-size:16px;font-weight:bold;margin-left:12px;">申请反馈信息</span></div>
+            <div style="line-height: 40px;" ><i style="font-size: 22px; float: left;" class="iconfont factory-shouqicaidan"></i><span style="font-size: 16px; font-weight: bold; margin-left: 12px;">申请反馈信息</span></div>
           </el-row>
           <el-row>
             <el-table header-row-class-name="tableHead" :data="detailList" border tooltip-effect="dark" >
@@ -405,22 +405,22 @@ export default class Index extends Vue {
 </script>
 
 <style lang="scss">
-.topform{
-  .el-form-item__content{
+.topform {
+  .el-form-item__content {
     height: 32px;
-    border-bottom: 1px solid #D8D8D8;
+    border-bottom: 1px solid #d8d8d8;
   }
 }
 </style>
 <style lang="scss" scoped>
-@import '@/assets/scss/_common.scss';
+@import "@/assets/scss/_common.scss";
 .header-form {
   .header-form_input {
-    width:140px;
-    font-size:14px;
-    font-family:PingFangSC-Regular;
-    font-weight:400;
-    color:rgba(0,0,0,0.85);
+    width: 140px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, sans-serif;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.85);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

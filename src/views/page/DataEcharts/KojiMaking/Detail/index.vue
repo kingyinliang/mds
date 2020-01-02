@@ -136,189 +136,209 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .pageMain {
-    width: 100%;
-    height: 100%;
+.pageMain {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .Container {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    .Container {
-      flex: 1;
+    justify-content: center;
+    align-items: center;
+    padding-left: 120px;
+
+    &_box {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding-left: 120px;
-      &_box {
-        display: flex;
-        justify-content: left;
-        &_ul{
-          margin-top: 10px;
-          margin-left: 10px;
-          ul,li{
-            font-size: 12px;
-            color: white;
-            list-style:none;
+      justify-content: left;
+
+      &_ul {
+        margin-top: 10px;
+        margin-left: 10px;
+
+        ul,
+        li {
+          font-size: 12px;
+          color: white;
+          list-style: none;
+          line-height: 20px;
+        }
+      }
+
+      &_left {
+        width: 600px;
+
+        &_top {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          padding-left: 15px;
+          padding-top: 15px;
+          background: url("~@/assets/img/echartsDetailLeftBg.png") no-repeat;
+          background-size: 100% 100%;
+
+          &_title {
+            margin-left: 10px;
+            height: 20px;
             line-height: 20px;
+            font-size: 16px;
+            color: #00dfff;
+            border-left: 6px solid #00dfff;
+            padding-left: 10px;
+          }
+
+          &_echarts {
+            flex: 1;
+            width: 100%;
           }
         }
-        &_left{
+
+        &_bottom {
+          width: 100%;
+          background: url("~@/assets/img/echartsDetailLeftBg1.png") no-repeat;
+          background-size: 100% 100%;
+          padding-left: 15px;
+          padding-top: 10px;
+        }
+      }
+
+      &_right {
+        width: 450px;
+        margin-left: 50px;
+
+        &_top {
+          text-align: center;
+          position: relative;
+          color: #00051a;
+          font-size: 14px;
+          line-height: 20px;
+          width: 100%;
+          background: url("~@/assets/img/echartsDetailLeftBg2.png") no-repeat;
+          background-size: 100% 100%;
+
+          &_temp {
+            width: 100%;
+            position: absolute;
+
+            p {
+              margin: auto;
+              width: 200px;
+            }
+
+            p span {
+              width: 50%;
+              float: left;
+              line-height: 25px;
+            }
+          }
+
+          &_text {
+            width: 100%;
+            position: absolute;
+
+            p {
+              display: inline-block;
+              margin: auto;
+              text-align: left;
+            }
+          }
+        }
+
+        &_bottom {
+          width: 100%;
+          background: url("~@/assets/img/echartsDetailLeftBg1.png") no-repeat;
+          background-size: 100% 100%;
+          padding-left: 15px;
+          padding-top: 10px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1367px) {
+  .pageMain {
+    .Container {
+      &_box {
+        width: 1153px;
+        height: 630px;
+        &_left {
           width: 600px;
-          &_top{
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            padding-left: 15px;
-            padding-top: 15px;
-            background: url('~@/assets/img/echartsDetailLeftBg.png') no-repeat;
-            background-size:100% 100%;
-            &_title{
-              margin-left: 10px;
-              height: 20px;
-              line-height: 20px;
-              font-size: 16px;
-              color: #00dfff;
-              border-left: 6px solid #00dfff;
-              padding-left: 10px;
-            }
-            &_echarts{
-              flex: 1;
-              width: 100%;
-            }
+          &_top {
+            height: 450px;
+            margin-bottom: 30px;
           }
-          &_bottom{
-            width: 100%;
-            background: url('~@/assets/img/echartsDetailLeftBg1.png') no-repeat;
-            background-size:100% 100%;
-            padding-left: 15px;
-            padding-top: 10px;
+          &_bottom {
+            height: 150px;
           }
         }
-        &_right{
+        &_right {
           width: 450px;
           margin-left: 50px;
           &_top {
-            text-align: center;
-            position: relative;
-            color: #00051a;
+            height: 450px;
+            margin-bottom: 30px;
+            &_temp {
+              top: 100px;
+            }
+            &_text {
+              bottom: 170px;
+            }
+          }
+          &_bottom {
+            height: 150px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1367px) {
+  .pageMain {
+    .Container {
+      &_box {
+        width: 1380px;
+        height: 730px;
+        &_ul {
+          li {
             font-size: 14px;
-            line-height: 20px;
-            width: 100%;
-            background: url('~@/assets/img/echartsDetailLeftBg2.png') no-repeat;
-            background-size:100% 100%;
-            &_temp{
-              width: 100%;
-              position: absolute;
-              p{
-                margin: auto;
-                width: 200px;
-                span{
-                  width: 50%;
-                  float: left;
-                  line-height: 25px;
-                }
-              }
+          }
+        }
+        &_left {
+          width: 780px;
+          &_top {
+            height: 550px;
+            margin-bottom: 30px;
+          }
+          &_bottom {
+            height: 150px;
+          }
+        }
+        &_right {
+          width: 550px;
+          margin-left: 50px;
+          &_top {
+            height: 550px;
+            margin-bottom: 30px;
+            &_temp {
+              font-size: 16px;
+              top: 130px;
             }
-            &_text{
-              width: 100%;
-              position: absolute;
-              p{
-                display: inline-block;
-                margin: auto;
-                text-align: left;
-              }
+            &_text {
+              bottom: 210px;
+              font-size: 16px;
+              line-height: 25px;
             }
           }
-          &_bottom{
-            width: 100%;
-            background: url('~@/assets/img/echartsDetailLeftBg1.png') no-repeat;
-            background-size:100% 100%;
-            padding-left: 15px;
-            padding-top: 10px;
+          &_bottom {
+            height: 150px;
           }
         }
       }
     }
   }
-  @media (max-width: 1367px) {
-    .pageMain {
-      .Container {
-        &_box {
-          width: 1153px;
-          height: 630px;
-          &_left{
-            width: 600px;
-            &_top{
-              height: 450px;
-              margin-bottom: 30px;
-            }
-            &_bottom{
-              height: 150px;
-            }
-          }
-          &_right{
-            width: 450px;
-            margin-left: 50px;
-            &_top {
-              height: 450px;
-              margin-bottom: 30px;
-              &_temp{
-                top: 100px;
-              }
-              &_text{
-                bottom: 170px;
-              }
-            }
-            &_bottom {
-              height: 150px;
-            }
-          }
-        }
-      }
-    }
-  }
-  @media (min-width: 1367px) {
-    .pageMain {
-      .Container {
-        &_box {
-          width: 1380px;
-          height: 730px;
-          &_ul{
-            li{
-              font-size: 14px;
-            }
-          }
-          &_left{
-            width: 780px;
-            &_top{
-              height: 550px;
-              margin-bottom: 30px;
-            }
-            &_bottom{
-              height: 150px;
-            }
-          }
-          &_right{
-            width: 550px;
-            margin-left: 50px;
-            &_top {
-              height: 550px;
-              margin-bottom: 30px;
-              &_temp{
-                font-size: 16px;
-                top: 130px;
-              }
-              &_text{
-                bottom: 210px;
-                font-size: 16px;
-                line-height: 25px;
-              }
-            }
-            &_bottom {
-              height: 150px;
-            }
-          }
-        }
-      }
-    }
-  }
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <el-card class="searchCard" style="margin-bottom: 5px">
+      <el-card class="searchCard" style="margin-bottom: 5px;">
         <el-form :model="queryForm" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
           <template v-for="item in queryFormData" v-if="!item.hide">
             <el-form-item
@@ -10,7 +10,7 @@
               :prop="item.prop"
               :key="item.prop">
               <el-select
-                style="width: 170px"
+                style="width: 170px;"
                 :ref="item.prop"
                 :filterable="item.filterable"
                 v-model="queryForm[item.prop]"
@@ -32,7 +32,7 @@
               :key="item.prop">
               <el-input
                 :ref="item.prop"
-                style="width: 170px"
+                style="width: 170px;"
                 v-model="queryForm[item.prop]"></el-input>
             </el-form-item>
             <el-form-item
@@ -43,11 +43,11 @@
               :key="item.prop">
               <el-row>
                 <el-col :span="12">
-                  <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                  <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
                   <span>-</span>
                 </el-col>
                 <el-col :span="12">
-                  <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px"></el-date-picker>
+                  <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
                 </el-col>
               </el-row>
             </el-form-item>
@@ -56,7 +56,7 @@
               :label="`${item.label}：` || ''"
               :prop="item.prop"
               :key="item.prop">
-              <el-date-picker :ref="item.prop" :type="item.dataType" v-model="queryForm[item.prop]" placeholder="请选择" :value-format="item.valueFormat" style="width: 170px"></el-date-picker>
+              <el-date-picker :ref="item.prop" :type="item.dataType" v-model="queryForm[item.prop]" placeholder="请选择" :value-format="item.valueFormat" style="width: 170px;"></el-date-picker>
             </el-form-item>
           </template>
           <el-form-item class="floatr">
@@ -69,16 +69,16 @@
           <i class="el-icon-caret-top"></i>
         </div>
       </el-card>
-      <el-card class="tableCard" style="min-height: 400px">
+      <el-card class="tableCard" style="min-height: 400px;">
         <div class="toggleSearchTop">
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-row>
-          <el-col style="text-align:right; margin-bottom:10px;">
+          <el-col style="text-align: right; margin-bottom: 10px;">
             <slot name="mds-button-middle"></slot>
           </el-col>
         </el-row>
-        <el-table :data="tableData" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;margin-bottom: 20px">
+        <el-table :data="tableData" ref="table" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
           <el-table-column
             v-if="showSelectColumn"
             :selectable="selectableFn"
@@ -108,7 +108,9 @@
               :key="chind.prop"
               :prop="chind.prop"
               :label="chind.label"
-              :formatter="chind.formatter">
+              :formatter="chind.formatter"
+              :show-overflow-tooltip="chind.showOverFlowTooltip"
+              :width="chind.width || ''">
             </el-table-column>
           </el-table-column>
           <el-table-column
@@ -121,7 +123,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-row >
+        <el-row v-if="showPage === true">
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -151,7 +153,8 @@ export default {
       queryFormRules: {},
       optionLists: {},
       tableData: [],
-      multipleSelection: []
+      multipleSelection: [],
+      tableHeight: 0
     }
   },
   props: {
@@ -230,6 +233,14 @@ export default {
     selectableFn: {
       type: Function,
       default: () => true
+    },
+    showPage: {
+      type: Boolean,
+      default: true
+    },
+    fixTableHeightFromTop: {
+      type: Number,
+      default: 0
     }
   },
   created () {
@@ -237,6 +248,18 @@ export default {
   },
   mounted () {
     this.headanimation(this.$)
+    this.$nextTick(function () {
+      if (this.fixTableHeightFromTop !== 0) {
+        this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - this.fixTableHeightFromTop
+        // 监听窗口大小变化
+        let self = this
+        window.onresize = function () {
+          self.tableHeight = window.innerHeight - self.$refs.table.$el.offsetTop - this.fixTableHeightFromTop
+        }
+      } else {
+        this.tableHeight = ''
+      }
+    })
   },
   methods: {
     // 设置下拉label

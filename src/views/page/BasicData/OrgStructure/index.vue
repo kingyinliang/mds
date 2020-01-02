@@ -9,8 +9,8 @@
     <div class="main">
       <el-card>
         <el-row :gutter="20">
-          <div style="margin-bottom: 10px;padding-left: 10px">
-            <el-input placeholder="部门名称" v-model="filterText" size="small" style="width: 300px">
+          <div style="margin-bottom: 10px; padding-left: 10px;">
+            <el-input placeholder="部门名称" v-model="filterText" size="small" style="width: 300px;">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
           </div>
@@ -52,7 +52,7 @@
                   </el-form-item>
                   <el-form-item label="产线属性：" v-if="OrgDetail.deptType === 'proLine'">
                     <span v-if="update">{{OrgDetail.properties}}</span>
-                    <el-select v-model="OrgDetail.properties" placeholder="请选择部门类型" style="width: 100%" v-else>
+                    <el-select v-model="OrgDetail.properties" placeholder="请选择部门类型" style="width: 100%;" v-else>
                       <el-option label="普通产线" value="普通产线"></el-option>
                       <el-option label="二合一&礼盒产线" value="二合一&礼盒产线"></el-option>
                     </el-select>
@@ -96,7 +96,7 @@
             </el-card>
           </el-col>
         </el-row>
-        <el-dialog :visible.sync="dialogFormVisible1" @close="clearForm('addDep')" :title="sibling?'新增同级':'新增下级'" id="adddepform">
+        <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible1" @close="clearForm('addDep')" :title="sibling?'新增同级':'新增下级'" id="adddepform">
           <el-form :model="addDep" size="small" label-position="left" label-width="100px">
             <el-form-item label="部门编号：">
               <el-input v-model="addDep.deptCode" auto-complete="off"></el-input>
@@ -113,12 +113,12 @@
             </el-form-item>
             <el-form-item label="部门类型：">
               <!--<el-input v-model="addDep.deptType" auto-complete="off"></el-input>-->
-              <el-select v-model="addDep.deptType" placeholder="请选择部门类型" style="width: 100%">
+              <el-select v-model="addDep.deptType" placeholder="请选择部门类型" style="width: 100%;">
                 <el-option :label="item.value" v-for="(item, index) in dictList" :key="index" :value="item.code"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="产线属性：" v-if="addDep.deptType== 'proLine'">
-              <el-select v-model="addDep.properties" placeholder="请选择产线属性" style="width: 100%">
+              <el-select v-model="addDep.properties" placeholder="请选择产线属性" style="width: 100%;">
                 <el-option label="普通产线" value="普通产线"></el-option>
                 <el-option label="二合一&礼盒产线" value="二合一&礼盒产线"></el-option>
               </el-select>
@@ -146,7 +146,7 @@
             <el-form-item label="备注：">
               <el-input type="textarea" v-model="addDep.remark"></el-input>
             </el-form-item>
-            <div style="text-align: center">
+            <div style="text-align: center;">
               <el-button @click="addOrg">保存</el-button>
               <el-button @click="closethis">关闭</el-button>
             </div>
@@ -393,57 +393,57 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .pkgImg{
-    width: 100px;
-    height: 100px;
-  }
-  .el-card__header {
-    font-size: 14px;
-    padding: 13px 20px;
-    background-color: #f9f9f9;
-    color: black;
+.pkgImg {
+  width: 100px;
+  height: 100px;
+}
+.el-card__header {
+  font-size: 14px;
+  padding: 13px 20px;
+  background-color: #f9f9f9;
+  color: black;
+  font-weight: bold;
+}
+.head {
+  width: 100%;
+  background: white;
+  padding: 20px 24px 0 24px;
+  h3 {
+    font-size: 20px;
     font-weight: bold;
+    line-height: 50px;
   }
-  .head{
-    width: 100%;
-    background: white;
-    padding: 20px 24px 0 24px;
-    h3{
-      font-size: 20px;
-      font-weight: bold;
-      line-height: 50px;
-    }
+}
+.rightmain {
+  flex: 1;
+}
+#menu {
+  cursor: pointer;
+  z-index: 99;
+  padding: 10px;
+  margin: 0;
+  list-style: none;
+  position: fixed;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 2px 2px 25px 5px rgba(213, 221, 238, 0.45);
+  li {
+    line-height: 28px;
   }
-  .rightmain{
-    flex: 1;
-  }
-  #menu{
-    cursor: pointer;
-    z-index: 99;
-    padding: 10px;
-    margin: 0;
-    list-style: none;
-    position: fixed;
-    background: white;
-    border-radius: 5px;
-    box-shadow: 2px 2px 25px 5px rgba(213,221,238,.45);
-    li{
-      line-height: 28px;
-    }
-  }
-  #adddepform{
-    .el-form-item{
-      margin-bottom: 5px;
-    }
-  }
-</style>
-<style>
-  .orgcard .el-card__body{
-    height: 450px;
-    overflow: auto;
-  }
-  .orgcard .el-form-item--mini.el-form-item,
-  .orgcard .el-form-item--small.el-form-item {
+}
+#adddepform {
+  .el-form-item {
     margin-bottom: 5px;
   }
+}
+</style>
+<style>
+.orgcard .el-card__body {
+  height: 450px;
+  overflow: auto;
+}
+.orgcard .el-form-item--mini.el-form-item,
+.orgcard .el-form-item--small.el-form-item {
+  margin-bottom: 5px;
+}
 </style>

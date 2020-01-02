@@ -1,11 +1,11 @@
 <template>
   <div>
-    <el-card class="box-card newCard" style="margin-bottom: 20px">
+    <el-card class="box-card newCard" style="margin-bottom: 20px;">
       <el-form :inline="true" :model="readyTimeDate" ref="timesForm" size="small" label-width="125px">
         <div class="clearfix" style="">
-          <h3 style="font-size: 14px;line-height: 32px">准备工时 (单位:min)</h3>
-          <el-button type="text" class="readyshiftBtn" name="ready" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
-          <el-form-item label="班次：" style="float: right">
+          <h3 style="font-size: 14px; line-height: 32px;">准备工时 (单位:min)</h3>
+          <el-button type="text" class="readyshiftBtn" name="ready" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
+          <el-form-item label="班次：" style="float: right;">
             <el-select v-model="readyTimeDate.classes" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status ==='noPass' || readyTimeDate.status ==='saved' || readyTimeDate.status ===''))">
               <el-option label="白班" value="白班"></el-option>
               <el-option label="中班" value="中班"></el-option>
@@ -14,7 +14,7 @@
             </el-select>
           </el-form-item>
         </div>
-        <div class="readyBox" style="overflow: hidden">
+        <div class="readyBox" style="overflow: hidden;">
           <el-row v-if="readyTimeDate.classes === '白班' || readyTimeDate.classes === '多班' || !readyTimeDate.classes">
             <el-form-item label="交接班（白班）：">
               <el-input v-model="readyTimeDate.dayChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status ==='noPass' || readyTimeDate.status ==='saved' || readyTimeDate.status ===''))"></el-input>
@@ -61,17 +61,17 @@
       </el-form>
     </el-card>
     <el-card class="box-card">
-      <div class="clearfix" style="margin-bottom: 20px">
-        <h3 style="font-size: 14px;line-height: 32px">机器工时 (单位:min)</h3>
-        <el-button type="text" class="readyshiftBtn" name="machine" style="margin-left: 30px">收起<i class="el-icon-caret-top"></i></el-button>
+      <div class="clearfix" style="margin-bottom: 20px;">
+        <h3 style="font-size: 14px; line-height: 32px;">机器工时 (单位:min)</h3>
+        <el-button type="text" class="readyshiftBtn" name="machine" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
       </div>
-      <div class="machineBox" style="overflow: hidden">
+      <div class="machineBox" style="overflow: hidden;">
         <el-row :gutter="10">
-          <el-col :span="8" style="margin-bottom: 15px" v-for="(item, index) in Machine" :key="index">
+          <el-col :span="8" style="margin-bottom: 15px;" v-for="(item, index) in Machine" :key="index">
             <el-card class="box-card">
               <div class="clearfix machinediv">
                 <img src="@/assets/img/machineicon.png" alt="">
-                <div style="margin-left: 15px">
+                <div style="margin-left: 15px;">
                   <p class="machineTit">{{ item.deviceName }}</p>
                   <!--<p class="machineTxt">这台酱油炒麦机是2018年在日本进口的。</p>-->
                 </div>
@@ -425,42 +425,41 @@ export default {
 </script>
 
 <style lang="scss">
-.readyBox{
-  input{
+.readyBox {
+  input {
     width: 153px;
   }
 }
-.readyshiftBtn{
+.readyshiftBtn {
   padding: 0;
   margin-left: 15px;
   line-height: 32px;
-  /*float: right;*/
 }
-.machineBox{
-  .box-card{
+.machineBox {
+  .box-card {
     padding: 0;
-    .el-card__body{
+    .el-card__body {
       padding: 0;
     }
   }
-  .machinediv{
+  .machinediv {
     display: flex;
     padding: 20px;
-    img{
+    img {
       width: 48px;
       height: 48px;
     }
-    .machineTit{
+    .machineTit {
       font-weight: bold;
       font-size: 16px;
       margin-bottom: 10px;
     }
-    .machineTxt{
+    .machineTxt {
       color: rgba(0, 0, 0, 0.45);
-      line-height: 22px
+      line-height: 22px;
     }
   }
-  .machineBtn{
+  .machineBtn {
     width: 100%;
     height: 40px;
   }

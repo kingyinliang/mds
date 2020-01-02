@@ -3,7 +3,7 @@
       <div class="main">
         <el-card>
           <el-row class="clearfix">
-            <div style="float: right">
+            <div style="float: right;">
               <el-form :inline="true" :model="condition" size="small" label-width="68px" class="topforms2" @keyup.enter.native="getList(true)">
                 <el-form-item>
                   <el-input v-model="condition.param" placeholder="用户名/工号" suffix-icon="el-icon-search"></el-input>
@@ -29,8 +29,8 @@
                   <span>人员</span>
                 </div>
                 <div>
-                  <el-button type="danger" @click="remove()" style="float: right;margin:0 20px 20px 0" size="small" v-if="isAuth('sys:user:delete')">批量删除</el-button>
-                  <el-button type="primary" @click="addOrupdate()" style="float: right;margin:0 20px 20px 0" size="small" v-if="isAuth('sys:user:save')">增加</el-button>
+                  <el-button type="danger" @click="remove()" style="float: right; margin: 0 20px 20px 0;" size="small" v-if="isAuth('sys:user:delete')">批量删除</el-button>
+                  <el-button type="primary" @click="addOrupdate()" style="float: right; margin: 0 20px 20px 0;" size="small" v-if="isAuth('sys:user:save')">增加</el-button>
                   <el-table
                     ref="table1"
                     :data="userArr"
@@ -38,7 +38,7 @@
                     header-row-class-name="tableHead"
                     border
                     tooltip-effect="dark"
-                    style="width: 100%;margin-bottom: 20px">
+                    style="width: 100%; margin-bottom: 20px;">
                     <el-table-column
                       type="selection"
                       width="34">
@@ -272,5 +272,5 @@ export default {
 </script>
 
 <style scoped>
-.el-button {  }
+
 </style>

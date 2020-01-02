@@ -16,20 +16,20 @@
             </el-select>
           </el-form-item>
           <el-form-item label="生产日期：">
-            <el-date-picker v-model="formHeader.allocateDate" type="date" placeholder="请选择" style="width:150px" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
+            <el-date-picker v-model="formHeader.allocateDate" type="date" placeholder="请选择" style="width: 150px;" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
           </el-form-item>
           <el-form-item label="调配单号：">
-            <el-input v-model="formHeader.orderNo" style="width:150px"></el-input>
+            <el-input v-model="formHeader.orderNo" style="width: 150px;"></el-input>
           </el-form-item>
           <el-form-item label="订单号：">
-            <el-input v-model="formHeader.order_no" style="width:150px"></el-input>
+            <el-input v-model="formHeader.order_no" style="width: 150px;"></el-input>
           </el-form-item>
-          <el-form-item class="floatr" style="width:290px">
-            <template style="float:right;">
+          <el-form-item class="floatr" style="width: 290px;">
+            <template style="float: right;">
               <el-button type="primary" size="small" v-if="isAuth('ste:allocate:allocateList')" @click="SearchList">查询</el-button>
               <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="isAuth('ste:allocate:allocateUpdate')">{{isRedact?'取消':'编辑'}}</el-button>
             </template>
-            <template v-if="isRedact" style="float:right;">
+            <template v-if="isRedact" style="float: right;">
               <el-button type="primary" size="small" @click="SavedForm()">保存</el-button>
               <el-button type="primary" size="small" @click="SubmitForm()">提交</el-button>
             </template>
@@ -40,9 +40,9 @@
         <i class="el-icon-caret-top"></i>
       </div>
     </el-card>
-    <div class="secondcard" style="padding-top:0">
+    <div class="secondcard" style="padding-top: 0;">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
       </div>
@@ -81,7 +81,7 @@
               <i class="reqI">*</i> 调配日期
             </template>
             <template slot-scope="scope">
-              <el-date-picker v-model="scope.row.allocateTime" :disabled="!isRedact" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width:150px" size="small"></el-date-picker>
+              <el-date-picker v-model="scope.row.allocateTime" :disabled="!isRedact" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="调配单备注" prop="remark" width="100" :show-overflow-tooltip="true"></el-table-column>
@@ -107,9 +107,9 @@
         </el-pagination>
       </el-card>
     </div>
-    <el-dialog :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">调配列表</div>
-      <el-table style="margin-bottom: 20px" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
+      <div slot="title" style="line-height: 59px;">调配列表</div>
+      <el-table style="margin-bottom: 20px;" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
         <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
           <template slot-scope="scope">
             {{scope.row.materialCode}} {{scope.row.materialName}}
@@ -190,9 +190,9 @@
         </template>
       </span>
     </el-dialog>
-    <el-dialog :visible.sync="RecordDialogTableVisible" width="550px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">记录</div>
-      <el-form :model="record" size="small" label-width="140px" :rules="recordrules" ref="record" style="width: 471px">
+    <el-dialog :close-on-click-modal="false" :visible.sync="RecordDialogTableVisible" width="550px" custom-class='dialog__class'>
+      <div slot="title" style="line-height: 59px;">记录</div>
+      <el-form :model="record" size="small" label-width="140px" :rules="recordrules" ref="record" style="width: 471px;">
         <el-form-item label="搅罐时间（min）：" prop="stirringTime">
           <el-input v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
           <!--<el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-date-picker>-->
@@ -213,7 +213,7 @@
           </el-select>
         </el-form-item>
         <el-row style="width: 510px;" v-for="(item, index) in record.Reason" :key="index">
-          <el-col style="width: 300px">
+          <el-col style="width: 300px;">
             <el-form-item label="不合格调整分类：">
               <el-select v-model="item.nonReasonClass" filterable :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'">
                 <el-option value=''>请选择</el-option>
@@ -221,12 +221,12 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col style="width: 170px">
+          <el-col style="width: 170px;">
             <el-form-item label="数量：" label-width="50px">
               <el-input v-model="item.adjustAmount" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'"></el-input>
             </el-form-item>
           </el-col>
-          <el-col style="width: 32px; margin-left: 8px">
+          <el-col style="width: 32px; margin-left: 8px;">
             <el-button type="primary" icon="el-icon-plus" circle @click="addReasons" size="small" v-if="index === 0" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'"></el-button>
             <el-button type="danger" icon="el-icon-delete" circle @click="delReason(index)" size="small" v-else :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'"></el-button>
           </el-col>
@@ -854,17 +854,17 @@ export default {
 }
 </script>
 
-<style lang="less">
-.dialog__class{
-  border-radius:6px 6px 6px 6px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+<style lang="scss">
+.dialog__class {
+  border-radius: 6px 6px 6px 6px !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
 }

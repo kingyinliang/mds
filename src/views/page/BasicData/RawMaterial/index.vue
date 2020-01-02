@@ -9,7 +9,7 @@
     <div class="main">
       <el-card>
         <div class="clearfix">
-          <el-row style="float: right">
+          <el-row style="float: right;">
             <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetLocationList(true)" @submit.native.prevent>
               <el-form-item>
                 <el-input v-model="form.batch" placeholder="批次" suffix-icon="el-icon-search"></el-input>
@@ -29,7 +29,7 @@
             :data="list"
             border
             tooltip-effect="dark"
-            style="width: 100%;margin-bottom: 20px">
+            style="width: 100%; margin-bottom: 20px;">
             <el-table-column label="物料" :show-overflow-tooltip="true" width="170px">
               <template slot-scope="scope">
                 {{scope.row.materialCode}} {{scope.row.materialName}}
@@ -67,21 +67,21 @@
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="visible1" width="510px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">高级查询</div>
+      <div slot="title" style="line-height: 59px;">高级查询</div>
       <el-form :model="form" size="small" label-width="130px" class="locationdialog">
         <el-form-item label="批次：" prop="orderNo1">
-          <el-input v-model="form.batch" style="width:283px"></el-input>
+          <el-input v-model="form.batch" style="width: 283px;"></el-input>
         </el-form-item>
         <el-form-item label="物料：" prop="orderNo2">
-          <el-input v-model="form.materialCode" style="width:283px"></el-input>
+          <el-input v-model="form.materialCode" style="width: 283px;"></el-input>
         </el-form-item>
         <el-form-item label="罐号：" prop="holderId">
-          <el-select v-model="form.holderId" placeholder="请选择" filterable style="width:283px">
+          <el-select v-model="form.holderId" placeholder="请选择" filterable style="width: 283px;">
             <el-option v-for="(sole, index) in this.guanList" :key="index" :value="sole.holderId" :label="sole.holderName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="过账日期：">
-          <el-date-picker v-model="form.commitDateOne" type="date" placeholder="选择日期" style="width:135px"></el-date-picker> - <el-date-picker v-model="form.commitDateTwo" type="date" placeholder="选择日期" style="width:135px"></el-date-picker>
+          <el-date-picker v-model="form.commitDateOne" type="date" placeholder="选择日期" style="width: 135px;"></el-date-picker> - <el-date-picker v-model="form.commitDateTwo" type="date" placeholder="选择日期" style="width: 135px;"></el-date-picker>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -224,16 +224,16 @@ export default {
 </script>
 
 <style lang="scss">
-.dialog__class{
-  border-radius:6px 6px 6px 6px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+.dialog__class {
+  border-radius: 6px 6px 6px 6px !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
 }

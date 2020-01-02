@@ -2,7 +2,7 @@
   <div class="header_main">
     <el-card class="searchCard">
       <el-row>
-        <el-col style="width:975px; float:left">
+        <el-col style="width: 975px; float: left;">
           <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="sole_row">
             <el-form-item label="生产工厂：">
               <el-select v-model="formHeader.factory" placeholder="请选择" class="width150px">
@@ -23,27 +23,27 @@
               </el-select>
             </el-form-item>
             <el-form-item label="生产日期：">
-              <el-date-picker v-model="formHeader.created" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择" style="width:140px"></el-date-picker>
+              <el-date-picker v-model="formHeader.created" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择" style="width: 140px;"></el-date-picker>
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col  style="width:127px; float:right">
+        <el-col  style="width: 127px; float: right;">
           <el-button type="primary" size="small" @click="GetList(true)" v-if="isAuth('ste:pkgOrder:orderList')">查询</el-button>
           <el-button type="primary" size="small" @click="isRedact = !isRedact" v-if="isAuth('ste:allocate:allocateOrderSave')">{{isRedact === false? '编辑' : '取消'}}</el-button>
         </el-col>
       </el-row>
     </el-card>
-    <el-tabs ref='tabs' v-model="activeName" @tab-click="handleClick" id="DaatTtabs" class="NewDaatTtabs secondcard" type="border-card" style="border-radius: 15px;overflow: hidden">
+    <el-tabs ref='tabs' v-model="activeName" @tab-click="handleClick" id="DaatTtabs" class="NewDaatTtabs secondcard" type="border-card" style="border-radius: 15px; overflow: hidden;">
       <el-tab-pane name="BL">
         <span slot="label" class="spanview">
           <el-button>待调配</el-button>
         </span>
         <el-row>
-          <el-col style="text-align: right">
+          <el-col style="text-align: right;">
             <el-button type="primary" size="small" @click="DoDeploy" :disabled="!isRedact">调配</el-button>
           </el-col>
         </el-row>
-        <el-table :data="dataList" :row-key="getRowKeys" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
+        <el-table :data="dataList" :row-key="getRowKeys" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top: 10px;">
           <el-table-column type="selection" width="35" :selectable="CheckBoxInit"></el-table-column>
           <el-table-column label="订单号" prop="orderNo" width="120"></el-table-column>
           <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
@@ -65,11 +65,11 @@
           <el-button>待分配</el-button>
         </span>
         <el-row>
-          <el-col style="text-align: right">
+          <el-col style="text-align: right;">
             <el-button type="primary" size="small" @click="DoDeploy" :disabled="!isRedact">分配</el-button>
           </el-col>
         </el-row>
-        <el-table :data="dataList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top:10px">
+        <el-table :data="dataList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead" style="margin-top: 10px;">
           <el-table-column type="selection" width="35" :selectable="CheckBoxInit"></el-table-column>
           <el-table-column label="订单号" prop="orderNo" width="120"></el-table-column>
           <el-table-column label="物料" :show-overflow-tooltip="true" width="180">

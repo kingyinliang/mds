@@ -4,8 +4,8 @@
     <el-tab-pane name="1">
       <span slot="label" class="spanview">半成品罐区报表</span>
       <div class="titleLeft">
-        <i class="iconfont factory-kucun" style="color:#666666; margin-right:10px"></i>半成品罐区报表
-        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color:#1890FF; color:#FFFFFF; float:right">导出</el-button>
+        <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>半成品罐区报表
+        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
       </div>
       <el-table :data="tableData1" header-row-class-name="tableHead" border tooltip-effect="dark">
         <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
@@ -25,8 +25,8 @@
     <el-tab-pane name="2">
       <span slot="label" class="spanview">成品罐区报表</span>
       <div class="titleLeft">
-        <i class="iconfont factory-kucun" style="color:#666666; margin-right:10px"></i>成品罐区报表
-        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color:#1890FF; color:#FFFFFF; float:right">导出</el-button>
+        <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>成品罐区报表
+        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
       </div>
       <el-table :data="tableData2" header-row-class-name="tableHead" border tooltip-effect="dark">
         <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
@@ -42,6 +42,29 @@
           :total="queryForm2.totalCount">
         </el-pagination>
       </el-row>
+    </el-tab-pane>
+    <el-tab-pane name="3">
+      <span slot="label" class="spanview">半成品库存汇总</span>
+      <div class="titleLeft">
+        <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>半成品库存汇总
+        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
+      </div>
+      <el-table :data="tableData3Top" :cell-style="cellStyle1" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-bottom: 10px;">
+        <el-table-column v-for="(item, index) in column1" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
+      </el-table>
+      <el-table :data="tableData3Bottom" :cell-style="cellStyle2" header-row-class-name="tableHead" border tooltip-effect="dark">
+        <el-table-column v-for="(item, index) in column2" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
+      </el-table>
+    </el-tab-pane>
+    <el-tab-pane name="4">
+      <span slot="label" class="spanview">成品库存汇总</span>
+      <div class="titleLeft">
+        <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>成品库存汇总
+        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
+      </div>
+      <el-table :data="tableData4" :cell-style="cellStyle3" header-row-class-name="tableHead" border tooltip-effect="dark">
+        <el-table-column v-for="(item, index) in column3" :class="{bg: item.classSt}" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
+      </el-table>
     </el-tab-pane>
   </el-tabs>
 </div>
@@ -73,6 +96,9 @@ export default {
       sumTableData2: [],
       tableData1: [],
       tableData2: [],
+      tableData3Top: [],
+      tableData3Bottom: [],
+      tableData4: [],
       column: [
         {
           label: '车间',
@@ -134,13 +160,166 @@ export default {
           prop: 'IS_OVERDUE',
           width: ''
         }
+      ],
+      column1: [
+        {
+          label: '物料编码',
+          prop: 'materialCode',
+          width: '120'
+        },
+        {
+          label: '物料名称',
+          prop: 'materialName',
+          width: '120'
+        },
+        {
+          label: '7天以上',
+          prop: 'gtSevenDay',
+          width: ''
+        },
+        {
+          label: '7天',
+          prop: 'sevenDay',
+          width: ''
+        },
+        {
+          label: '6天',
+          prop: 'sixDay',
+          width: ''
+        },
+        {
+          label: '5天',
+          prop: 'fiveDay',
+          width: ''
+        },
+        {
+          label: '4天',
+          prop: 'fourDay',
+          width: ''
+        },
+        {
+          label: '3天',
+          prop: 'threeDay',
+          width: ''
+        },
+        {
+          label: '<=44H',
+          prop: 'ltThreeDay',
+          width: ''
+        },
+        {
+          label: '合计',
+          prop: 'sumAmount',
+          width: ''
+        }
+      ],
+      column2: [
+        {
+          label: '物料编码',
+          prop: 'materialCode',
+          width: '120'
+        },
+        {
+          label: '物料名称',
+          prop: 'materialName',
+          width: '120'
+        },
+        {
+          label: '合计',
+          prop: 'sumAmount',
+          width: ''
+        }
+      ],
+      column3: [
+        {
+          label: '物料编码',
+          prop: 'materialCode',
+          width: '120'
+        },
+        {
+          label: '物料名称',
+          prop: 'materialName',
+          width: '120'
+        },
+        {
+          label: '>36h',
+          prop: 'gtThirtysixHour',
+          width: ''
+          // formatter: (row, column, value, index) => {
+          //   let h = this.$createElement
+          //   return h('div', {
+          //     // style: {
+          //     //   background: 'red'
+          //     // }
+          //   }, row.MATERIAL_NAME)
+          // }
+        },
+        {
+          label: '<=36h',
+          prop: 'ltThirtysixHour',
+          width: ''
+        },
+        {
+          label: '<=30h',
+          prop: 'ltThirtyHour',
+          width: ''
+        },
+        {
+          label: '<=24H',
+          prop: 'ltTwentyfourHour',
+          width: ''
+        },
+        {
+          label: '<=18H',
+          prop: 'ltEighteenHour',
+          width: ''
+        },
+        {
+          label: '<=12H',
+          prop: 'ltTwelveHour',
+          width: ''
+        },
+        {
+          label: '合计',
+          prop: 'sumAmount',
+          width: ''
+        }
       ]
     }
   },
   mounted () {
     this.GetDataList()
+    let arr = ['ltTwoDay', 'twoDay', 'threeDay', 'fourDay', 'fiveDay', 'sixDay', 'sevenDay', 'eightDay', 'nineDay', 'tenDay', 'elevenDay', 'tenerDay', 'thirteenDay', 'fourteenDay', 'fifteenDay', 'gtfifteenDay']
+    arr.forEach((item, index) => {
+      this.column2.splice(2, 0, {
+        label: `${index === 0 ? '<=16H' : index === arr.length - 1 ? index + '天以上' : index + 1 + '天'}`,
+        prop: `${item}`,
+        width: '90'
+      })
+    })
   },
   methods: {
+    cellStyle1 ({row, column, rowIndex, columnIndex}) {
+      if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
+        return '' // return 'background: #d9d9d9;'
+      } else {
+        return ''
+      }
+    },
+    cellStyle2 ({row, column, rowIndex, columnIndex}) {
+      if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5 || columnIndex === 6) {
+        return '' // return 'background: #d9d9d9;'
+      } else {
+        return ''
+      }
+    },
+    cellStyle3 ({row, column, rowIndex, columnIndex}) {
+      if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
+        return '' // return 'background: #d9d9d9;'
+      } else {
+        return ''
+      }
+    },
     setType (tab, event) {
       if (this.activeName === '1') {
         this.$store.state.common.PotReportForms.type = 'steHolder'
@@ -171,9 +350,21 @@ export default {
           this.$notify.error({title: '错误', message: data.msg})
         }
       })
+      this.$http(`${POTREPORTFORMS_API.POTREPORTFORMS_STOCK_LIST}`, 'POST', this.plantList).then(({data}) => {
+        if (data.code === 0) {
+          this.tableData3Top = data.steStork.steHolder.steStork
+          this.tableData3Bottom = data.steStork.steHolder.steHsStork
+          this.tableData4 = data.steStork.filterHolder
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
     },
     ExportExcelB () {
       exportFile(`${POTREPORTFORMS_API.POTREPORTFORMS_OUT}`, '罐区报表', this)
+    },
+    ExportExcelA () {
+      exportFile(`${POTREPORTFORMS_API.POTREPORTFORMS_STOCK_OUT}`, '库存报表', this)
     },
     // 改变每页条数
     handleSizeChange1 (val) {
@@ -202,5 +393,7 @@ export default {
 </script>
 
 <style scoped>
-
+.bg {
+  background: red;
+}
 </style>

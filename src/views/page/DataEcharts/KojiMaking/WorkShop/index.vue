@@ -195,130 +195,175 @@ export default {
 </script>
 
 <style lang="scss">
-  .KojiMakingTable{
-    &.el-table::before{
-      height: 0px!important;
-    }
-    &.el-table, .el-table__expanded-cell{
-      background-color: rgba(0, 0, 0, 0);
-    }
-    .el-table__row:hover{
-      background-color: inherit;
-    }
-    th{
+.KojiMakingTable {
+  &.el-table::before {
+    height: 0 !important;
+  }
+  &.el-table,
+  .el-table__expanded-cell {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  .el-table__row:hover {
+    background-color: inherit;
+  }
+  th {
+    text-align: center;
+    border-bottom: none !important;
+    background: rgba(0, 104, 190, 0.1) !important;
+  }
+
+  &_row,
+  tr,
+  &_row:hover {
+    background: rgba(0, 0, 0, 0) !important;
+    td {
       text-align: center;
-      border-bottom: none!important;
-      background: rgba(0, 104, 190, 0.1)!important;
-    }
-    &_row,tr,&_row:hover,tr:hover{
-      background: rgba(0, 0, 0, 0)!important;
-      td{
-        text-align: center;
-        border-bottom: none!important;
-        background: rgba(0,181,246, 0.1)!important;
-      }
-    }
-    &_row.el-table__row--striped:hover{
-      background: rgba(0, 0, 0, 0)!important;
-      td{
-        text-align: center;
-        border-bottom: none!important;
-        background: rgba(0, 104, 190, 0.1)!important;
-      }
-    }
-    &_row.el-table__row--striped{
-      background: rgba(0, 0, 0, 0)!important;
-      td{
-        text-align: center;
-        border-bottom: none!important;
-        background: rgba(0, 104, 190, 0.1)!important;
-      }
-    }
-    &.el-table--scrollable-y .el-table__body-wrapper {
-      &::-webkit-scrollbar { width: 0 !important }
-      -ms-overflow-style: none;
-      overflow: -moz-scrollbars-none;
-      .el-table__body{
-        width: 100%!important;
-      }
+      border-bottom: none !important;
+      background: rgba(0, 181, 246, 0.1) !important;
     }
   }
+  &_row.el-table__row--striped {
+    background: rgba(0, 0, 0, 0) !important;
+    td {
+      text-align: center;
+      border-bottom: none !important;
+      background: rgba(0, 104, 190, 0.1) !important;
+    }
+  }
+  tr:hover {
+    background: rgba(0, 0, 0, 0) !important;
+    td {
+      text-align: center;
+      border-bottom: none !important;
+      background: rgba(0, 181, 246, 0.1) !important;
+    }
+  }
+  &_row.el-table__row--striped:hover {
+    background: rgba(0, 0, 0, 0) !important;
+    td {
+      text-align: center;
+      border-bottom: none !important;
+      background: rgba(0, 104, 190, 0.1) !important;
+    }
+  }
+  &.el-table--scrollable-y .el-table__body-wrapper {
+    &::-webkit-scrollbar {
+      width: 0 !important;
+    }
+
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+    .el-table__body {
+      width: 100% !important;
+    }
+  }
+}
 </style>
 
 <style lang="scss" scoped>
-  .pageMain{
-    width: 100%;
-    height: 100%;
+.pageMain {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .Container {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    .Container{
-      flex: 1;
+    justify-content: center;
+    align-items: center;
+    padding-left: 120px;
+    &_box {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding-left: 120px;
-      &_box {
+      justify-content: left;
+      &_table {
+        height: 100%;
+        background: url("~@/assets/img/echartsWorkShopBg.png") no-repeat;
+        background-size: 100% 100%;
         display: flex;
-        justify-content: left;
-        &_table{
+        flex-direction: column;
+        &_title {
+          text-align: center;
+          font-size: 20px;
+          line-height: 48px;
+          color: #19f5fe;
+          margin-bottom: 10px;
+        }
+        .tableBox {
+          flex: 1;
+        }
+      }
+      &_echarts {
+        height: 100%;
+        margin-left: 25px;
+        padding-top: 50px;
+        &_bg {
+          width: 100%;
           height: 100%;
-          background: url('~@/assets/img/echartsWorkShopBg.png') no-repeat;
-          background-size:100% 100%;
-          display: flex;
-          flex-direction: column;
-          &_title{
+          background: url("~@/assets/img/echartsWorkShopRightBg.png") no-repeat;
+          background-size: 100% 100%;
+          &_title {
             text-align: center;
-            color: white;
-            font-size: 20px;
-            line-height: 48px;
+            font-size: 24px;
             color: #19f5fe;
-            margin-bottom: 10px;
           }
-          .tableBox{
-            flex: 1;
-          }
-        }
-        &_echarts{
-          height: 100%;
-          margin-left: 25px;
-          padding-top: 50px;
-          &_bg{
+          &_box {
             width: 100%;
-            height: 100%;
-            background: url('~@/assets/img/echartsWorkShopRightBg.png') no-repeat;
-            background-size:100% 100%;
-            &_title{
-              text-align: center;
-              font-size: 24px;
-              color: #19f5fe;
+            position: relative;
+            &_left,
+            &_right {
+              top: 77px;
+              position: absolute;
+              color: #59baf2;
+              font-size: 45px;
+              cursor: pointer;
             }
-            &_box{
+            &_e {
               width: 100%;
+              overflow: hidden;
               position: relative;
-              &_left,&_right{
-                top: 77px;
-                position: absolute;
-                color: #59baf2;
-                font-size: 45px;
-                cursor: pointer;
+              height: 200px;
+            }
+            &_barOrPie {
+              width: 300%;
+              height: 200px;
+              position: absolute;
+              left: 0;
+            }
+            &_barPie {
+              width: 33.333333%;
+              height: 200px;
+              float: left;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1367px) {
+  .pageMain {
+    .Container {
+      &_box {
+        width: 1153px;
+        height: 500px;
+        &_table {
+          width: 655px;
+        }
+        &_echarts {
+          width: 427px;
+          &_bg {
+            &_title {
+              padding-top: 25px;
+            }
+            &_box {
+              padding: 0 80px;
+              &_left {
+                left: 35px;
               }
-              &_e{
-                width: 100%;
-                overflow: hidden;
-                position: relative;
-                height: 200px;
-              }
-              &_barOrPie{
-                width: 300%;
-                height: 200px;
-                position: absolute;
-                left: 0;
-              }
-              &_barPie{
-                width: 33.333333%;
-                height: 200px;
-                float: left;
+              &_right {
+                right: 35px;
               }
             }
           }
@@ -326,29 +371,34 @@ export default {
       }
     }
   }
-  @media (max-width: 1367px) {
-    .pageMain {
-      .Container {
-        &_box {
-          width: 1153px;
-          height: 500px;
-          &_table {
-            width: 655px;
-          }
-          &_echarts {
-            width: 427px;
-            &_bg{
-              &_title{
-                padding-top: 25px;
+}
+
+@media (min-width: 1367px) {
+  body {
+    min-height: 670px !important;
+  }
+  .pageMain {
+    .Container {
+      &_box {
+        width: 1353px;
+        height: 580px;
+        &_table {
+          width: 755px;
+        }
+        &_echarts {
+          width: 503px;
+          margin-left: 40px;
+          &_bg {
+            &_title {
+              padding-top: 35px;
+            }
+            &_box {
+              padding: 0 90px;
+              &_left {
+                left: 45px;
               }
-              &_box{
-                padding: 0 80px;
-                &_left{
-                  left: 35px;
-                }
-                &_right{
-                  right: 35px;
-                }
+              &_right {
+                right: 45px;
               }
             }
           }
@@ -356,38 +406,5 @@ export default {
       }
     }
   }
-  @media (min-width: 1367px) {
-    body{
-      min-height: 670px!important;
-    }
-    .pageMain {
-      .Container {
-        &_box {
-          width: 1353px;
-          height: 580px;
-          &_table {
-            width: 755px;
-          }
-          &_echarts {
-            width: 503px;
-            margin-left: 40px;
-            &_bg{
-              &_title{
-                padding-top: 35px;
-              }
-              &_box{
-                padding: 0 90px;
-                &_left{
-                  left: 45px;
-                }
-                &_right{
-                  right: 45px;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+}
 </style>

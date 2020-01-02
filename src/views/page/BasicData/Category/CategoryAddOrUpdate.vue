@@ -4,16 +4,16 @@
     class="ShinHoDialog"
     :title="id?'修改类别':'新增类别'"
     @close="closeDialog"
-    :close-on-click-modal="closeDialog"
+    :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent label-width="155px"  size="small">
       <el-form-item label="生产工厂：" prop="factory">
-        <el-select v-model="dataForm.factory" placeholder="请选择" style="width: 100%">
+        <el-select v-model="dataForm.factory" placeholder="请选择" style="width: 100%;">
           <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="发酵物料：" prop="materialCode">
-        <el-select v-model="dataForm.materialCode" placeholder="请选择" filterable style="width: 100%">
+        <el-select v-model="dataForm.materialCode" placeholder="请选择" filterable style="width: 100%;">
           <el-option v-for="(sole, index) in this.material" :key="index" :value="sole.materialCode" :label="sole.materialCode+ ' ' + sole.materialName"></el-option>
         </el-select>
       </el-form-item>

@@ -14,20 +14,20 @@
                 {{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}
               </span>
             </div> -->
-            <div style="float:right; line-height:31px;font-size: 14px">
-              <div style="float:left">
+            <div style="float: right; line-height: 31px; font-size: 14px;">
+              <div style="float: left;">
                 <span class="point" :style="{'background': orderStatus === 'noPass'? 'red': '#7ED321'}"></span>订单状态：
               </div>
               <span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
             </div>
           </el-col>
         </el-row>
-        <el-row style="text-align:right; position:absolute; right:8px; top:90px; z-index:1000;" class="buttonCss">
-          <template style="float:right; margin-left: 10px;">
+        <el-row style="text-align: right; position: absolute; right: 8px; top: 90px; z-index: 1000;" class="buttonCss">
+          <template style="float: right; margin-left: 10px;">
             <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-FryWheat-index'})">返回</el-button>
             <el-button type="primary" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('sys:whtPwMaterial:update')">{{isRedact?'取消':'编辑'}}</el-button>
           </template>
-          <template v-if="isRedact && enableOpt" style="float:right; margin-left: 10px;">
+          <template v-if="isRedact && enableOpt" style="float: right; margin-left: 10px;">
             <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('sys:whtPwMaterial:update')">保存</el-button>
             <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('sys:whtPwMaterial:update')">提交</el-button>
           </template>
@@ -39,7 +39,7 @@
     </div>
     <div class="main">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" id="DaatTtabs" class="NewDaatTtabs"  :before-leave='beforeLeave' type="border-card">
@@ -324,47 +324,46 @@ export default {
 </script>
 
 <style lang="scss">
-#DaatTtabs{
-  h3{
+#DaatTtabs {
+  border-top: 1px solid #e8e8e8;
+  h3 {
     font-size: 16px;
     font-weight: bold;
     float: left;
   }
-  border-top: 1px solid #e8e8e8;
-  span{
-    .el-button{
+  span {
+    .el-button {
       background-color: inherit;
       font-size: 16px;
       padding: 0;
       border: none;
     }
   }
-  .el-tabs__item{
+  .el-tabs__item {
     height: 40px;
     line-height: 40px;
   }
-  table{
-    .el-form-item{
+  table {
+    .el-form-item {
       margin-bottom: 0;
     }
   }
-  .notNull{
+  .notNull {
     color: red;
   }
-  .el-table .warning-row:hover>td{
-    background: #bbbbbb!important;
-    background-color: #bbbbbb!important;
+  .el-table .warning-row > td {
+    background: #bbb !important;
+    background-color: #bbb !important;
   }
-  .el-table .warning-row>td{
-    background: #bbbbbb!important;
-    background-color: #bbbbbb!important;
+  .el-table .warning-row:hover > td {
+    background: #bbb !important;
+    background-color: #bbb !important;
   }
-  // .el-input--small .el-input__inner { height: 22px; line-height: 22px; }
 }
-.required{
+.required {
   position: relative;
   padding-left: 15px;
-  .reqI{
+  .reqI {
     color: red;
     position: absolute;
     left: 0;

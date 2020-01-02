@@ -76,17 +76,19 @@ export default {
 
 </style>
 <style lang="scss">
-  .sapdetail{
-    .el-form--inline .el-form-item__content{
+  .sapdetail {
+    .el-form--inline .el-form-item__content {
       min-width: 155px;
     }
-    .title{
+
+    .title {
       margin-bottom: 10px;
-      border-top: 1px solid #bbbbbb;
-      p{
+      border-top: 1px solid #bbb;
+
+      p {
         line-height: 40px;
         width: 100px;
-        text-align: right
+        text-align: right;
       }
     }
   }

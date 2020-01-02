@@ -7,33 +7,33 @@
             <el-col>
               <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
-                  <el-select v-model="params.factoryId" class="selectwpx" style="width:140px" @change="changeOptions('factory')">
+                  <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="生产车间：">
-                  <el-select v-model="params.workshopId" class="selectwpx" style="width:130px" @change="changeOptions('workshop')">
+                  <el-select v-model="params.workshopId" class="selectwpx" style="width: 130px;" @change="changeOptions('workshop')">
                     <el-option label="请选择" value=""></el-option>
                     <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="制曲日期：" label-width="70px">
-                  <el-date-picker type="date" v-model="params.zqDate" value-format="yyyy-MM-dd" style="width:135px"></el-date-picker>
+                  <el-date-picker type="date" v-model="params.zqDate" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="订单：" label-width="45px">
-                  <el-input type="text" v-model="params.orderNo" clearable style="width:140px"></el-input>
+                  <el-input type="text" v-model="params.orderNo" clearable style="width: 140px;"></el-input>
                 </el-form-item>
                 <el-form-item label="生产状态：" label-width="70px">
-                  <el-select v-model="params.productStatus" class="selectwpx" style="width:140px">
+                  <el-select v-model="params.productStatus" class="selectwpx" style="width: 140px;">
                     <el-option label="正常生产" value="normal"></el-option>
                     <el-option label="无生产" value="abnormal"></el-option>
                   </el-select>
                 </el-form-item>
               </el-form>
             </el-col>
-            <el-col style="width:342px">
-              <el-row class="rowButton" style="margin-top:39px; text-align:right;">
+            <el-col style="width: 342px;">
+              <el-row class="rowButton" style="margin-top: 39px; text-align: right;">
                 <el-button type="primary" size="small" @click="getOrderList()" v-if="isMyAuth">查询</el-button>
                 <template v-if="params.productStatus === 'abnormal'">
                   <el-button v-if="searched && disabled && isAuth('kjm:user:updateUser')" type="primary" size="small" @click="setDisabled(false)">编辑</el-button>
@@ -47,7 +47,7 @@
             </el-col>
           </el-row>
         </el-card>
-        <el-row v-if="params.productStatus === 'normal' && searched" style="margin-top:5px;">
+        <el-row v-if="params.productStatus === 'normal' && searched" style="margin-top: 5px;">
           <el-col>
             <el-row :gutter="32" v-for="(item, index) in orderList" :key="index" v-if="index%3===0">
               <el-col :span="8" v-if="index < orderList.length">
@@ -55,7 +55,7 @@
                   <div class="box-item-top">
                     <div class="box-item-title">
                       <div class="box-item-title-name"><div>{{orderList[index].houseNo}}</div><div>{{orderList[index].inPotNoName}}</div></div>
-                      <div :class="orderList[index].status==='不通过' ? 'box-item-title-state-nopass':'box-item-title-state'"><label style='color:rgba(0,0,0,0.65)'>状态：</label>{{orderList[index].status}}</div>
+                      <div :class="orderList[index].status==='不通过' ? 'box-item-title-state-nopass':'box-item-title-state'"><label style='color: rgba(0, 0, 0, 0.65);'>状态：</label>{{orderList[index].status}}</div>
                     </div>
                     <div class="box-item-container">
                       <div class="box-item-container-left">
@@ -88,8 +88,8 @@
                 <div class="box-item">
                   <div class="box-item-top">
                     <div class="box-item-title">
-                      <div class="box-item-title-name"><div style="background:#5BD171">{{orderList[index + 1].houseNo}}</div><div>{{orderList[index + 1].inPotNoName}}</div></div>
-                      <div :class="orderList[index + 1].status==='不通过' ? 'box-item-title-state-nopass':'box-item-title-state'"><label style='color:rgba(0,0,0,0.65)'>状态：</label>{{orderList[index + 1].status}}</div>
+                      <div class="box-item-title-name"><div style="background: #5bd171;">{{orderList[index + 1].houseNo}}</div><div>{{orderList[index + 1].inPotNoName}}</div></div>
+                      <div :class="orderList[index + 1].status==='不通过' ? 'box-item-title-state-nopass':'box-item-title-state'"><label style='color: rgba(0, 0, 0, 0.65);'>状态：</label>{{orderList[index + 1].status}}</div>
                     </div>
                     <div class="box-item-container">
                       <div class="box-item-container-left">
@@ -122,8 +122,8 @@
                 <div class="box-item">
                   <div class="box-item-top">
                     <div class="box-item-title">
-                      <div class="box-item-title-name"><div style="background:#2C92F6">{{orderList[index + 2].houseNo}}</div><div>{{orderList[index + 2].inPotNoName}}</div></div>
-                      <div :class="orderList[index + 2].status==='不通过' ? 'box-item-title-state-nopass':'box-item-title-state'"><label style='color:rgba(0,0,0,0.65)'>状态：</label>{{orderList[index + 2].status}}</div>
+                      <div class="box-item-title-name"><div style="background: #2c92f6;">{{orderList[index + 2].houseNo}}</div><div>{{orderList[index + 2].inPotNoName}}</div></div>
+                      <div :class="orderList[index + 2].status==='不通过' ? 'box-item-title-state-nopass':'box-item-title-state'"><label style='color: rgba(0, 0, 0, 0.65);'>状态：</label>{{orderList[index + 2].status}}</div>
                     </div>
                     <div class="box-item-container">
                       <div class="box-item-container-left">
@@ -155,8 +155,8 @@
             </el-row>
           </el-col>
         </el-row>
-        <el-row v-show="params.productStatus === 'abnormal' && searched" style="margin-top:5px;">
-          <div style="min-height:340px">
+        <el-row v-show="params.productStatus === 'abnormal' && searched" style="margin-top: 5px;">
+          <div style="min-height: 340px;">
           <el-table border  header-row-class-name="tableHead" :data="datalist">
             <!-- <el-table-column label="序号" width="50" prop="id" type="index"></el-table-column> -->
             <el-table-column label="中/白/夜班" prop="classType" width="100">
@@ -183,14 +183,14 @@
             <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true" width="200">
               <template slot-scope="scope">
                 <el-col>
-                  <span v-if="!disabled" style="cursor:pointer" @click="selectUser(scope.row)">
+                  <span v-if="!disabled" style="cursor: pointer;" @click="selectUser(scope.row)">
                     <i v-if="scope.row.userId!== undefined">{{scope.row.userId.join(",")}}</i>
                     <span>
                       <i v-if="scope.row.userType === '临时工'">点击输入临时工</i>
                       <i v-else>点击选择人员</i>
                     </span>
                   </span>
-                  <span v-else style="cursor:pointer">
+                  <span v-else style="cursor: pointer;">
                     <i v-if="scope.row.userId!== undefined">{{scope.row.userId.join(",")}}</i>
                     <span>
                       <i v-if="scope.row.userType === '临时工'">点击输入临时工</i>
@@ -202,7 +202,7 @@
             </el-table-column>
             <el-table-column label="开始时间" prop="startDate" width="190">
               <template slot-scope="scope">
-                <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width:175px" :disabled="disabled"></el-date-picker>
+                <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="disabled"></el-date-picker>
               </template>
             </el-table-column>
             <el-table-column label="用餐时间" prop="dinner" width="100">
@@ -212,7 +212,7 @@
             </el-table-column>
             <el-table-column label="结束时间" prop="endDate" width="190">
               <template slot-scope="scope">
-                <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width:175px" :disabled="disabled"></el-date-picker>
+                <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="disabled"></el-date-picker>
               </template>
             </el-table-column>
             <el-table-column label="备注" prop="remark" width="150px">
@@ -227,7 +227,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-row style="font-size:14px;line-height:30px;margin-top:10px">
+          <el-row style="font-size: 14px; line-height: 30px; margin-top: 10px;">
             实际作业人数: {{countMan}}
           </el-row>
           </div>
@@ -694,176 +694,182 @@ export default class Index extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-@import '@/assets/scss/_common.scss';
+@import "@/assets/scss/_common.scss";
 </style>
 <style lang="scss" scoped>
-  .box-item{
-    height:220px;
-    box-sizing:border-box;
-    background:rgba(255,255,255,1);
-    border-radius:2px;
-    border:1px solid rgba(232,232,232,1);
-    .box-item-top{
-      height:178px;
-      padding:10px 10px;
-      padding-bottom:0px;
-      border-bottom: 1px solid rgba(232,232,232,1);
-      .box-item-title{
-        display:flex;
-        justify-content:space-between;
-        flex:1;
-        height:34px;
-        .box-item-title-name{
-          display:flex;
-          flex:1;
-          :first-child{
-            height:30px;
-            width:30px;
-            border-radius:15px;
-            background:#FFBF00;
-            font-size:12px;
-            font-weight:500;
-            color:#fff;
-            line-height:30px;
-            text-align:center;
-          }
-          :nth-child(2){
-            font-size:16px;
-            font-weight:400;
-            color:rgba(0,0,0,0.85);
-            line-height:22px;
-            margin-top:4px;
-            margin-left:5px;
-          }
+.box-item {
+  height: 220px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 2px;
+  border: 1px solid rgba(232, 232, 232, 1);
+  .box-item-top {
+    height: 178px;
+    padding: 10px 10px;
+    padding-bottom: 0;
+    border-bottom: 1px solid rgba(232, 232, 232, 1);
+    .box-item-title {
+      display: flex;
+      justify-content: space-between;
+      flex: 1;
+      height: 34px;
+      .box-item-title-name {
+        display: flex;
+        flex: 1;
+        :first-child {
+          height: 30px;
+          width: 30px;
+          border-radius: 15px;
+          background: #ffbf00;
+          font-size: 12px;
+          font-weight: 500;
+          color: #fff;
+          line-height: 30px;
+          text-align: center;
         }
-        .box-item-title-state{
-          flex:1;
-          font-size:14px;
-          font-weight:500;
-          color:rgba(0,0,0,0.65);
-          line-height:20px;
-          text-align:right;
-          margin-top:4px;
-          &:before{
-            content:'';
-            display: inline-block;
-            height:6px;
-            width:6px;
-            margin-right:10px;
-            margin-bottom:2px;
-            background:rgba(126,211,33,1)
-          }
-        }
-        .box-item-title-state-nopass{
-          flex:1;
-          font-size:14px;
-          font-weight:500;
-          color:red;
-          line-height:20px;
-          text-align:right;
-          margin-top:4px;
-          &:before{
-            content:'';
-            display: inline-block;
-            height:6px;
-            width:6px;
-            margin-right:10px;
-            margin-bottom:2px;
-            background:red
-          }
+        :nth-child(2) {
+          font-size: 16px;
+          font-weight: 400;
+          color: rgba(0, 0, 0, 0.85);
+          line-height: 22px;
+          margin-top: 4px;
+          margin-left: 5px;
         }
       }
-      .box-item-container{
-        display:flex;
-        flex:1;
-        justify-content:space-between;
-        height:129px;
-        .box-item-container-left{
-          display:flex;
-          justify-content:center;
-          width:130px;
-          padding-top:10px;
-          .box-item-container-img{
-            width:94px;
-            height:86px;
-            background: url('~@/assets/img/fajiaoguan.png')
-          }
+      .box-item-title-state {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.65);
+        line-height: 20px;
+        text-align: right;
+        margin-top: 4px;
+        &::before {
+          content: "";
+          display: inline-block;
+          height: 6px;
+          width: 6px;
+          margin-right: 10px;
+          margin-bottom: 2px;
+          background: rgba(126, 211, 33, 1);
         }
-        .box-item-container-right{
-          flex:1;
-          display:flex;
-          flex-direction:column;
-          margin-left:10px;
-          .box-item-container-item{
-            flex:1;
-            display:flex;
-            justify-content:space-between;
-            .name{
-              width:60px;
-              font-size:12px;
-              font-weight:400;
-              color:rgba(0,0,0,0.45);
-              line-height:20px;
-            }
-            .detail{
-              flex:1;
-              font-size:14px;
-              font-weight:500;
-              color:rgba(0,0,0,0.65);
-              line-height:17px;
-              overflow:hidden;
-              text-overflow:ellipsis;
-              white-space:nowrap;
-            }
-          }
+      }
+      .box-item-title-state-nopass {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 500;
+        color: red;
+        line-height: 20px;
+        text-align: right;
+        margin-top: 4px;
+        &::before {
+          content: "";
+          display: inline-block;
+          height: 6px;
+          width: 6px;
+          margin-right: 10px;
+          margin-bottom: 2px;
+          background: red;
         }
       }
     }
-    .box-item-bottom{
-      height:40px;
-      box-sizing:border-box;
-      display:flex;
-      justify-content:space-between;
-      background:rgba(247,249,250,1);
-      border-radius:0px 0px 2px 2px;
-      .box-item-bottom-item{
-        flex:1;
-        text-align:center;
-        line-height:40px;
-        font-size:12px;
-        font-weight:500;
-        color:rgba(0,0,0,0.65);
-        &:hover{
-          color:#fff;
-          background:#1890FF;
-          cursor:pointer
+    .box-item-container {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      height: 129px;
+      .box-item-container-left {
+        display: flex;
+        justify-content: center;
+        width: 130px;
+        padding-top: 10px;
+        .box-item-container-img {
+          width: 94px;
+          height: 86px;
+          background: url("~@/assets/img/fajiaoguan.png");
         }
       }
-      .box-item-bottom-split{
-        width:1px;
-        height:16px;
-        background:rgba(232,232,232,1);
-        margin-top:12px;
+      .box-item-container-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        .box-item-container-item {
+          flex: 1;
+          display: flex;
+          justify-content: space-between;
+          .name {
+            width: 60px;
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.45);
+            line-height: 20px;
+          }
+          .detail {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.65);
+            line-height: 17px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
       }
     }
   }
-  .rowButton{
-    button{
-      margin: 0px 3px!important;
+  .box-item-bottom {
+    height: 40px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    background: rgba(247, 249, 250, 1);
+    border-radius: 0 0 2px 2px;
+    .box-item-bottom-item {
+      flex: 1;
+      text-align: center;
+      line-height: 40px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.65);
+      &:hover {
+        color: #fff;
+        background: #1890ff;
+        cursor: pointer;
+      }
+    }
+    .box-item-bottom-split {
+      width: 1px;
+      height: 16px;
+      background: rgba(232, 232, 232, 1);
+      margin-top: 12px;
     }
   }
-.box-card{
-  .pro-line { border-bottom: 1px solid #dcdfe6; }
-  .pro-line p { color: red; font-size: 16px; letter-spacing: .1em; }
-  b{
+}
+.rowButton {
+  button {
+    margin: 0 3px !important;
+  }
+}
+.box-card {
+  .pro-line {
+    border-bottom: 1px solid #dcdfe6;
+  }
+  .pro-line p {
+    color: red;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+  }
+  b {
     font-size: 16px;
     line-height: 32px;
     float: left;
   }
-  .item{
+  .item {
     margin-top: 20px;
     display: flex;
-    img{
+    img {
       float: left;
       width: 220px;
       height: 220px;
@@ -871,13 +877,15 @@ export default class Index extends Vue {
       border: 1px solid #dcdfe6;
       margin-right: 20px;
     }
-    .itemForm{
+    .itemForm {
       flex: 1;
-      p{
+      p {
         color: #8a979e;
       }
     }
-    .margb20px{margin-bottom: 10px}
+    .margb20px {
+      margin-bottom: 10px;
+    }
   }
 }
 .el-row {

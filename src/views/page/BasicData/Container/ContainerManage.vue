@@ -10,7 +10,7 @@
         <el-card>
           <h3>容器管理列表</h3>
           <el-row type="flex">
-            <el-col class="header_main" style="margin-bottom:10px">
+            <el-col class="header_main" style="margin-bottom: 10px;">
               <el-form :inline="true" :model="form" size="small" label-width="70px" class="multi_row" @keyup.enter.native="qurery()" @submit.native.prevent>
                 <el-form-item label="归属工厂：" >
                   <el-select v-model="form.factory" placeholder="请选择">
@@ -52,7 +52,7 @@
               :data="list"
               border
               tooltip-effect="dark"
-              style="width: 100%;margin-bottom: 20px">
+              style="width: 100%; margin-bottom: 20px;">
               <el-table-column
                 type="selection"
                 width="34">
@@ -298,17 +298,17 @@ export default {
 
 </style>
 <style lang="scss">
-.main{
-  h3{
+.main {
+  h3 {
     font-size: 16px;
     font-weight: bold;
     line-height: 38px;
     margin-bottom: 10px;
   }
 }
-.topforms1{
-  input{
-    width: 140px!important;
+.topforms1 {
+  input {
+    width: 140px !important;
   }
 }
 </style>

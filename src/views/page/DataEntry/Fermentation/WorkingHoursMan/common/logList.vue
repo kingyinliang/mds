@@ -21,6 +21,8 @@ export default {
 }
 </script>
 
-<style lang="less">
-.selectwidth {width:170px}
+<style lang="scss">
+.selectwidth {
+  width: 170px;
+}
 </style>

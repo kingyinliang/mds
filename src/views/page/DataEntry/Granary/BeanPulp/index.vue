@@ -17,7 +17,7 @@
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col :span="2" style="display:flex;align-items:flex-end;justify-content:flex-end">
+          <el-col :span="2" style="display: flex; align-items: flex-end; justify-content: flex-end;">
             <el-button type="primary" size="small" @click="getOrderList()" :disabled="plantList.factoryIDValue==='' && plantList.workshopIDValue==='' || workshopList.length === 0">查询</el-button>
           </el-col>
         </el-row>
@@ -29,7 +29,7 @@
           <el-col :span="12" v-for="(item, index) in dataList" :key="index">
             <el-card class="card-item">
               <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span></div>
-              <div style="display: flex">
+              <div style="display: flex;">
                 <div class="card-item_img">
                   <div class="card-item_img_box">
                     <div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.stocks) / (item.holderHold*1), 100)}%`}"></div>
@@ -37,15 +37,15 @@
                   <img src="@/assets/img/granary.png" alt="">
                 </div>
                 <div class="card-item_text">
-                  <el-card style="margin-top: 25px">
-                    <div slot="header">库存明细 <span style="float: right">合计：{{sumBatch(item.stocks).toLocaleString()}} KG</span></div>
+                  <el-card style="margin-top: 25px;">
+                    <div slot="header">库存明细 <span style="float: right;">合计：{{sumBatch(item.stocks).toLocaleString()}} KG</span></div>
                     <el-table
                       :data="item.stocks"
                       stripe
                       size="medium"
                       height="200"
                       min-width="300"
-                      style="width: 100%">
+                      style="width: 100%;">
                       <el-table-column
                         prop="batch"
                         label="批次"
@@ -251,40 +251,38 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/_common.scss';
-@import '@/assets/scss/_share.scss';
-.granary-bean-pulp{
-  .area-to-bottom{
+@import "@/assets/scss/_common.scss";
+@import "@/assets/scss/_share.scss";
+.granary-bean-pulp {
+  .area-to-bottom {
     min-height: calc(82vh);
   }
-  .granary-bean-pulp__body{
-    .el-col-12{
+  .granary-bean-pulp__body {
+    .el-col-12 {
       margin-bottom: 10px;
     }
   }
-  .card-item_detail{
-    &::after{
-      content: " >>"
+  .card-item_detail {
+    float: right;
+    cursor: pointer;
+    color: #1890ff;
+    &::after {
+      content: " >>";
     }
   }
-  .card-item{
-    .el-card__header{
+  .card-item {
+    .el-card__header {
       padding: 15px 20px;
       font-size: 16px;
       color: #666;
     }
-    &_detail{
-      float: right;
-      cursor: pointer;
-      color: #1890FF;
-    }
-    &_img{
+    &_img {
       width: 250px;
       position: relative;
-      img{
+      img {
         width: 250px;
       }
-      &_box{
+      &_box {
         width: 89px;
         height: 161px;
         position: absolute;
@@ -293,14 +291,15 @@ export default {
         display: flex;
         flex-wrap: wrap;
         align-content: flex-end;
-        &_bg{
+        &_bg {
           flex: 1;
           height: 161px;
           align-items: center;
           position: relative;
-          background: linear-gradient(#35C3FF,#1890FF);
+          background: linear-gradient(#35c3ff, #1890ff);
           overflow: hidden;
-          &::before,&::after{
+          &::before,
+          &::after {
             content: "";
             position: absolute;
             left: 50%;
@@ -320,42 +319,44 @@ export default {
             border-radius: 47%;
           }
         }
-        &:hover &_bg::before,&:hover &_bg::after{
+        &:hover &_bg::before,
+        &:hover &_bg::after {
           animation: roateOne 10s linear infinite;
         }
       }
     }
-    &_text{
+    &_text {
       flex: 1;
-      margin-right:2em;
-      .el-card__header{
+      margin-right: 2em;
+      .el-card__header {
         font-size: 14px;
         padding: 10px 12px;
-        background: #1890FF;
+        background: #1890ff;
         color: white;
       }
-      &_box{
+      &_box {
         position: relative;
         padding-bottom: 6px;
         max-height: 180px;
         overflow: scroll;
-        &_bg1,&_bg2{
+        &_bg1,
+        &_bg2 {
           position: absolute;
           width: 100%;
           height: 20px;
-          background: linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+          background: linear-gradient(rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
           z-index: 999;
         }
-        &_bg2{
+        &_bg2 {
           bottom: 0;
-          background: linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+          background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
         }
       }
       .card-item_text_box::-webkit-scrollbar {
         display: none;
       }
-      &_item{
-        color: #4A4A4A;
+      &_item {
+        color: #4a4a4a;
         font-size: 14px;
         padding-top: 10px;
       }

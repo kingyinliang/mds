@@ -26,29 +26,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.error{
+.error {
   padding: 30px 0;
   width: 790px;
   margin: auto;
   margin-top: 50px;
-  img{
+  img {
     width: 443px;
     height: 340px;
     float: left;
   }
-  .errortxt{
+  .errortxt {
     margin-top: 120px;
     margin-left: 40px;
     width: 300px;
     float: left;
   }
-  h3{
+  h3 {
     text-align: left;
     font-size: 60px;
     font-weight: bold;
     letter-spacing: 5px;
   }
-  p{
+  p {
     text-align: left;
     font-size: 20px;
     color: #8a979e;

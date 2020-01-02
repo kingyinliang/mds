@@ -21,7 +21,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.sh-dialog{
+.sh-dialog {
   position: fixed;
   top: 0;
   right: 0;
@@ -31,11 +31,11 @@ export default {
   margin: 0;
   z-index: 9999;
   background-color: rgba(255, 255, 255, 0.6);
-  &_content{
+  &_content {
     margin: 0 auto 50px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     border-radius: 6px 6px 6px 6px;
-    &_title{
+    &_title {
       padding: 20px;
       background: #1890ff;
     }

@@ -37,26 +37,26 @@
                 <p class="input_bottom">&nbsp;{{this.formHeaders.STATUS}}</p>
               </el-form-item>
               <el-form-item>
-                <span style="color:#606266; float:left; margin-left:5px;" v-if="typeString === '调配'">
+                <span style="color: #606266; float: left; margin-left: 5px;" v-if="typeString === '调配'">
                   计划BL原汁总量（L）：
                 </span>
-                <span style="color:#606266; float:left; margin-left:5px;" v-else>
+                <span style="color: #606266; float: left; margin-left: 5px;" v-else>
                   原汁总量（L）：
                 </span>
-                <p style="float:left" class="input_bottom">{{this.planOutputTotal}}</p>
+                <p style="float: left;" class="input_bottom">{{this.planOutputTotal}}</p>
               </el-form-item>
               <el-form-item label="备注：">
-                <textarea v-model="remark" :disabled="!isRedact" style="width:850px; height:50px; background:rgba(255,255,255,1); border-radius:4px; border:1px solid rgba(217,217,217,1);"></textarea>
+                <textarea v-model="remark" :disabled="!isRedact" style="width: 850px; height: 50px; background: rgba(255, 255, 255, 1); border-radius: 4px; border: 1px solid rgba(217, 217, 217, 1);"></textarea>
               </el-form-item>
             </el-col>
-            <el-col :span="3" style="text-align:right">
-              <div style="width:100%">
+            <el-col :span="3" style="text-align: right;">
+              <div style="width: 100%;">
                 <el-button type="primary" size="small" v-if="isAuth('ste:allocate:allocateOrderSave')" :disabled="(formHeaders.STATUS !== '已保存' && formHeaders.STATUS !== '')" @click="isRedact = !isRedact">{{isRedact === false? '编辑' : '取消'}}</el-button>
-                <el-button type="primary" size="small" @click="ReCall(true)" :disabled="revocation === 1" style="margin-left:5px;">撤回</el-button>
+                <el-button type="primary" size="small" @click="ReCall(true)" :disabled="revocation === 1" style="margin-left: 5px;">撤回</el-button>
               </div>
-              <div v-if="isRedact" style="margin-top:15px">
-                <el-button type="primary" size="small" @click="SaveOrderNo(true)" style="margin-left:0">保存</el-button>
-                <el-button type="primary" size="small" @click="CreateOrder(true)" style="margin-left:5px;">生成</el-button>
+              <div v-if="isRedact" style="margin-top: 15px;">
+                <el-button type="primary" size="small" @click="SaveOrderNo(true)" style="margin-left: 0;">保存</el-button>
+                <el-button type="primary" size="small" @click="CreateOrder(true)" style="margin-left: 5px;">生成</el-button>
               </div>
             </el-col>
           </el-row>
@@ -68,17 +68,17 @@
     </div>
     <div class="main">
       <div class="tableCard">
-        <div class="toggleSearchTop" style="background-color: white;margin-bottom: 8px;position: relative;border-radius: 5px">
+        <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
           <i class="el-icon-caret-bottom"></i>
         </div>
       </div>
       <el-card>
         <el-row>
-          <el-col style="text-align:right">
+          <el-col style="text-align: right;">
             <el-button type="primary" @click="AddOrderNo" size="small" :disabled="!isRedact">新增</el-button>
           </el-col>
         </el-row>
-        <el-table :data="orderList" border header-row-class-name="tableHead" style="margin-top:10px">
+        <el-table :data="orderList" border header-row-class-name="tableHead" style="margin-top: 10px;">
           <el-table-column label="序号" type="index" width="50"></el-table-column>
           <el-table-column label="订单号" prop="orderNo"></el-table-column>
           <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
@@ -100,8 +100,8 @@
         </el-table>
       </el-card>
     </div>
-    <el-dialog :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
-      <div slot="title" style="line-hight:59px">订单分配</div>
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
+      <div slot="title" style="line-height: 59px;">订单分配</div>
       <el-table ref="multipleTable" :data="orderPropList" :row-key="getRowKeys" @selection-change="handleSelectionChange" border header-row-class-name="tableHead">
         <el-table-column type="selection" width="35" :reserve-selection="true" prop="orderNo"></el-table-column>
         <el-table-column label="订单号" prop="orderNo" width="120"></el-table-column>
@@ -117,16 +117,16 @@
         <el-table-column label="生产调度员" prop="dispatchMan" width="120"></el-table-column>
         <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
-      <el-row style="position:relative;">
-        <el-col :span="20" style="text-align:center">
-          <el-pagination style="float:left; width: 960px; text-align:center;" background
+      <el-row style="position: relative;">
+        <el-col :span="20" style="text-align: center;">
+          <el-pagination style="float: left; width: 960px; text-align: center;" background
             layout="prev, pager, next"
             :current-page.sync="pagesForm.currPage"
             :page-size="pagesForm.pageSize"
             :total="pagesForm.totalCount">
           </el-pagination>
         </el-col>
-        <el-col :span="4" style="float:right; margin-top:13px; text-align:right;">
+        <el-col :span="4" style="float: right; margin-top: 13px; text-align: right;">
           <el-button @click="dialogTableVisible = false" size="small">取 消</el-button>
           <el-button type="primary" @click="SaveOderNo()" size="small">确 定</el-button>
         </el-col>
@@ -482,31 +482,32 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
 .input_bottom {
-  width:150px;
-  border-bottom: 1px solid rgba(216,216,216,1);
+  width: 150px;
+  border-bottom: 1px solid rgba(216, 216, 216, 1);
   overflow: hidden;
   height: 33px;
-  white-space:nowrap;
-  text-overflow:ellipsis;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-.dialog__class{
-  border-radius:6px 6px 6px 6px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+.dialog__class {
+  border-radius: 6px 6px 6px 6px !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
 }
 </style>
 <style lang="scss" scoped>
-.el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-  margin-bottom: 8px!important;
+.el-form-item--mini.el-form-item,
+.el-form-item--small.el-form-item {
+  margin-bottom: 8px !important;
 }
 </style>

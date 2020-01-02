@@ -1,19 +1,19 @@
 <template>
   <div class="header_main">
-    <el-card class="searchCard" style="margin-bottom: 5px">
+    <el-card class="searchCard" style="margin-bottom: 5px;">
       <el-row type="flex">
         <el-col>
           <form-head :formHeader="formHeader"></form-head>
         </el-col>
-        <el-col style="width: 100px">
-          <div style="padding-top: 0px;float: right" :style="{'color': orderStatus === 'noPass'? 'red' : '' }"><span style="width: 5px;height: 5px;float: left;background: #1890FF;border-radius: 50%;margin-top: 7px;margin-right: 3px" :style="{'background': orderStatus === 'noPass'? 'red' : '#1890FF' }"></span>{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : '未录入' }}</div>
+        <el-col style="width: 100px;">
+          <div style="padding-top: 0; float: right;" :style="{'color': orderStatus === 'noPass'? 'red' : '' }"><span style="width: 5px; height: 5px; float: left; background: #1890ff; border-radius: 50%; margin-top: 7px; margin-right: 3px;" :style="{'background': orderStatus === 'noPass'? 'red' : '#1890FF' }"></span>{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : '未录入' }}</div>
         </el-col>
       </el-row>
-      <el-row style="text-align:right;position: absolute;bottom:10px;right: 20px;" class="buttonCss">
-        <template style="float:right; margin-left: 10px;">
+      <el-row style="text-align: right; position: absolute; bottom: 10px; right: 20px;" class="buttonCss">
+        <template style="float: right; margin-left: 10px;">
           <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:tec:mySaveOrUpdate')">{{isRedact?'取消':'编辑'}}</el-button>
         </template>
-        <template v-if="isRedact" style="float:right; margin-left: 10px;">
+        <template v-if="isRedact" style="float: right; margin-left: 10px;">
           <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('ste:tec:mySaveOrUpdate')">保存</el-button>
           <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('ste:tec:mySaveOrUpdate')">提交</el-button>
         </template>
@@ -27,43 +27,43 @@
         <el-form :inline="true" size="small" :model="crafData" :rules="dataRule" ref="dataForm" class="topform">
           <!--<el-form-item label="原汁换热介质：" prop="hotMedium" label-width="120px">-->
           <el-form-item label="原汁换热介质：" label-width="120px">
-            <el-checkbox-group v-model="crafData.hotMedium" :disabled="!isRedact" style="width: 170px">
+            <el-checkbox-group v-model="crafData.hotMedium" :disabled="!isRedact" style="width: 170px;">
               <el-checkbox label="热水" name="type"></el-checkbox>
               <el-checkbox label="酱油" name="type"></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="热水温度：" label-width="110px">
-            <el-input v-model="crafData.hotTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px"></el-input>
+            <el-input v-model="crafData.hotTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;"></el-input>
           </el-form-item>
           <el-form-item label="酱油温度：" label-width="80px">
-            <el-input v-model="crafData.sauceTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px"></el-input>
+            <el-input v-model="crafData.sauceTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;"></el-input>
           </el-form-item>
           <el-form-item label="原汁入锅温度：" prop="originalTemp" label-width="120px">
-            <el-input v-model="crafData.originalTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 170px"></el-input>
+            <el-input v-model="crafData.originalTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 170px;"></el-input>
           </el-form-item>
           <el-form-item label="升温开始时间：" prop="upStartTime">
-            <el-date-picker type="datetime" placeholder="选择日期" v-model="crafData.upStartTime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 180px"></el-date-picker>
+            <el-date-picker type="datetime" placeholder="选择日期" v-model="crafData.upStartTime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 180px;"></el-date-picker>
           </el-form-item>
           <!--<el-card class="searchCard  newCard" style="padding: 8px 4px">-->
-          <div style="padding: 8px 12px">
+          <div style="padding: 8px 12px;">
             <el-form-item label="冷却开始时间：" prop="coolingStartTime">
-              <el-date-picker type="datetime" placeholder="选择日期" v-model="crafData.coolingStartTime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 170px"></el-date-picker>
+              <el-date-picker type="datetime" placeholder="选择日期" v-model="crafData.coolingStartTime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 170px;"></el-date-picker>
             </el-form-item>
             <el-form-item label="机械温度：" label-width="108px">
-              <el-input v-model="crafData.mechanicalTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px"></el-input>
+              <el-input v-model="crafData.mechanicalTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;"></el-input>
             </el-form-item>
             <el-form-item label="出料温度：" prop="dischargeTemp">
-              <el-input v-model="crafData.dischargeTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px"></el-input>
+              <el-input v-model="crafData.dischargeTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;"></el-input>
             </el-form-item>
             <el-form-item label="冷却结束时间：" prop="coolingEndTime">
-              <el-date-picker type="datetime" placeholder="选择日期" v-model="crafData.coolingEndTime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 170px"></el-date-picker>
+              <el-date-picker type="datetime" placeholder="选择日期" v-model="crafData.coolingEndTime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 170px;"></el-date-picker>
             </el-form-item>
             <el-form-item label="数显温度：" label-width="108px">
-              <el-input v-model="crafData.displayTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px"></el-input>
+              <el-input v-model="crafData.displayTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;"></el-input>
             </el-form-item>
             <el-row>
               <h3><i class="iconfont factory-shezhi"></i>保温时间及屏显温度</h3>
-              <el-button type="primary" size="small" @click="addresult()" style="float: right" :disabled="!isRedact" >新增</el-button>
+              <el-button type="primary" size="small" @click="addresult()" style="float: right;" :disabled="!isRedact" >新增</el-button>
             </el-row>
             <el-table header-row-class-name="tableHead" :data="crafData.result" :row-class-name="RowDelFlag" border tooltip-effect="dark">
               <el-table-column width="55" label="序号" type="index"></el-table-column>

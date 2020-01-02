@@ -1,6 +1,7 @@
+/* stylelint-disable */
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: border-box;
 }
 body {
@@ -10,17 +11,17 @@ body {
   color: #303133;
   background-color: #fff;
 }
-.main{
+.main {
   padding: 5px 10px;
 }
-.topTitle{
+.topTitle {
   width: 100%;
   background-color: white;
   padding: 16px 20px;
-  .el-breadcrumb__separator{
+  .el-breadcrumb__separator {
     margin: 0 6px;
   }
-  h3{
+  h3 {
     font-size: 20px;
     font-weight: bold;
     margin-top: 20px;
@@ -38,50 +39,62 @@ a {
 img {
   vertical-align: middle;
 }
-.el-loading-mask.is-fullscreen .el-loading-spinner{
+.el-loading-mask.is-fullscreen .el-loading-spinner {
   margin-top: -90px;
 }
-.loadingGif{
+.loadingGif {
   width: 150px;
   height: 75px;
-  background: url('~@/assets/img/loading.gif') no-repeat;
-  background-size:100% 100%;
+  background: url("~@/assets/img/loading.gif") no-repeat;
+  background-size: 100% 100%;
   display: block;
   margin: auto;
   margin-bottom: 15px;
 }
 
 //bass scss
-.searchCard, .tableCard {
+.searchCard,
+.tableCard {
   position: relative;
   .toggleSearchTop {
-    width: 100%; position: absolute; top: 0; left: 0; text-align: center; cursor: pointer; display: none;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    cursor: pointer;
+    display: none;
   }
   .toggleSearchBottom {
-    width: 100%; position: absolute; bottom: 0; left: 0; text-align: center; cursor: pointer;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    cursor: pointer;
   }
-  .el-icon-caret-top:before,
-  .el-icon-caret-bottom:before {
+  .el-icon-caret-top::before,
+  .el-icon-caret-bottom::before {
     color: #dcdfe6;
   }
 }
-.dateinput{
-  .el-form-item__label{
-    width: 70px!important;
+.dateinput {
+  .el-form-item__label {
+    width: 70px !important;
   }
-  .el-form-item__content{
+  .el-form-item__content {
     width: 300px;
   }
 }
 
 /* Utils
 ------------------------------ */
-.clearfix:before,
-.clearfix:after {
+.clearfix::before,
+.clearfix::after {
   content: " ";
   display: table;
 }
-.clearfix:after {
+.clearfix::after {
   clear: both;
 }
 
@@ -90,7 +103,7 @@ img {
 ------------------------------ */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity 0.5s;
 }
 .fade-enter,
 .fade-leave-to {
@@ -100,11 +113,9 @@ img {
 
 /* Reset element-ui
 ------------------------------ */
-.site-wrapper {
-  .el-pagination {
-    margin-top: 15px;
-    text-align: right;
-  }
+.site-wrapper .el-pagination {
+  margin-top: 15px;
+  text-align: right;
 }
 
 
@@ -118,6 +129,18 @@ img {
 
 /* Sidebar fold
 ------------------------------ */
+// animation
+.site-navbar__header,
+.site-navbar__brand,
+.site-navbar__body,
+.site-sidebar,
+.site-sidebar__inner,
+.site-sidebar__menu.el-menu,
+.site-sidebar__menu-icon,
+.site-content__wrapper,
+.site-content--tabs > .el-tabs .el-tabs__header {
+  transition: inline-block 0.3s, left 0.3s, width 0.3s, margin-left 0.3s, font-size 0.3s;
+}
 .site-sidebar--fold {
   .site-navbar__header,
   .site-navbar__brand,
@@ -125,13 +148,31 @@ img {
   .el-menu.site-sidebar__menu {
     width: 64px;
   }
-  .site-sidebar__inner{
+  .site-sidebar__inner {
     width: 84px;
     overflow-y: scroll;
   }
   .site-navbar__body,
   .site-content__wrapper {
     margin-left: 64px;
+  }
+  .site-content__wrapper {
+    height: 100%;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      width: 6px;
+      background: #ebeef5;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background: #ccc;
+      height: 120px;
+    }
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 1);
+    }
   }
   .site-navbar__brand {
     &-lg {
@@ -150,18 +191,7 @@ img {
     left: 64px;
   }
 }
-// animation
-.site-navbar__header,
-.site-navbar__brand,
-.site-navbar__body,
-.site-sidebar,
-.site-sidebar__inner,
-.site-sidebar__menu.el-menu,
-.site-sidebar__menu-icon,
-.site-content__wrapper,
-.site-content--tabs > .el-tabs .el-tabs__header {
-  transition: inline-block .3s, left .3s, width .3s, margin-left .3s, font-size .3s;
-}
+
 
 
 /* Navbar
@@ -173,7 +203,7 @@ img {
   left: 0;
   z-index: 1030;
   height: 32px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   background-color: #002140;
 
   &--inverse {
@@ -204,7 +234,6 @@ img {
       background-color: $navbar--background-color;
     }
   }
-
   &__header {
     background: #002140;
     position: relative;
@@ -307,7 +336,6 @@ img {
   z-index: 1020;
   width: 170px;
   overflow: hidden;
-
   &--dark,
   &--dark-popper {
     background-color: $sidebar--background-color-dark;
@@ -360,7 +388,7 @@ img {
 /* Content
 ------------------------------ */
 .site-content {
-  //position: relative;
+  position: relative;
   padding-bottom: 40px;
   min-height: 558px;
   overflow: hidden;
@@ -373,9 +401,6 @@ img {
     min-height: 100%;
     background: $content--background-color;
   }
-  &--tabs {
-    //padding: 55px 0 0;
-  }
   > .el-tabs {
     > .el-tabs__header {
       position: fixed;
@@ -384,11 +409,11 @@ img {
       right: 0;
       z-index: 930;
       padding: 0 55px 0 15px;
-      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
       background-color: #fff;
       > .el-tabs__nav-wrap {
         margin-bottom: 0;
-        &:after {
+        &::after {
           display: none;
         }
       }
@@ -414,80 +439,84 @@ img {
     }
   }
 }
+
 /* pkg or fry
 ------------------------------ */
-#DaatTtabs,#pkg,.NewDaatTtabs{
-  border-radius: 10px!important;
-  overflow: hidden!important;
-  min-height: 300px!important;
-  .required{
+#DaatTtabs,
+#pkg,
+.NewDaatTtabs {
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  min-height: 300px !important;
+  .required {
     position: relative;
     padding-left: 15px;
-    .reqI{
+    .reqI {
       color: red;
       position: absolute;
       left: 0;
       line-height: 32px;
     }
   }
-  h3{
+  h3 {
     font-size: 16px;
     font-weight: bold;
     float: left;
   }
+
   border-top: 1px solid #e8e8e8;
-  .spanview{
-    .el-button{
+  .spanview {
+    .el-button {
       background-color: white;
       font-size: 16px;
       padding: 0;
       border: none;
     }
   }
-  .el-tabs__item{
+  .el-tabs__item {
     height: 40px;
     line-height: 40px;
   }
-  table{
-    .el-form-item{
+  table {
+    .el-form-item {
       margin-bottom: 0;
     }
   }
-  .notNull{
+  .notNull {
     color: red;
   }
-  .el-card__header{
+  .el-card__header {
     font-size: 14px;
     padding: 13px 20px;
     background-color: #f9f9f9;
     color: black;
     font-weight: bold;
   }
-  .el-card{
+  .el-card {
     margin-bottom: 20px;
   }
-  .el-table .warning-row:hover>td{
-    background: #bbbbbb!important;
-    background-color: #bbbbbb!important;
+  .el-table .warning-row:hover > td {
+    background: #bbb !important;
+    background-color: #bbb !important;
   }
-  .el-table .warning-row>td{
-    background: #bbbbbb!important;
-    background-color: #bbbbbb!important;
+  .el-table .warning-row > td {
+    background: #bbb !important;
+    background-color: #bbb !important;
   }
   // .el-input--small .el-input__inner { height: 22px; line-height: 22px; }
 }
-.newCard{
+.newCard {
   .el-card__body {
-    padding: 7px!important;
+    padding: 7px !important;
   }
-  .el-form-item__label{
+  .el-form-item__label {
     padding: 0;
   }
 }
-.NewDaatTtabs{
-  .spanview{
-    .el-button{
-      background-color: inherit!important;
+.NewDaatTtabs {
+  .spanview {
+    .el-button {
+      background-color: inherit !important;
       font-size: 14px;
       padding: 0;
       border: none;
@@ -497,59 +526,60 @@ img {
 .point {
   width: 5px;
   height: 5px;
-  float:left;
+  float: left;
   border-radius: 50%;
   display: block;
   line-height: 16px;
-  margin-top:14px;
+  margin-top: 14px;
   margin-right: 8px;
 }
-.buttonCss{
-  .el-button--primary,.el-button--primary:focus{
-    color: #000000;
-    background-color: #FFFFFF;
-    border-color: #D9D9D9;
+.buttonCss {
+  .el-button--primary,
+  .el-button--primary:focus {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
   }
-  .el-button--primary:hover{
-    background-color: #1890FF;
-    color: #FFFFFF
+  .el-button--primary:hover {
+    background-color: #1890ff;
+    color: #fff;
   }
-  .el-button--primary:first-child{
-    background-color: #1890FF;
-    color: #FFFFFF;
-    border-color: #1890FF;
+  .el-button--primary:first-child {
+    background-color: #1890ff;
+    color: #fff;
+    border-color: #1890ff;
   }
 }
 .el-input.is-disabled .el-input__inner {
   color: #606266 !important;
 }
-.dataList{
-  &_item{
-    .el-card__body{
+.dataList {
+  &_item {
+    .el-card__body {
       padding: 0;
     }
-    &_btn{
-      background: #F7F9FA;
+    &_btn {
+      background: #f7f9fa;
       //text-align: center;
       //color: #333333;
       //font-size: 14px;
       //padding: 14px 0 10px 0;
-      &_item{
-        flex:1;
-        text-align:center;
-        line-height:40px;
-        font-size:12px;
-        font-weight:500;
-        color:rgba(0,0,0,0.65);
-        &:hover{
-          color:#fff;
-          background:#1890FF;
-          cursor:pointer
+      &_item {
+        flex: 1;
+        text-align: center;
+        line-height: 40px;
+        font-size: 12px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.65);
+        &:hover {
+          color: #fff;
+          background: #1890ff;
+          cursor: pointer;
         }
-        &_bor{
+        &_bor {
           float: left;
           margin-top: 14px;
-          background: #cccccc;
+          background: #ccc;
           width: 1px;
           height: 12px;
         }
@@ -559,34 +589,36 @@ img {
     }
   }
 }
-.ShinHoDialog{
-  .el-dialog{
+.ShinHoDialog {
+  .el-dialog {
     border-radius: 10px 10px 0 0;
   }
-  .el-dialog__header{
+  .el-dialog__header {
     border-radius: 10px 10px 0 0;
     background: #3a8ee6;
-    span,button,i{
-      color: white!important;
+    span,
+    button,
+    i {
+      color: white !important;
     }
   }
 }
 // 弹框title样式
-.dialog__class{
-  border-radius:6px 6px 6px 6px !important;
-  .el-dialog__header{
-    height:59px;
-    background:rgba(24,144,255,1);
-    border-radius:6px 6px 0px 0px;
+.dialog__class {
+  border-radius: 6px 6px 6px 6px !important;
+  .el-dialog__header {
+    height: 59px;
+    background: rgba(24, 144, 255, 1);
+    border-radius: 6px 6px 0 0;
     color: #fff;
-    font-size:20px;
-    .el-dialog__headerbtn .el-dialog__close{
-      color: #fff
+    font-size: 20px;
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
     }
   }
 }
-.ra_btn{
-  padding: 7px!important;
+.ra_btn {
+  padding: 7px !important;
 }
 // .searchCard {
 //   .el-button--primary,.el-button--primary:focus{
@@ -609,27 +641,28 @@ img {
 //     border-color: #a0cfff;
 //   }
 // }
-.marbottom{
-  .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-    margin-bottom: 7px!important;
+.marbottom {
+  .el-form-item--mini.el-form-item,
+  .el-form-item--small.el-form-item {
+    margin-bottom: 7px !important;
   }
 }
-.input_bottom{
-  width: 145px!important;
+.input_bottom {
+  width: 145px !important;
   border-bottom: 1px solid #d8d8d8;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 32px;
 }
-.delBtn{
+.delBtn {
   color: red;
 }
 
 // .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
 //   margin-bottom: 7px!important;
 // }
-.header_main{
+.header_main {
   padding: 10px;
   .searchCard .el-card__body {
     padding: 7px !important;
@@ -638,39 +671,53 @@ img {
     padding: 0;
   }
   // header 多行
-  .multi_row{
-    .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-      margin-bottom: 7px!important;
+  .multi_row {
+    .el-form-item--mini.el-form-item,
+    .el-form-item--small.el-form-item {
+      margin-bottom: 7px !important;
     }
   }
   // header 单行
-  .sole_row{
-    .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
-      margin-bottom: 0px!important;
+  .sole_row {
+    .el-form-item--mini.el-form-item,
+    .el-form-item--small.el-form-item {
+      margin-bottom: 0 !important;
     }
   }
-  .floatr {margin-right:0; text-align:right}
+  .floatr { margin-right: 0; text-align: right; }
 }
+
 /*********  按钮 start  *********/
-.el-button--primary,.el-button--primary:focus{
-  color: #000000;
-  background-color: #FFFFFF;
-  border-color: #D9D9D9;
+.el-button--primary,
+.el-button--primary:focus {
+  color: #000;
+  background-color: #fff;
+  border-color: #d9d9d9;
 }
-.el-button--primary:hover{
-  background-color: #1890FF;
-  color: #FFFFFF
+.el-button--primary:hover {
+  background-color: #1890ff;
+  color: #fff;
 }
-.el-button--primary:first-child{
-  background-color: #1890FF;
-  color: #FFFFFF;
-  border-color: #1890FF;
+.el-button--primary:first-child {
+  background-color: #1890ff;
+  color: #fff;
+  border-color: #1890ff;
 }
-.el-button--primary.is-disabled{
+.el-button--primary.is-disabled {
   color: #fff;
   background-color: #a0cfff;
   border-color: #a0cfff;
 }
+
 /*********  按钮 end  *********/
-.button_two_goup {margin-top:39px; text-align:right;}
-.button_three_goup {text-align: right; position: absolute; right: 8px; top: 90px; z-index: 1000;}
+.button_two_goup {
+  margin-top: 39px;
+  text-align: right;
+}
+.button_three_goup {
+  text-align: right;
+  position: absolute;
+  right: 8px;
+  top: 90px;
+  z-index: 1000;
+}

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="clearfix">
-      <el-button type="primary" @click="AddWorkerDate(WorkerDate)" size="small" :disabled="!isRedact" style="float: right">新增</el-button>
+      <el-button type="primary" @click="AddWorkerDate(WorkerDate)" size="small" :disabled="!isRedact" style="float: right;">新增</el-button>
     </div>
     <el-table header-row-class-name="tableHead" :data="WorkerDate" border tooltip-effect="dark">
       <el-table-column type="index" width="55" label="序号"></el-table-column>
@@ -38,15 +38,15 @@
           <span>人员选择</span>
         </template>
         <template slot-scope="scope">
-          <div class="required" style="min-height: 32px">
-            <span v-if="!isRedact" style="cursor: pointer">
+          <div class="required" style="min-height: 32px;">
+            <span v-if="!isRedact" style="cursor: pointer;">
               <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
             </span>
-            <span style="cursor: pointer" @click="selectUser(scope.row)" v-if="isRedact && scope.row.userType !=='临时工'">
+            <span style="cursor: pointer;" @click="selectUser(scope.row)" v-if="isRedact && scope.row.userType !=='临时工'">
               <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
               <i>点击选择人员</i>
             </span>
-            <span style="cursor: pointer" @click="dayLaborer(scope.row)" v-if="scope.row.userType=='临时工' && isRedact">
+            <span style="cursor: pointer;" @click="dayLaborer(scope.row)" v-if="scope.row.userType=='临时工' && isRedact">
               <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
               <i>点击输入临时工</i>
             </span>
@@ -84,9 +84,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <p style="font-size: 14px;line-height: 62px">实际作业人数：{{countMan}}</p>
+    <p style="font-size: 14px; line-height: 62px;">实际作业人数：{{countMan}}</p>
     <div v-if="att">
-      <h3 style="line-height: 32px;font-size: 16px">产量考勤分配</h3>
+      <h3 style="line-height: 32px; font-size: 16px;">产量考勤分配</h3>
       <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="Attendance" border tooltip-effect="dark">
         <el-table-column label="班组" width="60">
           <template slot-scope="scope">{{scope.row.itemName}}</template>
@@ -108,7 +108,7 @@
         </el-table-column>
         <el-table-column label="包装品项">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.materialCode" filterable placeholder="请选择" size="mini" style="width: 100%" @change="selectMaterial(scope.row)" :disabled="!isRedact">
+            <el-select v-model="scope.row.materialCode" filterable placeholder="请选择" size="mini" style="width: 100%;" @change="selectMaterial(scope.row)" :disabled="!isRedact">
               <el-option label="请选择"  value=""></el-option>
               <el-option :label="item.materialCode + ' ' + item.materialName" v-for="(item, index) in Materails" :key="index" :value="item.materialCode"></el-option>
             </el-select>
