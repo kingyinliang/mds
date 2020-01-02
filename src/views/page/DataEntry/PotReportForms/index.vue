@@ -47,12 +47,12 @@
       <span slot="label" class="spanview">半成品库存汇总</span>
       <div class="titleLeft">
         <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>半成品库存汇总
-        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
+        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:steStock')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
       </div>
-      <el-table :data="tableData3Top" :cell-style="cellStyle1" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-bottom: 10px;">
+      <el-table :data="tableData3Top" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-bottom: 10px;">
         <el-table-column v-for="(item, index) in column1" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
-      <el-table :data="tableData3Bottom" :cell-style="cellStyle2" header-row-class-name="tableHead" border tooltip-effect="dark">
+      <el-table :data="tableData3Bottom" header-row-class-name="tableHead" border tooltip-effect="dark">
         <el-table-column v-for="(item, index) in column2" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
     </el-tab-pane>
@@ -60,9 +60,9 @@
       <span slot="label" class="spanview">成品库存汇总</span>
       <div class="titleLeft">
         <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;"></i>成品库存汇总
-        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:reportFormExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
+        <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('ste:semi:steStock')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
       </div>
-      <el-table :data="tableData4" :cell-style="cellStyle3" header-row-class-name="tableHead" border tooltip-effect="dark">
+      <el-table :data="tableData4" header-row-class-name="tableHead" border tooltip-effect="dark">
         <el-table-column v-for="(item, index) in column3" :class="{bg: item.classSt}" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
     </el-tab-pane>
@@ -299,27 +299,6 @@ export default {
     })
   },
   methods: {
-    cellStyle1 ({row, column, rowIndex, columnIndex}) {
-      if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
-        return '' // return 'background: #d9d9d9;'
-      } else {
-        return ''
-      }
-    },
-    cellStyle2 ({row, column, rowIndex, columnIndex}) {
-      if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5 || columnIndex === 6) {
-        return '' // return 'background: #d9d9d9;'
-      } else {
-        return ''
-      }
-    },
-    cellStyle3 ({row, column, rowIndex, columnIndex}) {
-      if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
-        return '' // return 'background: #d9d9d9;'
-      } else {
-        return ''
-      }
-    },
     setType (tab, event) {
       if (this.activeName === '1') {
         this.$store.state.common.PotReportForms.type = 'steHolder'
@@ -338,27 +317,31 @@ export default {
       }
     },
     GetDataList () {
-      this.$http(`${POTREPORTFORMS_API.POTREPORTFORMS_LIST}`, 'POST', this.plantList).then(({data}) => {
-        if (data.code === 0) {
-          this.sumTableData1 = data.returnMap.steHolder
-          this.sumTableData2 = data.returnMap.filterHolder
-          this.queryForm1.totalCount = data.returnMap.steHolder.length
-          this.queryForm2.totalCount = data.returnMap.filterHolder.length
-          this.tableData1 = data.returnMap.steHolder.slice((this.queryForm1.currPage - 1) * this.queryForm1.pageSize, (this.queryForm1.currPage - 1) * this.queryForm1.pageSize + this.queryForm1.pageSize)
-          this.tableData2 = data.returnMap.filterHolder.slice((this.queryForm2.currPage - 1) * this.queryForm2.pageSize, (this.queryForm2.currPage - 1) * this.queryForm2.pageSize + this.queryForm2.pageSize)
-        } else {
-          this.$notify.error({title: '错误', message: data.msg})
-        }
-      })
-      this.$http(`${POTREPORTFORMS_API.POTREPORTFORMS_STOCK_LIST}`, 'POST', this.plantList).then(({data}) => {
-        if (data.code === 0) {
-          this.tableData3Top = data.steStork.steHolder.steStork
-          this.tableData3Bottom = data.steStork.steHolder.steHsStork
-          this.tableData4 = data.steStork.filterHolder
-        } else {
-          this.$notify.error({title: '错误', message: data.msg})
-        }
-      })
+      if (this.isAuth('ste:semi:reportForm')) {
+        this.$http(`${POTREPORTFORMS_API.POTREPORTFORMS_LIST}`, 'POST', this.plantList).then(({data}) => {
+          if (data.code === 0) {
+            this.sumTableData1 = data.returnMap.steHolder
+            this.sumTableData2 = data.returnMap.filterHolder
+            this.queryForm1.totalCount = data.returnMap.steHolder.length
+            this.queryForm2.totalCount = data.returnMap.filterHolder.length
+            this.tableData1 = data.returnMap.steHolder.slice((this.queryForm1.currPage - 1) * this.queryForm1.pageSize, (this.queryForm1.currPage - 1) * this.queryForm1.pageSize + this.queryForm1.pageSize)
+            this.tableData2 = data.returnMap.filterHolder.slice((this.queryForm2.currPage - 1) * this.queryForm2.pageSize, (this.queryForm2.currPage - 1) * this.queryForm2.pageSize + this.queryForm2.pageSize)
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
+      }
+      if (this.isAuth('ste:semi:steStock')) {
+        this.$http(`${POTREPORTFORMS_API.POTREPORTFORMS_STOCK_LIST}`, 'POST', this.plantList).then(({data}) => {
+          if (data.code === 0) {
+            this.tableData3Top = data.steStork.steHolder.steStork
+            this.tableData3Bottom = data.steStork.steHolder.steHsStork
+            this.tableData4 = data.steStork.filterHolder
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
+      }
     },
     ExportExcelB () {
       exportFile(`${POTREPORTFORMS_API.POTREPORTFORMS_OUT}`, '罐区报表', this)
