@@ -463,11 +463,11 @@ export default {
               this.$warning_SHINHO('批次必填')
               return false
             }
-          }
-          if (item.batch.length !== 10) {
-            ty = false
-            this.$warning_SHINHO('批次长度限制10位')
-            return false
+            if (item.batch.length !== 10) {
+              ty = false
+              this.$warning_SHINHO('批次长度限制10位')
+              return false
+            }
           }
           if (!item.receiveAmount) {
             ty = false
@@ -475,10 +475,12 @@ export default {
             return false
           }
           if (!st) {
-            if (item.addStatus !== '已添加') {
-              ty = false
-              this.$warning_SHINHO('有未添加完成的物料，无法提交！')
-              return false
+            if (item.adjustAmount === '0' || item.adjustAmount === 0) {} else {
+              if (item.addStatus !== '已添加') {
+                ty = false
+                this.$warning_SHINHO('有未添加完成的物料，无法提交！')
+                return false
+              }
             }
             // if (item.supStatus !== '已确认') {
             //   ty = false
