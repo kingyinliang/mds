@@ -127,7 +127,7 @@
       </el-card>
     </div>
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">{{this.judge.holderNo}} 类别判定</div>
+      <div slot="title">类别判定</div>
       <el-form :model="judge" size="small" label-width="130px" :rules="judgerules" ref="judge">
         <el-form-item label="订单编号：">{{this.judge.ferOrderNo}}</el-form-item>
         <el-form-item label="物料：">{{this.judge.ferMaterialCode}}{{this.judge.ferMaterialName}}</el-form-item>
@@ -345,6 +345,7 @@ export default {
         defaulthalfId = this.materialTypeList.find(item => item.halfName === '味极鲜').id
       }
       this.judge = {
+        id: row.judge.id,
         factory: this.form.factory,
         workShop: this.form.workShop,
         frozenStatus: row.judge ? row.judge.frozenStatus : '0',
@@ -378,6 +379,7 @@ export default {
           this.dialogVisible = false
           this.$http(`${FERMENTATION_API.CATEGORYJUDGEMENTTODO_API}`, 'POST', this.judge).then(({data}) => {
             if (data.code === 0) {
+              this.$success_SHINHO('调整成功')
               this.GetList()
             } else {
               this.$notify.error({title: '错误', message: data.msg})
