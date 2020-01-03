@@ -21,7 +21,6 @@
           <el-form-item label="生产订单：">
             <el-input type="text" v-model="plantList.orderNo" clearable style="width: 140px;"></el-input>
           </el-form-item>
-          <br/>
           <el-form-item label="生产状态：">
             <el-select v-model="plantList.status" class="selectwpx" style="width: 140px;">
               <el-option label="正常生产" value="normal"></el-option>

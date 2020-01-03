@@ -1,7 +1,7 @@
 <template>
   <div class="header_main">
     <el-row class="dataEntry-head-leftRight" :gutter="10">
-      <el-col :span="5" >
+      <el-col :span="4" >
         <div class="card-left" style="background: #ffbf00;">
           <p class="dataEntry-head-leftRight__title">罐号：{{formData.holderName ? formData.holderName : ''}}</p>
           <div class="dataEntry-head-leftRight-pot">
@@ -12,7 +12,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="19">
+      <el-col :span="20">
         <div class="card-right" style="background: #487bff;">
           <p class="dataEntry-head-leftRight__title"><i class="iconfont factory-gongchang"></i>{{formData.factoryName ? formData.factoryName : ''}}</p>
           <div class="dataEntry-head-leftRight-message">

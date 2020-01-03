@@ -17,7 +17,7 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <el-row :gutter="10" v-if="isMainAreaShow" class="cardList">
+    <el-row :gutter="30" v-if="isMainAreaShow" class="cardList">
       <el-col :span="12" v-for="(item, index) in dataList" :key="'h'+index">
         <el-card class="card-item">
           <div slot="header">计量仓号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span></div>
@@ -47,7 +47,7 @@
               <span>库存明细</span>
               <el-button type="primary" size="small" style="margin-left: 10px;" @click="goParn(item)" v-if="isAuth('kjm:pulpIn:save')">入罐</el-button>
             </p>
-            <el-table :data="item.pulpList" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="200">
+            <el-table :data="item.pulpList" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table">
               <el-table-column prop="batch" width="auto"><template slot="header" slot-scope="scope"><i class="iconfont factory-pici" style="margin-right: 5px;"></i>批次</template></el-table-column>
               <el-table-column prop="currentQuantity" width="auto" header-align="left">
                 <template slot="header" slot-scope="scope"><i class="iconfont factory-shuliang" style="font-size: 18px; margin-right: 5px;"></i>数量</template>

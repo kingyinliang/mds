@@ -1,7 +1,8 @@
 <template>
-<div>
-  <div class="audit"><i class="iconfont factory-shouqicaidan"></i><span>审核日志</span></div>
+<div class="audit-card">
+  <div class="audit"><i class="title-icon"></i><span>审核日志</span></div>
   <el-table
+    class="newTable"
     :data="tableData"
     header-row-class-name="tableHead"
     border
@@ -51,8 +52,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.audit-card {
+  box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(171, 171, 171, 0.5);
+  padding: 12px 16px;
+}
 .audit {
   line-height: 40px;
+  .title-icon {
+    float: left;
+    width: 4px;
+    height: 12px;
+    background: #487bff;
+    border-radius: 2px;
+    margin-top: 10px;
+    margin-right: 5px;
+  }
   i {
     font-size: 22px;
     float: left;

@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="site-wrapper"
-    :class="{ 'site-sidebar--fold': sidebarFold }">
+  <div class="site-wrapper" :class="{ 'site-sidebar--fold': sidebarFold }">
     <template v-if="!loading">
       <main-navbar :updatePassword="updatePassword"/>
       <main-sidebar />

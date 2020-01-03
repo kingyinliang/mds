@@ -1,9 +1,9 @@
 <template>
   <div>
-    <el-card class="box-card newCard" style="margin-bottom: 20px;">
+    <div class="box-card newCard" style="margin-bottom: 8px;">
       <el-form :inline="true" :model="readyTimeDate" ref="timesForm" size="small" label-width="125px">
         <div class="clearfix" style="">
-          <h3 style="font-size: 14px; line-height: 32px;">准备工时 (单位:min)</h3>
+          <h3 style="font-size: 14px; line-height: 32px;"><i class="title-icon"></i>准备工时 (单位:min)</h3>
           <el-button type="text" class="readyshiftBtn" name="ready" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
           <el-form-item label="班次：" style="float: right;">
             <el-select v-model="readyTimeDate.classes" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status ==='noPass' || readyTimeDate.status ==='saved' || readyTimeDate.status ===''))">
@@ -59,32 +59,30 @@
           </el-row>
         </div>
       </el-form>
-    </el-card>
-    <el-card class="box-card">
-      <div class="clearfix" style="margin-bottom: 20px;">
-        <h3 style="font-size: 14px; line-height: 32px;">机器工时 (单位:min)</h3>
+    </div>
+    <div class="box-card">
+      <div class="clearfix" style="margin-bottom: 8px;">
+        <h3 style="font-size: 14px; line-height: 32px;"><i class="title-icon" style="background: #ffbf00;"></i>机器工时 (单位:min)</h3>
         <el-button type="text" class="readyshiftBtn" name="machine" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
       </div>
       <div class="machineBox" style="overflow: hidden;">
         <el-row :gutter="10">
           <el-col :span="8" style="margin-bottom: 15px;" v-for="(item, index) in Machine" :key="index">
-            <el-card class="box-card">
+            <div class="machineBox_item clearfix" :style="{'background': index%2 === 0 ? '#ffbf00': '#f05c4a'}">
               <div class="clearfix machinediv">
-                <img src="@/assets/img/machineicon.png" alt="">
-                <div style="margin-left: 15px;">
-                  <p class="machineTit">{{ item.deviceName }}</p>
-                  <!--<p class="machineTxt">这台酱油炒麦机是2018年在日本进口的。</p>-->
-                </div>
+                <!--<img src="@/assets/img/machineicon.png" alt="">-->
+                <p class="machineBox_item_title"><i class="iconfont factory-zhizaozhuisu"></i>{{ item.deviceName }}</p>
+                <p class="machineBox_item_text">点击下方开始按钮设备开始运转，<br/>点击结束按钮设备停止工作。</p>
               </div>
-              <el-row>
-                <el-col :span="8"><el-button class="machineBtn" @click="machineStartOrEnd(true, item)" :disabled="!(isRedact && (readyTimeDate.status ==='noPass' || readyTimeDate.status ==='saved' || readyTimeDate.status ===''))">开始</el-button></el-col>
-                <el-col :span="8"><el-button class="machineBtn" @click="machineStartOrEnd(false, item)" :disabled="!(isRedact && (readyTimeDate.status ==='noPass' || readyTimeDate.status ==='saved' || readyTimeDate.status ===''))">结束</el-button></el-col>
-                <el-col :span="8"><el-button class="machineBtn" @click="machineTest(item)" :disabled="!(isRedact && (readyTimeDate.status ==='noPass' || readyTimeDate.status ==='saved' || readyTimeDate.status ===''))">检测</el-button></el-col>
-              </el-row>
-            </el-card>
+              <div style="float: right;">
+                <el-button class="machineBtn" @click="machineStartOrEnd(true, item)" :disabled="!(isRedact && (readyTimeDate.status ==='noPass' || readyTimeDate.status ==='saved' || readyTimeDate.status ===''))">开始</el-button>
+                <el-button class="machineBtn" @click="machineStartOrEnd(false, item)" :disabled="!(isRedact && (readyTimeDate.status ==='noPass' || readyTimeDate.status ==='saved' || readyTimeDate.status ===''))">结束</el-button>
+                <el-button class="machineBtn" @click="machineTest(item)" :disabled="!(isRedact && (readyTimeDate.status ==='noPass' || readyTimeDate.status ==='saved' || readyTimeDate.status ===''))">检测</el-button>
+              </div>
+            </div>
           </el-col>
         </el-row>
-        <el-table :data="machineTimeData" header-row-class-name="tableHead" border tooltip-effect="dark" @row-dblclick="rowUpdateMachine" :row-class-name="RowDelFlag">
+        <el-table class="newTable" :data="machineTimeData" header-row-class-name="tableHead" border tooltip-effect="dark" @row-dblclick="rowUpdateMachine" :row-class-name="RowDelFlag">
           <el-table-column label="日期" width="120" prop="productDate"></el-table-column>
           <el-table-column label="炒麦机" width="120" prop="deviceName"></el-table-column>
           <el-table-column label="开始时间" prop="openTime"></el-table-column>
@@ -98,7 +96,7 @@
           </el-table-column>
         </el-table>
       </div>
-    </el-card>
+    </div>
     <audit-log :tableData="timeAuditlog"></audit-log>
     <machine-time v-if="visible" ref="machinetime" @changeMachineTime="changeMachineTime"></machine-time>
     <machine-test v-if="visible1" ref="machinetest"></machine-test>
@@ -425,44 +423,83 @@ export default {
 </script>
 
 <style lang="scss">
-.readyBox {
-  input {
-    width: 153px;
-  }
-}
-.readyshiftBtn {
-  padding: 0;
-  margin-left: 15px;
-  line-height: 32px;
-}
-.machineBox {
+@mixin ready-css($base-sise) {
   .box-card {
-    padding: 0;
-    .el-card__body {
-      padding: 0;
+    box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(171, 171, 171, 0.5);
+    padding: 12px 16px 6px 16px !important;
+    .title-icon {
+      float: left;
+      width: 4px;
+      height: 12px;
+      background: #487bff;
+      border-radius: 2px;
+      margin-top: 10px;
+      margin-right: 5px;
     }
-  }
-  .machinediv {
-    display: flex;
-    padding: 20px;
-    img {
-      width: 48px;
-      height: 48px;
+    .el-form-item__label {
+      font-size: $base-sise;
     }
-    .machineTit {
-      font-weight: bold;
-      font-size: 16px;
+    .el-form-item {
       margin-bottom: 10px;
     }
-    .machineTxt {
-      color: rgba(0, 0, 0, 0.45);
-      line-height: 22px;
+  }
+  .readyBox {
+    .el-form-item {
+      margin-bottom: 10px;
+    }
+    input {
+      width: 153px;
     }
   }
-  .machineBtn {
-    width: 100%;
-    height: 40px;
+  .readyshiftBtn {
+    padding: 0;
+    margin-left: 15px;
+    line-height: 32px;
+  }
+  .machineBox {
+    color: white;
+    margin-bottom: 5px;
+    &_item {
+      padding: 10px;
+      box-shadow: 2px 2px 4px 0 rgba(232, 232, 232, 1);
+      border-radius: 8px;
+      &_title {
+        font-size: $base-sise+2;
+        margin-bottom: 5px;
+        i {
+          margin-right: 5px;
+        }
+      }
+      &_text {
+        padding-left: 20px;
+        line-height: 22px;
+        font-size: $base-sise;
+      }
+    }
+    .machineBtn {
+      font-size: $base-sise;
+      line-height: 32px;
+      padding: 0;
+      width: 65px;
+      height: 32px;
+    }
+    .machineBtn:first-child {
+      background-color: #487bff;
+    }
   }
 }
 
+@media (max-width: 1367px) {
+  $base-sise: 12px;
+
+  @include ready-css($base-sise);
+}
+
+@media (min-width: 1367px) {
+  $base-sise: 14px;
+
+  @include ready-css($base-sise);
+}
 </style>
