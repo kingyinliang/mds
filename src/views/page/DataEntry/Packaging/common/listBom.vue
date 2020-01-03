@@ -74,7 +74,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column width="120" label="罐内物料" v-if="this.order.factoryCode !== '6010'">
+    <el-table-column width="120" label="罐内物料">
       <template slot-scope="scope">
         {{scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName}}
       </template>
