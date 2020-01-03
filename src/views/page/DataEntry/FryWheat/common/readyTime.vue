@@ -460,7 +460,6 @@ export default {
   }
   .machineBox {
     color: white;
-    margin-bottom: 5px;
     &_item {
       padding: 10px;
       box-shadow: 2px 2px 4px 0 rgba(232, 232, 232, 1);
@@ -476,6 +475,7 @@ export default {
         padding-left: 20px;
         line-height: 22px;
         font-size: $base-sise;
+        margin-bottom: 5px;
       }
     }
     .machineBtn {
@@ -487,6 +487,8 @@ export default {
     }
     .machineBtn:first-child {
       background-color: #487bff;
+      border: none;
+      color: white;
     }
   }
 }
