@@ -74,7 +74,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column width="120" label="罐内物料">
+    <el-table-column width="120" label="罐内物料" v-if="this.order.factoryCode !== '6010'">
       <template slot-scope="scope">
         {{scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName}}
       </template>
@@ -378,7 +378,7 @@ export default {
     bomRule () {
       let ty = true
       for (let sole of this.listbomS) {
-        if (sole.potNo !== '' && sole.potNo !== null) {
+        if (sole.potNo !== '') {
           if (sole.materialCode !== sole.holderMaterialCode) {
             ty = false
             this.$warning_SHINHO('物料领用中' + sole.holderMaterialCode + '领用物料与BOM物料不一致，请确认！')
@@ -588,7 +588,7 @@ export default {
     },
     HolderChange (val, row) {
       let semiInfo = this.semiHolder.find(item => item.holderId === val)
-      if (semiInfo.materialCode !== row.materialCode) {
+      if (this.order.factoryCode !== '6010' && semiInfo.materialCode !== row.materialCode) {
         this.$warning_SHINHO('领用物料与BOM物料不一致，请确认！')
       }
       row.holderMaterialCode = semiInfo.materialCode

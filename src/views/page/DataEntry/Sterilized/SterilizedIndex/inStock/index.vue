@@ -126,7 +126,7 @@
 import ExcRecord from '@/views/components/ExcRecord'
 import TextRecord from '@/views/components/TextRecord'
 import {STERILIZED_API} from '@/api/api'
-import {Stesave, dateFormat, accDiv} from '@/net/validate'
+import {Stesave, dateFormat, accDiv, accAdd} from '@/net/validate'
 export default {
   name: 'index',
   data () {
@@ -324,7 +324,16 @@ export default {
       })
     },
     savedOrSubmitForm (str) {
-      if (str === 'submit') {}
+      if (str === 'submit') {
+        let inAmountSum = 0
+        for (let item of this.InStorageDate) {
+          inAmountSum = accAdd(inAmountSum, item.inAmount)
+        }
+        if (inAmountSum <= 0) {
+          this.$error_SHINHO('杀菌入库入罐数量必须大于0')
+          return false
+        }
+      }
       let net1 = new Promise((resolve, reject) => {
         this.Stesave.excUpdate(this, 'In', resolve, reject)
       })

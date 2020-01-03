@@ -32,7 +32,7 @@
       <audit-log :tableData="readAudit"></audit-log>
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class='dialog__class' @keyup.enter.native="SaveDialog('receive')">
-      <div slot="title" style="line-height: 59px;">领用</div>
+      <div slot="title">领用</div>
       <el-form :model="receive" size="small" label-width="160px" :rules="receiveRules" ref="receive">
         <el-form-item label="BOM物料：">
           {{this.BomMaterialCode + ' ' + this.BomMaterialName}}
