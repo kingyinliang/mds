@@ -57,3 +57,30 @@ export function throttle (fn, delay, atleast) {
     }
   }
 }
+export function AsyncHook (fnArr, thenArr) {
+  let arr = []
+  fnArr.forEach(item => {
+    arr.push(new Promise((resolve, reject) => {
+      item[1].push(resolve)
+      item[1].push(reject)
+      let [...args] = item[1]
+      item[0](...args)
+    }))
+  })
+  if (thenArr) {
+    Promise.all(arr).then(res => {
+      let submitArr = []
+      thenArr.forEach(item => {
+        submitArr.push(new Promise((resolve, reject) => {
+          item[1].push(resolve)
+          item[1].push(reject)
+          let [...args] = item[1]
+          item[0](...args)
+        }))
+      })
+      return Promise.all(submitArr)
+    })
+  } else {
+    return Promise.all(arr)
+  }
+}

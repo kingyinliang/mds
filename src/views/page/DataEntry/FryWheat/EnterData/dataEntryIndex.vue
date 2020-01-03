@@ -1,6 +1,13 @@
 <template>
   <el-col>
     <data-entry
+      :redactAuth="'wht:order:update'"
+      :saveAuth="'wht:order:update'"
+      :submitAuth="'sys:whtInStorage:submit'"
+      :orderStatus="orderStatus"
+      :submitRules="submitRules"
+      :savedDatas="savedDatas"
+      :submitDatas="submitDatas"
       :headerBase="headerBase"
       :formHeader="formHeader"
       :tabs="tabs">
@@ -119,6 +126,7 @@ import ExcRecord from '@/views/components/ExcRecord'
 import InStock from '../common/inStock'
 import ApplyMateriel from '../common/applyMateriel'
 import TextRecord from '@/views/components/TextRecord'
+import {AsyncHook} from '@/utils/index.js'
 export default {
   name: 'dataEntryIndex',
   data () {
@@ -182,6 +190,35 @@ export default {
         }
       ],
       orderStatus: '',
+      submitRules: () => {
+        return [this.$refs.readytime.Readyrul, this.$refs.workerref.userrul, this.$refs.excrecord.excrul, this.$refs.instock.validate, this.$refs.applymateriel.validate]
+      },
+      savedDatas: (str) => {
+        return AsyncHook([
+          [this.UpdateformHeader, [str]],
+          [this.$refs.readytime.UpdateReady, [str]],
+          [this.$refs.readytime.UpdateMachine, [str]],
+          [this.$refs.workerref.UpdateUser, [str]],
+          [this.$refs.instock.saveIn, []],
+          [this.$refs.applymateriel.saveMateriel, []],
+          [this.$refs.excrecord.saveOrSubmitExc, [this.formHeader.orderId, str]],
+          [this.$refs.textrecord.UpdateText, [this.formHeader, str]]
+        ])
+      },
+      submitDatas: (str) => {
+        return AsyncHook([
+          [this.UpdateformHeader, [str]],
+          [this.$refs.readytime.UpdateReady, [str]],
+          [this.$refs.readytime.UpdateMachine, [str]],
+          [this.$refs.workerref.UpdateUser, [str]],
+          [this.$refs.excrecord.saveOrSubmitExc, [this.formHeader.orderId, str]],
+          [this.$refs.textrecord.UpdateText, [this.formHeader, str]]
+        ], [
+          [this.ProHours, []],
+          [this.$refs.instock.submitIn, []],
+          [this.$refs.applymateriel.submitMateriel, []]
+        ])
+      },
       isRedact: false,
       orderNo: '',
       productDate: '',
