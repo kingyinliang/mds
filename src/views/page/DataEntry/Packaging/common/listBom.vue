@@ -378,7 +378,7 @@ export default {
     bomRule () {
       let ty = true
       for (let sole of this.listbomS) {
-        if (sole.potNo !== '') {
+        if (sole.potNo !== '' && sole.potNo !== null) {
           if (sole.materialCode !== sole.holderMaterialCode) {
             ty = false
             this.$warning_SHINHO('物料领用中' + sole.holderMaterialCode + '领用物料与BOM物料不一致，请确认！')
