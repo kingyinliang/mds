@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { dateFormat, GetStatus } from '@/net/validate'
+import { dateFormat, GetStatus, accAdd, accMul } from '@/net/validate'
 import { FILTRATION_API } from '@/api/api'
 export default {
   name: 'material',
@@ -214,7 +214,8 @@ export default {
           }
           this.dataAList.map(itema => {
             if (itema.delFlag === '0' && itema.holderId === item.holderId) {
-              soleAmount = Number(soleAmount) + (Number(itema.receiveAmount) * 1000)
+              // soleAmount = Number(soleAmount) + (Number(itema.receiveAmount) * 1000)
+              soleAmount = accAdd(soleAmount, Number(itema.receiveAmount) * 1000)
             }
           })
           this.repertory.push({
@@ -228,10 +229,11 @@ export default {
         let total = 0
         this.dataList.map((items) => {
           if (item.holderId === items.holderId && items.delFlag === '0') {
-            total = Number(total) + Number(items.receiveAmount)
+            // total = Number(total) + Number(items.receiveAmount)
+            total = accAdd(total, items.receiveAmount)
           }
         })
-        if (total * 1000 > item.holderAmount) {
+        if (accMul(total, 1000) > item.holderAmount) {
           ty = false
           this.$warning_SHINHO(item.holderName + '罐领用数超过库存，请重新调整')
           return false
