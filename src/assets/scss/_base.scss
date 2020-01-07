@@ -713,7 +713,7 @@ img {
     /* 表头查询样式 */
     .queryHead {
       .el-card__body {
-        padding: 16px 16px 8px 16px !important;
+        padding: 12px 16px 4px 16px !important;
       }
       .el-form-item--mini.el-form-item,
       .el-form-item--small.el-form-item {
@@ -879,6 +879,9 @@ img {
           .el-table__body-wrapper table {
             width: 100% !important;
           }
+          tr:nth-child(even) {
+            background-color: #f7f7f7;
+          }
           .el-table__row:hover {
             td:first-child {
               border-left: 2px solid #487BFF;
@@ -970,6 +973,7 @@ img {
       background: none !important;
       border: none !important;
       box-shadow: none !important;
+      font-size: $base-sise;
       .el-tabs__header {
         background: none !important;
         border-bottom: none !important;
@@ -977,7 +981,8 @@ img {
       .el-tabs__item {
         height: auto !important;
         line-height: 22px !important;
-        font-size: $base-sise + 2;
+        font-size: $base-sise+2;
+        font-weight: bold;
         color: #666666;
         padding: 6px 16px !important;
         background: rgba(235, 235, 235, 1);
@@ -1015,9 +1020,52 @@ img {
           border: none;
         }
       }
+      tr:nth-child(even) {
+        background-color: #f7f7f7;
+      }
       .el-table__row:hover {
         td:first-child {
           border-left: 2px solid #487BFF;
+        }
+      }
+      .el-input.is-disabled .el-input__inner {
+        background: none;
+        border: none;
+        color: rgba(0, 0, 0, 0.25)!important;
+      }
+    }
+    /* card样式 */
+    .box-card {
+      box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(171, 171, 171, 0.5);
+      padding: 12px 16px 6px 16px !important;
+      margin-bottom: 10px;
+      &-title {
+        h3 {
+          line-height: 32px;
+          font-size: 14px !important;
+          font-weight: bold;
+          float: left;
+          .title-icon {
+            float: left;
+            width: 4px;
+            height: 12px;
+            background: #487bff;
+            border-radius: 2px;
+            margin-top: 10px;
+            margin-right: 5px;
+          }
+        }
+      }
+      &-show-hidden {
+        height: 12px;
+        span {
+          line-height: 12px;
+          cursor: pointer;
+          font-size: 12px;
+          float: right;
+          color: #487bff;
         }
       }
     }
@@ -1037,12 +1085,12 @@ img {
         margin-right: 6px;
       }
       &__text {
-        font-size: $base-sise + 4;
+        font-size: $base-sise+4;
       }
       &__status {
         color: #999;
         position: relative;
-        font-size: 14px;
+        font-size: $base-sise;
         float: right;
         padding-left: 15px;
         &::before {
@@ -1156,17 +1204,33 @@ img {
       }
     }
   }
+  /* 红黄蓝背景图色块 */
+  .forColor {
+    .colorItem:nth-child(3n+1) {
+      .colorContainer {
+        background: url("~@/assets/img/ui2.0/yellowCardBg.png") no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+    .colorItem:nth-child(3n+2) {
+      .colorContainer {
+        background: url("~@/assets/img/ui2.0/redCardBg.png") no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+    .colorItem:nth-child(3n+3) {
+      .colorContainer {
+        background: url("~@/assets/img/ui2.0/greenCardBg.png") no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+  }
 }
+
 @media (max-width: 1367px) {
   $base-sise: 12px;
   @include dataEntry-head($base-sise);
   .header_main {
-    /* 表头查询样式 */
-    .queryHead {
-      .el-card__body {
-        padding: 12px 16px 4px 12px !important;
-      }
-    }
     /* 色块布局带批次的首页布局 */
     .cardList {
       .el-card__header {
@@ -1245,10 +1309,17 @@ img {
   }
 }
 @media (min-width: 1367px) {
-  $base-sise: 14px;
+  $base-sise: 12px;
   @include dataEntry-head($base-sise);
   .site-content {
     min-height: 726px;
+  }
+}
+@media (min-width: 1600px) {
+  $base-sise: 14px;
+  @include dataEntry-head($base-sise);
+  .site-content {
+    min-height: 926px;
   }
 }
 /*

@@ -47,7 +47,7 @@
               <span>库存明细</span>
               <el-button type="primary" size="small" style="margin-left: 10px;" @click="goParn(item)" v-if="isAuth('kjm:pulpIn:save')">入罐</el-button>
             </p>
-            <el-table :data="item.pulpList" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table">
+            <el-table :data="item.pulpList" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="165">
               <el-table-column prop="batch" width="auto"><template slot="header" slot-scope="scope"><i class="iconfont factory-pici" style="margin-right: 5px;"></i>批次</template></el-table-column>
               <el-table-column prop="currentQuantity" width="auto" header-align="left">
                 <template slot="header" slot-scope="scope"><i class="iconfont factory-shuliang" style="font-size: 18px; margin-right: 5px;"></i>数量</template>

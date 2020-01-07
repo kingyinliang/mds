@@ -1,12 +1,9 @@
 <template>
-  <div>
-    <div class="clearfix topBox">
-      <h3>录入数据单位：MIN</h3>
-      <div style="float: right; margin-bottom: 10px;">
-        <el-button type="primary" @click="AddExcDate(ExcDate)" size="small" :disabled="!isRedact">新增</el-button>
-      </div>
-    </div>
-    <el-table header-row-class-name="tableHead" :data="ExcDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
+  <mds-card :title="'录入数据单位：MIN'" :name="'exc'">
+    <template slot="titleBtn">
+      <div style="float: right;"><el-button type="primary" @click="AddExcDate(ExcDate)" size="small" :disabled="!isRedact">新增</el-button></div>
+    </template>
+    <el-table header-row-class-name="tableHead" class="newTable" :data="ExcDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
       <el-table-column type="index" width="55" label="序号">
       </el-table-column>
       <el-table-column label="白/中/夜班" width="120">
@@ -99,8 +96,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <div><p style="line-height: 52px; font-size: 14px;">总停线时间：{{ExcNum}}</p></div>
-  </div>
+    <div><p style="line-height: 32px; font-size: 12px;">总停线时间：{{ExcNum}}</p></div>
+  </mds-card>
 </template>
 
 <script>

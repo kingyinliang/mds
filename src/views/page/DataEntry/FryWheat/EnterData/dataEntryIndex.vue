@@ -9,6 +9,7 @@
       :submitRules="submitRules"
       :savedDatas="savedDatas"
       :submitDatas="submitDatas"
+      @success="GetOrderList"
       :headerBase="headerBase"
       :formHeader="formHeader"
       :tabs="tabs">
@@ -22,10 +23,10 @@
         <exc-record ref="excrecord" :isRedact="data.isRedact" :order="formHeader"></exc-record>
       </template>
       <template slot="4" slot-scope="data">
-        <in-stock ref="instock" :isRedact="data.isRedact" :order="formHeader" ></in-stock>
+        <in-stock ref="instock" :isRedact="data.isRedact" :order="formHeader" @setInStorageState='setInStorageState' ></in-stock>
       </template>
       <template slot="5" slot-scope="data">
-        <apply-materiel ref="applymateriel" :isRedact="data.isRedact" :order="formHeader" ></apply-materiel>
+        <apply-materiel ref="applymateriel" :isRedact="data.isRedact" :order="formHeader" @setApplyMaterielState='setApplyMaterielState' ></apply-materiel>
       </template>
       <template slot="6" slot-scope="data">
         <text-record ref="textrecord" :isRedact="data.isRedact" ></text-record>
@@ -176,16 +177,19 @@ export default {
           status: '未录入'
         },
         {
-          label: '人员'
+          label: '人员',
+          status: '未录入'
         },
         {
           label: '异常记录'
         },
         {
-          label: '生产入库'
+          label: '生产入库',
+          status: '未录入'
         },
         {
-          label: '物料领用'
+          label: '物料领用',
+          status: '未录入'
         },
         {
           label: '文本记录'
@@ -437,6 +441,7 @@ export default {
     SetReadyStatus (status) {
       this.readyState = status
       this.tabs[0].status = status
+      this.tabs[1].status = status
       // 强制刷新tabs
       this.$refs.dataEntry.updateTabs()
       // this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
@@ -444,12 +449,16 @@ export default {
     // 入库状态
     setInStorageState (status) {
       this.inStorageState = status
+      this.tabs[3].status = status
+      this.$refs.dataEntry.updateTabs()
       // 强制刷新tabs
       // this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     },
     // 物料状态
     setApplyMaterielState (status) {
       this.applyMaterielState = status
+      this.tabs[4].status = status
+      this.$refs.dataEntry.updateTabs()
       // 强制刷新tabs
       // this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     },

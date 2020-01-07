@@ -46,7 +46,7 @@
               <i class="card-item-color-lump_text__icon"></i>
               <span>库存明细</span>
             </p>
-            <el-table :data="item.stocks" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table">
+            <el-table :data="item.stocks" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="165">
               <el-table-column prop="batch" width="auto"><template slot="header" slot-scope="scope"><i class="iconfont factory-pici" style="margin-right: 5px;"></i>批次</template></el-table-column>
               <el-table-column prop="currentQuantity" width="auto" header-align="left">
                 <template slot="header" slot-scope="scope"><i class="iconfont factory-shuliang" style="font-size: 18px; margin-right: 5px;"></i>数量</template>

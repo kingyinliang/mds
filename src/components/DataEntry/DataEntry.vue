@@ -26,12 +26,12 @@
     <!--tabs-->
     <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs tabsPages" type="border-card">
       <el-tab-pane :name="setKey(index)" v-for="(item, index) in tabs" :key="index">
-        <span slot="label" class="spanview" v-if="item.status">
+        <span slot="label" class="spanview" v-if="item.status !== undefined">
           <el-tooltip class="item" effect="dark" :content="item.status === 'noPass'? '不通过':item.status === 'saved'? '已保存':item.status === 'submit' ? '已提交' : item.status === 'checked'? '通过':'未录入'" placement="top-start">
-            <span :style="{'color': item.status === 'noPass'? 'red' : ''}">准备时间</span>
+            <span :style="{'color': item.status === 'noPass'? 'red' : ''}">{{item.label}}</span>
           </el-tooltip>
         </span>
-        <span slot="label" class="spanview" v-if="!item.status">
+        <span slot="label" class="spanview" v-if="item.status === undefined">
           {{item.label}}
         </span>
         <slot :name="setKey(index)" :isRedact="isRedact"></slot>
@@ -145,21 +145,23 @@ export default {
       if (str === 'saved') {
         this.savedDatas(str).then(res => {
           this.$success_SHINHO('保存成功')
+          this.$emit('success')
         })
       } else {
         this.submitDatas(str).then(res => {
           this.$success_SHINHO('提交成功')
+          this.$emit('success')
         })
       }
     },
     // 提交
     submitData () {
-      // let arr = this.submitRules()
-      // for (let rule of arr) {
-      //   if (!rule()) {
-      //     return false
-      //   }
-      // }
+      let arr = this.submitRules()
+      for (let rule of arr) {
+        if (!rule()) {
+          return false
+        }
+      }
       this.$confirm('确认提交该订单, 是否继续?', '提交订单', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
