@@ -277,7 +277,11 @@ export default {
   components: {}
 }
 </script>
-
+<style lang="scss">
+  .itemForm .el-form-item__content {
+    height: auto;
+  }
+</style>
 <style lang="scss" scoped>
 .hiddenP {
   max-height: 64px;
