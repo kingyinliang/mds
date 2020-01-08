@@ -39,7 +39,7 @@
     "axios": "^0.18.1",
     "babel-polyfill": "^6.26.0",
     "echarts": "^4.1.0",
-    "element-ui": "^2.10.1",
+    "element-ui": "2.4.1",
     "file-saver": "^2.0.0-rc.3",
     "fundebug-javascript": "^2.0.0",
     "fundebug-revideo": "^0.6.0",

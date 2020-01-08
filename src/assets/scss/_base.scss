@@ -743,8 +743,8 @@ img {
     .queryHead .el-select,
     .cardList .el-select {
       .el-input__inner {
-        padding-right: 32px;
-        padding-left: 15px;
+        padding-right: 32px !important;
+        padding-left: 15px !important;
       }
       .el-input__suffix {
         right: 0;
