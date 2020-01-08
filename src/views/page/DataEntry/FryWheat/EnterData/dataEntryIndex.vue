@@ -10,6 +10,7 @@
       :savedDatas="savedDatas"
       :submitDatas="submitDatas"
       @success="GetOrderList"
+      @updateProductDate="updateProductDate"
       :headerBase="headerBase"
       :formHeader="formHeader"
       :tabs="tabs">

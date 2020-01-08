@@ -72,7 +72,7 @@
           </div>
         </el-col>
       </el-row>
-      <el-table class="newTable" :data="machineTimeData" header-row-class-name="tableHead" border tooltip-effect="dark" @row-dblclick="rowUpdateMachine" :row-class-name="RowDelFlag">
+      <el-table class="newTable" :data="machineTimeData" header-row-class-name="tableHead" border tooltip-effect="dark" @row-dblclick="rowUpdateMachine" :row-class-name="RowDelFlag" style="margin-bottom: 10px;">
         <el-table-column label="日期" width="120" prop="productDate"></el-table-column>
         <el-table-column label="炒麦机" width="120" prop="deviceName"></el-table-column>
         <el-table-column label="开始时间" prop="openTime"></el-table-column>

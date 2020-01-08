@@ -15,7 +15,7 @@
               <span>{{item.label}}：</span>
             </template>
             <p v-if="item.type === 'p'">{{item.value | itemValue(formHeader)}}</p>
-            <el-date-picker size="mini" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="formHeader[item.value]" style="width: 120px;" v-if="item.type === 'date-picker'"></el-date-picker>
+            <el-date-picker size="mini" @change="updateProductDate" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="formHeader[item.value]" style="width: 120px;" v-if="item.type === 'date-picker'"></el-date-picker>
           </el-form-item>
         </el-form>
       </div>
@@ -139,6 +139,9 @@ export default {
     },
     updateTabs () {
       // this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
+    },
+    updateProductDate (dataStr) {
+      this.$emit('updateProductDate', dataStr)
     },
     // 保存
     savedData (str) {
