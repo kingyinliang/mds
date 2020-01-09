@@ -160,14 +160,14 @@ export default {
   },
   methods: {
     Getdetail () {
-      this.$http(`${FERMENTATION_API.FORRECIPIENTSDETAIL_API}`, 'POST', {id: this.$store.state.common.Fermentation.orderId}, false, false, false).then(({data}) => {
+      this.$http(`${FERMENTATION_API.FORRECIPIENTSDETAIL_API}`, 'POST', {id: this.$store.state.common.Fermentation.orderId}).then(({data}) => {
         if (data.code === 0) {
           this.formHeader = data.openBasicsInfo
           if (data.openBasicsInfo.PRODUCT_DATE < dateFormat(new Date(), 'yyyy-MM-dd')) {
             this.isRedact = true
           }
-          this.GetList()
           this.GetOrderType(this.formHeader.FACTORYID)
+          this.GetList()
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }
