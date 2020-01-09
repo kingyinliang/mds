@@ -1,0 +1,126 @@
+<template>
+  <div class="header_main">
+    <div>
+      <el-card class="searchCard" style="margin-bottom: 5px;">
+        <el-form :model="plantList" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
+          <el-form-item label="生产工厂：">
+            <el-select v-model="plantList.factory" style="width: 170px;">
+              <el-option label="请选择"  value=""></el-option>
+              <el-option v-for="sole in factory" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="月份：">
+            <el-date-picker type="month" v-model="plantList.productDate" placeholder="请选择" value-format="yyyy-MM" style="width: 170px;"></el-date-picker>
+          </el-form-item>
+          <el-form-item class="floatr">
+            <el-button type="primary" size="small" @click="GetDataList(true)" v-if="isAuth('report:fromEs:chuipingDaily')">查询</el-button>
+            <el-button type="primary" size="small" @click="FormExportExcel(true)" v-if="isAuth('report:fromEs:expectChuipingDaily')">导出</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+      <el-tabs v-model="activeName" type="border-card" style="margin-top: 5px;">
+        <el-tab-pane name="0" label="吹瓶一车间">
+          <el-table :data="dataList" border header-row-class-name="tableHead">
+            <el-table-column label="名称" prop="theDate"></el-table-column>
+            <el-table-column label="瓶胚领用/个">
+              <el-table-column label="普利思" prop="plsRec"></el-table-column>
+              <el-table-column label="西蒙西" prop="xmxRec"></el-table-column>
+              <el-table-column label="尧邦" prop="ybRec"></el-table-column>
+            </el-table-column>
+            <el-table-column label="耗用瓶胚数量/个" prop="allRec" width="140"></el-table-column>
+            <el-table-column label="PET瓶产出/个">
+              <el-table-column label="普利思" prop="plsOutput"></el-table-column>
+              <el-table-column label="西蒙西" prop="xmxOutput"></el-table-column>
+              <el-table-column label="尧邦" prop="ybOutput"></el-table-column>
+            </el-table-column>
+            <el-table-column label="损耗数量/个" prop="loss"></el-table-column>
+            <el-table-column label="良品率" prop="productRate"></el-table-column>
+            <el-table-column label="包装领用/个" prop="pkgOutput"></el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane name="1" label="吹瓶二车间">
+          <el-table :data="dataList2" border header-row-class-name="tableHead">
+            <el-table-column label="名称" prop="theDate"></el-table-column>
+            <el-table-column label="瓶胚领用/个">
+              <el-table-column label="普利思" prop="plsRec"></el-table-column>
+              <el-table-column label="西蒙西" prop="xmxRec"></el-table-column>
+              <el-table-column label="尧邦" prop="ybRec"></el-table-column>
+            </el-table-column>
+            <el-table-column label="耗用瓶胚数量/个" prop="allRec" width="140"></el-table-column>
+            <el-table-column label="PET瓶产出/个">
+              <el-table-column label="普利思" prop="plsOutput"></el-table-column>
+              <el-table-column label="西蒙西" prop="xmxOutput"></el-table-column>
+              <el-table-column label="尧邦" prop="ybOutput"></el-table-column>
+            </el-table-column>
+            <el-table-column label="损耗数量/个" prop="loss"></el-table-column>
+            <el-table-column label="良品率" prop="productRate"></el-table-column>
+            <el-table-column label="包装领用/个" prop="pkgOutput"></el-table-column>
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+  </div>
+</template>
+
+<script>
+import { dateFormat, exportFile } from '@/net/validate'
+import { BASICDATA_API, REP_API } from '@/api/api'
+export default {
+  name: 'QueryTable',
+  data () {
+    return {
+      plantList: {
+        factory: '',
+        productDate: dateFormat(new Date(), 'yyyy-MM')
+      },
+      factory: '',
+      activeName: '0',
+      dataList: [],
+      dataList2: []
+    }
+  },
+  created () {
+  },
+  mounted () {
+    this.Getdeptcode()
+  },
+  methods: {
+    // 获取工厂
+    Getdeptcode () {
+      this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false).then(({data}) => {
+        if (data.code === 0) {
+          this.factory = data.typeList
+          if (!this.plantList.factory && data.typeList.length > 0) {
+            this.plantList.factory = data.typeList[0].deptId
+          }
+        } else {
+          this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+    },
+    // 获取数据
+    GetDataList () {
+      this.$http(`${REP_API.BOTTLE_LIST_API}`, 'POST', this.plantList).then(({data}) => {
+        if (data.code === 0) {
+          this.dataList = data.list1
+          this.dataList2 = data.list2
+        } else {
+          this.$error_SHINHO(data.msg)
+        }
+      })
+    },
+    // 导出
+    FormExportExcel () {
+      let that = this
+      // console.log('123')
+      exportFile(`${REP_API.BOTTLE_REPORT_API}`, '吹瓶日报表', that)
+    }
+  },
+  computed: {},
+  components: {}
+}
+</script>
+
+<style scoped>
+
+</style>
