@@ -5,7 +5,8 @@
       :queryFormData="queryFormData"
       :list-interface="listInterface"
       :query-auth="'report:formh:getAllStatusList'"
-      :column="column">
+      :tabs="tabs"
+      @get-data-success="setData">
     </query-table>
   </div>
 </template>
@@ -28,20 +29,6 @@ export default {
             resData: 'typeList',
             label: ['deptName'],
             value: 'deptId'
-          },
-          linkageProp: ['workShop']
-        },
-        {
-          type: 'select',
-          label: '生产车间',
-          prop: 'workShop',
-          optionsFn: (val) => {
-            return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: val, deptName: '压榨' })
-          },
-          resVal: {
-            resData: 'typeList',
-            label: ['deptName'],
-            value: 'deptId'
           }
         },
         {
@@ -55,97 +42,153 @@ export default {
       listInterface: (params) => {
         return this.$http(`${BASICDATA_API.REPMADIFFLIST_API}`, 'POST', params)
       },
-      column: [
+      tabs: [
         {
-          prop: 'factoryName',
-          label: '名称'
+          label: '压榨一',
+          tableData: [],
+          column: [
+            {
+              prop: 'factoryName',
+              label: '名称'
+            },
+            {
+              label: '领用/m³',
+              child: [{
+                prop: 'factoryName',
+                label: '普通酱醪'
+              }]
+            },
+            {
+              label: '产出/m³',
+              child: [{
+                prop: 'factoryName',
+                label: '普通原汁'
+              }]
+            },
+            {
+              label: '生产笼数/笼',
+              child: [{
+                prop: 'factoryName',
+                label: '一期'
+              }, {
+                prop: 'factoryName',
+                label: '二期'
+              }, {
+                prop: 'factoryName',
+                label: '三期'
+              }, {
+                prop: 'factoryName',
+                label: '四期'
+              }]
+            },
+            {
+              prop: 'factoryName',
+              label: '酱渣板数/板'
+            },
+            {
+              prop: 'factoryName',
+              label: '出油率/%'
+            },
+            {
+              prop: 'factoryName',
+              label: '名称'
+            },
+            {
+              label: '领用/m³',
+              child: [{
+                prop: 'factoryName',
+                label: 'JYTB酱醪'
+              }]
+            },
+            {
+              label: '产出/m³',
+              child: [{
+                prop: 'factoryName',
+                label: 'TB原汁'
+              }]
+            },
+            {
+              label: '生产笼数/笼',
+              child: [{
+                prop: 'factoryName',
+                label: '一期'
+              }, {
+                prop: 'factoryName',
+                label: '二期'
+              }, {
+                prop: 'factoryName',
+                label: '三期'
+              }, {
+                prop: 'factoryName',
+                label: '四期'
+              }]
+            },
+            {
+              prop: 'factoryName',
+              label: '酱渣板数/板'
+            },
+            {
+              prop: 'factoryName',
+              label: '出油率/%'
+            }
+          ]
         },
         {
-          label: '领用/m³',
-          child: [{
-            prop: 'factoryName',
-            label: '普通酱醪'
-          }]
-        },
-        {
-          label: '产出/m³',
-          child: [{
-            prop: 'factoryName',
-            label: '普通原汁'
-          }]
-        },
-        {
-          label: '生产笼数/笼',
-          child: [{
-            prop: 'factoryName',
-            label: '一期'
-          }, {
-            prop: 'factoryName',
-            label: '二期'
-          }, {
-            prop: 'factoryName',
-            label: '三期'
-          }, {
-            prop: 'factoryName',
-            label: '四期'
-          }]
-        },
-        {
-          prop: 'factoryName',
-          label: '酱渣板数/板'
-        },
-        {
-          prop: 'factoryName',
-          label: '出油率/%'
-        },
-        {
-          prop: 'factoryName',
-          label: '名称'
-        },
-        {
-          label: '领用/m³',
-          child: [{
-            prop: 'factoryName',
-            label: 'JYTB酱醪'
-          }]
-        },
-        {
-          label: '产出/m³',
-          child: [{
-            prop: 'factoryName',
-            label: 'TB原汁'
-          }]
-        },
-        {
-          label: '生产笼数/笼',
-          child: [{
-            prop: 'factoryName',
-            label: '一期'
-          }, {
-            prop: 'factoryName',
-            label: '二期'
-          }, {
-            prop: 'factoryName',
-            label: '三期'
-          }, {
-            prop: 'factoryName',
-            label: '四期'
-          }]
-        },
-        {
-          prop: 'factoryName',
-          label: '酱渣板数/板'
-        },
-        {
-          prop: 'factoryName',
-          label: '出油率/%'
+          label: '压榨二',
+          tableData: [],
+          column: [
+            {
+              prop: 'factoryName',
+              label: '名称'
+            },
+            {
+              label: '领用/m³',
+              child: [{
+                prop: 'factoryName',
+                label: '普通酱醪'
+              }]
+            },
+            {
+              label: '产出/m³',
+              child: [{
+                prop: 'factoryName',
+                label: '普通原汁'
+              }]
+            },
+            {
+              label: '生产笼数/笼',
+              child: [{
+                prop: 'factoryName',
+                label: '一期'
+              }, {
+                prop: 'factoryName',
+                label: '二期'
+              }, {
+                prop: 'factoryName',
+                label: '三期'
+              }, {
+                prop: 'factoryName',
+                label: '四期'
+              }]
+            },
+            {
+              prop: 'factoryName',
+              label: '酱渣板数/板'
+            },
+            {
+              prop: 'factoryName',
+              label: '出油率/%'
+            }
+          ]
         }
       ]
     }
   },
   mounted () {
   },
-  methods: {},
+  methods: {
+    setData (data) {}
+  },
   computed: {},
   components: {}
 }

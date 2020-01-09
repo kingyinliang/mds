@@ -69,7 +69,56 @@
           <i class="el-icon-caret-top"></i>
         </div>
       </el-card>
-      <el-card class="tableCard" style="min-height: 400px;">
+      <el-tabs v-if="tabs.length" v-model="activeName" type="border-card">
+        <el-tab-pane :name='index' :label='tabItem.label' v-for="(tabItem, index) in tabs" :key="index">
+          <el-table :data="tabItem.tableData" ref="table" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+            <el-table-column
+              v-if="showSelectColumn"
+              :selectable="selectableFn"
+              type="selection"
+              width="50px">
+            </el-table-column>
+            <el-table-column
+              v-if="showIndexColumn"
+              type="index"
+              :index="indexMethod"
+              label="序号"
+              width="50px">
+            </el-table-column>
+            <el-table-column
+              v-for="item in tabItem.column"
+              v-if="!item.hide"
+              :key="item.prop"
+              :fixed="item.fixed"
+              :prop="item.prop"
+              :label="item.label"
+              :width="item.width || ''"
+              :formatter="item.formatter"
+              :show-overflow-tooltip="true">
+              <el-table-column
+                v-for="chind in item.child"
+                v-if="item.child"
+                :key="chind.prop"
+                :prop="chind.prop"
+                :label="chind.label"
+                :formatter="chind.formatter"
+                :show-overflow-tooltip="chind.showOverFlowTooltip"
+                :width="chind.width || ''">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              fixed="right"
+              :width="operationColumnWidth"
+              v-if="showOperationColumn">
+              <template slot-scope="scope">
+                <slot :scope="scope" name="operation_column"/>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
+      <el-card class="tableCard" style="min-height: 400px;" v-if="!tabs.length">
         <div class="toggleSearchTop">
           <i class="el-icon-caret-bottom"></i>
         </div>
@@ -150,6 +199,7 @@ export default {
         pageSize: 10,
         totalCount: 0
       },
+      activeName: 0,
       queryFormRules: {},
       optionLists: {},
       tableData: [],
@@ -241,6 +291,12 @@ export default {
     fixTableHeightFromTop: {
       type: Number,
       default: 0
+    },
+    tabs: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   created () {
