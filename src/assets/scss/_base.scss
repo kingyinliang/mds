@@ -281,7 +281,7 @@ img {
     }
     .el-dropdown-link {
       > img {
-        width: 28px;
+        width: 24px;
         height: auto;
         margin-right: 5px;
         border-radius: 100%;
@@ -670,26 +670,26 @@ img {
 }
 
 /*********  按钮 start  *********/
-.el-button--primary,
-.el-button--primary:focus {
-  color: #000;
-  background-color: #fff;
-  border-color: #d9d9d9;
-}
-.el-button--primary:hover {
-  background-color: #1890ff;
-  color: #fff;
-}
-.el-button--primary:first-child {
-  background-color: #487BFF;
-  color: #fff;
-  border-color: #487BFF;
-}
-.el-button--primary.is-disabled {
-  color: #fff;
-  background-color: #a0cfff;
-  border-color: #a0cfff;
-}
+//.el-button--primary,
+//.el-button--primary:focus {
+//  color: #000;
+//  background-color: #fff;
+//  border-color: #d9d9d9;
+//}
+//.el-button--primary:hover {
+//  background-color: #1890ff;
+//  color: #fff;
+//}
+//.el-button--primary:first-child {
+//  background-color: #487BFF;
+//  color: #fff;
+//  border-color: #487BFF;
+//}
+//.el-button--primary.is-disabled {
+//  color: #fff;
+//  background-color: #a0cfff;
+//  border-color: #a0cfff;
+//}
 
 /*********  按钮 end  *********/
 .button_two_goup {
@@ -1008,6 +1008,16 @@ img {
         border: none;
         color: rgba(0, 0, 0, 0.25)!important;
       }
+      .el-button--primary {
+        background-color: #487bff;
+        color: #fff;
+        border-color: #487bff;
+      }
+      .el-button--primary.is-disabled {
+        color: #fff;
+        background-color: #a0cfff;
+        border-color: #a0cfff;
+      }
     }
     /* table样式 */
     .newTable {
@@ -1070,6 +1080,7 @@ img {
       }
     }
   }
+  /* 数据录入头部 */
   .dataEntry-head {
     width: 100%;
     padding: 14px 16px;
@@ -1088,7 +1099,7 @@ img {
         font-size: $base-sise+4;
       }
       &__status {
-        color: #999;
+        color: #333333;
         position: relative;
         font-size: $base-sise;
         float: right;
@@ -1098,11 +1109,11 @@ img {
           display: block;
           border-radius: 50%;
           position: absolute;
-          top: 5px;
+          top: 4px;
           left: 0;
           width: 6px;
           height: 6px;
-          background: rgba(175, 177, 189, 1);
+          background: #bfbfbf;
         }
       }
     }
@@ -1164,6 +1175,7 @@ img {
       }
     }
   }
+  /* 数据录入编辑 */
   .redactBox {
     transition: all 0.3s;
     width: 100%;
@@ -1223,6 +1235,31 @@ img {
         background: url("~@/assets/img/ui2.0/greenCardBg.png") no-repeat;
         background-size: 100% 100%;
       }
+    }
+  }
+  /* 订单状态颜色 */
+  .noPass {
+    color: #ff0000;
+    &::before {
+      background: #ff0000;
+    }
+  }
+  .saved {
+    color: #333333;
+    &::before {
+      background: $main-color;
+    }
+  }
+  .submit {
+    color: #333333;
+    &::before {
+      background: $main-color;
+    }
+  }
+  .checked {
+    color: #66C039;
+    &::before {
+      background: #66c039;
     }
   }
 }

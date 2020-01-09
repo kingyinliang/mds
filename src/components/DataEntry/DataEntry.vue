@@ -5,7 +5,10 @@
         <i class="dataEntry-head-title__icon iconfont factory-gongchang"></i>
         <span class="dataEntry-head-title__text" v-if="headShow">{{formHeader.factoryName}}烟台欣和企业食品有限公司</span>
         <span class="dataEntry-head-title__text" v-else>基础信息</span>
-        <i class="dataEntry-head-title__status">订单状态：{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</i>
+        <i class="dataEntry-head-title__status"
+          :class="{'noPass': orderStatus === 'noPass', 'saved': orderStatus === 'saved', 'submit': orderStatus === 'submit', 'checked': orderStatus === 'checked', '': orderStatus === '已同步'}">
+          订单状态：{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}
+        </i>
       </div>
       <div v-if="headShow" class="dataEntry-head-base">
         <el-form :inline="true" :model="formHeader" size="small" label-width="91px" class="dataEntry-head-base__form">
@@ -43,14 +46,18 @@
         <div class="redact clearfix">
           <div class="redact_tips">
             <i class="el-icon-info"></i>
-            <span v-if="isRedact">点击提交按钮，当前页面编辑信息将提交系统</span>
-            <span v-else>点击编辑按钮，对当前页面进行编辑</span>
+            <span v-if="orderStatus === 'submit'">订单已提交，请等待审核</span>
+            <span v-if="orderStatus === 'checked'">订单已审核通过</span>
+            <span v-if="orderStatus !== 'submit' && orderStatus !== 'checked'">
+              <span v-if="isRedact">点击提交按钮，当前页面编辑信息将提交系统</span>
+              <span v-else>点击编辑按钮，对当前页面进行编辑</span>
+            </span>
           </div>
           <div class="redact_btn">
             <el-button type="primary" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(redactAuth)">{{isRedact?'取消':'编辑'}}</el-button>
             <template v-if="isRedact">
-              <el-button type="primary" size="small" v-if="isAuth(saveAuth)" @click="savedData('saved')">保存</el-button>
-              <el-button type="primary" size="small" v-if="isAuth(submitAuth)" @click="submitData">提交</el-button>
+              <el-button type="primary" size="small" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(saveAuth)" @click="savedData('saved')">保存</el-button>
+              <el-button type="primary" size="small" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(submitAuth)" @click="submitData">提交</el-button>
             </template>
           </div>
         </div>
@@ -119,7 +126,11 @@ export default {
     },
     submitRules: {
       type: Function,
-      default: () => {}
+      default: () => []
+    },
+    savedRules: {
+      type: Function,
+      default: () => []
     },
     savedDatas: {
       type: Function,
@@ -146,6 +157,12 @@ export default {
     // 保存
     savedData (str) {
       if (str === 'saved') {
+        let arr = this.savedRules()
+        for (let rule of arr) {
+          if (!rule()) {
+            return false
+          }
+        }
         this.savedDatas(str).then(res => {
           this.$success_SHINHO('保存成功')
           this.$emit('success')

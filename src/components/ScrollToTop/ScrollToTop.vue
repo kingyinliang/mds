@@ -30,7 +30,7 @@ export default {
     handleScroll () {
       let dom = document.getElementsByClassName('site-content__wrapper')[0]
       this.scrollTop = dom.scrollTop
-      if (this.scrollTop > 300) {
+      if (this.scrollTop >= 200) {
         this.toTopShow = true
       } else {
         this.toTopShow = false

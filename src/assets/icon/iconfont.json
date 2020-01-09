@@ -202,6 +202,13 @@
       "unicode_decimal": 59117
     },
     {
+      "icon_id": "3904381",
+      "name": "工人",
+      "font_class": "gongren",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
       "icon_id": "4143359",
       "name": "数据总览",
       "font_class": "shujuzonglan",
@@ -340,6 +347,13 @@
       "font_class": "zhongzhi",
       "unicode": "e613",
       "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "7699859",
+      "name": "编号规则",
+      "font_class": "bianhaoguize",
+      "unicode": "e6ef",
+      "unicode_decimal": 59119
     },
     {
       "icon_id": "7712194",

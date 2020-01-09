@@ -75,7 +75,7 @@ export function AsyncHook (fnArr, thenArr) {
     }))
   })
   if (thenArr) {
-    Promise.all(arr).then(res => {
+    return Promise.all(arr).then(res => {
       let submitArr = []
       thenArr.forEach(item => {
         submitArr.push(new Promise((resolve, reject) => {

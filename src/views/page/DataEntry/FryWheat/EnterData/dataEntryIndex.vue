@@ -7,6 +7,7 @@
       :submitAuth="'sys:whtInStorage:submit'"
       :orderStatus="orderStatus"
       :submitRules="submitRules"
+      :savedRules="savedRules"
       :savedDatas="savedDatas"
       :submitDatas="submitDatas"
       @success="GetOrderList"
@@ -24,10 +25,10 @@
         <exc-record ref="excrecord" :isRedact="data.isRedact" :order="formHeader"></exc-record>
       </template>
       <template slot="4" slot-scope="data">
-        <in-stock ref="instock" :isRedact="data.isRedact" :order="formHeader" @setInStorageState='setInStorageState' ></in-stock>
+        <in-stock ref="instock" :isRedact="data.isRedact" :order="formHeader" @setInStorageState='setInStorageState' :inStorageState="inStorageState"></in-stock>
       </template>
       <template slot="5" slot-scope="data">
-        <apply-materiel ref="applymateriel" :isRedact="data.isRedact" :order="formHeader" @setApplyMaterielState='setApplyMaterielState' ></apply-materiel>
+        <apply-materiel ref="applymateriel" :isRedact="data.isRedact" :order="formHeader" @setApplyMaterielState='setApplyMaterielState' :applyMaterielState='applyMaterielState'></apply-materiel>
       </template>
       <template slot="6" slot-scope="data">
         <text-record ref="textrecord" :isRedact="data.isRedact" ></text-record>
@@ -200,6 +201,9 @@ export default {
       submitRules: () => {
         return [this.$refs.readytime.Readyrul, this.$refs.workerref.userrul, this.$refs.excrecord.excrul, this.$refs.instock.validate, this.$refs.applymateriel.validate]
       },
+      savedRules: () => {
+        return [this.formHeaderRul]
+      },
       savedDatas: (str) => {
         return AsyncHook([
           [this.UpdateformHeader, [str]],
@@ -293,6 +297,12 @@ export default {
           this.$refs.textrecord.GetText(this.formHeader.orderId)
         }
       })
+    },
+    formHeaderRul () {
+      if (!this.formHeader.productDate) {
+        this.$warning_SHINHO('表头生产日期必填')
+        return false
+      }
     },
     // 修改表头
     UpdateformHeader (str, resolve) {
