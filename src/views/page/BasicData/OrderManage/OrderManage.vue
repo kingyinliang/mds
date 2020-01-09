@@ -277,7 +277,7 @@ export default {
     // 查询
     querys (st) {
       if (st) {
-        this.form.currPage = 1
+        this.currPage = 1
       }
       this.GetOrderList()
     },
