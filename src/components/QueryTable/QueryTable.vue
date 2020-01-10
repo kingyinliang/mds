@@ -127,7 +127,7 @@
             <slot name="mds-button-middle"></slot>
           </el-col>
         </el-row>
-        <el-table :data="tableData" ref="table" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+        <el-table :data="tableData" ref="table" :span-method="spanMethod" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
           <el-table-column
             v-if="showSelectColumn"
             :selectable="selectableFn"
@@ -208,6 +208,10 @@ export default {
     }
   },
   props: {
+    getListField: {
+      type: String,
+      default: ''
+    },
     returnColumnType: {
       type: String,
       default: 'page'
@@ -291,6 +295,10 @@ export default {
     fixTableHeightFromTop: {
       type: Number,
       default: 0
+    },
+    spanMethod: {
+      type: Function,
+      default: () => {}
     },
     tabs: {
       type: Array,
@@ -454,10 +462,20 @@ export default {
       }
       this.listInterface(this.queryForm).then(({data}) => {
         if (data.code === 0) {
-          this.tableData = data[this.returnColumnType].list
-          this.queryForm.currPage = data[this.returnColumnType].currPage
-          this.queryForm.pageSize = data[this.returnColumnType].pageSize
-          this.queryForm.totalCount = data[this.returnColumnType].totalCount
+          if (this.getListField) {
+            if (/\./g.test(this.getListField)) {
+              this.getListField.split('.').forEach(resIt => {
+                this.tableData = data[resIt]
+              })
+            } else {
+              this.tableData = data[this.getListField]
+            }
+          } else {
+            this.tableData = data[this.returnColumnType].list
+            this.queryForm.currPage = data[this.returnColumnType].currPage
+            this.queryForm.pageSize = data[this.returnColumnType].pageSize
+            this.queryForm.totalCount = data[this.returnColumnType].totalCount
+          }
           this.$emit('get-data-success', data)
         } else {
           this.$error_SHINHO(data.msg)
