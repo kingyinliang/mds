@@ -1,54 +1,56 @@
 <template>
   <div>
     <!--<el-button type="primary" @click="AddpwTimeDate()" size="small" :disabled="!isRedact" style="float: right;margin-bottom: 10px">新增</el-button>-->
-    <el-table header-row-class-name="tableHead" :data="pwTimeDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-      <el-table-column label="生产订单号">
-        <template slot-scope="scope">
-          {{scope.row.orderNo}}
-        </template>
-      </el-table-column>
-      <el-table-column label="准备工时" width="150">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.prepareTime" :disabled="!(isRedact && order.orderId)" size="small" placeholder="手工录入"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="单位" width="60">
-        <template slot-scope="scope">
-          <span>H</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="*机器工时" width="150">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.machineTime" :disabled="!(isRedact && order.orderId)" size="small" placeholder="手工录入"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="单位" width="60">
-        <template slot-scope="scope">
-          <span>H</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="*人工工时" width="150">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.humanTime" :disabled="!(isRedact && order.orderId)" size="small" placeholder="手工录入"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="单位" width="60">
-        <template slot-scope="scope">
-          <span>H</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="备注" width="110">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.expInfo" :disabled="!(isRedact && order.orderId)" size="small" placeholder="手工录入"></el-input>
-        </template>
-      </el-table-column>
-      <!--<el-table-column label="操作" width="60" fixed="right">-->
-        <!--<template slot-scope="scope">-->
-          <!--<el-button type="danger" icon="el-icon-delete" circle size="small" :disabled="!isRedact" @click="delpwTimeDate(scope.row)"></el-button>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-    </el-table>
-    <audit-log :tableData="timeAudit"></audit-log>
+    <mds-card :title="'工时录入'" :name="'user'">
+      <el-table class="newTable" header-row-class-name="tableHead" :data="pwTimeDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
+        <el-table-column label="生产订单号">
+          <template slot-scope="scope">
+            {{scope.row.orderNo}}
+          </template>
+        </el-table-column>
+        <el-table-column label="准备工时" width="150">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.prepareTime" :disabled="!(isRedact && order.orderId)" size="small" placeholder="手工录入"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="单位" width="60">
+          <template slot-scope="scope">
+            <span>H</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="*机器工时" width="150">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.machineTime" :disabled="!(isRedact && order.orderId)" size="small" placeholder="手工录入"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="单位" width="60">
+          <template slot-scope="scope">
+            <span>H</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="*人工工时" width="150">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.humanTime" :disabled="!(isRedact && order.orderId)" size="small" placeholder="手工录入"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="单位" width="60">
+          <template slot-scope="scope">
+            <span>H</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="备注" width="110">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.expInfo" :disabled="!(isRedact && order.orderId)" size="small" placeholder="手工录入"></el-input>
+          </template>
+        </el-table-column>
+        <!--<el-table-column label="操作" width="60" fixed="right">-->
+          <!--<template slot-scope="scope">-->
+            <!--<el-button type="danger" icon="el-icon-delete" circle size="small" :disabled="!isRedact" @click="delpwTimeDate(scope.row)"></el-button>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
+      </el-table>
+    </mds-card>
+    <audit-log :tableData="timeAudit" :name="'audit2'"></audit-log>
   </div>
 </template>
 

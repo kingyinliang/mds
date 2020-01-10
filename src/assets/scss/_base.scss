@@ -712,6 +712,7 @@ img {
   .header_main {
     /* 表头查询样式 */
     .queryHead {
+      border-radius: 8px;
       .el-card__body {
         padding: 12px 16px 4px 16px !important;
       }
@@ -761,6 +762,7 @@ img {
       margin-top: 6px;
       .card-item {
         margin-bottom: 10px;
+        border-radius: 8px;
       }
       .el-card__header {
         font-size: 16px;

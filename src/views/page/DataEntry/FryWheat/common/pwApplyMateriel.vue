@@ -2,29 +2,26 @@
 <template>
   <div>
     <!--数据录入-->
-    <el-card body-style="padding-top:10px;">
-      <el-row>
-        <el-col :span="12">
-          <el-form ref="form" label-width="100px">
-            <el-form-item label="生产调度员" style='margin-bottom: 0;'>
-              <el-select size="small" v-model="dispatcherCode" value-key="dispatcherCode" placeholder="请选择生产调度员" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'" >
-                <el-option v-for="(item, index) in this.dictListObj['PW_FEVOR']" :key="index" :label="item.code" :value="item.code" ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="12">
-          <div class="btn" style="float: right;">
-            <el-button type="primary" size="small" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'" @click="addNewRecord">新增</el-button>
-            <el-button type="primary" style="margin-left: 0;" size="small" :disabled="!isRedact || !enableSubmit" @click="saveOrderMateriel">申请订单</el-button>
-            <!-- <el-button type='primary' size="small" @click="saveMaterielList">baocun</el-button>
-            <el-button type='primary' size="small" @click="submitMaterielList">tijiao</el-button> -->
-          </div>
-        </el-col>
-      </el-row>
+    <mds-card :title="'物料领用'" :name="'pwmateriel'">
+      <template slot="titleBtn">
+        <div class="btn" style="float: right;">
+          <el-button type="primary" size="small" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'" @click="addNewRecord">新增</el-button>
+          <el-button type="primary" style="margin-left: 0;" size="small" :disabled="!isRedact || !enableSubmit" @click="saveOrderMateriel">申请订单</el-button>
+          <!-- <el-button type='primary' size="small" @click="saveMaterielList">baocun</el-button>
+          <el-button type='primary' size="small" @click="submitMaterielList">tijiao</el-button> -->
+        </div>
+        <el-form ref="form" label-width="100px" size="small" style="float: right;">
+          <el-form-item label="生产调度员" style='margin-bottom: 0;'>
+            <el-select size="small" v-model="dispatcherCode" value-key="dispatcherCode" placeholder="请选择生产调度员" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'" >
+              <el-option v-for="(item, index) in this.dictListObj['PW_FEVOR']" :key="index" :label="item.code" :value="item.code" ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </template>
       <el-row>
         <el-col :span="24" >
           <el-table
+            class="newTable"
             ref="table1"
             header-row-class-name="tableHead"
             :data="materielDataList"
@@ -175,11 +172,11 @@
           </el-table>
         </el-col>
       </el-row>
-    </el-card>
+    </mds-card>
     <!--审批-->
     <el-row>
       <el-col :span="24">
-        <auditLog :tableData="readAudit"></auditLog>
+        <auditLog :tableData="readAudit" :name="'audit1'"></auditLog>
       </el-col>
     </el-row>
   </div>
@@ -597,5 +594,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+
 </style>

@@ -42,7 +42,7 @@
       </el-card>
       <el-row v-if="type === 'normal'" :gutter="20" class="cardList">
         <el-col v-for="(item, index) in FryWheatList" :key="index" id="normal" :span="12">
-          <el-card>
+          <el-card class="card-item">
             <div class="title_left" style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">工序： <font style="color: red;">{{item.productLineName}}</font>
               <div style="float: right; font-size: 14px; font-weight: normal;">
                 <span class="points" style="margin-top: 5px;" :style="{'background': item.orderStatus === 'noPass'? 'red': item.orderStatus === 'checked'? '#67C23A' : item.orderStatus === 'submit'? '#1890ff' : item.orderStatus === 'saved'? '#1890ff' : '#7ED321'}"></span>订单状态：<i :style="{'color': item.orderStatus === 'noPass'? 'red': item.orderStatus === 'checked'? '#67C23A' : ''}">{{item.orderStatus === 'submit'? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass'?  '审核不通过' : item.orderStatus === 'saved'? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus}}</i>

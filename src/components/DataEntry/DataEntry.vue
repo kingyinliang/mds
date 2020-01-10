@@ -27,7 +27,7 @@
       <!--</div>-->
     </div>
     <!--tabs-->
-    <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs tabsPages" type="border-card">
+    <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs tabsPages" type="border-card" :before-leave='beforeLeave'>
       <el-tab-pane :name="setKey(index)" v-for="(item, index) in tabs" :key="index">
         <span slot="label" class="spanview" v-if="item.status !== undefined">
           <el-tooltip class="item" effect="dark" :content="item.status === 'noPass'? '不通过':item.status === 'saved'? '已保存':item.status === 'submit' ? '已提交' : item.status === 'checked'? '通过':'未录入'" placement="top-start">
@@ -81,7 +81,7 @@ export default {
       if (Object.prototype.toString.call(value) === '[object Array]') {
         let str = ''
         value.forEach(it => {
-          str = str + ' ' + formHeader[it]
+          str = str + ' ' + (formHeader[it] || '')
         })
         return str
       } else {
@@ -123,6 +123,10 @@ export default {
       default: () => {
         return []
       }
+    },
+    beforeLeave: {
+      type: Function,
+      default: () => []
     },
     submitRules: {
       type: Function,
