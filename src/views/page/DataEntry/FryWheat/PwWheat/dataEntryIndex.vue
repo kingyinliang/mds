@@ -13,7 +13,6 @@
       :tabs="tabs"
       :beforeLeave="beforeLeave"
       :submitRules="submitRules"
-      :savedRules="savedRules"
       :savedDatas="savedDatas"
       :submitDatas="submitDatas"
       >
@@ -184,7 +183,6 @@ export default {
       submitRules: () => {
         return [this.$refs.pwtime.timerul, this.$refs.excrecord.excrul, this.$refs.pwapplymateriel.validate]
       },
-      savedRules: () => {},
       savedDatas: (str) => {
         return AsyncHook([
           [this.OrderUpdate, [str]],

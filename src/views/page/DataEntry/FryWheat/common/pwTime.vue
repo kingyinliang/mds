@@ -140,16 +140,17 @@ export default {
       this.pwTimeDate[0].status = str
       this.$http(`${WHT_API.MATERIELTIMEUPDATE_API}`, 'POST', this.pwTimeDate[0]).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
+          if (resolve) {
+            reject(data.msg)
+          }
           this.$notify.error({title: '错误', message: data.msg})
         }
-        if (resolve) {
-          resolve('resolve')
-        }
+
       }).catch(() => {
-        if (resolve) {
-          reject('reject')
-        }
       })
     },
     AddpwTimeDate () {
