@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <el-button type="primary" @click="AddMateriel(MaterielDate)" size="small" :disabled="!isRedact" style="float: right;">新增</el-button>
+  <div class="KojiMaking-Out-index">
+    <el-button type="primary" @click="AddMateriel(MaterielDate)" size="small" :disabled="formHeader.materialCode !== 'SS02010001' ? true : !isRedact" style="float: right;">新增</el-button>
     <el-table header-row-class-name="tableHead" :data="MaterielDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
       <el-table-column type="index" width="50" label="序号"></el-table-column>
       <el-table-column label="盐水" width="140">
@@ -9,7 +9,7 @@
           <span>盐水</span>
         </template>
         <template slot-scope="scope">
-          <el-select v-model="scope.row.material" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
+          <el-select v-model="scope.row.material" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
             <el-option :label="item.value" v-for="(item, index) in brine" :key="index" :value="item.code + ' ' + item.value"></el-option>
           </el-select>
         </template>
@@ -20,9 +20,18 @@
           <span>盐水罐号</span>
         </template>
         <template slot-scope="scope">
-          <el-select v-model="scope.row.saltWaterHolderId" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')"  size="small">
+          <el-select v-model="scope.row.saltWaterHolderId" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')"  size="small">
             <el-option :label="item.holderName" v-for="(item, index) in brineTankNo" :key="index" :value="item.holderId"></el-option>
           </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column width="130">
+        <template slot="header">
+          <i class="reqI">*</i>
+          <span>批次</span>
+        </template>
+        <template slot-scope="scope">
+          <el-input type="text" v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="起始值" width="140">
@@ -31,7 +40,7 @@
           <span>起始值</span>
         </template>
         <template slot-scope="scope">
-          <el-input type="number" v-model="scope.row.startValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" placeholder="手工录入"></el-input>
+          <el-input type="number" v-model="scope.row.startValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="结束值" width="140">
@@ -40,7 +49,7 @@
           <span>结束值</span>
         </template>
         <template slot-scope="scope">
-          <el-input type="number" v-model="scope.row.endValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" placeholder="手工录入"></el-input>
+          <el-input type="number" v-model="scope.row.endValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="数量" width="90" show-overflow-tooltip>
@@ -48,12 +57,13 @@
           {{scope.row.amount = ((scope.row.endValue*1 - scope.row.startValue*1) * 1000).toFixed(3)*1}}
         </template>
       </el-table-column>
+      <el-table-column label="库存量" width="90" show-overflow-tooltip prop="scope.row.leftAmount"></el-table-column>
       <el-table-column label="单位" width="50" prop="unit" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作人" prop="creator" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作时间" prop="created" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" width="70" fixed="right">
         <template slot-scope="scope">
-          <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delMateriel(scope.row)">删除</el-button>
+          <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="formHeader.materialCode !== 'SS02010001' ? true : !(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" @click="delMateriel(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -64,6 +74,7 @@
 
 <script>
 import {BASICDATA_API, SYSTEMSETUP_API, KJM_API} from '@/api/api'
+import {dateFormat} from '@/net/validate'
 export default {
   name: 'materiel',
   data () {
@@ -88,7 +99,9 @@ export default {
       this.$http(`${KJM_API.OUTMATERIELLIST_API}`, 'POST', {
         orderId: formHeader.orderId,
         orderHouseId: formHeader.id,
-        orderNo: formHeader.orderNo
+        orderNo: formHeader.orderNo,
+        outStatus: formHeader.outStatus,
+        orderMaterialCode: formHeader.materialCode
       }).then(({data}) => {
         if (data.code === 0) {
           this.MaterielDate = data.list
@@ -206,7 +219,9 @@ export default {
         endValue: '',
         amount: '',
         unit: 'L',
-        delFlag: '0'
+        delFlag: '0',
+        created: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+        creator: this.$store.state.user.realName + `(${this.$store.state.user.name})`
       })
     },
     // 删除
@@ -222,7 +237,8 @@ export default {
     //  RowDelFlag
     RowDelFlag ({row, rowIndex}) {
       if (row.delFlag === '1') {
-        return 'rowDel'
+        return 'rowCCC'
+        // return 'rowDel'
       } else {
         return ''
       }
@@ -253,6 +269,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+  .KojiMaking-Out-index {
+    .el-table tr.rowCCC {
+      background-color: #cccc;
+    }
+  }
 </style>

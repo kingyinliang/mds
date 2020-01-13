@@ -125,8 +125,8 @@ export default {
           this.$refs.outtech.GetTechList(this.formHeader)
           this.$refs.excrecord.GetequipmentType(this.formHeader.prolineId)
           this.$refs.excrecord.getDataList(this.formHeader.factory)
+          this.$refs.meateriel.GetmaterielDate(this.formHeader)
           if (this.orderStatus !== '已同步') {
-            this.$refs.meateriel.GetmaterielDate(this.formHeader)
             this.$refs.outinstorage.GetOutInStorage(this.formHeader)
             this.$refs.excrecord.GetExcDate({
               order_id: this.formHeader.orderId,
