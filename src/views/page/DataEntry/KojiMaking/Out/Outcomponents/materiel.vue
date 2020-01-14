@@ -31,7 +31,10 @@
           <span>批次</span>
         </template>
         <template slot-scope="scope">
-          <el-input type="text" v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
+          <el-select v-if="formHeader.materialCode === 'SS02010001'" v-model="scope.row.batch" @change="checkBatchStock(scope.row)" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
+            <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch"></el-option>
+          </el-select>
+          <el-input v-else type="text" v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="起始值" width="140">
@@ -40,7 +43,7 @@
           <span>起始值</span>
         </template>
         <template slot-scope="scope">
-          <el-input type="number" v-model="scope.row.startValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
+          <el-input type="number" @change="checkBatchStock(scope.row)" v-model="scope.row.startValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="结束值" width="140">
@@ -49,7 +52,7 @@
           <span>结束值</span>
         </template>
         <template slot-scope="scope">
-          <el-input type="number" v-model="scope.row.endValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
+          <el-input type="number" @change="checkBatchStock(scope.row)" v-model="scope.row.endValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="数量" width="90" show-overflow-tooltip>
@@ -57,7 +60,7 @@
           {{scope.row.amount = ((scope.row.endValue*1 - scope.row.startValue*1) * 1000).toFixed(3)*1}}
         </template>
       </el-table-column>
-      <el-table-column label="库存量" width="90" show-overflow-tooltip prop="scope.row.leftAmount"></el-table-column>
+      <el-table-column label="库存量" width="90" show-overflow-tooltip prop="leftAmount"></el-table-column>
       <el-table-column label="单位" width="50" prop="unit" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作人" prop="creator" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作时间" prop="created" show-overflow-tooltip></el-table-column>
@@ -83,7 +86,8 @@ export default {
       MaterielAuditlog: [],
       Materielstatus: '',
       brine: [],
-      brineTankNo: []
+      brineTankNo: [],
+      batchList: []
     }
   },
   props: {
@@ -94,6 +98,49 @@ export default {
     // this.GetBrine()
   },
   methods: {
+    saveRul2 () {
+      let ty = true
+      if (this.MaterielDate.length !== 0) {
+        // this.MaterielDate.forEach((item) => {
+        //   if (item.delFlag !== '1') {
+        //     console.log(item.leftAmount)
+        //     if (item.material && item.saltWaterHolderId && item.batch && (item.startValue || item.startValue === 0) && (item.endValue || item.endValue === 0)) {} else {
+        //       ty = false
+        //       this.$warning_SHINHO('原料领用必填项未填')
+        //       return false
+        //     }
+        //     if (item.leftAmount < 0) {
+        //       ty = false
+        //       this.$warning_SHINHO('原料领用库存量不能为负')
+        //       return false
+        //     }
+        //   }
+        // })
+        for (let item of this.MaterielDate) {
+          if (item.delFlag !== '1') {
+            if (item.material && item.saltWaterHolderId && item.batch && (item.startValue || item.startValue === 0) && (item.endValue || item.endValue === 0)) {} else {
+              ty = false
+              this.$warning_SHINHO('原料领用必填项未填')
+              return false
+            }
+            if (item.leftAmount < 0) {
+              ty = false
+              this.$warning_SHINHO('原料领用库存量不能为负')
+              return false
+            }
+          }
+        }
+      }
+      return ty
+    },
+    // 库存校验
+    checkBatchStock (row) {
+      if (this.formHeader.materialCode === 'SS02010001') {
+        if (row.batch !== '' && row.startValue !== '' && row.endValue !== '') {
+          this.getRepertory(this.formHeader, this.MaterielDate)
+        }
+      }
+    },
     // 获取原料领用列表
     GetmaterielDate (formHeader) {
       this.$http(`${KJM_API.OUTMATERIELLIST_API}`, 'POST', {
@@ -105,6 +152,9 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.MaterielDate = data.list
+          if (formHeader.materialCode === 'SS02010001') {
+            this.getRepertory(formHeader, this.MaterielDate)
+          }
           this.MaterielAuditlog = data.vrlist
           let sub = 0
           let che = 0
@@ -134,6 +184,23 @@ export default {
           this.$emit('GetMaterielStatus', this.Materielstatus)
         } else {
           this.$notify.error({title: '错误', message: data.msg})
+        }
+      })
+    },
+    // 库存拉取
+    getRepertory (formHeader, data) {
+      let location = '7102'
+      if (formHeader.workShopName === '制曲二车间') {
+        location = '71A2'
+      }
+      this.$http(`${KJM_API.OUT_GETSTOCK_API}`, 'POST', {factory: formHeader.factory, location: location, orderHouseId: formHeader.id, workList: this.MaterielDate}, false, false, false).then(({data}) => {
+        if (data.code === 0) {
+          this.batchList = data.list
+          this.MaterielDate.map((item) => {
+            item.leftAmount = this.batchList.find(items => items.batch === item.batch).currentQuantity
+          })
+        } else {
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -220,6 +287,8 @@ export default {
         amount: '',
         unit: 'L',
         delFlag: '0',
+        batch: '',
+        leftAmount: 0,
         created: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
         creator: this.$store.state.user.realName + `(${this.$store.state.user.name})`
       })
@@ -232,6 +301,7 @@ export default {
         type: 'warning'
       }).then(() => {
         row.delFlag = '1'
+        this.checkBatchStock(row)
       })
     },
     //  RowDelFlag

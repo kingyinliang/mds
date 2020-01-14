@@ -107,6 +107,7 @@ export const BASICDATA_API = {
    * @property {string} CONTAINERLIST_API 容器列表 不带权限
    */
   CONTAINERLIST_API: HOST + '/sys/holder/list',
+  CONTAINER_LIST_API: HOST + '/all/dropDown/getFerHolder', // 出油率报表发酵罐list
   /**
    * @property {string} CONTAINERLIST_API 容器列表 带权限
    */
@@ -1099,6 +1100,7 @@ export const KJM_API = {
    * @property {string} OUTMATERIELSAVE_API 出曲工艺控制保存
    */
   OUTTECHSAVE_API: HOST + '/sys/kjmOutTech/mySaveOrUpdate',
+  OUT_GETSTOCK_API: HOST + '/kjm/salt/saltBatchList', // 出曲库存拉取
   /**
    * @property {string} OUTTIMELIST_API 工时查询
    */

@@ -23,7 +23,7 @@
                 <el-button class="button" @click="ShowDialog(item, '预涂')" :disabled="!isRedact">预涂</el-button>
               </el-col>
               <el-col :span="8">
-                <el-button class="button" @click="ShowDialog(item, '过滤')" :disabled="!isRedact">过滤</el-button>
+                <el-button class="button" @click="ShowDialog(item, '过滤')" :disabled="!isRedact">过滤/脱盐</el-button>
               </el-col>
             </el-row>
           </div>
@@ -50,7 +50,7 @@
       <audit-log :tableData="recordList"></audit-log>
     </el-card>
     <el-dialog :visible.sync="dialogVisible" width="400px" :close-on-click-modal="false" custom-class='dialog__class' @keyup.enter.native="SaveDialog('workInfo')">
-      <div slot="title" style="line-height: 59px;">{{this.workInfo.deviceName}}</div>
+      <div slot="title">{{this.workInfo.deviceName}}</div>
       <el-form :model="workInfo" size="small" label-width="110px" :rules="workInforules" ref="workInfo">
         <el-form-item label="工作内容：">{{this.workInfo.content}}</el-form-item>
         <el-form-item label="开始时间：" prop="startTime">
@@ -95,7 +95,7 @@ export default {
       equStatus: ''
     }
   },
-  props: ['isRedact'],
+  props: ['isRedact', 'formHeader'],
   methods: {
     GetList (params) {
       this.orderId = params.orderId
@@ -128,6 +128,9 @@ export default {
       return ty
     },
     ShowDialog (item, content) {
+      if (content === '过滤' && this.formHeader.productLineName === '脱盐') {
+        content = '脱盐'
+      }
       this.workInfo = {
         id: '',
         uid: this.uuid(),

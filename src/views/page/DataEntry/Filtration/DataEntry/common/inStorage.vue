@@ -89,7 +89,7 @@
 
 <script>
 import {FILTRATION_API} from '@/api/api'
-import {dateFormat, GetStatus} from '@/net/validate'
+import {dateFormat, GetStatus, accAdd, accMul} from '@/net/validate'
 export default {
   name: 'inStorage',
   data () {
@@ -152,12 +152,12 @@ export default {
         if (this.updateS === false) {
           let amounts = Number(this.PotList.find(item => item.holderId === this.dataForm.holderId).amount)
           if (this.InStorageDate.findIndex(item => item.uid === this.dataForm.uid) === -1) {
-            this.dataForm.holderRemaining = Number(n) + amounts
+            this.dataForm.holderRemaining = accAdd(Number(n), amounts)
           } else {
             if (this.dataForm.holderId === this.oldHolderId) {
-              this.dataForm.holderRemaining = Number(n) + amounts - this.oldInAmount
+              this.dataForm.holderRemaining = accMul(accAdd(Number(n), amounts), this.oldInAmount)
             } else {
-              this.dataForm.holderRemaining = Number(n) + amounts
+              this.dataForm.holderRemaining = accAdd(Number(n), amounts)
             }
           }
         } else {
@@ -175,7 +175,7 @@ export default {
           this.InStorageDate = data.list
           if (this.InStorageDate.length > 0) {
             this.PotDetail = {
-              amount: this.InStorageDate[0].holderRemaining + this.InStorageDate[0].unit,
+              amount: accAdd(this.InStorageDate[0].holderRemaining, this.InStorageDate[0].unit),
               batch: this.InStorageDate[0].batch,
               material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
             }
@@ -244,7 +244,7 @@ export default {
           this.visible = false
           let changeAmount = 0
           if (this.oldHolderId !== '' && this.oldHolderId !== this.dataForm.holderId && this.InStorageDate.findIndex(item => item.uid === this.dataForm.uid) !== -1) {
-            changeAmount = Number(this.PotList.find(item => item.holderId === this.oldHolderId).amount) - Number(this.oldInAmount)
+            changeAmount = accMul(Number(this.PotList.find(item => item.holderId === this.oldHolderId).amount), Number(this.oldInAmount))
             this.PotList.find(item => item.holderId === this.oldHolderId).amount = changeAmount
           }
           this.InStorageDate.map((item) => {
@@ -260,7 +260,7 @@ export default {
           }, 500)
           if (this.InStorageDate.length > 0) {
             this.PotDetail = {
-              amount: this.InStorageDate[0].holderRemaining + this.InStorageDate[0].unit,
+              amount: accAdd(this.InStorageDate[0].holderRemaining, this.InStorageDate[0].unit),
               batch: this.InStorageDate[0].batch,
               material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
             }
@@ -312,7 +312,7 @@ export default {
           if (id === this.oldHolderId) {
             this.dataForm.holderRemaining = amount
           } else {
-            this.dataForm.holderRemaining = amount + Number(this.dataForm.inAmount)
+            this.dataForm.holderRemaining = accAdd(amount, this.dataForm.inAmount)
           }
         }
         if (!st) {
@@ -377,7 +377,7 @@ export default {
         if (this.PotList.findIndex(item => item.holderId === row.holderId) !== -1) {
           let changeAmount = 0
           // changeAmount = Number(this.PotList.find(item => (item.holderId === row.holderId || item.holderId + 'repeat' === row.holderId) && item.batch === row.batch).amount) - Number(row.inAmount)
-          changeAmount = Number(row.holderRemaining) - Number(row.inAmount)
+          changeAmount = accMul(row.holderRemaining, row.inAmount)
           this.PotList.find(item => (item.holderId === row.holderId || item.holderId === (row.holderId + 'repeat')) && item.batch === row.batch).amount = changeAmount
           this.InStorageDate.map((item) => {
             if (item.holderId === row.holderId) {
