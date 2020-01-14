@@ -103,7 +103,7 @@
       </el-table>
     </el-card>
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">{{this.techInfo.deviceName}}</div>
+      <div slot="title">{{this.techInfo.deviceName}}</div>
       <el-form :model="techInfo" size="small" label-width="160px" ref="techInfo" @keyup.enter.native="SaveDialog('techInfo')">
         <el-form-item label="过滤前温度(℃)：">
           <el-input v-model="techInfo.filterBefTem" style="width: 220px;"></el-input>
@@ -516,7 +516,6 @@ export default {
           totalSum = accAdd(accAdd(totalSum, item.filterAidBef), item.filterAidAdd)
         }
       }
-      console.log(totalSum)
       if (totalSum !== 0 && this.supMaterialList.length === 0) {
         ty = false
         this.$warning_SHINHO('辅料领用不能为空')

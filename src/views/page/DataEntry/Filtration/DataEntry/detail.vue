@@ -64,7 +64,7 @@
               <el-button :style="{'color': EquState === 'noPass'? 'red' : ''}">设备工时</el-button>
             </el-tooltip>
           </span>
-          <Equ-workinghours ref="equworkinghours" :isRedact="isRedact" @setEquState="setEquState"></Equ-workinghours>
+          <Equ-workinghours ref="equworkinghours" :isRedact="isRedact" :formHeader="formHeader" @setEquState="setEquState"></Equ-workinghours>
         </el-tab-pane>
         <el-tab-pane name="2">
           <span slot="label" class="spanview">
@@ -209,7 +209,7 @@ export default {
       if (!this.$refs.equworkinghours.Readyrules()) {
         return false
       }
-      if (!this.$refs.craft.Readyrules()) {
+      if (this.formHeader.productLineName !== '脱盐' && !this.$refs.craft.Readyrules()) {
         return false
       }
       if (!this.$refs.material.Readyrules()) {
