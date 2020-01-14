@@ -149,7 +149,6 @@ export default {
           }
           this.$notify.error({title: '错误', message: data.msg})
         }
-
       }).catch(() => {
       })
     },

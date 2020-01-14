@@ -299,10 +299,13 @@ export default {
       })
     },
     formHeaderRul () {
+      let ty = true
       if (!this.formHeader.productDate) {
         this.$warning_SHINHO('表头生产日期必填')
+        ty = false
         return false
       }
+      return ty
     },
     // 修改表头
     UpdateformHeader (str, resolve) {
