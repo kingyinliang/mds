@@ -43,11 +43,11 @@
               :key="item.prop">
               <el-row>
                 <el-col :span="12">
-                  <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
+                  <el-date-picker :ref="item.prop" :type="item.dataType? item.dataType : 'date'" v-model="queryForm[item.prop]" placeholder="选择日期" :value-format="item.valueFormat?item.valueFormat: 'yyyy-MM-dd'" style="width: 135px;"></el-date-picker>
                   <span>-</span>
                 </el-col>
                 <el-col :span="12">
-                  <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
+                  <el-date-picker :ref="item.propTwo" :type="item.dataType? item.dataType : 'date'" v-model="queryForm[item.propTwo]" placeholder="选择日期" :value-format="item.valueFormat?item.valueFormat: 'yyyy-MM-dd'" style="width: 135px;"></el-date-picker>
                 </el-col>
               </el-row>
             </el-form-item>
@@ -70,7 +70,7 @@
         </div>
       </el-card>
       <el-tabs v-if="tabs.length" v-model="activeName" type="border-card">
-        <el-tab-pane :name='index' :label='tabItem.label' v-for="(tabItem, index) in tabs" :key="index">
+        <el-tab-pane :name='index.toString()' :label='tabItem.label' v-for="(tabItem, index) in tabs" :key="index">
           <el-table :data="tabItem.tableData" ref="table" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
             <el-table-column
               v-if="showSelectColumn"
@@ -208,6 +208,10 @@ export default {
     }
   },
   props: {
+    customData: {
+      type: Boolean,
+      default: false
+    },
     getListField: {
       type: String,
       default: ''
@@ -471,10 +475,12 @@ export default {
               this.tableData = data[this.getListField]
             }
           } else {
-            this.tableData = data[this.returnColumnType].list
-            this.queryForm.currPage = data[this.returnColumnType].currPage
-            this.queryForm.pageSize = data[this.returnColumnType].pageSize
-            this.queryForm.totalCount = data[this.returnColumnType].totalCount
+            if (!this.customData) {
+              this.tableData = data[this.returnColumnType].list
+              this.queryForm.currPage = data[this.returnColumnType].currPage
+              this.queryForm.pageSize = data[this.returnColumnType].pageSize
+              this.queryForm.totalCount = data[this.returnColumnType].totalCount
+            }
           }
           this.$emit('get-data-success', data)
         } else {

@@ -7,7 +7,7 @@
       :showPage="false"
       :list-interface="listInterface"
       @get-data-success="getDataSuccess"
-      :query-auth="'report:formh:getAllStatusList'"
+      :query-auth="'report:production:packing'"
       :spanMethod="spanMethod"
       :column="column"
       :export-excel="true"
@@ -91,7 +91,7 @@ export default {
       },
       exportOption: {
         exportInterface: REP_API.PKGSPECANDOUTPUT_OUT,
-        auth: 'report:formh:getAllStatusList',
+        auth: 'report:production:packingExport',
         text: '包装规格&品项产量分析报表导出'
       },
       column: [

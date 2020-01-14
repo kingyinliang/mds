@@ -2,20 +2,41 @@
   <div class="header_main">
     <query-table
       ref="queryTable"
+      :rules="rules"
       :queryFormData="queryFormData"
       :list-interface="listInterface"
-      :query-auth="'report:formh:getAllStatusList'"
+      @get-data-success="getDataSuccess"
+      :customData="true"
+      :query-auth="'esCommon:iot'"
       :column="column">
     </query-table>
   </div>
 </template>
 
 <script>
-import { BASICDATA_API } from '@/api/api'
+import { BASICDATA_API, SYSTEMSETUP_API } from '@/api/api'
 export default {
   name: 'index',
   data () {
     return {
+      rules: [
+        {
+          prop: 'factory',
+          text: '请选择生产工厂'
+        },
+        {
+          prop: 'workShopid',
+          text: '请选择生产车间'
+        },
+        {
+          prop: 'startDate',
+          text: '请选择时间'
+        },
+        {
+          prop: 'endDate',
+          text: '请选择时间'
+        }
+      ],
       queryFormData: [
         {
           type: 'select',
@@ -29,12 +50,12 @@ export default {
             label: ['deptName'],
             value: 'deptId'
           },
-          linkageProp: ['workShop']
+          linkageProp: ['workShopid']
         },
         {
           type: 'select',
           label: '生产车间',
-          prop: 'workShop',
+          prop: 'workShopid',
           optionsFn: (val) => {
             return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: val, deptName: '' })
           },
@@ -45,33 +66,38 @@ export default {
           }
         },
         {
-          type: 'select',
+          type: 'input',
           label: '名称',
-          prop: 'name',
-          filterable: true
+          prop: 'name'
         },
         {
-          type: 'date-picker',
+          type: 'date-interval',
           label: '时间',
-          prop: 'productDate',
-          dataType: 'month',
-          valueFormat: 'yyyy-MM'
+          dataType: 'datetime',
+          prop: 'startDate',
+          propTwo: 'endDate',
+          valueFormat: 'yyyy-MM-dd HH:mm:ss'
         }
       ],
       listInterface: (params) => {
-        return this.$http(`${BASICDATA_API.REPMADIFFLIST_API}`, 'POST', params)
+        params.werks = this.$refs.queryTable.optionLists.factory.filter(it => it.deptId === params.factory)[0].deptCode
+        params.workShop = this.$refs.queryTable.optionLists.workShopid.filter(it => it.deptId === params.workShopid)[0].deptCode
+        // params.werks = '7101'
+        // params.workShop = 'BZ1'
+        return this.$http(`${SYSTEMSETUP_API.ES_LIST_API}`, 'POST', params)
       },
       column: [
         {
-          prop: 'productDate',
+          prop: 'name',
           label: '名称'
         },
         {
-          prop: 'factoryName',
-          label: '数值'
+          prop: 'v',
+          label: '数值',
+          width: '120'
         },
         {
-          prop: 'factoryName',
+          prop: 'datetime',
           label: '时间'
         }
       ]
@@ -79,7 +105,14 @@ export default {
   },
   mounted () {
   },
-  methods: {},
+  methods: {
+    getDataSuccess (data) {
+      this.$refs.queryTable.tableData = data.page.content
+      this.$refs.queryTable.currPage = data.page.pageNumber
+      this.$refs.queryTable.pageSize = data.page.pageSize
+      this.$refs.queryTable.totalCount = data.page.total
+    }
+  },
   computed: {},
   components: {}
 }

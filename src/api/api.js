@@ -455,7 +455,8 @@ export const SYSTEMSETUP_API = {
   IOTDATADEL_API: HOST + '/iot/import/iotDel', // 删除
   IOTDATALISTEXPORT_API: HOST + '/iot/import/exportIot', // 导出
   IOTDATAUPDATE_API: HOST + '/iot/import/iotUpdate', // 修改
-  IOTDATALISTIMPORT_API: HOST + '/iot/import/iotImport' // 导入
+  IOTDATALISTIMPORT_API: HOST + '/iot/import/iotImport', // 导入
+  ES_LIST_API: HOST + '/esCommon/iot'
 }
 /*
 *包装车间api
@@ -933,7 +934,9 @@ export const REP_API = {
   JUICEOCCUPATION_SEMIPROD: HOST + '/sys/sapmaterialitem/semiProductList', // 原汁占用报表 - 品项
   JUICEOCCUPATION_OUT: HOST + '/juiceOccupy/export',
   PKGSPECANDOUTPUT_LIST: HOST + '/report/production/packing',
-  PKGSPECANDOUTPUT_OUT: HOST + '/report/production/packingExport'
+  PKGSPECANDOUTPUT_OUT: HOST + '/report/production/packingExport',
+  SQUEEZEDAYS_LIST: HOST + '/report/production/prsDays',
+  SQUEEZEDAYS_OUT: HOST + '/report/production/prsDaysExport'
 
 }
 /*
