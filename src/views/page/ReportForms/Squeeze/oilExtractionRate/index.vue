@@ -18,7 +18,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="发酵罐：">
-                <el-select v-model="plantList.childPotNo" placeholder="请选择">
+                <el-select v-model="plantList.childPotNo" filterable placeholder="请选择">
                   <el-option label="请选择"  value=""></el-option>
                   <el-option :label="item.holderName" v-for="(item, index) in potList" :key="index" :value="item.holderId"></el-option>
                 </el-select>
@@ -138,16 +138,12 @@ export default {
     // 获取罐
     GetPot (id) {
       this.plantList.childPotNo = ''
-      this.$http(`${BASICDATA_API.CONTAINERLIST_API}`, 'POST', {
-        holder_type: '001',
-        type: 'holder_type',
+      this.$http(`${BASICDATA_API.CONTAINER_LIST_API}`, 'POST', {
         factory: this.plantList.factory,
-        dept_id: id,
-        currPage: 1,
-        pageSize: 9999
+        workShop: id
       }).then(({data}) => {
         if (data.code === 0) {
-          this.potList = data.page.list
+          this.potList = data.list
         } else {
           this.$notify.error({title: '错误', message: data.msg})
         }

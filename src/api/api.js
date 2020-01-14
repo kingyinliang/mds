@@ -107,6 +107,7 @@ export const BASICDATA_API = {
    * @property {string} CONTAINERLIST_API 容器列表 不带权限
    */
   CONTAINERLIST_API: HOST + '/sys/holder/list',
+  CONTAINER_LIST_API: HOST + '/all/dropDown/getFerHolder', // 出油率报表发酵罐list
   /**
    * @property {string} CONTAINERLIST_API 容器列表 带权限
    */
