@@ -1096,6 +1096,7 @@ export const KJM_API = {
    * @property {string} OUTMATERIELSAVE_API 出曲工艺控制保存
    */
   OUTTECHSAVE_API: HOST + '/sys/kjmOutTech/mySaveOrUpdate',
+  OUT_GETSTOCK_API: HOST + '/kjm/salt/saltBatchList', // 出曲库存拉取
   /**
    * @property {string} OUTTIMELIST_API 工时查询
    */

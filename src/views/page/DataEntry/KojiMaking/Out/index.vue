@@ -162,6 +162,10 @@ export default {
     },
     // 保存
     savedOrSubmitForm (str) {
+      // 原料领用校验
+      if (!this.$refs.meateriel.saveRul2()) {
+        return false
+      }
       if (str === 'submit') {
         if (!this.$refs.meateriel.saveRul()) {
           return false
@@ -242,7 +246,9 @@ export default {
     },
     SetMeaterielNum (num) {
       // this.$refs.outtech.GetsaltWaterUsed(num)
-      this.$refs.outinstorage.setBrineNum(num)
+      this.$nextTick(function () {
+        this.$refs.outinstorage.setBrineNum(num)
+      })
     },
     // 生产入库状态
     GetInStockStatus (status) {
