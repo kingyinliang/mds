@@ -153,7 +153,9 @@ export default {
         if (data.code === 0) {
           this.MaterielDate = data.list
           if (formHeader.materialCode === 'SS02010001') {
-            this.getRepertory(formHeader, this.MaterielDate)
+            setTimeout(() => {
+              this.getRepertory(formHeader, this.MaterielDate)
+            }, 500)
           }
           this.MaterielAuditlog = data.vrlist
           let sub = 0
@@ -188,12 +190,12 @@ export default {
       })
     },
     // 库存拉取
-    getRepertory (formHeader, data) {
+    getRepertory (formHeader, MaterielDate) {
       let location = '7102'
       if (formHeader.workShopName === '制曲二车间') {
         location = '71A2'
       }
-      this.$http(`${KJM_API.OUT_GETSTOCK_API}`, 'POST', {factory: formHeader.factory, location: location, orderHouseId: formHeader.id, workList: this.MaterielDate}, false, false, false).then(({data}) => {
+      this.$http(`${KJM_API.OUT_GETSTOCK_API}`, 'POST', {factory: formHeader.factory, location: location, orderHouseId: formHeader.id, workList: MaterielDate}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.batchList = data.list
           this.MaterielDate.map((item) => {
