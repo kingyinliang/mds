@@ -54,7 +54,7 @@
           <el-table-column width="130">
             <template slot="header"><i class="reqI">*</i><span>批次</span></template>
             <template slot-scope="scope">
-              <el-input v-model="scope.row.batch" :disabled="!scope.row.isB" size="small"></el-input>
+              <el-input v-model="scope.row.batch" :disabled="!scope.row.isB" size="small" maxlength="10"></el-input>
             </template>
           </el-table-column>
           <el-table-column width="130">
@@ -190,10 +190,15 @@ export default {
     },
     setBatch (row) {
       let PotSole = this.PotList.find(item => item.holderId === row.holderId)
-      if (PotSole.holderId !== '016' && PotSole.holderId !== '017') {
+      if (PotSole.holderType !== '016' && PotSole.holderType !== '017' && PotSole.holderType !== '018') {
+        row.isB = 0
         if (PotSole.materialCode !== row.materialCode && PotSole.materialCode !== '') {
           this.$warning_SHINHO('领用物料与BOM物料不一致，请确认！')
         }
+      } else if (PotSole.holderType === '016' || PotSole.holderType === '017' || PotSole.holderType === '018') {
+        row.isB = 1
+      } else {
+        row.isB = 0
       }
       row.holderMaterialCode = PotSole.materialCode
       row.holderMaterialName = PotSole.materialName

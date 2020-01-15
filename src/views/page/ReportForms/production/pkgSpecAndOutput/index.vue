@@ -34,20 +34,6 @@ export default {
             resData: 'typeList',
             label: ['deptName'],
             value: 'deptId'
-          },
-          linkageProp: ['workShop']
-        },
-        {
-          type: 'select',
-          label: '生产车间',
-          prop: 'workShop',
-          optionsFn: (val) => {
-            return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: val, deptName: '包装' })
-          },
-          resVal: {
-            resData: 'typeList',
-            label: ['deptName'],
-            value: 'deptId'
           }
         },
         {
