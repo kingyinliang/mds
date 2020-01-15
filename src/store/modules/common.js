@@ -63,6 +63,7 @@ export default {
       params: {
         orderNo: '',
         orderId: '',
+        orderStatus: '',
         // 煮豆
         beanOrderHouseId: '',
         // 出曲
@@ -370,6 +371,9 @@ export default {
     },
     updateZQCheckParamsOrderId (state, name) {
       state.ZQWorkshop.checkParams.orderId = name
+    },
+    updateZQCheckParamsOrderStatus (state, name) {
+      state.ZQWorkshop.checkParams.orderStatus = name
     },
     /** 制曲 end */
     /** 压榨 */
