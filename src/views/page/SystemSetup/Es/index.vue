@@ -14,19 +14,19 @@
 </template>
 
 <script>
-import { BASICDATA_API, SYSTEMSETUP_API } from '@/api/api'
+import { SYSTEMSETUP_API } from '@/api/api'
 export default {
   name: 'index',
   data () {
     return {
       rules: [
         {
-          prop: 'factory',
-          text: '请选择生产工厂'
+          prop: 'werks',
+          text: '请填写生产工厂'
         },
         {
-          prop: 'workShopid',
-          text: '请选择生产车间'
+          prop: 'workShop',
+          text: '请填写生产车间'
         },
         {
           prop: 'startDate',
@@ -39,31 +39,14 @@ export default {
       ],
       queryFormData: [
         {
-          type: 'select',
+          type: 'input',
           label: '生产工厂',
-          prop: 'factory',
-          defaultOptionsFn: () => {
-            return this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false)
-          },
-          resVal: {
-            resData: 'typeList',
-            label: ['deptName'],
-            value: 'deptId'
-          },
-          linkageProp: ['workShopid']
+          prop: 'werks'
         },
         {
-          type: 'select',
+          type: 'input',
           label: '生产车间',
-          prop: 'workShopid',
-          optionsFn: (val) => {
-            return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: val, deptName: '' })
-          },
-          resVal: {
-            resData: 'typeList',
-            label: ['deptName'],
-            value: 'deptId'
-          }
+          prop: 'workShop'
         },
         {
           type: 'input',
@@ -80,8 +63,8 @@ export default {
         }
       ],
       listInterface: (params) => {
-        params.werks = this.$refs.queryTable.optionLists.factory.filter(it => it.deptId === params.factory)[0].deptCode
-        params.workShop = this.$refs.queryTable.optionLists.workShopid.filter(it => it.deptId === params.workShopid)[0].deptCode
+        // params.werks = this.$refs.queryTable.optionLists.factory.filter(it => it.deptId === params.factory)[0].deptCode
+        // params.workShop = this.$refs.queryTable.optionLists.workShopid.filter(it => it.deptId === params.workShopid)[0].deptCode
         // params.werks = '7101'
         // params.workShop = 'BZ1'
         return this.$http(`${SYSTEMSETUP_API.ES_LIST_API}`, 'POST', params)
