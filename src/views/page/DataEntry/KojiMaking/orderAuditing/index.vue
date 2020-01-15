@@ -3,7 +3,7 @@
     <div class="header_main">
       <el-card class="searchCard">
         <el-row type="flex">
-          <el-col :span="21">
+          <el-col :span="20">
             <el-form :inline="true" size="small" label-width="70px">
               <el-form-item label="生产车间：">
                 <p class="input_bommom">{{formHeader.workShopName}}</p>
@@ -34,7 +34,7 @@
               </el-form-item>
             </el-form>
           </el-col>
-          <el-col :span="3" >
+          <el-col :span="4" >
             <div style="float: right; line-height: 31px; font-size: 14px;">
               <div style="float: left;">
                 <span class="point" :style="{'background': formHeader.orderStatus === 'noPass'? 'red' : formHeader.orderStatus === 'saved'? '#1890f' : formHeader.orderStatus === 'submit' ? '#1890ff' : formHeader.orderStatus === '已拆分' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：
@@ -239,7 +239,7 @@
                     {{scope.row.houseName}}
                   </template>
                 </el-table-column>
-                <el-table-column label="物料" width="180">
+                <el-table-column label="物料" show-overflow-tooltip width="150">
                   <template slot-scope="scope">
                     {{scope.row.materialCode + ' ' + scope.row.materialName}}
                   </template>
@@ -251,9 +251,9 @@
                     {{scope.row.holderName}}
                   </template>
                 </el-table-column>
-                <el-table-column width="120" label="批次">
+                <el-table-column width="140" label="批次">
                   <template slot-scope="scope">
-                    {{scope.row.batch}}
+                    <el-input size="small" v-model.number="scope.row.batch" maxlength="10" placeholder="手工录入" :disabled="scope.row.disabled"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column width="80" label="数量">
@@ -266,7 +266,7 @@
                     <span>{{scope.row.entryUom ? (scope.row.entryUom === 'box' ? '盒' : scope.row.entryUom === 'L' ? '升' : scope.row.entryUom === 'KG' ? '千克' : scope.row.entryUom) : ''}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作人" width="150">
+                <el-table-column label="操作人" width="145">
                   <template slot-scope="scope">
                     <span>{{scope.row.changer}}</span>
                   </template>
@@ -279,8 +279,10 @@
                 <el-table-column
                   fixed="right"
                   label="操作"
-                  width="80">
+                  width="145">
                   <template slot-scope="scope">
+                    <el-button style='float: left;' type="primary" size="small"  @click="materialEnbaleEdit(scope.row)" :disabled="!(scope.row.materialCode === 'M040000001' && scope.row.status === 'saved')" v-if="scope.row.disabled">编辑</el-button>
+                    <el-button style='float: left;' type="primary" size="small" @click="materialSaveWorkHour(scope.row)" v-if="!scope.row.disabled">保存</el-button>
                     <el-button style='float: right;' type="primary" size="small" @click="goBack('物料领用', scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
                   </template>
                 </el-table-column>
@@ -509,9 +511,10 @@ export default class Index extends Vue {
   async getMaterialList () {
     let orderId = this.$store.state.common.ZQWorkshop.checkParams.orderId
     let orderNo = this.$store.state.common.ZQWorkshop.checkParams.orderNo
+    let orderStatus = this.$store.state.common.ZQWorkshop.checkParams.orderStatus
     this.applyMaterieList = []
     this.applyMaterieAuditList = []
-    await Vue.prototype.$http(`${KJM_API.KJMAKINGCHECKMATERIALE_API}`, 'POST', {orderId, orderNo}).then(res => {
+    await Vue.prototype.$http(`${KJM_API.KJMAKINGCHECKMATERIALE_API}`, 'POST', {orderId, orderNo, orderStatus}).then(res => {
       let no = 0
       let sub = 0
       let che = 0
@@ -618,7 +621,22 @@ export default class Index extends Vue {
       console.log('catch data::', err)
     })
   }
-
+  materialEnbaleEdit (row) {
+    row.disabled = false
+  }
+  materialSaveWorkHour (row) {
+    row.status = 'saved'
+    Vue.prototype.$http(`${KJM_API.KJMAKING_MATERIAL_SAVE_API}`, 'POST', row).then(res => {
+      if (res.data.code === 0) {
+        Vue.prototype.$success_SHINHO('保存成功')
+        this.getList()
+      } else {
+        Vue.prototype.$error_SHINHO(res.data.msg)
+      }
+    }).catch(err => {
+      console.log('catch data::', err)
+    })
+  }
   submitForm () {
     let that = this
     this.$confirm('确认提交该订单, 是否继续?', '提交订单', {

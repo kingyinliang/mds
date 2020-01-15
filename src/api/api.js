@@ -1222,7 +1222,8 @@ export const KJM_API = {
   /**
    * @property {string} KJMAKINGCHECKMATERIALESUBMIT_API 车间审核表头提交
    */
-  KJMAKINGCHECKHEADSUBMIT_API: HOST + '/kjm/order/submitToFerVer'
+  KJMAKINGCHECKHEADSUBMIT_API: HOST + '/kjm/order/submitToFerVer',
+  KJMAKING_MATERIAL_SAVE_API: HOST + '/sys/midMaterial/saveWater' // 物料领用保存
 }
 
 /**
