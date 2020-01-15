@@ -24,7 +24,8 @@ module.exports = {
     // "selector-id-pattern": "^[a-z]+([a-z0-9]?|[a-z0-9\\-\\_]*[a-z0-9])$", // 指定一个模式，id选择器，限制选择器名称写法
     // "value-keyword-case": "lower", // 属性值小写
     "no-empty-source": null, // 不允许空的来源
-    // "at-rule-no-unknown": null, // 不允许at-rules不明
+    "at-rule-no-unknown": null, // 不允许at-rules不明
+    "scss/at-rule-no-unknown": true,
     // // "indentation": 2, // 指定缩进(stylelint-config-standard)
     "max-nesting-depth": 6, // 允许嵌套的深度为3
     // "no-duplicate-selectors": true, // 不允许重复的选择器
@@ -32,5 +33,6 @@ module.exports = {
     // // "no-invalid-double-slash-comments": true // 不允许双斜杠注释(/ /…)不支持CSS(stylelint-config-standard)
     "max-empty-lines": null, // 设值 2 解决 html DOM 被误判问题
     "rule-empty-line-before":null // 前面空行
-  }
+  },
+  'ignoreFiles': ["/src/assets/icon/iconfont.css"]
 };

@@ -2,74 +2,68 @@
 <template>
   <div>
     <!--数据录入-->
-    <el-row>
-      <el-col :span="24">
-        <el-row :gutter="10">
-          <el-col :span="12" v-for="(sole, index) in WheatCangList" :key="index">
-            <el-card class="Card_item">
-              <div slot="header">小麦罐号：{{sole.holderName}} <el-button type="primary" size="small" @click="Receive(sole.holderName, sole.holderId)" :disabled="!isRedact || applyMaterielState == 'submit' || applyMaterielState == 'checked'" style="float: right; margin-top: -8px;">立即领用</el-button></div>
-              <div style="display: flex;">
-                <div class="Card_item_img">
-                  <div class="Card_item_img_box">
-                    <div class="Card_item_img_box_bg" style="height: 50%;"></div>
-                  </div>
-                  <img src="@/assets/img/granary.png" alt="">
-                </div>
-                <div class="Card_item_text">
-                  <el-card style="margin-top: 25px;">
-                    <div slot="header">库存明细 <span style="float: right;">合计：{{sole.cangtotal}}KG</span></div>
-                    <div style="position: relative;">
-                      <el-row  class="Card_item_text_item bgbox" style="padding-top: 0;">
-                        <el-col :span="16">批次</el-col>
-                        <el-col :span="8">数量</el-col>
-                      </el-row >
-                      <div class="Card_item_text_box_bg1"></div>
-                      <div class="Card_item_text_box">
-                        <el-row class="Card_item_text_item" v-for="(soles, indexs) in sole.wheatData" :key="indexs">
-                          <el-col :span="16">{{soles.batch}}</el-col>
-                          <el-col :span="8">{{soles.currentQuantity}}KG</el-col>
-                        </el-row>
-                      </div>
-                      <div class="Card_item_text_box_bg2"></div>
+    <mds-card :title="'物料领用'" :name="'material'">
+      <el-row :gutter="10" class="cardList">
+        <el-col :span="12" v-for="(sole, index) in WheatCangList" :key="index">
+          <el-card class="card-item">
+            <div slot="header">小麦罐号：{{sole.holderName}} <el-button type="primary" size="small" @click="Receive(sole.holderName, sole.holderId)" :disabled="!isRedact || applyMaterielState == 'submit' || applyMaterielState == 'checked'" style="float: right; margin-top: -8px;">立即领用</el-button></div>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <div class="card-item-color-lump" style="background: #ffbf00;">
+                  <span class="card-item-color-lump_icon iconfont factory-chuguan1"></span>
+                  <div class="card-item-color-lump__img">
+                    <div class="card-item-color-lump__img__box">
+                      <div class="card-item-color-lump__img__box__bg" style="height: 70%;"></div>
                     </div>
-                  </el-card>
+                    <img src="@/assets/img/ui2.0/pot.png" alt="">
+                  </div>
                 </div>
-              </div>
-            </el-card>
-          </el-col>
-<!-- <el-button @click="Receive(sole.holderName, sole.holderId)" :disabled="!isRedact || applyMaterielState == 'submit' || applyMaterielState == 'checked'">立即领用</el-button>
--->
-        </el-row>
-        <el-card body-style="padding-top:10px;">
-          <el-table ref="table1" header-row-class-name="tableHead" :data="materielDataList" @row-dblclick="EditReceive" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-            <el-table-column label="物料">
-              <template slot-scope="scope">{{scope.row.materialCode}} {{scope.row.materialName}}</template>
-            </el-table-column>
-            <el-table-column label="粮仓" :show-overflow-tooltip="true" prop="holderName"></el-table-column>
-            <el-table-column label="物料批次" prop="batch"></el-table-column>
-            <el-table-column width="160" label="小麦领用数" prop="wheatWeight"></el-table-column>
-            <el-table-column label="单位" width="120" prop="weightUnit"></el-table-column>
-            <!-- <el-table-column label="备注" width="160" prop="remark"></el-table-column> -->
-            <el-table-column fixed="right" label="操作" width="70">
-              <template slot-scope="scope">
-                <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'"  @click="dellistbomS(scope.row)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-row style="margin-top: 20px;">
-            <el-col>
-              <div><span>领用数合计：</span>{{totalInstock}} KG</div>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
+              </el-col>
+              <el-col :span="12">
+                <div class="card-item-color-lump">
+                  <span class="card-item-color-lump_icon iconfont factory-zongliangguanli"></span>
+                  <p class="card-item-color-lump_text"><span>{{sole.cangtotal}}</span>KG</p>
+                  <p class="card-item-color-lump_text">库存总量</p>
+                </div>
+              </el-col>
+            </el-row>
+            <div class="card-item-color-lump_text">
+              <p class="card-item-color-lump_text__title">
+                <i class="card-item-color-lump_text__icon"></i>
+                <span>库存明细</span>
+              </p>
+              <el-table :data="sole.wheatData" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="165">
+                <el-table-column prop="batch" width="auto"><template slot="header" slot-scope="scope"><i class="iconfont factory-pici" style="margin-right: 5px;"></i>批次</template></el-table-column>
+                <el-table-column prop="currentQuantity" width="auto" header-align="left">
+                  <template slot="header" slot-scope="scope"><i class="iconfont factory-shuliang" style="font-size: 18px; margin-right: 5px;"></i>数量</template>
+                  <template slot-scope="scope">
+                    {{(scope.row.currentQuantity*1).toLocaleString()}} KG
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-table class="newTable" ref="table1" header-row-class-name="tableHead" :data="materielDataList" @row-dblclick="EditReceive" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+        <el-table-column label="物料">
+          <template slot-scope="scope">{{scope.row.materialCode}} {{scope.row.materialName}}</template>
+        </el-table-column>
+        <el-table-column label="粮仓" :show-overflow-tooltip="true" prop="holderName"></el-table-column>
+        <el-table-column label="物料批次" prop="batch"></el-table-column>
+        <el-table-column width="160" label="小麦领用数" prop="wheatWeight"></el-table-column>
+        <el-table-column label="单位" width="120" prop="weightUnit"></el-table-column>
+        <!-- <el-table-column label="备注" width="160" prop="remark"></el-table-column> -->
+        <el-table-column fixed="right" label="操作" width="70">
+          <template slot-scope="scope">
+            <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'"  @click="dellistbomS(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div style="margin-top: 20px;"><span>领用数合计：</span>{{totalInstock}} KG</div>
+    </mds-card>
     <!--审批-->
-    <el-row >
-      <el-col :span="24">
-        <auditLog :tableData="readAudit"></auditLog>
-      </el-col>
-    </el-row>
+    <auditLog :tableData="readAudit"></auditLog>
     <el-dialog :close-on-click-modal="false" :title="dialogTitle" :visible.sync="dialogFormVisible" width="450px">
       <el-form :model="cang" size="small" :rules="cangrules" ref="cang">
         <el-form-item label="领用粮仓：" :label-width="formLabelWidth">{{cang.holderName}}</el-form-item>

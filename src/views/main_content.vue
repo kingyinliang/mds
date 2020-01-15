@@ -186,7 +186,7 @@ export default {
     text-align: center;
     width: 100%;
     position: absolute;
-    bottom: 14px;
+    bottom: 55px;
     color: rgba(0, 0, 0, 0.45);
     line-height: 20px;
     font-size: 12px;

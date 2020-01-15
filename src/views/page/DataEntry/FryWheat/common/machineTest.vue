@@ -1,8 +1,8 @@
 <template>
 <el-dialog :visible.sync="visible" width="850px" custom-class='dialog__class' :close-on-click-modal="false">
-  <div slot="title" style="line-height: 59px;">{{machineName}}检测</div>
+  <div slot="title">{{machineName}}检测</div>
   <el-button type="primary" @click="AddMachineTest" size="small" style="float: right; margin-bottom: 15px;">新增</el-button>
-  <el-table :data="machineTest" header-row-class-name="tableHead" :row-class-name="RowDelFlag"  border tooltip-effect="dark">
+  <el-table class="newTable" :data="machineTest" header-row-class-name="tableHead" :row-class-name="RowDelFlag"  border tooltip-effect="dark">
     <el-table-column label="检测时间" width="160">
       <template slot-scope="scope">
         <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" v-model="scope.row.checkTime" size="small"></el-date-picker>

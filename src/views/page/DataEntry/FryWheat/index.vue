@@ -1,62 +1,59 @@
 <template>
   <el-col>
     <div class="header_main">
-      <el-card class="searchCard" style="min-height: 480px;">
-        <el-row type="flex" style="border-bottom: 1px solid #e9e9e9; margin-bottom: 12px;">
-          <el-col>
-            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
-              <el-form-item label="生产工厂：">
-                <el-select v-model="plantList.factoryid" class="selectwpx" style="width: 140px;">
-                  <el-option label="请选择" value=""></el-option>
-                  <el-option v-for="sole in factory" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="生产车间：">
-                <el-select v-model="plantList.workshopid" class="selectwpx" style="width: 130px;">
-                  <el-option label="请选择" value=""></el-option>
-                  <el-option v-for="sole in workshop" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="生产日期：">
-                <el-date-picker type="date" v-model="plantList.productDate" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
-              </el-form-item>
-              <el-form-item label="订单：" label-width="45px">
-                <el-input type="text" v-model="plantList.orderNo" clearable style="width: 140px;"></el-input>
-              </el-form-item>
-              <el-form-item label="生产状态：">
-                <el-select v-model="plantList.status" class="selectwpx" style="width: 140px;">
-                  <el-option label="正常生产" value="normal"></el-option>
-                  <el-option label="无生产" value="abnormal" v-if="isAuth('wht:user:listUser')"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-form>
-          </el-col>
-          <el-col style="width: 342px;">
-            <el-row class="rowButton" style="margin-top: 39px; text-align: right;">
-              <el-button type="primary" size="small" @click="GetOrderList(true)">查询</el-button>
-              <template v-if="type === 'abnormal'">
-                <el-button v-if="isdisabled === true && isAuth('wht:user:updateUser')" type="primary" size="small" @click="isdisabledFn" >编辑</el-button>
-                <el-button v-if="isdisabled === false" type="primary" size="small" @click="disabledFn">返回</el-button>
-              </template>
-              <template v-if="type === 'abnormal' && isdisabled === false">
-                <el-button type="primary" size="small" @click="AddPeople" >新增</el-button>
-                <el-button type="primary" size="small" @click="save">保存</el-button>
-              </template>
-            </el-row>
-          </el-col>
-        </el-row>
-        <el-row v-if="type === 'normal'" :gutter="20">
-          <el-col v-for="(item, index) in FryWheatList" :key="index" id="normal" :span="12">
-            <div class="title_left" style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">工序： <font style="color: red;">{{item.productLineName}}</font></div>
+      <el-card class="searchCard queryHead">
+        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
+          <el-form-item label="生产工厂：">
+            <el-select v-model="plantList.factoryid" class="selectwpx" style="width: 140px;">
+              <el-option label="请选择" value=""></el-option>
+              <el-option v-for="sole in factory" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="生产车间：">
+            <el-select v-model="plantList.workshopid" class="selectwpx" style="width: 140px;">
+              <el-option label="请选择" value=""></el-option>
+              <el-option v-for="sole in workshop" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="生产日期：">
+            <el-date-picker type="date" v-model="plantList.productDate" value-format="yyyy-MM-dd" style="width: 135px;"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="生产订单：">
+            <el-input type="text" v-model="plantList.orderNo" clearable style="width: 140px;"></el-input>
+          </el-form-item>
+          <el-form-item label="生产状态：">
+            <el-select v-model="plantList.status" class="selectwpx" style="width: 140px;">
+              <el-option label="正常生产" value="normal"></el-option>
+              <el-option label="无生产" value="abnormal" v-if="isAuth('wht:user:listUser')"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item style="float: right;">
+            <el-button type="primary" size="small" @click="GetOrderList(true)">查询</el-button>
+            <template v-if="type === 'abnormal'">
+              <el-button v-if="isdisabled === true && isAuth('wht:user:updateUser')" type="primary" size="small" @click="isdisabledFn" >编辑</el-button>
+              <el-button v-if="isdisabled === false" type="primary" size="small" @click="disabledFn">返回</el-button>
+            </template>
+            <template v-if="type === 'abnormal' && isdisabled === false">
+              <el-button type="primary" size="small" @click="AddPeople" >新增</el-button>
+              <el-button type="primary" size="small" @click="save">保存</el-button>
+            </template>
+          </el-form-item>
+        </el-form>
+      </el-card>
+      <el-row v-if="type === 'normal'" :gutter="20" class="cardList">
+        <el-col v-for="(item, index) in FryWheatList" :key="index" id="normal" :span="12">
+          <el-card class="card-item">
+            <div class="title_left" style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">工序： <font style="color: red;">{{item.productLineName}}</font>
+              <div style="float: right; font-size: 14px; font-weight: normal;">
+                <span class="points" style="margin-top: 5px;" :style="{'background': item.orderStatus === 'noPass'? 'red': item.orderStatus === 'checked'? '#67C23A' : item.orderStatus === 'submit'? '#1890ff' : item.orderStatus === 'saved'? '#1890ff' : '#7ED321'}"></span>订单状态：<i :style="{'color': item.orderStatus === 'noPass'? 'red': item.orderStatus === 'checked'? '#67C23A' : ''}">{{item.orderStatus === 'submit'? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass'?  '审核不通过' : item.orderStatus === 'saved'? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus}}</i>
+              </div>
+            </div>
             <div class="sole_cont">
               <el-form size="small" :inline="true" label-position="right" label-width="90px">
                 <div class="itemImg">
                   <img :src="'data:image/gif;base64,' + item.img" alt="" style="width: 100%; min-height: 181px;">
                 </div>
                 <div class="title_left">
-                  <div style="float: left; font-size: 14px; font-weight: normal; line-height: 60px;">
-                    <span class="points" :style="{'background': item.orderStatus === 'noPass'? 'red': item.orderStatus === 'checked'? '#67C23A' : item.orderStatus === 'submit'? '#1890ff' : item.orderStatus === 'saved'? '#1890ff' : '#7ED321'}"></span>订单状态：<i :style="{'color': item.orderStatus === 'noPass'? 'red': item.orderStatus === 'checked'? '#67C23A' : ''}">{{item.orderStatus === 'submit'? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass'?  '审核不通过' : item.orderStatus === 'saved'? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus}}</i>
-                  </div>
                   <el-button @click="go(item)" type="primary" size="small" style="float: right; margin-top: 14px; background-color: #1890ff; color: white;" v-if="isAuth('wht:order:list') || isAuth('sys:whtPwMaterial:list')">数据录入</el-button>
                 </div>
                 <div class="normal_bottom">
@@ -66,142 +63,108 @@
                       </el-select>
                     </el-form-item>
                     <el-form-item label="计划产量：" class="width50b">
-                      <div style="width: 152px; border-bottom: 1px solid #ccc;">&nbsp;{{(item.planOutput || 0) + ' ' + item.outputUnit}}</div>
+                      <div style="width: 152px; padding-left: 12px; background: rgba(245, 245, 245, 1); border-radius: 4px;">&nbsp;{{(item.planOutput || 0) + ' ' + item.outputUnit}}</div>
                     </el-form-item>
                     <el-form-item label="品项：" class="width50b">
-                      <div style="width: 150px; border-bottom: 1px solid #ccc;">&nbsp;{{item.materialCode + ' ' + item.materialName}}</div>
+                      <div style="width: 152px; padding-left: 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; background: rgba(245, 245, 245, 1); border-radius: 4px;">&nbsp;{{item.materialCode + ' ' + item.materialName}}</div>
                     </el-form-item>
                     <el-form-item label="实际产量：" class="width50b">
-                      <div style="width: 152px; border-bottom: 1px solid #ccc;">&nbsp;{{(item.realOutput || 0) + ' ' + item.outputUnit}}</div>
+                      <div style="width: 152px; padding-left: 12px; background: rgba(245, 245, 245, 1); border-radius: 4px;">&nbsp;{{(item.realOutput || 0) + ' ' + item.outputUnit}}</div>
                     </el-form-item>
                 </div>
               </el-form>
             </div>
-          </el-col>
-          <!-- <el-col :span="12" v-for="(item, index) in FryWheatList" :key="index" style="margin-bottom: 10px">
-            <el-card class="box-card">
-              <el-form  size="small" label-position="right" label-width="85px">
-                <div class="clearfix pro-line">
-                  <el-form-item label="工序：">
-                    <p>
-                      {{item.productLineName}}
-                      <el-button @click="go(item)" type="primary" size="small" style="float: right">数据录入</el-button>
-                    </p>
-                  </el-form-item>
-                </div>
-                <div class="clearfix item">
-                  <img :src="'data:image/gif;base64,' + item.img" alt="">
-                  <div class="itemForm">
-                    <el-form-item label="订单号：" class="margb20px">
-                      <el-select v-model="item.orderNo" placeholder="请选择" :change="orderchange(item)">
-                        <el-option label=""  value=""></el-option>
-                        <el-option :label="item" v-for="(item, index) in item.order_arr" :key="index" :value="item"></el-option>
-                      </el-select>
-                    </el-form-item>
-                    <el-form-item label="品项：" class="margb20px">
-                      <p class="hiddenP">{{item.materialCode + ' ' + item.materialName}}</p>
-                    </el-form-item>
-                    <el-form-item label="计划产量：" class="margb20px">
-                      <p>{{item.planOutput + ' ' + item.outputUnit}}</p>
-                    </el-form-item>
-                    <el-form-item label="实时产量：" class="margb20px">
-                      <p>{{item.realOutput? item.realOutput + item.outputUnit: '0' + ' ' + item.outputUnit}}</p>
-                    </el-form-item>
-                  </div>
-                </div>
-              </el-form>
-            </el-card>
-          </el-col> -->
-        </el-row>
-        <el-row v-else-if="type === 'abnormal'">
-          <div style="min-height: 340px;">
-          <el-table border  header-row-class-name="tableHead" :data="datalist">
-            <!-- <el-table-column prop="orderId"></el-table-column> -->
-            <el-table-column label="序号" width="50" prop="id" type="index"></el-table-column>
-            <el-table-column label="中/白/夜班" prop="classType" width="100">
-              <template slot-scope="scope">
-                <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="isdisabled" size="small">
-                  <el-option :label="iteam.value" :value="iteam.code" v-for="(iteam, index) in productShift" :key="index"></el-option>
-                </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column label="班组/工序"  width="120">
-              <template slot-scope="scope">
-                <el-select v-model="scope.row.deptId" placeholder="请选择" size="small" @change="changeProcType(scope.row)" :disabled="isdisabled">
-                  <el-option v-for="sole in processesList" :key="sole.deptId" :value="sole.deptId" :label="sole.deptName"></el-option>
-                </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column label="人员属性" prop="userType" width="110">
-              <template slot-scope="scope">
-                <el-select v-model="scope.row.userType" placeholder="请选择" size="small" @change="changeProcType(scope.row)" :disabled="isdisabled">
-                  <el-option v-for="sole in userTypeList" :key="sole.value" :value="sole.value" :label="sole.value"></el-option>
-                </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true">
-              <template slot-scope="scope">
-                <el-col>
-                  <span v-if="!isdisabled" style="cursor: pointer;" @click="selectUser(scope.row)">
-                    <i v-if="scope.row.userId!== undefined">{{scope.row.userId.join(",")}}</i>
-                    <span>
-                      <i v-if="scope.row.userType == '临时工'">点击输入临时工</i>
-                      <i v-else>点击选择人员</i>
-                    </span>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-row v-else-if="type === 'abnormal'">
+        <div style="min-height: 340px;">
+        <el-table border  header-row-class-name="tableHead" :data="datalist">
+          <!-- <el-table-column prop="orderId"></el-table-column> -->
+          <el-table-column label="序号" width="50" prop="id" type="index"></el-table-column>
+          <el-table-column label="中/白/夜班" prop="classType" width="100">
+            <template slot-scope="scope">
+              <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="isdisabled" size="small">
+                <el-option :label="iteam.value" :value="iteam.code" v-for="(iteam, index) in productShift" :key="index"></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="班组/工序"  width="120">
+            <template slot-scope="scope">
+              <el-select v-model="scope.row.deptId" placeholder="请选择" size="small" @change="changeProcType(scope.row)" :disabled="isdisabled">
+                <el-option v-for="sole in processesList" :key="sole.deptId" :value="sole.deptId" :label="sole.deptName"></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="人员属性" prop="userType" width="110">
+            <template slot-scope="scope">
+              <el-select v-model="scope.row.userType" placeholder="请选择" size="small" @change="changeProcType(scope.row)" :disabled="isdisabled">
+                <el-option v-for="sole in userTypeList" :key="sole.value" :value="sole.value" :label="sole.value"></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <el-col>
+                <span v-if="!isdisabled" style="cursor: pointer;" @click="selectUser(scope.row)">
+                  <i v-if="scope.row.userId!== undefined">{{scope.row.userId.join(",")}}</i>
+                  <span>
+                    <i v-if="scope.row.userType == '临时工'">点击输入临时工</i>
+                    <i v-else>点击选择人员</i>
                   </span>
-                  <span v-else style="cursor: pointer;">
-                    <i v-if="scope.row.userId!== undefined">{{scope.row.userId.join(",")}}</i>
-                    <span>
-                      <i v-if="scope.row.userType == '临时工'">点击输入临时工</i>
-                      <i v-else>点击选择人员</i>
-                    </span>
+                </span>
+                <span v-else style="cursor: pointer;">
+                  <i v-if="scope.row.userId!== undefined">{{scope.row.userId.join(",")}}</i>
+                  <span>
+                    <i v-if="scope.row.userType == '临时工'">点击输入临时工</i>
+                    <i v-else>点击选择人员</i>
                   </span>
-                </el-col>
-              </template>
-            </el-table-column>
-            <el-table-column label="开始时间" prop="startDate">
-              <template slot-scope="scope">
-                <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="isdisabled"></el-date-picker>
-              </template>
-            </el-table-column>
-            <el-table-column label="用餐时间" prop="dinner" width="80">
-              <template slot-scope="scope">
-                <el-input size="small" v-model="scope.row.dinner" :disabled="isdisabled"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column label="结束时间" prop="endDate">
-              <template slot-scope="scope">
-                <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="isdisabled"></el-date-picker>
-              </template>
-            </el-table-column>
-            <el-table-column label="备注" prop="remark" width="100px">
-              <template slot-scope="scope">
-                <el-input size="small" v-model="scope.row.remark" :disabled="isdisabled"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" fixed="right" width="50">
-              <template slot-scope="scope">
-                <el-button type="danger" icon="el-icon-delete" circle size="small" @click="delUser(scope.row)" :disabled="isdisabled" v-if="isAuth('wht:user:delUser')"></el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-row style="font-size: 14px; line-height: 30px; margin-top: 10px;">
-            实际作业人数: {{countMan}}
-          </el-row>
-          </div>
-          <el-row v-if="addRowStatus!=1">
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="plantList.currPage"
-              :page-sizes="[10, 20, 50]"
-              :page-size="plantList.pageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="plantList.totalCount">
-            </el-pagination>
-          </el-row>
+                </span>
+              </el-col>
+            </template>
+          </el-table-column>
+          <el-table-column label="开始时间" prop="startDate">
+            <template slot-scope="scope">
+              <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="isdisabled"></el-date-picker>
+            </template>
+          </el-table-column>
+          <el-table-column label="用餐时间" prop="dinner" width="80">
+            <template slot-scope="scope">
+              <el-input size="small" v-model="scope.row.dinner" :disabled="isdisabled"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="结束时间" prop="endDate">
+            <template slot-scope="scope">
+              <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="isdisabled"></el-date-picker>
+            </template>
+          </el-table-column>
+          <el-table-column label="备注" prop="remark" width="100px">
+            <template slot-scope="scope">
+              <el-input size="small" v-model="scope.row.remark" :disabled="isdisabled"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" fixed="right" width="50">
+            <template slot-scope="scope">
+              <el-button type="danger" icon="el-icon-delete" circle size="small" @click="delUser(scope.row)" :disabled="isdisabled" v-if="isAuth('wht:user:delUser')"></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-row style="font-size: 14px; line-height: 30px; margin-top: 10px;">
+          实际作业人数: {{countMan}}
         </el-row>
-      </el-card>
+        </div>
+        <el-row v-if="addRowStatus!=1">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="plantList.currPage"
+            :page-sizes="[10, 20, 50]"
+            :page-size="plantList.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="plantList.totalCount">
+          </el-pagination>
+        </el-row>
+      </el-row>
     </div>
     <temporary-worker ref="temporaryWorker" @changeUser="changeUser"></temporary-worker>
     <loaned-personnel ref="loanedPersonnel" @changeUser="changeUser" :OrgTree="OrgTree" :arrList="arrList"></loaned-personnel>

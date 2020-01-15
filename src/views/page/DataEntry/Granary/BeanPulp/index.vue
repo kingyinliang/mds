@@ -1,77 +1,64 @@
 <template>
-  <div class="granary-bean-pulp">
-    <div class="header_main granary-bean-pulp__header">
-      <el-card>
-        <el-row type="flex" :gutter="10">
-          <el-col :span="22">
-            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="auto" class="sole_row">
-              <el-form-item label="生产工厂：">
-                <el-select v-model="plantList.factoryIDValue" class="w300" placeholder="请选择" @change="changeSearchOptions(plantList.factoryIDValue)">
-                  <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="生产车间：">
-                <el-select v-model="plantList.workshopIDValue" class="w200" clearable placeholder="请选择" :disabled="plantList.factoryIDValue ==='' || workshopList.length === 0">
-                  <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-form>
-          </el-col>
-          <el-col :span="2" style="display: flex; align-items: flex-end; justify-content: flex-end;">
-            <el-button type="primary" size="small" @click="getOrderList()" :disabled="plantList.factoryIDValue==='' && plantList.workshopIDValue==='' || workshopList.length === 0">查询</el-button>
-          </el-col>
-        </el-row>
-      </el-card>
-    </div>
-    <div class="main granary-bean-pulp__body" v-if="isMainAreaShow" >
-      <el-card class="newCard area-to-bottom">
-        <el-row :gutter="10">
-          <el-col :span="12" v-for="(item, index) in dataList" :key="index">
-            <el-card class="card-item">
-              <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span></div>
-              <div style="display: flex;">
-                <div class="card-item_img">
-                  <div class="card-item_img_box">
-                    <div class="card-item_img_box_bg" :style="{height: `${Math.min(sumBatch(item.stocks) / (item.holderHold*1), 100)}%`}"></div>
+  <div class="header_main">
+    <el-card class="queryHead">
+      <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="auto" class="sole_row">
+        <el-form-item label="生产工厂：">
+          <el-select v-model="plantList.factoryIDValue" class="w300" placeholder="请选择" @change="changeSearchOptions(plantList.factoryIDValue)">
+            <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="生产车间：">
+          <el-select v-model="plantList.workshopIDValue" class="w200" clearable placeholder="请选择" :disabled="plantList.factoryIDValue ==='' || workshopList.length === 0">
+            <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item style="float: right;">
+          <el-button type="primary" size="small" @click="getOrderList()" :disabled="plantList.factoryIDValue==='' && plantList.workshopIDValue==='' || workshopList.length === 0">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+    <el-row :gutter="30" v-if="isMainAreaShow" class="cardList">
+      <el-col :span="12" v-for="(item, index) in dataList" :key="index">
+        <el-card class="card-item">
+          <div slot="header">豆粕罐号：{{item.holderName}} <span class="card-item_detail" @click="goTargetDetail(item)">详情</span></div>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <div class="card-item-color-lump" style="background: #ffbf00;">
+                <span class="card-item-color-lump_icon iconfont factory-chuguan1"></span>
+                <div class="card-item-color-lump__img">
+                  <div class="card-item-color-lump__img__box">
+                    <div class="card-item-color-lump__img__box__bg" :style="{height: `${Math.min(sumBatch(item.stocks) / (item.holderHold*1), 100)}%`}"></div>
                   </div>
-                  <img src="@/assets/img/granary.png" alt="">
-                </div>
-                <div class="card-item_text">
-                  <el-card style="margin-top: 25px;">
-                    <div slot="header">库存明细 <span style="float: right;">合计：{{sumBatch(item.stocks).toLocaleString()}} KG</span></div>
-                    <el-table
-                      :data="item.stocks"
-                      stripe
-                      size="medium"
-                      height="200"
-                      min-width="300"
-                      style="width: 100%;">
-                      <el-table-column
-                        prop="batch"
-                        label="批次"
-                        width="auto">
-                      </el-table-column>
-                      <el-table-column
-                        prop="currentQuantity"
-                        label="数量"
-                        width="auto"
-                        align="right"
-                        header-align="left">
-                        <template slot-scope="scope">
-                          <div>
-                            {{(scope.row.currentQuantity*1).toLocaleString()}} KG
-                          </div>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                  </el-card>
+                  <img src="@/assets/img/ui2.0/pot.png" alt="">
                 </div>
               </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-card>
-    </div>
+            </el-col>
+            <el-col :span="12">
+              <div class="card-item-color-lump">
+                <span class="card-item-color-lump_icon iconfont factory-zongliangguanli"></span>
+                <p class="card-item-color-lump_text"><span>{{sumBatch(item.stocks).toLocaleString()}}</span>KG</p>
+                <p class="card-item-color-lump_text">库存总量</p>
+              </div>
+            </el-col>
+          </el-row>
+          <div class="card-item-color-lump_text">
+            <p class="card-item-color-lump_text__title">
+              <i class="card-item-color-lump_text__icon"></i>
+              <span>库存明细</span>
+            </p>
+            <el-table :data="item.stocks" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="165">
+              <el-table-column prop="batch" width="auto"><template slot="header" slot-scope="scope"><i class="iconfont factory-pici" style="margin-right: 5px;"></i>批次</template></el-table-column>
+              <el-table-column prop="currentQuantity" width="auto" header-align="left">
+                <template slot="header" slot-scope="scope"><i class="iconfont factory-shuliang" style="font-size: 18px; margin-right: 5px;"></i>数量</template>
+                <template slot-scope="scope">
+                  {{(scope.row.currentQuantity*1).toLocaleString()}} KG
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -251,116 +238,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/assets/scss/_common.scss";
-@import "@/assets/scss/_share.scss";
-.granary-bean-pulp {
-  .area-to-bottom {
-    min-height: calc(82vh);
-  }
-  .granary-bean-pulp__body {
-    .el-col-12 {
-      margin-bottom: 10px;
-    }
-  }
-  .card-item_detail {
-    float: right;
-    cursor: pointer;
-    color: #1890ff;
-    &::after {
-      content: " >>";
-    }
-  }
-  .card-item {
-    .el-card__header {
-      padding: 15px 20px;
-      font-size: 16px;
-      color: #666;
-    }
-    &_img {
-      width: 250px;
-      position: relative;
-      img {
-        width: 250px;
-      }
-      &_box {
-        width: 89px;
-        height: 161px;
-        position: absolute;
-        left: 83px;
-        top: 33px;
-        display: flex;
-        flex-wrap: wrap;
-        align-content: flex-end;
-        &_bg {
-          flex: 1;
-          height: 161px;
-          align-items: center;
-          position: relative;
-          background: linear-gradient(#35c3ff, #1890ff);
-          overflow: hidden;
-          &::before,
-          &::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            min-width: 155px;
-            min-height: 145px;
-            background: #fff;
-            animation: roateTwo 10s linear infinite;
-          }
 
-          &::before {
-            top: -138px;
-            border-radius: 45%;
-          }
-          &::after {
-            top: -132px;
-            opacity: 0.5;
-            border-radius: 47%;
-          }
-        }
-        &:hover &_bg::before,
-        &:hover &_bg::after {
-          animation: roateOne 10s linear infinite;
-        }
-      }
-    }
-    &_text {
-      flex: 1;
-      margin-right: 2em;
-      .el-card__header {
-        font-size: 14px;
-        padding: 10px 12px;
-        background: #1890ff;
-        color: white;
-      }
-      &_box {
-        position: relative;
-        padding-bottom: 6px;
-        max-height: 180px;
-        overflow: scroll;
-        &_bg1,
-        &_bg2 {
-          position: absolute;
-          width: 100%;
-          height: 20px;
-          background: linear-gradient(rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
-          z-index: 999;
-        }
-        &_bg2 {
-          bottom: 0;
-          background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
-        }
-      }
-      .card-item_text_box::-webkit-scrollbar {
-        display: none;
-      }
-      &_item {
-        color: #4a4a4a;
-        font-size: 14px;
-        padding-top: 10px;
-      }
-    }
-  }
-}
 </style>

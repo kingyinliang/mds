@@ -37,7 +37,8 @@ import {
   MessageBox,
   Loading,
   Notification,
-  InputNumber
+  InputNumber,
+  Scrollbar
 } from 'element-ui'
 
 export default () => {
@@ -75,6 +76,7 @@ export default () => {
   Vue.use(CheckboxGroup)
   Vue.use(Tag)
   Vue.use(InputNumber)
+  Vue.use(Scrollbar)
   Vue.prototype.$loading = Loading.service
   Vue.prototype.$msgbox = MessageBox
   Vue.prototype.$alert = MessageBox.alert
