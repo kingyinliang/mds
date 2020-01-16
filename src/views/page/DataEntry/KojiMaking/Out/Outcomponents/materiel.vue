@@ -31,7 +31,7 @@
           <span>批次</span>
         </template>
         <template slot-scope="scope">
-          <el-select v-if="formHeader.materialCode === 'SS02010001'" v-model="scope.row.batch" @change="checkBatchStock(scope.row)" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
+          <el-select v-if="formHeader.materialCode === 'SS02010001'" v-model="scope.row.batch" @change="checkBatchStock(scope.row, 'batch')" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
             <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch"></el-option>
           </el-select>
           <el-input v-else type="text" v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
@@ -101,21 +101,6 @@ export default {
     saveRul2 () {
       let ty = true
       if (this.MaterielDate.length !== 0) {
-        // this.MaterielDate.forEach((item) => {
-        //   if (item.delFlag !== '1') {
-        //     console.log(item.leftAmount)
-        //     if (item.material && item.saltWaterHolderId && item.batch && (item.startValue || item.startValue === 0) && (item.endValue || item.endValue === 0)) {} else {
-        //       ty = false
-        //       this.$warning_SHINHO('原料领用必填项未填')
-        //       return false
-        //     }
-        //     if (item.leftAmount < 0) {
-        //       ty = false
-        //       this.$warning_SHINHO('原料领用库存量不能为负')
-        //       return false
-        //     }
-        //   }
-        // })
         for (let item of this.MaterielDate) {
           if (item.delFlag !== '1') {
             if (item.material && item.saltWaterHolderId && item.batch && (item.startValue || item.startValue === 0) && (item.endValue || item.endValue === 0)) {} else {
@@ -123,21 +108,23 @@ export default {
               this.$warning_SHINHO('原料领用必填项未填')
               return false
             }
-            if (item.leftAmount < 0) {
-              ty = false
-              this.$warning_SHINHO('原料领用库存量不能为负')
-              return false
-            }
+            // if (item.leftAmount < 0) {
+            //   ty = false
+            //   this.$warning_SHINHO('原料领用库存量不能为负')
+            //   return false
+            // }
           }
         }
       }
       return ty
     },
     // 库存校验
-    checkBatchStock (row) {
+    checkBatchStock (row, type = '') {
       if (this.formHeader.materialCode === 'SS02010001') {
         if (row.batch !== '' && row.startValue !== '' && row.endValue !== '') {
-          this.getRepertory(this.formHeader, this.MaterielDate)
+          this.getRepertory()
+        } else if (row.batch !== '' && type === 'batch') {
+          this.getRepertory()
         }
       }
     },
@@ -154,7 +141,7 @@ export default {
           this.MaterielDate = data.list
           if (formHeader.materialCode === 'SS02010001') {
             setTimeout(() => {
-              this.getRepertory(formHeader, this.MaterielDate)
+              this.getRepertory()
             }, 500)
           }
           this.MaterielAuditlog = data.vrlist
@@ -190,19 +177,31 @@ export default {
       })
     },
     // 库存拉取
-    getRepertory (formHeader, MaterielDate) {
+    getRepertory (str, resolve, reject) {
       let location = '7102'
-      if (formHeader.workShopName === '制曲二车间') {
+      if (this.formHeader.workShopName === '制曲二车间') {
         location = '71A2'
       }
-      this.$http(`${KJM_API.OUT_GETSTOCK_API}`, 'POST', {factory: formHeader.factory, location: location, orderHouseId: formHeader.id, workList: MaterielDate}, false, false, false).then(({data}) => {
+      this.$http(`${KJM_API.OUT_GETSTOCK_API}`, 'POST', {factory: this.formHeader.factory, location: location, orderHouseId: this.formHeader.id, workList: this.MaterielDate}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.batchList = data.list
+          let error = 0
           this.MaterielDate.map((item) => {
-            item.leftAmount = this.batchList.find(items => items.batch === item.batch).currentQuantity
+            if (item.delFlag !== '1') {
+              item.leftAmount = this.batchList.find(items => items.batch === item.batch).currentQuantity
+              if (item.leftAmount < 0) {
+                error = 1
+              }
+            }
           })
+          if (resolve) {
+            resolve(error)
+          }
         } else {
           this.$error_SHINHO(data.msg)
+          if (reject) {
+            reject('原料领用' + data.msg)
+          }
         }
       })
     },
