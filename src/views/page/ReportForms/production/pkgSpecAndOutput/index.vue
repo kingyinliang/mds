@@ -48,9 +48,6 @@ export default {
         return this.$http(`${REP_API.PKGSPECANDOUTPUT_LIST}`, 'POST', params)
       },
       spanMethod: ({ row, column, rowIndex, columnIndex }) => {
-        if (row.brand * 1 > 1000) {
-          row.brand = '大包装'
-        }
         if (row.brand * 1 === 1000) {
           row.brand = '1L'
         }

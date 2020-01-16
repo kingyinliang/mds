@@ -20,14 +20,18 @@
     <el-row class="login_box">
       <el-col :span="16">
         <div class="canvas_box">
-          <img src="@/assets/img/ui2.0/loginBg.png" alt="" style="width: 100%;">
+          <div class="canvas_box_main" id="canvas_box_main">
+            <canvas id="loginAnimation"></canvas>
+            <!--<img src="/static/img/windmill.png" alt="" class="bg1">-->
+            <!--<img src="/static/img/loginBg.png" alt="" style="width: 100%;">-->
+          </div>
         </div>
       </el-col>
       <el-col :span="8">
         <img src="@/assets/img/MDSlogo.png" alt="" class="login_icon">
         <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="loginForm_ui2" @keyup.enter.native="submitForm('ruleForm2')">
           <p class="login_title1">欢迎使用</p>
-          <p class="login_title2">MDS工厂制造管理系统</p>
+          <p class="login_title2">MDS制造管理系统</p>
           <el-form-item prop="user">
             <el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号"><i slot="prefix" class="iconfont factory-zhanghaodenglu"></i></el-input>
           </el-form-item>
@@ -67,6 +71,7 @@
 
 <script>
 import {MAIN_API} from '@/api/api'
+import { LoginAnimation } from './loginCanvas'
 
 export default {
   name: 'login',
@@ -142,10 +147,12 @@ export default {
     }
   },
   mounted () {
-    var that = this
-    this.$refs.videos.addEventListener('ended', function () {
-      that.play()
-    })
+    // var that = this
+    // this.$refs.videos.addEventListener('ended', function () {
+    //   that.play()
+    // })
+    let canvas = new LoginAnimation(this.$)
+    canvas.init()
   },
   methods: {
     play (e) {
@@ -235,6 +242,12 @@ export default {
 </script>
 
 <style lang="scss">
+.bg1 {
+  width: 200px;
+  position: absolute;
+  transform-style: preserve-3d;
+  transform: rotateY(35deg);
+}
 video {
   object-fit: fill;
 }
@@ -293,6 +306,17 @@ video {
   .canvas_box {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: linear-gradient(135deg, #070f6e 0%, #141bb7 51%, #1582ff 100%);
+    &_main {
+      width: 100%;
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 }
 .loginForm_ui2 {
