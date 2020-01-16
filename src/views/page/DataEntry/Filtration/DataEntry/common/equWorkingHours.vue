@@ -23,7 +23,7 @@
                 <el-button class="button" @click="ShowDialog(item, '预涂')" :disabled="!isRedact">预涂</el-button>
               </el-col>
               <el-col :span="8">
-                <el-button class="button" @click="ShowDialog(item, '过滤')" :disabled="!isRedact">过滤/脱盐</el-button>
+                <el-button class="button" @click="ShowDialog(item, '过滤')" :disabled="!isRedact">{{formHeader.productLineName}}</el-button>
               </el-col>
             </el-row>
           </div>
