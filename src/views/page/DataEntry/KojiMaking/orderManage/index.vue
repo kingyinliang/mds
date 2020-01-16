@@ -259,7 +259,7 @@
             <el-table-column label="连续蒸煮号" width="140">
               <template slot-scope="scope">
                 <el-select  v-model="scope.row.cookingNo" filterable placeholder="请选择"  size="small">
-                  <el-option value='' label=''></el-option>
+                  <el-option value='' label='请选择'></el-option>
                   <el-option v-for="(item, index) in continueList" :key="index" :label="item.holderName" :value="item.holderId" ></el-option>
                 </el-select>
               </template>

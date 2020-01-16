@@ -1,24 +1,3 @@
-// export function loginAnimation ($) {
-//   let canvas = document.getElementById('loginAnimation')
-//   let ctx = canvas.getContext('2d')
-//   let width = $('#loginAnimation').width()
-//   let height = width * 0.71
-//   canvas.width = width
-//   canvas.height = height
-//   init()
-//   let windmill = new Image()
-//   windmill.src = './static/img/windmill.png'
-//   windmill.onload = () => {
-//     ctx.drawImage(windmill, 20, 200, 100, 100)
-//   }
-// }
-// function init () {
-//   let bg = new Image()
-//   bg.src = './static/img/loginBg.png'
-//   bg.onload = () => {
-//     ctx.drawImage(bg, 0, 0, width, height)
-//   }
-// }
 export class LoginAnimation {
   constructor ($) {
     this.canvas = document.getElementById('loginAnimation')
@@ -32,10 +11,11 @@ export class LoginAnimation {
     let num = 1
     let bg = new Image()
     bg.src = './static/img/loginBg.png'
-    let windmill = new Image()
-    windmill.src = './static/img/windmill.png'
     bg.onload = () => {
+      let windmill = new Image()
+      windmill.src = './static/img/windmill.png'
       windmill.onload = () => {
+        console.log('start')
         setInterval(() => {
           this.ctx.save()
           this.ctx.clearRect(0, 0, this.width, this.height)

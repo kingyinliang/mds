@@ -40,7 +40,7 @@
             <el-button type="text" @click="resetForm('ruleForm2')" class="reset"><i class="iconfont factory-zhongzhi" style="font-size: 12px;"></i>重置</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm2')" style="width: 100%; margin-top: 20px;">登录</el-button>
+            <el-button type="primary" @click="submitForm('ruleForm2')" class="loginBtn">登录</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -336,6 +336,10 @@ video {
     line-height: 40px;
     margin-bottom: 15px;
   }
+  .loginBtn {
+    width: 100%;
+    margin-top: 20px;
+  }
   label {
     color: white !important;
   }
@@ -356,6 +360,24 @@ video {
     bottom: -22px;
     padding: 0;
     font-size: 12px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .loginForm_ui2 {
+    width: 360px;
+    padding-top: 60px;
+    .login_title1 {
+      font-size: 26px;
+      font-weight: bold;
+    }
+    .login_title2 {
+      font-weight: bold;
+      font-size: 32px;
+    }
+    .loginBtn {
+      margin-top: 40px;
+    }
   }
 }
 </style>

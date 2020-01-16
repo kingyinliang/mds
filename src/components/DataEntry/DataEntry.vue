@@ -27,7 +27,7 @@
       <!--</div>-->
     </div>
     <!--tabs-->
-    <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs tabsPages" type="border-card" :before-leave='beforeLeave'>
+    <el-tabs ref='tabs' @tab-click='tabClick' v-model="activeName" id="DaatTtabs" class="NewDaatTtabs tabsPages" type="border-card" :before-leave='beforeLeave'>
       <el-tab-pane :name="setKey(index)" v-for="(item, index) in tabs" :key="index">
         <span slot="label" class="spanview" v-if="item.status !== undefined">
           <el-tooltip class="item" effect="dark" :content="item.status === 'noPass'? '不通过':item.status === 'saved'? '已保存':item.status === 'submit' ? '已提交' : item.status === 'checked'? '通过':'未录入'" placement="top-start">
@@ -148,12 +148,15 @@ export default {
   mounted () {
   },
   methods: {
+    tabClick (val) {
+      this.$refs.tabs.setCurrentName(val.name)
+    },
     // 设置tabs的绑定
     setKey (index) {
       return (index + 1).toString()
     },
     updateTabs () {
-      // this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
+      this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     },
     updateProductDate (dataStr) {
       this.$emit('updateProductDate', dataStr)

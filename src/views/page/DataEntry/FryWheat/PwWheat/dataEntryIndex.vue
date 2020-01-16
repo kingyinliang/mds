@@ -391,6 +391,7 @@ export default {
     setAppyMaterielState: function (state) {
       this.appyMaterielState = state
       this.tabs[0].status = state
+      this.$refs.dataEntry.updateTabs()
       // 强制tabs刷新
       // this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     },
@@ -398,6 +399,7 @@ export default {
     SetReadyStatus (status) {
       this.readyState = status
       this.tabs[1].status = status
+      this.$refs.dataEntry.updateTabs()
       // this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     }
   },
