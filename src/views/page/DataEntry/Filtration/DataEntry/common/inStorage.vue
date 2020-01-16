@@ -175,7 +175,7 @@ export default {
           this.InStorageDate = data.list
           if (this.InStorageDate.length > 0) {
             this.PotDetail = {
-              amount: accAdd(this.InStorageDate[0].holderRemaining, this.InStorageDate[0].unit),
+              amount: this.InStorageDate[0].holderRemaining + this.InStorageDate[0].unit,
               batch: this.InStorageDate[0].batch,
               material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
             }
@@ -260,7 +260,7 @@ export default {
           }, 500)
           if (this.InStorageDate.length > 0) {
             this.PotDetail = {
-              amount: accAdd(this.InStorageDate[0].holderRemaining, this.InStorageDate[0].unit),
+              amount: this.InStorageDate[0].holderRemaining + this.InStorageDate[0].unit,
               batch: this.InStorageDate[0].batch,
               material: this.InStorageDate[0].materialCode + ' ' + this.InStorageDate[0].materialName
             }
