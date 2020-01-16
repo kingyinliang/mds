@@ -44,7 +44,7 @@
       </el-table>
     </el-card>
     <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisibleAdd" width="400px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">新增</div>
+      <div slot="title">新增</div>
       <el-form :model="formAdd" :inline="true" size="small" :rules="Addrulestar" ref="Addstar" label-width="85px">
         <el-form-item label="工厂：">{{this.factoryName}}</el-form-item>
         <el-form-item label="物料：" prop="materialCode">
@@ -118,7 +118,7 @@ export default {
           this.factory = data.typeList
           this.formHeader.factory = data.typeList[0].deptId
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -130,7 +130,7 @@ export default {
           if (data.code === 0) {
             this.materialList = data.list
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -145,7 +145,7 @@ export default {
         if (data.code === 0) {
           this.dataList = data.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -179,7 +179,7 @@ export default {
               this.$refs[formName].resetFields()
               this.GetList()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {
@@ -210,7 +210,7 @@ export default {
             this.$notify({title: '成功', message: '删除成功', type: 'success'})
             this.GetList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })

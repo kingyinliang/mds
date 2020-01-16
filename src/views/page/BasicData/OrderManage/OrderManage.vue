@@ -196,7 +196,7 @@ export default {
         if (data.code === 0) {
           this.factory = data.typeList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -213,7 +213,7 @@ export default {
           this.currPage = data.page.currPage
           this.visible = false
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -266,7 +266,7 @@ export default {
           // this.loading = false
           this.loadings.close()
           clearInterval(this.orderTime)
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch(() => {
         // this.loading = false

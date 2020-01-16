@@ -444,7 +444,7 @@ export default {
       this.$http(`${WHT_API.MATERIELTIMESUBMIT_API}`, 'POST', data).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')

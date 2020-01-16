@@ -527,7 +527,7 @@ export default {
           if (reject) {
             reject('提交失败')
           }
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -622,7 +622,7 @@ export default {
         if (data.code === 0) {
           this.productShift = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -651,7 +651,7 @@ export default {
           this.Instatus = GetStatus(this.InDate)
           this.$emit('GetinstorageState', this.Instatus)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -665,7 +665,7 @@ export default {
           this.InVlist = data.vlist
           this.$notify({title: '成功', message: '刷新成功', type: 'success'})
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

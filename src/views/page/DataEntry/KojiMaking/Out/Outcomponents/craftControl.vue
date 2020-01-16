@@ -137,7 +137,7 @@ export default {
           let CraftControlStatus = this.CraftControlDate.status ? this.CraftControlDate.status : ''
           this.$emit('GetCraftControlStatus', CraftControlStatus)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -164,7 +164,7 @@ export default {
             this.$notify({title: '成功', message: '提交成功', type: 'success'})
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -212,7 +212,7 @@ export default {
         if (data.code === 0) {
           this.userlist = data.page.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     }

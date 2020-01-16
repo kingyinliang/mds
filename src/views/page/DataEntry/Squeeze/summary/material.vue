@@ -181,7 +181,7 @@ export default {
           if (reject) {
             reject(data.msg)
           }
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -191,7 +191,7 @@ export default {
         if (data.code === 0) {
           this.MaterialAudit = data.listRecord
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -231,7 +231,7 @@ export default {
           if (reject) {
             reject(data.msg)
           }
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -401,7 +401,7 @@ export default {
           if (reject) {
             reject(data.msg)
           }
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

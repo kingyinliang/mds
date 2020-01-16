@@ -147,7 +147,7 @@ export default {
           this.pageSize = data.page.pageSize
           this.totalCount = data.page.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         this.addOrUpdateVisible1 = false
         this.addOrUpdateVisible2 = false
@@ -195,7 +195,7 @@ export default {
             this.$success_SHINHO('删除成功!')
             this.GetRoleList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }).catch(() => {

@@ -41,7 +41,7 @@ export default {
         if (data.code === 0) {
           this.OrgTree = data.deptList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         this.visible = true
       }).then(() => {
@@ -51,7 +51,7 @@ export default {
           if (data.code === 0) {
             this.$refs.deptListTree.setCheckedKeys(data.list)
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })
@@ -70,7 +70,7 @@ export default {
             this.visible = false
             this.$emit('refreshDataList')
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
           this.visible = true
         })

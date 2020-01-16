@@ -114,7 +114,7 @@ export default {
               }]
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         }).finally(() => {
           this.$emit('SetReadyStatus', status)
@@ -147,7 +147,7 @@ export default {
           if (resolve) {
             reject(data.msg)
           }
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch(() => {
       })

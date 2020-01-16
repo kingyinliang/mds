@@ -165,7 +165,7 @@ export default {
           this.PotList = data.materialPotList.pot
           this.MaterialList = data.materialPotList.material
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -190,7 +190,7 @@ export default {
           this.DataList = data.juiceExamine
           this.formHeader.totalCount = data.juiceExamine.length
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

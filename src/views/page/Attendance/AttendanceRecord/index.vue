@@ -631,7 +631,7 @@ export default {
         if (data.code === 0) {
           this.productShift = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -649,7 +649,7 @@ export default {
           this.datalist.splice(this.datalist.length, 0, {})
           this.datalist.splice(this.datalist.length - 1, 1)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (callback) {
           callback(null, 'one')
@@ -662,7 +662,7 @@ export default {
         if (data.code === 0) {
           this.ARtype = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -675,7 +675,7 @@ export default {
             this.plantList.factory = data.typeList[0].deptId
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -691,7 +691,7 @@ export default {
               this.plantList.workShop = data.typeList[0].deptId
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -706,7 +706,7 @@ export default {
           if (data.code === 0) {
             this.productline = data.childList
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -720,7 +720,7 @@ export default {
           this.OrgTree = data.deptList
           this.arrList = [this.OrgTree[0].children[0].deptId]
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -732,7 +732,7 @@ export default {
         if (data.code === 0) {
           this.auditLogList = data.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -823,11 +823,11 @@ export default {
                   that.tableLoding = false
                 })
               } else {
-                this.$notify.error({title: '错误', message: data.msg})
+                this.$error_SHINHO(data.msg)
               }
             })
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -848,7 +848,7 @@ export default {
               this.multipleSelection = []
               this.GetList()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         })
@@ -875,7 +875,7 @@ export default {
           this.plantList.pageSize = data.page.pageSize
           this.plantList.totalCount = data.page.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         this.lodingS = false
       })
@@ -933,7 +933,7 @@ export default {
           }
           this.visible = true
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -968,7 +968,7 @@ export default {
           this.userlist = data.page.list
           this.tree1Status = false
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -1063,7 +1063,7 @@ export default {
             this.tableLoding = false
             this.GetList(true)
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
           this.lodingS = false
         })
@@ -1130,7 +1130,7 @@ export default {
               this.$notify({title: '成功', message: '操作成功', type: 'success'})
               this.GetList(true)
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
             this.lodingS = false
           })
@@ -1171,7 +1171,7 @@ export default {
             this.$notify({title: '成功', message: '操作成功', type: 'success'})
             this.GetList(true)
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
           this.lodingS = false
         })

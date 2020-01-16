@@ -137,7 +137,7 @@ export default {
             }
           })
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -150,7 +150,7 @@ export default {
         if (data.code === 0) {
           this.Materails = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -214,7 +214,7 @@ export default {
               }, 100)
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else if (str === '3') {

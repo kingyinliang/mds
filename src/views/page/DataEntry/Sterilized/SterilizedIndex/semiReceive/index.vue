@@ -141,7 +141,7 @@ export default {
             }
           })
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -173,7 +173,7 @@ export default {
         if (data.code === 0) {
           this.PotList = data.halfList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (this.formHeader.status !== '') {
           this.GetDataList()
@@ -377,7 +377,7 @@ export default {
           this.$refs.excrecord.GetequipmentType(this.formHeader.productLine)
           this.$refs.excrecord.getDataList(this.formHeader.factory)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     }

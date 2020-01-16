@@ -243,7 +243,7 @@ export default {
         if (data.code === 0) {
           this.productShift = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -340,7 +340,7 @@ export default {
           if (data.code === 0) {
             this.processesList = data.teamList
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -348,7 +348,7 @@ export default {
           if (data.code === 0) {
             this.processesList = data.teamList
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -360,7 +360,7 @@ export default {
           this.OrgTree = data.deptList
           this.arrList = [this.OrgTree[0].children[0].deptId]
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -377,7 +377,7 @@ export default {
           this.factoryid = this.plantList.factoryid
           this.FWproductDate = this.plantList.productDate
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         this.lodingStatus = false
       })
@@ -454,7 +454,7 @@ export default {
             row.realOutput = data.list[0].realOutput
             row.plan = data.list[0].plan
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -493,7 +493,7 @@ export default {
               this.datalist.splice(this.datalist.indexOf(row), 1)
               this.$success_SHINHO('删除成功')
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         })
@@ -565,7 +565,7 @@ export default {
                 this.$success_SHINHO('保存成功')
                 this.GetOrderList(true)
               } else {
-                this.$notify.error({title: '错误', message: data.msg})
+                this.$error_SHINHO(data.msg)
               }
               this.lodingStatus = false
             })

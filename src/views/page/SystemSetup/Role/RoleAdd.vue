@@ -54,7 +54,7 @@ export default {
           if (data.code === 0) {
             this.$refs.menuListTree.setCheckedKeys(data.list)
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })
@@ -73,7 +73,7 @@ export default {
             this.visible = false
             this.$emit('refreshDataList')
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }

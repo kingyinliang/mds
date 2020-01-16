@@ -18,7 +18,7 @@
       </template>
     </query-table>
     <el-dialog :visible.sync="AddDialogTableVisible" :close-on-click-modal="false" width="550px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">{{addAndupdate? '新增调配物料' : '修改调配物料'}}</div>
+      <div slot="title">{{addAndupdate? '新增调配物料' : '修改调配物料'}}</div>
       <el-form :model="AddDialogTable" label-width="100px" size="small" ref="AddDialogTable">
         <el-form-item label="工厂：">
           <el-select v-model="AddDialogTable.factory" placeholder="请选择" style="width: 100%;">

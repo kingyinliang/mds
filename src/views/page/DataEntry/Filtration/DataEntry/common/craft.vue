@@ -216,7 +216,7 @@ export default {
             }
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).finally(() => {
         this.$emit('setCraftStatus', this.craftStatus)
@@ -228,7 +228,7 @@ export default {
           this.filterAidModelList = data.materialInfo.materialType
           this.filterAidVenderList = data.materialInfo.materialSupplier
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -386,7 +386,7 @@ export default {
       this.$http(`${FILTRATION_API.FILTER_CRAFT_TECHSAVE}`, 'POST', this.techList).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -404,7 +404,7 @@ export default {
       this.$http(`${FILTRATION_API.FILTER_CRAFT_MATERIALSAVE}`, 'POST', [{orderId: this.orderId, materialInfo: this.supMaterialList}]).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -423,7 +423,7 @@ export default {
       this.$http(`${AUDIT_API.AUDIT_AID_SUBMIT}`, 'POST', [{orderId: this.orderId, materialInfo: this.supMaterialList}]).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -565,7 +565,7 @@ export default {
     SubmitMaterial (resolve, reject) {
       this.$http(`${FILTRATION_API.FILTER_CRAFT_MATERIASUBMIT}`, 'POST', this.techList).then(({data}) => {
         if (data.code === 0) {} else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')

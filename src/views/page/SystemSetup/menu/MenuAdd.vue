@@ -204,7 +204,7 @@ export default {
                 this.$emit('refreshDataList')
               } else {
                 this.submitType = true
-                this.$notify.error({title: '错误', message: data.msg})
+                this.$error_SHINHO(data.msg)
               }
             })
           } else {

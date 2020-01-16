@@ -171,7 +171,7 @@ export default {
             this.$success_SHINHO('申请成功')
             this.GetList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })
@@ -229,7 +229,7 @@ export default {
             })
           })
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -326,7 +326,7 @@ export default {
         if (data.code === 0) {
           this.SerchSapList = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -336,7 +336,7 @@ export default {
         if (data.code === 0) {
           this.SerchSapListM = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -346,7 +346,7 @@ export default {
         if (data.code === 0) {
           this.orderTypeList = data.dicList[0].prolist
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch((error) => {
         console.log('catch data::', error)
@@ -358,7 +358,7 @@ export default {
         if (data.code === 0) {
           this.VersionList = data.dicList[0].prolist
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch((error) => {
         console.log('catch data::', error)
@@ -371,7 +371,7 @@ export default {
           this.factory = data.typeList
           this.formHeader.factory = data.typeList[0].deptId
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -386,7 +386,7 @@ export default {
               this.formHeader.workShop = data.typeList[0].deptId
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }

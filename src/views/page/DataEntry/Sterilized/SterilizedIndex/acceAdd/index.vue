@@ -227,7 +227,7 @@ export default {
             this.supStatus = false
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -307,7 +307,7 @@ export default {
           this.$notify({title: '成功', message: '操作成功', type: 'success'})
           this.GetOrderHead(true)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -554,7 +554,7 @@ export default {
             })
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     }

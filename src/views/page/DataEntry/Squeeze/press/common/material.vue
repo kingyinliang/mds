@@ -193,7 +193,7 @@ export default {
           if (data.code === 0) {
             this.proPressList = data.list.list
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -208,7 +208,7 @@ export default {
             this.formInline.destoryNumWest = this.materialList[0].destoryNumWest
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -244,7 +244,7 @@ export default {
             }
             this.visible = true
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -307,7 +307,7 @@ export default {
           if (reject) {
             reject('reject')
           }
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch(() => {
         if (reject) {
@@ -339,7 +339,7 @@ export default {
       this.$http(`${configurl}`, 'POST', this.materialList).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')

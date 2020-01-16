@@ -244,7 +244,7 @@ export default {
           this.plantList.pageSize = data.page.pageSize
           this.plantList.totalCount = data.page.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -257,7 +257,7 @@ export default {
             this.plantList.factory = data.typeList[0].deptId
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -273,7 +273,7 @@ export default {
               this.plantList.workshop = data.typeList[0].deptId
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -286,7 +286,7 @@ export default {
           if (data.code === 0) {
             this.productline = data.childList
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -349,7 +349,7 @@ export default {
             this.noMaintainList.splice(this.noMaintainList.length, 0, {})
             this.noMaintainList.splice(this.noMaintainList.length - 1, 1)
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -371,7 +371,7 @@ export default {
               this.$notify({title: '成功', message: '保存成功', type: 'success'})
               this.GetMaintainList()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
           this.GetMaintainList()
@@ -401,7 +401,7 @@ export default {
               this.$notify({title: '成功', message: '提交成功', type: 'success'})
               this.GetMaintainList()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         })

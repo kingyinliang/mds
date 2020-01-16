@@ -204,7 +204,7 @@
       <audit-log></audit-log>
     </el-card>
     <el-dialog :close-on-click-modal="false" :title="MTitle" :visible.sync="dialogFormVisibleMai" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">{{this.MTitle}}</div>
+      <div slot="title">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrulestar" ref="wheatstar">
         <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">
           <el-select v-model="wheat.whtBatch" placeholder="请选择">
@@ -224,7 +224,7 @@
       </div>
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="MTitle" :visible.sync="dialogFormVisibleMai2" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">{{this.MTitle}}</div>
+      <div slot="title">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrulend" ref="wheatend">
         <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">{{wheat.whtBatch}}</el-form-item>
         <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
@@ -240,7 +240,7 @@
       </div>
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="MTitle" :visible.sync="dialogFormVisibleMai3" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">{{this.MTitle}}</div>
+      <div slot="title">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrules" ref="wheat">
         <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">
           <el-select v-model="wheat.whtBatch" placeholder="请选择">
@@ -264,7 +264,7 @@
       </div>
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="DRTitle" :visible.sync="dialogFormVisibleDouRu" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">{{this.DRTitle}}</div>
+      <div slot="title">{{this.DRTitle}}</div>
       <el-form :model="rusoy" size="small" :rules="rusoyrules" ref="rusoy">
         <el-form-item label="领用粮仓：" :label-width="formLabelWidth" prop="foodHolderId">
           <el-select v-model="rusoy.foodHolderId" @change="changCang()">
@@ -294,7 +294,7 @@
       </div>
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="DCTitle" :visible.sync="dialogFormVisibleDouChu" width="450px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">{{this.DCTitle}}</div>
+      <div slot="title">{{this.DCTitle}}</div>
       <el-form :model="chusoy" size="small" :rules="chusoyrules" ref="chusoy">
         <el-form-item label="批次：" :label-width="formLabelWidth" prop="batch">
           <!-- <el-input v-model="chusoy.batch" autocomplete="off" maxlength="10"></el-input> -->
@@ -623,7 +623,7 @@ export default {
         if (data.code === 0) {
           this.materialShort = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -632,7 +632,7 @@ export default {
         if (data.code === 0) {
           this.wheatShort = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -641,7 +641,7 @@ export default {
         if (data.code === 0) {
           this.soyShort = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -728,12 +728,11 @@ export default {
                 this.$set(this.MaiHoldList[index], 'total', total)
               })
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {
-          this.$notify.error({title: '错误', message: res.data.msg})
-          this.$notify.error({title: '错误', message: res.data.msg})
+          this.$error_SHINHO(res.data.msg)
         }
       })
     },
@@ -769,11 +768,11 @@ export default {
                 this.$set(this.DouHoldList[index], 'total', total)
               })
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {
-          this.$notify.error({title: '错误', message: res.data.msg})
+          this.$error_SHINHO(res.data.msg)
         }
       })
     },
@@ -783,7 +782,7 @@ export default {
         if (res.data.code === 0) {
           this.DouCangList = res.data.page.list
         } else {
-          this.$notify.error({title: '错误', message: res.data.msg})
+          this.$error_SHINHO(res.data.msg)
         }
       })
     },
@@ -1178,14 +1177,14 @@ export default {
         this.$http(`${KJM_API.DOUMATERSUBMITZHONG_API}`, 'POST', this.materialList).then(({data}) => {
           if (data.code === 0) {
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
       this.$http(`${KJM_API.DOUMATERZHONG_API}`, 'POST', this.materialList).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -1206,14 +1205,14 @@ export default {
         this.$http(`${KJM_API.DOUMATERSUBMITWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
           if (data.code === 0) {
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
       this.$http(`${KJM_API.DOUMATERWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -1241,14 +1240,14 @@ export default {
         this.$http(`${KJM_API.DOUMATERSUBMITSOY_API}`, 'POST', this.soyList).then(({data}) => {
           if (data.code === 0) {
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
       this.$http(`${KJM_API.DOUMATERPULP_API}`, 'POST', this.soyList).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -1263,7 +1262,7 @@ export default {
       this.$http(`${KJM_API.DOUMATERSTATUS_API}`, 'POST', {status: this.formHeader.submitStatus, orderHouseId: this.formHeader.orderHouseId, orderId: this.formHeader.orderId}).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -1336,7 +1335,7 @@ export default {
             inState = 'checked'
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch((error) => {
         this.$notify.error({title: '错误', message: error})
@@ -1391,7 +1390,7 @@ export default {
         if (data.code === 0) {
           this.PulpCangList = data.holder
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

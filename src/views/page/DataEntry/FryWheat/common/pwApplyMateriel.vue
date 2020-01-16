@@ -299,7 +299,7 @@ export default {
           this.$http(WHT_API.MATERIELSAVE_API, 'POST', this.materielDataList).then(({data}) => {
             if (data.code === 0) {
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
             if (resolve) {
               resolve('resolve')
@@ -324,7 +324,7 @@ export default {
         this.$http(WHT_API.MATERIELSUBMIT_API, 'POST', this.materielDataList).then(({data}) => {
           if (data.code === 0) {
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
           if (resolve) {
             resolve('resolve')
@@ -397,7 +397,7 @@ export default {
             this.dispatcherCode = this.dictListObj['PW_FEVOR'][0].code
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch((error) => {
         console.log('catch data::', error)
@@ -447,7 +447,7 @@ export default {
           }
           // this.$emit('setAppyMaterielState', inState)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch((error) => {
         console.log('catch data::', error)

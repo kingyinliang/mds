@@ -98,7 +98,7 @@ export default {
           this.pageSize = 10
           this.totalCount = data.embryoRecordList.length
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

@@ -122,7 +122,7 @@ export default {
           this.readAudit = data.verify
           this.materialStatus = GetStatus(data.list)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).finally(() => {
         this.$emit('setMaterialStatus', this.materialStatus)
@@ -135,7 +135,7 @@ export default {
           this.BomMaterialCode = data.bomMaterial.MATNR
           this.BomMaterialName = data.bomMaterial.MATERIAL_NAME
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -262,7 +262,7 @@ export default {
       }
       this.$http(url, 'POST', this.dataList).then(({data}) => {
         if (data.code === 0) {} else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')

@@ -101,7 +101,7 @@
       </el-card>
     </div>
     <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">订单分配</div>
+      <div slot="title">订单分配</div>
       <el-table ref="multipleTable" :data="orderPropList" :row-key="getRowKeys" @selection-change="handleSelectionChange" border header-row-class-name="tableHead">
         <el-table-column type="selection" width="35" :reserve-selection="true" prop="orderNo"></el-table-column>
         <el-table-column label="订单号" prop="orderNo" width="120"></el-table-column>
@@ -213,7 +213,7 @@ export default {
           })
           // this.GetorderNo(this.orderArray)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -233,7 +233,7 @@ export default {
           this.orderList = data.orderInfo.list
           this.revocation = data.revocation
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -252,7 +252,7 @@ export default {
           this.pagesForm.totalCount = this.orderPropAllList.length
           this.dialogTableVisible = true
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -352,11 +352,11 @@ export default {
                   orderNo: this.allocateId
                 }
               } else {
-                this.$notify.error({title: '错误', message: data.msg})
+                this.$error_SHINHO(data.msg)
               }
             })
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -409,15 +409,15 @@ export default {
                         orderNo: this.allocateId
                       }
                     } else {
-                      this.$notify.error({title: '错误', message: data.msg})
+                      this.$error_SHINHO(data.msg)
                     }
                   })
                 } else {
-                  this.$notify.error({title: '错误', message: data.msg})
+                  this.$error_SHINHO(data.msg)
                 }
               })
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {
@@ -437,11 +437,11 @@ export default {
                   this.isRedact = false
                   this.GetInfoList(this.allocateId)
                 } else {
-                  this.$notify.error({title: '错误', message: data.msg})
+                  this.$error_SHINHO(data.msg)
                 }
               })
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         }

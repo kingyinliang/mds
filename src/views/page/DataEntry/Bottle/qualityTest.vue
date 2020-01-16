@@ -234,7 +234,7 @@ export default {
           this.getUsers()
           this.GetList()
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -248,7 +248,7 @@ export default {
         if (data.code === 0) {
           this.userlist = data.page.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -264,7 +264,7 @@ export default {
           this.pages.pageSize = data.qualityInspectionList.pageSize
           this.pages.totalCount = data.qualityInspectionList.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -349,10 +349,10 @@ export default {
             this.isRedact = false
             this.GetHeader()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

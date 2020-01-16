@@ -97,7 +97,7 @@ export default {
           this.MaterialAudit = data.vrList
           status = GetStatus(this.MaterialList)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).finally(() => {
         this.$emit('setApplyMaterielState', status)

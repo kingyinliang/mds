@@ -192,7 +192,7 @@ export default {
           this.formHeader.pageSize = data.page.pageSize
           this.formHeader.totalCount = data.page.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -212,7 +212,7 @@ export default {
             this.AuditList.splice(this.AuditList.length, 0, {})
             this.AuditList.splice(this.AuditList.length - 1, 1)
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
           this.GetDataList()
         })
@@ -248,7 +248,7 @@ export default {
                   this.$notify({title: '成功', message: '操作成功', type: 'success'})
                   this.GetDataList()
                 } else {
-                  this.$notify.error({title: '错误', message: data.msg})
+                  this.$error_SHINHO(data.msg)
                 }
               })
             })
@@ -279,7 +279,7 @@ export default {
                   this.$notify({title: '成功', message: '操作成功', type: 'success'})
                   this.GetDataList()
                 } else {
-                  this.$notify.error({title: '错误', message: data.msg})
+                  this.$error_SHINHO(data.msg)
                   this.GetDataList()
                 }
               })
@@ -311,7 +311,7 @@ export default {
             this.GetDataList()
             this.$notify({title: '成功', message: '操作成功', type: 'success'})
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })
@@ -322,7 +322,7 @@ export default {
         if (data.code === 0) {
           this.MoveReas = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

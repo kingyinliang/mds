@@ -106,7 +106,7 @@ export default {
           this.equStatus = GetStatus(data.listInfo.machineList)
           this.recordList = data.listInfo.record
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).finally(() => {
         this.$emit('setEquState', this.equStatus)
@@ -196,7 +196,7 @@ export default {
     SaveEquWorking (resolve, reject) {
       this.$http(`${FILTRATION_API.FILTER_EQUWORKINGHOURS_SAVE}`, 'POST', this.dataList).then(({data}) => {
         if (data.code === 0) {} else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -210,7 +210,7 @@ export default {
     SubmitEquWorking (resolve, reject) {
       this.$http(`${FILTRATION_API.FILTER_EQUWORKINGHOURS_SUBMITONE}`, 'POST', {'orderId': this.orderId}).then(({data}) => {
         if (data.code === 0) {} else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')

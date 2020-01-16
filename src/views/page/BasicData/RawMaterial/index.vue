@@ -67,7 +67,7 @@
     <el-dialog
       :close-on-click-modal="false"
       :visible.sync="visible1" width="510px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">高级查询</div>
+      <div slot="title">高级查询</div>
       <el-form :model="form" size="small" label-width="130px" class="locationdialog">
         <el-form-item label="批次：" prop="orderNo1">
           <el-input v-model="form.batch" style="width: 283px;"></el-input>
@@ -154,7 +154,7 @@ export default {
           this.pageSize = data.page.pageSize
           this.totalCount = data.page.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -204,7 +204,7 @@ export default {
         } else {
           this.loading.close()
           clearInterval(this.orderTime)
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch(() => {
         this.loading.close()

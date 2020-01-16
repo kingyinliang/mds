@@ -260,7 +260,7 @@ export default {
           this.fastS = true
           this.dataList = data.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -297,7 +297,7 @@ export default {
             this.$notify({title: '成功', message: '操作成功', type: 'success'})
             this.GetDataList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })
@@ -370,7 +370,7 @@ export default {
               this.$notify({title: '成功', message: '操作成功', type: 'success'})
               this.GetDataList()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         }
@@ -392,7 +392,7 @@ export default {
               this.$notify({title: '成功', message: '操作成功', type: 'success'})
               this.GetDataList()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         }

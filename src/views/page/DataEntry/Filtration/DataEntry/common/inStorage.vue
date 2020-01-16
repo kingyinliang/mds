@@ -186,7 +186,7 @@ export default {
           this.instorageState = GetStatus(this.InStorageDate)
           this.DataAudit = data.vrlist
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).finally(() => {
         this.$emit('setInstorageState', this.instorageState)
@@ -288,7 +288,7 @@ export default {
             }
           })
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

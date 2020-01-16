@@ -236,7 +236,7 @@ export default {
             this.form.factory = this.factory[0].deptId
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -256,7 +256,7 @@ export default {
               }
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -269,7 +269,7 @@ export default {
         if (data.code === 0) {
           this.holderList = data.data
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -279,7 +279,7 @@ export default {
         if (data.code === 0) {
           this.materialList = data.materialList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -289,7 +289,7 @@ export default {
         if (data.code === 0) {
           this.materialTypeList = data.ferList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -299,7 +299,7 @@ export default {
         if (data.code === 0) {
           this.materialTypeList = data.ferList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -317,7 +317,7 @@ export default {
           this.$store.state.common.Fermentation.category.halfId = ''
           // console.log(this.dataList)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -382,7 +382,7 @@ export default {
               this.$success_SHINHO('调整成功')
               this.GetList()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {
