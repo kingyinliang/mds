@@ -185,7 +185,7 @@ export default {
           this.dataLeftListOrderTotal = data.juiceStockItem.juiceStockItemPot
           this.changeLeftDataList()
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
       this.$http(`${JUICE_API.JUICE_JUICE_STOCKITEM}`, 'POST', {TYPE: 'alls'}).then(({data}) => {
@@ -195,7 +195,7 @@ export default {
           this.dataRightListOrderTotal = data.juiceStockItem.juiceStockItemPot
           this.changeRightDataList()
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
       this.$http(`${JUICE_API.JUICE_POT_STOCKSUM}`, 'POST', {}).then(({data}) => {

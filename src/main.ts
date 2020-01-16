@@ -51,7 +51,7 @@ Vue.prototype.$warning_SHINHO = (str) => {
 }
 // 错误通知
 Vue.prototype.$error_SHINHO = (str) => {
-  Notification({ title: '错误', message: str, type: 'error' })
+  Notification({ title: '错误', message: str, type: 'error', duration: 0 })
 }
 // 成功通知
 Vue.prototype.$success_SHINHO = (str) => {

@@ -188,7 +188,7 @@ export default {
       if (data.code === 0) {
         this.sapList = data.dicList
       } else {
-        this.$notify.error({title: '错误', message: data.msg})
+        this.$error_SHINHO(data.msg)
       }
     })
     // this.$http(`${BASICDATA_API.SERCHSAPLIST_API}`, 'POST', {params: ''}).then(({data}) => {
@@ -206,7 +206,7 @@ export default {
         if (data.code === 0) {
           this.factory = data.typeList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -218,7 +218,7 @@ export default {
           if (data.code === 0) {
             this.workshop = data.typeList
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -251,7 +251,7 @@ export default {
           this.pageSize = data.page.pageSize
           this.totalCount = data.page.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         this.visible = false
       })
@@ -269,7 +269,7 @@ export default {
             this.multipleSelection = []
             this.GetLocationList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })

@@ -188,7 +188,7 @@ export default {
             this.$success_SHINHO('操作成功')
             this.getDataList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }).catch(() => {})
@@ -208,7 +208,7 @@ export default {
             this.$success_SHINHO('操作成功')
             this.getDataList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }).catch(() => {})
@@ -228,7 +228,7 @@ export default {
             this.$success_SHINHO('操作成功')
             this.getDataList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }).catch(() => {})
@@ -248,7 +248,7 @@ export default {
             this.$success_SHINHO('操作成功')
             this.getDataList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }).catch(() => {})

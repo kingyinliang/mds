@@ -145,7 +145,7 @@ export default {
         if (data.code === 0) {
           this.RoleList = data.page.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -159,7 +159,7 @@ export default {
           this.$notify({title: '成功', message: '操作成功', type: 'success'})
           this.GetList()
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -175,7 +175,7 @@ export default {
             this.$notify({title: '成功', message: '重置成功', type: 'success'})
             this.GetList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })
@@ -199,7 +199,7 @@ export default {
           this.UserListArr = data.page
           this.dataPro(this.currPage)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

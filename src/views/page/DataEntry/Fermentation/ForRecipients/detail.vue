@@ -169,7 +169,7 @@ export default {
           this.GetOrderType(this.formHeader.FACTORYID)
           this.GetList()
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -243,7 +243,7 @@ export default {
           if (data.code === 0) {
             this.OrderType = data.dicList
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -263,7 +263,7 @@ export default {
           //   })
           // })
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
       this.$http(`${FERMENTATION_API.FORRECIPIENTSDETAILIST_API}`, 'POST', {deptId: '', pageSize: 10000, currPage: '1', halfType: this.formHeader.HALF_TYPE ? this.formHeader.HALF_TYPE : '', materialCode: this.formHeader.MATERIAL_CODE}).then(({data}) => {
@@ -335,7 +335,7 @@ export default {
               this.$notify({title: '成功', message: '开罐成功', type: 'success'})
               this.Getdetail()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         })

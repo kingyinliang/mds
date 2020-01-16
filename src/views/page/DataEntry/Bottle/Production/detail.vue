@@ -155,7 +155,7 @@ export default {
             this.$refs.textrecord.GetText(this.formHeader.orderId)
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -168,7 +168,7 @@ export default {
           this.$refs.workerref.GetTimeUserList(data.listuser, data.vrList)
           this.Attendance = data.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -297,7 +297,7 @@ export default {
             resolve('resolve')
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
           if (reject) {
             reject('工时提交' + data.msg)
           }
@@ -310,7 +310,7 @@ export default {
         if (data.code === 0) {
           this.productShift = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -320,7 +320,7 @@ export default {
         if (data.code === 0) {
           this.Supplier = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     }

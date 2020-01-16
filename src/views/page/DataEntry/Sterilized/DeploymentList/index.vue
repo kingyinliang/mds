@@ -202,7 +202,7 @@ export default {
           this.factory = data.typeList
           this.formHeader.factory = data.typeList[0].deptId
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -219,7 +219,7 @@ export default {
               this.formHeader.workShop = ''
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -232,7 +232,7 @@ export default {
         if (data.code === 0) {
           this.holderList = data.holderList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -249,7 +249,7 @@ export default {
           this.pages.totalCount = this.dataListAll.length
           this.orderInfoList = []
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -280,7 +280,7 @@ export default {
         if (data.code === 0) {
           this.orderInfoList = data.allocateInfo.orderInfo
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -310,7 +310,7 @@ export default {
             this.$notify({title: '成功', message: '生成成功', type: 'success'})
             this.GetList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })

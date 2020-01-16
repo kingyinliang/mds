@@ -140,7 +140,7 @@ export default {
             })
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -162,7 +162,6 @@ export default {
     },
     // 保存
     savedOrSubmitForm (str) {
-      // 原料领用校验
       if (!this.$refs.meateriel.saveRul2()) {
         return false
       }
@@ -178,55 +177,64 @@ export default {
         }
       }
       let that = this
-      let excSaveNet = new Promise((resolve, reject) => {
-        that.$refs.excrecord.saveOrSubmitExc({
-          orderId: that.formHeader.orderId,
-          orderHouseId: that.formHeader.id,
-          blongProc: that.formHeader.prolineId
-        }, str, resolve, reject)
+      let meaterielStock = new Promise((resolve, reject) => {
+        that.$refs.meateriel.getRepertory(str, resolve, reject)
       })
-      let textSaveNet = new Promise((resolve, reject) => {
-        that.$refs.textrecord.UpdateText({
-          orderId: that.formHeader.orderId,
-          orderHouseId: that.formHeader.id,
-          blongProc: that.formHeader.prolineId
-        }, str, resolve, reject)
-      })
-      let OrderHeadSaveNet = new Promise((resolve, reject) => {
-        that.UpdateOrderHead(str, resolve, reject)
-      })
-      if (str === 'submit') {
-        let saveNet = Promise.all([OrderHeadSaveNet, excSaveNet, textSaveNet])
-        saveNet.then(function () {
-          let meaterielSubmit = new Promise((resolve, reject) => {
+      meaterielStock.then(function (data) {
+        if (data === 1) {
+          that.$warning_SHINHO('原料领用库存量不能为负')
+          return false
+        }
+        let excSaveNet = new Promise((resolve, reject) => {
+          that.$refs.excrecord.saveOrSubmitExc({
+            orderId: that.formHeader.orderId,
+            orderHouseId: that.formHeader.id,
+            blongProc: that.formHeader.prolineId
+          }, str, resolve, reject)
+        })
+        let textSaveNet = new Promise((resolve, reject) => {
+          that.$refs.textrecord.UpdateText({
+            orderId: that.formHeader.orderId,
+            orderHouseId: that.formHeader.id,
+            blongProc: that.formHeader.prolineId
+          }, str, resolve, reject)
+        })
+        let OrderHeadSaveNet = new Promise((resolve, reject) => {
+          that.UpdateOrderHead(str, resolve, reject)
+        })
+        if (str === 'submit') {
+          let saveNet = Promise.all([OrderHeadSaveNet, excSaveNet, textSaveNet])
+          saveNet.then(function () {
+            let meaterielSubmit = new Promise((resolve, reject) => {
+              that.$refs.meateriel.SaveOrSubmitMateriel(str, resolve, reject)
+            })
+            let InstockSubmit = new Promise((resolve, reject) => {
+              that.$refs.outinstorage.SaveOrSubmitInStock(str, resolve, reject)
+            })
+            let submitNet = Promise.all([meaterielSubmit, InstockSubmit])
+            submitNet.then(function () {
+              that.GetOrderList()
+              that.$notify({title: '成功', message: '提交成功', type: 'success'})
+            }, err => {
+              that.$error_SHINHO(err)
+            })
+          })
+        } else {
+          let meaterielSave = new Promise((resolve, reject) => {
             that.$refs.meateriel.SaveOrSubmitMateriel(str, resolve, reject)
           })
-          let InstockSubmit = new Promise((resolve, reject) => {
+          let InstockSave = new Promise((resolve, reject) => {
             that.$refs.outinstorage.SaveOrSubmitInStock(str, resolve, reject)
           })
-          let submitNet = Promise.all([meaterielSubmit, InstockSubmit])
-          submitNet.then(function () {
+          let saveNet = Promise.all([OrderHeadSaveNet, meaterielSave, InstockSave, excSaveNet, textSaveNet])
+          saveNet.then(function () {
             that.GetOrderList()
-            that.$notify({title: '成功', message: '提交成功', type: 'success'})
+            that.$notify({title: '成功', message: '保存成功', type: 'success'})
           }, err => {
             that.$error_SHINHO(err)
           })
-        })
-      } else {
-        let meaterielSave = new Promise((resolve, reject) => {
-          that.$refs.meateriel.SaveOrSubmitMateriel(str, resolve, reject)
-        })
-        let InstockSave = new Promise((resolve, reject) => {
-          that.$refs.outinstorage.SaveOrSubmitInStock(str, resolve, reject)
-        })
-        let saveNet = Promise.all([OrderHeadSaveNet, meaterielSave, InstockSave, excSaveNet, textSaveNet])
-        saveNet.then(function () {
-          that.GetOrderList()
-          that.$notify({title: '成功', message: '保存成功', type: 'success'})
-        }, err => {
-          that.$error_SHINHO(err)
-        })
-      }
+        }
+      })
     },
     // 提交
     SubmitForm () {

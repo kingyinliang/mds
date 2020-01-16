@@ -120,7 +120,7 @@ export default {
           this.currPage = data.list.currPage
           this.pageSize = data.list.pageSize
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -136,7 +136,7 @@ export default {
             this.$success_SHINHO('删除成功!')
             this.getList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })
@@ -153,7 +153,7 @@ export default {
         if (data.code === 0) {
           this.parameter = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

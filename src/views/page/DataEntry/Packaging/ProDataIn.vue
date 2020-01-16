@@ -179,7 +179,7 @@ export default {
             this.$notify.error({title: '错误', message: '比例获取失败'})
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -419,7 +419,7 @@ export default {
       this.$http(`${PACKAGING_API.PKGSAVEFORM_API}`, 'POST', data).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')

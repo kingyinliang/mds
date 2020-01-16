@@ -119,7 +119,7 @@ export default {
           this.totalCount = data.page.totalCount
           this.currPage = data.page.currPage
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -144,7 +144,7 @@ export default {
           }, 4000)
         } else {
           this.loading.close()
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -166,7 +166,7 @@ export default {
         } else {
           this.loading.close()
           clearInterval(this.sapTime)
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch(() => {
         this.loading.close()

@@ -163,7 +163,7 @@ export default {
             })
           }
         } else {
-          this.$notify.error({title: '错误', message: res.data.msg})
+          this.$error_SHINHO(res.data.msg)
         }
       })
     },
@@ -173,7 +173,7 @@ export default {
         if (data.code === 0) {
           this.holderList = data.page.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -183,7 +183,7 @@ export default {
       this.$http(`${KJM_API.DOUHEADER_API}`, 'POST', {cookingNoId: holderNamestr, orderHouseId: this.formHeader.orderHouseId}).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: '保存表头' + data.msg})
+          this.$error_SHINHO('保存表头' + data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -194,7 +194,7 @@ export default {
       this.$http(`${KJM_API.DOUMATERHEADCREATOR_API}`, 'POST', {orderId: this.formHeader.orderId}).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: '保存表头' + data.msg})
+          this.$error_SHINHO('保存表头' + data.msg)
         }
         if (resolve) {
           resolve('resolve')

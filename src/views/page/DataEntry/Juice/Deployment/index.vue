@@ -108,7 +108,7 @@
       </el-card>
     </div>
     <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">调配列表</div>
+      <div slot="title">调配列表</div>
       <el-table style="margin-bottom: 20px;" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
         <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
           <template slot-scope="scope">
@@ -191,7 +191,7 @@
       </span>
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :visible.sync="RecordDialogTableVisible" width="550px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">记录</div>
+      <div slot="title">记录</div>
       <el-form :model="record" size="small" label-width="140px" :rules="recordrules" ref="record" style="width: 471px;">
         <el-form-item label="搅罐时间（min）：" prop="stirringTime">
           <el-input v-model="record.stirringTime" size="small" :disabled="!isRedact || this.soleRowstatus === '已提交' || this.soleRowstatus === '审核通过'"></el-input>
@@ -366,7 +366,7 @@ export default {
         if (data.code === 0) {
           this.nonReasonsList = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -378,7 +378,7 @@ export default {
           this.factory = data.typeList
           this.formHeader.factory = data.typeList[0].deptId
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -395,7 +395,7 @@ export default {
               this.formHeader.workShop = ''
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -408,7 +408,7 @@ export default {
         if (data.code === 0) {
           this.holderList = data.holderList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -424,7 +424,7 @@ export default {
           if (data.code === 0) {
             this.thrwHolderList = data.holderList
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -448,7 +448,7 @@ export default {
           this.pages.currentPage = 1
           this.dataList = this.dataListAll.slice((this.pages.currentPage - 1) * this.pages.pageSize, this.pages.currentPage * this.pages.pageSize)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -475,7 +475,7 @@ export default {
             this.CheckMessage()
           }, 1000)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -636,7 +636,7 @@ export default {
           this.isRedact = false
           this.SearchList()
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -666,7 +666,7 @@ export default {
             this.isRedact = false
             this.SearchList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })
@@ -717,7 +717,7 @@ export default {
         if (data.code === 0) {
           this.userList = data.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -784,7 +784,7 @@ export default {
           }
           this.RecordDialogTableVisible = true
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -842,7 +842,7 @@ export default {
               this.RecordDialogTableVisible = false
               this.$refs[formName].resetFields()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {

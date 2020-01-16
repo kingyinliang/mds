@@ -34,7 +34,7 @@
       </template>
     </query-table>
     <el-dialog :visible.sync="DialogTableVisible" :close-on-click-modal="false" width="500px" custom-class='dialog__class'>
-      <div slot="title" style="line-height: 59px;">编辑</div>
+      <div slot="title">编辑</div>
       <el-form ref="form" size="small" label-width="100px" :model="form">
         <el-form-item label="工厂编码：">
           <el-input v-model="form.factory"></el-input>

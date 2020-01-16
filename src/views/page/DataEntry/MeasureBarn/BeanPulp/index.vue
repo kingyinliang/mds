@@ -301,7 +301,7 @@ export default {
           // console.log('this.inParnHolder')
           // console.log(this.inParnHolder)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
       // let temp = {
@@ -359,7 +359,7 @@ export default {
               this.$refs[formName].resetFields()
               this.getOrderList()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {
@@ -442,7 +442,7 @@ export default {
             this.$notify.info({title: MSG.API.BeanPulp.searchResult.title, message: MSG.API.BeanPulp.searchResult.message})
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

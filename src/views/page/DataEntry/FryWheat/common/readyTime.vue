@@ -182,7 +182,7 @@ export default {
           this.machineTimeData = data.listFormMachine
           this.timeAuditlog = data.listApproval
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).finally(() => {
         this.$emit('SetReadyStatus', status)
@@ -211,7 +211,7 @@ export default {
       this.$http(`${WHT_API.READYTIMEUPDATE_API}`, 'POST', this.readyTimeDate).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -235,7 +235,7 @@ export default {
       this.$http(`${WHT_API.MACHINETIMEUPDATE_API}`, 'POST', this.machineTimeData).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -335,7 +335,7 @@ export default {
         if (data.code === 0) {
           this.Machine = data.list.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

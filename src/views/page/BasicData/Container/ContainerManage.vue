@@ -189,7 +189,7 @@ export default {
           this.form.pageSize = data.page.pageSize
           this.form.totalCount = data.page.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         this.visible = false
       })
@@ -200,7 +200,7 @@ export default {
         if (data.code === 0) {
           this.dictList = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -221,7 +221,7 @@ export default {
           if (data.code === 0) {
             this.workshop = data.typeList
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -263,7 +263,7 @@ export default {
               this.multipleSelection = []
               this.GetContainerList()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         }).catch(() => {

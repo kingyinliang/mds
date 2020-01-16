@@ -93,7 +93,7 @@ export default {
         if (data.code === 0) {
           this.orderList = this.ProcessingData(data.list)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

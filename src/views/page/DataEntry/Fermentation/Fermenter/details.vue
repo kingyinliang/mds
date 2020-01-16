@@ -154,7 +154,7 @@ export default {
           }
           console.log(this.formData.frozenStatus)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

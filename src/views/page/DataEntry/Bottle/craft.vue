@@ -322,7 +322,7 @@ export default {
           this.GetEquipmentList()
           this.GetWarmingList()
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -332,7 +332,7 @@ export default {
           this.productList = data.techProductParameterList.list
           this.pages.totalCount = data.techProductParameterList.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -341,7 +341,7 @@ export default {
         if (data.code === 0) {
           this.equipmentList = data.techMachineList.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -350,7 +350,7 @@ export default {
         if (data.code === 0) {
           this.warmingList = data.techTempParameterList.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

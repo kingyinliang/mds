@@ -90,7 +90,7 @@ export default {
           this.InAudit = data.vrList
           status = GetStatus(this.InDataList)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).finally(() => {
         this.$emit('setInStorageState', status)

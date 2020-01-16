@@ -184,7 +184,7 @@ export default {
             this.$notify.info({title: MSG.API.WheatPot.BeanPulp.searchResult.title, message: MSG.API.WheatPot.BeanPulp.searchResult.message})
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

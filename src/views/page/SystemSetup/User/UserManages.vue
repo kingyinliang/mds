@@ -159,7 +159,7 @@ export default {
           this.OrgTree = data.deptList
           this.arrList = [this.OrgTree[0].children[0].deptId]
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -191,7 +191,7 @@ export default {
           this.pageSize = data.page.pageSize
           this.totalCount = data.page.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         this.visible = false
       })
@@ -245,7 +245,7 @@ export default {
                 this.multipleSelection = []
                 this.getList()
               } else {
-                this.$notify.error({title: '错误', message: data.msg})
+                this.$error_SHINHO(data.msg)
               }
             })
           }).catch(() => {

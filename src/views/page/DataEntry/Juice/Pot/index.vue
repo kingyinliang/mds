@@ -136,7 +136,7 @@
     </el-row>
   </el-card>
   <el-dialog :visible.sync="TransferDialogTableVisible" :close-on-click-modal="false" width="500px" custom-class='dialog__class'>
-    <div slot="title" style="line-height: 59px;">转储</div>
+    <div slot="title">转储</div>
     <div>
       <el-form size="small" :model="formTransfer" :rules="Transferulestar" ref="Transferstar" label-width="150px">
         <el-form-item label="领用罐号：">{{formTransfer.holderName}}</el-form-item>
@@ -182,7 +182,7 @@
     </span>
   </el-dialog>
   <el-dialog :visible.sync="AddDialogTableVisible" :close-on-click-modal="false" width="500px" custom-class='dialog__class'>
-    <div slot="title" style="line-height: 59px;">HD</div>
+    <div slot="title">HD</div>
     <div>
       <el-form size="small" :model="formAdd" :rules="Addrulestar" ref="Addstar" label-width="150px">
         <el-form-item label="领用罐号：">{{formAdd.holderName}}</el-form-item>
@@ -212,7 +212,7 @@
     </span>
   </el-dialog>
   <el-dialog :close-on-click-modal="false" :visible.sync="JudgeDialogTableVisible" width="400px" custom-class='dialog__class'>
-    <div slot="title" style="line-height: 59px;">类别判定</div>
+    <div slot="title">类别判定</div>
     <el-form :model="judge" size="small" label-width="130px" :rules="judgerules" ref="judge">
       <el-form-item label="物料：">{{this.judge.materialCode}}{{this.judge.materialName}}</el-form-item>
       <el-form-item label="发酵天数：">{{this.judge.ferDays}} 天</el-form-item>
@@ -262,7 +262,7 @@
     </span>
   </el-dialog>
   <el-dialog :visible.sync="BringOutDialogTableVisible" :close-on-click-modal="false" width="500px" custom-class='dialog__class'>
-    <div slot="title" style="line-height: 59px;">调整</div>
+    <div slot="title">调整</div>
     <div>
       <el-form size="small" :model="formBringOut" :rules="BringOutrulestar" ref="BringOutstar" label-width="150px">
         <el-form-item label="领用罐号：">{{formBringOut.holderName}}</el-form-item>
@@ -628,7 +628,7 @@ export default {
           this.factory = data.typeList
           this.formHeader.factory = data.typeList[0].deptId
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -637,21 +637,21 @@ export default {
         if (data.code === 0) {
           this.formBringOutFa = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
       this.$http(`${JUICE_API.JUICE_BRINGOUTPROP_FA_LIST}`, 'POST', {}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.formBringOutFaPot = data.addPotList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
       this.$http(`${JUICE_API.JUICE_BRINGOUTPROP_TIAO_LIST}`, 'POST', {}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.formBringOutTPot = data.allocateHolderList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -665,7 +665,7 @@ export default {
               this.formHeader.workShop = data.typeList[0].deptId
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -685,7 +685,7 @@ export default {
         if (data.code === 0) {
           this.typeList = data.maintain
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -695,7 +695,7 @@ export default {
         if (data.code === 0) {
           this.holderStatusList = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -729,7 +729,7 @@ export default {
           this.topBox[5].num = data.indexList.summaryData.kong
           this.topBox[5].content = data.indexList.summaryData.kongMaintain ? data.indexList.summaryData.kongMaintain : 0
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -763,7 +763,7 @@ export default {
             }
             this.TransferDialogTableVisible = true
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -776,7 +776,7 @@ export default {
         if (data.code === 0) {
           this.thrwHolderList = data.transferStoragePotList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -794,7 +794,7 @@ export default {
               this.$refs[formName].resetFields()
               this.GetDataList(true)
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {
@@ -831,7 +831,7 @@ export default {
             }
             this.AddDialogTableVisible = true
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -848,7 +848,7 @@ export default {
               this.$refs[formName].resetFields()
               this.GetDataList(true)
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {
@@ -892,7 +892,7 @@ export default {
           }
           this.JudgeDialogTableVisible = true
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -906,7 +906,7 @@ export default {
               this.$refs[formName].resetFields()
               this.GetDataList(true)
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {
@@ -938,7 +938,7 @@ export default {
           this.GetDataList(true)
           this.visible = false
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -984,7 +984,7 @@ export default {
               this.$refs[formName].resetFields()
               this.GetDataList(true)
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {

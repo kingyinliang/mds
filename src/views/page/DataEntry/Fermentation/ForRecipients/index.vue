@@ -142,7 +142,7 @@ export default {
           this.factory = data.typeList
           this.form.factory = data.typeList[0].deptId
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -160,7 +160,7 @@ export default {
               }
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -173,7 +173,7 @@ export default {
         if (data.code === 0) {
           this.MaterialType = data.productsInfo
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -217,7 +217,7 @@ export default {
             this.$notify({title: '成功', message: '删除成功', type: 'success'})
             this.SearchList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })

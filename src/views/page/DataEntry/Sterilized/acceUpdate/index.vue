@@ -238,7 +238,7 @@ export default {
           // this.totalCount = data.list.length
           // this.dataList = this.SumDataList.slice((this.currPage - 1) * this.pageSize, (this.currPage - 1) * this.pageSize + this.pageSize)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -291,7 +291,7 @@ export default {
           this.$notify({title: '成功', message: '操作成功', type: 'success'})
           this.GetDataList()
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -335,7 +335,7 @@ export default {
           this.$notify({title: '成功', message: '操作成功', type: 'success'})
           this.GetDataList()
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -430,7 +430,7 @@ export default {
         if (data.code === 0) {
           this.Materails = data.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -440,7 +440,7 @@ export default {
         if (data.code === 0) {
           this.Unit = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

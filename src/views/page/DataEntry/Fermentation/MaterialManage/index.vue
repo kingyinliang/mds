@@ -195,7 +195,7 @@ export default {
         if (data.code === 0) {
           this.orderTypeList = data.dicList[0].prolist
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch((error) => {
         console.log('catch data::', error)
@@ -211,7 +211,7 @@ export default {
           this.Audit = []
           this.$store.commit('common/updateFermentationM', this.formHeader)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -221,7 +221,7 @@ export default {
         if (data.code === 0) {
           this.Audit = data.verList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -271,11 +271,11 @@ export default {
                 this.$notify({title: '成功', message: '操作成功', type: 'success'})
                 this.GetDataList()
               } else {
-                this.$notify.error({title: '错误', message: data.msg})
+                this.$error_SHINHO(data.msg)
               }
             })
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -284,7 +284,7 @@ export default {
             this.$notify({title: '成功', message: '操作成功', type: 'success'})
             this.GetDataList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -310,7 +310,7 @@ export default {
             this.$notify({title: '成功', message: '删除成功', type: 'success'})
             this.GetDataList()
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -339,7 +339,7 @@ export default {
             this.formHeader.factory = data.typeList[0].deptId
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -353,7 +353,7 @@ export default {
               this.formHeader.workShop = data.typeList[0].deptId
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -387,7 +387,7 @@ export default {
           if (data.code === 0) {
             this.material = data.list
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }

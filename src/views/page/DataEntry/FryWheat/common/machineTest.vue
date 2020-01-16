@@ -80,7 +80,7 @@ export default {
         if (data.code === 0) {
           this.machineTest = data.record
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -137,7 +137,7 @@ export default {
           this.$notify({title: '成功', message: '保存成功', type: 'success'})
           this.visible = false
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     }

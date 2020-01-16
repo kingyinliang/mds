@@ -130,7 +130,7 @@ export default {
         if (data.code === 0) {
           this.factory = data.typeList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -142,7 +142,7 @@ export default {
           if (data.code === 0) {
             this.workshop = data.typeList
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }
@@ -153,7 +153,7 @@ export default {
         if (data.code === 0) {
           this.sapList = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -181,7 +181,7 @@ export default {
                 this.$emit('refreshDataList')
               } else {
                 this.submitType = true
-                this.$notify.error({title: '错误', message: data.msg})
+                this.$error_SHINHO(data.msg)
               }
             })
           } else {

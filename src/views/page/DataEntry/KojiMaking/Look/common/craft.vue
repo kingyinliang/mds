@@ -399,7 +399,7 @@ export default {
         if (data.code === 0) {
           this.userList = data.page.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -508,7 +508,7 @@ export default {
       this.$http(`${KJM_API.DOULOOKSTATUS_API}`, 'POST', {status: this.statuss, orderHouseId: this.formHeader.orderHouseId}).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -529,7 +529,7 @@ export default {
       this.$http(`${KJM_API.DOULOOKZHUSAVE_API}`, 'POST', this.tech).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -544,7 +544,7 @@ export default {
       this.$http(`${KJM_API.DOULOOKKANQUSAVE_API}`, 'POST', this.lookList).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -571,7 +571,7 @@ export default {
       this.$http(`${KJM_API.DOULOOKGANGUANSAVE_API}`, 'POST', this.assessList).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -589,7 +589,7 @@ export default {
           this.assessList = data.feelList
           this.lookList = data.recordList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch((error) => {
         this.$notify.error({title: '错误', message: error})

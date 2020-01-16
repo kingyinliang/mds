@@ -114,7 +114,7 @@ export default {
           // this.dataList = orderList(data.list)
           this.dataList = orderListNew(data.list)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -135,7 +135,7 @@ export default {
             row.countOutput = data.list[0].countOutput
             row.plan = data.list[0].plan
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }

@@ -256,7 +256,7 @@ export default {
             this.form.factory = this.factory[0].deptId
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -272,7 +272,7 @@ export default {
               this.form.workShop = data.typeList[0].deptId
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {

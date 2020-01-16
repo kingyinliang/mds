@@ -366,7 +366,7 @@ export default {
         if (data.code === 0) {
           this.orderTypeList = data.dicList[0].prolist
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       }).catch((error) => {
         console.log('catch data::', error)
@@ -391,7 +391,7 @@ export default {
           this.plantList.pageSize = data.page.pageSize
           this.plantList.totalCount = data.page.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         this.dataListLoading = false
       })
@@ -419,7 +419,7 @@ export default {
             this.GetAuditList()
             this.$notify({title: '成功', message: '操作成功', type: 'success'})
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       })
@@ -430,7 +430,7 @@ export default {
         if (data.code === 0) {
           this.MoveReas = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -441,7 +441,7 @@ export default {
           this.factory = data.typeList
           this.plantList.factory = data.typeList[0].deptId
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -457,7 +457,7 @@ export default {
               this.plantList.workShop = data.typeList[0].deptId
             }
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -472,7 +472,7 @@ export default {
           if (data.code === 0) {
             this.productline = data.childList
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       } else {
@@ -516,7 +516,7 @@ export default {
             this.AuditList.splice(this.AuditList.length, 0, {})
             this.AuditList.splice(this.AuditList.length - 1, 1)
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
           this.GetAuditList()
         }).catch(() => {
@@ -557,7 +557,7 @@ export default {
                   this.$notify({title: '成功', message: '操作成功', type: 'success'})
                   this.GetAuditList()
                 } else {
-                  this.$notify.error({title: '错误', message: data.msg})
+                  this.$error_SHINHO(data.msg)
                 }
               }).catch(() => {
                 this.$notify.error({title: '错误', message: '网络错误'})
@@ -593,7 +593,7 @@ export default {
                   this.$notify({title: '成功', message: '操作成功', type: 'success'})
                   this.GetAuditList()
                 } else {
-                  this.$notify.error({title: '错误', message: data.msg})
+                  this.$error_SHINHO(data.msg)
                   this.GetAuditList()
                 }
               }).catch(() => {

@@ -152,7 +152,7 @@ export default {
         if (data && data.code === 0) {
           this.$alert(data.log.error)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     }

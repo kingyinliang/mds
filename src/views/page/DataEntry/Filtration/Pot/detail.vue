@@ -106,7 +106,7 @@ export default {
           this.dataList = data.current
           this.dataListRe = data.history
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     }

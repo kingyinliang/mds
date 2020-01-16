@@ -93,7 +93,7 @@
       </div>
     </el-card>
     <el-dialog :close-on-click-modal="false" custom-class='dialog__class' :visible.sync="dialogFormVisibleMai" width="450px">
-      <div slot="title" style="line-height: 59px;">熟酱醪领用</div>
+      <div slot="title">熟酱醪领用</div>
       <el-form :model="sauce" size="small" :rules="saucerule" ref="saucesbu">
         <el-form-item label="布浆机：" :label-width="formLabelWidth" prop="pulpMachine">
           <el-select v-model="sauce.pulpMachine" filterable placeholder="请选择" style="width: 310px;">
@@ -222,7 +222,7 @@ export default {
         if (data.code === 0) {
           this.sauceClassList = data.dicList
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -248,7 +248,7 @@ export default {
         if (data.code === 0) {
           this.pulpMachineList = data.list.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -264,7 +264,7 @@ export default {
         if (data.code === 0) {
           this.hovercraftList = data.list.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
       this.$http(`${BASICDATA_API.DEVICELIST_API}`, 'POST', {
@@ -276,7 +276,7 @@ export default {
         if (data.code === 0) {
           this.hovercraftAll = data.list.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -380,7 +380,7 @@ export default {
           this.materialList = data.propulp
           this.peopleList = data.propulpMan
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -427,7 +427,7 @@ export default {
       this.$http(`${SQU_API.CLOTHFORMHEADER_API}`, 'POST', this.formHeader).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -460,12 +460,12 @@ export default {
             this.$http(`${SQU_API.CLOTHMATERIALSUBMIT_API}`, 'POST', this.multipleSelection).then(({data}) => {
               if (data.code === 0) {
               } else {
-                this.$notify.error({title: '错误', message: data.msg})
+                this.$error_SHINHO(data.msg)
               }
             })
           }
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -483,7 +483,7 @@ export default {
       this.$http(`${SQU_API.CLOTHMATERIALMAN_API}`, 'POST', this.peopleList).then(({data}) => {
         if (data.code === 0) {
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
         if (resolve) {
           resolve('resolve')
@@ -528,7 +528,7 @@ export default {
             }
             this.visible = true
           } else {
-            this.$notify.error({title: '错误', message: data.msg})
+            this.$error_SHINHO(data.msg)
           }
         })
       }

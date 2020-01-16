@@ -102,7 +102,7 @@ export default {
           this.formHeader.pageSize = data.ferList.pageSize
           this.formHeader.totalCount = data.ferList.totalCount
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -125,7 +125,7 @@ export default {
               this.multipleSelection = []
               this.GetDataList()
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         }).catch(() => {
@@ -139,7 +139,7 @@ export default {
           this.factory = data.typeList
           this.formHeader.factory = data.typeList[0].deptId
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -150,7 +150,7 @@ export default {
         if (data.code === 0) {
           this.material = data.list
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },

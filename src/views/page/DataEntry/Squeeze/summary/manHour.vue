@@ -77,7 +77,7 @@ export default {
           if (reject) {
             reject(data.msg)
           }
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -87,7 +87,7 @@ export default {
         if (data.code === 0) {
           this.TimeAudit = data.listRecord
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -97,7 +97,7 @@ export default {
         if (data.code === 0) {
           this.GetTimeList(this.formHeader)
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -119,7 +119,7 @@ export default {
           if (reject) {
             reject(data.msg)
           }
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     },
@@ -143,11 +143,11 @@ export default {
             if (data.code === 0) {
               this.GetTimeList(this.formHeader)
             } else {
-              this.$notify.error({title: '错误', message: data.msg})
+              this.$error_SHINHO(data.msg)
             }
           })
         } else {
-          this.$notify.error({title: '错误', message: data.msg})
+          this.$error_SHINHO(data.msg)
         }
       })
     }
