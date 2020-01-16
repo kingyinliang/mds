@@ -2,192 +2,112 @@
 <template>
   <div>
     <!--数据录入-->
-    <el-row>
-      <el-col :span="24">
-        <el-card>
-          <!--录入-->
-          <div>
-            <el-row  :gutter="36" v-for="(item, index) in flourContainerList" :key="index" v-if="index%6===0" style="margin-top: 5px;">
-              <el-col :span="4" v-if="index < flourContainerList.length">
-                  <div class="stock-box">
-                    <div class="stock-title">
-                      <span class="stock-text">{{flourContainerList[index].holderName}}</span>
-                    </div>
-                    <div class="stock-container">
-                      <div class="stock-img img1"></div>
-                      <div class="stock-button enabled" @click="addNewRecord(flourContainerList[index].holderId, flourContainerList[index].holderName)" v-if="isRedact && (inStorageState != 'submit' && inStorageState != 'checked')"> 入罐</div>
-                      <div class="stock-button disabled"  v-else> 入罐</div>
-                    </div>
-                  </div>
-              </el-col>
-              <el-col :span="4" v-if="index + 1 < flourContainerList.length">
-                  <div class="stock-box">
-                    <div class="stock-title">
-                      <span class="stock-text">{{flourContainerList[index + 1].holderName}}</span>
-                    </div>
-                    <div class="stock-container">
-                      <div class="stock-img img2"></div>
-                      <div class="stock-button enabled" @click="addNewRecord(flourContainerList[index + 1].holderId, flourContainerList[index + 1].holderName)" v-if="isRedact && (inStorageState != 'submit' && inStorageState != 'checked')"> 入罐</div>
-                      <div class="stock-button disabled"  v-else> 入罐</div>
-                    </div>
-                  </div>
-              </el-col>
-              <el-col :span="4" v-if="index + 2 < flourContainerList.length">
-                  <div class="stock-box">
-                    <div class="stock-title">
-                      <span class="stock-text">{{flourContainerList[index + 2].holderName}}</span>
-                    </div>
-                    <div class="stock-container">
-                      <div class="stock-img img3"></div>
-                      <div class="stock-button enabled" @click="addNewRecord(flourContainerList[index + 2].holderId, flourContainerList[index + 2].holderName)" v-if="isRedact && (inStorageState != 'submit' && inStorageState != 'checked')"> 入罐</div>
-                      <div class="stock-button disabled"  v-else> 入罐</div>
-                    </div>
-                  </div>
-              </el-col>
-              <el-col :span="4" v-if="index + 3 < flourContainerList.length">
-                  <div class="stock-box">
-                    <div class="stock-title">
-                      <span class="stock-text">{{flourContainerList[index + 3].holderName}}</span>
-                    </div>
-                    <div class="stock-container">
-                      <div class="stock-img img4"></div>
-                      <div class="stock-button enabled" @click="addNewRecord(flourContainerList[index + 3].holderId, flourContainerList[index + 3].holderName)" v-if="isRedact && (inStorageState != 'submit' && inStorageState != 'checked')"> 入罐</div>
-                      <div class="stock-button disabled"  v-else> 入罐</div>
-                    </div>
-                  </div>
-              </el-col>
-               <el-col :span="4" v-if="index + 4 < flourContainerList.length">
-                  <div class="stock-box">
-                    <div class="stock-title">
-                      <span class="stock-text">{{flourContainerList[index + 4].holderName}}</span>
-                    </div>
-                    <div class="stock-container">
-                      <div class="stock-img img5"></div>
-                      <div class="stock-button enabled" @click="addNewRecord(flourContainerList[index + 4].holderId, flourContainerList[index + 4].holderName)" v-if="isRedact && (inStorageState != 'submit' && inStorageState != 'checked')"> 入罐</div>
-                      <div class="stock-button disabled"  v-else> 入罐</div>
-                    </div>
-                  </div>
-              </el-col>
-               <el-col :span="4" v-if="index + 5 < flourContainerList.length">
-                  <div class="stock-box">
-                    <div class="stock-title">
-                      <span class="stock-text">{{flourContainerList[index + 5].holderName}}</span>
-                    </div>
-                    <div class="stock-container">
-                      <div class="stock-img img6"></div>
-                      <div class="stock-button enabled" @click="addNewRecord(flourContainerList[index + 5].holderId, flourContainerList[index + 5].holderName)" v-if="isRedact && (inStorageState != 'submit' && inStorageState != 'checked')"> 入罐</div>
-                      <div class="stock-button disabled"  v-else> 入罐</div>
-                    </div>
-                  </div>
-              </el-col>
-            </el-row>
+    <mds-card :title="'生产入库'" :name="'instock'">
+      <!--录入-->
+      <el-row class="forColor" :gutter="10">
+        <el-col class="colorItem" :span="6" v-for="(item, index) in flourContainerList" :key="index" style="margin-bottom: 10px;">
+          <div class="stock-box colorContainer">
+            <p class="stock-title"><i class="iconfont factory-zhizaozhuisu"></i>{{flourContainerList[index].holderName}}</p>
+            <div class="stock-container clearfix">
+              <img src="@/assets/img/ui2.0/instockPot.png" alt="" class="stock-img">
+              <div class="stock-button enabled" @click="addNewRecord(flourContainerList[index].holderId, flourContainerList[index].holderName)" v-if="isRedact && (inStorageState != 'submit' && inStorageState != 'checked')"> 入罐</div>
+              <div class="stock-button disabled"  v-else> 入罐</div>
+            </div>
           </div>
-          <!--table-->
-          <!-- <el-button type='primary' size="small" @click="saveStockList">baocun</el-button>
-          <el-button type='primary' size="small" @click="submitStockList">tijiao</el-button> -->
-          <el-row  style="margin-top: 20px;" >
-            <el-col>
-              <el-table @row-dblclick="modifyOldRecord" header-row-class-name="tableHead" :data="wheatDataList"  border tooltip-effect="dark" :row-class-name="rowDelFlag">
-                <el-table-column label="日期" width="100">
-                  <template slot-scope="scope">
-                    {{scope.row.inPortDate | formatDate}}
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="麦粉计量仓"
-                  :show-overflow-tooltip="true"
-                  width="120">
-                  <template slot-scope="scope">
-                    {{scope.row.flourDeviceName}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="粮仓" show-overflow-tooltip>
-                  <template slot-scope="scope">
-                    {{scope.row.wheatDeviceName}}
-                  </template>
-                </el-table-column>
-                <el-table-column width="90" label="起始">
-                  <template slot-scope="scope">
-                    {{scope.row.startWeight}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="结束" width="90">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.endWeight}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="入库数" width="100">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.inPortWeight}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="单位" width="50">
-                  <template slot-scope="scope">
-                     <span>{{scope.row.weightUnit = 'KG'}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="入库批次" width="110">
-                  <template slot-scope="scope">
-                     <span>{{scope.row.inPortBatch}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作人员" width="100" show-overflow-tooltip>
-                  <template slot-scope="scope">
-                     <span>{{scope.row.changer}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作时间" width="160" show-overflow-tooltip>
-                  <template slot-scope="scope">
-                     <span>{{scope.row.changed}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  fixed="right"
-                  label="操作"
-                  width="70">
-                  <template slot-scope="scope">
-                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked' "  @click="dellistbomS(scope.row)">删除</el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </el-col>
-          </el-row>
-          <el-row style="margin-top: 20px;">
-            <el-col>
-              <div><span>入库数合计：</span>{{totalInstock}} KG</div>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
+        </el-col>
+      </el-row>
+      <!--table-->
+      <!-- <el-button type='primary' size="small" @click="saveStockList">baocun</el-button>
+      <el-button type='primary' size="small" @click="submitStockList">tijiao</el-button> -->
+      <el-table class="newTable" @row-dblclick="modifyOldRecord" header-row-class-name="tableHead" :data="wheatDataList"  border tooltip-effect="dark" :row-class-name="rowDelFlag">
+        <el-table-column label="日期" width="110">
+          <template slot-scope="scope">
+            {{scope.row.inPortDate | formatDate}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="麦粉计量仓"
+          :show-overflow-tooltip="true"
+          width="120">
+          <template slot-scope="scope">
+            {{scope.row.flourDeviceName}}
+          </template>
+        </el-table-column>
+        <el-table-column label="粮仓" show-overflow-tooltip>
+          <template slot-scope="scope">
+            {{scope.row.wheatDeviceName}}
+          </template>
+        </el-table-column>
+        <el-table-column width="90" label="起始">
+          <template slot-scope="scope">
+            {{scope.row.startWeight}}
+          </template>
+        </el-table-column>
+        <el-table-column label="结束" width="90">
+          <template slot-scope="scope">
+            <span>{{scope.row.endWeight}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="入库数" width="100">
+          <template slot-scope="scope">
+            <span>{{scope.row.inPortWeight}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="单位" width="50">
+          <template slot-scope="scope">
+             <span>{{scope.row.weightUnit = 'KG'}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="入库批次" width="110">
+          <template slot-scope="scope">
+             <span>{{scope.row.inPortBatch}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作人员" width="100" show-overflow-tooltip>
+          <template slot-scope="scope">
+             <span>{{scope.row.changer}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作时间" width="160" show-overflow-tooltip>
+          <template slot-scope="scope">
+             <span>{{scope.row.changed}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="70">
+          <template slot-scope="scope">
+            <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked' "  @click="dellistbomS(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div style="margin-top: 10px;"><span>入库数合计：</span>{{totalInstock}} KG</div>
+    </mds-card>
     <!--审批-->
-    <el-row>
-      <el-col :span="24">
-        <auditLog :tableData="readAudit"></auditLog>
-      </el-col>
-    </el-row>
+    <auditLog :tableData="readAudit"></auditLog>
     <el-dialog :title="this.stockForm.flourDeviceName" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="450px">
-      <el-form :model="stockForm" :rules="dataRule" ref="stockForm">
-        <el-form-item label="粮仓" :label-width="formLabelWidth" required prop="wheatDeviceId">
+      <el-form :model="stockForm" :rules="dataRule" ref="stockForm" size="small">
+        <el-form-item label="粮仓：" :label-width="formLabelWidth" required prop="wheatDeviceId">
           <el-select @change="changeWheatContainer"  v-model="stockForm.wheatDeviceId" value-key="wheatDeviceId" placeholder="请选择粮仓" style="width: 220px;" :disabled="!isRedact">
             <el-option v-for="(item, index) in wheatContainerList" :key="index" :label="item.holderName" :value="item.holderId" ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="起始(KG)" :label-width="formLabelWidth" required prop="startWeight">
+        <el-form-item label="起始(KG)：" :label-width="formLabelWidth" required prop="startWeight">
           <el-input type='number' v-model.number="stockForm.startWeight" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width: 220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
-        <el-form-item label="结束(KG)" :label-width="formLabelWidth" required prop="endWeight">
+        <el-form-item label="结束(KG)：" :label-width="formLabelWidth" required prop="endWeight">
           <el-input type='number' v-model.number="stockForm.endWeight" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width: 220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
-        <el-form-item label="入库批次" :label-width="formLabelWidth" required prop="inPortBatch">
+        <el-form-item label="入库批次：" :label-width="formLabelWidth" required prop="inPortBatch">
           <el-input  maxlength='10' v-model="stockForm.inPortBatch"  style="width: 220px;" :disabled="!isRedact"></el-input>
         </el-form-item>
-         <el-form-item label="操作时间" :label-width="formLabelWidth">
+         <el-form-item label="操作时间：" :label-width="formLabelWidth">
           <!-- <el-input v-model="stockForm.operateTime" ></el-input> -->
           <label>{{stockForm.changed}}</label>
           <!-- <el-date-picker type="datetime"  value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" v-model="stockForm.operateTime" :disabled="!isRedact"></el-date-picker> -->
         </el-form-item>
-         <el-form-item label="操作人" :label-width="formLabelWidth">
+         <el-form-item label="操作人：" :label-width="formLabelWidth">
           <label>{{stockForm.changer}}</label>
           <!-- <el-input v-model="stockForm.operatorId"  style="width:220px;" :disabled="!isRedact"></el-input> -->
         </el-form-item>
@@ -564,65 +484,38 @@ export default {
 
 <style lang="scss" scoped>
   .stock-box {
-    height: 184px;
-    border: 1px solid #e9e9e9;
-    border-radius: 4px;
+    padding: 10px;
+    color: white;
+    box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(171, 171, 171, 0.5);
     .stock-title {
-      height: 40px;
-      line-height: 40px;
-      border-radius: 4px 4px 0 0;
-      background-color: #ebebeb;
+      font-size: 12px;
+      line-height: 12px;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
-      .stock-text {
-        margin-left: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        font-family: PingFangSC-Medium, sans-serif;
-      }
     }
     .stock-container {
-      height: 144px;
+      margin-top: 20px;
       .stock-img {
         width: 82px;
-        height: 82px;
-        margin: auto;
-        margin-top: 11px;
-        border-radius: 41px;
-      }
-      .stock-img.img1 {
-        background: url("~@/assets/img/G1.png");
-      }
-      .stock-img.img2 {
-        background: url("~@/assets/img/G2.png");
-      }
-      .stock-img.img3 {
-        background: url("~@/assets/img/G3.png");
-      }
-      .stock-img.img4 {
-        background: url("~@/assets/img/G4.png");
-      }
-      .stock-img.img5 {
-        background: url("~@/assets/img/G5.png");
-      }
-      .stock-img.img6 {
-        background: url("~@/assets/img/G6.png");
+        margin-left: 10px;
+        float: left;
       }
       .stock-button {
-        margin: auto;
-        margin-top: 11px;
-        height: 22px;
-        width: 72px;
-        font-size: 14px;
-        line-height: 22px;
+        margin-top: 32px;
+        float: right;
+        width: 65px;
+        height: 32px;
+        font-size: 12px;
+        color: white;
+        line-height: 32px;
         text-align: center;
         border-radius: 4px;
-        font-weight: 400;
-        border: 1px solid #e9e9e9;
       }
       .enabled {
-        background: #f7f9fa;
+        background: #487bff;
         &:hover {
           color: #fff;
           background: #1890ff;
@@ -630,8 +523,7 @@ export default {
         }
       }
       .disabled {
-        color: rgba(0, 0, 0, 0.6);
-        background: #f7f9fa;
+        background: #a0cfff;
         &:hover {
           cursor: not-allowed;
         }

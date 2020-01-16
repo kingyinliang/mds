@@ -1,92 +1,93 @@
 <template>
   <div>
-    <div class="clearfix">
-      <el-button type="primary" @click="AddWorkerDate(WorkerDate)" size="small" :disabled="!isRedact" style="float: right;">新增</el-button>
-    </div>
-    <el-table header-row-class-name="tableHead" :data="WorkerDate" border tooltip-effect="dark">
-      <el-table-column type="index" width="55" label="序号"></el-table-column>
-      <el-table-column label="白/中/夜班" width="100">
-        <template slot-scope="scope">
-          <el-select v-model="scope.row.classType" placeholder="请选择" size="small" :disabled="!isRedact">
-            <el-option :label="iteam.value" :value="iteam.code" v-for="(iteam, index) in productShift" :key="index"></el-option>
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column label="班组/工序" width="100">
-        <template slot-scope="scope">
-          <el-select filterable v-model="scope.row.deptId" placeholder="请选择" size="small" :disabled="!isRedact" @change="SelectDept(scope.row)">
-            <el-option :label="iteam.deptName" :value="iteam.deptId" v-for="(iteam, index) in Team" :key="index"></el-option>
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column label="人员属性" width="130">
-        <template slot="header">
-          <i class="reqI">*</i>
-          <span>人员属性</span>
-        </template>
-        <template slot-scope="scope">
-          <el-select v-model="scope.row.userType" placeholder="请选择" size="small" :disabled="!isRedact" @change="userTypesele(scope.row)">
-            <el-option label="正式" value="正式"></el-option>
-            <el-option label="借调" value="借调"></el-option>
-            <el-option label="临时工" value="临时工"></el-option>
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column label="人员选择" :show-overflow-tooltip="true" width="300">
-        <template slot="header">
-          <i class="reqI">*</i>
-          <span>人员选择</span>
-        </template>
-        <template slot-scope="scope">
-          <div class="required" style="min-height: 32px;">
-            <span v-if="!isRedact" style="cursor: pointer;">
-              <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
-            </span>
-            <span style="cursor: pointer;" @click="selectUser(scope.row)" v-if="isRedact && scope.row.userType !=='临时工'">
-              <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
-              <i>点击选择人员</i>
-            </span>
-            <span style="cursor: pointer;" @click="dayLaborer(scope.row)" v-if="scope.row.userType=='临时工' && isRedact">
-              <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
-              <i>点击输入临时工</i>
-            </span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column width="241" label="开始时间">
-        <template slot-scope="scope">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.startDate" size="small" :disabled="!isRedact"></el-date-picker>
-        </template>
-      </el-table-column>
-      <el-table-column label="用餐时间" width="100">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!isRedact"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column width="241" label="结束时间">
-        <template slot-scope="scope">
-          <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.endDate" size="small" :disabled="!isRedact"></el-date-picker>
-        </template>
-      </el-table-column>
-      <el-table-column label="工作时长" width="100">
-        <template slot-scope="scope">
-          <p>{{workTime(scope.row.endDate, scope.row.startDate, scope.row)}}H</p>
-        </template>
-      </el-table-column>
-      <el-table-column label="备注" width="100">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.remark" size="small" :disabled="!isRedact"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" width="70">
-        <template slot-scope="scope">
-          <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="delUser(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <p style="font-size: 14px; line-height: 62px;">实际作业人数：{{countMan}}</p>
-    <div v-if="att">
-      <h3 style="line-height: 32px; font-size: 16px;">产量考勤分配</h3>
+    <mds-card :title="'人员 (小时:H)'" :name="'user'">
+      <template slot="titleBtn">
+        <div style="float: right;"><el-button type="primary" @click="AddWorkerDate(WorkerDate)" size="small" :disabled="!isRedact">新增</el-button></div>
+      </template>
+      <el-table header-row-class-name="tableHead" class="newTable" :data="WorkerDate" border tooltip-effect="dark">
+        <el-table-column type="index" width="55" label="序号"></el-table-column>
+        <el-table-column label="白/中/夜班" width="100">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.classType" placeholder="请选择" size="small" :disabled="!isRedact">
+              <el-option :label="iteam.value" :value="iteam.code" v-for="(iteam, index) in productShift" :key="index"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="班组/工序" width="100">
+          <template slot-scope="scope">
+            <el-select filterable v-model="scope.row.deptId" placeholder="请选择" size="small" :disabled="!isRedact" @change="SelectDept(scope.row)">
+              <el-option :label="iteam.deptName" :value="iteam.deptId" v-for="(iteam, index) in Team" :key="index"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="人员属性" width="130">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>人员属性</span>
+          </template>
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.userType" placeholder="请选择" size="small" :disabled="!isRedact" @change="userTypesele(scope.row)">
+              <el-option label="正式" value="正式"></el-option>
+              <el-option label="借调" value="借调"></el-option>
+              <el-option label="临时工" value="临时工"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="人员选择" :show-overflow-tooltip="true" width="300">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>人员选择</span>
+          </template>
+          <template slot-scope="scope">
+            <div class="required" style="min-height: 32px;">
+              <span v-if="!isRedact" style="cursor: pointer;">
+                <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
+              </span>
+              <span style="cursor: pointer;" @click="selectUser(scope.row)" v-if="isRedact && scope.row.userType !=='临时工'">
+                <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
+                <i>点击选择人员</i>
+              </span>
+              <span style="cursor: pointer;" @click="dayLaborer(scope.row)" v-if="scope.row.userType=='临时工' && isRedact">
+                <i v-for="(item,index) in scope.row.userId" :key="index">{{item}}，</i>
+                <i>点击输入临时工</i>
+              </span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column width="241" label="开始时间">
+          <template slot-scope="scope">
+            <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.startDate" size="small" :disabled="!isRedact"></el-date-picker>
+          </template>
+        </el-table-column>
+        <el-table-column label="用餐时间" width="100">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!isRedact"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column width="241" label="结束时间">
+          <template slot-scope="scope">
+            <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" v-model="scope.row.endDate" size="small" :disabled="!isRedact"></el-date-picker>
+          </template>
+        </el-table-column>
+        <el-table-column label="工作时长" width="100">
+          <template slot-scope="scope">
+            <p>{{workTime(scope.row.endDate, scope.row.startDate, scope.row)}}H</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="备注" width="100">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.remark" size="small" :disabled="!isRedact"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" width="70">
+          <template slot-scope="scope">
+            <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="delUser(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <p style="font-size: 12px; line-height: 32px;">实际作业人数：{{countMan}}</p>
+    </mds-card>
+    <mds-card :title="'产量考勤分配'" :name="'user'" v-if="att">
       <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="Attendance" border tooltip-effect="dark">
         <el-table-column label="班组" width="60">
           <template slot-scope="scope">{{scope.row.itemName}}</template>
@@ -133,7 +134,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
+    </mds-card>
     <audit-log :tableData="UserAudit"></audit-log>
     <official-worker v-if="officialWorkerStatus" ref="officialWorker" @changeUser="changeUser"></official-worker>
     <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" @changeUser="changeUser" :OrgTree="OrgTree" :arrList="arrList"></loaned-personnel>

@@ -731,6 +731,7 @@ export default class Index extends Vue {
   orderCheck (row) {
     this.$store.commit('common/updateZQCheckParamsOrderNo', row.orderNo)
     this.$store.commit('common/updateZQCheckParamsOrderId', row.orderId)
+    this.$store.commit('common/updateZQCheckParamsOrderStatus', row.orderStatus)
     this.pushPage('DataEntry-KojiMaking-orderAuditing-index')
   }
   get totalCount () {

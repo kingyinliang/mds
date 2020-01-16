@@ -1,5 +1,5 @@
 <template>
-  <aside class="site-sidebar" :class="'site-sidebar--' + sidebarLayoutSkin">
+  <aside class="site-sidebar" :class="'site-sidebar--' + sidebarLayoutSkin" @mouseenter="showMenu" @mouseleave="closeMenu">
     <div class="site-sidebar__inner">
       <el-menu
         :default-active="menuActiveName || 'home'"
@@ -42,6 +42,12 @@ export default {
   mounted () {
   },
   methods: {
+    showMenu () {
+      this.sidebarFold = false
+    },
+    closeMenu () {
+      this.sidebarFold = true
+    },
     // 路由操作
     routeHandle (route) {
       if (route.meta.isTab) {
@@ -73,7 +79,8 @@ export default {
       get () { return this.$store.state.common.sidebarLayoutSkin }
     },
     sidebarFold: {
-      get () { return this.$store.state.common.sidebarFold }
+      get () { return this.$store.state.common.sidebarFold },
+      set (val) { this.$store.commit('common/updateSidebarFold', val) }
     },
     menuList: {
       get () { return this.$store.state.common.menuList },

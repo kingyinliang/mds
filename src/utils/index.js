@@ -1,3 +1,4 @@
+
 export function MdsPromise (callback) {
   this.status = 'pending'
   this.resolveArray = []
@@ -56,4 +57,59 @@ export function throttle (fn, delay, atleast) {
       }, delay)
     }
   }
+}
+/**
+ * 简化Promise
+ * @param Array fnArr 第一次异步的函数数组
+ * @param Array thenArr 第二次异步的函数数组
+ * @return Function Promise.all的回调Promise
+ */
+export function AsyncHook (fnArr, thenArr) {
+  let arr = []
+  fnArr.forEach(item => {
+    arr.push(new Promise((resolve, reject) => {
+      item[1].push(resolve)
+      item[1].push(reject)
+      let [...args] = item[1]
+      item[0](...args)
+    }))
+  })
+  if (thenArr) {
+    return Promise.all(arr).then(res => {
+      let submitArr = []
+      thenArr.forEach(item => {
+        submitArr.push(new Promise((resolve, reject) => {
+          item[1].push(resolve)
+          item[1].push(reject)
+          let [...args] = item[1]
+          item[0](...args)
+        }))
+      })
+      return Promise.all(submitArr)
+    })
+  } else {
+    return Promise.all(arr)
+  }
+}
+/**
+ * 展开合并
+ * @param $ this.$
+ * @param 按钮class为showHiddenBtn name是展开div的class
+ */
+export function ShowHiddenNameBox ($) {
+  $('.showHiddenBtn').unbind('click').click(function () {
+    var $shiftBox = $('.' + $(this).attr('name') + 'Box')
+    if ($(this).find('i').hasClass('el-icon-caret-top')) {
+      $(this).html('展开<i class="el-icon-caret-bottom"></i>')
+      $shiftBox.data('heightData', $shiftBox.height())
+      $shiftBox.css('overflow', 'hidden')
+      $shiftBox.animate({height: 0}, 300, function () {})
+    } else {
+      $shiftBox.css('overflow', 'inherit')
+      $(this).html('收起<i class="el-icon-caret-top"></i>')
+      $shiftBox.animate({height: $shiftBox.data('heightData')}, 300, function () {
+        $shiftBox.css('height', 'auto')
+      })
+    }
+  })
 }

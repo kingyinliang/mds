@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="header_main">
     <div class="header_main">
       <el-card class="searchCard">
         <el-row type="flex">
@@ -21,7 +21,7 @@
                 <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" v-model="formHeader.inKjmDate" style="width: 180px;"></el-date-picker>
               </el-form-item>
               <el-form-item label="生产工序：">
-                <el-select v-model="formHeader.deptId" placeholder="请选择" style="width: 180px;">
+                <el-select v-model="formHeader.deptId" placeholder="请选择" style="width: 180px;" @change="setDeptName">
                   <el-option label="请选择"  value=""></el-option>
                   <el-option :label="item.deptName" v-for="(item, index) in deptId" :key="index" :value="item.deptId"></el-option>
                 </el-select>
@@ -55,7 +55,7 @@
         <div class="toggleSearchBottom">
           <i class="el-icon-caret-top"></i>
         </div>
-      </el-card>
+  </el-card>
     </div>
     <div class="main" style="padding-top: 0;">
       <div class="tableCard">
@@ -65,12 +65,10 @@
       </div>
       <div v-show="searchCard">
         <el-card class="box-cards NewDaatTtabs">
-          <el-card style="margin-bottom: 10px; position: relative;" class="readyCard">
-            <el-form :inline="true" :model="readyTimeDate" ref="timesForm" size="small" label-width="125px">
-              <div class="clearfix">
-                <h3 style="font-size: 14px; line-height: 32px; font-weight: bold; float: left;">准备时间（分钟：min）</h3>
-                <el-button type="text" class="readyshiftBtn manHour" name="manHourReady" style="bottom: 15px;">收起<i class="el-icon-caret-top"></i></el-button>
-                <el-form-item label="班次：" style="float: right; margin-right: 60px; margin-bottom: 10px;">
+          <el-form :inline="true" :model="readyTimeDate" ref="timesForm" size="small" label-width="125px">
+            <mds-card style="margin-bottom: 10px; position: relative;" :title="'准备时间（分钟：min）'" :name="'ready'" class="readyCard">
+              <template slot="titleBtn">
+                <el-form-item label="班次：" style="float: right; margin-bottom: 10px;">
                   <el-select v-model="readyTimeDate.classes" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status ==='noPass' || readyTimeDate.status ==='saved' || readyTimeDate.status ===''))">
                     <el-option label="白班" value="白班"></el-option>
                     <el-option label="中班" value="中班"></el-option>
@@ -78,7 +76,7 @@
                     <el-option label="多班" value="多班"></el-option>
                   </el-select>
                 </el-form-item>
-              </div>
+              </template>
               <div class="manHourReadyBox">
                 <el-row v-if="readyTimeDate.classes === '白班' || readyTimeDate.classes === '多班' || !readyTimeDate.classes">
                   <el-form-item label="交接班（白班）：">
@@ -123,10 +121,9 @@
                   </el-form-item>
                 </el-row>
               </div>
-            </el-form>
-          </el-card>
+            </mds-card>
+          </el-form>
           <el-card style="margin-bottom: 10px;">
-            <h3 style="font-size: 14px; line-height: 32px; font-weight: bold;">人员(小时:H)</h3>
             <worker ref="workerref" :isRedact="isRedact" :order="userOrder"></worker>
           </el-card>
         </el-card>
@@ -200,12 +197,20 @@ export default {
   },
   watch: {
     'formHeader.factory' (n, o) {
+      this.searchCard = false
       this.Getdeptbyid(n)
     },
     'formHeader.workShop' (n, o) {
       if (n) {
+        this.searchCard = false
         this.GetParentline(n)
       }
+    },
+    'formHeader.inKjmDate' (n, o) {
+      this.searchCard = false
+    },
+    'formHeader.deptId' (n, o) {
+      this.searchCard = false
     }
   },
   mounted () {
@@ -214,6 +219,9 @@ export default {
     this.Getdeptcode()
   },
   methods: {
+    setDeptName (val) {
+      this.headList.deptName = this.deptId.filter(it => it.deptId === val)[0].deptName
+    },
     // 查询
     GetTimeList () {
       if (this.formHeader.factory === '' || this.formHeader.workShop === '' || this.formHeader.inKjmDate === '' || this.formHeader.deptId === '') {

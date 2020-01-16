@@ -27,12 +27,9 @@ if (process.env.NODE_ENV === 'production') {
   // fundebugVue(fundebug, Vue)
   // require('fundebug-revideo')
 }
-// queryTable
-import query_table from '@/components/QueryTable/index'
-Vue.use(query_table)
-// ScrollTop
-import ScrollTop from '@/components/ScrollToTop/index'
-Vue.use(ScrollTop)
+
+import useComponents from '@/components/index'
+Vue.use(useComponents)
 
 elementUi()
 // SentryUtil.init()
@@ -44,7 +41,7 @@ Vue.use(install)
 // 挂载全局
 Vue.prototype.$http = httpProxy // ajax请求方法
 Vue.prototype.isAuth = isAuth// 权限方法
-Vue.prototype.$ = $// 权限方法
+Vue.prototype.$ = $// jq
 Vue.prototype.lodingStatus = false// 加载遮罩
 Vue.prototype.lodingState = false// 加载遮罩
 Vue.prototype.version = version // 版本号
@@ -54,7 +51,7 @@ Vue.prototype.$warning_SHINHO = (str) => {
 }
 // 错误通知
 Vue.prototype.$error_SHINHO = (str) => {
-  Notification({ title: '错误', message: str, type: 'error' })
+  Notification({ title: '错误', message: str, type: 'error', duration: 0 })
 }
 // 成功通知
 Vue.prototype.$success_SHINHO = (str) => {

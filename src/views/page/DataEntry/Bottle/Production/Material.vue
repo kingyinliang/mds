@@ -57,7 +57,7 @@
 
 <script>
 import { BOTTLE_API } from '@/api/api'
-import { GetStatus } from '@/net/validate'
+import { GetStatus, accAdd, accSub } from '@/net/validate'
 export default {
   name: 'Material',
   data () {
@@ -162,6 +162,13 @@ export default {
     // 拆分
     splitDate (row, index) {
       // this.MaterialList.splice(index + 1, 0, {
+      let serialNumber = 0
+      let maxlength = this.MaterialList.length
+      if (maxlength === 0) {
+        serialNumber = 1
+      } else {
+        serialNumber = accAdd(this.MaterialList[accSub(maxlength, 1)].serialNumber, 1)
+      }
       this.MaterialList.push({
         isSplit: '1',
         orderId: this.$store.state.common.bottle.ProOrderId,
@@ -179,7 +186,8 @@ export default {
         supplier: '',
         supplierName: '',
         remark: '',
-        delFlag: '0'
+        delFlag: '0',
+        serialNumber: serialNumber
       })
     },
     // 删除

@@ -107,6 +107,7 @@ export const BASICDATA_API = {
    * @property {string} CONTAINERLIST_API 容器列表 不带权限
    */
   CONTAINERLIST_API: HOST + '/sys/holder/list',
+  CONTAINER_LIST_API: HOST + '/all/dropDown/getFerHolder', // 出油率报表发酵罐list
   /**
    * @property {string} CONTAINERLIST_API 容器列表 带权限
    */
@@ -455,7 +456,8 @@ export const SYSTEMSETUP_API = {
   IOTDATADEL_API: HOST + '/iot/import/iotDel', // 删除
   IOTDATALISTEXPORT_API: HOST + '/iot/import/exportIot', // 导出
   IOTDATAUPDATE_API: HOST + '/iot/import/iotUpdate', // 修改
-  IOTDATALISTIMPORT_API: HOST + '/iot/import/iotImport' // 导入
+  IOTDATALISTIMPORT_API: HOST + '/iot/import/iotImport', // 导入
+  ES_LIST_API: HOST + '/esCommon/iot'
 }
 /*
 *包装车间api
@@ -931,7 +933,11 @@ export const REP_API = {
   OZONE_SEARCH_EXPECT: HOST + '/o3/board/expectCharList', // 臭氧看板导出
   JUICEOCCUPATION_LIST: HOST + '/juiceOccupy/report',
   JUICEOCCUPATION_SEMIPROD: HOST + '/sys/sapmaterialitem/semiProductList', // 原汁占用报表 - 品项
-  JUICEOCCUPATION_OUT: HOST + '/juiceOccupy/export'
+  JUICEOCCUPATION_OUT: HOST + '/juiceOccupy/export',
+  PKGSPECANDOUTPUT_LIST: HOST + '/report/production/packing',
+  PKGSPECANDOUTPUT_OUT: HOST + '/report/production/packingExport',
+  SQUEEZEDAYS_LIST: HOST + '/report/production/prsDays',
+  SQUEEZEDAYS_OUT: HOST + '/report/production/prsDaysExport'
 
 }
 /*
@@ -1094,6 +1100,7 @@ export const KJM_API = {
    * @property {string} OUTMATERIELSAVE_API 出曲工艺控制保存
    */
   OUTTECHSAVE_API: HOST + '/sys/kjmOutTech/mySaveOrUpdate',
+  OUT_GETSTOCK_API: HOST + '/kjm/salt/saltBatchList', // 出曲库存拉取
   /**
    * @property {string} OUTTIMELIST_API 工时查询
    */
@@ -1215,7 +1222,8 @@ export const KJM_API = {
   /**
    * @property {string} KJMAKINGCHECKMATERIALESUBMIT_API 车间审核表头提交
    */
-  KJMAKINGCHECKHEADSUBMIT_API: HOST + '/kjm/order/submitToFerVer'
+  KJMAKINGCHECKHEADSUBMIT_API: HOST + '/kjm/order/submitToFerVer',
+  KJMAKING_MATERIAL_SAVE_API: HOST + '/sys/midMaterial/saveWater' // 物料领用保存
 }
 
 /**

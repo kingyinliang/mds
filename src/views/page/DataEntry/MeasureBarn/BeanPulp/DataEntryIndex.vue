@@ -1,303 +1,283 @@
 <template>
-  <div class="measurebarn-bean-pulp-data-entry">
-    <el-row>
-      <el-col>
-        <div class="header_main measurebarn-bean-pulp__header">
-          <el-card>
-            <el-row type="flex" class="header">
-              <el-col class="header-pot">
-                <div class='header-pot__label'>豆粕罐号：{{formData.holderName ? formData.holderName : ''}}</div>
-                <div class="header-pot__image">
-                  <div class="header-pot__image_content">
-                  </div>
-                </div>
-              </el-col>
-              <el-col class="header-form">
-                <el-form :inline="true" size="small" label-width="auto" class="topform">
-                  <el-form-item label="生产工厂：">
-                    <p class="header-form_input">{{formData.factoryName ? formData.factoryName : ''}}</p>
-                  </el-form-item>
-                  <el-form-item label="物理区域：">
-                    <p class="header-form_input">{{formData.area ? formData.area : ''}}</p>
-                  </el-form-item>
-                  <el-form-item label="容器号：">
-                    <p class="header-form_input">{{formData.holderName ? formData.holderName : ''}}</p>
-                  </el-form-item>
-                  <el-form-item label="罐体容量：">
-                    <p class="header-form_input">{{formData.capacity ? formData.capacity.toLocaleString() : ''}} KG</p>
-                  </el-form-item>
-                  <el-form-item label="物料编码：">
-                    <p class="header-form_input">{{formData.materialNo ? formData.materialNo : '' + ' ' + formData.materialName ? formData.materialName : ''}}</p>
-                  </el-form-item>
-                  <el-form-item label="当前总量：">
-                    <p class="header-form_input">{{formData.totalWeight.toLocaleString()}} KG</p>
-                  </el-form-item>
-                </el-form>
-              </el-col>
-            </el-row>
-          </el-card>
-        </div>
-        <div class="main">
-          <div class="tableCard">
-            <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
-              <em class="el-icon-caret-bottom"></em>
+  <div class="header_main">
+    <el-row class="dataEntry-head-leftRight" :gutter="10">
+      <el-col :span="4" >
+        <div class="card-left" style="background: #ffbf00;">
+          <p class="dataEntry-head-leftRight__title">计量仓号：{{formData.holderName ? formData.holderName : ''}}</p>
+          <div class="dataEntry-head-leftRight-pot">
+            <div class="dataEntry-head-leftRight-pot__tank">
+              <div class="dataEntry-head-leftRight-pot__tank__bg"></div>
             </div>
-            <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px; overflow: hidden;">
-              <el-tab-pane name="1">
-                <span slot="label" class="spanview">
-                  <el-button>当前库存信息</el-button>
-                </span>
-                <el-row>
-                  <el-table header-row-class-name="" :data="dataList" border tooltip-effect="dark" class="datatTableHead-normal">
-                    <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
-                    <el-table-column label="物料" :show-overflow-tooltip="true">
-                      <template slot-scope="scope">
-                        {{scope.row.materialCode + ' ' + scope.row.materialName}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="批次" :show-overflow-tooltip="true" width="180">
-                      <template slot-scope="scope">
-                        {{scope.row.batch}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="入罐数量(KG)" :show-overflow-tooltip="true" width="160" align="right">
-                      <template slot-scope="scope">
-                        {{(scope.row.inAmount!==null? scope.row.inAmount.toLocaleString() : '')}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="当前数量(KG)" width="160" align="right">
-                      <template slot-scope="scope">
-                        {{(scope.row.amount!==null ? scope.row.amount.toLocaleString() : '')}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="操作" width="150" align="center">
-                      <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="showMoreDetail(scope.row.batch)"><em class="iconfont factory-fangdajing-copy" style="font-size: 12px; margin-right: 5px;"></em>查看</el-button>
-                        <el-button type="text" size="small" @click="makeAdjust(scope.row)" v-if="isAuth('Gra:adjust:material:soybeanUpdate')"><em class="iconfont factory-banshou" style="font-size: 12px; margin-right: 5px;"></em>调整</el-button>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                </el-row>
-                <!-- <el-row v-if="dataList.length!==0">
-                  <el-pagination
-                    @size-change="handleDataSizeChange"
-                    @current-change="handleDataCurrentChange"
-                    :current-page="dataCurrPage"
-                    :page-sizes="[10, 20, 50]"
-                    :page-size="dataPageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="dataTotalCount">
-                  </el-pagination>
-                </el-row> -->
-              </el-tab-pane>
-              <el-tab-pane name="2">
-                <span slot="label"  class="spanview">
-                  <el-button>调整信息记录</el-button>
-                </span>
-                <el-row>
-                  <el-table header-row-class-name="" :data="adjustList" border tooltip-effect="dark" class="datatTableHead-normal">
-                    <el-table-column type="index" label="序号" width="55"></el-table-column>
-                    <el-table-column label="物料" :show-overflow-tooltip="true"  width="200">
-                      <template slot-scope="scope">
-                        {{scope.row.materialCode + ' ' + scope.row.materialName}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
-                      <template slot-scope="scope">
-                        {{scope.row.batch}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="调整类型" :show-overflow-tooltip="true" width="100">
-                      <template slot-scope="scope">
-                        {{scope.row.adjustType === '0' ? '盘盈' : '盘亏'}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="数量(KG)" :show-overflow-tooltip="true" width="120" >
-                      <template slot-scope="scope">
-                        {{(scope.row.quantity?scope.row.quantity.toLocaleString() : '')}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="说明" width="170">
-                      <template slot-scope="scope">
-                        {{scope.row.remark}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="调整时间" >
-                      <template slot-scope="scope">
-                        {{scope.row.adjustTime}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="调整人" >
-                      <template slot-scope="scope">
-                        {{scope.row.adjuster}}
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                </el-row>
-                <el-row v-if="adjustList.length !== 0">
-                  <el-pagination
-                    @size-change="handleAdjustSizeChange"
-                    @current-change="handleAdjustCurrentChange"
-                    :current-page="adjustCurrPage"
-                    :page-sizes="[10, 20, 50]"
-                    :page-size="adjustPageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="adjustTotalCount"
-                    v-if="adjustList.length !==0">
-                  </el-pagination>
-                </el-row>
-              </el-tab-pane>
-            </el-tabs>
+            <img src="@/assets/img/ui2.0/pot.png" alt="">
           </div>
         </div>
-        <el-dialog :close-on-click-modal="false" :visible.sync="isShowMessageBoxAdjust" width="900px" custom-class='dialog__class'>
-          <div slot="title" class='title'>
-            <span>查询明细</span>
+      </el-col>
+      <el-col :span="20">
+        <div class="card-right" style="background: #487bff;">
+          <p class="dataEntry-head-leftRight__title"><i class="iconfont factory-gongchang"></i>{{formData.factoryName ? formData.factoryName : ''}}</p>
+          <div class="dataEntry-head-leftRight-message">
+            <div class="dataEntry-head-leftRight-message__item">
+              <p>{{formData.area ? formData.area : ''}}</p>
+              <p><i class="iconfont factory-quyu"></i>物理区域</p>
+            </div>
+            <div class="dataEntry-head-leftRight-message__item">
+              <p>{{formData.holderName ? formData.holderName : ''}}</p>
+              <p><i class="iconfont factory-bianhao"></i>容器号</p>
+            </div>
+            <div class="dataEntry-head-leftRight-message__item">
+              <p>{{formData.capacity ? formData.capacity.toLocaleString() : ''}} KG</p>
+              <p><i class="iconfont factory-cunchurongliang"></i>仓体容量</p>
+            </div>
+            <div class="dataEntry-head-leftRight-message__item">
+              <el-tooltip class="item" effect="dark" :content="(formData.materialNo ? formData.materialNo : '') + ' ' + (formData.materialName ? formData.materialName : '')" placement="top">
+                <p>{{(formData.materialNo ? formData.materialNo : '') + ' ' + (formData.materialName ? formData.materialName : '')}}</p>
+              </el-tooltip>
+              <p><i class="iconfont factory-bianma"></i>物料编码</p>
+            </div>
+            <div class="dataEntry-head-leftRight-message__item">
+              <p>{{formData.totalWeight.toLocaleString()}} KG</p>
+              <p><i class="iconfont factory-shujurongliang"></i>当前总量</p>
+            </div>
           </div>
-          <el-tabs v-model="activeDialogFormName" type="card">
-            <el-tab-pane label="入罐信息" name="inStorage">
-              <el-table header-row-class-name="" :data="applyInStorageList" border tooltip-effect="dark" class="datatTableHead-normal">
-                <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
-                  <template slot-scope="scope">
-                    {{scope.row.materialCode + ' ' + scope.row.materialName}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
-                  <template slot-scope="scope">
-                    {{scope.row.batch}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="入罐量(KG)" :show-overflow-tooltip="true" width="100" align="right" header-align="center">
-                  <template slot-scope="scope">
-                    {{(scope.row.useWeight? scope.row.useWeight.toLocaleString() : '')}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="粮仓号" :show-overflow-tooltip="true" width="130" >
-                  <template slot-scope="scope">
-                    {{scope.row.foodHolderNo}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="入罐时间">
-                  <template slot-scope="scope">
-                    {{scope.row.created}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="入罐人">
-                  <template slot-scope="scope">
-                    {{scope.row.creator}}
-                  </template>
-                </el-table-column>
-              </el-table>
-              <el-row v-if="applyInStorageList.length !== 0">
-                <el-pagination
-                  @size-change="handleInStorageListSizeChange"
-                  @current-change="handleInStorageListCurrentChange"
-                  :current-page="currPageInStorageList"
-                  :page-sizes="[10, 20, 50]"
-                  :page-size="pageSizeInStorageList"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="totalCountInStorageList">
-                </el-pagination>
-              </el-row>
-            </el-tab-pane>
-            <el-tab-pane label="领用信息" name="receive">
-              <el-table header-row-class-name="" :data="applyReceiveList" border tooltip-effect="dark" class="datatTableHead-normal">
-                <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
-                <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
-                  <template slot-scope="scope">
-                    {{scope.row.materialCode + ' ' + scope.row.materialName}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
-                  <template slot-scope="scope">
-                    {{scope.row.batch}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="领用量(KG)" :show-overflow-tooltip="true" width="100" align="right">
-                  <template slot-scope="scope">
-                    {{(scope.row.useWeight? scope.row.useWeight.toLocaleString() : '')}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="领用订单" :show-overflow-tooltip="true" width="130" >
-                  <template slot-scope="scope">
-                    {{scope.row.orderNo}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="领用时间">
-                  <template slot-scope="scope">
-                    {{scope.row.created}}
-                  </template>
-                </el-table-column>
-                <el-table-column label="领用人">
-                  <template slot-scope="scope">
-                    {{scope.row.creator}}
-                  </template>
-                </el-table-column>
-              </el-table>
-              <el-row v-if="applyReceiveList.length !== 0">
-                <el-pagination
-                  @size-change="handleReceiveListSizeChange"
-                  @current-change="handleReceiveListCurrentChange"
-                  :current-page="currPageReceiveList"
-                  :page-sizes="[10, 20, 50]"
-                  :page-size="pageSizeReceiveList"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="totalCountReceiveList">
-                </el-pagination>
-              </el-row>
-            </el-tab-pane>
-          </el-tabs>
-          <div slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="isShowMessageBoxAdjust = false">取消</el-button>
-            <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="isShowMessageBoxAdjust = false">确定</el-button>
-          </div>
-        </el-dialog>
-        <el-dialog :close-on-click-modal="false" :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class'>
-          <div slot="title" class='title'>
-            <span>盘点调整</span>
-          </div>
-          <div>
-            <el-form :model="adjustForm" label-width="100px" size="small" ref="adjustForm">
-              <el-form-item label="物料：">
-                <p>{{adjustForm.materialCode + ' ' + adjustForm.materialName}}</p>
-              </el-form-item>
-              <el-form-item label="批次：" >
-                <p>{{adjustForm.batch}}</p>
-              </el-form-item>
-              <el-form-item label="调整类型：" required>
-                <el-select  placeholder="请选择"  v-model="adjustForm.adjustType" style="width: 220px;" >
-                  <el-option label="盘亏" value="1" ></el-option>
-                  <el-option label="盘盈" value="0" ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                label="调整量："
-                prop="quantity"
-                :rules="[
-                  { required: true, validator: validatePassAdjustNum, message: '请填写调整量 ', trigger: 'blur' }
-                ]"
-              >
-                <el-input  type='number'  v-model.number="adjustForm.quantity" style='width: 150px;'/> KG
-              </el-form-item>
-              <el-form-item
-                  label="说明："
-                  prop="remark"
-                  :rules="[
-                    { required: true, message: '请填写调整说明', trigger: 'blur' }
-                  ]"
-              >
-                <el-input  type='text'  v-model.trim="adjustForm.remark" style='width: 220px;'/>
-              </el-form-item>
-            </el-form>
-          </div>
-          <div slot="footer" class="dialog-footer">
-            <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="cannalSaveAdjust('adjustForm')">取消</el-button>
-            <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveAdjust('adjustForm')">确定</el-button>
-          </div>
-        </el-dialog>
+        </div>
       </el-col>
     </el-row>
+    <el-tabs ref='tabs'  v-model="activeName" id="DaatTtabs" class="NewDaatTtabs tabsPages" type="border-card">
+      <el-tab-pane name="1">
+        <span slot="label" class="spanview">
+          当前库存信息
+        </span>
+        <el-table header-row-class-name="" :data="dataList" border tooltip-effect="dark" class="newTable">
+          <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
+          <el-table-column label="物料" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              {{scope.row.materialCode + ' ' + scope.row.materialName}}
+            </template>
+          </el-table-column>
+          <el-table-column label="批次" :show-overflow-tooltip="true" width="180">
+            <template slot-scope="scope">
+              {{scope.row.batch}}
+            </template>
+          </el-table-column>
+          <el-table-column label="入罐数量(KG)" :show-overflow-tooltip="true" width="160" align="right">
+            <template slot-scope="scope">
+              {{(scope.row.inAmount!==null? scope.row.inAmount.toLocaleString() : '')}}
+            </template>
+          </el-table-column>
+          <el-table-column label="当前数量(KG)" width="160" align="right">
+            <template slot-scope="scope">
+              {{(scope.row.amount!==null ? scope.row.amount.toLocaleString() : '')}}
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="150" align="center">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" @click="showMoreDetail(scope.row.batch)"><em class="iconfont factory-fangdajing-copy" style="font-size: 12px; margin-right: 5px;"></em>查看</el-button>
+              <el-button type="text" size="small" @click="makeAdjust(scope.row)" v-if="isAuth('Gra:adjust:material:soybeanUpdate')"><em class="iconfont factory-banshou" style="font-size: 12px; margin-right: 5px;"></em>调整</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+      <el-tab-pane name="2">
+        <span slot="label" class="spanview">
+          调整信息记录
+        </span>
+        <el-table header-row-class-name="" :data="adjustList" border tooltip-effect="dark" class="newTable">
+          <el-table-column type="index" label="序号" width="55"></el-table-column>
+          <el-table-column label="物料" :show-overflow-tooltip="true"  width="200">
+            <template slot-scope="scope">
+              {{scope.row.materialCode + ' ' + scope.row.materialName}}
+            </template>
+          </el-table-column>
+          <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
+            <template slot-scope="scope">
+              {{scope.row.batch}}
+            </template>
+          </el-table-column>
+          <el-table-column label="调整类型" :show-overflow-tooltip="true" width="100">
+            <template slot-scope="scope">
+              {{scope.row.adjustType === '0' ? '盘盈' : '盘亏'}}
+            </template>
+          </el-table-column>
+          <el-table-column label="数量(KG)" :show-overflow-tooltip="true" width="120" >
+            <template slot-scope="scope">
+              {{(scope.row.quantity?scope.row.quantity.toLocaleString() : '')}}
+            </template>
+          </el-table-column>
+          <el-table-column label="说明" width="170">
+            <template slot-scope="scope">
+              {{scope.row.remark}}
+            </template>
+          </el-table-column>
+          <el-table-column label="调整时间" >
+            <template slot-scope="scope">
+              {{scope.row.adjustTime}}
+            </template>
+          </el-table-column>
+          <el-table-column label="调整人" >
+            <template slot-scope="scope">
+              {{scope.row.adjuster}}
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-row v-if="adjustList.length !== 0">
+          <el-pagination
+            @size-change="handleAdjustSizeChange"
+            @current-change="handleAdjustCurrentChange"
+            :current-page="adjustCurrPage"
+            :page-sizes="[10, 20, 50]"
+            :page-size="adjustPageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="adjustTotalCount"
+            v-if="adjustList.length !==0">
+          </el-pagination>
+        </el-row>
+      </el-tab-pane>
+    </el-tabs>
+    <el-dialog :close-on-click-modal="false" :visible.sync="isShowMessageBoxAdjust" width="900px" custom-class='dialog__class bg_dialog'>
+      <div slot="title" class='title'>
+        <span>查询明细</span>
+      </div>
+      <el-tabs v-model="activeDialogFormName" type="border-card" class="tabsPages">
+        <el-tab-pane label="入罐信息" name="inStorage">
+          <el-table header-row-class-name="" :data="applyInStorageList" border tooltip-effect="dark" class="newTable">
+            <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
+            <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
+              <template slot-scope="scope">
+                {{scope.row.materialCode + ' ' + scope.row.materialName}}
+              </template>
+            </el-table-column>
+            <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
+              <template slot-scope="scope">
+                {{scope.row.batch}}
+              </template>
+            </el-table-column>
+            <el-table-column label="入罐量(KG)" :show-overflow-tooltip="true" width="100" align="right" header-align="center">
+              <template slot-scope="scope">
+                {{(scope.row.useWeight? scope.row.useWeight.toLocaleString() : '')}}
+              </template>
+            </el-table-column>
+            <el-table-column label="粮仓号" :show-overflow-tooltip="true" width="130" >
+              <template slot-scope="scope">
+                {{scope.row.foodHolderNo}}
+              </template>
+            </el-table-column>
+            <el-table-column label="入罐时间" :show-overflow-tooltip="true">
+              <template slot-scope="scope">
+                {{scope.row.created}}
+              </template>
+            </el-table-column>
+            <el-table-column label="入罐人" :show-overflow-tooltip="true">
+              <template slot-scope="scope">
+                {{scope.row.creator}}
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-row v-if="applyInStorageList.length !== 0">
+            <el-pagination
+              @current-change="handleInStorageListCurrentChange"
+              :current-page="currPageInStorageList"
+              layout="total, prev, pager, next, jumper"
+              :total="totalCountInStorageList">
+            </el-pagination>
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane label="领用信息" name="receive">
+          <el-table header-row-class-name="" :data="applyReceiveList" border tooltip-effect="dark" class="newTable">
+            <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
+            <el-table-column label="物料" :show-overflow-tooltip="true"  width="160">
+              <template slot-scope="scope">
+                {{scope.row.materialCode + ' ' + scope.row.materialName}}
+              </template>
+            </el-table-column>
+            <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
+              <template slot-scope="scope">
+                {{scope.row.batch}}
+              </template>
+            </el-table-column>
+            <el-table-column label="领用量(KG)" :show-overflow-tooltip="true" width="100" align="right">
+              <template slot-scope="scope">
+                {{(scope.row.useWeight? scope.row.useWeight.toLocaleString() : '')}}
+              </template>
+            </el-table-column>
+            <el-table-column label="领用订单" :show-overflow-tooltip="true" width="130" >
+              <template slot-scope="scope">
+                {{scope.row.orderNo}}
+              </template>
+            </el-table-column>
+            <el-table-column label="领用时间" :show-overflow-tooltip="true">
+              <template slot-scope="scope">
+                {{scope.row.created}}
+              </template>
+            </el-table-column>
+            <el-table-column label="领用人" :show-overflow-tooltip="true">
+              <template slot-scope="scope">
+                {{scope.row.creator}}
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-row v-if="applyReceiveList.length !== 0">
+            <el-pagination
+              @size-change="handleReceiveListSizeChange"
+              @current-change="handleReceiveListCurrentChange"
+              :current-page="currPageReceiveList"
+              :page-sizes="[10, 20, 50]"
+              :page-size="pageSizeReceiveList"
+              layout="total, prev, pager, next, jumper"
+              :total="totalCountReceiveList">
+            </el-pagination>
+          </el-row>
+        </el-tab-pane>
+      </el-tabs>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="isShowMessageBoxAdjust = false">取消</el-button>
+        <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="isShowMessageBoxAdjust = false">确定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :close-on-click-modal="false" :visible.sync="isShowMessageBoxCheck" width="400px" custom-class='dialog__class'>
+      <div slot="title" class='title'>
+        <span>盘点调整</span>
+      </div>
+      <div>
+        <el-form :model="adjustForm" label-width="100px" size="small" ref="adjustForm">
+          <el-form-item label="物料：">
+            <p class="disabled-text" style="width: 220px;">{{adjustForm.materialCode + ' ' + adjustForm.materialName}}</p>
+          </el-form-item>
+          <el-form-item label="批次：" >
+            <p class="disabled-text" style="width: 220px;">{{adjustForm.batch}}</p>
+          </el-form-item>
+          <el-form-item label="调整类型：" required>
+            <el-select  placeholder="请选择"  v-model="adjustForm.adjustType" style="width: 220px;" >
+              <el-option label="盘亏" value="1" ></el-option>
+              <el-option label="盘盈" value="0" ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            label="调整量："
+            prop="quantity"
+            :rules="[
+                  { required: true, validator: validatePassAdjustNum, message: '请填写调整量 ', trigger: 'blur' }
+                ]"
+          >
+            <el-input  type='number'  v-model.number="adjustForm.quantity" style='width: 220px;'>
+              <i slot="suffix">KG</i>
+            </el-input>
+          </el-form-item>
+          <el-form-item
+            label="说明："
+            prop="remark"
+            :rules="[
+                    { required: true, message: '请填写调整说明', trigger: 'blur' }
+                  ]"
+          >
+            <el-input  type='text'  v-model.trim="adjustForm.remark" style='width: 220px;'/>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="cannalSaveAdjust('adjustForm')">取消</el-button>
+        <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveAdjust('adjustForm')">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -586,64 +566,5 @@ export default class Index extends Vue {
 }
 </script>
 <style lang="scss">
-@import "@/assets/scss/_common.scss";
-@import "@/assets/scss/_share.scss";
-.measurebarn-bean-pulp-data-entry {
-  .header {
-    height: 200px;
-    .header-pot {
-      width: 250px;
-      .header-pot__label {
-        font-size: 18px;
-        font-weight: 400;
-        color: rgba(102, 102, 102, 1);
-        line-height: 30px;
-        height: 30px;
-        width: 300px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .header-pot__image {
-        position: relative;
-        margin-top: 10px;
-        height: 160px;
-        width: 250px;
-        background: url("~@/assets/img/pot.png") no-repeat top right;
-        background-size: contain;
-        .header-pot__image_content {
-          height: 65px;
-          width: 46px;
-          position: absolute;
-          right: 40px;
-          bottom: 61px;
-          background: linear-gradient(#35c3ff, #1890ff);
-        }
-      }
-    }
-    .header-form {
-      width: 600px;
-      margin-left: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .header-form_input {
-        width: 150px;
-        font-size: 14px;
-        font-family: PingFangSC-Regular, sans-serif;
-        font-weight: 400;
-        color: rgba(0, 0, 0, 0.85);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-  }
-  .topform {
-    .el-form-item__content {
-      height: 32px;
-      border-bottom: 1px solid #d8d8d8;
-    }
-  }
-}
+
 </style>

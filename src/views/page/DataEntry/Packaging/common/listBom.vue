@@ -159,6 +159,7 @@
 
 <script>
 import {PACKAGING_API} from '@/api/api'
+import {accAdd, accSub} from '@/net/validate'
 export default {
   name: 'listBom',
   data () {
@@ -611,6 +612,13 @@ export default {
     },
     // 新增物料半成品
     addSapS (form, row) {
+      let serialNumber = 0
+      let maxlength = form.length
+      if (maxlength === 0) {
+        serialNumber = 1
+      } else {
+        serialNumber = accAdd(form[accSub(maxlength, 1)].serialNumber, 1)
+      }
       form.push({
         batch: '',
         orderId: this.order.orderId,
@@ -628,7 +636,8 @@ export default {
         delFlag: '0',
         useUsage: '',
         holderMaterialCode: '',
-        holderMaterialName: ''
+        holderMaterialName: '',
+        serialNumber: serialNumber
       })
     },
     // tableRowClassName

@@ -1,22 +1,46 @@
 <template>
   <div>
-    <video width="100%" height="100%" autoplay ref="videos" id="videos" muted src="@/assets/img/video.mp4">
-      您的浏览器不支持 video 标签。
-    </video>
-    <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="loginForm" @keyup.enter.native="submitForm('ruleForm2')">
-      <img src="@/assets/img/MDSlogo.png" alt="" style="width: 300px; margin-bottom: 25px;">
-      <el-form-item prop="user">
-        <el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号"><i slot="prefix" class="iconfont factory-zhanghaodenglu"></i></el-input>
-      </el-form-item>
-      <el-form-item prop="pass">
-        <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" placeholder="密码"><i slot="prefix" class="iconfont factory-mima"></i></el-input>
-        <el-button type="text" @click="resetForm('ruleForm2')" class="reset"><i class="iconfont factory-zhongzhi" style="font-size: 12px;"></i>重置</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm2')" style="width: 100%; margin-top: 20px;">登录</el-button>
-      </el-form-item>
-    </el-form>
-    <div class="loginFormBg"></div>
+    <!--<video width="100%" height="100%" autoplay ref="videos" id="videos" muted src="@/assets/img/video.mp4">-->
+      <!--您的浏览器不支持 video 标签。-->
+    <!--</video>-->
+    <!--<el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="loginForm" @keyup.enter.native="submitForm('ruleForm2')">-->
+      <!--<img src="@/assets/img/MDSlogo.png" alt="" style="width: 300px; margin-bottom: 25px;">-->
+      <!--<el-form-item prop="user">-->
+        <!--<el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号"><i slot="prefix" class="iconfont factory-zhanghaodenglu"></i></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item prop="pass">-->
+        <!--<el-input type="password" v-model="ruleForm2.pass" auto-complete="off" placeholder="密码"><i slot="prefix" class="iconfont factory-mima"></i></el-input>-->
+        <!--<el-button type="text" @click="resetForm('ruleForm2')" class="reset"><i class="iconfont factory-zhongzhi" style="font-size: 12px;"></i>重置</el-button>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item>-->
+        <!--<el-button type="primary" @click="submitForm('ruleForm2')" style="width: 100%; margin-top: 20px;">登录</el-button>-->
+      <!--</el-form-item>-->
+    <!--</el-form>-->
+    <!--<div class="loginFormBg"></div>-->
+    <el-row class="login_box">
+      <el-col :span="16">
+        <div class="canvas_box">
+          <img src="@/assets/img/ui2.0/loginBg.png" alt="" style="width: 100%;">
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <img src="@/assets/img/MDSlogo.png" alt="" class="login_icon">
+        <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="loginForm_ui2" @keyup.enter.native="submitForm('ruleForm2')">
+          <p class="login_title1">欢迎使用</p>
+          <p class="login_title2">MDS工厂制造管理系统</p>
+          <el-form-item prop="user">
+            <el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号"><i slot="prefix" class="iconfont factory-zhanghaodenglu"></i></el-input>
+          </el-form-item>
+          <el-form-item prop="pass">
+            <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" placeholder="密码"><i slot="prefix" class="iconfont factory-mima"></i></el-input>
+            <el-button type="text" @click="resetForm('ruleForm2')" class="reset"><i class="iconfont factory-zhongzhi" style="font-size: 12px;"></i>重置</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm2')" style="width: 100%; margin-top: 20px;">登录</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
     <el-dialog :close-on-click-modal="false"
       width="500px"
       title="修改密码"
@@ -252,5 +276,62 @@ video {
   position: fixed;
   top: 165px;
   right: 65px;
+}
+.login_box {
+  width: 100%;
+  height: 100%;
+  .el-col {
+    height: 100%;
+    overflow: hidden;
+  }
+  .login_icon {
+    margin-left: 20px;
+    margin-top: 20px;
+    width: 300px;
+    margin-bottom: 84px;
+  }
+  .canvas_box {
+    width: 100%;
+    height: 100%;
+  }
+}
+.loginForm_ui2 {
+  padding-top: 20px;
+  width: 300px;
+  margin: auto;
+  p {
+    color: #333;
+  }
+  .login_title1 {
+    font-size: 22px;
+    line-height: 26px;
+    margin-bottom: 10px;
+  }
+  .login_title2 {
+    font-size: 28px;
+    line-height: 40px;
+    margin-bottom: 15px;
+  }
+  label {
+    color: white !important;
+  }
+  input {
+    background: #fff !important;
+  }
+  .el-form-item__content {
+    margin-left: 0 !important;
+  }
+  .el-input__prefix {
+    margin-left: 6px;
+  }
+  .reset {
+    float: right;
+    color: #487bff;
+    position: absolute;
+    right: 0;
+    bottom: -22px;
+    padding: 0;
+    font-size: 12px;
+  }
 }
 </style>

@@ -202,6 +202,13 @@
       "unicode_decimal": 59117
     },
     {
+      "icon_id": "3904381",
+      "name": "工人",
+      "font_class": "gongren",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
       "icon_id": "4143359",
       "name": "数据总览",
       "font_class": "shujuzonglan",
@@ -340,6 +347,13 @@
       "font_class": "zhongzhi",
       "unicode": "e613",
       "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "7699859",
+      "name": "编号规则",
+      "font_class": "bianhaoguize",
+      "unicode": "e6ef",
+      "unicode_decimal": 59119
     },
     {
       "icon_id": "7712194",
@@ -482,6 +496,13 @@
       "unicode_decimal": 58996
     },
     {
+      "icon_id": "9853856",
+      "name": "订 单",
+      "font_class": "dingdan1",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
       "icon_id": "10088932",
       "name": "可用库存",
       "font_class": "icon_function_keyongkucun",
@@ -552,6 +573,13 @@
       "unicode_decimal": 58906
     },
     {
+      "icon_id": "11861595",
+      "name": "编码",
+      "font_class": "bianma",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
       "icon_id": "11948492",
       "name": "日期",
       "font_class": "riqi1",
@@ -571,6 +599,34 @@
       "font_class": "menu-chanliangfenxi",
       "unicode": "e6a6",
       "unicode_decimal": 59046
+    },
+    {
+      "icon_id": "12496045",
+      "name": "总量管理",
+      "font_class": "zongliangguanli",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "12504059",
+      "name": "批次",
+      "font_class": "pici",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "12504062",
+      "name": "数量",
+      "font_class": "shuliang",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "12550700",
+      "name": "储罐 ",
+      "font_class": "chuguan1",
+      "unicode": "e626",
+      "unicode_decimal": 58918
     }
   ]
 }

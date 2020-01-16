@@ -21,6 +21,7 @@ export class InStock {
 
 export class Material {
   [propName: string]: any
+  disabled: boolean = true
   constructor (obj: any) {
     for (let key of Object.keys(obj)) {
       this[key] = obj[key]
