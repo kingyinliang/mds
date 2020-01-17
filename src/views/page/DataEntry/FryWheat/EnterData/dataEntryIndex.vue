@@ -152,7 +152,7 @@ export default {
           icon: 'factory-dingdan',
           label: '订单日期',
           value: 'orderDate'},
-        {type: 'p',
+        {type: 'tooltip',
           icon: 'factory-pinleiguanli',
           label: '生产品项',
           value: ['materialCode', 'materialName']},
