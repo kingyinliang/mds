@@ -65,7 +65,7 @@
             <slot name="mds-button"></slot>
           </el-form-item>
         </el-form>
-        <div class="toggleSearchBottom">
+        <div class="toggleSearchBottom" v-if="!tabs.length">
           <i class="el-icon-caret-top"></i>
         </div>
       </el-card>

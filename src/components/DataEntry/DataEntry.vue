@@ -3,7 +3,7 @@
     <div class="dataEntry-head">
       <div class="dataEntry-head-title">
         <i class="dataEntry-head-title__icon iconfont factory-gongchang"></i>
-        <span class="dataEntry-head-title__text" v-if="headShow">{{formHeader.factoryName}}烟台欣和企业食品有限公司</span>
+        <span class="dataEntry-head-title__text" v-if="headShow">{{formHeader.factoryName}}</span>
         <span class="dataEntry-head-title__text" v-else>基础信息</span>
         <i class="dataEntry-head-title__status"
           :class="{'noPass': orderStatus === 'noPass', 'saved': orderStatus === 'saved', 'submit': orderStatus === 'submit', 'checked': orderStatus === 'checked', '': orderStatus === '已同步'}">
@@ -18,6 +18,7 @@
               <span>{{item.label}}：</span>
             </template>
             <p v-if="item.type === 'p'">{{item.value | itemValue(formHeader)}}</p>
+            <el-tooltip class="item" effect="dark" :content="item.value | itemValue(formHeader)" placement="top" v-if="item.type === 'tooltip'"><p>{{item.value | itemValue(formHeader)}}</p></el-tooltip>
             <el-date-picker size="mini" @change="updateProductDate" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="formHeader[item.value]" style="width: 120px;" v-if="item.type === 'date-picker'"></el-date-picker>
           </el-form-item>
         </el-form>

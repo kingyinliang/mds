@@ -132,7 +132,7 @@ export default {
           icon: 'factory-bianhao',
           label: '订单编号',
           value: 'orderNo'},
-        {type: 'p',
+        {type: 'tooltip',
           icon: 'factory-pinleiguanli',
           label: '生产品项',
           value: ['materialCode', 'materialName']},
