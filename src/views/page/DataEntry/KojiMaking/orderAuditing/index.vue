@@ -279,11 +279,11 @@
                 <el-table-column fixed="right" label="操作" width="80">
                   <template slot-scope="scope">
                     <i v-if="scope.row.materialCode === 'M040000001'">
-                      <el-button style='float: right;' type="primary" size="small"  @click="materialEnbaleEdit(scope.row)" :disabled="!(scope.row.materialCode === 'M040000001' && scope.row.status === 'saved')" v-if="scope.row.disabled">编辑</el-button>
+                      <el-button style='float: right;' type="primary" size="small"  @click="materialEnbaleEdit(scope.row)" :disabled="!(scope.row.materialCode === 'M040000001' && (scope.row.status === 'saved' || scope.row.status === 'noPass'))" v-if="scope.row.disabled">编辑</el-button>
                       <el-button style='float: right;' type="primary" size="small" @click="materialSaveWorkHour(scope.row)" v-if="!scope.row.disabled">保存</el-button>
                     </i>
                     <i v-else>
-                      <el-button style='float: right;' type="primary" size="small" @click="goBack('物料领用', scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
+                      <el-button style='float: right;' type="primary" size="small" @click="goBack('物料领用', scope.row)" :disabled="!(scope.row.isVerBack === '0' && (scope.row.status === 'saved' || scope.row.status === 'noPass'))" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
                     </i>
                   </template>
                 </el-table-column>
