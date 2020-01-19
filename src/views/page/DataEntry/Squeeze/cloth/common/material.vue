@@ -35,8 +35,8 @@
             <template slot="header">布号</template>
             <template slot-scope="scope">{{scope.row.clothNo}}</template>
           </el-table-column>
-          <el-table-column show-overflow-tooltip width="200px">
-            <template slot="header"><i class="reqI">*</i><span>酱醪分类</span></template>
+          <el-table-column show-overflow-tooltip width="210px">
+            <template slot="header"><i class="reqI">*</i><span>原汁分类</span></template>
             <template slot-scope="scope">{{scope.row.sauceClass}}</template>
           </el-table-column>
           <el-table-column width="160px">
@@ -131,7 +131,7 @@
         <el-form-item label="布号：" :label-width="formLabelWidth" prop="clothNo">
           <el-input v-model="sauce.clothNo"></el-input>
         </el-form-item>
-        <el-form-item label="酱醪分类：" :label-width="formLabelWidth" prop="sauceClass">
+        <el-form-item label="原汁分类：" :label-width="formLabelWidth" prop="sauceClass">
           <el-select v-model="sauce.sauceClass" filterable placeholder="请选择" style="width: 310px;">
             <el-option :label="item.code + ' ' + item.value" v-for="(item, index) in sauceClassList" :key="index" :value="item.code + ' ' + item.value"></el-option>
           </el-select>
@@ -218,7 +218,7 @@ export default {
   methods: {
     // 酱醪列表
     GetsauceClass (factory) {
-      this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {factory: factory, type: 'YZ_ZUJIAN_MATERIAL'}).then(({data}) => {
+      this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {factory: factory, type: 'YA_M_MATERIAL'}).then(({data}) => {
         if (data.code === 0) {
           this.sauceClassList = data.dicList
         } else {

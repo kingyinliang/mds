@@ -70,12 +70,12 @@
               <el-button type="primary" style="float: right;" size="small" @click="GetTime" v-if="formHeader.orderStatus !== 'submit' && formHeader.orderStatus !== 'checked'&& isAuth('sys:midTimeSheet:udpate')">获取工时</el-button>
               <el-table header-row-class-name="tableHead" :data="workHourList"  border tooltip-effect="dark" >
                 <el-table-column type="index" width="55" label="序号"></el-table-column>
-                <el-table-column label="工序" width="140">
+                <el-table-column label="工序" width="150">
                   <template slot-scope="scope">
                     {{scope.row.productLineName}}
                   </template>
                 </el-table-column>
-                <el-table-column label="曲房" width="120">
+                <el-table-column label="曲房" width="150">
                   <template slot-scope="scope">
                     {{scope.row.houseName}}
                   </template>
@@ -112,7 +112,7 @@
                     <span>{{scope.row.confActiUnit2}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="备注" width="140">
+                <el-table-column label="备注">
                   <template slot-scope="scope">
                     {{scope.row.remark}}
                   </template>
@@ -161,7 +161,7 @@
                     {{scope.row.wheatWeight}}
                   </template>
                 </el-table-column>
-                <el-table-column width="80" label="盐水量">
+                <el-table-column width="90" label="盐水量">
                   <template slot-scope="scope">
                     {{scope.row.saltWaterWeight}}
                   </template>
@@ -171,7 +171,7 @@
                     {{scope.row.materialCode + ' ' + scope.row.materialName}}
                   </template>
                 </el-table-column>
-                <el-table-column label="入库量" width="80">
+                <el-table-column label="入库量" width="90">
                   <template slot-scope="scope">
                     <span>{{scope.row.sauceWeight}}</span>
                   </template>
@@ -186,7 +186,7 @@
                     <span>{{scope.row.unit}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作人" width="150">
+                <el-table-column label="操作人" width="145">
                   <template slot-scope="scope">
                     {{scope.row.changer}}
                   </template>
@@ -234,19 +234,19 @@
             <el-row>
               <el-table header-row-class-name="tableHead" :data="applyMaterieList"  border tooltip-effect="dark" >
                 <el-table-column type="index" width="55" label="序号"></el-table-column>
-                <el-table-column label="曲房" width="100">
+                <el-table-column label="曲房" width="140">
                   <template slot-scope="scope">
                     {{scope.row.houseName}}
                   </template>
                 </el-table-column>
-                <el-table-column label="物料" show-overflow-tooltip width="150">
+                <el-table-column label="物料" show-overflow-tooltip>
                   <template slot-scope="scope">
                     {{scope.row.materialCode + ' ' + scope.row.materialName}}
                   </template>
                 </el-table-column>
                 <el-table-column
                   label="领用容器"
-                  width="140">
+                  width="160">
                   <template slot-scope="scope">
                     {{scope.row.holderName}}
                   </template>
@@ -256,7 +256,7 @@
                     <el-input size="small" v-model.number="scope.row.batch" maxlength="10" placeholder="手工录入" :disabled="scope.row.disabled"></el-input>
                   </template>
                 </el-table-column>
-                <el-table-column width="80" label="数量">
+                <el-table-column width="90" label="数量">
                   <template slot-scope="scope">
                     {{scope.row.entryQnt}}
                   </template>
@@ -276,14 +276,15 @@
                     <span>{{scope.row.changed}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  fixed="right"
-                  label="操作"
-                  width="145">
+                <el-table-column fixed="right" label="操作" width="80">
                   <template slot-scope="scope">
-                    <el-button style='float: left;' type="primary" size="small"  @click="materialEnbaleEdit(scope.row)" :disabled="!(scope.row.materialCode === 'M040000001' && scope.row.status === 'saved')" v-if="scope.row.disabled">编辑</el-button>
-                    <el-button style='float: left;' type="primary" size="small" @click="materialSaveWorkHour(scope.row)" v-if="!scope.row.disabled">保存</el-button>
-                    <el-button style='float: right;' type="primary" size="small" @click="goBack('物料领用', scope.row)" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
+                    <i v-if="scope.row.materialCode === 'M040000001'">
+                      <el-button style='float: right;' type="primary" size="small"  @click="materialEnbaleEdit(scope.row)" :disabled="!(scope.row.materialCode === 'M040000001' && (scope.row.status === 'saved' || scope.row.status === 'noPass'))" v-if="scope.row.disabled">编辑</el-button>
+                      <el-button style='float: right;' type="primary" size="small" @click="materialSaveWorkHour(scope.row)" v-if="!scope.row.disabled">保存</el-button>
+                    </i>
+                    <i v-else>
+                      <el-button style='float: right;' type="primary" size="small" @click="goBack('物料领用', scope.row)" :disabled="!(scope.row.isVerBack === '0' && (scope.row.status === 'saved' || scope.row.status === 'noPass'))" v-if="isAuth('sys:midTimeSheet:udpate')">退回</el-button>
+                    </i>
                   </template>
                 </el-table-column>
               </el-table>
