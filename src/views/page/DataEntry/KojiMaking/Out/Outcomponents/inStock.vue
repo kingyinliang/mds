@@ -2,17 +2,17 @@
   <div>
     <el-table header-row-class-name="tableHead" :data="InStock" :row-class-name="RowDelFlag" border tooltip-effect="dark">
       <el-table-column type="index" width="50" label="序号"></el-table-column>
-      <el-table-column width="115" label="豆粕量（KG）">
+      <el-table-column width="130" label="豆粕量（KG）">
         <template slot-scope="scope">
           {{scope.row.pulpWeight = ThreeNum.allP}}
         </template>
       </el-table-column>
-      <el-table-column width="115" label="麦粉量（KG）">
+      <el-table-column width="130" label="麦粉量（KG）">
         <template slot-scope="scope">
           {{scope.row.wheatWeight = ThreeNum.allM}}
         </template>
       </el-table-column>
-      <el-table-column width="115" label="盐水量（L）">
+      <el-table-column width="130" label="盐水量（L）">
         <template slot-scope="scope">
           {{scope.row.saltWaterWeight = BrineNum}}
         </template>
@@ -24,7 +24,7 @@
           <!--<el-input v-if="(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" v-model="scope.row.sauceWeight" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" placeholder="手工录入"></el-input>-->
         </template>
       </el-table-column>
-      <el-table-column width="130" label="入库批次">
+      <el-table-column width="150" label="入库批次">
         <template slot="header">
           <i class="reqI">*</i>
           <span>入库批次</span>
@@ -33,9 +33,9 @@
           <el-input v-model="scope.row.batch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" placeholder="手工录入" maxlength="10"></el-input>
         </template>
       </el-table-column>
-      <el-table-column width="85" label="入罐罐号" show-overflow-tooltip>
+      <!-- <el-table-column width="85" label="入罐罐号" show-overflow-tooltip>
         <template slot-scope="scope">{{scope.row.holderName}}</template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column width="50" label="单位" prop="unit"></el-table-column>
       <el-table-column width="" label="操作人" prop="changer" show-overflow-tooltip></el-table-column>
       <el-table-column width="" label="操作时间" prop="changed" show-overflow-tooltip></el-table-column>

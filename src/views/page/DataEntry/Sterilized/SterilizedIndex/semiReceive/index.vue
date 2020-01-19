@@ -46,7 +46,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column width="140" label="罐内物料" show-overflow-tooltip>
+          <el-table-column width="200" label="罐内物料" show-overflow-tooltip>
             <template slot-scope="scope">
               <i v-if="scope.row.holderMaterialCode !== null">{{scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName}}</i>
             </template>
@@ -202,6 +202,7 @@ export default {
       }
       row.holderMaterialCode = PotSole.materialCode
       row.holderMaterialName = PotSole.materialName
+      row.holderType = PotSole.holderType
       row.batch = this.PotList.filter(items => items.holderId === row.holderId)[0].batch
       row.holderName = this.PotList.filter(items => items.holderId === row.holderId)[0].holderName
       // row.receiveAmount = this.PotList.filter(items => items.holderId === row.holderId)[0].amount
