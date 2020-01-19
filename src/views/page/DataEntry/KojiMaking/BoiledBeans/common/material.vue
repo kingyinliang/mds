@@ -707,7 +707,7 @@ export default {
       })
       if (useType) {
         ty = false
-        this.$warning_SHINHO('豆粕没有出罐')
+        this.$warning_SHINHO('豆粕没有出罐领用数据，请确认')
         return false
       }
       return ty

@@ -6,7 +6,6 @@
       :queryFormData="queryFormData"
       :list-interface="listInterface"
       @get-data-success="getDataSuccess"
-      :customData="true"
       :query-auth="'esCommon:iot'"
       :column="column">
     </query-table>
@@ -89,12 +88,6 @@ export default {
   mounted () {
   },
   methods: {
-    getDataSuccess (data) {
-      this.$refs.queryTable.tableData = data.page.content
-      this.$refs.queryTable.queryForm.currPage = data.page.currPage
-      this.$refs.queryTable.queryForm.pageSize = data.page.pageSize
-      this.$refs.queryTable.queryForm.totalCount = data.page.totalCount
-    }
   },
   computed: {},
   components: {}
