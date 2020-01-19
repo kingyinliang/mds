@@ -3,7 +3,7 @@
     <el-button type="primary" @click="AddMateriel(MaterielDate)" size="small" :disabled="formHeader.materialCode !== 'SS02010001' ? true : !isRedact" style="float: right;">新增</el-button>
     <el-table header-row-class-name="tableHead" :data="MaterielDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
       <el-table-column type="index" width="50" label="序号"></el-table-column>
-      <el-table-column label="盐水" width="140">
+      <el-table-column label="盐水" width="200">
         <template slot="header">
           <i class="reqI">*</i>
           <span>盐水</span>
