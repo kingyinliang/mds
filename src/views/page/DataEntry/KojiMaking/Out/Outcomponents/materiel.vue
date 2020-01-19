@@ -43,7 +43,7 @@
           <span>起始值</span>
         </template>
         <template slot-scope="scope">
-          <el-input type="number" @change="checkBatchStock(scope.row)" v-model="scope.row.startValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
+          <el-input type="number" @change="checkBatchStock(scope.row)" v-model="scope.row.startValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(formHeader.materialCode === 'SS02010001')" size="small" placeholder="手工录入"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="结束值" width="140">
@@ -52,7 +52,7 @@
           <span>结束值</span>
         </template>
         <template slot-scope="scope">
-          <el-input type="number" @change="checkBatchStock(scope.row)" v-model="scope.row.endValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
+          <el-input type="number" @change="checkBatchStock(scope.row)" v-model="scope.row.endValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(formHeader.materialCode === 'SS02010001')" size="small" placeholder="手工录入"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="数量" width="90" show-overflow-tooltip>
@@ -108,11 +108,11 @@ export default {
               this.$warning_SHINHO('原料领用必填项未填')
               return false
             }
-            // if (item.leftAmount < 0) {
-            //   ty = false
-            //   this.$warning_SHINHO('原料领用库存量不能为负')
-            //   return false
-            // }
+            if (item.amount < 0) {
+              ty = false
+              this.$warning_SHINHO('原料领用库存量不能为负')
+              return false
+            }
           }
         }
       }
