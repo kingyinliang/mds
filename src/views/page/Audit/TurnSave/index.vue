@@ -60,6 +60,7 @@
           <el-table-column prop="inType" label="打入类别" width="100" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="inBatch" label="打入批次" width="100" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="creator" label="操作人" width="100" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="created" label="操作时间" width="100" :show-overflow-tooltip="true"></el-table-column>
         </el-table>
         <el-row>
           <el-pagination
@@ -88,6 +89,7 @@
           <el-table-column prop="inHolderName" label="打入罐号" width="100" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="verifyMan" label="物料" width="150" :show-overflow-tooltip="true"><template slot-scope="scope" width="120">{{scope.row.inMaterialCode + ' ' + scope.row.inMaterialName}}</template></el-table-column>
           <el-table-column prop="creator" label="操作人" width="100" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="created" label="操作时间" width="100" :show-overflow-tooltip="true"></el-table-column>
         </el-table>
         <el-row>
           <el-pagination

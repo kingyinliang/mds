@@ -91,9 +91,9 @@ export default {
   methods: {
     getDataSuccess (data) {
       this.$refs.queryTable.tableData = data.page.content
-      this.$refs.queryTable.currPage = data.page.pageNumber
-      this.$refs.queryTable.pageSize = data.page.pageSize
-      this.$refs.queryTable.totalCount = data.page.total
+      this.$refs.queryTable.queryForm.currPage = data.page.currPage
+      this.$refs.queryTable.queryForm.pageSize = data.page.pageSize
+      this.$refs.queryTable.queryForm.totalCount = data.page.totalCount
     }
   },
   computed: {},

@@ -11,7 +11,7 @@
           <el-button type='primary' size="small" @click="submitMaterielList">tijiao</el-button> -->
         </div>
         <el-form ref="form" label-width="100px" size="small" style="float: right; margin-bottom: 10px; margin-right: 5px;">
-          <el-form-item label="生产调度员" style='margin-bottom: 0;'>
+          <el-form-item label="生产调度员：" style='margin-bottom: 0;'>
             <el-select size="small" v-model="dispatcherCode" value-key="dispatcherCode" placeholder="请选择生产调度员" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'" >
               <el-option v-for="(item, index) in this.dictListObj['PW_FEVOR']" :key="index" :label="item.code" :value="item.code" ></el-option>
             </el-select>

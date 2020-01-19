@@ -694,6 +694,22 @@ export default {
         this.$warning_SHINHO('请填写豆粕数据')
         return false
       }
+      let useType = true
+      this.soyList.forEach(it => {
+        if (it.useType === '出罐') {
+          useType = false
+        }
+        if (it.useWeight * 1 <= 0) {
+          ty = false
+          this.$warning_SHINHO('出罐数量不能为0')
+          return false
+        }
+      })
+      if (useType) {
+        ty = false
+        this.$warning_SHINHO('豆粕没有出罐')
+        return false
+      }
       return ty
     },
     // 麦粉罐
