@@ -937,8 +937,9 @@ export const REP_API = {
   PKGSPECANDOUTPUT_LIST: HOST + '/report/production/packing',
   PKGSPECANDOUTPUT_OUT: HOST + '/report/production/packingExport',
   SQUEEZEDAYS_LIST: HOST + '/report/production/prsDays',
-  SQUEEZEDAYS_OUT: HOST + '/report/production/prsDaysExport'
-
+  SQUEEZEDAYS_OUT: HOST + '/report/production/prsDaysExport',
+  STERILIZATIONDAYS_LIAT_API: HOST + '/report/fromEs/shajunDaily', // 杀菌日报表
+  STERILIZATIONDAYS_EXPORT_API: HOST + '/report/fromEs/expectShajunDaily' // 杀菌日报表导出
 }
 /*
 *炒麦api
