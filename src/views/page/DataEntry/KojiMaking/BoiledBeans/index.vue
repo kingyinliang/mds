@@ -261,11 +261,8 @@ export default {
       let net2 = new Promise((resolve, reject) => {
         that.$refs.material.savepulps(resolve, reject)
       })
-      let net3 = new Promise((resolve, reject) => {
-        that.$refs.material.savestauts(resolve, reject)
-      })
       let net99
-      net99 = Promise.all([net100, net101, net0, net1, net2, net3, excSaveNet, textSaveNet])
+      net99 = Promise.all([net100, net101, net0, net1, net2, excSaveNet, textSaveNet])
       net99.then(function () {
         new Promise((resolve, reject) => {
           that.$refs.craft.updatezhu(resolve, reject)
@@ -279,7 +276,10 @@ export default {
           let net7 = new Promise((resolve, reject) => {
             that.$refs.craft.updatehunhe(resolve, reject)
           })
-          Promise.all([net5, net6, net7]).then(function () {
+          let net3 = new Promise((resolve, reject) => {
+            that.$refs.material.savestauts(resolve, reject)
+          })
+          Promise.all([net5, net6, net7, net3]).then(function () {
             that.$notify({title: '成功', message: that.succmessage, type: 'success'})
             that.GetheadList()
             that.isRedact = false
