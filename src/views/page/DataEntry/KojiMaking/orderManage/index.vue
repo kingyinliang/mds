@@ -219,7 +219,7 @@
                 {{scope.row.orderDate}}
               </template>
             </el-table-column>
-            <el-table-column width="70" label="数量">
+            <el-table-column width="80" label="数量">
               <template slot-scope="scope">
                 {{scope.row.planOutput}}
               </template>
@@ -229,7 +229,7 @@
                 {{scope.row.outputUnit}}
               </template>
             </el-table-column>
-            <el-table-column label="备注" width="80">
+            <el-table-column label="备注" width="80" show-overflow-tooltip>
               <template slot-scope="scope">
                 <span>{{scope.row.remark}}</span>
               </template>
@@ -264,7 +264,7 @@
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column width="170">
+            <el-table-column width="165">
               <template slot="header">
                 <i class="reqI">*</i>
                 <span>制曲日期</span>
@@ -273,7 +273,7 @@
                 <el-date-picker v-model="scope.row.inKjmDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" size="small" style="width: 135px;" ></el-date-picker>
               </template>
             </el-table-column>
-            <el-table-column label="生产日期" width="170">
+            <el-table-column label="生产日期" width="165">
               <template slot="header">
                 <i class="reqI">*</i>
                 <span>生产日期</span>
