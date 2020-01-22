@@ -100,6 +100,14 @@ export default {
     },
     // 获取数据
     GetDataList () {
+      if (this.plantList.factory === '') {
+        this.$warning_SHINHO('请选择工厂')
+        return false
+      }
+      if (!this.plantList.productDate) {
+        this.$warning_SHINHO('请选择日期')
+        return false
+      }
       this.$http(`${REP_API.BOTTLE_LIST_API}`, 'POST', this.plantList).then(({data}) => {
         if (data.code === 0) {
           this.dataList = data.list1

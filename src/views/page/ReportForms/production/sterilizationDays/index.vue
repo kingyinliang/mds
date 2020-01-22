@@ -21,31 +21,31 @@
       <el-tabs v-model="activeName" type="border-card" style="margin-top: 5px;">
         <el-tab-pane name="0" label="杀菌一车间">
           <el-table :data="dataList" border header-row-class-name="tableHead" :span-method="objectSpanMethod">
-            <el-table-column label="产出" prop="materialH" width="190" show-overflow-tooltip fixed></el-table-column>
-            <el-table-column label="投入" prop="material" width="180" show-overflow-tooltip fixed></el-table-column>
+            <el-table-column label="产出物料" prop="materialH" width="190" show-overflow-tooltip fixed></el-table-column>
+            <el-table-column label="投入物料" prop="material" width="180" show-overflow-tooltip fixed></el-table-column>
             <el-table-column label="月汇总" width="180" fixed>
-              <el-table-column label="产出" prop="monthOutput"></el-table-column>
-              <el-table-column label="投入" prop="monthInput" width="110"></el-table-column>
+              <el-table-column label="产出/方" prop="monthOutput"></el-table-column>
+              <el-table-column label="投入/方" prop="monthInput" width="110"></el-table-column>
             </el-table-column>
             <el-table-column label="出品率" prop="monthProductRate" width="90" show-overflow-tooltip fixed></el-table-column>
-            <el-table-column v-for="(item, index) in daySizeList" :key="index" :label="plantList.productDate + '-' + item.padStart(2, '0')" >
-              <el-table-column label="产出" :prop="`output${item}`"></el-table-column>
-              <el-table-column label="投入" :prop="`input${item}`"></el-table-column>
+            <el-table-column v-for="(item, index) in daySizeList" :key="index" :label="item + '日'" >
+              <el-table-column label="产出/方" :prop="`output${item}`"></el-table-column>
+              <el-table-column label="投入/方" :prop="`input${item}`"></el-table-column>
             </el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane name="1" label="杀菌二车间">
           <el-table :data="dataList2" border header-row-class-name="tableHead" :span-method="objectSpanMethod2">
-            <el-table-column label="产出" prop="materialH" width="190" show-overflow-tooltip fixed></el-table-column>
-            <el-table-column label="投入" prop="material" width="180" show-overflow-tooltip fixed></el-table-column>
+            <el-table-column label="产出物料" prop="materialH" width="190" show-overflow-tooltip fixed></el-table-column>
+            <el-table-column label="投入物料" prop="material" width="180" show-overflow-tooltip fixed></el-table-column>
             <el-table-column label="月汇总" width="180" fixed>
-              <el-table-column label="产出" prop="monthOutput"></el-table-column>
-              <el-table-column label="投入" prop="monthInput" width="110"></el-table-column>
+              <el-table-column label="产出/方" prop="monthOutput"></el-table-column>
+              <el-table-column label="投入/方" prop="monthInput" width="110"></el-table-column>
             </el-table-column>
             <el-table-column label="出品率" prop="monthProductRate" width="90" show-overflow-tooltip fixed></el-table-column>
-            <el-table-column v-for="(item, index) in daySizeList" :key="index" :label="plantList.productDate + '-' + item.padStart(2, '0')" >
-              <el-table-column label="产出" :prop="`output${item}`"></el-table-column>
-              <el-table-column label="投入" :prop="`input${item}`"></el-table-column>
+            <el-table-column v-for="(item, index) in daySizeList" :key="index" :label="item + '日'" >
+              <el-table-column label="产出/方" :prop="`output${item}`"></el-table-column>
+              <el-table-column label="投入/方" :prop="`input${item}`"></el-table-column>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -95,8 +95,12 @@ export default {
     },
     // 获取数据
     GetDataList () {
-      if (this.plantList.factory === '' || this.plantList.productDate === '') {
-        this.$warning_SHINHO('请选择工厂跟日期')
+      if (this.plantList.factory === '') {
+        this.$warning_SHINHO('请选择工厂')
+        return false
+      }
+      if (!this.plantList.productDate) {
+        this.$warning_SHINHO('请选择日期')
         return false
       }
       this.daySizeList = []
