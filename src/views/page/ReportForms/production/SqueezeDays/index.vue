@@ -2,6 +2,7 @@
   <div class="header_main">
     <query-table
       ref="queryTable"
+      :rules="rules"
       :queryFormData="queryFormData"
       :list-interface="listInterface"
       :customData="true"
@@ -21,6 +22,13 @@ export default {
   name: 'index',
   data () {
     return {
+      rules: [{
+        prop: 'factory',
+        text: '请选择工厂'
+      }, {
+        prop: 'productDate',
+        text: '请选择月份'
+      }],
       queryFormData: [
         {
           type: 'select',
@@ -61,14 +69,14 @@ export default {
               label: '名称'
             },
             {
-              label: '领用/m³',
+              label: '领用/方',
               child: [{
                 prop: 'collarUse',
                 label: '普通酱醪'
               }]
             },
             {
-              label: '产出/m³',
+              label: '产出/方',
               child: [{
                 prop: 'produce',
                 label: '普通原汁'
@@ -103,14 +111,14 @@ export default {
               label: '名称'
             },
             {
-              label: '领用/m³',
+              label: '领用/方',
               child: [{
                 prop: 'tbcollarUse',
                 label: 'JYTB酱醪'
               }]
             },
             {
-              label: '产出/m³',
+              label: '产出/方',
               child: [{
                 prop: 'tbproduce',
                 label: 'TB原汁'
@@ -151,14 +159,14 @@ export default {
               label: '名称'
             },
             {
-              label: '领用/m³',
+              label: '领用/方',
               child: [{
                 prop: 'collarUse',
                 label: '普通酱醪'
               }]
             },
             {
-              label: '产出/m³',
+              label: '产出/方',
               child: [{
                 prop: 'produce',
                 label: '普通原汁'

@@ -21,6 +21,7 @@ function startLoading () {
 }
 // 使用Element loading-close 方法
 function endLoading () {
+  needLoadingRequestCount = 0
   loading.close()
 }
 
