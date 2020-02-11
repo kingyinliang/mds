@@ -139,11 +139,11 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.MaterielDate = data.list
-          if (formHeader.materialCode === 'SS02010001') {
-            setTimeout(() => {
-              this.getRepertory()
-            }, 500)
-          }
+          // if (formHeader.materialCode === 'SS02010001') {
+          //   setTimeout(() => {
+          //     this.getRepertory()
+          //   }, 500)
+          // }
           this.MaterielAuditlog = data.vrlist
           let sub = 0
           let che = 0
