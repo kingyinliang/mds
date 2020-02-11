@@ -139,11 +139,11 @@ export default {
       }).then(({data}) => {
         if (data.code === 0) {
           this.MaterielDate = data.list
-          // if (formHeader.materialCode === 'SS02010001') {
-          //   setTimeout(() => {
-          //     this.getRepertory()
-          //   }, 500)
-          // }
+          if (formHeader.materialCode === 'SS02010001') {
+            setTimeout(() => {
+              this.getRepertory()
+            }, 500)
+          }
           this.MaterielAuditlog = data.vrlist
           let sub = 0
           let che = 0
@@ -186,14 +186,14 @@ export default {
         if (data.code === 0) {
           this.batchList = data.list
           let error = 0
-          this.MaterielDate.map((item) => {
-            if (item.delFlag !== '1') {
-              item.leftAmount = this.batchList.find(items => items.batch === item.batch).currentQuantity
-              if (item.leftAmount < 0) {
-                error = 1
-              }
-            }
-          })
+          // this.MaterielDate.map((item) => {
+          //   if (item.delFlag !== '1') {
+          //     item.leftAmount = this.batchList.find(items => items.batch === item.batch).currentQuantity
+          //     if (item.leftAmount < 0) {
+          //       error = 1
+          //     }
+          //   }
+          // })
           if (resolve) {
             resolve(error)
           }

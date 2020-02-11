@@ -463,10 +463,11 @@ export default {
           } else {
             if (!this.customData) {
               let getPath = creatGetPath(this.returnColumnType)
-              this.tableData = getPath(data).list
-              this.queryForm.currPage = getPath(data).currPage
-              this.queryForm.pageSize = getPath(data).pageSize
-              this.queryForm.totalCount = getPath(data).totalCount
+              let path = getPath(data)
+              this.tableData = path.list
+              this.queryForm.currPage = path.currPage
+              this.queryForm.pageSize = path.pageSize
+              this.queryForm.totalCount = path.totalCount
             }
           }
           this.$emit('get-data-success', data)
