@@ -141,7 +141,8 @@ export default {
           this.MaterielDate = data.list
           if (formHeader.materialCode === 'SS02010001') {
             setTimeout(() => {
-              this.getRepertory()
+              // this.getRepertory()
+              this.getBath()
             }, 500)
           }
           this.MaterielAuditlog = data.vrlist
@@ -176,6 +177,19 @@ export default {
         }
       })
     },
+    getBath () {
+      let location = '7102'
+      if (this.formHeader.workShopName === '制曲二车间') {
+        location = '71A2'
+      }
+      this.$http(`${KJM_API.OUT_GETSTOCK_API}`, 'POST', {factory: this.formHeader.factory, location: location, orderHouseId: this.formHeader.id, workList: this.MaterielDate}, false, false, false).then(({data}) => {
+        if (data.code === 0) {
+          this.batchList = data.list
+        } else {
+          this.$error_SHINHO(data.msg)
+        }
+      })
+    },
     // 库存拉取
     getRepertory (str, resolve, reject) {
       let location = '7102'
@@ -186,14 +200,14 @@ export default {
         if (data.code === 0) {
           this.batchList = data.list
           let error = 0
-          // this.MaterielDate.map((item) => {
-          //   if (item.delFlag !== '1') {
-          //     item.leftAmount = this.batchList.find(items => items.batch === item.batch).currentQuantity
-          //     if (item.leftAmount < 0) {
-          //       error = 1
-          //     }
-          //   }
-          // })
+          this.MaterielDate.map((item) => {
+            if (item.delFlag !== '1') {
+              item.leftAmount = this.batchList.find(items => items.batch === item.batch).currentQuantity
+              if (item.leftAmount < 0) {
+                error = 1
+              }
+            }
+          })
           if (resolve) {
             resolve(error)
           }
