@@ -122,9 +122,11 @@ export default {
     checkBatchStock (row, type = '') {
       if (this.formHeader.materialCode === 'SS02010001') {
         if (row.batch !== '' && row.startValue !== '' && row.endValue !== '') {
-          this.getRepertory()
+          // this.getRepertory()
+          row.leftAmount = this.batchList.find(items => items.batch === row.batch).currentQuantity
         } else if (row.batch !== '' && type === 'batch') {
-          this.getRepertory()
+          // this.getRepertory()
+          row.leftAmount = this.batchList.find(items => items.batch === row.batch).currentQuantity
         }
       }
     },
