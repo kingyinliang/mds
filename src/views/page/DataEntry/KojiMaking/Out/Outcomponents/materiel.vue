@@ -122,9 +122,11 @@ export default {
     checkBatchStock (row, type = '') {
       if (this.formHeader.materialCode === 'SS02010001') {
         if (row.batch !== '' && row.startValue !== '' && row.endValue !== '') {
-          this.getRepertory()
+          // this.getRepertory()
+          row.leftAmount = this.batchList.find(items => items.batch === row.batch).currentQuantity
         } else if (row.batch !== '' && type === 'batch') {
-          this.getRepertory()
+          // this.getRepertory()
+          row.leftAmount = this.batchList.find(items => items.batch === row.batch).currentQuantity
         }
       }
     },
@@ -141,7 +143,8 @@ export default {
           this.MaterielDate = data.list
           if (formHeader.materialCode === 'SS02010001') {
             setTimeout(() => {
-              this.getRepertory()
+              // this.getRepertory()
+              this.getBath()
             }, 500)
           }
           this.MaterielAuditlog = data.vrlist
@@ -171,6 +174,19 @@ export default {
             this.Materielstatus = 'checked'
           }
           this.$emit('GetMaterielStatus', this.Materielstatus)
+        } else {
+          this.$error_SHINHO(data.msg)
+        }
+      })
+    },
+    getBath () {
+      let location = '7102'
+      if (this.formHeader.workShopName === '制曲二车间') {
+        location = '71A2'
+      }
+      this.$http(`${KJM_API.OUT_GETSTOCK_API}`, 'POST', {factory: this.formHeader.factory, location: location, orderHouseId: this.formHeader.id, workList: this.MaterielDate}, false, false, false).then(({data}) => {
+        if (data.code === 0) {
+          this.batchList = data.list
         } else {
           this.$error_SHINHO(data.msg)
         }

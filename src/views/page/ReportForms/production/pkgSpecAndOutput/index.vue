@@ -113,18 +113,20 @@ export default {
   },
   methods: {
     getDataSuccess (data) {
-      this.$refs.queryTable.tableData.push({
-        brand: '总计',
-        productLine: '',
-        type: '',
-        boxNums: this.$refs.queryTable.tableData[0].boxNumsTotal,
-        boxNumsSum: '',
-        squareNums: this.$refs.queryTable.tableData[0].squareNumsTotal,
-        squareNumsSum: '',
-        boxNumsTotal: 0,
-        squareNumsTotal: 0,
-        mergeNums: 1
-      })
+      if (this.$refs.queryTable.tableData.length) {
+        this.$refs.queryTable.tableData.push({
+          brand: '总计',
+          productLine: '',
+          type: '',
+          boxNums: this.$refs.queryTable.tableData[0].boxNumsTotal,
+          boxNumsSum: '',
+          squareNums: this.$refs.queryTable.tableData[0].squareNumsTotal,
+          squareNumsSum: '',
+          boxNumsTotal: 0,
+          squareNumsTotal: 0,
+          mergeNums: 1
+        })
+      }
     }
   },
   computed: {},

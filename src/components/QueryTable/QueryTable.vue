@@ -190,6 +190,7 @@
 
 <script>
 import {exportFileForm} from '@/net/validate'
+import {creatGetPath} from '@/utils/index'
 export default {
   name: 'QueryTable',
   data () {
@@ -353,13 +354,8 @@ export default {
         } else if (item.defaultOptionsFn) {
           // 初始化下拉
           item.defaultOptionsFn().then(({data}) => {
-            if (/\./g.test(item.resVal.resData)) {
-              item.resVal.resData.split('.').forEach(resIt => {
-                data = data[resIt]
-              })
-            } else {
-              data = data[item.resVal.resData]
-            }
+            let getPath = creatGetPath(item.resVal.resData)
+            data = getPath(data)
             this.$set(this.optionLists, item.prop, data)
             if (data.length > 0 && !item.defaultValue && item.defaultValue !== '') {
               this.$set(this.queryForm, item.prop, data[0][item.resVal.value])
@@ -401,13 +397,8 @@ export default {
                 if (val) {
                   linkagePropItemObj.optionsFn(val).then(({data}) => {
                     if (data.code === 0) {
-                      if (/\./g.test(linkagePropItemObj.resVal.resData)) {
-                        linkagePropItemObj.resVal.resData.split('.').forEach(resIt => {
-                          data = data[resIt]
-                        })
-                      } else {
-                        data = data[linkagePropItemObj.resVal.resData]
-                      }
+                      let getPath = creatGetPath(linkagePropItemObj.resVal.resData)
+                      data = getPath(data)
                       this.$set(this.optionLists, linkagePropItemObj.prop, data)
                       if (data.length > 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
                         this.$set(this.queryForm, linkagePropItemObj.prop, data[0][linkagePropItemObj.resVal.value])
@@ -467,19 +458,16 @@ export default {
       this.listInterface(this.queryForm).then(({data}) => {
         if (data.code === 0) {
           if (this.getListField) {
-            if (/\./g.test(this.getListField)) {
-              this.getListField.split('.').forEach(resIt => {
-                this.tableData = data[resIt]
-              })
-            } else {
-              this.tableData = data[this.getListField]
-            }
+            let getPath = creatGetPath(this.getListField)
+            this.tableData = getPath(data)
           } else {
             if (!this.customData) {
-              this.tableData = data[this.returnColumnType].list
-              this.queryForm.currPage = data[this.returnColumnType].currPage
-              this.queryForm.pageSize = data[this.returnColumnType].pageSize
-              this.queryForm.totalCount = data[this.returnColumnType].totalCount
+              let getPath = creatGetPath(this.returnColumnType)
+              let path = getPath(data)
+              this.tableData = path.list
+              this.queryForm.currPage = path.currPage
+              this.queryForm.pageSize = path.pageSize
+              this.queryForm.totalCount = path.totalCount
             }
           }
           this.$emit('get-data-success', data)

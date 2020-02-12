@@ -59,12 +59,25 @@ export function throttle (fn, delay, atleast) {
   }
 }
 /**
- * 简化Promise
- * @param Array fnArr 第一次异步的函数数组
- * @param Array thenArr 第二次异步的函数数组
+ * 简化Promise提交保存异步同步操作
+ * @function AsyncHook 多参数同步Promise
+ * @param 多个array，每一个参数是一个异步请求的数组，多个参数是同步的请求
+ * @function setPromise 把请求数组处理成Promise.all
  * @return Function Promise.all的回调Promise
  */
-export function AsyncHook (fnArr, thenArr) {
+export function AsyncHook () {
+  if (arguments.length === 1) {
+    return setPromise(arguments[0])
+  } else {
+    return setPromise(arguments[0]).then(res => {
+      let arr = Array.prototype.slice.call(arguments)
+      arr.shift()
+      let [...args] = arr
+      return AsyncHook(...args)
+    })
+  }
+}
+function setPromise (fnArr) {
   let arr = []
   fnArr.forEach(item => {
     arr.push(new Promise((resolve, reject) => {
@@ -74,22 +87,7 @@ export function AsyncHook (fnArr, thenArr) {
       item[0](...args)
     }))
   })
-  if (thenArr) {
-    return Promise.all(arr).then(res => {
-      let submitArr = []
-      thenArr.forEach(item => {
-        submitArr.push(new Promise((resolve, reject) => {
-          item[1].push(resolve)
-          item[1].push(reject)
-          let [...args] = item[1]
-          item[0](...args)
-        }))
-      })
-      return Promise.all(submitArr)
-    })
-  } else {
-    return Promise.all(arr)
-  }
+  return Promise.all(arr)
 }
 /**
  * 展开合并
@@ -113,3 +111,21 @@ export function ShowHiddenNameBox ($) {
     }
   })
 }
+/**
+ * 获取对象的路径 函数柯里化
+ * @param path 传入路径返回获取这个路径的方法
+ * @param obj 获取哪个对象的参数
+ */
+/* eslint-disable */
+export function creatGetPath (path) {
+  let paths = path.split('.')
+  return function getPath (obj) {
+    let res = obj
+    let prop
+    while (prop = paths.shift()) {
+      res = res[prop]
+    }
+    return res
+  }
+}
+/* eslint-enable */
