@@ -238,6 +238,11 @@ export default {
               this.$warning_SHINHO('准备时间白班工作结束时间不能早于停线时间')
               return false
             }
+            if (((toDate(this.readyDate.dayStartLineDate) - toDate(this.readyDate.dayStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.dayCauseDate) - toDate(this.readyDate.dayStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.dayEndDate) - toDate(this.readyDate.dayCauseDate)) / 60000) >= 0) {
+              ty = false
+              this.$warning_SHINHO('准备时间白班工作开始时间<=开线时间<停线时间<=工作结束时间')
+              return false
+            }
           } else {
             ty = false
             this.$warning_SHINHO('准备时间白班必填字段未填')
@@ -250,6 +255,11 @@ export default {
               this.$warning_SHINHO('准备时间中班工作结束时间不能早于停线时间')
               return false
             }
+            if (((toDate(this.readyDate.midStartLineDate) - toDate(this.readyDate.midStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.midCauseDate) - toDate(this.readyDate.midStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.midEndDate) - toDate(this.readyDate.midCauseDate)) / 60000) >= 0) {
+              ty = false
+              this.$warning_SHINHO('准备时间中班工作开始时间<=开线时间<停线时间<=工作结束时间')
+              return false
+            }
           } else {
             ty = false
             this.$warning_SHINHO('准备时间中班必填字段未填')
@@ -260,6 +270,11 @@ export default {
             if (((toDate(this.readyDate.nightEndDate) - toDate(this.readyDate.nightCauseDate)) / 60000) < 0) {
               ty = false
               this.$warning_SHINHO('准备时间夜班工作结束时间不能早于停线时间')
+              return false
+            }
+            if (((toDate(this.readyDate.nightStartLineDate) - toDate(this.readyDate.nightStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.nightCauseDate) - toDate(this.readyDate.nightStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.nightEndDate) - toDate(this.readyDate.nightCauseDate)) / 60000) >= 0) {
+              ty = false
+              this.$warning_SHINHO('准备时间夜班工作开始时间<=开线时间<停线时间<=工作结束时间')
               return false
             }
           } else {
@@ -279,57 +294,14 @@ export default {
               this.$warning_SHINHO('准备时间夜班工作结束时间不能早于停线时间')
               return false
             }
-          } else {
-            ty = false
-            this.$warning_SHINHO('准备时间白班和夜班必填字段未填')
-            return false
-          }
-        } else if (this.readyDate.classes === '白班') {
-          if (this.readyDate.dayStartLineDate && this.readyDate.dayStartDate && (this.readyDate.dayDinner || this.readyDate.dayDinner === 0) && this.readyDate.dayCauseDate && this.readyDate.dayEndDate) {
-            if (((toDate(this.readyDate.dayEndDate) - toDate(this.readyDate.dayCauseDate)) / 60000) < 0) {
+            if (((toDate(this.readyDate.dayStartLineDate) - toDate(this.readyDate.dayStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.dayCauseDate) - toDate(this.readyDate.dayStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.dayEndDate) - toDate(this.readyDate.dayCauseDate)) / 60000) >= 0) {
               ty = false
-              this.$warning_SHINHO('准备时间白班工作结束时间不能早于停线时间')
+              this.$warning_SHINHO('准备时间白班工作开始时间<=开线时间<停线时间<=工作结束时间')
               return false
             }
-          } else {
-            ty = false
-            this.$warning_SHINHO('准备时间白班必填字段未填')
-            return false
-          }
-        } else if (this.readyDate.classes === '中班') {
-          if (this.readyDate.midCauseDate && this.readyDate.midStartDate && (this.readyDate.midDinner || this.readyDate.midDinner === 0) && this.readyDate.midCauseDate && this.readyDate.midEndDate) {
-            if (((toDate(this.readyDate.midEndDate) - toDate(this.readyDate.midCauseDate)) / 60000) < 0) {
+            if (((toDate(this.readyDate.nightStartLineDate) - toDate(this.readyDate.nightStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.nightCauseDate) - toDate(this.readyDate.nightStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.nightEndDate) - toDate(this.readyDate.nightCauseDate)) / 60000) >= 0) {
               ty = false
-              this.$warning_SHINHO('准备时间中班工作结束时间不能早于停线时间')
-              return false
-            }
-          } else {
-            ty = false
-            this.$warning_SHINHO('准备时间中班必填字段未填')
-            return false
-          }
-        } else if (this.readyDate.classes === '夜班') {
-          if (this.readyDate.nightStartLineDate && this.readyDate.nightStartDate && (this.readyDate.nightDinner || this.readyDate.nightDinner === 0) && this.readyDate.nightCauseDate && this.readyDate.nightEndDate) {
-            if (((toDate(this.readyDate.nightEndDate) - toDate(this.readyDate.nightCauseDate)) / 60000) < 0) {
-              ty = false
-              this.$warning_SHINHO('准备时间夜班工作结束时间不能早于停线时间')
-              return false
-            }
-          } else {
-            ty = false
-            this.$warning_SHINHO('准备时间夜班必填字段未填')
-            return false
-          }
-        } else if (this.readyDate.classes === '多班') {
-          if (this.readyDate.dayStartLineDate && this.readyDate.dayStartDate && (this.readyDate.dayDinner || this.readyDate.dayDinner === 0) && this.readyDate.dayCauseDate && this.readyDate.dayEndDate && this.readyDate.nightStartLineDate && this.readyDate.nightStartDate && (this.readyDate.nightDinner || this.readyDate.nightDinner === 0) && this.readyDate.nightCauseDate && this.readyDate.nightEndDate) {
-            if (((toDate(this.readyDate.dayEndDate) - toDate(this.readyDate.dayCauseDate)) / 60000) < 0) {
-              ty = false
-              this.$warning_SHINHO('准备时间白班工作结束时间不能早于停线时间')
-              return false
-            }
-            if (((toDate(this.readyDate.nightEndDate) - toDate(this.readyDate.nightCauseDate)) / 60000) < 0) {
-              ty = false
-              this.$warning_SHINHO('准备时间夜班工作结束时间不能早于停线时间')
+              this.$warning_SHINHO('准备时间夜班工作开始时间<=开线时间<停线时间<=工作结束时间')
               return false
             }
           } else {
