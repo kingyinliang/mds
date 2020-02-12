@@ -23,22 +23,31 @@
         <i class="iconfont factory-icon_function_keyongkucun" style="color: #666; margin-right: 10px;"></i>发酵总库存列表
       </div>
       <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
-        <el-table-column label="发酵罐编号" show-overflow-tooltip prop="holderNo" width="110"></el-table-column>
-        <el-table-column label="状态" show-overflow-tooltip prop="holderStatus"></el-table-column>
+        <el-table-column label="罐编号" show-overflow-tooltip prop="holderNo" width="50"></el-table-column>
+        <el-table-column label="状态" show-overflow-tooltip prop="holderStatus" width="70"></el-table-column>
+        <el-table-column label="投料数(M³)" show-overflow-tooltip prop="realInAmount" width="75"></el-table-column>
+        <el-table-column label="入库数(M³)" show-overflow-tooltip prop="ferAmount" width="75"></el-table-column>
+        <el-table-column label="库存数(M³)" show-overflow-tooltip prop="stockAmount" width="75"></el-table-column>
+        <el-table-column label="类别" prop="halfType" show-overflow-tooltip width="70"></el-table-column>
+        <el-table-column label="" show-overflow-tooltip prop="feedingDate" width="100">
+          <template slot="header">投料开始<br>时间</template>
+          <template slot-scope="scope">{{scope.row.feedingDate}}</template>
+        </el-table-column>
+        <el-table-column label="" show-overflow-tooltip prop="fermentDate" width="100">
+          <template slot="header">发酵开始<br>时间</template>
+          <template slot-scope="scope">{{scope.row.fermentDate}}</template>
+        </el-table-column>
+        <el-table-column label="发酵结束时间" show-overflow-tooltip prop="fermentEndDate" width="100">
+          <template slot="header">发酵结束<br>时间</template>
+          <template slot-scope="scope">{{scope.row.fermentEndDate}}</template>
+        </el-table-column>
+        <el-table-column label="发酵期" show-overflow-tooltip prop="fermentTime" width="60"></el-table-column>
+        <el-table-column label="发酵时间" show-overflow-tooltip prop="fermentDays" width="50"></el-table-column>
+        <el-table-column label="压榨时间" show-overflow-tooltip prop="pulpDate" width="100"></el-table-column>
+        <el-table-column label="领用酱醪数(M³)" show-overflow-tooltip prop="useNums" width="75"></el-table-column>
+        <el-table-column label="出品数" show-overflow-tooltip prop="outAmount" width="70"></el-table-column>
+        <el-table-column label="出品率" show-overflow-tooltip prop="yield" width="80"></el-table-column>
         <el-table-column label="发酵罐容量(M³)" show-overflow-tooltip prop="holderHold"></el-table-column>
-        <el-table-column label="投料数量(M³)" show-overflow-tooltip prop="realInAmount" width="120"></el-table-column>
-        <el-table-column label="入库数量(M³)" show-overflow-tooltip prop="ferAmount" width="120"></el-table-column>
-        <el-table-column label="库存数量(M³)" show-overflow-tooltip prop="stockAmount"></el-table-column>
-        <el-table-column label="类别" prop="halfType" show-overflow-tooltip width="110"></el-table-column>
-        <el-table-column label="投料开始时间" show-overflow-tooltip prop="feedingDate" width="120"></el-table-column>
-        <el-table-column label="发酵开始时间" show-overflow-tooltip prop="fermentDate" width="120"></el-table-column>
-        <el-table-column label="发酵结束时间" show-overflow-tooltip prop="fermentEndDate" width="120"></el-table-column>
-        <el-table-column label="发酵期" show-overflow-tooltip prop="fermentTime" width="80"></el-table-column>
-        <el-table-column label="发酵时间" show-overflow-tooltip prop="fermentDays"></el-table-column>
-        <el-table-column label="压榨时间" show-overflow-tooltip prop="pulpDate"></el-table-column>
-        <el-table-column label="领用酱醪数(M³)" show-overflow-tooltip prop="useNums"></el-table-column>
-        <el-table-column label="出品数" show-overflow-tooltip prop="outAmount"></el-table-column>
-        <el-table-column label="出品率" show-overflow-tooltip prop="yield"></el-table-column>
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"

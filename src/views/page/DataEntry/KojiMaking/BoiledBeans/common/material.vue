@@ -225,7 +225,7 @@
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="MTitle" :visible.sync="dialogFormVisibleMai2" width="450px" custom-class='dialog__class'>
       <div slot="title">{{this.MTitle}}</div>
-      <el-form :model="wheat" size="small" :rules="wheatrulend" ref="wheatend">
+      <el-form :model="wheat" size="small" @submit.native.prevent :rules="wheatrulend" ref="wheatend">
         <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">{{wheat.whtBatch}}</el-form-item>
         <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
         <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
@@ -241,7 +241,7 @@
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="MTitle" :visible.sync="dialogFormVisibleMai3" width="450px" custom-class='dialog__class'>
       <div slot="title">{{this.MTitle}}</div>
-      <el-form :model="wheat" size="small" :rules="wheatrules" ref="wheat">
+      <el-form :model="wheat" size="small" @submit.native.prevent :rules="wheatrules" ref="wheat">
         <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">
           <el-select v-model="wheat.whtBatch" placeholder="请选择">
             <el-option v-for='sole in wheatPiArray' :key="sole.batch" :value="sole.batch" :label="sole.batch"></el-option>
@@ -265,7 +265,7 @@
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="DRTitle" :visible.sync="dialogFormVisibleDouRu" width="450px" custom-class='dialog__class'>
       <div slot="title">{{this.DRTitle}}</div>
-      <el-form :model="rusoy" size="small" :rules="rusoyrules" ref="rusoy">
+      <el-form :model="rusoy" size="small" @submit.native.prevent :rules="rusoyrules" ref="rusoy">
         <el-form-item label="领用粮仓：" :label-width="formLabelWidth" prop="foodHolderId">
           <el-select v-model="rusoy.foodHolderId" @change="changCang()">
             <el-option v-for='sole in PulpCangList' :key="sole.holderId" :value="sole.holderId" :label="sole.holderName"></el-option>
@@ -295,7 +295,7 @@
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="DCTitle" :visible.sync="dialogFormVisibleDouChu" width="450px" custom-class='dialog__class'>
       <div slot="title">{{this.DCTitle}}</div>
-      <el-form :model="chusoy" size="small" :rules="chusoyrules" ref="chusoy">
+      <el-form :model="chusoy" size="small" @submit.native.prevent :rules="chusoyrules" ref="chusoy">
         <el-form-item label="批次：" :label-width="formLabelWidth" prop="batch">
           <!-- <el-input v-model="chusoy.batch" autocomplete="off" maxlength="10"></el-input> -->
           <el-select v-model="chusoy.batch" placeholder="请选择">
