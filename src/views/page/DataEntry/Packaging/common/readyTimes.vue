@@ -238,7 +238,7 @@ export default {
               this.$warning_SHINHO('准备时间白班工作结束时间不能早于停线时间')
               return false
             }
-            if (((toDate(this.readyDate.dayStartLineDate) - toDate(this.readyDate.dayStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.dayCauseDate) - toDate(this.readyDate.dayStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.dayEndDate) - toDate(this.readyDate.dayCauseDate)) / 60000) >= 0) {
+            if (((toDate(this.readyDate.dayStartLineDate) - toDate(this.readyDate.dayStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.dayCauseDate) - toDate(this.readyDate.dayStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.dayEndDate) - toDate(this.readyDate.dayCauseDate)) / 60000) >= 0) {} else {
               ty = false
               this.$warning_SHINHO('准备时间白班工作开始时间<=开线时间<停线时间<=工作结束时间')
               return false
@@ -255,7 +255,7 @@ export default {
               this.$warning_SHINHO('准备时间中班工作结束时间不能早于停线时间')
               return false
             }
-            if (((toDate(this.readyDate.midStartLineDate) - toDate(this.readyDate.midStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.midCauseDate) - toDate(this.readyDate.midStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.midEndDate) - toDate(this.readyDate.midCauseDate)) / 60000) >= 0) {
+            if (((toDate(this.readyDate.midStartLineDate) - toDate(this.readyDate.midStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.midCauseDate) - toDate(this.readyDate.midStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.midEndDate) - toDate(this.readyDate.midCauseDate)) / 60000) >= 0) {} else {
               ty = false
               this.$warning_SHINHO('准备时间中班工作开始时间<=开线时间<停线时间<=工作结束时间')
               return false
@@ -272,7 +272,7 @@ export default {
               this.$warning_SHINHO('准备时间夜班工作结束时间不能早于停线时间')
               return false
             }
-            if (((toDate(this.readyDate.nightStartLineDate) - toDate(this.readyDate.nightStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.nightCauseDate) - toDate(this.readyDate.nightStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.nightEndDate) - toDate(this.readyDate.nightCauseDate)) / 60000) >= 0) {
+            if (((toDate(this.readyDate.nightStartLineDate) - toDate(this.readyDate.nightStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.nightCauseDate) - toDate(this.readyDate.nightStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.nightEndDate) - toDate(this.readyDate.nightCauseDate)) / 60000) >= 0) {} else {
               ty = false
               this.$warning_SHINHO('准备时间夜班工作开始时间<=开线时间<停线时间<=工作结束时间')
               return false
@@ -294,12 +294,12 @@ export default {
               this.$warning_SHINHO('准备时间夜班工作结束时间不能早于停线时间')
               return false
             }
-            if (((toDate(this.readyDate.dayStartLineDate) - toDate(this.readyDate.dayStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.dayCauseDate) - toDate(this.readyDate.dayStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.dayEndDate) - toDate(this.readyDate.dayCauseDate)) / 60000) >= 0) {
+            if (((toDate(this.readyDate.dayStartLineDate) - toDate(this.readyDate.dayStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.dayCauseDate) - toDate(this.readyDate.dayStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.dayEndDate) - toDate(this.readyDate.dayCauseDate)) / 60000) >= 0) {} else {
               ty = false
               this.$warning_SHINHO('准备时间白班工作开始时间<=开线时间<停线时间<=工作结束时间')
               return false
             }
-            if (((toDate(this.readyDate.nightStartLineDate) - toDate(this.readyDate.nightStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.nightCauseDate) - toDate(this.readyDate.nightStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.nightEndDate) - toDate(this.readyDate.nightCauseDate)) / 60000) >= 0) {
+            if (((toDate(this.readyDate.nightStartLineDate) - toDate(this.readyDate.nightStartDate)) / 60000) >= 0 && ((toDate(this.readyDate.nightCauseDate) - toDate(this.readyDate.nightStartLineDate)) / 60000) > 0 && ((toDate(this.readyDate.nightEndDate) - toDate(this.readyDate.nightCauseDate)) / 60000) >= 0) {} else {
               ty = false
               this.$warning_SHINHO('准备时间夜班工作开始时间<=开线时间<停线时间<=工作结束时间')
               return false
