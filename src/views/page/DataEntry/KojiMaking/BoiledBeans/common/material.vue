@@ -200,9 +200,7 @@
         </el-table>
       </div>
     </el-card>
-    <el-card>
-      <audit-log></audit-log>
-    </el-card>
+    <audit-log></audit-log>
     <el-dialog :close-on-click-modal="false" :title="MTitle" :visible.sync="dialogFormVisibleMai" width="450px" custom-class='dialog__class'>
       <div slot="title">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrulestar" ref="wheatstar">
@@ -1185,33 +1183,44 @@ export default {
           this.$set(item, 'materialCode', materstrchai[0])
           this.$set(item, 'materialName', materstrName)
         }
-        if (item.status === '' || item.status === 'saved' || item.status === 'noPass') {
+        if (item.status === null || item.status === '' || item.status === 'saved' || item.status === 'noPass') {
+          console.log(this.formHeader.submitStatus)
           this.$set(item, 'status', this.formHeader.submitStatus)
         }
       })
       if (this.formHeader.submitStatus === 'submit') {
         this.$http(`${KJM_API.DOUMATERSUBMITZHONG_API}`, 'POST', this.materialList).then(({data}) => {
           if (data.code === 0) {
+            if (resolve) {
+              resolve('resolve')
+            }
           } else {
             this.$error_SHINHO(data.msg)
+            if (resolve) {
+              reject('reject')
+            }
+          }
+        })
+      } else {
+        this.$http(`${KJM_API.DOUMATERZHONG_API}`, 'POST', this.materialList).then(({data}) => {
+          if (data.code === 0) {
+            if (resolve) {
+              resolve('resolve')
+            }
+          } else {
+            this.$error_SHINHO(data.msg)
+            if (resolve) {
+              reject('reject')
+            }
+          }
+        }).catch(() => {
+          if (resolve) {
+            reject('reject')
           }
         })
       }
-      this.$http(`${KJM_API.DOUMATERZHONG_API}`, 'POST', this.materialList).then(({data}) => {
-        if (data.code === 0) {
-        } else {
-          this.$error_SHINHO(data.msg)
-        }
-        if (resolve) {
-          resolve('resolve')
-        }
-      }).catch(() => {
-        if (resolve) {
-          reject('reject')
-        }
-      })
     },
-    savewheats (resolve, reject) {
+    submitwheats (resolve, reject) {
       this.wheatList.map((item) => {
         if (item.status === '' || item.status === undefined || item.status === 'saved' || item.status === 'noPass') {
           this.$set(item, 'status', this.formHeader.submitStatus)
@@ -1220,24 +1229,77 @@ export default {
       if (this.formHeader.submitStatus === 'submit') {
         this.$http(`${KJM_API.DOUMATERSUBMITWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
           if (data.code === 0) {
+            if (resolve) {
+              resolve('resolve')
+            }
           } else {
             this.$error_SHINHO(data.msg)
+            if (resolve) {
+              reject('reject')
+            }
           }
         })
-      }
-      this.$http(`${KJM_API.DOUMATERWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
-        if (data.code === 0) {
-        } else {
-          this.$error_SHINHO(data.msg)
-        }
+      } else {
         if (resolve) {
           resolve('resolve')
+        }
+      }
+    },
+    savewheats (resolve, reject) {
+      this.wheatList.map((item) => {
+        if (item.status === '' || item.status === undefined || item.status === 'saved' || item.status === 'noPass') {
+          this.$set(item, 'status', this.formHeader.submitStatus)
+        }
+      })
+      // if (this.formHeader.submitStatus === 'submit') {
+      //   this.$http(`${KJM_API.DOUMATERSUBMITWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
+      //     if (data.code === 0) {
+      //     } else {
+      //       this.$error_SHINHO(data.msg)
+      //     }
+      //   })
+      // }
+      this.$http(`${KJM_API.DOUMATERWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
+        if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
+        } else {
+          this.$error_SHINHO(data.msg)
+          if (resolve) {
+            reject('reject')
+          }
         }
       }).catch(() => {
         if (resolve) {
           reject('reject')
         }
       })
+    },
+    submitpulps (resolve, reject) {
+      this.soyList.map((item) => {
+        if (item.status === '' || item.status === undefined || item.status === 'saved' || item.status === 'noPass') {
+          this.$set(item, 'status', this.formHeader.submitStatus)
+        }
+      })
+      if (this.formHeader.submitStatus === 'submit') {
+        this.$http(`${KJM_API.DOUMATERSUBMITSOY_API}`, 'POST', this.soyList).then(({data}) => {
+          if (data.code === 0) {
+            if (resolve) {
+              resolve('resolve')
+            }
+          } else {
+            this.$error_SHINHO(data.msg)
+            if (resolve) {
+              reject('reject')
+            }
+          }
+        })
+      } else {
+        if (resolve) {
+          resolve('resolve')
+        }
+      }
     },
     savepulps (resolve, reject) {
       this.soyList.map((item) => {
@@ -1252,21 +1314,24 @@ export default {
           this.$set(item, 'status', this.formHeader.submitStatus)
         }
       })
-      if (this.formHeader.submitStatus === 'submit') {
-        this.$http(`${KJM_API.DOUMATERSUBMITSOY_API}`, 'POST', this.soyList).then(({data}) => {
-          if (data.code === 0) {
-          } else {
-            this.$error_SHINHO(data.msg)
-          }
-        })
-      }
+      // if (this.formHeader.submitStatus === 'submit') {
+      //   this.$http(`${KJM_API.DOUMATERSUBMITSOY_API}`, 'POST', this.soyList).then(({data}) => {
+      //     if (data.code === 0) {
+      //     } else {
+      //       this.$error_SHINHO(data.msg)
+      //     }
+      //   })
+      // }
       this.$http(`${KJM_API.DOUMATERPULP_API}`, 'POST', this.soyList).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
           this.$error_SHINHO(data.msg)
-        }
-        if (resolve) {
-          resolve('resolve')
+          if (resolve) {
+            reject('reject')
+          }
         }
       }).catch(() => {
         if (resolve) {

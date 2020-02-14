@@ -11,15 +11,18 @@
         </i>
       </div>
       <div v-if="headShow" class="dataEntry-head-base">
-        <el-form :inline="true" :model="formHeader" size="small" label-width="91px" class="dataEntry-head-base__form">
+        <el-form :inline="true" :model="formHeader" size="small"  class="dataEntry-head-base__form">
           <el-form-item v-for="(item, index) in headerBase" :key="index">
             <template slot="label">
-              <i class="iconfont" :class="item.icon"></i>
+              <i class="iconfont" :class="item.icon" style="margin-left: 8px;"></i>
               <span>{{item.label}}：</span>
             </template>
             <p v-if="item.type === 'p'">{{item.value | itemValue(formHeader)}}</p>
             <el-tooltip class="item" effect="dark" :content="item.value | itemValue(formHeader)" placement="top" v-if="item.type === 'tooltip'"><p>{{item.value | itemValue(formHeader)}}</p></el-tooltip>
             <el-date-picker size="mini" @change="updateProductDate" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="formHeader[item.value]" style="width: 120px;" v-if="item.type === 'date-picker'"></el-date-picker>
+            <el-select size="mini" v-model="formHeader[item.value]"  v-if="item.type === 'select'" style="width: 120px;" :disabled="!(isRedact && item.disabled)">
+              <el-option :label="optionIt[item.option.label]" :value="optionIt[item.option.value]" v-for="(optionIt, index) in item.option.list" :key="index"></el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -172,13 +175,17 @@ export default {
           }
         }
         this.savedDatas(str).then(res => {
-          this.$success_SHINHO('保存成功')
-          this.$emit('success')
+          if (res !== false) {
+            this.$success_SHINHO('保存成功')
+            this.$emit('success')
+          }
         })
       } else {
         this.submitDatas(str).then(res => {
-          this.$success_SHINHO('提交成功')
-          this.$emit('success')
+          if (res !== false) {
+            this.$success_SHINHO('提交成功')
+            this.$emit('success')
+          }
         })
       }
     },

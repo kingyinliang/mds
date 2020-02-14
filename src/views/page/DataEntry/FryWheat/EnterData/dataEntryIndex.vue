@@ -34,89 +34,6 @@
         <text-record ref="textrecord" :isRedact="data.isRedact" ></text-record>
       </template>
     </data-entry>
-    <!--<div class="header_main">-->
-      <!--<el-card class="searchCard">-->
-        <!--<el-row type="flex">-->
-          <!--<el-col :span="21">-->
-            <!--<form-header :formHeader="formHeader" :isRedact="isRedact" @updateProductDateCallback='updateProductDate'></form-header>-->
-          <!--</el-col>-->
-          <!--<el-col :span="3" >-->
-            <!--<div style="float: right; line-height: 31px; font-size: 14px;">-->
-              <!--<div style="float: left;">-->
-                <!--<span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? '#1890f' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：-->
-              <!--</div>-->
-              <!--<span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>-->
-            <!--</div>-->
-          <!--</el-col>-->
-        <!--</el-row>-->
-        <!--<el-row style="text-align: right; position: absolute; right: 8px; top: 90px; z-index: 1000;" class="buttonCss">-->
-          <!--<template style="float: right; margin-left: 10px;">-->
-            <!--<el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-FryWheat-index'})">返回</el-button>-->
-            <!--<el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('wht:order:update')">{{isRedact?'取消':'编辑'}}</el-button>-->
-          <!--</template>-->
-          <!--<template v-if="isRedact" style="float: right; margin-left: 10px;">-->
-            <!--<el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('wht:order:update')">保存</el-button>-->
-            <!--<el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('sys:whtInStorage:submit')">提交</el-button>-->
-          <!--</template>-->
-        <!--</el-row>-->
-        <!--<div class="toggleSearchBottom">-->
-          <!--<i class="el-icon-caret-top"></i>-->
-        <!--</div>-->
-      <!--</el-card>-->
-    <!--</div>-->
-    <!--<div class="main">-->
-      <!--<div class="tableCard">-->
-        <!--<div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">-->
-          <!--<i class="el-icon-caret-bottom"></i>-->
-        <!--</div>-->
-        <!--<el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" id="DaatTtabs" class="NewDaatTtabs" type="border-card" style="border-radius: 15px; overflow: hidden;">-->
-          <!--<el-tab-pane name="1">-->
-            <!--<span slot="label" class="spanview">-->
-              <!--<el-tooltip class="item" effect="dark" :content="readyState === 'noPass'? '不通过':readyState === 'saved'? '已保存':readyState === 'submit' ? '已提交' : readyState === 'checked'? '通过':'未录入'" placement="top-start">-->
-                <!--<el-button :style="{'color': readyState === 'noPass'? 'red' : ''}">准备时间</el-button>-->
-              <!--</el-tooltip>-->
-            <!--</span>-->
-            <!--&lt;!&ndash;<ready-time ref="readytime" :isRedact="isRedact" :formHeader="formHeader" @SetReadyStatus="SetReadyStatus"></ready-time>&ndash;&gt;-->
-          <!--</el-tab-pane>-->
-          <!--<el-tab-pane name="2">-->
-            <!--<span slot="label"  class="spanview">-->
-              <!--<el-tooltip class="item" effect="dark" :content="readyState === 'noPass'? '不通过':readyState === 'saved'? '已保存':readyState === 'submit' ? '已提交' : readyState === 'checked'? '通过':'未录入'" placement="top-start">-->
-                <!--<el-button :style="{'color': readyState === 'noPass'? 'red' : ''}">人员</el-button>-->
-              <!--</el-tooltip>-->
-            <!--</span>-->
-            <!--<worker ref="workerref" :isRedact="isRedact" :order="formHeader"></worker>-->
-          <!--</el-tab-pane>-->
-          <!--<el-tab-pane name="3">-->
-            <!--<span slot="label" class="spanview">-->
-              <!--<el-button>异常记录</el-button>-->
-            <!--</span>-->
-            <!--<exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader"></exc-record>-->
-          <!--</el-tab-pane>-->
-          <!--<el-tab-pane name="4">-->
-            <!--<span slot="label" class="spanview">-->
-              <!--<el-tooltip class="item" effect="dark" :content="inStorageState === 'noPass'? '不通过':inStorageState === 'saved'? '已保存':inStorageState === 'submit' ? '已提交' : inStorageState === 'checked'? '通过':'未录入'" placement="top-start">-->
-                <!--<el-button :style="{'color': inStorageState === 'noPass'? 'red' : ''}">生产入库</el-button>-->
-              <!--</el-tooltip>-->
-            <!--</span>-->
-            <!--<in-stock ref="instock" :isRedact="isRedact" :order="formHeader" @setInStorageState='setInStorageState' :inStorageState="inStorageState"></in-stock>-->
-          <!--</el-tab-pane>-->
-          <!--<el-tab-pane name="5">-->
-            <!--<span slot="label" class="spanview">-->
-              <!--<el-tooltip class="item" effect="dark"  :content="applyMaterielState === 'noPass'? '不通过':applyMaterielState === 'saved'? '已保存':applyMaterielState === 'submit' ? '已提交' : applyMaterielState === 'checked'? '通过':'未录入'" placement="top-start">-->
-                <!--<el-button :style="{'color': applyMaterielState === 'noPass'? 'red' : ''}">物料领用</el-button>-->
-              <!--</el-tooltip>-->
-            <!--</span>-->
-            <!--&lt;!&ndash;<apply-materiel ref="applymateriel" :isRedact="isRedact" :order="formHeader" @setApplyMaterielState='setApplyMaterielState' :applyMaterielState='applyMaterielState'></apply-materiel>&ndash;&gt;-->
-          <!--</el-tab-pane>-->
-          <!--<el-tab-pane name="6">-->
-            <!--<span slot="label" class="spanview">-->
-              <!--<el-button>文本记录</el-button>-->
-            <!--</span>-->
-            <!--<text-record ref="textrecord" :isRedact="isRedact"></text-record>-->
-          <!--</el-tab-pane>-->
-        <!--</el-tabs>-->
-      <!--</div>-->
-    <!--</div>-->
   </el-col>
 </template>
 
@@ -230,7 +147,6 @@ export default {
           [this.$refs.applymateriel.submitMateriel, []]
         ])
       },
-      isRedact: false,
       orderNo: '',
       productDate: '',
       workShop: '',
@@ -249,7 +165,6 @@ export default {
         // productDate: `${this.$store.state.common.FWproductDate.substring(0, 4)}-${this.$store.state.common.FWproductDate.substring(4, 6)}-${this.$store.state.common.FWproductDate.substring(6, 8)}`
         productDate: this.$store.state.common.FWproductDate
       },
-      activeName: '1',
       readyState: '',
       // 生产入库状态
       inStorageState: '',
@@ -271,7 +186,6 @@ export default {
     },
     // 获取表头
     GetOrderList () {
-      this.isRedact = false
       this.$http(`${WHT_API.CINDEXORDERLIST_API}`, 'POST', {
         workShop: this.workShop,
         productDate: this.productDate,
@@ -362,7 +276,6 @@ export default {
       })
     },
     savedOrSubmitForm (str) {
-      // this.activeName = '1'
       if (str === 'submit') {
         if (!this.$refs.readytime.Readyrul()) {
           return false
@@ -456,25 +369,19 @@ export default {
       this.readyState = status
       this.tabs[0].status = status
       this.tabs[1].status = status
-      // 强制刷新tabs
       this.$refs.dataEntry.updateTabs()
-      // this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     },
     // 入库状态
     setInStorageState (status) {
       this.inStorageState = status
       this.tabs[3].status = status
       this.$refs.dataEntry.updateTabs()
-      // 强制刷新tabs
-      // this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     },
     // 物料状态
     setApplyMaterielState (status) {
       this.applyMaterielState = status
       this.tabs[4].status = status
       this.$refs.dataEntry.updateTabs()
-      // 强制刷新tabs
-      // this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     },
     // 表头更改生产日期
     updateProductDate: function (dataStr) {
