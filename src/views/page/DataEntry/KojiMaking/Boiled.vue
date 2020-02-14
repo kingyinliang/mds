@@ -1,59 +1,51 @@
 <template>
-  <el-row>
-    <el-col>
-      <div class="header_main">
-        <el-card class="searchCard">
-          <el-row type="flex">
-            <el-col>
-              <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
-                <el-form-item label="生产工厂：">
-                  <el-select v-model="params.factoryId" class="selectwpx" style="width: 150px;">
-                    <el-option label="请选择" value=""></el-option>
-                    <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="生产车间：">
-                  <el-select v-model="params.workShop" class="selectwpx" style="width: 150px;">
-                    <el-option label="请选择" value=""></el-option>
-                    <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-form>
-            </el-col>
-            <el-col style="width: 340px;">
-              <el-button type="primary" size="small" @click="getOrderList()" style="float: right;">查询</el-button>
-            </el-col>
-          </el-row>
-        </el-card>
-        <el-row :gutter="10">
-          <el-col :span="8" v-for="(item, index) in orderList" :key="index" style="margin-top: 5px;">
-            <div class="box-item">
-              <div class="box-item-top">
-                <div class="box-item-title">
-                  <div class="box-item-title-name"><div :style="{'background': index%3 === 0 ? '#FFBF00' : (index%3) === 1 ? '#5BD171': '#2C92F6'}">{{item.houseNo}}</div><div>{{item.inPotNoName}}</div></div>
-                  <div class="box-item-title-state">状态：{{item.beanStatus === 'noPass'? '审核不通过':item.beanStatus === 'saved'? '已保存':item.beanStatus === 'submit' ? '已提交' : item.beanStatus === 'checked'? '通过':item.beanStatus === '已同步' ? '未录入' : item.beanStatus}}</div>
-                </div>
-                <div class="box-item-container">
-                  <div class="box-item-container-left">
-                    <div class="box-item-container-img"></div>
-                  </div>
-                  <div class="box-item-container-right">
-                    <div class="box-item-container-item"><div class="name">生产订单</div><div class="detail">{{item.orderNo}}</div></div>
-                    <div class="box-item-container-item"><div class="name">生产品项</div><div class="detail">{{item.materialCode + ' ' + item.materialName}}</div></div>
-                    <div class="box-item-container-item"><div class="name">入曲时长</div><div class="detail">{{item.inEndTimeLength}} 小时</div></div>
-                    <div class="box-item-container-item"><div class="name">入曲时间</div><div class="detail">{{item.inEndTime ? item.inEndTime : ''}}</div></div>
-                  </div>
-                </div>
+  <div class="header_main">
+    <el-card class="searchCard queryHead">
+      <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
+        <el-form-item label="生产工厂：">
+          <el-select v-model="params.factoryId" class="selectwpx" style="width: 150px;">
+            <el-option label="请选择" value=""></el-option>
+            <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="生产车间：">
+          <el-select v-model="params.workShop" class="selectwpx" style="width: 150px;">
+            <el-option label="请选择" value=""></el-option>
+            <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item style="float: right;">
+          <el-button type="primary" size="small" @click="getOrderList()" style="float: right;">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+    <el-row :gutter="10">
+      <el-col :span="8" v-for="(item, index) in orderList" :key="index" style="margin-top: 5px;">
+        <div class="box-item">
+          <div class="box-item-top">
+            <div class="box-item-title">
+              <div class="box-item-title-name"><div :style="{'background': index%3 === 0 ? '#FFBF00' : (index%3) === 1 ? '#5BD171': '#2C92F6'}">{{item.houseNo}}</div><div>{{item.inPotNoName}}</div></div>
+              <div class="box-item-title-state">状态：{{item.beanStatus === 'noPass'? '审核不通过':item.beanStatus === 'saved'? '已保存':item.beanStatus === 'submit' ? '已提交' : item.beanStatus === 'checked'? '通过':item.beanStatus === '已同步' ? '未录入' : item.beanStatus}}</div>
+            </div>
+            <div class="box-item-container">
+              <div class="box-item-container-left">
+                <div class="box-item-container-img"></div>
               </div>
-              <div class="box-item-bottom">
-                <div class="box-item-bottom-item" :style="{'color':item.beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', item)">数据录入</div>
+              <div class="box-item-container-right">
+                <div class="box-item-container-item"><div class="name">生产订单</div><div class="detail">{{item.orderNo}}</div></div>
+                <div class="box-item-container-item"><div class="name">生产品项</div><div class="detail">{{item.materialCode + ' ' + item.materialName}}</div></div>
+                <div class="box-item-container-item"><div class="name">入曲时长</div><div class="detail">{{item.inEndTimeLength}} 小时</div></div>
+                <div class="box-item-container-item"><div class="name">入曲时间</div><div class="detail">{{item.inEndTime ? item.inEndTime : ''}}</div></div>
               </div>
             </div>
-          </el-col>
-        </el-row>
-      </div>
-    </el-col>
-  </el-row>
+          </div>
+          <div class="box-item-bottom">
+            <div class="box-item-bottom-item" :style="{'color':item.beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', item)">数据录入</div>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
