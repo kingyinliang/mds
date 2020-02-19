@@ -43,7 +43,7 @@
         </el-card>
         <el-row v-if="params.productStatus === 'normal' && searched" style="margin-top: 5px;">
           <el-col>
-            <el-row :gutter="32" v-for="(item, index) in orderList" :key="index" v-if="index%3===0">
+            <el-row :gutter="10" v-for="(item, index) in orderList" :key="index" v-if="index%3===0">
               <el-col :span="8" v-if="index < orderList.length">
                 <div class="box-item">
                   <div class="box-item-top">
@@ -53,7 +53,7 @@
                     </div>
                     <div class="box-item-container">
                       <div class="box-item-container-left">
-                        <div class="box-item-container-img"></div>
+                        <div class="box-item-container-img"><img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg"></div>
                       </div>
                       <div class="box-item-container-right">
                         <div class="box-item-container-item"><div class="name">生产订单</div><div class="detail">{{orderList[index].orderNo}}</div></div>
@@ -62,13 +62,13 @@
                         <div class="box-item-container-item"><div class="name">入曲时间</div><div class="detail">{{orderList[index].inEndTime ? orderList[index].inEndTime : ''}}</div></div>
                         <div class="btn">
                           <el-tooltip class="item" effect="dark" :content="orderList[index].beanStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :style="{'color':orderList[index].beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', orderList[index])">煮豆</el-button>
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].beanStatus === '不通过'}" @click="goPage('煮豆', orderList[index])">煮豆</el-button>
                           </el-tooltip>
                           <el-tooltip class="item" effect="dark" :content="orderList[index].guardStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :style="{'color': orderList[index].guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', orderList[index])">看曲</el-button>
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].guardStatus === '不通过'}" @click="goPage('看曲', orderList[index])">看曲</el-button>
                           </el-tooltip>
                           <el-tooltip class="item" effect="dark" :content="orderList[index].outStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :style="{'color': orderList[index].outStatus === '不通过'? 'red' : ''}" @click="goPage('出曲', orderList[index])">出曲</el-button>
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].outStatus === '不通过'}" @click="goPage('出曲', orderList[index])">出曲</el-button>
                           </el-tooltip>
                         </div>
                       </div>
@@ -98,7 +98,7 @@
                     </div>
                     <div class="box-item-container">
                       <div class="box-item-container-left">
-                        <div class="box-item-container-img"></div>
+                        <div class="box-item-container-img"><img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg"></div>
                       </div>
                       <div class="box-item-container-right">
                         <div class="box-item-container-item"><div class="name">生产订单</div><div class="detail">{{orderList[index + 1].orderNo}}</div></div>
@@ -107,13 +107,13 @@
                         <div class="box-item-container-item"><div class="name">入曲时间</div><div class="detail">{{orderList[index + 1].inEndTime ? orderList[index + 1].inEndTime : ''}}</div></div>
                         <div class="btn">
                           <el-tooltip class="item" effect="dark" :content="orderList[index].beanStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :style="{'color':orderList[index].beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', orderList[index])">煮豆</el-button>
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].beanStatus === '不通过'}" @click="goPage('煮豆', orderList[index])">煮豆</el-button>
                           </el-tooltip>
                           <el-tooltip class="item" effect="dark" :content="orderList[index].guardStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :style="{'color': orderList[index].guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', orderList[index])">看曲</el-button>
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].guardStatus === '不通过'}" @click="goPage('看曲', orderList[index])">看曲</el-button>
                           </el-tooltip>
                           <el-tooltip class="item" effect="dark" :content="orderList[index].outStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :style="{'color': orderList[index].outStatus === '不通过'? 'red' : ''}" @click="goPage('出曲', orderList[index])">出曲</el-button>
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].outStatus === '不通过'}" @click="goPage('出曲', orderList[index])">出曲</el-button>
                           </el-tooltip>
                         </div>
                       </div>
@@ -143,7 +143,7 @@
                     </div>
                     <div class="box-item-container">
                       <div class="box-item-container-left">
-                        <div class="box-item-container-img"></div>
+                        <div class="box-item-container-img"><img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg"></div>
                       </div>
                       <div class="box-item-container-right">
                         <div class="box-item-container-item"><div class="name">生产订单</div><div class="detail">{{orderList[index + 2].orderNo}}</div></div>
@@ -152,13 +152,13 @@
                         <div class="box-item-container-item"><div class="name">入曲时间</div><div class="detail">{{orderList[index + 2].inEndTime ? orderList[index + 2].inEndTime : ''}}</div></div>
                         <div class="btn">
                           <el-tooltip class="item" effect="dark" :content="orderList[index].beanStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :style="{'color':orderList[index].beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', orderList[index])">煮豆</el-button>
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].beanStatus === '不通过'}" @click="goPage('煮豆', orderList[index])">煮豆</el-button>
                           </el-tooltip>
                           <el-tooltip class="item" effect="dark" :content="orderList[index].guardStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :style="{'color': orderList[index].guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', orderList[index])">看曲</el-button>
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].guardStatus === '不通过'}" @click="goPage('看曲', orderList[index])">看曲</el-button>
                           </el-tooltip>
                           <el-tooltip class="item" effect="dark" :content="orderList[index].outStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :style="{'color': orderList[index].outStatus === '不通过'? 'red' : ''}" @click="goPage('出曲', orderList[index])">出曲</el-button>
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].outStatus === '不通过'}" @click="goPage('出曲', orderList[index])">出曲</el-button>
                           </el-tooltip>
                         </div>
                       </div>
@@ -724,6 +724,10 @@ export default class Index extends Vue {
 @import "@/assets/scss/_common.scss";
 </style>
 <style lang="scss" scoped>
+.nopassBtn {
+  background: #f05c4a;
+  border: none;
+}
 .box-item {
   box-sizing: border-box;
   background: rgba(255, 255, 255, 1);
@@ -736,6 +740,7 @@ export default class Index extends Vue {
       justify-content: space-between;
       flex: 1;
       height: 34px;
+      margin-bottom: 16px;
       .box-item-title-name {
         display: flex;
         flex: 1;
@@ -791,6 +796,7 @@ export default class Index extends Vue {
           display: inline-block;
           height: 6px;
           width: 6px;
+          border-radius: 50%;
           margin-right: 10px;
           margin-bottom: 2px;
           background: red;
@@ -805,24 +811,24 @@ export default class Index extends Vue {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 130px;
+        width: 40%;
         background: rgba(242, 242, 242, 1);
-        box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
         border-radius: 8px;
         .box-item-container-img {
-          width: 94px;
-          height: 86px;
-          background: url("~@/assets/img/fajiaoguan.png");
+          width: 150px;
+          .bgimg {
+            width: 100%;
+          }
         }
       }
       .box-item-container-right {
+        width: 60%;
         flex: 1;
         display: flex;
         flex-direction: column;
-        margin-left: 10px;
+        margin-left: 16px;
         .btn {
-          display: inline-block;
-          margin: auto;
+          text-align: right;
         }
         .box-item-container-item {
           flex: 1;
@@ -834,18 +840,16 @@ export default class Index extends Vue {
             font-size: 12px;
             font-weight: 400;
             color: rgba(0, 0, 0, 0.45);
-            line-height: 26px;
+            line-height: 32px;
           }
           .detail {
             flex: 1;
             font-size: 12px;
-            font-weight: 500;
             color: #333;
             background: #f5f5f5;
-            box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
             padding-left: 10px;
             border-radius: 4px;
-            line-height: 26px;
+            line-height: 32px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
