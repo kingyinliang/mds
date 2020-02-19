@@ -23,7 +23,7 @@
         <i class="iconfont factory-icon_function_keyongkucun" style="color: #666; margin-right: 10px;"></i>发酵总库存列表
       </div>
       <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
-        <el-table-column label="罐编号" show-overflow-tooltip prop="holderNo" width="50"></el-table-column>
+        <el-table-column label="罐号" show-overflow-tooltip prop="holderNo" width="50"></el-table-column>
         <el-table-column label="状态" show-overflow-tooltip prop="holderStatus" width="70"></el-table-column>
         <el-table-column label="投料数(M³)" show-overflow-tooltip prop="realInAmount" width="75"></el-table-column>
         <el-table-column label="入库数(M³)" show-overflow-tooltip prop="ferAmount" width="75"></el-table-column>
@@ -44,7 +44,7 @@
         <el-table-column label="发酵期" show-overflow-tooltip prop="fermentTime" width="60"></el-table-column>
         <el-table-column label="发酵时间" show-overflow-tooltip prop="fermentDays" width="50"></el-table-column>
         <el-table-column label="压榨时间" show-overflow-tooltip prop="pulpDate" width="100"></el-table-column>
-        <el-table-column label="领用酱醪数(M³)" show-overflow-tooltip prop="useNums" width="75"></el-table-column>
+        <el-table-column label="领用酱醪数(M³)" show-overflow-tooltip prop="useNums" width="80"></el-table-column>
         <el-table-column label="出品数" show-overflow-tooltip prop="outAmount" width="70"></el-table-column>
         <el-table-column label="出品率" show-overflow-tooltip prop="yield" width="80"></el-table-column>
         <el-table-column label="发酵罐容量(M³)" show-overflow-tooltip prop="holderHold"></el-table-column>
