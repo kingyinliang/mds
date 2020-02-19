@@ -25,10 +25,11 @@
           <div class="box-item-top">
             <div class="box-item-title">
               <div class="box-item-title-name"><div :style="{'background': index%3 === 0 ? '#FFBF00' : (index%3) === 1 ? '#5BD171': '#2C92F6'}">{{item.houseNo}}</div><div>{{item.inPotNoName}}</div></div>
-              <div class="box-item-title-state">状态：{{item.beanStatus === 'noPass'? '审核不通过':item.beanStatus === 'saved'? '已保存':item.beanStatus === 'submit' ? '已提交' : item.beanStatus === 'checked'? '通过':item.beanStatus === '已同步' ? '未录入' : item.beanStatus}}</div>
+              <el-button type="primary" size="mini" :style="{'color':item.beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', item)">数据录入</el-button>
             </div>
             <div class="box-item-container">
               <div class="box-item-container-left">
+                <div class="box-item-title-state">状态：{{item.beanStatus === 'noPass'? '审核不通过':item.beanStatus === 'saved'? '已保存':item.beanStatus === 'submit' ? '已提交' : item.beanStatus === 'checked'? '通过':item.beanStatus === '已同步' ? '未录入' : item.beanStatus}}</div>
                 <div class="box-item-container-img"></div>
               </div>
               <div class="box-item-container-right">
@@ -39,9 +40,9 @@
               </div>
             </div>
           </div>
-          <div class="box-item-bottom">
-            <div class="box-item-bottom-item" :style="{'color':item.beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', item)">数据录入</div>
-          </div>
+          <!--<div class="box-item-bottom">-->
+            <!--<div class="box-item-bottom-item" :style="{'color':item.beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', item)">数据录入</div>-->
+          <!--</div>-->
         </div>
       </el-col>
     </el-row>
@@ -185,21 +186,19 @@ export default {
 
 <style lang="scss" scoped>
   .box-item {
-    height: 220px;
     box-sizing: border-box;
     background: rgba(255, 255, 255, 1);
     border-radius: 2px;
     border: 1px solid rgba(232, 232, 232, 1);
     .box-item-top {
-      height: 178px;
-      padding: 10px 10px;
-      padding-bottom: 0;
+      padding: 10px 10px 20px 10px;
       border-bottom: 1px solid rgba(232, 232, 232, 1);
       .box-item-title {
         display: flex;
         justify-content: space-between;
         flex: 1;
         height: 34px;
+        margin-bottom: 10px;
         .box-item-title-name {
           display: flex;
           flex: 1;
@@ -223,23 +222,26 @@ export default {
             margin-left: 5px;
           }
         }
-        .box-item-title-state {
-          flex: 1;
-          font-size: 14px;
-          font-weight: 500;
-          color: rgba(0, 0, 0, 0.65);
-          line-height: 20px;
-          text-align: right;
-          margin-top: 4px;
-          &::before {
-            content: "";
-            display: inline-block;
-            height: 6px;
-            width: 6px;
-            margin-right: 10px;
-            margin-bottom: 2px;
-            background: rgba(126, 211, 33, 1);
-          }
+      }
+      .box-item-title-state {
+        flex: 1;
+        font-size: 12px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.65);
+        line-height: 20px;
+        text-align: left;
+        padding-left: 10px;
+        margin-top: 4px;
+        margin-bottom: 6px;
+        &::before {
+          content: "";
+          display: inline-block;
+          height: 6px;
+          width: 6px;
+          border-radius: 50%;
+          margin-right: 10px;
+          margin-bottom: 2px;
+          background: rgba(126, 211, 33, 1);
         }
       }
       .box-item-container {
@@ -248,13 +250,14 @@ export default {
         justify-content: space-between;
         height: 129px;
         .box-item-container-left {
-          display: flex;
-          justify-content: center;
           width: 130px;
-          padding-top: 10px;
+          background: rgba(242, 242, 242, 1);
+          box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
           .box-item-container-img {
             width: 94px;
             height: 86px;
+            margin: auto;
             background: url("~@/assets/img/fajiaoguan.png");
           }
         }
@@ -267,19 +270,24 @@ export default {
             flex: 1;
             display: flex;
             justify-content: space-between;
+            margin-bottom: 10px;
             .name {
               width: 60px;
               font-size: 12px;
               font-weight: 400;
-              color: rgba(0, 0, 0, 0.45);
-              line-height: 20px;
+              color: black;
+              line-height: 26px;
             }
             .detail {
               flex: 1;
-              font-size: 14px;
+              font-size: 12px;
               font-weight: 500;
-              color: rgba(0, 0, 0, 0.65);
-              line-height: 17px;
+              color: #333;
+              background: #f5f5f5;
+              box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
+              padding-left: 10px;
+              border-radius: 4px;
+              line-height: 26px;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;

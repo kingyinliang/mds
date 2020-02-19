@@ -1,76 +1,80 @@
 <template>
   <div class="KojiMaking-Out-index">
-    <el-button type="primary" @click="AddMateriel(MaterielDate)" size="small" :disabled="formHeader.materialCode !== 'SS02010001' ? true : !isRedact" style="float: right;">新增</el-button>
-    <el-table header-row-class-name="tableHead" :data="MaterielDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-      <el-table-column type="index" width="50" label="序号"></el-table-column>
-      <el-table-column label="盐水" width="200">
-        <template slot="header">
-          <i class="reqI">*</i>
-          <span>盐水</span>
-        </template>
-        <template slot-scope="scope">
-          <el-select v-model="scope.row.material" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
-            <el-option :label="item.value" v-for="(item, index) in brine" :key="index" :value="item.code + ' ' + item.value"></el-option>
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column label="盐水罐号" width="140">
-        <template slot="header">
-          <i class="reqI">*</i>
-          <span>盐水罐号</span>
-        </template>
-        <template slot-scope="scope">
-          <el-select v-model="scope.row.saltWaterHolderId" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')"  size="small">
-            <el-option :label="item.holderName" v-for="(item, index) in brineTankNo" :key="index" :value="item.holderId"></el-option>
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column width="130">
-        <template slot="header">
-          <i class="reqI">*</i>
-          <span>批次</span>
-        </template>
-        <template slot-scope="scope">
-          <el-select v-if="formHeader.materialCode === 'SS02010001'" v-model="scope.row.batch" @change="checkBatchStock(scope.row, 'batch')" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
-            <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch"></el-option>
-          </el-select>
-          <el-input v-else type="text" v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="起始值" width="140">
-        <template slot="header">
-          <i class="reqI">*</i>
-          <span>起始值</span>
-        </template>
-        <template slot-scope="scope">
-          <el-input type="number" @change="checkBatchStock(scope.row)" v-model="scope.row.startValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(formHeader.materialCode === 'SS02010001')" size="small" placeholder="手工录入"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="结束值" width="140">
-        <template slot="header">
-          <i class="reqI">*</i>
-          <span>结束值</span>
-        </template>
-        <template slot-scope="scope">
-          <el-input type="number" @change="checkBatchStock(scope.row)" v-model="scope.row.endValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(formHeader.materialCode === 'SS02010001')" size="small" placeholder="手工录入"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="数量" width="90" show-overflow-tooltip>
-        <template slot-scope="scope">
-          {{scope.row.amount = ((scope.row.endValue*1 - scope.row.startValue*1) * 1000).toFixed(3)*1}}
-        </template>
-      </el-table-column>
-      <el-table-column label="库存量" width="90" show-overflow-tooltip prop="leftAmount"></el-table-column>
-      <el-table-column label="单位" width="50" prop="unit" show-overflow-tooltip></el-table-column>
-      <el-table-column label="操作人" prop="creator" show-overflow-tooltip></el-table-column>
-      <el-table-column label="操作时间" prop="created" show-overflow-tooltip></el-table-column>
-      <el-table-column label="操作" width="70" fixed="right">
-        <template slot-scope="scope">
-          <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="formHeader.materialCode !== 'SS02010001' ? true : !(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" @click="delMateriel(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <p style="line-height: 32px;">总数量：{{BrineNum}}</p>
+    <mds-card :title="'原料领用'" :name="'material'">
+      <template slot="titleBtn">
+        <el-button type="primary" @click="AddMateriel(MaterielDate)" size="small" :disabled="formHeader.materialCode !== 'SS02010001' ? true : !isRedact" style="float: right;">新增</el-button>
+      </template>
+      <el-table class="newTable" header-row-class-name="tableHead" :data="MaterielDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
+        <el-table-column type="index" width="50" label="序号"></el-table-column>
+        <el-table-column label="盐水" width="200">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>盐水</span>
+          </template>
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.material" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
+              <el-option :label="item.value" v-for="(item, index) in brine" :key="index" :value="item.code + ' ' + item.value"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="盐水罐号" width="140">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>盐水罐号</span>
+          </template>
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.saltWaterHolderId" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')"  size="small">
+              <el-option :label="item.holderName" v-for="(item, index) in brineTankNo" :key="index" :value="item.holderId"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column width="130">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>批次</span>
+          </template>
+          <template slot-scope="scope">
+            <el-select v-if="formHeader.materialCode === 'SS02010001'" v-model="scope.row.batch" @change="checkBatchStock(scope.row, 'batch')" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small">
+              <el-option v-for="(item, index) in batchList" :key="index" :label="item.batch" :value="item.batch"></el-option>
+            </el-select>
+            <el-input v-else type="text" v-model="scope.row.batch" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" size="small" placeholder="手工录入"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="起始值" width="140">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>起始值</span>
+          </template>
+          <template slot-scope="scope">
+            <el-input type="number" @change="checkBatchStock(scope.row)" v-model="scope.row.startValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(formHeader.materialCode === 'SS02010001')" size="small" placeholder="手工录入"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="结束值" width="140">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>结束值</span>
+          </template>
+          <template slot-scope="scope">
+            <el-input type="number" @change="checkBatchStock(scope.row)" v-model="scope.row.endValue" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1') || !(formHeader.materialCode === 'SS02010001')" size="small" placeholder="手工录入"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="数量" width="90" show-overflow-tooltip>
+          <template slot-scope="scope">
+            {{scope.row.amount = ((scope.row.endValue*1 - scope.row.startValue*1) * 1000).toFixed(3)*1}}
+          </template>
+        </el-table-column>
+        <el-table-column label="库存量" width="90" show-overflow-tooltip prop="leftAmount"></el-table-column>
+        <el-table-column label="单位" width="50" prop="unit" show-overflow-tooltip></el-table-column>
+        <el-table-column label="操作人" prop="creator" show-overflow-tooltip></el-table-column>
+        <el-table-column label="操作时间" prop="created" show-overflow-tooltip></el-table-column>
+        <el-table-column label="操作" width="70" fixed="right">
+          <template slot-scope="scope">
+            <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="formHeader.materialCode !== 'SS02010001' ? true : !(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.delFlag !== '1')" @click="delMateriel(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <p style="line-height: 32px;">总数量：{{BrineNum}}</p>
+    </mds-card>
     <audit-log :tableData="MaterielAuditlog"></audit-log>
   </div>
 </template>

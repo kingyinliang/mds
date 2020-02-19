@@ -1,19 +1,19 @@
 <template>
   <div>
     <data-entry
-    ref="dataEntry"
-    :redactAuth="'kjm:bean:material:update'"
-    :saveAuth="'kjm:bean:material:update'"
-    :submitAuth="'kjm:bean:material:update'"
-    :submitRules="submitRules"
-    :savedRules="savedRules"
-    :savedDatas="savedDatas"
-    :submitDatas="submitDatas"
-    @success="GetheadList"
-    :orderStatus="orderStatus"
-    :headerBase="headerBase"
-    :formHeader="formHeader"
-    :tabs="tabs">
+      ref="dataEntry"
+      :redactAuth="'kjm:bean:material:update'"
+      :saveAuth="'kjm:bean:material:update'"
+      :submitAuth="'kjm:bean:material:update'"
+      :submitRules="submitRules"
+      :savedRules="savedRules"
+      :savedDatas="savedDatas"
+      :submitDatas="submitDatas"
+      @success="GetheadList"
+      :orderStatus="orderStatus"
+      :headerBase="headerBase"
+      :formHeader="formHeader"
+      :tabs="tabs">
       <template slot="1" slot-scope="data">
         <Material ref="material" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyMaterielState='setApplyMaterielState'></Material>
       </template>
@@ -458,14 +458,12 @@ export default {
       this.tabs[0].status = status
       // 强制刷新tabs
       this.$refs.dataEntry.updateTabs()
-      this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     },
     setApplyCraftState (status) {
       this.applyCraftState = status
       this.tabs[1].status = status
       // 强制刷新tabs
       this.$refs.dataEntry.updateTabs()
-      this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
     }
   },
   components: {
