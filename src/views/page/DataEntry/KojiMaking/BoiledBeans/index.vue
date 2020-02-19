@@ -255,6 +255,7 @@ export default {
         ], [
           [this.$refs.material.submitwheats, []],
           [this.$refs.material.submitpulps, []],
+          [this.$refs.material.submitmains, []],
           [this.$refs.craft.updatezhu, []]
         ], [
           [this.$refs.craft.updatelishui, []],

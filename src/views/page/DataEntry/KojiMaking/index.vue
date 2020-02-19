@@ -820,6 +820,10 @@ export default class Index extends Vue {
         display: flex;
         flex-direction: column;
         margin-left: 10px;
+        .btn {
+          display: inline-block;
+          margin: auto;
+        }
         .box-item-container-item {
           flex: 1;
           display: flex;

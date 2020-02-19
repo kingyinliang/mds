@@ -1273,6 +1273,7 @@ export default {
         pulpHolderId: row.holderId,
         pulpHolderName: row.holderName,
         foodHolderId: '',
+        soyMaterialstr: row.materialCode + ' ' + row.materialName,
         foodHolderName: '',
         startWeight: '',
         endWeight: '',
@@ -1302,6 +1303,7 @@ export default {
             materstrchai = this.chusoy.soyMaterialstr.split(' ')
             let materstrName = materstrchai[1] === undefined ? '' : materstrchai[1]
             if (currentRecord && currentRecord.length > 0) {
+              console.log(1)
               Object.assign(currentRecord[0], {
                 batch: this.chusoy.batch,
                 startWeight: this.chusoy.startWeight,
@@ -1348,6 +1350,33 @@ export default {
         }
       })
     },
+    submitmains (resolve, reject) {
+      this.materialList.map((item) => {
+        if (item.materialCode !== undefined) {
+          let materstrchai = []
+          materstrchai = item.materialCode.split(' ')
+          let materstrName = materstrchai[1] === undefined ? '' : materstrchai[1]
+          this.$set(item, 'materialCode', materstrchai[0])
+          this.$set(item, 'materialName', materstrName)
+        }
+        if (item.status === null || item.status === '' || item.status === 'saved' || item.status === 'noPass') {
+          console.log(this.formHeader.submitStatus)
+          this.$set(item, 'status', this.formHeader.submitStatus)
+        }
+      })
+      this.$http(`${KJM_API.DOUMATERSUBMITZHONG_API}`, 'POST', this.materialList).then(({data}) => {
+        if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
+        } else {
+          this.$error_SHINHO(data.msg)
+          if (resolve) {
+            reject('reject')
+          }
+        }
+      })
+    },
     savemains (resolve, reject) {
       this.materialList.map((item) => {
         if (item.materialCode !== undefined) {
@@ -1362,37 +1391,22 @@ export default {
           this.$set(item, 'status', this.formHeader.submitStatus)
         }
       })
-      if (this.formHeader.submitStatus === 'submit') {
-        this.$http(`${KJM_API.DOUMATERSUBMITZHONG_API}`, 'POST', this.materialList).then(({data}) => {
-          if (data.code === 0) {
-            if (resolve) {
-              resolve('resolve')
-            }
-          } else {
-            this.$error_SHINHO(data.msg)
-            if (resolve) {
-              reject('reject')
-            }
+      this.$http(`${KJM_API.DOUMATERZHONG_API}`, 'POST', this.materialList).then(({data}) => {
+        if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
           }
-        })
-      } else {
-        this.$http(`${KJM_API.DOUMATERZHONG_API}`, 'POST', this.materialList).then(({data}) => {
-          if (data.code === 0) {
-            if (resolve) {
-              resolve('resolve')
-            }
-          } else {
-            this.$error_SHINHO(data.msg)
-            if (resolve) {
-              reject('reject')
-            }
-          }
-        }).catch(() => {
+        } else {
+          this.$error_SHINHO(data.msg)
           if (resolve) {
             reject('reject')
           }
-        })
-      }
+        }
+      }).catch(() => {
+        if (resolve) {
+          reject('reject')
+        }
+      })
     },
     submitwheats (resolve, reject) {
       this.wheatList.map((item) => {
