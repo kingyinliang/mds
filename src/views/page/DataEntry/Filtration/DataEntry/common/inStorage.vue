@@ -17,8 +17,8 @@
         <el-table header-row-class-name="tableHead" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow" >
           <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="日期" width="80" prop="created"  :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="成品罐号" width="80" prop="holderName" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column label="成品批次" width="80" prop="batch" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="罐号" width="80" prop="holderName" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="批次" width="80" prop="batch" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="入罐数量" width="80" prop="inAmount" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column label="是否满罐" width="90" prop="isFull" :show-overflow-tooltip="true"><template slot-scope="scope">{{scope.row.isFull==='1'?'是':'否'}}</template></el-table-column>
@@ -39,9 +39,9 @@
     <el-card style="margin-top: 10px;">
       <auditLog :tableData="DataAudit"></auditLog>
     </el-card>
-    <el-dialog width="400px" title="入罐开始" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible">
+    <el-dialog width="400px" title="入罐" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible">
       <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="addIn()" @submit.native.prevent label-width="110px"  size="small" style="width: 300px; margin: auto;">
-        <el-form-item label="成品罐号：" prop="holderId">
+        <el-form-item label="罐号：" prop="holderId">
           <el-select v-model="dataForm.holderId" filterable placeholder="请选择" @change="PotinTankAmount" style="width: 100%;" v-if="!dialogDisabled">
             <el-option :label="item.holderName" v-for="(item, index) in PotList" :key="index" :value="item.holderId"></el-option>
           </el-select>

@@ -939,7 +939,14 @@ export const REP_API = {
   SQUEEZEDAYS_LIST: HOST + '/report/production/prsDays',
   SQUEEZEDAYS_OUT: HOST + '/report/production/prsDaysExport',
   STERILIZATIONDAYS_LIAT_API: HOST + '/report/fromEs/shajunDaily', // 杀菌日报表
-  STERILIZATIONDAYS_EXPORT_API: HOST + '/report/fromEs/expectShajunDaily' // 杀菌日报表导出
+  STERILIZATIONDAYS_EXPORT_API: HOST + '/report/fromEs/expectShajunDaily', // 杀菌日报表导出
+  /** *************** 生管审核 start ************** */
+  PACKINGYUELD_LIST_API: HOST + '/report/production/packingYield',
+  PACKINGYUELD_EXPORT_API: HOST + '/report/production/packingYieldExport',
+  /** ************************* 吹瓶车间报表 ************************** */
+  BOTTLEQUALITY_MATERIALCODE_API: HOST + '/report/production/bottleQualityMaterialCode', // 品项下拉
+  BOTTLEQUALITY_LIST_API: HOST + '/report/production/bottleQuality', // 查询
+  BOTTLEQUALITY_EXPORT_API: HOST + '/report/production/bottleQualityExport' // 导出
 }
 /*
 *炒麦api
