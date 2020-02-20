@@ -1,114 +1,60 @@
 <template>
-  <div class="header_main">
-    <query-table
-      ref="queryTable"
-      :rules="rules"
-      :queryFormData="queryFormData"
-      :list-interface="listInterface"
-      :query-auth="'juice:occupy:report'"
-      :column="column"
-      :export-excel="true"
-      :export-option="exportOption">
-    </query-table>
+  <div class="header_main" style="background: #fff; margin: 10px; padding: 15px;">
+    <div style="overflow: hidden;">
+      <div class="titleLeft">(单位:罐)</div>
+      <el-button type="primary" size="small" @click="FormExportExcel(true)" v-if="isAuth('ReportForms:production:fermentationStatusExport')" style="float: right;">导出</el-button>
+    </div>
+    <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
+      <el-table-column label=" " prop="type"></el-table-column>
+      <el-table-column label="<30" prop="ltThirty"></el-table-column>
+      <el-table-column label="30≤N<60" prop="ltSixty"></el-table-column>
+      <el-table-column label="60≤N<90" prop="ltNinety"></el-table-column>
+      <el-table-column label="90≤N<130" prop="ltOneHundredAndThree"></el-table-column>
+      <el-table-column label="130≤N<150" prop="ltOneHundredAndFive"></el-table-column>
+      <el-table-column label="150≤N<180" prop="ltOneHundredAndEight"></el-table-column>
+      <el-table-column label="180≤N<200" prop="ltTwoHundred"></el-table-column>
+      <el-table-column label="200≤N" prop="gtTwoHundred"></el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
-import { dateFormat } from '@/net/validate'
-import { REP_API, BASICDATA_API } from '@/api/api'
+import { exportFile } from '@/net/validate'
+import { REP_API } from '@/api/api'
 export default {
-  name: 'JuiceOccupation',
+  name: 'Fermentation',
   data () {
     return {
-      rules: [
-        {
-          prop: 'factory',
-          text: '请选择工厂'
-        }
-      ],
-      queryFormData: [
-        {
-          type: 'select',
-          label: '生产工厂',
-          prop: 'factory',
-          defaultOptionsFn: () => {
-            return this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false)
-          },
-          resVal: {
-            resData: 'typeList',
-            label: ['deptName'],
-            value: 'deptId'
-          }
-        },
-        {
-          type: 'date-picker',
-          label: '月份',
-          prop: 'productDate',
-          dataType: 'month',
-          defaultValue: dateFormat(new Date(), 'yyyy-MM'),
-          valueFormat: 'yyyy-MM'
-        }
-      ],
-      listInterface: (params) => {
-        return this.$http(`${REP_API.JUICEOCCUPATION_LIST}`, 'POST', params)
-      },
-      exportOption: {
-        exportInterface: REP_API.JUICEOCCUPATION_OUT,
-        auth: 'juice:occupy:export',
-        text: '原汁占用报表数据导出'
-      },
-      column: [
-        {
-          prop: 'factory',
-          label: ' '
-        },
-        {
-          prop: 'factory',
-          label: '<30'
-        },
-        {
-          prop: 'workShop',
-          label: '30≤N<60'
-        },
-        {
-          prop: 'productDate',
-          label: '60≤N<90'
-        },
-        {
-          prop: 'material',
-          label: '90≤N<130',
-          width: '200'
-        },
-        {
-          prop: 'batch',
-          label: '130≤N<150',
-          width: '120'
-        },
-        {
-          prop: 'amount',
-          label: '150≤N<180'
-        },
-        {
-          prop: 'unit',
-          label: '150≤N<180',
-          width: '50'
-        },
-        {
-          prop: 'unit',
-          label: '200≤N',
-          width: '50'
-        }
-      ]
+      dataList: []
     }
   },
   mounted () {
+    this.GetList()
   },
-  methods: {},
+  methods: {
+    GetList () {
+      this.$http(`${REP_API.FERMENTATION_LIST_API}`, 'POST', {}).then(({data}) => {
+        if (data.code === 0) {
+          this.dataList = data.fermentationStatus
+        } else {
+          this.$error_SHINHO(data.msg)
+        }
+      })
+    },
+    FormExportExcel () {
+      let that = this
+      exportFile(`${REP_API.FERMENTATION_EXPORT_API}`, '发酵一览表报表', that)
+    }
+  },
   computed: {},
   components: {}
 }
 </script>
 
 <style scoped>
-
+.titleLeft {
+  font-weight: bold;
+  line-height: 32px;
+  float: left;
+}
 </style>

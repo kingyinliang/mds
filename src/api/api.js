@@ -943,6 +943,8 @@ export const REP_API = {
   /** *************** 生管审核 start ************** */
   PACKINGYUELD_LIST_API: HOST + '/report/production/packingYield',
   PACKINGYUELD_EXPORT_API: HOST + '/report/production/packingYieldExport',
+  FERMENTATION_LIST_API: HOST + '/report/production/fermentationStatus', // 发酵一览表
+  FERMENTATION_EXPORT_API: HOST + '/report/production/fermentationStatusExport', // 发酵一览表导出
   /** ************************* 吹瓶车间报表 ************************** */
   BOTTLEQUALITY_MATERIALCODE_API: HOST + '/report/production/bottleQualityMaterialCode', // 品项下拉
   BOTTLEQUALITY_LIST_API: HOST + '/report/production/bottleQuality', // 查询
