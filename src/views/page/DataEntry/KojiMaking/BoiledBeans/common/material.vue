@@ -1172,6 +1172,7 @@ export default {
         this.rusoy = Object.assign({}, row)
       } else {
         this.dialogFormVisibleDouChu = true
+        row.soyMaterialstr = (row.materialCode || '') + ' ' + (row.materialName || '')
         this.chusoy = Object.assign({}, row)
       }
     },
@@ -1273,7 +1274,7 @@ export default {
         pulpHolderId: row.holderId,
         pulpHolderName: row.holderName,
         foodHolderId: '',
-        soyMaterialstr: row.materialCode + ' ' + row.materialName,
+        soyMaterialstr: (row.materialCode || '') + ' ' + (row.materialName || ''),
         foodHolderName: '',
         startWeight: '',
         endWeight: '',
@@ -1303,7 +1304,6 @@ export default {
             materstrchai = this.chusoy.soyMaterialstr.split(' ')
             let materstrName = materstrchai[1] === undefined ? '' : materstrchai[1]
             if (currentRecord && currentRecord.length > 0) {
-              console.log(1)
               Object.assign(currentRecord[0], {
                 batch: this.chusoy.batch,
                 startWeight: this.chusoy.startWeight,
