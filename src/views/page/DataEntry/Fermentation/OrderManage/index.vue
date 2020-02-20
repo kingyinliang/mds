@@ -93,6 +93,13 @@
                     </el-select>
                   </template>
                 </el-table-column>
+                <el-table-column label="版本" width="120">
+                  <template slot-scope="scope">
+                    <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px;">
+                      <el-option v-for="(item, index) in versionsList" :label="item.value"  :value="item.code" :key="index"></el-option>
+                    </el-select>
+                  </template>
+                </el-table-column>
                 <el-table-column label="开始日期" width="100">
                   <template slot-scope="scope">
                     {{scope.row.startDate}}
@@ -193,6 +200,13 @@
                     </el-select>
                   </template>
                 </el-table-column>
+                <el-table-column label="版本" width="120">
+                  <template slot-scope="scope">
+                    <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px;" :disabled="true">
+                      <el-option v-for="(item, index) in versionsList" :label="item.value"  :value="item.code" :key="index"></el-option>
+                    </el-select>
+                  </template>
+                </el-table-column>
                 <el-table-column label="开始日期" width="100">
                   <template slot-scope="scope">
                     {{scope.row.startDate}}
@@ -273,6 +287,7 @@ export default class Index extends Vue {
   params = JSON.parse(JSON.stringify(this.$store.state.common.FerOrderManage))
   factoryList = []
   orderTypeList = []
+  versionsList = []
   workshopList = []
   potList = []
   materialList = []
@@ -299,6 +314,7 @@ export default class Index extends Vue {
     this.getDictList(this.params.factoryId)
     this.getMaterialList(this.params.factoryId)
     this.getFermentPot(this.params.factoryId, this.params.workshopId)
+    this.getVersionList(this.params.workshopId)
   }
   isAuth (key) {
     return Vue.prototype.isAuth(key)
@@ -332,6 +348,20 @@ export default class Index extends Vue {
           this.orderTypeList = data.dicList[0].prolist
         } else {
           this.$notify.error({title: '错误', message: data.msg})
+        }
+      }).catch((error) => {
+        console.log('catch data::', error)
+      })
+    }
+  }
+  getVersionList (workShopId) {
+    if (workShopId) {
+      let params = {types: ['fjpro_version'], workShopId}
+      Vue.prototype.$http(`${SYSTEMSETUP_API.PARAMETERSLIST_API}`, 'POST', params, false, false, false).then(({data}) => {
+        if (data.code === 0) {
+          this.versionsList = data.dicList[0].prolist
+        } else {
+          Vue.prototype.$warning_SHINHO(data.msg)
         }
       }).catch((error) => {
         console.log('catch data::', error)
@@ -429,10 +459,10 @@ export default class Index extends Vue {
       Vue.prototype.$warning_SHINHO('请选择工厂')
       return
     }
-    // if (this.params.workshopId === '') {
-    //   this.$notify.error({title: '错误', message: '请选择车间'})
-    //   return
-    // }
+    if (this.params.workshopId === '') {
+      this.$notify.error({title: '错误', message: '请选择车间'})
+      return
+    }
     // if (this.params.potId === '') {
     //   this.$message.error('请选择罐号')
     //   return
@@ -595,6 +625,7 @@ export default class Index extends Vue {
     this.params.potId = ''
     this.params.potName = ''
     this.getFermentPot(this.params.factoryId, newVal)
+    this.getVersionList(newVal)
   }
 }
 </script>
