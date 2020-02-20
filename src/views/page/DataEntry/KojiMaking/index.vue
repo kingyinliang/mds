@@ -106,14 +106,14 @@
                         <div class="box-item-container-item"><div class="name">入曲时长</div><div class="detail">{{orderList[index + 1].inEndTimeLength}} 小时</div></div>
                         <div class="box-item-container-item"><div class="name">入曲时间</div><div class="detail">{{orderList[index + 1].inEndTime ? orderList[index + 1].inEndTime : ''}}</div></div>
                         <div class="btn">
-                          <el-tooltip class="item" effect="dark" :content="orderList[index].beanStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].beanStatus === '不通过'}" @click="goPage('煮豆', orderList[index])">煮豆</el-button>
+                          <el-tooltip class="item" effect="dark" :content="orderList[index + 1].beanStatus" placement="top-start">
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index + 1].beanStatus === '不通过'}" @click="goPage('煮豆', orderList[index + 1])">煮豆</el-button>
                           </el-tooltip>
-                          <el-tooltip class="item" effect="dark" :content="orderList[index].guardStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].guardStatus === '不通过'}" @click="goPage('看曲', orderList[index])">看曲</el-button>
+                          <el-tooltip class="item" effect="dark" :content="orderList[index + 1].guardStatus" placement="top-start">
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index + 1].guardStatus === '不通过'}" @click="goPage('看曲', orderList[index + 1])">看曲</el-button>
                           </el-tooltip>
-                          <el-tooltip class="item" effect="dark" :content="orderList[index].outStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].outStatus === '不通过'}" @click="goPage('出曲', orderList[index])">出曲</el-button>
+                          <el-tooltip class="item" effect="dark" :content="orderList[index + 1].outStatus" placement="top-start">
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index + 1].outStatus === '不通过'}" @click="goPage('出曲', orderList[index + 1])">出曲</el-button>
                           </el-tooltip>
                         </div>
                       </div>
@@ -151,14 +151,14 @@
                         <div class="box-item-container-item"><div class="name">入曲时长</div><div class="detail">{{orderList[index + 2].inEndTimeLength}} 小时</div></div>
                         <div class="box-item-container-item"><div class="name">入曲时间</div><div class="detail">{{orderList[index + 2].inEndTime ? orderList[index + 2].inEndTime : ''}}</div></div>
                         <div class="btn">
-                          <el-tooltip class="item" effect="dark" :content="orderList[index].beanStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].beanStatus === '不通过'}" @click="goPage('煮豆', orderList[index])">煮豆</el-button>
+                          <el-tooltip class="item" effect="dark" :content="orderList[index + 2].beanStatus" placement="top-start">
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index + 2].beanStatus === '不通过'}" @click="goPage('煮豆', orderList[index + 2])">煮豆</el-button>
                           </el-tooltip>
-                          <el-tooltip class="item" effect="dark" :content="orderList[index].guardStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].guardStatus === '不通过'}" @click="goPage('看曲', orderList[index])">看曲</el-button>
+                          <el-tooltip class="item" effect="dark" :content="orderList[index + 2].guardStatus" placement="top-start">
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index + 2].guardStatus === '不通过'}" @click="goPage('看曲', orderList[index + 2])">看曲</el-button>
                           </el-tooltip>
-                          <el-tooltip class="item" effect="dark" :content="orderList[index].outStatus" placement="top-start">
-                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index].outStatus === '不通过'}" @click="goPage('出曲', orderList[index])">出曲</el-button>
+                          <el-tooltip class="item" effect="dark" :content="orderList[index + 2].outStatus" placement="top-start">
+                            <el-button type="primary" size="mini" :class="{nopassBtn: orderList[index + 2].outStatus === '不通过'}" @click="goPage('出曲', orderList[index + 2])">出曲</el-button>
                           </el-tooltip>
                         </div>
                       </div>
