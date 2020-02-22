@@ -176,6 +176,7 @@ export default {
         }
         this.savedDatas(str).then(res => {
           if (res !== false) {
+            this.isRedact = false
             this.$success_SHINHO('保存成功')
             this.$emit('success')
           }
@@ -183,6 +184,7 @@ export default {
       } else {
         this.submitDatas(str).then(res => {
           if (res !== false) {
+            this.isRedact = false
             this.$success_SHINHO('提交成功')
             this.$emit('success')
           }

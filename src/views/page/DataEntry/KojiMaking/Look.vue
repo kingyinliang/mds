@@ -25,18 +25,20 @@
           <div class="box-item-top">
             <div class="box-item-title">
               <div class="box-item-title-name"><div :style="{'background': index%3 === 0 ? '#FFBF00' : (index%3) === 1 ? '#5BD171': '#2C92F6'}">{{item.houseNo}}</div><div>{{item.inPotNoName}}</div></div>
-              <el-button type="primary" size="mini" :style="{'color':item.guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', item)">数据录入</el-button>
+              <div class="box-item-title-state" :class="{diannopassBtn: item.guardStatus === 'noPass'}">状态：{{item.guardStatus === 'noPass'? '审核不通过':item.guardStatus === 'saved'? '已保存':item.guardStatus === 'submit' ? '已提交' : item.guardStatus === 'checked'? '通过':item.guardStatus === '已同步' ? '未录入' : item.guardStatus}}</div>
             </div>
             <div class="box-item-container">
               <div class="box-item-container-left">
-                <div class="box-item-title-state">状态：{{item.guardStatus === 'noPass'? '审核不通过':item.guardStatus === 'saved'? '已保存':item.guardStatus === 'submit' ? '已提交' : item.guardStatus === 'checked'? '通过':item.guardStatus === '已同步' ? '未录入' : item.guardStatus}}</div>
-                <div class="box-item-container-img"></div>
+                <div class="box-item-container-img"><img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg"></div>
               </div>
               <div class="box-item-container-right">
                 <div class="box-item-container-item"><div class="name">生产订单</div><div class="detail">{{item.orderNo}}</div></div>
                 <div class="box-item-container-item"><div class="name">生产品项</div><div class="detail">{{item.materialCode + ' ' + item.materialName}}</div></div>
                 <div class="box-item-container-item"><div class="name">入曲时长</div><div class="detail">{{item.inEndTimeLength}} 小时</div></div>
                 <div class="box-item-container-item"><div class="name">入曲时间</div><div class="detail">{{item.inEndTime ? item.inEndTime : ''}}</div></div>
+                <div class="btn">
+                  <el-button type="primary" size="mini" :class="{nopassBtn: item.guardStatus === 'noPass'}" @click="goPage('看曲', item)">数据录入</el-button>
+                </div>
               </div>
             </div>
           </div>
@@ -189,6 +191,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .diannopassBtn {
+    &::before {
+      background: #f05c4a !important;
+    }
+  }
+  .nopassBtn {
+    background: #f05c4a;
+    border: none;
+  }
   .box-item {
     box-sizing: border-box;
     background: rgba(255, 255, 255, 1);
@@ -202,7 +213,7 @@ export default {
         justify-content: space-between;
         flex: 1;
         height: 34px;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
         .box-item-title-name {
           display: flex;
           flex: 1;
@@ -233,7 +244,7 @@ export default {
         font-weight: 500;
         color: rgba(0, 0, 0, 0.65);
         line-height: 20px;
-        text-align: left;
+        text-align: right;
         padding-left: 10px;
         margin-top: 4px;
         margin-bottom: 6px;
@@ -252,24 +263,29 @@ export default {
         display: flex;
         flex: 1;
         justify-content: space-between;
-        height: 129px;
         .box-item-container-left {
-          width: 130px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40%;
           background: rgba(242, 242, 242, 1);
-          box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
           border-radius: 8px;
           .box-item-container-img {
-            width: 94px;
-            height: 86px;
-            margin: auto;
-            background: url("~@/assets/img/fajiaoguan.png");
+            width: 150px;
+            .bgimg {
+              width: 100%;
+            }
           }
         }
         .box-item-container-right {
+          width: 60%;
           flex: 1;
           display: flex;
           flex-direction: column;
-          margin-left: 10px;
+          margin-left: 16px;
+          .btn {
+            text-align: right;
+          }
           .box-item-container-item {
             flex: 1;
             display: flex;
@@ -280,7 +296,7 @@ export default {
               font-size: 12px;
               font-weight: 400;
               color: black;
-              line-height: 26px;
+              line-height: 32px;
             }
             .detail {
               flex: 1;
@@ -288,10 +304,9 @@ export default {
               font-weight: 500;
               color: #333;
               background: #f5f5f5;
-              box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
               padding-left: 10px;
               border-radius: 4px;
-              line-height: 26px;
+              line-height: 32px;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
