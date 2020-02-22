@@ -109,6 +109,7 @@ export default {
         this.$warning_SHINHO('生产日期或生产订单请选填一项')
         return false
       }
+      this.formHeader.orderType = '1'
       this.$http(`${FILTRATION_API.FILTER_HOME_LIST_API}`, 'POST', this.formHeader).then(({data}) => {
         if (data.code === 0) {
           // this.dataList = orderList(data.list)
@@ -122,7 +123,8 @@ export default {
     orderchange (row) {
       if (row.orderNo && row.orderNo !== row.orderNo2) {
         this.$http(`${FILTRATION_API.FILTER_HOME_LIST_API}`, 'POST', {
-          orderNo: row.orderNo
+          orderNo: row.orderNo,
+          orderType: '1'
         }).then(({data}) => {
           if (data.code === 0) {
             row.orderNo2 = row.orderNo
