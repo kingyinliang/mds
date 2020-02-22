@@ -162,7 +162,8 @@ export default {
     },
     GetOrder () {
       this.$http(`${FILTRATION_API.FILTER_HOME_LIST_API}`, 'POST', {
-        orderNo: this.$store.state.common.orderNo
+        orderNo: this.$store.state.common.orderNo,
+        orderType: '1'
       }).then(({data}) => {
         if (data.code === 0) {
           this.formHeader = data.list[0]
