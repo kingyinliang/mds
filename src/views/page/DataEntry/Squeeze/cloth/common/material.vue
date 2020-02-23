@@ -392,7 +392,7 @@ export default {
         return false
       }
       for (let items of this.multipleSelection) {
-        if (!items.pulpMachineName || items.pulpMachineName === '' || !items.hovercraftName || items.hovercraftName === '' || !items.pulpStartDate || items.pulpStartDate === '' || !items.pulpEndDate || items.pulpEndDate === '' || !items.pulpAmount || items.pulpAmount === '' || !items.selfDrenchTime || items.selfDrenchTime === '' || !items.potOne || items.potOne === '' || !items.sauceClass || items.sauceClass === '') {
+        if (!items.pulpMachineName || items.pulpMachineName === '' || !items.hovercraftName || items.hovercraftName === '' || !items.pulpStartDate || items.pulpStartDate === '' || !items.pulpEndDate || items.pulpEndDate === '' || !items.pulpAmount || items.pulpAmount === '' || items.selfDrenchTime === '' || items.selfDrenchTime === null || !items.potOne || items.potOne === '' || !items.sauceClass || items.sauceClass === '') {
           ty = false
           this.$warning_SHINHO('物料必填项不能为空')
           return false
