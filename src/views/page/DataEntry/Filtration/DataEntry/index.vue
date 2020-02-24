@@ -136,6 +136,8 @@ export default {
             row.properties = data.list[0].properties
             row.countOutput = data.list[0].countOutput
             row.plan = data.list[0].plan
+            this.dataList.splice(this.dataList.length, 0, {})
+            this.dataList.splice(this.dataList.length - 1, 1)
           } else {
             this.$error_SHINHO(data.msg)
           }
