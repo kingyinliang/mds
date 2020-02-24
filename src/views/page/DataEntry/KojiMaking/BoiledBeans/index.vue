@@ -15,7 +15,7 @@
       :formHeader="formHeader"
       :tabs="tabs">
       <template slot="1" slot-scope="data">
-        <Material ref="material" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyMaterielState='setApplyMaterielState'></Material>
+        <Material ref="material" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyMaterielState='setApplyMaterielState' @UpdateHeader="UpdateHeader" @HeadUpdate="HeadUpdate"></Material>
       </template>
       <template slot="2" slot-scope="data">
         <Craft ref="craft" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyCraftState='setApplyCraftState'></Craft>
@@ -298,6 +298,28 @@ export default {
     },
     tabClick (val) {
       this.$refs.tabs.setCurrentName(val.name)
+    },
+    HeadUpdate (str) {
+      this.$http(`${KJM_API.DOUHEAERLIST}`, `POST`, {orderHouseId: this.$store.state.common.ZQWorkshop.params.beanOrderHouseId, deptName: '煮豆'}, false, false, false).then((res) => {
+        if (res.data.code === 0) {
+          this.formHeader = res.data.headList[0]
+          this.formHeader = res.data.headList[0]
+          this.cookingNoId = this.formHeader.cookingNoName
+          this.orderStatus = res.data.headList[0].beanStatus
+          if (str === 'wheat') {
+            this.$refs.material.getMaiholdList(this.formHeader)
+          }
+          if (str === 'soy') {
+            this.$refs.material.getDouholdList(this.formHeader)
+            this.$refs.material.GetPuplList(this.formHeader)
+          }
+          this.$refs.excrecord.GetequipmentType(this.formHeader.processId)
+          this.$refs.excrecord.getDataList(this.formHeader.factory)
+          this.$refs.material.partialUpdates(this.formHeader, str)
+        } else {
+          this.$error_SHINHO(res.data.msg)
+        }
+      })
     },
     GetheadList () {
       this.$http(`${KJM_API.DOUHEAERLIST}`, `POST`, {orderHouseId: this.$store.state.common.ZQWorkshop.params.beanOrderHouseId, deptName: '煮豆'}, false, false, false).then((res) => {

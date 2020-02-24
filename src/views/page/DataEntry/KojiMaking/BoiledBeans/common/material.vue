@@ -1131,9 +1131,40 @@ export default {
               this.$refs.wheatTable.bodyWrapper.scrollTop = this.$refs.wheatTable.bodyWrapper.scrollHeight
             })
           }
+          if (formName === 'wheat' || formName === 'wheatend') {
+            this.wheatConfirm()
+          }
         } else {
           return false
         }
+      })
+    },
+    wheatConfirm () {
+      let that = this
+      let savedHead = new Promise((resolve, reject) => {
+        that.$emit('UpdateHeader', 'saved', resolve)
+      })
+      savedHead().then(() => {
+        let savedWh = new Promise((resolve, reject) => {
+          that.savewheats(resolve, reject)
+        })
+        savedWh.then(() => {
+          that.$emit('HeadUpdate', 'wheat')
+        })
+      })
+    },
+    soyConfirm () {
+      let that = this
+      let savedHead = new Promise((resolve, reject) => {
+        that.$emit('UpdateHeader', 'saved', resolve)
+      })
+      savedHead().then(() => {
+        let savedSoy = new Promise((resolve, reject) => {
+          that.savepulps(resolve, reject)
+        })
+        savedSoy.then(() => {
+          that.$emit('HeadUpdate', 'soy')
+        })
       })
     },
     // 豆 入罐
@@ -1251,6 +1282,7 @@ export default {
                 this.$refs.pulpTable.bodyWrapper.scrollTop = this.$refs.pulpTable.bodyWrapper.scrollHeight
               })
             }
+            this.soyConfirm()
           }
         } else {
           return false
@@ -1542,6 +1574,73 @@ export default {
         }
       })
     },
+    partialUpdates (formHeader, str) {
+      let inState = ''
+      this.$http(`${KJM_API.DOUMATERLIST_API}`, 'POST', {orderHouseId: formHeader.orderHouseId}).then(({data}) => {
+        if (data.code === 0) {
+          let no = 0
+          let sub = 0
+          let che = 0
+          let sav = 0
+          if (str === 'wheat') {
+            this.wheatList = data.wheatList
+          }
+          if (str === 'soy') {
+            this.soyList = data.pulpList
+          }
+          this.materialList.map((item) => {
+            this.$set(item, 'materialCode', item.materialCode + ' ' + item.materialName)
+            if (item.status === 'noPass') {
+              no = no + 1
+            } else if (item.status === 'submit') {
+              sub = sub + 1
+            } else if (item.status === 'checked') {
+              che = che + 1
+            } else if (item.status === 'saved') {
+              sav = sav + 1
+            }
+          })
+          this.wheatList.forEach((item) => {
+            if (item.status === 'noPass') {
+              no = no + 1
+            } else if (item.status === 'submit') {
+              sub = sub + 1
+            } else if (item.status === 'checked') {
+              che = che + 1
+            } else if (item.status === 'saved') {
+              sav = sav + 1
+            }
+          })
+          this.soyList.forEach((item) => {
+            this.$set(item, 'soyMaterialstr', item.materialCode + ' ' + item.materialName)
+            if (item.status === 'noPass') {
+              no = no + 1
+            } else if (item.status === 'submit') {
+              sub = sub + 1
+            } else if (item.status === 'checked') {
+              che = che + 1
+            } else if (item.status === 'saved') {
+              sav = sav + 1
+            }
+          })
+          if (no > 0) {
+            inState = 'noPass'
+          } else if (sub > 0) {
+            inState = 'submit'
+          } else if (sav > 0) {
+            inState = 'saved'
+          } else if (che > 0) {
+            inState = 'checked'
+          }
+        } else {
+          this.$error_SHINHO(data.msg)
+        }
+      }).catch((error) => {
+        this.$notify.error({title: '错误', message: error})
+      }).finally(() => {
+        this.$emit('setApplyMaterielState', inState)
+      })
+    },
     getList (formHeader) {
       let inState = ''
       this.$http(`${KJM_API.DOUMATERLIST_API}`, 'POST', {orderHouseId: formHeader.orderHouseId}).then(({data}) => {
@@ -1638,6 +1737,7 @@ export default {
           type: 'warning'
         }).then(() => {
           row.delFlag = '1'
+          this.wheatConfirm()
         })
       }
     },
@@ -1651,6 +1751,7 @@ export default {
           type: 'warning'
         }).then(() => {
           row.delFlag = '1'
+          this.soyConfirm()
         })
       }
     },
