@@ -948,7 +948,9 @@ export const REP_API = {
   /** ************************* 吹瓶车间报表 ************************** */
   BOTTLEQUALITY_MATERIALCODE_API: HOST + '/report/production/bottleQualityMaterialCode', // 品项下拉
   BOTTLEQUALITY_LIST_API: HOST + '/report/production/bottleQuality', // 查询
-  BOTTLEQUALITY_EXPORT_API: HOST + '/report/production/bottleQualityExport' // 导出
+  BOTTLEQUALITY_EXPORT_API: HOST + '/report/production/bottleQualityExport', // 导出
+  BOTTLEEMRE_LIST_API: HOST + '/report/fromEs/embryoRecord', // 投胚记录查询
+  BOTTLEEMRE_EXPORT_API: HOST + '/report/fromEs/expectEmbryoRecord' // 投胚记录导出
 }
 /*
 *炒麦api
