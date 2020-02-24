@@ -8,7 +8,6 @@
       :query-auth="'report:fromEs:embryoRecord'"
       :column="column"
       :export-excel="true"
-      returnColumnType="bottleQuality"
       :export-option="exportOption">
     </query-table>
   </div>
@@ -26,11 +25,11 @@ export default {
           text: '请选择工厂'
         },
         {
-          prop: 'startDate',
+          prop: 'productDateStart',
           text: '请选择生产日期'
         },
         {
-          prop: 'endDate',
+          prop: 'productDateEnd',
           text: '请选择生产日期'
         }
       ],
@@ -118,8 +117,8 @@ export default {
         {
           type: 'date-interval',
           label: '生产日期',
-          prop: 'startDate',
-          propTwo: 'endDate'
+          prop: 'productDateStart',
+          propTwo: 'productDateEnd'
         }
       ],
       listInterface: (params) => {

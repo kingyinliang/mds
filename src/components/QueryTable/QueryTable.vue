@@ -127,7 +127,7 @@
             <slot name="mds-button-middle"></slot>
           </el-col>
         </el-row>
-        <el-table :data="tableData" ref="table" :span-method="spanMethod" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+        <el-table :data="tableData" ref="table" height="400" :span-method="spanMethod" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
           <el-table-column
             v-if="showSelectColumn"
             :selectable="selectableFn"
