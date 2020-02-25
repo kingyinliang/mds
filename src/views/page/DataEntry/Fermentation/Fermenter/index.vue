@@ -37,20 +37,26 @@
       </el-form-item>
     </el-form>
   </el-card>
-  <el-card class="searchCard  newCard ferCard" style="margin-top: 5px;" v-show="fastS">
+  <el-card class="searchCard  newCard ferCard" style="margin-top: 5px; overflow: initial;" v-show="fastS">
     <h3 class="cardTit"><i class="iconfont factory-shujuzonglan" style="color: #666; margin-right: 10px;"></i>发酵情况总览 <i class="gotop" @click="gotop"><span>收起</span><i class="el-icon-caret-top"></i></i></h3>
     <div class="sumbox">
     <div class="topBox clearfix">
       <div class="clearfix" v-for="(item, index) in topBox" :key="index" style="float: left;">
         <div class="topBox_boxItem" @click="topClick(item)">
-          <div class="topBox_boxItem_bar">
-            <div class="topBox_boxItem_bar_box" :style="{'background': `linear-gradient(to right,${item.startColor} 0%,${item.startColor} 10%,${item.endColor})`}"></div>
+          <div style="overflow: hidden;">
+            <div class="topBox_boxItem_bar">
+              <div class="topBox_boxItem_bar_box" :style="{'background': `linear-gradient(to right,${item.startColor} 0%,${item.startColor} 10%,${item.startColor})`}"></div>
+            </div>
+            <div style="float: left; line-height: 30px; width: 32px; text-align: center; font-size: 14px;">{{item.middleText}}</div>
+            <div class="topBox_boxItem_bar">
+              <div class="topBox_boxItem_bar_box" :style="{'background': `linear-gradient(to right,${item.endColor} 0%,${item.endColor} 10%,${item.endColor})`}"></div>
+            </div>
           </div>
           <p class="topBox_boxItem_tit">{{item.ptext}}</p>
           <p class="topBox_boxItem_detail">
             总计: <span>{{item.num}}</span> 罐
           </p>
-          <div class="topBox_boxItem_popover" v-if="index === 2 || index === 3">
+          <div class="topBox_boxItem_popover" v-if="index > 0 && index < 7">
             <p class=""><i class="dot" style="background: #1890ff;"></i>味极鲜<span style="float: right;">{{item.wdm}} 罐</span></p>
             <p class=""><i class="dot" style="background: #ffbf00;"></i>六月鲜<span style="float: right;">{{item.lyx}} 罐</span></p>
             <i class="topBox_boxItem_popover_ar"></i>
@@ -181,61 +187,95 @@ export default {
       RDorder: '',
       topBox: [
         {
-          color: '#999999',
-          startColor: '#999999',
-          endColor: '#999999',
+          color: '#999999FF',
+          startColor: '#999999FF',
+          endColor: '#999999FF',
           text: '空',
-          ptext: '空罐',
+          ptext: '0个月',
+          middleText: '空罐',
           holderStatus: '0',
-          num: ''
+          num: '0'
         }, {
-          color: '#D6D2C4',
-          startColor: '#E9E9E9',
-          endColor: '#D6D2C4',
+          color: '#D6D2C4FF',
+          startColor: '#E9E9E9FF',
+          endColor: '#D6D2C4FF',
           text: '1',
-          ptext: '酿造 0-1个月',
+          ptext: '1个月',
+          middleText: '酿造',
           search: '1',
-          num: ''
+          num: '0'
         }, {
-          color: '#B58150',
-          startColor: '#D6D2C4',
-          endColor: '#B58150',
-          text: '3',
-          ptext: '酿造 1-3个月',
+          color: '#CDA786FF',
+          startColor: '#D6D2C4FF',
+          endColor: '#CDA786FF',
+          text: '2',
+          ptext: '2个月',
+          middleText: '酿造',
           search: '2',
-          num: ''
+          num: '0'
         }, {
-          color: '#3F2021',
-          startColor: '#B58150',
-          endColor: '#3F2021',
-          text: '6',
-          ptext: '酿造 3-6个月',
+          color: '#B58150FF',
+          startColor: '#CDA786FF',
+          endColor: '#B58150FF',
+          text: '3',
+          ptext: '3个月',
+          middleText: '酿造',
           search: '3',
-          num: ''
+          num: '0'
         }, {
-          color: '#C70909',
-          startColor: '#3F2021',
-          endColor: '#C70909',
-          text: '超',
-          ptext: '超时超期',
+          color: '#C67C5AFF',
+          startColor: '#B58150FF',
+          endColor: '#C67C5AFF',
+          text: '4',
+          ptext: '4个月',
+          middleText: '酿造',
           search: '4',
-          num: ''
+          num: '0'
         }, {
-          color: '#8BC34A',
-          startColor: '#C70909',
-          endColor: '#8BC34A',
+          color: '#AD592DFF',
+          startColor: '#C67C5AFF',
+          endColor: '#AD592DFF',
+          text: '5',
+          ptext: '5个月',
+          middleText: '酿造',
+          search: '5',
+          num: '0'
+        }, {
+          color: '#8A391BFF',
+          startColor: '#8A391BFF',
+          endColor: '#8A391BFF',
+          text: '6',
+          ptext: '6个月',
+          middleText: '酿造',
+          search: '6',
+          num: '0'
+        }, {
+          color: '#C70909FF',
+          startColor: '#8A391BFF',
+          endColor: '#C70909FF',
+          text: '超',
+          ptext: '6个月以上',
+          middleText: '超期',
+          search: '7',
+          num: '0'
+        }, {
+          color: '#8BC34AFF',
+          startColor: '#C70909FF',
+          endColor: '#8BC34AFF',
           text: '压',
-          ptext: '压榨',
+          ptext: ' ',
+          middleText: '压榨',
           holderStatus: '4',
-          num: ''
+          num: '0'
         }, {
           color: '',
-          startColor: '#999999',
-          endColor: '#999999',
+          startColor: '#999999FF',
+          endColor: '#999999FF',
           text: '',
-          ptext: '空罐',
+          ptext: '0个月',
+          middleText: '空罐',
           holderStatus: '0',
-          num: ''
+          num: '0'
         }
       ],
       formHeader: {
@@ -358,15 +398,26 @@ export default {
           this.formHeader.pageSize = data.orderPage.pageSize
           this.topBox[0].num = data.overView.emptyCount
           this.topBox[1].num = data.overView.oneMonthCount
-          this.topBox[2].num = data.overView.threeMonthCount
-          this.topBox[3].num = data.overView.sixMonthCount
-          this.topBox[4].num = data.overView.outCount
-          this.topBox[5].num = data.overView.useCount
-          this.topBox[6].num = data.overView.emptyCount
-          this.topBox[2].wdm = data.overView.wdmThreeMonthCount
-          this.topBox[2].lyx = data.overView.lyxThreeMonthCount
-          this.topBox[3].wdm = data.overView.wdmSixMonthCount
-          this.topBox[3].lyx = data.overView.lyxSixMonthCount
+          this.topBox[1].wdm = data.overView.wdmOneMonthCount
+          this.topBox[1].lyx = data.overView.lyxOneMonthCount
+          this.topBox[2].num = data.overView.twoMonthCount
+          this.topBox[2].wdm = data.overView.wdmTwoMonthCount
+          this.topBox[2].lyx = data.overView.lyxTwoMonthCount
+          this.topBox[3].num = data.overView.threeMonthCount
+          this.topBox[3].wdm = data.overView.wdmThreeMonthCount
+          this.topBox[3].lyx = data.overView.lyxThreeMonthCount
+          this.topBox[4].num = data.overView.fourMonthCount
+          this.topBox[4].wdm = data.overView.wdmFourMonthCount
+          this.topBox[4].lyx = data.overView.lyxFourMonthCount
+          this.topBox[5].num = data.overView.fiveMonthCount
+          this.topBox[5].wdm = data.overView.wdmFiveMonthCount
+          this.topBox[5].lyx = data.overView.lyxFiveMonthCount
+          this.topBox[6].num = data.overView.sixMonthCount
+          this.topBox[6].wdm = data.overView.wdmSixMonthCount
+          this.topBox[6].lyx = data.overView.lyxSixMonthCount
+          this.topBox[7].num = data.overView.outCount
+          this.topBox[8].num = data.overView.useCount
+          this.topBox[9].wdm = data.overView.emptyCount
         } else {
           this.$error_SHINHO(data.msg)
         }
@@ -552,7 +603,6 @@ export default {
     color: black;
     font-weight: 400;
     padding-bottom: 10px;
-    border-bottom: 1px solid #e9e9e9;
   }
   .gotop {
     float: right;
@@ -567,29 +617,31 @@ export default {
   }
 }
 .topBox {
-  width: 1160px;
-  padding: 25px 25px 10px 25px;
+  width: 1260px;
+  padding: 10px 0 10px 0;
   margin: auto;
   &_boxItem {
     position: relative;
     cursor: pointer;
-    width: 131px;
+    // width: 102px;
     float: left;
     &_bar {
-      width: 115px;
+      width: 30px;
       height: 2px;
-      margin: 15px 8px 0 8px;
+      margin: 15px 0 0 0;
       background: #f2f2f2;
+      float: left;
       &_box {
         height: 2px;
       }
     }
     &_tit {
       color: black;
-      font-size: 16px;
-      margin-top: 10px;
+      font-size: 14px;
+      // margin-top: 10px;
       text-align: center;
       line-height: 32px;
+      height: 32px;
     }
     &_detail {
       font-size: 14px;
@@ -597,6 +649,7 @@ export default {
       color: #666;
       span {
         color: black;
+        font-size: 16px;
       }
     }
     &_popover {
@@ -640,6 +693,7 @@ export default {
     border-radius: 50%;
     background: #999;
     transition: all 0.5s;
+    margin: 0 2px;
   }
 }
 .dataList {
