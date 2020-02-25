@@ -15,7 +15,7 @@
       :formHeader="formHeader"
       :tabs="tabs">
       <template slot="1" slot-scope="data">
-        <Material ref="material" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyMaterielState='setApplyMaterielState' @UpdateHeader="UpdateHeader" @HeadUpdate="HeadUpdate" @UpdateHeaderCreator="UpdateHeaderCreator"></Material>
+        <Material ref="material" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyMaterielState='setApplyMaterielState' @HeadUpdate="HeadUpdate"></Material>
       </template>
       <template slot="2" slot-scope="data">
         <Craft ref="craft" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyCraftState='setApplyCraftState'></Craft>

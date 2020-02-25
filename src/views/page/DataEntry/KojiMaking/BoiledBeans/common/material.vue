@@ -1141,29 +1141,31 @@ export default {
     },
     wheatConfirm () {
       let that = this
-      let savedHead = new Promise((resolve, reject) => {
-        that.$emit('UpdateHeaderCreator', 'saved', resolve)
+      let savedWh = new Promise((resolve, reject) => {
+        that.savewheats(resolve, reject)
       })
-      Promise.all([savedHead]).then(() => {
-        let savedWh = new Promise((resolve, reject) => {
-          that.savewheats(resolve, reject)
+      savedWh.then(() => {
+        let savedStatus = new Promise((resolve, reject) => {
+          that.formHeader.submitStatus = 'saved'
+          that.savestauts(resolve, reject)
         })
-        savedWh.then(() => {
+        savedStatus.then(() => {
           that.$emit('HeadUpdate', 'wheat')
         })
       })
     },
     soyConfirm () {
       let that = this
-      let savedHead = new Promise((resolve, reject) => {
-        that.$emit('UpdateHeaderCreator', 'saved', resolve)
+      let savedSoy = new Promise((resolve, reject) => {
+        that.savepulps(resolve, reject)
       })
-      Promise.all([savedHead]).then(() => {
-        let savedSoy = new Promise((resolve, reject) => {
-          that.savepulps(resolve, reject)
+      savedSoy.then(() => {
+        let savedStatus = new Promise((resolve, reject) => {
+          that.formHeader.submitStatus = 'saved'
+          that.savestauts(resolve, reject)
         })
-        savedSoy.then(() => {
-          that.$emit('HeadUpdate', 'soy')
+        savedStatus.then(() => {
+          that.$emit('HeadUpdate', 'wheat')
         })
       })
     },
