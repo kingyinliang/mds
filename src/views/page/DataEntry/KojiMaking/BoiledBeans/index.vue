@@ -15,7 +15,7 @@
       :formHeader="formHeader"
       :tabs="tabs">
       <template slot="1" slot-scope="data">
-        <Material ref="material" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyMaterielState='setApplyMaterielState' @UpdateHeader="UpdateHeader" @HeadUpdate="HeadUpdate"></Material>
+        <Material ref="material" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyMaterielState='setApplyMaterielState' @UpdateHeader="UpdateHeader" @HeadUpdate="HeadUpdate" @UpdateHeaderCreator="UpdateHeaderCreator"></Material>
       </template>
       <template slot="2" slot-scope="data">
         <Craft ref="craft" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyCraftState='setApplyCraftState'></Craft>
@@ -289,7 +289,7 @@ export default {
   methods: {
     formHeaderRul () {
       let ty = true
-      if (!this.cookingNoId || this.cookingNoId === '') {
+      if (!this.formHeader.cookingNoId || this.formHeader.cookingNoId === '') {
         this.$warning_SHINHO('请选择连续蒸煮号')
         ty = false
         return false
@@ -304,7 +304,7 @@ export default {
         if (res.data.code === 0) {
           this.formHeader = res.data.headList[0]
           this.formHeader = res.data.headList[0]
-          this.cookingNoId = this.formHeader.cookingNoName
+          // this.cookingNoId = this.formHeader.cookingNoName
           this.orderStatus = res.data.headList[0].beanStatus
           if (str === 'wheat') {
             this.$refs.material.getMaiholdList(this.formHeader)
@@ -325,7 +325,7 @@ export default {
       this.$http(`${KJM_API.DOUHEAERLIST}`, `POST`, {orderHouseId: this.$store.state.common.ZQWorkshop.params.beanOrderHouseId, deptName: '煮豆'}, false, false, false).then((res) => {
         if (res.data.code === 0) {
           this.formHeader = res.data.headList[0]
-          this.cookingNoId = this.formHeader.cookingNoName
+          // this.cookingNoId = this.formHeader.cookingNoName
           this.orderStatus = res.data.headList[0].beanStatus
           // this.$refs.material.GetrealTime(this.formHeader)
           // this.$refs.material.GetrealWheatTime(this.formHeader)
@@ -365,26 +365,31 @@ export default {
       })
     },
     // 表头更改
-    UpdateHeader (str, resolve) {
-      let holderNamestr = this.holderList.find(item => item.holderName === this.cookingNoId)['holderId']
-      this.$http(`${KJM_API.DOUHEADER_API}`, 'POST', {cookingNoId: holderNamestr, orderHouseId: this.formHeader.orderHouseId}).then(({data}) => {
+    UpdateHeader (str, resolve, reject) {
+      this.$http(`${KJM_API.DOUHEADER_API}`, 'POST', {cookingNoId: this.formHeader.cookingNoId, orderHouseId: this.formHeader.orderHouseId}).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
           this.$error_SHINHO('保存表头' + data.msg)
-        }
-        if (resolve) {
-          resolve('resolve')
+          if (reject) {
+            reject('resolve')
+          }
         }
       })
     },
-    UpdateHeaderCreator (str, resolve) {
+    UpdateHeaderCreator (str, resolve, reject) {
       this.$http(`${KJM_API.DOUMATERHEADCREATOR_API}`, 'POST', {orderId: this.formHeader.orderId}).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
           this.$error_SHINHO('保存表头' + data.msg)
-        }
-        if (resolve) {
-          resolve('resolve')
+          if (reject) {
+            reject('resolve')
+          }
         }
       })
     },

@@ -97,7 +97,7 @@
         </el-col>
       </el-row>
       <el-table class="newTable" ref="wheatTable" max-height="276" border header-row-class-name="tableHead" :data="wheatList" style="margin-top: 10px;" @row-dblclick="editwheat" :row-class-name="rowDelFlag">
-        <el-table-column label="日期" prop="useDate" width="100"></el-table-column>
+        <el-table-column label="日期" prop="useDate" width="110"></el-table-column>
         <el-table-column label="物料" prop="materialCode" width="160">
           <template slot-scope="scope">
             {{scope.row.materialCode}} {{scope.row.materialName}}
@@ -1142,9 +1142,9 @@ export default {
     wheatConfirm () {
       let that = this
       let savedHead = new Promise((resolve, reject) => {
-        that.$emit('UpdateHeader', 'saved', resolve)
+        that.$emit('UpdateHeaderCreator', 'saved', resolve)
       })
-      savedHead().then(() => {
+      Promise.all([savedHead]).then(() => {
         let savedWh = new Promise((resolve, reject) => {
           that.savewheats(resolve, reject)
         })
@@ -1156,9 +1156,9 @@ export default {
     soyConfirm () {
       let that = this
       let savedHead = new Promise((resolve, reject) => {
-        that.$emit('UpdateHeader', 'saved', resolve)
+        that.$emit('UpdateHeaderCreator', 'saved', resolve)
       })
-      savedHead().then(() => {
+      Promise.all([savedHead]).then(() => {
         let savedSoy = new Promise((resolve, reject) => {
           that.savepulps(resolve, reject)
         })
@@ -1562,11 +1562,14 @@ export default {
     savestauts (resolve, reject) {
       this.$http(`${KJM_API.DOUMATERSTATUS_API}`, 'POST', {status: this.formHeader.submitStatus, orderHouseId: this.formHeader.orderHouseId, orderId: this.formHeader.orderId}).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
           this.$error_SHINHO(data.msg)
-        }
-        if (resolve) {
-          resolve('resolve')
+          if (resolve) {
+            reject('reject')
+          }
         }
       }).catch(() => {
         if (resolve) {
