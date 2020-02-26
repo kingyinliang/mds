@@ -7,7 +7,7 @@
       :showPage="false"
       :list-interface="listInterface"
       @get-data-success="getDataSuccess"
-      :query-auth="'report:production:packing'"
+      :query-auth="'report:fromEs:materialSummary'"
       :spanMethod="spanMethod"
       :column="column"
       :export-excel="true"
@@ -45,7 +45,7 @@ export default {
         }
       ],
       listInterface: (params) => {
-        return this.$http(`${REP_API.PKGSPECANDOUTPUT_LIST}`, 'POST', params)
+        return this.$http(`${REP_API.PKGOUTPUT_LIST_API}`, 'POST', params)
       },
       spanMethod: ({ row, column, rowIndex, columnIndex }) => {
         if (row.brand * 1 === 1000) {
@@ -73,8 +73,8 @@ export default {
         }
       },
       exportOption: {
-        exportInterface: REP_API.PKGSPECANDOUTPUT_OUT,
-        auth: 'report:production:packingExport',
+        exportInterface: REP_API.PKGOUTPUT_EXPORT_API,
+        auth: 'report:fromEs:expectMaterialSummary',
         text: '包装品项产量汇总导出'
       },
       column: [

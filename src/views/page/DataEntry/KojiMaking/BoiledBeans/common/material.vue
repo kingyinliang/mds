@@ -1165,7 +1165,7 @@ export default {
           that.savestauts(resolve, reject)
         })
         savedStatus.then(() => {
-          that.$emit('HeadUpdate', 'wheat')
+          that.$emit('HeadUpdate', 'soy')
         })
       })
     },
@@ -1378,6 +1378,7 @@ export default {
                 this.$refs.pulpTable.bodyWrapper.scrollTop = this.$refs.pulpTable.bodyWrapper.scrollHeight
               })
             }
+            this.soyConfirm()
           }
         } else {
           return false
