@@ -19,34 +19,34 @@
     </mds-card>
     <mds-card :title="'煮豆润水参数设置'" :name="'rateRunWater'" :iconBg="'#ffbf00'">
       <el-form :inline="true" size="small" label-width="130px" :model="craftfrom">
-        <el-form-item label="润水比例:">
+        <el-form-item label="润水比例：">
           <el-input class="liInputWidth" v-model="craftfrom.rateRunWater" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
         <!-- <el-form-item label="润水温度(°C):" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.tempRunWater" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item> -->
-        <el-form-item label="润水变频(HZ):" :required="true">
+        <el-form-item label="润水变频(HZ)：" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.frequenceRunWater" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
-        <el-form-item label="实际比例:" :required="true">
+        <el-form-item label="实际比例：" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.realRate" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
-        <el-form-item label="润水总量(L):" :required="true">
+        <el-form-item label="润水总量(L)：" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.weightRunWater" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
-        <el-form-item label="润水流速(L/h):" :required="true">
+        <el-form-item label="润水流速(L/h)：" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.speedRunWater" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
-        <el-form-item label="一次预热变频:" :required="true">
+        <el-form-item label="一次预热变频：" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.oncePreheatFrequency" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
-        <el-form-item label="二次预热变频:" :required="true">
+        <el-form-item label="二次预热变频：" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.secondPreheatFrequency" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
-        <el-form-item label="二次预热温度:" :required="true">
+        <el-form-item label="二次预热温度：" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.secondPreheatTemp" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
-        <el-form-item label="下料速度(KG/H):" :required="true">
+        <el-form-item label="下料速度(KG/H)：" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.unloadingSpeed" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
       </el-form>
@@ -121,13 +121,13 @@
     </mds-card>
     <mds-card :title="'连续蒸煮记录'" :name="'lianxu'">
       <el-form :inline="true" size="small" :model="craftfrom">
-        <el-form-item label="蒸煮变频(HZ):" :required="true">
+        <el-form-item label="蒸煮变频(HZ)：" :required="true">
           <el-input v-model="craftfrom.cookingFrequency" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
-        <el-form-item label="上转阀变频(HZ):" :required="true">
+        <el-form-item label="上转阀变频(HZ)：" :required="true">
           <el-input v-model="craftfrom.upFrequency" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
-        <el-form-item label="下转阀变频(HZ):" :required="true">
+        <el-form-item label="下转阀变频(HZ)：" :required="true">
           <el-input v-model="craftfrom.downFrequency" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
       </el-form>
@@ -135,7 +135,7 @@
         <h3><i class="title-icon" style="background: #5bd171;"></i>过程监控数据记录</h3>
         <el-button type="primary" @click="addzhengzhu" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')" size="small" style="float: right;"> + 新增</el-button>
       </div>
-      <el-table class="newTable" ref="zhengzhuTable" max-height="267" border header-row-class-name="tableHead" :data="zhengzhuList" :row-class-name="rowDelFlag">
+      <el-table class="newTable borderTable" ref="zhengzhuTable" max-height="267" border header-row-class-name="tableHead" :data="zhengzhuList" :row-class-name="rowDelFlag">
         <el-table-column  width="195">
           <template slot="header">
             <i class="reqI">*</i>
@@ -201,7 +201,7 @@
           </el-table-column>
         </el-table-column>
         <el-table-column label="操作人" prop="changer" width="140"></el-table-column>
-        <el-table-column label="操作时间" prop="changed" width="160"></el-table-column>
+        <el-table-column label="操作时间" prop="changed"></el-table-column>
         <el-table-column width="70" fixed="right">
           <template slot-scope="scope">
             <el-button class="delBtn" type="text" @click="delrow(scope.row)" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" icon="el-icon-delete" size="small">删除</el-button>

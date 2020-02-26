@@ -128,6 +128,7 @@ export default {
         if (row.batch !== '' && row.startValue !== '' && row.endValue !== '') {
           // this.getRepertory()
           row.leftAmount = this.batchList.find(items => items.batch === row.batch).currentQuantity
+          console.log(row.leftAmount)
         } else if (row.batch !== '' && type === 'batch') {
           // this.getRepertory()
           row.leftAmount = this.batchList.find(items => items.batch === row.batch).currentQuantity
