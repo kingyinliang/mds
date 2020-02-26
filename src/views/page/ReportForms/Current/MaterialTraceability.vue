@@ -25,6 +25,7 @@
         </el-form-item>
         <el-form-item label="生产物料：">
           <el-select v-model="formHeader.materialCode" filterable placeholder="请选择" style="width: 140px;">
+            <el-option label="请选择"  value=""></el-option>
             <el-option v-for="(sole, index) in this.materiaList" :key="index" :value="sole.MATERIAL_CODE" :label="`${sole.MATERIAL_CODE}`+ ' ' +`${sole.MATERIAL_NAME}`"></el-option>
           </el-select>
         </el-form-item>
