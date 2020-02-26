@@ -24,14 +24,6 @@ export default {
         {
           prop: 'factory',
           text: '请选择工厂'
-        },
-        {
-          prop: 'startDate',
-          text: '请选择生产日期'
-        },
-        {
-          prop: 'endDate',
-          text: '请选择生产日期'
         }
       ],
       queryFormData: [

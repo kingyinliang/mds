@@ -4,10 +4,12 @@
       ref="queryTable"
       :queryFormData="queryFormData"
       :list-interface="listInterface"
-      :query-auth="'report:production:packing'"
+      :query-auth="'report:production:jbsReport'"
       :column="column"
       :export-excel="true"
-      :export-option="exportOption">
+      :export-option="exportOption"
+      getListField="jbsReport"
+      :showPage="false">
     </query-table>
   </div>
 </template>
@@ -36,39 +38,39 @@ export default {
         {
           type: 'date-picker',
           label: '月份',
-          prop: 'productDate',
+          prop: 'startDate',
           dataType: 'month',
           defaultValue: dateFormat(new Date(), 'yyyy-MM'),
           valueFormat: 'yyyy-MM'
         }
       ],
       listInterface: (params) => {
-        return this.$http(`${REP_API.PKGSPECANDOUTPUT_LIST}`, 'POST', params)
+        return this.$http(`${REP_API.JBS_REPORT_LIST}`, 'POST', params)
       },
       exportOption: {
-        exportInterface: REP_API.PKGSPECANDOUTPUT_OUT,
-        auth: 'report:production:packingExport',
+        exportInterface: REP_API.JBS_REPORT_EXPORT,
+        auth: 'report:production:jbsReportExport',
         text: 'JBS出品率'
       },
       column: [
         {
-          prop: 'brand',
+          prop: 'type',
           label: '大类'
         },
         {
-          prop: 'productLine',
+          prop: 'unit',
           label: '单位'
         },
         {
-          prop: 'type',
+          prop: 'jbsOut',
           label: 'JBS出库数'
         },
         {
-          prop: 'boxNums',
+          prop: 'filterNums',
           label: '过滤领用数'
         },
         {
-          prop: 'boxNumsSum',
+          prop: 'jbsProduce',
           label: 'JBS出品率'
         }
       ]
