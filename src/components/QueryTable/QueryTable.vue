@@ -71,7 +71,7 @@
       </el-card>
       <el-tabs v-if="tabs.length" v-model="activeName" type="border-card">
         <el-tab-pane :name='index.toString()' :label='tabItem.label' v-for="(tabItem, index) in tabs" :key="index">
-          <el-table :data="tabItem.tableData" ref="table" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+          <el-table :data="tabItem.tableData" height="400" ref="table" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
             <el-table-column
               v-if="showSelectColumn"
               :selectable="selectableFn"

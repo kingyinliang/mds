@@ -20,7 +20,7 @@
       </el-card>
       <el-tabs v-model="activeName" type="border-card" style="margin-top: 5px;">
         <el-tab-pane name="0" label="吹瓶一车间">
-          <el-table :data="dataList" border header-row-class-name="tableHead">
+          <el-table :data="dataList" height="400" border header-row-class-name="tableHead">
             <el-table-column label="名称" prop="theDate"></el-table-column>
             <el-table-column label="瓶胚领用/个">
               <el-table-column label="普利思" prop="plsRec"></el-table-column>
@@ -39,7 +39,7 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane name="1" label="吹瓶二车间">
-          <el-table :data="dataList2" border header-row-class-name="tableHead">
+          <el-table :data="dataList2" height="400" border header-row-class-name="tableHead">
             <el-table-column label="名称" prop="theDate"></el-table-column>
             <el-table-column label="瓶胚领用/个">
               <el-table-column label="普利思" prop="plsRec"></el-table-column>
