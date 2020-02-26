@@ -956,6 +956,8 @@ export const REP_API = {
   FERMENTATION_EXPORT_API: HOST + '/report/production/fermentationStatusExport', // 发酵一览表导出
   JBS_REPORT_LIST: HOST + '/jbs/report/jbsReport', // JBS查询
   JBS_REPORT_EXPORT: HOST + '/report/jbsReportExport', // JBS导出
+  PKGOUTPUT_LIST_API: HOST + '/report/fromEs/materialSummary', // 包装品项产量汇总查询
+  PKGOUTPUT_EXPORT_API: HOST + '/report/fromEs/expectMaterialSummary', // 包装品项产量汇总导出
   /** ************************* 吹瓶车间报表 ************************** */
   BOTTLEQUALITY_MATERIALCODE_API: HOST + '/report/production/bottleQualityMaterialCode', // 品项下拉
   BOTTLEQUALITY_LIST_API: HOST + '/report/production/bottleQuality', // 查询

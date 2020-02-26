@@ -1141,12 +1141,12 @@ export default {
     },
     wheatConfirm () {
       let that = this
+      that.formHeader.submitStatus = 'saved'
       let savedWh = new Promise((resolve, reject) => {
         that.savewheats(resolve, reject)
       })
       savedWh.then(() => {
         let savedStatus = new Promise((resolve, reject) => {
-          that.formHeader.submitStatus = 'saved'
           that.savestauts(resolve, reject)
         })
         savedStatus.then(() => {
@@ -1156,16 +1156,16 @@ export default {
     },
     soyConfirm () {
       let that = this
+      that.formHeader.submitStatus = 'saved'
       let savedSoy = new Promise((resolve, reject) => {
         that.savepulps(resolve, reject)
       })
       savedSoy.then(() => {
         let savedStatus = new Promise((resolve, reject) => {
-          that.formHeader.submitStatus = 'saved'
           that.savestauts(resolve, reject)
         })
         savedStatus.then(() => {
-          that.$emit('HeadUpdate', 'wheat')
+          that.$emit('HeadUpdate', 'soy')
         })
       })
     },
@@ -1378,6 +1378,7 @@ export default {
                 this.$refs.pulpTable.bodyWrapper.scrollTop = this.$refs.pulpTable.bodyWrapper.scrollHeight
               })
             }
+            this.soyConfirm()
           }
         } else {
           return false

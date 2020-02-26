@@ -20,7 +20,7 @@
       </el-card>
       <el-tabs v-model="activeName" type="border-card" style="margin-top: 5px;">
         <el-tab-pane name="0" label="杀菌一车间">
-          <el-table :data="dataList" border header-row-class-name="tableHead" :span-method="objectSpanMethod">
+          <el-table :data="dataList" height="400" border header-row-class-name="tableHead" :span-method="objectSpanMethod">
             <el-table-column label="产出物料" prop="materialH" width="190" show-overflow-tooltip fixed></el-table-column>
             <el-table-column label="投入物料" prop="material" width="180" show-overflow-tooltip fixed></el-table-column>
             <el-table-column label="月汇总" width="180" fixed>
@@ -35,7 +35,7 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane name="1" label="杀菌二车间">
-          <el-table :data="dataList2" border header-row-class-name="tableHead" :span-method="objectSpanMethod2">
+          <el-table :data="dataList2" height="400" border header-row-class-name="tableHead" :span-method="objectSpanMethod2">
             <el-table-column label="产出物料" prop="materialH" width="190" show-overflow-tooltip fixed></el-table-column>
             <el-table-column label="投入物料" prop="material" width="180" show-overflow-tooltip fixed></el-table-column>
             <el-table-column label="月汇总" width="180" fixed>

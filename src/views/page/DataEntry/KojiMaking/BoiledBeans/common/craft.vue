@@ -808,10 +808,18 @@ export default {
     getList (formHeader) {
       this.$http(`${KJM_API.DOUGONGYILISTSAVE_API}`, 'POST', {orderHouseId: formHeader.orderHouseId}).then(({data}) => {
         if (data.code === 0) {
-          this.craftfrom = data.technologyList[0]
-          this.lishuiList = data.boiledList
-          this.zhengzhuList = data.cookingList
-          this.hunheList = data.blendList
+          if (data.technologyList[0]) {
+            this.craftfrom = data.technologyList[0]
+          }
+          if (data.boiledList.length) {
+            this.lishuiList = data.boiledList
+          }
+          if (data.cookingList.length) {
+            this.zhengzhuList = data.cookingList
+          }
+          if (data.blendList) {
+            this.hunheList = data.blendList
+          }
           // this.wheatList = data.wheatList
           // this.soyList = data.pulpList
         } else {
