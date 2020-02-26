@@ -769,7 +769,7 @@ export default {
         }
       ],
       submitRules: () => {
-        return [this.Readyrules, this.$refs.excrecord.excrul()]
+        return [this.Readyrules, this.$refs.excrecord.excrul]
       },
       savedRules: () => {
         return []

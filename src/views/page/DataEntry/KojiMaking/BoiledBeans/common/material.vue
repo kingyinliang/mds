@@ -1141,12 +1141,12 @@ export default {
     },
     wheatConfirm () {
       let that = this
+      that.formHeader.submitStatus = 'saved'
       let savedWh = new Promise((resolve, reject) => {
         that.savewheats(resolve, reject)
       })
       savedWh.then(() => {
         let savedStatus = new Promise((resolve, reject) => {
-          that.formHeader.submitStatus = 'saved'
           that.savestauts(resolve, reject)
         })
         savedStatus.then(() => {
@@ -1156,12 +1156,12 @@ export default {
     },
     soyConfirm () {
       let that = this
+      that.formHeader.submitStatus = 'saved'
       let savedSoy = new Promise((resolve, reject) => {
         that.savepulps(resolve, reject)
       })
       savedSoy.then(() => {
         let savedStatus = new Promise((resolve, reject) => {
-          that.formHeader.submitStatus = 'saved'
           that.savestauts(resolve, reject)
         })
         savedStatus.then(() => {
