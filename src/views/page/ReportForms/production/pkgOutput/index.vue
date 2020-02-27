@@ -13,6 +13,29 @@
       :export-excel="true"
       :export-option="exportOption">
     </query-table>
+    <el-table :data="tableData">
+      <el-table-column
+        v-for="item in column"
+        v-if="!item.hide"
+        :key="item.prop"
+        :fixed="item.fixed"
+        :prop="item.prop"
+        :label="item.label"
+        :width="item.width || ''"
+        :formatter="item.formatter"
+        :show-overflow-tooltip="true">
+        <el-table-column
+          v-for="chind in item.child"
+          v-if="item.child"
+          :key="chind.prop"
+          :prop="chind.prop"
+          :label="chind.label"
+          :formatter="chind.formatter"
+          :show-overflow-tooltip="chind.showOverFlowTooltip"
+          :width="chind.width || ''">
+        </el-table-column>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -76,13 +99,7 @@ export default {
         exportInterface: REP_API.PKGOUTPUT_EXPORT_API,
         auth: 'report:fromEs:expectMaterialSummary',
         text: '包装品项产量汇总导出'
-      },
-      column: [
-        {
-          prop: 'brand',
-          label: '包装品项产量汇总'
-        }
-      ]
+      }
     }
   },
   mounted () {
@@ -117,7 +134,16 @@ export default {
         }
         console.log(obj)
         this.column = arr
-        this.$refs.queryTable.tableData = [obj]
+        this.$refs.queryTable.tableData = [{
+          item0: 395062,
+          item1: 5551722.86,
+          item2: 469521.2,
+          item3: 1656567.8,
+          item4: 5620.5,
+          item5: 344197.5,
+          item6: 14595,
+          item7: 21957
+        }]
       }
     }
   },
