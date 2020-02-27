@@ -80,31 +80,7 @@ export default {
       column: [
         {
           prop: 'brand',
-          label: '品相'
-        },
-        {
-          prop: 'productLine',
-          label: '产线'
-        },
-        {
-          prop: 'type',
-          label: '类别'
-        },
-        {
-          prop: 'boxNums',
-          label: '箱数'
-        },
-        {
-          prop: 'boxNumsSum',
-          label: '小计'
-        },
-        {
-          prop: 'squareNums',
-          label: '方数'
-        },
-        {
-          prop: 'squareNumsSum',
-          label: '小计'
+          label: '包装品项产量汇总'
         }
       ]
     }
@@ -113,19 +89,35 @@ export default {
   },
   methods: {
     getDataSuccess (data) {
-      if (this.$refs.queryTable.tableData.length) {
-        this.$refs.queryTable.tableData.push({
-          brand: '总计',
-          productLine: '',
-          type: '',
-          boxNums: this.$refs.queryTable.tableData[0].boxNumsTotal,
-          boxNumsSum: '',
-          squareNums: this.$refs.queryTable.tableData[0].squareNumsTotal,
-          squareNumsSum: '',
-          boxNumsTotal: 0,
-          squareNumsTotal: 0,
-          mergeNums: 1
-        })
+      if (data.list.length) {
+        let arr = []
+        let keyIndex = 0
+        for (var item of data.list) {
+          let arrTwo = []
+          if (item.summary.length) {
+            for (var it of item.summary) {
+              arrTwo.push({
+                label: it.largeClassName,
+                prop: 'item' + keyIndex
+              })
+              keyIndex++
+            }
+          }
+          arr.push({
+            label: item.brand,
+            child: arrTwo
+          })
+        }
+        console.log(arr)
+        let obj = {}
+        let num = 0
+        for (var items of data.content) {
+          obj['item' + num] = items
+          num++
+        }
+        console.log(obj)
+        this.column = arr
+        this.$refs.queryTable.tableData = [obj]
       }
     }
   },
