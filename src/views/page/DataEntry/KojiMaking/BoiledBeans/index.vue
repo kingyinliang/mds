@@ -200,7 +200,7 @@ export default {
         }
       ],
       submitRules: () => {
-        return [this.$refs.material.mainrules, this.$refs.craft.craftrules, this.$refs.excrecord.excrul]
+        return [this.formHeaderRul, this.$refs.material.mainrules, this.$refs.craft.craftrules, this.$refs.excrecord.excrul]
       },
       savedRules: () => {
         return [this.formHeaderRul]

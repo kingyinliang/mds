@@ -152,7 +152,7 @@
       </el-row>
       <el-table class="newTable" border ref="pulpTable" max-height="275" header-row-class-name="tableHead" :data="soyList" @row-dblclick="editsoy" :row-class-name="rowDelFlag" style="margin-top: 10px;">
         <el-table-column label="日期" prop="pulpDate" width="110"></el-table-column>
-        <el-table-column label="物料" width="190">
+        <el-table-column label="物料">
           <template slot-scope="scope">
             {{scope.row.materialCode}} {{scope.row.materialName}}
           </template>

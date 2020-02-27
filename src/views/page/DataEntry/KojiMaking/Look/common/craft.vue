@@ -41,7 +41,7 @@
             <el-button type="primary" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" @click="addline" size="small" style="float: right; margin-right: 10px;"> + 新增</el-button>
           </el-col>
         </el-row>
-        <el-table border ref="recordTable" max-height="315" header-row-class-name="tableHead" :data="lookList" :row-class-name="rowDelFlag" tooltip-effect="dark">
+        <el-table class="newTable borderTable" border ref="recordTable" max-height="315" header-row-class-name="tableHead" :data="lookList" :row-class-name="rowDelFlag" tooltip-effect="dark">
           <el-table-column label="序号" type="index" width="50px"></el-table-column>
           <el-table-column label="" width="205">
             <template slot="header">
