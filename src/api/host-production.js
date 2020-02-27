@@ -6,6 +6,9 @@ if (type === undefined) {
   HOST = 'https://apimarket-dev.shinho.net.cn/xhqy-fc'
 } else {
   switch (type) {
+    // case 'dev':
+    //   HOST = 'http://localhost:8080/xhqy-fc'
+    //   break
     case 'dev':
       HOST = 'https://apimarket-dev.shinho.net.cn/xhqy-fc'
       // HOST = 'http://ALB001-ECS-1995142321.cn-north-1.elb.amazonaws.com.cn/xhqy-fc'

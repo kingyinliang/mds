@@ -1,217 +1,389 @@
 <template>
   <div>
-    <el-card>
-      <div>
-        <span class="lh32px">种曲</span>
-        <el-button type="text" class="readyshiftBtn" name="zhongar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
+    <mds-card :title="'种曲'" :name="'material'">
+      <template slot="titleBtn">
         <el-button type="primary" size="small" @click="addmaterial" :disabled="!isRedact" style="float: right;"> + 新增</el-button>
-      </div>
-        <div class="zhongarBox">
-        <el-table ref="materialTable" border max-height="267" style="margin-top: 10px;" header-row-class-name="tableHead" :data="materialList" :row-class-name="rowDelFlag">
-          <el-input type="index"></el-input>
-          <el-table-column width="125px">
-            <template slot="header">
-              <i class="reqI">*</i>
-              <span>日期</span>
-            </template>
-            <template slot-scope="scope">{{scope.row.materialDate}}</template>
-          </el-table-column>
-          <el-table-column width="180px">
-            <template slot="header">
-              <i class="reqI">*</i>
-              <span>种曲</span>
-            </template>
-            <template slot-scope="scope">
-              <el-select v-model.trim="scope.row.materialCode" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
-                <el-option :label="item.code +' '+ item.value" v-for="(item, index) in materialShort" :key="index" :value="item.code +' '+ item.value"></el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column width="130px">
-            <template slot="header">
-              <i class="reqI">*</i>
-              <span>生产批次</span>
-            </template>
-            <template slot-scope="scope">
-              <el-input maxlength="10" v-model="scope.row.productBatch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column label="物料批次" width="130px">
-            <template slot-scope="scope">
-              <el-input maxlength="10" v-model="scope.row.materialBatch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column>
-            <template slot="header">
-              <i class="reqI">*</i>
-              <span>数量</span>
-            </template>
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.amount" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column width="60px">
-            <template slot="header">
-              <i class="reqI">*</i>
-              <span>单位</span>
-            </template>
-            <template slot-scope="scope">{{scope.row.unitName}}</template>
-          </el-table-column>
-          <el-table-column label="操作人" prop="changer" width="140px"></el-table-column>
-          <el-table-column label="操作时间" prop="changed" width="160px"></el-table-column>
-          <el-table-column label="操作" width="70" fixed="right">
-            <template slot-scope="scope">
-              <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delrow(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-card>
-    <el-card>
-      <div class="solecontent">
-        <p class="lh32px">小麦粉用量：</p><p class="input_bommom">{{this.wheatUseNum}}</p>
-        <!-- <p class="lh32px" style="margin-left:20px">小麦：</p>
-        <p>
-          <el-select v-model="wheatliang" placeholder="请选择" :disabled="!isRedact" size="small">
-            <el-option :label="item.code +' '+ item.value" v-for="(item, index) in wheatShort" :key="index" :value="item.code +' '+ item.value"></el-option>
-          </el-select>
-        </p> -->
-        <el-button type="text" class="readyshiftBtn" name="wheatar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
-      </div>
-      <div class="wheatarBox">
-        <el-row style="margin-top: 10px;">
-          <el-col class="box" v-for="(sole, indexss) in MaiHoldList" :key="indexss">
-            <div class="boxTitle">{{sole.holderName}}</div>
-            <div class="boxContent">
-              <div :id="`JM_${sole.holderId}`" class="chart-box"></div>
-              <!-- <el-progress type="circle" :percentage="sole.percent" :stroke-width="10" :width="135" status="text">{{sole.total}}KG</el-progress> -->
-              <el-popover  placement="top" title="标题" width="200" trigger="hover">
-                <div class="boxText">
-                  <div v-for="(soles, index) in sole.pici" :key="index">
-                    <div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="(index%3) === 0"></el-progress>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="(index-1)%3 === 0"></el-progress>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="(index-2)%3 === 0"></el-progress>
-                  </div>
+      </template>
+      <el-table class="newTable" ref="materialTable" border max-height="267" style="margin-top: 10px;" header-row-class-name="tableHead" :data="materialList" :row-class-name="rowDelFlag">
+        <el-input type="index"></el-input>
+        <el-table-column width="125px">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>日期</span>
+          </template>
+          <template slot-scope="scope">{{scope.row.materialDate}}</template>
+        </el-table-column>
+        <el-table-column width="180px">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>种曲</span>
+          </template>
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.materialCode" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
+              <el-option :label="item.code +' '+ item.value" v-for="(item, index) in materialShort" :key="index" :value="item.code"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column width="130px">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>生产批次</span>
+          </template>
+          <template slot-scope="scope">
+            <el-input maxlength="10" v-model="scope.row.productBatch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column label="物料批次" width="130px">
+          <template slot-scope="scope">
+            <el-input maxlength="10" v-model="scope.row.materialBatch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column>
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>数量</span>
+          </template>
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.amount" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column width="60px">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>单位</span>
+          </template>
+          <template slot-scope="scope">{{scope.row.unitName}}</template>
+        </el-table-column>
+        <el-table-column label="操作人" prop="changer" width="140px"></el-table-column>
+        <el-table-column label="操作时间" prop="changed" width="160px"></el-table-column>
+        <el-table-column label="操作" width="70" fixed="right">
+          <template slot-scope="scope">
+            <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delrow(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </mds-card>
+    <mds-card :title="'小麦粉'" :name="'wheat'" :iconBg="'#ffbf00'">
+      <p style="line-height: 30px;">小麦粉用量：<span style="display: inline-block; width: 140px; height: 30px; background: #f5f5f5; padding-left: 5px;">{{wheatUseNum}}</span></p>
+      <el-row style="margin-top: 10px;">
+        <el-col class="box" v-for="(sole, indexss) in MaiHoldList" :key="indexss">
+          <div class="boxTitle">{{sole.holderName}}</div>
+          <div class="boxContent">
+            <div :id="`JM_${sole.holderId}`" class="chart-box"></div>
+            <!-- <el-progress type="circle" :percentage="sole.percent" :stroke-width="10" :width="135" status="text">{{sole.total}}KG</el-progress> -->
+            <el-popover  placement="top" title="标题" width="200" trigger="hover">
+              <div class="boxText">
+                <div v-for="(soles, index) in sole.pici" :key="index">
+                  <div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="(index%3) === 0"></el-progress>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="(index-1)%3 === 0"></el-progress>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="(index-2)%3 === 0"></el-progress>
                 </div>
-                <div class="boxText" style="height: 90px;" slot="reference">
-                  <div v-for="(soles, index) in sole.pici" :key="index">
-                    <div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="index===0"></el-progress>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="index===1"></el-progress>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="index===2"></el-progress>
-                  </div>
+              </div>
+              <div class="boxText" style="height: 90px;" slot="reference">
+                <div v-for="(soles, index) in sole.pici" :key="index">
+                  <div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="index===0"></el-progress>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="index===1"></el-progress>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="index===2"></el-progress>
                 </div>
-              </el-popover>
-            </div>
-            <div style="width: 100%; text-align: center;">
-              <el-button class="boxButton" @click="startwheat(sole)" :disabled="!isRedact" style="margin: 15px auto; width: 75px; float: initial; line-height: 30px; height: 30px;">开始领用</el-button>
-              <el-button class="boxButton" @click="endwheat(sole)" :disabled="!isRedact" style="margin: 15px auto; width: 75px; float: initial; line-height: 30px; height: 30px;">结束领用</el-button>
-            </div>
-          </el-col>
-        </el-row>
-        <el-table ref="wheatTable" max-height="276" border header-row-class-name="tableHead" :data="wheatList" style="margin-top: 10px;" @row-dblclick="editwheat" :row-class-name="rowDelFlag">
-          <el-table-column label="日期" prop="useDate" width="100"></el-table-column>
-          <el-table-column label="物料" prop="materialCode" width="160">
-            <template slot-scope="scope">
-              {{scope.row.materialCode}} {{scope.row.materialName}}
-            </template>
-          </el-table-column>
-          <el-table-column label="麦粉罐" prop="holderName" width="140"></el-table-column>
-          <el-table-column label="批次" prop="whtBatch" width="110"></el-table-column>
-          <el-table-column label="起始" prop="startWeight"></el-table-column>
-          <el-table-column label="结束" prop="endWeight"></el-table-column>
-          <el-table-column label="领用数" prop="userWeight" width="70"></el-table-column>
-          <el-table-column label="单位" prop="unit" width="50"></el-table-column>
-          <el-table-column label="操作人员" prop="changer" width="140"></el-table-column>
-          <el-table-column label="操作时间" prop="changed" width="160"></el-table-column>
-          <el-table-column label="操作" width="70" fixed="right">
-            <template slot-scope="scope">
-              <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delwheatRow(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-card>
-    <el-card>
-      <div class="solecontent">
-        <p class="lh32px">豆粕用量：</p><p class="input_bommom">{{soyUseNum}}</p>
-        <!-- <p class="lh32px" style="margin-left:20px">豆粕：</p>
-        <p>
-          <el-select v-model="soyliang" placeholder="请选择" :disabled="!isRedact" size="small">
-            <el-option :label="item.code +' '+ item.value" v-for="(item, index) in soyShort" :key="index" :value="item.code +' '+ item.value"></el-option>
-          </el-select>
-        </p> -->
-        <el-button type="text" class="readyshiftBtn" name="soyar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
-      </div>
-      <div class="soyarBox">
-        <el-row style="margin-top: 10px;">
-          <el-col class="box" v-for="sole in DouHoldList" :key="sole.holderid">
-            <div class="boxTitle">{{sole.holderName}}</div>
-            <div class="boxContent">
-              <!-- <el-progress type="circle" :percentage="sole.percent" :stroke-width="10" :width="135" status="text">{{sole.total}}KG</el-progress> -->
-              <div :id="`J_${sole.holderId}`" class="chart-box"></div>
-              <el-popover  placement="top" title="" width="200" trigger="hover" v-if="sole.pici !== ''">
-                <div class="boxText">
-                  <div v-for="(soles, index) in sole.pici" :key="index">
-                    <div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="(index%3) === 0"></el-progress>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="(index-1)%3 === 0"></el-progress>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="(index-2)%3 === 0"></el-progress>
-                  </div>
+              </div>
+            </el-popover>
+          </div>
+          <div style="width: 100%; text-align: center;">
+            <el-button class="boxButton" @click="startwheat(sole)" :disabled="!isRedact" style="margin: 15px auto; width: 75px; float: initial; line-height: 30px; height: 30px;">开始领用</el-button>
+            <el-button class="boxButton" @click="endwheat(sole)" :disabled="!isRedact" style="margin: 15px auto; width: 75px; float: initial; line-height: 30px; height: 30px;">结束领用</el-button>
+          </div>
+        </el-col>
+      </el-row>
+      <el-table class="newTable" ref="wheatTable" max-height="276" border header-row-class-name="tableHead" :data="wheatList" style="margin-top: 10px;" @row-dblclick="editwheat" :row-class-name="rowDelFlag">
+        <el-table-column label="日期" prop="useDate" width="110"></el-table-column>
+        <el-table-column label="物料" prop="materialCode" width="160">
+          <template slot-scope="scope">
+            {{scope.row.materialCode}} {{scope.row.materialName}}
+          </template>
+        </el-table-column>
+        <el-table-column label="麦粉罐" prop="holderName" width="140"></el-table-column>
+        <el-table-column label="批次" prop="whtBatch" width="110"></el-table-column>
+        <el-table-column label="起始" prop="startWeight"></el-table-column>
+        <el-table-column label="结束" prop="endWeight"></el-table-column>
+        <el-table-column label="领用数" prop="userWeight" width="70"></el-table-column>
+        <el-table-column label="单位" prop="unit" width="50"></el-table-column>
+        <el-table-column label="操作人员" prop="changer" width="140"></el-table-column>
+        <el-table-column label="操作时间" prop="changed" width="160"></el-table-column>
+        <el-table-column label="操作" width="70" fixed="right">
+          <template slot-scope="scope">
+            <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delwheatRow(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </mds-card>
+    <mds-card :title="'豆粕'" :name="'soy'" :iconBg="'#5bd171'">
+      <p style="line-height: 30px;">豆粕用量：<span style="display: inline-block; width: 140px; height: 30px; background: #f5f5f5; padding-left: 5px;">{{soyUseNum}}</span></p>
+      <el-row style="margin-top: 10px;">
+        <el-col class="box" v-for="sole in DouHoldList" :key="sole.holderid">
+          <div class="boxTitle">{{sole.holderName}}</div>
+          <div class="boxContent">
+            <!-- <el-progress type="circle" :percentage="sole.percent" :stroke-width="10" :width="135" status="text">{{sole.total}}KG</el-progress> -->
+            <div :id="`J_${sole.holderId}`" class="chart-box"></div>
+            <el-popover  placement="top" title="" width="200" trigger="hover" v-if="sole.pici !== ''">
+              <div class="boxText">
+                <div v-for="(soles, index) in sole.pici" :key="index">
+                  <div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="(index%3) === 0"></el-progress>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="(index-1)%3 === 0"></el-progress>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="(index-2)%3 === 0"></el-progress>
                 </div>
-                <div class="boxText" slot="reference" style="height: 90px;">
-                  <div v-for="(soles, index) in sole.pici" :key="index">
-                    <div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="index===0"></el-progress>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="index===1"></el-progress>
-                    <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="index===2"></el-progress>
-                  </div>
+              </div>
+              <div class="boxText" slot="reference" style="height: 90px;">
+                <div v-for="(soles, index) in sole.pici" :key="index">
+                  <div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="index===0"></el-progress>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="index===1"></el-progress>
+                  <el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="index===2"></el-progress>
                 </div>
-              </el-popover>
-            </div>
-            <div style="text-align: center; width: 140px; margin: 5px auto; overflow: hidden;">
-              <el-button type="button" class="boxButton" @click="rusoyM(sole)" :disabled="!isRedact">入罐</el-button><el-button class="boxButton" @click="chusoyM(sole)" :disabled="!isRedact">出罐</el-button>
-            </div>
-          </el-col>
-        </el-row>
-        <el-table border ref="pulpTable" max-height="275" header-row-class-name="tableHead" :data="soyList" @row-dblclick="editsoy" :row-class-name="rowDelFlag" style="margin-top: 10px;">
-          <el-table-column label="日期" prop="pulpDate" width="110"></el-table-column>
-          <el-table-column label="物料" width="190">
-            <template slot-scope="scope">
-              {{scope.row.materialCode}} {{scope.row.materialName}}
-            </template>
-          </el-table-column>
-          <el-table-column label="领用粮仓" prop="foodHolderName" width="100"></el-table-column>
-          <el-table-column label="豆粕仓" prop="pulpHolderName" width="130"></el-table-column>
-          <el-table-column label="批次" prop="batch" width="110"></el-table-column>
-          <el-table-column label="起始" prop="startWeight" width="70"></el-table-column>
-          <el-table-column label="结束" prop="endWeight" width="70"></el-table-column>
-          <el-table-column label="数量" prop="useWeight" width="70"></el-table-column>
-          <el-table-column label="单位" prop="unit" width="50"></el-table-column>
-          <el-table-column label="入罐/出罐" prop="useType" width="90"></el-table-column>
-          <el-table-column label="操作人员" prop="changer" width="140"></el-table-column>
-          <el-table-column label="操作时间" prop="changed" width="160"></el-table-column>
-          <el-table-column label="操作" width="70" fixed="right">
-            <template slot-scope="scope">
-              <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delsoyRow(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-card>
-    <el-card>
-      <audit-log></audit-log>
-    </el-card>
+              </div>
+            </el-popover>
+          </div>
+          <div style="text-align: center; width: 140px; margin: 5px auto; overflow: hidden;">
+            <el-button type="button" class="boxButton" @click="rusoyM(sole)" :disabled="!isRedact">入罐</el-button><el-button class="boxButton" @click="chusoyM(sole)" :disabled="!isRedact">出罐</el-button>
+          </div>
+        </el-col>
+      </el-row>
+      <el-table class="newTable" border ref="pulpTable" max-height="275" header-row-class-name="tableHead" :data="soyList" @row-dblclick="editsoy" :row-class-name="rowDelFlag" style="margin-top: 10px;">
+        <el-table-column label="日期" prop="pulpDate" width="110" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="物料" width="160" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            {{scope.row.materialCode}} {{scope.row.materialName}}
+          </template>
+        </el-table-column>
+        <el-table-column label="领用粮仓" prop="foodHolderName" width="100" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="豆粕仓" prop="pulpHolderName" width="130" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="批次" prop="batch" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="起始" prop="startWeight" width="70" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="结束" prop="endWeight" width="70" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="数量" prop="useWeight" width="70" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="入罐/出罐" prop="useType" width="90" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="操作人员" prop="changer" width="140" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="操作时间" prop="changed" width="160" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="操作" width="70" fixed="right">
+          <template slot-scope="scope">
+            <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delsoyRow(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </mds-card>
+    <audit-log></audit-log>
+    <!--<el-card>-->
+      <!--<div>-->
+        <!--<span class="lh32px">种曲</span>-->
+        <!--<el-button type="text" class="readyshiftBtn" name="zhongar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>-->
+        <!--<el-button type="primary" size="small" @click="addmaterial" :disabled="!isRedact" style="float: right;"> + 新增</el-button>-->
+      <!--</div>-->
+      <!--<div class="zhongarBox">-->
+        <!--<el-table ref="materialTable" border max-height="267" style="margin-top: 10px;" header-row-class-name="tableHead" :data="materialList" :row-class-name="rowDelFlag">-->
+          <!--<el-input type="index"></el-input>-->
+          <!--<el-table-column width="125px">-->
+            <!--<template slot="header">-->
+              <!--<i class="reqI">*</i>-->
+              <!--<span>日期</span>-->
+            <!--</template>-->
+            <!--<template slot-scope="scope">{{scope.row.materialDate}}</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column width="180px">-->
+            <!--<template slot="header">-->
+              <!--<i class="reqI">*</i>-->
+              <!--<span>种曲</span>-->
+            <!--</template>-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-select v-model.trim="scope.row.materialCode" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">-->
+                <!--<el-option :label="item.code +' '+ item.value" v-for="(item, index) in materialShort" :key="index" :value="item.code +' '+ item.value"></el-option>-->
+              <!--</el-select>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column width="130px">-->
+            <!--<template slot="header">-->
+              <!--<i class="reqI">*</i>-->
+              <!--<span>生产批次</span>-->
+            <!--</template>-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-input maxlength="10" v-model="scope.row.productBatch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column label="物料批次" width="130px">-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-input maxlength="10" v-model="scope.row.materialBatch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column>-->
+            <!--<template slot="header">-->
+              <!--<i class="reqI">*</i>-->
+              <!--<span>数量</span>-->
+            <!--</template>-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-input v-model="scope.row.amount" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small"></el-input>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column width="60px">-->
+            <!--<template slot="header">-->
+              <!--<i class="reqI">*</i>-->
+              <!--<span>单位</span>-->
+            <!--</template>-->
+            <!--<template slot-scope="scope">{{scope.row.unitName}}</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column label="操作人" prop="changer" width="140px"></el-table-column>-->
+          <!--<el-table-column label="操作时间" prop="changed" width="160px"></el-table-column>-->
+          <!--<el-table-column label="操作" width="70" fixed="right">-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delrow(scope.row)">删除</el-button>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+        <!--</el-table>-->
+      <!--</div>-->
+    <!--</el-card>-->
+    <!--<el-card>-->
+      <!--<div class="solecontent">-->
+        <!--<p class="lh32px">小麦粉用量：</p><p class="input_bommom">{{this.wheatUseNum}}</p>-->
+        <!--&lt;!&ndash; <p class="lh32px" style="margin-left:20px">小麦：</p>-->
+        <!--<p>-->
+          <!--<el-select v-model="wheatliang" placeholder="请选择" :disabled="!isRedact" size="small">-->
+            <!--<el-option :label="item.code +' '+ item.value" v-for="(item, index) in wheatShort" :key="index" :value="item.code +' '+ item.value"></el-option>-->
+          <!--</el-select>-->
+        <!--</p> &ndash;&gt;-->
+        <!--<el-button type="text" class="readyshiftBtn" name="wheatar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>-->
+      <!--</div>-->
+      <!--<div class="wheatarBox">-->
+        <!--<el-row style="margin-top: 10px;">-->
+          <!--<el-col class="box" v-for="(sole, indexss) in MaiHoldList" :key="indexss">-->
+            <!--<div class="boxTitle">{{sole.holderName}}</div>-->
+            <!--<div class="boxContent">-->
+              <!--<div :id="`JM_${sole.holderId}`" class="chart-box"></div>-->
+              <!--&lt;!&ndash; <el-progress type="circle" :percentage="sole.percent" :stroke-width="10" :width="135" status="text">{{sole.total}}KG</el-progress> &ndash;&gt;-->
+              <!--<el-popover  placement="top" title="标题" width="200" trigger="hover">-->
+                <!--<div class="boxText">-->
+                  <!--<div v-for="(soles, index) in sole.pici" :key="index">-->
+                    <!--<div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="(index%3) === 0"></el-progress>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="(index-1)%3 === 0"></el-progress>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="(index-2)%3 === 0"></el-progress>-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<div class="boxText" style="height: 90px;" slot="reference">-->
+                  <!--<div v-for="(soles, index) in sole.pici" :key="index">-->
+                    <!--<div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="index===0"></el-progress>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="index===1"></el-progress>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="index===2"></el-progress>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</el-popover>-->
+            <!--</div>-->
+            <!--<div style="width: 100%; text-align: center;">-->
+              <!--<el-button class="boxButton" @click="startwheat(sole)" :disabled="!isRedact" style="margin: 15px auto; width: 75px; float: initial; line-height: 30px; height: 30px;">开始领用</el-button>-->
+              <!--<el-button class="boxButton" @click="endwheat(sole)" :disabled="!isRedact" style="margin: 15px auto; width: 75px; float: initial; line-height: 30px; height: 30px;">结束领用</el-button>-->
+            <!--</div>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
+        <!--<el-table ref="wheatTable" max-height="276" border header-row-class-name="tableHead" :data="wheatList" style="margin-top: 10px;" @row-dblclick="editwheat" :row-class-name="rowDelFlag">-->
+          <!--<el-table-column label="日期" prop="useDate" width="100"></el-table-column>-->
+          <!--<el-table-column label="物料" prop="materialCode" width="160">-->
+            <!--<template slot-scope="scope">-->
+              <!--{{scope.row.materialCode}} {{scope.row.materialName}}-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column label="麦粉罐" prop="holderName" width="140"></el-table-column>-->
+          <!--<el-table-column label="批次" prop="whtBatch" width="110"></el-table-column>-->
+          <!--<el-table-column label="起始" prop="startWeight"></el-table-column>-->
+          <!--<el-table-column label="结束" prop="endWeight"></el-table-column>-->
+          <!--<el-table-column label="领用数" prop="userWeight" width="70"></el-table-column>-->
+          <!--<el-table-column label="单位" prop="unit" width="50"></el-table-column>-->
+          <!--<el-table-column label="操作人员" prop="changer" width="140"></el-table-column>-->
+          <!--<el-table-column label="操作时间" prop="changed" width="160"></el-table-column>-->
+          <!--<el-table-column label="操作" width="70" fixed="right">-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delwheatRow(scope.row)">删除</el-button>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+        <!--</el-table>-->
+      <!--</div>-->
+    <!--</el-card>-->
+    <!--<el-card>-->
+      <!--<div class="solecontent">-->
+        <!--<p class="lh32px">豆粕用量：</p><p class="input_bommom">{{soyUseNum}}</p>-->
+        <!--&lt;!&ndash; <p class="lh32px" style="margin-left:20px">豆粕：</p>-->
+        <!--<p>-->
+          <!--<el-select v-model="soyliang" placeholder="请选择" :disabled="!isRedact" size="small">-->
+            <!--<el-option :label="item.code +' '+ item.value" v-for="(item, index) in soyShort" :key="index" :value="item.code +' '+ item.value"></el-option>-->
+          <!--</el-select>-->
+        <!--</p> &ndash;&gt;-->
+        <!--<el-button type="text" class="readyshiftBtn" name="soyar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>-->
+      <!--</div>-->
+      <!--<div class="soyarBox">-->
+        <!--<el-row style="margin-top: 10px;">-->
+          <!--<el-col class="box" v-for="sole in DouHoldList" :key="sole.holderid">-->
+            <!--<div class="boxTitle">{{sole.holderName}}</div>-->
+            <!--<div class="boxContent">-->
+              <!--&lt;!&ndash; <el-progress type="circle" :percentage="sole.percent" :stroke-width="10" :width="135" status="text">{{sole.total}}KG</el-progress> &ndash;&gt;-->
+              <!--<div :id="`J_${sole.holderId}`" class="chart-box"></div>-->
+              <!--<el-popover  placement="top" title="" width="200" trigger="hover" v-if="sole.pici !== ''">-->
+                <!--<div class="boxText">-->
+                  <!--<div v-for="(soles, index) in sole.pici" :key="index">-->
+                    <!--<div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="(index%3) === 0"></el-progress>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="(index-1)%3 === 0"></el-progress>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="(index-2)%3 === 0"></el-progress>-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<div class="boxText" slot="reference" style="height: 90px;">-->
+                  <!--<div v-for="(soles, index) in sole.pici" :key="index">-->
+                    <!--<div>批次:{{soles.batch}}<span>{{soles.amount}}KG</span></div>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#1890FF" v-if="index===0"></el-progress>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#5BD171" v-else-if="index===1"></el-progress>-->
+                    <!--<el-progress :percentage="soles.proportion" :show-text="false" :text-inside="true" :stroke-width="8" color="#F5A623" v-else-if="index===2"></el-progress>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</el-popover>-->
+            <!--</div>-->
+            <!--<div style="text-align: center; width: 140px; margin: 5px auto; overflow: hidden;">-->
+              <!--<el-button type="button" class="boxButton" @click="rusoyM(sole)" :disabled="!isRedact">入罐</el-button><el-button class="boxButton" @click="chusoyM(sole)" :disabled="!isRedact">出罐</el-button>-->
+            <!--</div>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
+        <!--<el-table border ref="pulpTable" max-height="275" header-row-class-name="tableHead" :data="soyList" @row-dblclick="editsoy" :row-class-name="rowDelFlag" style="margin-top: 10px;">-->
+          <!--<el-table-column label="日期" prop="pulpDate" width="110"></el-table-column>-->
+          <!--<el-table-column label="物料" width="190">-->
+            <!--<template slot-scope="scope">-->
+              <!--{{scope.row.materialCode}} {{scope.row.materialName}}-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column label="领用粮仓" prop="foodHolderName" width="100"></el-table-column>-->
+          <!--<el-table-column label="豆粕仓" prop="pulpHolderName" width="130"></el-table-column>-->
+          <!--<el-table-column label="批次" prop="batch" width="110"></el-table-column>-->
+          <!--<el-table-column label="起始" prop="startWeight" width="70"></el-table-column>-->
+          <!--<el-table-column label="结束" prop="endWeight" width="70"></el-table-column>-->
+          <!--<el-table-column label="数量" prop="useWeight" width="70"></el-table-column>-->
+          <!--<el-table-column label="单位" prop="unit" width="50"></el-table-column>-->
+          <!--<el-table-column label="入罐/出罐" prop="useType" width="90"></el-table-column>-->
+          <!--<el-table-column label="操作人员" prop="changer" width="140"></el-table-column>-->
+          <!--<el-table-column label="操作时间" prop="changed" width="160"></el-table-column>-->
+          <!--<el-table-column label="操作" width="70" fixed="right">-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delsoyRow(scope.row)">删除</el-button>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+        <!--</el-table>-->
+      <!--</div>-->
+    <!--</el-card>-->
     <el-dialog :close-on-click-modal="false" :title="MTitle" :visible.sync="dialogFormVisibleMai" width="450px" custom-class='dialog__class'>
       <div slot="title">{{this.MTitle}}</div>
       <el-form :model="wheat" size="small" :rules="wheatrulestar" ref="wheatstar">
         <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">
-          <el-select v-model="wheat.whtBatch" placeholder="请选择">
+          <el-select v-model="wheat.whtBatch" placeholder="请选择" style="width: 100%;">
             <el-option v-for='sole in wheatPiArray' :key="sole.batch" :value="sole.batch" :label="sole.batch"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
+        <el-form-item label="物料描述：" :label-width="formLabelWidth"><p class="disabled-text">{{wheat.materialCode}} {{wheat.materialName}}</p></el-form-item>
         <el-form-item label="起始数：" :label-width="formLabelWidth" prop="startWeight">
           <el-input type="number" disabled @mousewheel.native.prevent v-model.number="wheat.startWeight" autocomplete="off"></el-input>
         </el-form-item>
@@ -219,15 +391,15 @@
         <el-form-item label="操作人：" :label-width="formLabelWidth">{{wheat.changer}}</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisibleMai = false">取 消</el-button>
-        <el-button type="primary" @click="savewheat('wheatstar')">确 定</el-button>
+        <el-button @click="dialogFormVisibleMai = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="savewheat('wheatstar')" size="small">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="MTitle" :visible.sync="dialogFormVisibleMai2" width="450px" custom-class='dialog__class'>
       <div slot="title">{{this.MTitle}}</div>
-      <el-form :model="wheat" size="small" :rules="wheatrulend" ref="wheatend">
-        <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">{{wheat.whtBatch}}</el-form-item>
-        <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
+      <el-form :model="wheat" size="small" @submit.native.prevent :rules="wheatrulend" ref="wheatend">
+        <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch"><p class="disabled-text">{{wheat.whtBatch}}</p></el-form-item>
+        <el-form-item label="物料描述：" :label-width="formLabelWidth"><p class="disabled-text">{{wheat.materialCode}} {{wheat.materialName}}</p></el-form-item>
         <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
           <el-input type="number" @mousewheel.native.prevent v-model.number="wheat.endWeight" autocomplete="off"></el-input>
         </el-form-item>
@@ -235,70 +407,70 @@
         <el-form-item label="操作人：" :label-width="formLabelWidth">{{wheat.changer}}</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisibleMai2 = false">取 消</el-button>
-        <el-button type="primary" @click="savewheat('wheatend')">确 定</el-button>
+        <el-button @click="dialogFormVisibleMai2 = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="savewheat('wheatend')" size="small">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="MTitle" :visible.sync="dialogFormVisibleMai3" width="450px" custom-class='dialog__class'>
       <div slot="title">{{this.MTitle}}</div>
-      <el-form :model="wheat" size="small" :rules="wheatrules" ref="wheat">
+      <el-form :model="wheat" size="small" @submit.native.prevent :rules="wheatrules" ref="wheat">
         <el-form-item label="麦粉批次：" :label-width="formLabelWidth" prop="whtBatch">
-          <el-select v-model="wheat.whtBatch" placeholder="请选择">
+          <el-select v-model="wheat.whtBatch" placeholder="请选择" style="width: 100%;">
             <el-option v-for='sole in wheatPiArray' :key="sole.batch" :value="sole.batch" :label="sole.batch"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="物料描述：" :label-width="formLabelWidth">{{wheat.materialCode}} {{wheat.materialName}}</el-form-item>
+        <el-form-item label="物料描述：" :label-width="formLabelWidth"><p class="disabled-text">{{wheat.materialCode}} {{wheat.materialName}}</p></el-form-item>
         <el-form-item label="起始数：" :label-width="formLabelWidth" prop="startWeight">
           <el-input type="number" disabled @mousewheel.native.prevent v-model.number="wheat.startWeight" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
           <el-input type="number" @mousewheel.native.prevent v-model.number="wheat.endWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="领用数量：" :label-width="formLabelWidth" prop="wheatuseprop">{{lnum}}</el-form-item>
+        <el-form-item label="领用数量：" :label-width="formLabelWidth" prop="wheatuseprop"><p class="disabled-text">{{lnum}}</p></el-form-item>
         <el-form-item label="操作时间：" :label-width="formLabelWidth">{{wheat.changed}}</el-form-item>
         <el-form-item label="操作人：" :label-width="formLabelWidth">{{wheat.changer}}</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisibleMai3 = false">取 消</el-button>
-        <el-button type="primary" @click="savewheat('wheat')">确 定</el-button>
+        <el-button @click="dialogFormVisibleMai3 = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="savewheat('wheat')" size="small">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="DRTitle" :visible.sync="dialogFormVisibleDouRu" width="450px" custom-class='dialog__class'>
       <div slot="title">{{this.DRTitle}}</div>
-      <el-form :model="rusoy" size="small" :rules="rusoyrules" ref="rusoy">
+      <el-form :model="rusoy" size="small" @submit.native.prevent :rules="rusoyrules" ref="rusoy">
         <el-form-item label="领用粮仓：" :label-width="formLabelWidth" prop="foodHolderId">
-          <el-select v-model="rusoy.foodHolderId" @change="changCang()">
+          <el-select v-model="rusoy.foodHolderId" @change="changCang()" style="width: 100%;">
             <el-option v-for='sole in PulpCangList' :key="sole.holderId" :value="sole.holderId" :label="sole.holderName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="批次：" :label-width="formLabelWidth" prop="batch">
-          <el-select v-model="rusoy.batch">
+          <el-select v-model="rusoy.batch" style="width: 100%;">
             <el-option v-for="(sole, index) in PulpCangBatchList" :key="index" :value="sole.batch" :label="sole.batch"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="领用物料：" :label-width="formLabelWidth">{{rusoy.materialCode}} {{rusoy.materialName}}</el-form-item>
-        <el-form-item label="剩余数：" :label-width="formLabelWidth">{{rusoy.currentQuantity}}</el-form-item>
+        <el-form-item label="领用物料：" :label-width="formLabelWidth"><p class="disabled-text">{{rusoy.materialCode}} {{rusoy.materialName}}</p></el-form-item>
+        <el-form-item label="剩余数：" :label-width="formLabelWidth"><p class="disabled-text">{{rusoy.currentQuantity}}</p></el-form-item>
         <el-form-item label="起始数：" :label-width="formLabelWidth" prop="startWeight">
           <el-input type="number" @mousewheel.native.prevent v-model.number="rusoy.startWeight" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
           <el-input type="number" @mousewheel.native.prevent v-model.number="rusoy.endWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="领用数量：" :label-width="formLabelWidth">{{rusoylnum}}</el-form-item>
+        <el-form-item label="领用数量：" :label-width="formLabelWidth"><p class="disabled-text">{{rusoylnum}}</p></el-form-item>
         <el-form-item label="操作时间：" :label-width="formLabelWidth">{{rusoy.changed}}</el-form-item>
         <el-form-item label="操作人：" :label-width="formLabelWidth">{{rusoy.changer}}</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisibleDouRu = false">取 消</el-button>
-        <el-button type="primary" @click="soydialogrusave('rusoy')">确 定</el-button>
+        <el-button @click="dialogFormVisibleDouRu = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="soydialogrusave('rusoy')" size="small">确 定</el-button>
       </div>
     </el-dialog>
     <el-dialog :close-on-click-modal="false" :title="DCTitle" :visible.sync="dialogFormVisibleDouChu" width="450px" custom-class='dialog__class'>
       <div slot="title">{{this.DCTitle}}</div>
-      <el-form :model="chusoy" size="small" :rules="chusoyrules" ref="chusoy">
+      <el-form :model="chusoy" size="small" @submit.native.prevent :rules="chusoyrules" ref="chusoy">
         <el-form-item label="批次：" :label-width="formLabelWidth" prop="batch">
           <!-- <el-input v-model="chusoy.batch" autocomplete="off" maxlength="10"></el-input> -->
-          <el-select v-model="chusoy.batch" placeholder="请选择">
+          <el-select v-model="chusoy.batch" placeholder="请选择" style="width: 100%;">
             <el-option v-for='sole in pulpPiArray' :key="sole.batch" :value="sole.batch" :label="sole.batch"></el-option>
           </el-select>
         </el-form-item>
@@ -311,13 +483,13 @@
         <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
           <el-input type="number" @mousewheel.native.prevent v-model.number="chusoy.endWeight" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="领用数量：" :label-width="formLabelWidth">{{chusoylnum}}</el-form-item>
+        <el-form-item label="领用数量：" :label-width="formLabelWidth"><p class="disabled-text">{{chusoylnum}}</p></el-form-item>
         <el-form-item label="操作时间：" :label-width="formLabelWidth">{{chusoy.changed}}</el-form-item>
         <el-form-item label="操作人：" :label-width="formLabelWidth">{{chusoy.changer}}</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisibleDouChu = false">取 消</el-button>
-        <el-button type="primary" @click="soydialogchusave('chusoy')">确 定</el-button>
+        <el-button @click="dialogFormVisibleDouChu = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="soydialogchusave('chusoy')" size="small">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -959,9 +1131,42 @@ export default {
               this.$refs.wheatTable.bodyWrapper.scrollTop = this.$refs.wheatTable.bodyWrapper.scrollHeight
             })
           }
+          if (formName === 'wheat' || formName === 'wheatend') {
+            this.wheatConfirm()
+          }
         } else {
           return false
         }
+      })
+    },
+    wheatConfirm () {
+      let that = this
+      that.formHeader.submitStatus = 'saved'
+      let savedWh = new Promise((resolve, reject) => {
+        that.savewheats(resolve, reject)
+      })
+      savedWh.then(() => {
+        let savedStatus = new Promise((resolve, reject) => {
+          that.savestauts(resolve, reject)
+        })
+        savedStatus.then(() => {
+          that.$emit('HeadUpdate', 'wheat')
+        })
+      })
+    },
+    soyConfirm () {
+      let that = this
+      that.formHeader.submitStatus = 'saved'
+      let savedSoy = new Promise((resolve, reject) => {
+        that.savepulps(resolve, reject)
+      })
+      savedSoy.then(() => {
+        let savedStatus = new Promise((resolve, reject) => {
+          that.savestauts(resolve, reject)
+        })
+        savedStatus.then(() => {
+          that.$emit('HeadUpdate', 'soy')
+        })
       })
     },
     // 豆 入罐
@@ -1000,6 +1205,7 @@ export default {
         this.rusoy = Object.assign({}, row)
       } else {
         this.dialogFormVisibleDouChu = true
+        row.soyMaterialstr = (row.materialCode || '') + ' ' + (row.materialName || '')
         this.chusoy = Object.assign({}, row)
       }
     },
@@ -1078,6 +1284,7 @@ export default {
                 this.$refs.pulpTable.bodyWrapper.scrollTop = this.$refs.pulpTable.bodyWrapper.scrollHeight
               })
             }
+            this.soyConfirm()
           }
         } else {
           return false
@@ -1101,6 +1308,7 @@ export default {
         pulpHolderId: row.holderId,
         pulpHolderName: row.holderName,
         foodHolderId: '',
+        soyMaterialstr: (row.materialCode || '') + ' ' + (row.materialName || ''),
         foodHolderName: '',
         startWeight: '',
         endWeight: '',
@@ -1170,40 +1378,61 @@ export default {
                 this.$refs.pulpTable.bodyWrapper.scrollTop = this.$refs.pulpTable.bodyWrapper.scrollHeight
               })
             }
+            this.soyConfirm()
           }
         } else {
           return false
         }
       })
     },
-    savemains (resolve, reject) {
+    submitmains (resolve, reject) {
       this.materialList.map((item) => {
         if (item.materialCode !== undefined) {
-          let materstrchai = []
-          materstrchai = item.materialCode.split(' ')
-          let materstrName = materstrchai[1] === undefined ? '' : materstrchai[1]
-          this.$set(item, 'materialCode', materstrchai[0])
+          let materstrName = this.materialShort.filter(ite => item.materialCode === ite.code)[0].value
           this.$set(item, 'materialName', materstrName)
         }
-        if (item.status === '' || item.status === 'saved' || item.status === 'noPass') {
+        if (item.status === null || item.status === '' || item.status === 'saved' || item.status === 'noPass') {
+          console.log(this.formHeader.submitStatus)
           this.$set(item, 'status', this.formHeader.submitStatus)
         }
       })
-      if (this.formHeader.submitStatus === 'submit') {
-        this.$http(`${KJM_API.DOUMATERSUBMITZHONG_API}`, 'POST', this.materialList).then(({data}) => {
-          if (data.code === 0) {
-          } else {
-            this.$error_SHINHO(data.msg)
-          }
-        })
-      }
-      this.$http(`${KJM_API.DOUMATERZHONG_API}`, 'POST', this.materialList).then(({data}) => {
+      this.$http(`${KJM_API.DOUMATERSUBMITZHONG_API}`, 'POST', this.materialList).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
           this.$error_SHINHO(data.msg)
+          if (resolve) {
+            reject('reject')
+          }
         }
-        if (resolve) {
-          resolve('resolve')
+      })
+    },
+    savemains (resolve, reject) {
+      this.materialList.map((item) => {
+        if (item.materialCode !== undefined) {
+          console.log(item.materialCode)
+          console.log(this.materialShort[0].code)
+          console.log(this.materialShort[0].code === item.materialCode)
+          let materstrName = this.materialShort.filter(ite => item.materialCode === ite.code)[0].value
+          this.$set(item, 'materialName', materstrName)
+        }
+        if (item.status === null || item.status === '' || item.status === 'saved' || item.status === 'noPass') {
+          console.log(this.formHeader.submitStatus)
+          this.$set(item, 'status', this.formHeader.submitStatus)
+        }
+      })
+      this.$http(`${KJM_API.DOUMATERZHONG_API}`, 'POST', this.materialList).then(({data}) => {
+        if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
+        } else {
+          this.$error_SHINHO(data.msg)
+          if (resolve) {
+            reject('reject')
+          }
         }
       }).catch(() => {
         if (resolve) {
@@ -1211,7 +1440,7 @@ export default {
         }
       })
     },
-    savewheats (resolve, reject) {
+    submitwheats (resolve, reject) {
       this.wheatList.map((item) => {
         if (item.status === '' || item.status === undefined || item.status === 'saved' || item.status === 'noPass') {
           this.$set(item, 'status', this.formHeader.submitStatus)
@@ -1220,24 +1449,77 @@ export default {
       if (this.formHeader.submitStatus === 'submit') {
         this.$http(`${KJM_API.DOUMATERSUBMITWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
           if (data.code === 0) {
+            if (resolve) {
+              resolve('resolve')
+            }
           } else {
             this.$error_SHINHO(data.msg)
+            if (resolve) {
+              reject('reject')
+            }
           }
         })
-      }
-      this.$http(`${KJM_API.DOUMATERWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
-        if (data.code === 0) {
-        } else {
-          this.$error_SHINHO(data.msg)
-        }
+      } else {
         if (resolve) {
           resolve('resolve')
+        }
+      }
+    },
+    savewheats (resolve, reject) {
+      this.wheatList.map((item) => {
+        if (item.status === '' || item.status === undefined || item.status === 'saved' || item.status === 'noPass') {
+          this.$set(item, 'status', this.formHeader.submitStatus)
+        }
+      })
+      // if (this.formHeader.submitStatus === 'submit') {
+      //   this.$http(`${KJM_API.DOUMATERSUBMITWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
+      //     if (data.code === 0) {
+      //     } else {
+      //       this.$error_SHINHO(data.msg)
+      //     }
+      //   })
+      // }
+      this.$http(`${KJM_API.DOUMATERWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
+        if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
+        } else {
+          this.$error_SHINHO(data.msg)
+          if (resolve) {
+            reject('reject')
+          }
         }
       }).catch(() => {
         if (resolve) {
           reject('reject')
         }
       })
+    },
+    submitpulps (resolve, reject) {
+      this.soyList.map((item) => {
+        if (item.status === '' || item.status === undefined || item.status === 'saved' || item.status === 'noPass') {
+          this.$set(item, 'status', this.formHeader.submitStatus)
+        }
+      })
+      if (this.formHeader.submitStatus === 'submit') {
+        this.$http(`${KJM_API.DOUMATERSUBMITSOY_API}`, 'POST', this.soyList).then(({data}) => {
+          if (data.code === 0) {
+            if (resolve) {
+              resolve('resolve')
+            }
+          } else {
+            this.$error_SHINHO(data.msg)
+            if (resolve) {
+              reject('reject')
+            }
+          }
+        })
+      } else {
+        if (resolve) {
+          resolve('resolve')
+        }
+      }
     },
     savepulps (resolve, reject) {
       this.soyList.map((item) => {
@@ -1252,21 +1534,24 @@ export default {
           this.$set(item, 'status', this.formHeader.submitStatus)
         }
       })
-      if (this.formHeader.submitStatus === 'submit') {
-        this.$http(`${KJM_API.DOUMATERSUBMITSOY_API}`, 'POST', this.soyList).then(({data}) => {
-          if (data.code === 0) {
-          } else {
-            this.$error_SHINHO(data.msg)
-          }
-        })
-      }
+      // if (this.formHeader.submitStatus === 'submit') {
+      //   this.$http(`${KJM_API.DOUMATERSUBMITSOY_API}`, 'POST', this.soyList).then(({data}) => {
+      //     if (data.code === 0) {
+      //     } else {
+      //       this.$error_SHINHO(data.msg)
+      //     }
+      //   })
+      // }
       this.$http(`${KJM_API.DOUMATERPULP_API}`, 'POST', this.soyList).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
           this.$error_SHINHO(data.msg)
-        }
-        if (resolve) {
-          resolve('resolve')
+          if (resolve) {
+            reject('reject')
+          }
         }
       }).catch(() => {
         if (resolve) {
@@ -1277,16 +1562,85 @@ export default {
     savestauts (resolve, reject) {
       this.$http(`${KJM_API.DOUMATERSTATUS_API}`, 'POST', {status: this.formHeader.submitStatus, orderHouseId: this.formHeader.orderHouseId, orderId: this.formHeader.orderId}).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
           this.$error_SHINHO(data.msg)
-        }
-        if (resolve) {
-          resolve('resolve')
+          if (resolve) {
+            reject('reject')
+          }
         }
       }).catch(() => {
         if (resolve) {
           reject('reject')
         }
+      })
+    },
+    partialUpdates (formHeader, str) {
+      let inState = ''
+      this.$http(`${KJM_API.DOUMATERLIST_API}`, 'POST', {orderHouseId: formHeader.orderHouseId}).then(({data}) => {
+        if (data.code === 0) {
+          let no = 0
+          let sub = 0
+          let che = 0
+          let sav = 0
+          if (str === 'wheat') {
+            this.wheatList = data.wheatList
+          }
+          if (str === 'soy') {
+            this.soyList = data.pulpList
+          }
+          this.materialList.map((item) => {
+            if (item.status === 'noPass') {
+              no = no + 1
+            } else if (item.status === 'submit') {
+              sub = sub + 1
+            } else if (item.status === 'checked') {
+              che = che + 1
+            } else if (item.status === 'saved') {
+              sav = sav + 1
+            }
+          })
+          this.wheatList.forEach((item) => {
+            if (item.status === 'noPass') {
+              no = no + 1
+            } else if (item.status === 'submit') {
+              sub = sub + 1
+            } else if (item.status === 'checked') {
+              che = che + 1
+            } else if (item.status === 'saved') {
+              sav = sav + 1
+            }
+          })
+          this.soyList.forEach((item) => {
+            this.$set(item, 'soyMaterialstr', item.materialCode + ' ' + item.materialName)
+            if (item.status === 'noPass') {
+              no = no + 1
+            } else if (item.status === 'submit') {
+              sub = sub + 1
+            } else if (item.status === 'checked') {
+              che = che + 1
+            } else if (item.status === 'saved') {
+              sav = sav + 1
+            }
+          })
+          if (no > 0) {
+            inState = 'noPass'
+          } else if (sub > 0) {
+            inState = 'submit'
+          } else if (sav > 0) {
+            inState = 'saved'
+          } else if (che > 0) {
+            inState = 'checked'
+          }
+        } else {
+          this.$error_SHINHO(data.msg)
+        }
+      }).catch((error) => {
+        this.$notify.error({title: '错误', message: error})
+      }).finally(() => {
+        this.$emit('setApplyMaterielState', inState)
       })
     },
     getList (formHeader) {
@@ -1307,7 +1661,6 @@ export default {
           //   this.soyliang = this.soyList[0].materialCode + ' ' + this.soyList[0].materialName
           // }
           this.materialList.map((item) => {
-            this.$set(item, 'materialCode', item.materialCode + ' ' + item.materialName)
             if (item.status === 'noPass') {
               no = no + 1
             } else if (item.status === 'submit') {
@@ -1385,6 +1738,7 @@ export default {
           type: 'warning'
         }).then(() => {
           row.delFlag = '1'
+          this.wheatConfirm()
         })
       }
     },
@@ -1398,6 +1752,7 @@ export default {
           type: 'warning'
         }).then(() => {
           row.delFlag = '1'
+          this.soyConfirm()
         })
       }
     },
@@ -1503,10 +1858,12 @@ export default {
   width: 207px;
   margin: 0 4px 10px 4px;
   .boxTitle {
+    color: white;
     line-height: 32px;
-    background: #e9e9e9;
+    background: #487bff;
     padding-left: 10px;
     font-weight: bold;
+    border-radius: 3px 3px 0 0;
   }
   .boxButton {
     margin: 10px;

@@ -1,398 +1,707 @@
 <template>
   <div class="header_main">
-    <el-card class="searchCard">
-      <el-row>
-        <el-col :span="21">
-          <el-form :inline="true" size="small" label-width="70px">
-            <el-form-item label="生产车间：">
-              <p class="input_bommom">&nbsp;{{formHeader.workShopName ? formHeader.workShopName : ''}}</p>
-            </el-form-item>
-            <el-form-item label="曲房号：">
-              <p class="input_bommom">&nbsp;{{formHeader.houseNoName ? formHeader.houseNoName : ''}}</p>
-            </el-form-item>
-            <el-form-item label="工序：">
-              <p class="input_bommom">&nbsp;看曲</p>
-            </el-form-item>
-            <el-form-item label="生产订单：" label-width="85px">
-              <p class="input_bommom">&nbsp;{{formHeader.orderNo ? formHeader.orderNo : ''}}</p>
-            </el-form-item>
-            <el-form-item label="生产品项：">
-              <p class="input_bommom">&nbsp;{{(formHeader.materialCode ? formHeader.materialCode : '') + ' ' + (formHeader.materialName ? formHeader.materialName : '')}}</p>
-            </el-form-item>
-            <el-form-item label="生产日期：">
-              <p class="input_bommom">&nbsp;{{formHeader.inKjmDate ? formHeader.inKjmDate : ''}}</p>
-            </el-form-item>
-            <el-form-item label="入罐号：">
-              <p class="input_bommom">&nbsp;{{formHeader.inPotNoName ? formHeader.inPotNoName : ''}}</p>
-            </el-form-item>
-            <el-form-item label="连续蒸煮号：" label-width="85px">
-              <p class="input_bommom">&nbsp;{{formHeader.cookingNoName ? formHeader.cookingNoName : ''}}</p>
-            </el-form-item>
-            <el-form-item label="提交人员：">
-              <p class="input_bommom">&nbsp;{{formHeader.changer ? formHeader.changer : ''}}</p>
-            </el-form-item>
-            <el-form-item label="提交时间：">
-              <p class="input_bommom">&nbsp;{{formHeader.changed? (formHeader.changed.indexOf('.')!==-1?formHeader.changed.substring(0, formHeader.changed.indexOf('.')):formHeader.changed):''}}</p>
-            </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="3">
-          <div style="float: right; line-height: 31px; font-size: 14px;">
-            <div style="float: right;">
-              <span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? 'rgb(103, 194, 58)' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：
-              <span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
+    <data-entry
+      ref="dataEntry"
+      :redactAuth="'kjm:guard:tech:update'"
+      :saveAuth="'kjm:guard:tech:update'"
+      :submitAuth="'kjm:guard:tech:update'"
+      :submitRules="submitRules"
+      :savedRules="savedRules"
+      :savedDatas="savedDatas"
+      :submitDatas="submitDatas"
+      @success="GetheadList"
+      :orderStatus="orderStatus"
+      :headerBase="headerBase"
+      :formHeader="formHeader"
+      :tabs="tabs">
+      <template slot="1" slot-scope="data">
+        <div>
+          <mds-card :title="'入曲检查'" :name="'tech'">
+            <el-form :inline="true" :model="tech" size="small" label-width="130px">
+              <el-form-item label="入曲检查：" :required="true">
+                <el-input style="width: 171px;" v-model="tech.inCheck" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')"></el-input>
+              </el-form-item>
+              <el-form-item label="检查人：" :required="true">
+                <el-select v-model="tech.inCheckMan" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')">
+                  <el-option v-for="sole in userList" :key="sole.userId" :value="sole.realName + `(${sole.workNum})`" :label="sole.realName + `（${sole.workNum}）`"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="入曲开始时间：" :required="true">
+                <el-date-picker v-model="tech.inStartTime" type="datetime" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 171px;"></el-date-picker>
+              </el-form-item>
+              <el-form-item label="入曲结束时间：" :required="true">
+                <el-date-picker v-model="tech.inEndTime" type="datetime" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 171px;"></el-date-picker>
+              </el-form-item>
+              <el-form-item label="入曲时长：">{{timecha}}</el-form-item>
+            </el-form>
+          </mds-card>
+          <mds-card :title="'看曲记录'" :name="'kanqu'" :iconBg="'#ffbf00'">
+            <div id="test1Content" style="display: none;">
+              <look-echarts ref="LookEcharts"></look-echarts>
             </div>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row style="text-align: right;" class="button_three_goup">
-        <template style="float: right; margin-left: 10px;">
-          <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-index'})">返回</el-button>
-          <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('kjm:guard:tech:update')">{{isRedact?'取消':'编辑'}}</el-button>
-        </template>
-        <template v-if="isRedact" style="float: right; margin-left: 10px;">
-          <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('kjm:guard:tech:update')">保存</el-button>
-          <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('kjm:guard:tech:update')">提交</el-button>
-        </template>
-      </el-row>
-      <div class="toggleSearchBottom">
-        <i class="el-icon-caret-top"></i>
-      </div>
-    </el-card>
-    <div class="tableCard">
-      <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
-        <i class="el-icon-caret-bottom"></i>
-      </div>
-      <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" type="border-card" class="NewDaatTtabs" id="DaatTtabs" style="margin-top: 5px;">
-        <el-tab-pane name="1">
-          <span slot="label" class="spanview">
-            <el-tooltip class="item" effect="dark"  :content="applyCraftState === 'noPass'? '不通过':applyCraftState === 'saved'? '已保存':applyCraftState === 'submit' ? '已提交' : applyCraftState === 'checked'? '通过':'未录入'" placement="top-start">
-              <el-button :style="{'color': applyCraftState === 'noPass'? 'red' : ''}">工艺控制</el-button>
-            </el-tooltip>
-          </span>
-          <div>
-            <el-card>
-              <el-form :inline="true" :model="tech" size="small" label-width="130px">
-                <el-form-item label="入曲检查：" :required="true">
-                  <el-input style="width: 171px;" v-model="tech.inCheck" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>
-                </el-form-item>
-                <el-form-item label="检查人：" :required="true">
-                  <el-select v-model="tech.inCheckMan" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')">
-                    <el-option v-for="sole in userList" :key="sole.userId" :value="sole.realName + `(${sole.workNum})`" :label="sole.realName + `（${sole.workNum}）`"></el-option>
+            <el-row style="line-height: 32px; margin-bottom: 10px;">
+              <el-col :span="5">第（<el-input size="small" v-model="tech.guardProcess" style="width: 80px; padding: 0;" class="guard-form-input">{{tech.guardProcess}}</el-input>）套程序</el-col>
+              <el-col :span="15">
+                <el-radio-group v-model="tech.processType">
+                  <el-radio label="自动" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')">自动</el-radio>
+                  <el-radio label="半自动" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')">半自动</el-radio>
+                  <el-radio label="手动" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')">手动</el-radio>
+                </el-radio-group>
+              </el-col>
+              <el-col :span="4">
+                <el-button type="primary" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" @click="ReadRow" size="small" style="float: right;">读取数据</el-button>
+                <el-button type="primary" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" @click="addline" size="small" style="float: right; margin-right: 10px;"> + 新增</el-button>
+              </el-col>
+            </el-row>
+            <el-table class="newTable borderTable" border ref="recordTable" max-height="315" header-row-class-name="tableHead" :data="lookList" :row-class-name="rowDelFlag" tooltip-effect="dark">
+              <el-table-column label="序号" type="index" width="50px"></el-table-column>
+              <el-table-column label="" width="205">
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>看曲时间</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-date-picker v-model="scope.row.guardTime" type="datetime" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 175px;"></el-date-picker>
+                </template>
+              </el-table-column>
+              <el-table-column width="100">
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>风温实际</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.windTemp" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column width="100">
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>品温实际</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.productTemp" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column width="130">
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>风速（R/HZ）</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.windSpeed" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column width="100">
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>风门/进风</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-input type="number" v-model="scope.row.windInFlag" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="" width="100">
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>强排/反风</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-input type="number" v-model="scope.row.forceOutFlag" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                  <!-- <el-select v-model="scope.row.forceOutFlag" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">
+                    <el-option label="强排" value="1"></el-option>
+                    <el-option label="反风" value="0"></el-option>
+                  </el-select> -->
+                </template>
+              </el-table-column>
+              <el-table-column label="" width="100">
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>加湿情况</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.jiashiFlag" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">
+                    <el-option label="0" value="0"></el-option>
+                    <el-option label="1" value="1"></el-option>
+                    <el-option label="2" value="2"></el-option>
+                    <el-option label="3" value="3"></el-option>
+                    <el-option label="4" value="4"></el-option>
+                    <el-option label="5" value="5"></el-option>
+                    <el-option label="6" value="6"></el-option>
                   </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column label="" width="100">
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>加热/冷却</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.jiareFlag" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">
+                    <el-option label="0" value="2"></el-option>
+                    <el-option label="∆" value="1"></el-option>
+                    <el-option label="※" value="0"></el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column label="外品温探头温度">
+                <el-table-column label="">
+                  <template slot="header">
+                    <i class="reqI">*</i>
+                    <span>上</span>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.productTempOutsideUp" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="">
+                  <template slot="header">
+                    <i class="reqI">*</i>
+                    <span>中</span>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.productTempOutsideMid" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="">
+                  <template slot="header">
+                    <i class="reqI">*</i>
+                    <span>下</span>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.productTempOutsideDown" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                  </template>
+                </el-table-column>
+              </el-table-column>
+              <el-table-column label="内品温探头温度">
+                <el-table-column label="">
+                  <template slot="header">
+                    <span>上</span>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.productTempUp" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="">
+                  <template slot="header">
+                    <span>中</span>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.productTempMid" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="">
+                  <template slot="header">
+                    <span>下</span>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.productTempDown" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                  </template>
+                </el-table-column>
+              </el-table-column>
+              <el-table-column label="温度计温度">
+                <el-table-column label="外">
+                  <template slot="header">
+                    <i class="reqI">*</i>
+                    <span>外</span>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.thermometerOut" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="里">
+                  <template slot="header">
+                    <i class="reqI">*</i>
+                    <span>里</span>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.thermometerInner" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                  </template>
+                </el-table-column>
+              </el-table-column>
+              <el-table-column label="备注">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.remark" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作人" prop="changer" width="150px"></el-table-column>
+              <el-table-column width=70 fixed="right">
+                <template slot-scope="scope">
+                  <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small" @click="delrow(scope.row)">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </mds-card>
+          <mds-card :title="'加水量记录'" :name="'jiashui'" :iconBg="'#5bd171'">
+            <el-form :inline="true" :model="tech" size="small">
+              <div>
+                <div style="line-height: 32px; float: left; margin-right: 20px;">翻曲加水</div>
+                <el-form-item label="起始数：" :required="true">
+                  <el-input size="small" v-model="tech.overStartWeight" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')"></el-input>
                 </el-form-item>
-                <el-form-item label="入曲开始时间：" :required="true">
-                  <el-date-picker v-model="tech.inStartTime" type="datetime" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 171px;"></el-date-picker>
+                <el-form-item label="结束数：" :required="true">
+                  <el-input size="small" v-model="tech.overEndWeight" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')"></el-input>
                 </el-form-item>
-                <el-form-item label="入曲结束时间：" :required="true">
-                  <el-date-picker v-model="tech.inEndTime" type="datetime" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 171px;"></el-date-picker>
+                <el-form-item label="加水量（L）：">
+                  <el-input size="small" v-model="tech.overWeight" :disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="入曲时长：">{{timecha}}</el-form-item>
-              </el-form>
-            </el-card>
-            <el-card>
-              <div class="htitle">
-                <span class="iconfont">&#xe606;</span> 看曲记录<el-button type="text" class="readyshiftBtn" id="test1" style="margin-left: 30px;">展开<i class="el-icon-caret-bottom"></i></el-button>
               </div>
               <div>
-                <div id="test1Content">
-                  <look-echarts ref="LookEcharts"></look-echarts>
-                </div>
-                <!-- <iframe src="#/lookEcharts" style="width:100%; height:460px" name="iframe_a" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe> -->
-                <!-- <iframe src="https://search-iot-m4krkhtzni6xjktkbymymhix5a.cn-north-1.es.amazonaws.com.cn/_plugin/kibana/app/kibana#/visualize/edit/e6382af0-adb4-11e9-8b6e-1f733cf01d7e?embed=true&_g=(refreshInterval%3A(pause%3A!f%2Cvalue%3A10000)%2Ctime%3A(from%3A'2019-07-23T14%3A52%3A42.616Z'%2Cmode%3Aabsolute%2Cto%3A'2019-07-26T14%3A12%3A20.186Z'))" style="width:100%;height:600px" name="iframe_a" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe> -->
-                <el-row style="line-height: 32px; margin-bottom: 10px;">
-                  <el-col :span="5">第（<el-input size="small" v-model="tech.guardProcess" style="width: 80px; padding: 0;" class="guard-form-input">{{tech.guardProcess}}</el-input>）套程序</el-col>
-                  <el-col :span="15">
-                    <el-radio-group v-model="tech.processType">
-                      <el-radio label="自动" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')">自动</el-radio>
-                      <el-radio label="半自动" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')">半自动</el-radio>
-                      <el-radio label="手动" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')">手动</el-radio>
-                    </el-radio-group>
-                  </el-col>
-                  <el-col :span="4">
-                    <el-button type="primary" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" @click="ReadRow" size="small" style="float: right;">读取数据</el-button>
-                    <el-button type="primary" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" @click="addline" size="small" style="float: right; margin-right: 10px;"> + 新增</el-button>
-                  </el-col>
-                </el-row>
-                <el-table border ref="recordTable" max-height="315" header-row-class-name="tableHead" :data="lookList" :row-class-name="rowDelFlag" tooltip-effect="dark">
-                  <el-table-column label="序号" type="index" width="50px"></el-table-column>
-                  <el-table-column label="" width="205">
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>看曲时间</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-date-picker v-model="scope.row.guardTime" type="datetime" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 175px;"></el-date-picker>
-                    </template>
-                  </el-table-column>
-                  <el-table-column width="100">
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>风温实际</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-input v-model="scope.row.windTemp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                    </template>
-                  </el-table-column>
-                  <el-table-column width="100">
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>品温实际</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-input v-model="scope.row.productTemp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                    </template>
-                  </el-table-column>
-                  <el-table-column width="130">
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>风速（R/HZ）</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-input v-model="scope.row.windSpeed" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                    </template>
-                  </el-table-column>
-                  <el-table-column width="100">
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>风门/进风</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-input type="number" v-model="scope.row.windInFlag" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="" width="100">
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>强排/反风</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-input type="number" v-model="scope.row.forceOutFlag" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                      <!-- <el-select v-model="scope.row.forceOutFlag" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">
-                        <el-option label="强排" value="1"></el-option>
-                        <el-option label="反风" value="0"></el-option>
-                      </el-select> -->
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="" width="100">
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>加湿情况</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-select v-model="scope.row.jiashiFlag" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">
-                        <el-option label="0" value="0"></el-option>
-                        <el-option label="1" value="1"></el-option>
-                        <el-option label="2" value="2"></el-option>
-                        <el-option label="3" value="3"></el-option>
-                        <el-option label="4" value="4"></el-option>
-                        <el-option label="5" value="5"></el-option>
-                        <el-option label="6" value="6"></el-option>
-                      </el-select>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="" width="100">
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>加热/冷却</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-select v-model="scope.row.jiareFlag" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">
-                        <el-option label="0" value="2"></el-option>
-                        <el-option label="∆" value="1"></el-option>
-                        <el-option label="※" value="0"></el-option>
-                      </el-select>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="外品温探头温度">
-                    <el-table-column label="">
-                      <template slot="header">
-                        <i class="reqI">*</i>
-                        <span>上</span>
-                      </template>
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.productTempOutsideUp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="">
-                      <template slot="header">
-                        <i class="reqI">*</i>
-                        <span>中</span>
-                      </template>
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.productTempOutsideMid" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="">
-                      <template slot="header">
-                        <i class="reqI">*</i>
-                        <span>下</span>
-                      </template>
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.productTempOutsideDown" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                      </template>
-                    </el-table-column>
-                  </el-table-column>
-                  <el-table-column label="内品温探头温度">
-                    <el-table-column label="">
-                      <template slot="header">
-                        <span>上</span>
-                      </template>
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.productTempUp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="">
-                      <template slot="header">
-                        <span>中</span>
-                      </template>
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.productTempMid" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="">
-                      <template slot="header">
-                        <span>下</span>
-                      </template>
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.productTempDown" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                      </template>
-                    </el-table-column>
-                  </el-table-column>
-                  <el-table-column label="温度计温度">
-                    <el-table-column label="外">
-                      <template slot="header">
-                        <i class="reqI">*</i>
-                        <span>外</span>
-                      </template>
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.thermometerOut" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="里">
-                      <template slot="header">
-                        <i class="reqI">*</i>
-                        <span>里</span>
-                      </template>
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.thermometerInner" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                      </template>
-                    </el-table-column>
-                  </el-table-column>
-                  <el-table-column label="备注">
-                    <template slot-scope="scope">
-                      <el-input v-model="scope.row.remark" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="操作人" prop="changer" width="150px"></el-table-column>
-                  <el-table-column width=70 fixed="right">
-                    <template slot-scope="scope">
-                      <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small" @click="delrow(scope.row)">删除</el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
+                <div style="line-height: 32px; float: left; margin-right: 20px;">出曲加水</div>
+                <el-form-item label="起始数：" :required="true">
+                  <el-input size="small" v-model="tech.outStartWeight" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')"></el-input>
+                </el-form-item>
+                <el-form-item label="结束数：" :required="true">
+                  <el-input size="small" v-model="tech.outEndWeight" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')"></el-input>
+                </el-form-item>
+                <el-form-item label="加水量（L）：">
+                  <el-input size="small" v-model="tech.outWeight" :disabled="true"></el-input>
+                </el-form-item>
               </div>
-            </el-card>
-            <el-card>
-              <el-form :inline="true" :model="tech" size="small">
-                <div class="htitle">
-                  <span class="iconfont">&#xe609;</span> 加水量记录<el-button type="text" class="readyshiftBtn" name="shuiar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
-                </div>
-                <div class="shuiarBox">
-                  <div>
-                    <div style="line-height: 32px;">翻曲加水</div>
-                    <el-form-item label="起始数：" :required="true">
-                      <el-input size="small" v-model="tech.overStartWeight" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>
-                    </el-form-item>
-                    <el-form-item label="结束数：" :required="true">
-                      <el-input size="small" v-model="tech.overEndWeight" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>
-                    </el-form-item>
-                    <el-form-item label="加水量（L）：">
-                      <el-input size="small" v-model="tech.overWeight" :disabled="true"></el-input>
-                    </el-form-item>
-                  </div>
-                  <div>
-                    <div style="line-height: 32px;">出曲加水</div>
-                    <el-form-item label="起始数：" :required="true">
-                      <el-input size="small" v-model="tech.outStartWeight" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>
-                    </el-form-item>
-                    <el-form-item label="结束数：" :required="true">
-                      <el-input size="small" v-model="tech.outEndWeight" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>
-                    </el-form-item>
-                    <el-form-item label="加水量（L）：">
-                      <el-input size="small" v-model="tech.outWeight" :disabled="true"></el-input>
-                    </el-form-item>
-                  </div>
-                </div>
-              </el-form>
-            </el-card>
-            <el-card>
-              <div class="htitle">
-                <span class="iconfont">&#xe602;</span> 感官评价记录<el-button type="text" class="readyshiftBtn" name="feelar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
-              </div>
-              <div class="feelarBox">
-                <el-table border header-row-class-name="tableHead" :data="assessList">
-                  <el-table-column prop="feelName"></el-table-column>
-                  <el-table-column>
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>U</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-select v-model="scope.row.codeU" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="请选择" size="small" >
-                        <el-option v-for="item in Ulist" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                      </el-select>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="S">
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>S</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-select v-model="scope.row.codeS" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="请选择" size="small">
-                        <el-option v-for="item in Slist" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                      </el-select>
-                    </template>
-                  </el-table-column>
-                  <el-table-column>
-                    <template slot="header">
-                      <i class="reqI">*</i>
-                      <span>A</span>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-select v-model="scope.row.codeA" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="请选择" size="small">
-                        <el-option v-for="item in Alist" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                      </el-select>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </div>
-            </el-card>
-            <el-card>
-              <el-form :inline="true" :model="tech" size="small">
-                <div class="htitle">
-                  <span class="iconfont">&#xe607;</span> 异常情况记录<el-button type="text" class="readyshiftBtn" name="excar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
-                </div>
-                <div class="excarBox"><el-input type="textarea" v-model="tech.guardException" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" class="textarea" style="width: 100%; height: 40px;"></el-input></div>
-              </el-form>
-            </el-card>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane name="2">
-          <span slot="label" class="spanview">
-            <el-button>异常记录</el-button>
-          </span>
-          <exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader"></exc-record>
-        </el-tab-pane>
-        <el-tab-pane name="3">
-          <span slot="label" class="spanview">
-            <el-button>文本记录</el-button>
-          </span>
-          <text-record ref="textrecord" :isRedact="isRedact"></text-record>
-        </el-tab-pane>
-      </el-tabs>
-    </div>
+            </el-form>
+          </mds-card>
+          <mds-card :title="'感官评价记录'" :name="'jiashui'">
+            <el-table class="newTable" border header-row-class-name="tableHead" :data="assessList">
+              <el-table-column prop="feelName"></el-table-column>
+              <el-table-column>
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>U</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.codeU" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="请选择" size="small" >
+                    <el-option v-for="item in Ulist" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column label="S">
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>S</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.codeS" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="请选择" size="small">
+                    <el-option v-for="item in Slist" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column>
+                <template slot="header">
+                  <i class="reqI">*</i>
+                  <span>A</span>
+                </template>
+                <template slot-scope="scope">
+                  <el-select v-model="scope.row.codeA" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="请选择" size="small">
+                    <el-option v-for="item in Alist" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+            </el-table>
+          </mds-card>
+          <mds-card :title="'异常情况记录'" :name="'jiashui'" :iconBg="'#f05c4a'">
+            <div class="excarBox"><el-input type="textarea" v-model="tech.guardException" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')" class="textarea" style="width: 100%; height: 40px;"></el-input></div>
+          </mds-card>
+        </div>
+      </template>
+      <template slot="2" slot-scope="data">
+        <exc-record ref="excrecord" :isRedact="data.isRedact" :order="formHeader"></exc-record>
+      </template>
+      <template slot="3" slot-scope="data">
+        <text-record ref="textrecord" :isRedact="data.isRedact"></text-record>
+      </template>
+    </data-entry>
+    <!--<el-card class="searchCard">-->
+      <!--<el-row>-->
+        <!--<el-col :span="21">-->
+          <!--<el-form :inline="true" size="small" label-width="70px">-->
+            <!--<el-form-item label="生产车间：">-->
+              <!--<p class="input_bommom">&nbsp;{{formHeader.workShopName ? formHeader.workShopName : ''}}</p>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="曲房号：">-->
+              <!--<p class="input_bommom">&nbsp;{{formHeader.houseNoName ? formHeader.houseNoName : ''}}</p>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="工序：">-->
+              <!--<p class="input_bommom">&nbsp;看曲</p>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="生产订单：" label-width="85px">-->
+              <!--<p class="input_bommom">&nbsp;{{formHeader.orderNo ? formHeader.orderNo : ''}}</p>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="生产品项：">-->
+              <!--<p class="input_bommom">&nbsp;{{(formHeader.materialCode ? formHeader.materialCode : '') + ' ' + (formHeader.materialName ? formHeader.materialName : '')}}</p>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="生产日期：">-->
+              <!--<p class="input_bommom">&nbsp;{{formHeader.inKjmDate ? formHeader.inKjmDate : ''}}</p>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="入罐号：">-->
+              <!--<p class="input_bommom">&nbsp;{{formHeader.inPotNoName ? formHeader.inPotNoName : ''}}</p>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="连续蒸煮号：" label-width="85px">-->
+              <!--<p class="input_bommom">&nbsp;{{formHeader.cookingNoName ? formHeader.cookingNoName : ''}}</p>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="提交人员：">-->
+              <!--<p class="input_bommom">&nbsp;{{formHeader.changer ? formHeader.changer : ''}}</p>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="提交时间：">-->
+              <!--<p class="input_bommom">&nbsp;{{formHeader.changed? (formHeader.changed.indexOf('.')!==-1?formHeader.changed.substring(0, formHeader.changed.indexOf('.')):formHeader.changed):''}}</p>-->
+            <!--</el-form-item>-->
+          <!--</el-form>-->
+        <!--</el-col>-->
+        <!--<el-col :span="3">-->
+          <!--<div style="float: right; line-height: 31px; font-size: 14px;">-->
+            <!--<div style="float: right;">-->
+              <!--<span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? 'rgb(103, 194, 58)' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：-->
+              <!--<span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</el-col>-->
+      <!--</el-row>-->
+      <!--<el-row style="text-align: right;" class="button_three_goup">-->
+        <!--<template style="float: right; margin-left: 10px;">-->
+          <!--<el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-index'})">返回</el-button>-->
+          <!--<el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('kjm:guard:tech:update')">{{isRedact?'取消':'编辑'}}</el-button>-->
+        <!--</template>-->
+        <!--<template v-if="isRedact" style="float: right; margin-left: 10px;">-->
+          <!--<el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('kjm:guard:tech:update')">保存</el-button>-->
+          <!--<el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('kjm:guard:tech:update')">提交</el-button>-->
+        <!--</template>-->
+      <!--</el-row>-->
+      <!--<div class="toggleSearchBottom">-->
+        <!--<i class="el-icon-caret-top"></i>-->
+      <!--</div>-->
+    <!--</el-card>-->
+    <!--<div class="tableCard">-->
+      <!--<div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">-->
+        <!--<i class="el-icon-caret-bottom"></i>-->
+      <!--</div>-->
+      <!--<el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" type="border-card" class="NewDaatTtabs" id="DaatTtabs" style="margin-top: 5px;">-->
+        <!--<el-tab-pane name="1">-->
+          <!--<span slot="label" class="spanview">-->
+            <!--<el-tooltip class="item" effect="dark"  :content="applyCraftState === 'noPass'? '不通过':applyCraftState === 'saved'? '已保存':applyCraftState === 'submit' ? '已提交' : applyCraftState === 'checked'? '通过':'未录入'" placement="top-start">-->
+              <!--<el-button :style="{'color': applyCraftState === 'noPass'? 'red' : ''}">工艺控制</el-button>-->
+            <!--</el-tooltip>-->
+          <!--</span>-->
+          <!--<div>-->
+            <!--<el-card>-->
+              <!--<el-form :inline="true" :model="tech" size="small" label-width="130px">-->
+                <!--<el-form-item label="入曲检查：" :required="true">-->
+                  <!--<el-input style="width: 171px;" v-model="tech.inCheck" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="检查人：" :required="true">-->
+                  <!--<el-select v-model="tech.inCheckMan" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')">-->
+                    <!--<el-option v-for="sole in userList" :key="sole.userId" :value="sole.realName + `(${sole.workNum})`" :label="sole.realName + `（${sole.workNum}）`"></el-option>-->
+                  <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="入曲开始时间：" :required="true">-->
+                  <!--<el-date-picker v-model="tech.inStartTime" type="datetime" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 171px;"></el-date-picker>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="入曲结束时间：" :required="true">-->
+                  <!--<el-date-picker v-model="tech.inEndTime" type="datetime" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 171px;"></el-date-picker>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item label="入曲时长：">{{timecha}}</el-form-item>-->
+              <!--</el-form>-->
+            <!--</el-card>-->
+            <!--<el-card>-->
+              <!--<div class="htitle">-->
+                <!--<span class="iconfont">&#xe606;</span> 看曲记录<el-button type="text" class="readyshiftBtn" id="test1" style="margin-left: 30px;">展开<i class="el-icon-caret-bottom"></i></el-button>-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--<div id="test1Content">-->
+                  <!--<look-echarts ref="LookEcharts"></look-echarts>-->
+                <!--</div>-->
+                <!--&lt;!&ndash; <iframe src="#/lookEcharts" style="width:100%; height:460px" name="iframe_a" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe> &ndash;&gt;-->
+                <!--&lt;!&ndash; <iframe src="https://search-iot-m4krkhtzni6xjktkbymymhix5a.cn-north-1.es.amazonaws.com.cn/_plugin/kibana/app/kibana#/visualize/edit/e6382af0-adb4-11e9-8b6e-1f733cf01d7e?embed=true&_g=(refreshInterval%3A(pause%3A!f%2Cvalue%3A10000)%2Ctime%3A(from%3A'2019-07-23T14%3A52%3A42.616Z'%2Cmode%3Aabsolute%2Cto%3A'2019-07-26T14%3A12%3A20.186Z'))" style="width:100%;height:600px" name="iframe_a" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe> &ndash;&gt;-->
+                <!--<el-row style="line-height: 32px; margin-bottom: 10px;">-->
+                  <!--<el-col :span="5">第（<el-input size="small" v-model="tech.guardProcess" style="width: 80px; padding: 0;" class="guard-form-input">{{tech.guardProcess}}</el-input>）套程序</el-col>-->
+                  <!--<el-col :span="15">-->
+                    <!--<el-radio-group v-model="tech.processType">-->
+                      <!--<el-radio label="自动" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')">自动</el-radio>-->
+                      <!--<el-radio label="半自动" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')">半自动</el-radio>-->
+                      <!--<el-radio label="手动" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')">手动</el-radio>-->
+                    <!--</el-radio-group>-->
+                  <!--</el-col>-->
+                  <!--<el-col :span="4">-->
+                    <!--<el-button type="primary" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" @click="ReadRow" size="small" style="float: right;">读取数据</el-button>-->
+                    <!--<el-button type="primary" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" @click="addline" size="small" style="float: right; margin-right: 10px;"> + 新增</el-button>-->
+                  <!--</el-col>-->
+                <!--</el-row>-->
+                <!--<el-table border ref="recordTable" max-height="315" header-row-class-name="tableHead" :data="lookList" :row-class-name="rowDelFlag" tooltip-effect="dark">-->
+                  <!--<el-table-column label="序号" type="index" width="50px"></el-table-column>-->
+                  <!--<el-table-column label="" width="205">-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>看曲时间</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-date-picker v-model="scope.row.guardTime" type="datetime" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="选择日期" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 175px;"></el-date-picker>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column width="100">-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>风温实际</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-input v-model="scope.row.windTemp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column width="100">-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>品温实际</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-input v-model="scope.row.productTemp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column width="130">-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>风速（R/HZ）</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-input v-model="scope.row.windSpeed" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column width="100">-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>风门/进风</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-input type="number" v-model="scope.row.windInFlag" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="" width="100">-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>强排/反风</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-input type="number" v-model="scope.row.forceOutFlag" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                      <!--&lt;!&ndash; <el-select v-model="scope.row.forceOutFlag" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">-->
+                        <!--<el-option label="强排" value="1"></el-option>-->
+                        <!--<el-option label="反风" value="0"></el-option>-->
+                      <!--</el-select> &ndash;&gt;-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="" width="100">-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>加湿情况</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-select v-model="scope.row.jiashiFlag" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">-->
+                        <!--<el-option label="0" value="0"></el-option>-->
+                        <!--<el-option label="1" value="1"></el-option>-->
+                        <!--<el-option label="2" value="2"></el-option>-->
+                        <!--<el-option label="3" value="3"></el-option>-->
+                        <!--<el-option label="4" value="4"></el-option>-->
+                        <!--<el-option label="5" value="5"></el-option>-->
+                        <!--<el-option label="6" value="6"></el-option>-->
+                      <!--</el-select>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="" width="100">-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>加热/冷却</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-select v-model="scope.row.jiareFlag" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small">-->
+                        <!--<el-option label="0" value="2"></el-option>-->
+                        <!--<el-option label="∆" value="1"></el-option>-->
+                        <!--<el-option label="※" value="0"></el-option>-->
+                      <!--</el-select>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="外品温探头温度">-->
+                    <!--<el-table-column label="">-->
+                      <!--<template slot="header">-->
+                        <!--<i class="reqI">*</i>-->
+                        <!--<span>上</span>-->
+                      <!--</template>-->
+                      <!--<template slot-scope="scope">-->
+                        <!--<el-input v-model="scope.row.productTempOutsideUp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                      <!--</template>-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column label="">-->
+                      <!--<template slot="header">-->
+                        <!--<i class="reqI">*</i>-->
+                        <!--<span>中</span>-->
+                      <!--</template>-->
+                      <!--<template slot-scope="scope">-->
+                        <!--<el-input v-model="scope.row.productTempOutsideMid" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                      <!--</template>-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column label="">-->
+                      <!--<template slot="header">-->
+                        <!--<i class="reqI">*</i>-->
+                        <!--<span>下</span>-->
+                      <!--</template>-->
+                      <!--<template slot-scope="scope">-->
+                        <!--<el-input v-model="scope.row.productTempOutsideDown" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                      <!--</template>-->
+                    <!--</el-table-column>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="内品温探头温度">-->
+                    <!--<el-table-column label="">-->
+                      <!--<template slot="header">-->
+                        <!--<span>上</span>-->
+                      <!--</template>-->
+                      <!--<template slot-scope="scope">-->
+                        <!--<el-input v-model="scope.row.productTempUp" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                      <!--</template>-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column label="">-->
+                      <!--<template slot="header">-->
+                        <!--<span>中</span>-->
+                      <!--</template>-->
+                      <!--<template slot-scope="scope">-->
+                        <!--<el-input v-model="scope.row.productTempMid" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                      <!--</template>-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column label="">-->
+                      <!--<template slot="header">-->
+                        <!--<span>下</span>-->
+                      <!--</template>-->
+                      <!--<template slot-scope="scope">-->
+                        <!--<el-input v-model="scope.row.productTempDown" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                      <!--</template>-->
+                    <!--</el-table-column>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="温度计温度">-->
+                    <!--<el-table-column label="外">-->
+                      <!--<template slot="header">-->
+                        <!--<i class="reqI">*</i>-->
+                        <!--<span>外</span>-->
+                      <!--</template>-->
+                      <!--<template slot-scope="scope">-->
+                        <!--<el-input v-model="scope.row.thermometerOut" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                      <!--</template>-->
+                    <!--</el-table-column>-->
+                    <!--<el-table-column label="里">-->
+                      <!--<template slot="header">-->
+                        <!--<i class="reqI">*</i>-->
+                        <!--<span>里</span>-->
+                      <!--</template>-->
+                      <!--<template slot-scope="scope">-->
+                        <!--<el-input v-model="scope.row.thermometerInner" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                      <!--</template>-->
+                    <!--</el-table-column>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="备注">-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-input v-model="scope.row.remark" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small"></el-input>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="操作人" prop="changer" width="150px"></el-table-column>-->
+                  <!--<el-table-column width=70 fixed="right">-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" size="small" @click="delrow(scope.row)">删除</el-button>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                <!--</el-table>-->
+              <!--</div>-->
+            <!--</el-card>-->
+            <!--<el-card>-->
+              <!--<el-form :inline="true" :model="tech" size="small">-->
+                <!--<div class="htitle">-->
+                  <!--<span class="iconfont">&#xe609;</span> 加水量记录<el-button type="text" class="readyshiftBtn" name="shuiar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>-->
+                <!--</div>-->
+                <!--<div class="shuiarBox">-->
+                  <!--<div>-->
+                    <!--<div style="line-height: 32px;">翻曲加水</div>-->
+                    <!--<el-form-item label="起始数：" :required="true">-->
+                      <!--<el-input size="small" v-model="tech.overStartWeight" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="结束数：" :required="true">-->
+                      <!--<el-input size="small" v-model="tech.overEndWeight" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="加水量（L）：">-->
+                      <!--<el-input size="small" v-model="tech.overWeight" :disabled="true"></el-input>-->
+                    <!--</el-form-item>-->
+                  <!--</div>-->
+                  <!--<div>-->
+                    <!--<div style="line-height: 32px;">出曲加水</div>-->
+                    <!--<el-form-item label="起始数：" :required="true">-->
+                      <!--<el-input size="small" v-model="tech.outStartWeight" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="结束数：" :required="true">-->
+                      <!--<el-input size="small" v-model="tech.outEndWeight" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')"></el-input>-->
+                    <!--</el-form-item>-->
+                    <!--<el-form-item label="加水量（L）：">-->
+                      <!--<el-input size="small" v-model="tech.outWeight" :disabled="true"></el-input>-->
+                    <!--</el-form-item>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</el-form>-->
+            <!--</el-card>-->
+            <!--<el-card>-->
+              <!--<div class="htitle">-->
+                <!--<span class="iconfont">&#xe602;</span> 感官评价记录<el-button type="text" class="readyshiftBtn" name="feelar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>-->
+              <!--</div>-->
+              <!--<div class="feelarBox">-->
+                <!--<el-table border header-row-class-name="tableHead" :data="assessList">-->
+                  <!--<el-table-column prop="feelName"></el-table-column>-->
+                  <!--<el-table-column>-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>U</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-select v-model="scope.row.codeU" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="请选择" size="small" >-->
+                        <!--<el-option v-for="item in Ulist" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+                      <!--</el-select>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column label="S">-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>S</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-select v-model="scope.row.codeS" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="请选择" size="small">-->
+                        <!--<el-option v-for="item in Slist" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+                      <!--</el-select>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                  <!--<el-table-column>-->
+                    <!--<template slot="header">-->
+                      <!--<i class="reqI">*</i>-->
+                      <!--<span>A</span>-->
+                    <!--</template>-->
+                    <!--<template slot-scope="scope">-->
+                      <!--<el-select v-model="scope.row.codeA" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" placeholder="请选择" size="small">-->
+                        <!--<el-option v-for="item in Alist" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+                      <!--</el-select>-->
+                    <!--</template>-->
+                  <!--</el-table-column>-->
+                <!--</el-table>-->
+              <!--</div>-->
+            <!--</el-card>-->
+            <!--<el-card>-->
+              <!--<el-form :inline="true" :model="tech" size="small">-->
+                <!--<div class="htitle">-->
+                  <!--<span class="iconfont">&#xe607;</span> 异常情况记录<el-button type="text" class="readyshiftBtn" name="excar" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>-->
+                <!--</div>-->
+                <!--<div class="excarBox"><el-input type="textarea" v-model="tech.guardException" :disabled="!(isRedact && this.tech.status !== 'submit' && this.tech.status !== 'checked')" class="textarea" style="width: 100%; height: 40px;"></el-input></div>-->
+              <!--</el-form>-->
+            <!--</el-card>-->
+          <!--</div>-->
+        <!--</el-tab-pane>-->
+        <!--<el-tab-pane name="2">-->
+          <!--<span slot="label" class="spanview">-->
+            <!--<el-button>异常记录</el-button>-->
+          <!--</span>-->
+          <!--<exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader"></exc-record>-->
+        <!--</el-tab-pane>-->
+        <!--<el-tab-pane name="3">-->
+          <!--<span slot="label" class="spanview">-->
+            <!--<el-button>文本记录</el-button>-->
+          <!--</span>-->
+          <!--<text-record ref="textrecord" :isRedact="isRedact"></text-record>-->
+        <!--</el-tab-pane>-->
+      <!--</el-tabs>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -402,10 +711,111 @@ import {headanimation, Readyanimation, ReadyanimationLook} from '@/net/validate'
 import ExcRecord from '@/views/components/ExcRecord'
 import TextRecord from '@/views/components/TextRecord'
 import LookEcharts from '@/views/components/LookEcharts'
+import {AsyncHook} from '@/utils/index.js'
 export default {
   name: 'look',
   data () {
     return {
+      headerBase: [
+        {type: 'p',
+          icon: 'factory-shengchanchejian',
+          label: '生产车间',
+          value: 'workShopName'},
+        {type: 'p',
+          icon: 'factory--ICONxiugai_chepaihaoma',
+          label: '制曲房号',
+          value: 'houseNoName'},
+        {type: 'p',
+          icon: 'factory-bianhao',
+          label: '订单编号',
+          value: 'orderNo'},
+        {type: 'tooltip',
+          icon: 'factory-pinleiguanli',
+          label: '生产品项',
+          value: ['materialCode', 'materialName']},
+        {type: 'p',
+          icon: 'factory-dingdan',
+          label: '生产日期',
+          value: 'productDate'},
+        {type: 'p',
+          icon: 'factory-xianchangrenyuan',
+          label: '提交人员',
+          value: 'changer'},
+        {type: 'p',
+          icon: 'factory-riqi',
+          label: '提交时间',
+          value: 'changed'},
+        {type: 'p',
+          icon: 'factory-riqi',
+          label: '入 罐 号 ',
+          value: 'inPotNoName'},
+        {
+          type: 'p',
+          icon: 'factory-bianhaoguize',
+          label: '连续蒸煮号',
+          value: 'cookingNoName'
+        }
+      ],
+      tabs: [
+        {
+          label: '工艺控制',
+          status: '未录入'
+        },
+        {
+          label: '异常记录'
+        },
+        {
+          label: '文本记录'
+        }
+      ],
+      submitRules: () => {
+        return [this.Readyrules, this.$refs.excrecord.excrul]
+      },
+      savedRules: () => {
+        return []
+      },
+      savedDatas: (str) => {
+        this.submitStatus = 'saved'
+        return AsyncHook([
+          [this.savesmain, []]
+        ], [
+          [this.$refs.excrecord.saveOrSubmitExc, [{
+            orderId: this.formHeader.orderId,
+            orderHouseId: this.formHeader.orderHouseId,
+            blongProc: this.formHeader.processId
+          }, str]],
+          [this.$refs.textrecord.UpdateText, [{
+            orderId: this.formHeader.orderId,
+            orderHouseId: this.formHeader.orderHouseId,
+            blongProc: this.formHeader.processId
+          }, str]],
+          [this.savestauts, []],
+          [this.savesecond, []],
+          [this.savefeel, []],
+          [this.UpdateHeaderCreator, [str]]
+        ])
+      },
+      submitDatas: (str) => {
+        this.submitStatus = 'submit'
+        return AsyncHook([
+          [this.savesmain, []]
+        ], [
+          [this.$refs.excrecord.saveOrSubmitExc, [{
+            orderId: this.formHeader.orderId,
+            orderHouseId: this.formHeader.orderHouseId,
+            blongProc: this.formHeader.processId
+          }, str]],
+          [this.$refs.textrecord.UpdateText, [{
+            orderId: this.formHeader.orderId,
+            orderHouseId: this.formHeader.orderHouseId,
+            blongProc: this.formHeader.processId
+          }, str]],
+          [this.savestauts, []],
+          [this.savesecond, []],
+          [this.savefeel, []],
+          [this.UpdateHeaderCreator, [str]]
+        ])
+      },
       activeName: '1',
       formHeader: {
         inStartTime: ''
@@ -792,7 +1202,9 @@ export default {
           this.formHeader.inStartTime = data.techList[0].inStartTime === null ? '' : data.techList[0].inStartTime
           this.$refs.LookEcharts.testInit(this.formHeader)
           this.applyCraftState = this.tech.status
-          this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[0])
+          this.tabs[0].status = this.tech.status
+          // 强制刷新tabs
+          this.$refs.dataEntry.updateTabs()
           this.assessList = data.feelList
           this.lookList = data.recordList
         } else {

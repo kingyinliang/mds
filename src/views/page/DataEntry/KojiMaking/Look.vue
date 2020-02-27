@@ -1,59 +1,54 @@
 <template>
-  <el-row>
-    <el-col>
-      <div class="header_main">
-        <el-card class="searchCard">
-          <el-row type="flex">
-            <el-col>
-              <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
-                <el-form-item label="生产工厂：">
-                  <el-select v-model="params.factoryId" class="selectwpx" style="width: 150px;">
-                    <el-option label="请选择" value=""></el-option>
-                    <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="生产车间：">
-                  <el-select v-model="params.workShop" class="selectwpx" style="width: 150px;">
-                    <el-option label="请选择" value=""></el-option>
-                    <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-form>
-            </el-col>
-            <el-col style="width: 340px;">
-              <el-button type="primary" size="small" @click="getOrderList()" style="float: right;">查询</el-button>
-            </el-col>
-          </el-row>
-        </el-card>
-        <el-row :gutter="10">
-          <el-col :span="8" v-for="(item, index) in orderList" :key="index" style="margin-top: 5px;">
-            <div class="box-item">
-              <div class="box-item-top">
-                <div class="box-item-title">
-                  <div class="box-item-title-name"><div :style="{'background': index%3 === 0 ? '#FFBF00' : (index%3) === 1 ? '#5BD171': '#2C92F6'}">{{item.houseNo}}</div><div>{{item.inPotNoName}}</div></div>
-                  <div class="box-item-title-state">状态：{{item.guardStatus === 'noPass'? '审核不通过':item.guardStatus === 'saved'? '已保存':item.guardStatus === 'submit' ? '已提交' : item.guardStatus === 'checked'? '通过':item.guardStatus === '已同步' ? '未录入' : item.guardStatus}}</div>
-                </div>
-                <div class="box-item-container">
-                  <div class="box-item-container-left">
-                    <div class="box-item-container-img"></div>
-                  </div>
-                  <div class="box-item-container-right">
-                    <div class="box-item-container-item"><div class="name">生产订单</div><div class="detail">{{item.orderNo}}</div></div>
-                    <div class="box-item-container-item"><div class="name">生产品项</div><div class="detail">{{item.materialCode + ' ' + item.materialName}}</div></div>
-                    <div class="box-item-container-item"><div class="name">入曲时长</div><div class="detail">{{item.inEndTimeLength}} 小时</div></div>
-                    <div class="box-item-container-item"><div class="name">入曲时间</div><div class="detail">{{item.inEndTime ? item.inEndTime : ''}}</div></div>
-                  </div>
-                </div>
+  <div class="header_main">
+    <el-card class="searchCard queryHead">
+      <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
+        <el-form-item label="生产工厂：">
+          <el-select v-model="params.factoryId" class="selectwpx" style="width: 150px;">
+            <el-option label="请选择" value=""></el-option>
+            <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="生产车间：">
+          <el-select v-model="params.workShop" class="selectwpx" style="width: 150px;">
+            <el-option label="请选择" value=""></el-option>
+            <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item style="float: right;">
+          <el-button type="primary" size="small" @click="getOrderList()" style="float: right;">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+    <el-row :gutter="10">
+      <el-col :span="8" v-for="(item, index) in orderList" :key="index" style="margin-top: 5px;">
+        <div class="box-item">
+          <div class="box-item-top">
+            <div class="box-item-title">
+              <div class="box-item-title-name"><div :style="{'background': index%3 === 0 ? '#FFBF00' : (index%3) === 1 ? '#5BD171': '#2C92F6'}">{{item.houseNo}}</div><div>{{item.inPotNoName}}</div></div>
+              <div class="box-item-title-state" :class="{diannopassBtn: item.guardStatus === 'noPass'}">状态：{{item.guardStatus === 'noPass'? '审核不通过':item.guardStatus === 'saved'? '已保存':item.guardStatus === 'submit' ? '已提交' : item.guardStatus === 'checked'? '通过':item.guardStatus === '已同步' ? '未录入' : item.guardStatus}}</div>
+            </div>
+            <div class="box-item-container">
+              <div class="box-item-container-left">
+                <div class="box-item-container-img"><img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg"></div>
               </div>
-              <div class="box-item-bottom">
-                <div class="box-item-bottom-item" :style="{'color':item.guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', item)">数据录入</div>
+              <div class="box-item-container-right">
+                <div class="box-item-container-item"><div class="name">生产订单</div><div class="detail">{{item.orderNo}}</div></div>
+                <div class="box-item-container-item"><div class="name">生产品项</div><div class="detail">{{item.materialCode + ' ' + item.materialName}}</div></div>
+                <div class="box-item-container-item"><div class="name">入曲时长</div><div class="detail">{{item.inEndTimeLength}} 小时</div></div>
+                <div class="box-item-container-item"><div class="name">入曲时间</div><div class="detail">{{item.inEndTime ? item.inEndTime : ''}}</div></div>
+                <div class="btn">
+                  <el-button type="primary" size="mini" :class="{nopassBtn: item.guardStatus === 'noPass'}" @click="goPage('看曲', item)">数据录入</el-button>
+                </div>
               </div>
             </div>
-          </el-col>
-        </el-row>
-      </div>
-    </el-col>
-  </el-row>
+          </div>
+          <!--<div class="box-item-bottom">-->
+            <!--<div class="box-item-bottom-item" :style="{'color':item.guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', item)">数据录入</div>-->
+          <!--</div>-->
+        </div>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -196,22 +191,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .diannopassBtn {
+    &::before {
+      background: #f05c4a !important;
+    }
+  }
+  .nopassBtn {
+    background: #f05c4a;
+    border: none;
+  }
   .box-item {
-    height: 220px;
     box-sizing: border-box;
     background: rgba(255, 255, 255, 1);
     border-radius: 2px;
     border: 1px solid rgba(232, 232, 232, 1);
     .box-item-top {
-      height: 178px;
-      padding: 10px 10px;
-      padding-bottom: 0;
+      padding: 10px 10px 20px 10px;
       border-bottom: 1px solid rgba(232, 232, 232, 1);
       .box-item-title {
         display: flex;
         justify-content: space-between;
         flex: 1;
         height: 34px;
+        margin-bottom: 16px;
         .box-item-title-name {
           display: flex;
           flex: 1;
@@ -235,63 +237,76 @@ export default {
             margin-left: 5px;
           }
         }
-        .box-item-title-state {
-          flex: 1;
-          font-size: 14px;
-          font-weight: 500;
-          color: rgba(0, 0, 0, 0.65);
-          line-height: 20px;
-          text-align: right;
-          margin-top: 4px;
-          &::before {
-            content: "";
-            display: inline-block;
-            height: 6px;
-            width: 6px;
-            margin-right: 10px;
-            margin-bottom: 2px;
-            background: rgba(126, 211, 33, 1);
-          }
+      }
+      .box-item-title-state {
+        flex: 1;
+        font-size: 12px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.65);
+        line-height: 20px;
+        text-align: right;
+        padding-left: 10px;
+        margin-top: 4px;
+        margin-bottom: 6px;
+        &::before {
+          content: "";
+          display: inline-block;
+          height: 6px;
+          width: 6px;
+          border-radius: 50%;
+          margin-right: 10px;
+          margin-bottom: 2px;
+          background: rgba(126, 211, 33, 1);
         }
       }
       .box-item-container {
         display: flex;
         flex: 1;
         justify-content: space-between;
-        height: 129px;
         .box-item-container-left {
           display: flex;
           justify-content: center;
-          width: 130px;
-          padding-top: 10px;
+          align-items: center;
+          width: 40%;
+          background: rgba(242, 242, 242, 1);
+          border-radius: 8px;
           .box-item-container-img {
-            width: 94px;
-            height: 86px;
-            background: url("~@/assets/img/fajiaoguan.png");
+            width: 150px;
+            .bgimg {
+              width: 100%;
+            }
           }
         }
         .box-item-container-right {
+          width: 60%;
           flex: 1;
           display: flex;
           flex-direction: column;
-          margin-left: 10px;
+          margin-left: 16px;
+          .btn {
+            text-align: right;
+          }
           .box-item-container-item {
             flex: 1;
             display: flex;
             justify-content: space-between;
+            margin-bottom: 10px;
             .name {
               width: 60px;
               font-size: 12px;
               font-weight: 400;
-              color: rgba(0, 0, 0, 0.45);
-              line-height: 20px;
+              color: black;
+              line-height: 32px;
             }
             .detail {
               flex: 1;
-              font-size: 14px;
+              font-size: 12px;
               font-weight: 500;
-              color: rgba(0, 0, 0, 0.65);
-              line-height: 17px;
+              color: #333;
+              background: #f5f5f5;
+              padding-left: 10px;
+              border-radius: 4px;
+              line-height: 32px;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;

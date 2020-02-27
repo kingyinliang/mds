@@ -39,13 +39,13 @@
           <el-button type="primary" size="small" @click="ExportExcelA(true)"  v-if="isAuth('juice:pot:juiceStockItemExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
         </div>
         <el-table header-row-class-name="tableHead" :data="formLeftData" border tooltip-effect="dark" >
-          <el-table-column label="六月鲜" :show-overflow-tooltip="true" prop="liuyuexian"></el-table-column>
           <el-table-column label="味极鲜" :show-overflow-tooltip="true" prop="weijixian"></el-table-column>
-          <el-table-column label="F0" :show-overflow-tooltip="true" prop="f0"></el-table-column>
+          <el-table-column label="六月鲜" :show-overflow-tooltip="true" prop="liuyuexian"></el-table-column>
           <el-table-column label="JY" :show-overflow-tooltip="true" prop="jy"></el-table-column>
           <el-table-column label="TB" :show-overflow-tooltip="true" prop="tb"></el-table-column>
-          <el-table-column label="JBS" :show-overflow-tooltip="true" prop="jbs"></el-table-column>
           <el-table-column label="JYTB" :show-overflow-tooltip="true" prop="jytb"></el-table-column>
+          <el-table-column label="F0" :show-overflow-tooltip="true" prop="f0"></el-table-column>
+          <el-table-column label="JBS" :show-overflow-tooltip="true" prop="jbs"></el-table-column>
           <el-table-column label="原汁总库存量" :show-overflow-tooltip="true" prop="sum" ></el-table-column>
         </el-table>
         <div class="titleLeft"><i class="iconfont factory-icon_function_keyongkucun" style="color: #666; margin-right: 10px;"></i>原汁总库存列表（单位:方）</div>
@@ -95,13 +95,13 @@
           <el-button type="primary" size="small" @click="ExportExcelB(true)"  v-if="isAuth('juice:pot:juiceStockItemExport')" style="background-color: #1890ff; color: #fff; float: right;">导出</el-button>
         </div>
         <el-table header-row-class-name="tableHead" :data="formRightData" border tooltip-effect="dark" >
-          <el-table-column label="六月鲜" :show-overflow-tooltip="true" prop="liuyuexian"></el-table-column>
           <el-table-column label="味极鲜" :show-overflow-tooltip="true" prop="weijixian"></el-table-column>
-          <el-table-column label="F0" :show-overflow-tooltip="true" prop="f0"></el-table-column>
+          <el-table-column label="六月鲜" :show-overflow-tooltip="true" prop="liuyuexian"></el-table-column>
           <el-table-column label="JY" :show-overflow-tooltip="true" prop="jy"></el-table-column>
           <el-table-column label="TB" :show-overflow-tooltip="true" prop="tb"></el-table-column>
-          <el-table-column label="JBS" :show-overflow-tooltip="true" prop="jbs"></el-table-column>
           <el-table-column label="JYTB" :show-overflow-tooltip="true" prop="jytb"></el-table-column>
+          <el-table-column label="F0" :show-overflow-tooltip="true" prop="f0"></el-table-column>
+          <el-table-column label="JBS" :show-overflow-tooltip="true" prop="jbs"></el-table-column>
           <el-table-column label="原汁总库存量" :show-overflow-tooltip="true" prop="sum" ></el-table-column>
         </el-table>
         <div class="titleLeft"><i class="iconfont factory-icon_function_keyongkucun" style="color: #666; margin-right: 10px;"></i>可用原汁列表（单位:方）</div>

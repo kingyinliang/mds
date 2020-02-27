@@ -335,6 +335,7 @@ export default {
           this.$notify({title: '成功', message: '操作成功', type: 'success'})
           this.GetDataList()
         } else {
+          this.GetDataList()
           this.$error_SHINHO(data.msg)
         }
       })

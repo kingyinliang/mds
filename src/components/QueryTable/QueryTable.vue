@@ -71,7 +71,7 @@
       </el-card>
       <el-tabs v-if="tabs.length" v-model="activeName" type="border-card">
         <el-tab-pane :name='index.toString()' :label='tabItem.label' v-for="(tabItem, index) in tabs" :key="index">
-          <el-table :data="tabItem.tableData" ref="table" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+          <el-table :data="tabItem.tableData" height="400" ref="table" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
             <el-table-column
               v-if="showSelectColumn"
               :selectable="selectableFn"
@@ -127,7 +127,7 @@
             <slot name="mds-button-middle"></slot>
           </el-col>
         </el-row>
-        <el-table :data="tableData" ref="table" :span-method="spanMethod" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+        <el-table :data="tableData" ref="table" :height="tableHeight" :span-method="spanMethod" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
           <el-table-column
             v-if="showSelectColumn"
             :selectable="selectableFn"
@@ -204,8 +204,7 @@ export default {
       queryFormRules: {},
       optionLists: {},
       tableData: [],
-      multipleSelection: [],
-      tableHeight: 0
+      multipleSelection: []
     }
   },
   props: {
@@ -310,6 +309,10 @@ export default {
       default: () => {
         return []
       }
+    },
+    tableHeight: {
+      type: String,
+      default: ''
     }
   },
   created () {
@@ -321,10 +324,10 @@ export default {
       if (this.fixTableHeightFromTop !== 0) {
         this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - this.fixTableHeightFromTop
         // 监听窗口大小变化
-        let self = this
-        window.onresize = function () {
-          self.tableHeight = window.innerHeight - self.$refs.table.$el.offsetTop - this.fixTableHeightFromTop
-        }
+        // let self = this
+        // window.onresize = function () {
+        //   self.tableHeight = window.innerHeight - self.$refs.table.$el.offsetTop - this.fixTableHeightFromTop
+        // }
       } else {
         this.tableHeight = ''
       }

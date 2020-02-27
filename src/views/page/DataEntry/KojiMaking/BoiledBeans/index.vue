@@ -1,100 +1,129 @@
 <template>
-  <div class="header_main">
-    <el-card class="searchCard">
-      <el-row>
-        <el-col :span="21">
-          <el-form :inline="true" size="small" label-width="70px">
-            <el-form-item label="生产车间：">
-              <p class="input_bommom">&nbsp;{{formHeader.workShopName ? formHeader.workShopName : ''}}</p>
-            </el-form-item>
-            <el-form-item label="曲房号：">
-              <p class="input_bommom">&nbsp;{{formHeader.houseNoName ? formHeader.houseNoName : ''}}</p>
-            </el-form-item>
-            <el-form-item label="生产订单：" label-width="85px">
-              <p class="input_bommom">&nbsp;{{formHeader.orderNo ? formHeader.orderNo : ''}}</p>
-            </el-form-item>
-            <el-form-item label="生产品项：">
-              <p class="input_bommom">&nbsp;{{(formHeader.materialCode ? formHeader.materialCode : '') + ' ' + (formHeader.materialName ? formHeader.materialName : '')}}</p>
-            </el-form-item>
-            <el-form-item label="生产日期：">
-              <p class="input_bommom">&nbsp;{{formHeader.inKjmDate ? formHeader.inKjmDate : ''}}</p>
-            </el-form-item>
-            <el-form-item label="入罐号：">
-              <p class="input_bommom">&nbsp;{{formHeader.inPotNoName ? formHeader.inPotNoName : ''}}</p>
-            </el-form-item>
-            <el-form-item label="连续蒸煮号：" label-width="85px">
-              <p>
-                <el-select v-model="cookingNoId" :disabled="!isRedact" style="width: 147px;">
-                  <el-option v-for="(item, index) in this.holderList" :key="index" :label="item.holderName" :value="item.holderName"></el-option>
-                </el-select>
-              </p>
-            </el-form-item>
-            <el-form-item label="提交人员：">
-              <p class="input_bommom">&nbsp;{{formHeader.changer ? formHeader.changer : ''}}</p>
-            </el-form-item>
-            <el-form-item label="提交时间：">
-              <p class="input_bommom">&nbsp;{{formHeader.changed? (formHeader.changed.indexOf('.')!==-1?formHeader.changed.substring(0, formHeader.changed.indexOf('.')):formHeader.changed):''}}</p>
-            </el-form-item>
-          </el-form>
-        </el-col>
-        <el-col :span="3">
-          <div style="float: right; line-height: 31px; font-size: 14px;">
-            <div style="float: left;">
-              <span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? '#1890f' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：
-              <span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row style="text-align: right;" class="button_three_goup">
-        <template style="float: right; margin-left: 10px;">
-          <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-index'})">返回</el-button>
-          <el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('kjm:bean:material:update')">{{isRedact?'取消':'编辑'}}</el-button>
-        </template>
-        <template v-if="isRedact" style="float: right; margin-left: 10px;">
-          <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('kjm:bean:material:update')">保存</el-button>
-          <el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('kjm:bean:material:update')">提交</el-button>
-        </template>
-      </el-row>
-      <div class="toggleSearchBottom">
-        <i class="el-icon-caret-top"></i>
-      </div>
-    </el-card>
-    <div class="tableCard">
-      <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
-        <i class="el-icon-caret-bottom"></i>
-      </div>
-      <el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" type="border-card" class="NewDaatTtabs" id="DaatTtabs" style="margin-top: 15px;">
-        <el-tab-pane name="1">
-          <span slot="label" class="spanview">
-            <el-tooltip class="item" effect="dark"  :content="applyMaterielState === 'noPass'? '不通过':applyMaterielState === 'saved'? '已保存':applyMaterielState === 'submit' ? '已提交' : applyMaterielState === 'checked'? '通过':'未录入'" placement="top-start">
-              <el-button :style="{'color': applyMaterielState === 'noPass'? 'red' : ''}">原料领用</el-button>
-            </el-tooltip>
-          </span>
-          <Material ref="material" :isRedact="isRedact" :formHeader="formHeader" @setApplyMaterielState='setApplyMaterielState'></Material>
-        </el-tab-pane>
-        <el-tab-pane name="2">
-          <span slot="label" class="spanview">
-            <el-tooltip class="item" effect="dark"  :content="applyCraftState === 'noPass'? '不通过':applyCraftState === 'saved'? '已保存':applyCraftState === 'submit' ? '已提交' : applyCraftState === 'checked'? '通过':'未录入'" placement="top-start">
-              <el-button :style="{'color': applyCraftState === 'noPass'? 'red' : ''}">工艺控制</el-button>
-            </el-tooltip>
-          </span>
-          <Craft ref="craft" :isRedact="isRedact" :formHeader="formHeader" @setApplyCraftState='setApplyCraftState'></Craft>
-        </el-tab-pane>
-        <el-tab-pane name="3">
-          <span slot="label" class="spanview">
-            <el-button>异常记录</el-button>
-          </span>
-          <exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader"></exc-record>
-        </el-tab-pane>
-        <el-tab-pane name="4">
-          <span slot="label" class="spanview">
-            <el-button>文本记录</el-button>
-          </span>
-          <text-record ref="textrecord" :isRedact="isRedact"></text-record>
-        </el-tab-pane>
-      </el-tabs>
-    </div>
+  <div>
+    <data-entry
+      ref="dataEntry"
+      :redactAuth="'kjm:bean:material:update'"
+      :saveAuth="'kjm:bean:material:update'"
+      :submitAuth="'kjm:bean:material:update'"
+      :submitRules="submitRules"
+      :savedRules="savedRules"
+      :savedDatas="savedDatas"
+      :submitDatas="submitDatas"
+      @success="GetheadList"
+      :orderStatus="orderStatus"
+      :headerBase="headerBase"
+      :formHeader="formHeader"
+      :tabs="tabs">
+      <template slot="1" slot-scope="data">
+        <Material ref="material" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyMaterielState='setApplyMaterielState' @HeadUpdate="HeadUpdate"></Material>
+      </template>
+      <template slot="2" slot-scope="data">
+        <Craft ref="craft" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyCraftState='setApplyCraftState'></Craft>
+      </template>
+      <template slot="3" slot-scope="data">
+        <exc-record ref="excrecord" :isRedact="data.isRedact" :order="formHeader"></exc-record>
+      </template>
+      <template slot="4" slot-scope="data">
+        <text-record ref="textrecord" :isRedact="data.isRedact"></text-record>
+      </template>
+    </data-entry>
+    <!--<div class="header_main">-->
+      <!--<el-card class="searchCard">-->
+        <!--<el-row>-->
+          <!--<el-col :span="21">-->
+            <!--<el-form :inline="true" size="small" label-width="70px">-->
+              <!--<el-form-item label="生产车间：">-->
+                <!--<p class="input_bommom">&nbsp;{{formHeader.workShopName ? formHeader.workShopName : ''}}</p>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item label="曲房号：">-->
+                <!--<p class="input_bommom">&nbsp;{{formHeader.houseNoName ? formHeader.houseNoName : ''}}</p>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item label="生产订单：" label-width="85px">-->
+                <!--<p class="input_bommom">&nbsp;{{formHeader.orderNo ? formHeader.orderNo : ''}}</p>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item label="生产品项：">-->
+                <!--<p class="input_bommom">&nbsp;{{(formHeader.materialCode ? formHeader.materialCode : '') + ' ' + (formHeader.materialName ? formHeader.materialName : '')}}</p>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item label="生产日期：">-->
+                <!--<p class="input_bommom">&nbsp;{{formHeader.inKjmDate ? formHeader.inKjmDate : ''}}</p>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item label="入罐号：">-->
+                <!--<p class="input_bommom">&nbsp;{{formHeader.inPotNoName ? formHeader.inPotNoName : ''}}</p>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item label="连续蒸煮号：" label-width="85px">-->
+                <!--<p>-->
+                  <!--<el-select v-model="cookingNoId" :disabled="!isRedact" style="width: 147px;">-->
+                    <!--<el-option v-for="(item, index) in this.holderList" :key="index" :label="item.holderName" :value="item.holderName"></el-option>-->
+                  <!--</el-select>-->
+                <!--</p>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item label="提交人员：">-->
+                <!--<p class="input_bommom">&nbsp;{{formHeader.changer ? formHeader.changer : ''}}</p>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item label="提交时间：">-->
+                <!--<p class="input_bommom">&nbsp;{{formHeader.changed? (formHeader.changed.indexOf('.')!==-1?formHeader.changed.substring(0, formHeader.changed.indexOf('.')):formHeader.changed):''}}</p>-->
+              <!--</el-form-item>-->
+            <!--</el-form>-->
+          <!--</el-col>-->
+          <!--<el-col :span="3">-->
+            <!--<div style="float: right; line-height: 31px; font-size: 14px;">-->
+              <!--<div style="float: left;">-->
+                <!--<span class="point" :style="{'background': orderStatus === 'noPass'? 'red' : orderStatus === 'saved'? '#1890f' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ?  '#f5f7fa' : 'rgb(103, 194, 58)'}"></span>订单状态：-->
+                <!--<span :style="{'color': orderStatus === 'noPass'? 'red' : '' }">{{orderStatus === 'noPass'? '审核不通过':orderStatus === 'saved'? '已保存':orderStatus === 'submit' ? '已提交' : orderStatus === 'checked'? '通过':orderStatus === '已同步' ? '未录入' : orderStatus }}</span>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
+        <!--<el-row style="text-align: right;" class="button_three_goup">-->
+          <!--<template style="float: right; margin-left: 10px;">-->
+            <!--<el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-index'})">返回</el-button>-->
+            <!--<el-button type="primary" class="button" size="small" @click="isRedact = !isRedact" v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('kjm:bean:material:update')">{{isRedact?'取消':'编辑'}}</el-button>-->
+          <!--</template>-->
+          <!--<template v-if="isRedact" style="float: right; margin-left: 10px;">-->
+            <!--<el-button type="primary" size="small" @click="savedOrSubmitForm('saved')" v-if="isAuth('kjm:bean:material:update')">保存</el-button>-->
+            <!--<el-button type="primary" size="small" @click="SubmitForm" v-if="isAuth('kjm:bean:material:update')">提交</el-button>-->
+          <!--</template>-->
+        <!--</el-row>-->
+        <!--<div class="toggleSearchBottom">-->
+          <!--<i class="el-icon-caret-top"></i>-->
+        <!--</div>-->
+      <!--</el-card>-->
+      <!--<div class="tableCard">-->
+        <!--<div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">-->
+          <!--<i class="el-icon-caret-bottom"></i>-->
+        <!--</div>-->
+        <!--<el-tabs @tab-click='tabClick' ref='tabs' v-model="activeName" type="border-card" class="NewDaatTtabs" id="DaatTtabs" style="margin-top: 15px;">-->
+          <!--<el-tab-pane name="1">-->
+            <!--<span slot="label" class="spanview">-->
+              <!--<el-tooltip class="item" effect="dark"  :content="applyMaterielState === 'noPass'? '不通过':applyMaterielState === 'saved'? '已保存':applyMaterielState === 'submit' ? '已提交' : applyMaterielState === 'checked'? '通过':'未录入'" placement="top-start">-->
+                <!--<el-button :style="{'color': applyMaterielState === 'noPass'? 'red' : ''}">原料领用</el-button>-->
+              <!--</el-tooltip>-->
+            <!--</span>-->
+            <!--<Material ref="material" :isRedact="isRedact" :formHeader="formHeader" @setApplyMaterielState='setApplyMaterielState'></Material>-->
+          <!--</el-tab-pane>-->
+          <!--<el-tab-pane name="2">-->
+            <!--<span slot="label" class="spanview">-->
+              <!--<el-tooltip class="item" effect="dark"  :content="applyCraftState === 'noPass'? '不通过':applyCraftState === 'saved'? '已保存':applyCraftState === 'submit' ? '已提交' : applyCraftState === 'checked'? '通过':'未录入'" placement="top-start">-->
+                <!--<el-button :style="{'color': applyCraftState === 'noPass'? 'red' : ''}">工艺控制</el-button>-->
+              <!--</el-tooltip>-->
+            <!--</span>-->
+            <!--<Craft ref="craft" :isRedact="isRedact" :formHeader="formHeader" @setApplyCraftState='setApplyCraftState'></Craft>-->
+          <!--</el-tab-pane>-->
+          <!--<el-tab-pane name="3">-->
+            <!--<span slot="label" class="spanview">-->
+              <!--<el-button>异常记录</el-button>-->
+            <!--</span>-->
+            <!--<exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader"></exc-record>-->
+          <!--</el-tab-pane>-->
+          <!--<el-tab-pane name="4">-->
+            <!--<span slot="label" class="spanview">-->
+              <!--<el-button>文本记录</el-button>-->
+            <!--</span>-->
+            <!--<text-record ref="textrecord" :isRedact="isRedact"></text-record>-->
+          <!--</el-tab-pane>-->
+        <!--</el-tabs>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -105,10 +134,136 @@ import Material from './common/material'
 import Craft from './common/craft'
 import ExcRecord from '@/views/components/ExcRecord'
 import TextRecord from '@/views/components/TextRecord'
+import {AsyncHook} from '@/utils/index.js'
 export default {
   name: 'boileIndex',
   data () {
     return {
+      headerBase: [
+        {type: 'p',
+          icon: 'factory-shengchanchejian',
+          label: '生产车间',
+          value: 'workShopName'},
+        {type: 'p',
+          icon: 'factory--ICONxiugai_chepaihaoma',
+          label: '制曲房号',
+          value: 'houseNoName'},
+        {type: 'p',
+          icon: 'factory-bianhao',
+          label: '订单编号',
+          value: 'orderNo'},
+        {type: 'tooltip',
+          icon: 'factory-pinleiguanli',
+          label: '生产品项',
+          value: ['materialCode', 'materialName']},
+        {type: 'p',
+          icon: 'factory-dingdan',
+          label: '生产日期',
+          value: 'productDate'},
+        {type: 'p',
+          icon: 'factory-xianchangrenyuan',
+          label: '提交人员',
+          value: 'changer'},
+        {type: 'p',
+          icon: 'factory-riqi',
+          label: '提交时间',
+          value: 'changed'},
+        {type: 'p',
+          icon: 'factory-riqi',
+          label: '入 罐 号 ',
+          value: 'inPotNoName'},
+        {type: 'select',
+          icon: 'factory-bianhaoguize',
+          label: '连续蒸煮号',
+          value: 'cookingNoId',
+          disabled: true,
+          option: {
+            list: [],
+            label: 'holderName',
+            value: 'holderId'
+          }}
+      ],
+      tabs: [
+        {
+          label: '原料领用',
+          status: '未录入'
+        },
+        {
+          label: '工艺控制',
+          status: '未录入'
+        },
+        {
+          label: '异常记录'
+        },
+        {
+          label: '文本记录'
+        }
+      ],
+      submitRules: () => {
+        return [this.formHeaderRul, this.$refs.material.mainrules, this.$refs.craft.craftrules, this.$refs.excrecord.excrul]
+      },
+      savedRules: () => {
+        return [this.formHeaderRul]
+      },
+      savedDatas: (str) => {
+        this.$set(this.formHeader, 'submitStatus', 'saved')
+        return AsyncHook([
+          [this.UpdateHeader, [str]],
+          [this.UpdateHeaderCreator, [str]],
+          [this.$refs.material.savemains, []],
+          [this.$refs.material.savewheats, []],
+          [this.$refs.material.savepulps, []],
+          [this.$refs.excrecord.saveOrSubmitExc, [{
+            orderId: this.formHeader.orderId,
+            orderHouseId: this.formHeader.orderHouseId,
+            blongProc: this.formHeader.processId
+          }, str]],
+          [this.$refs.textrecord.UpdateText, [{
+            orderId: this.formHeader.orderId,
+            orderHouseId: this.formHeader.orderHouseId,
+            blongProc: this.formHeader.processId
+          }, str]]
+        ], [
+          [this.$refs.material.submitwheats, []],
+          [this.$refs.material.submitpulps, []],
+          [this.$refs.craft.updatezhu, []]
+        ], [
+          [this.$refs.craft.updatelishui, []],
+          [this.$refs.craft.updatezhengzhu, []],
+          [this.$refs.craft.updatehunhe, []],
+          [this.$refs.material.savestauts, []]
+        ])
+      },
+      submitDatas: (str) => {
+        this.$set(this.formHeader, 'submitStatus', 'submit')
+        return AsyncHook([
+          [this.UpdateHeader, [str]],
+          [this.UpdateHeaderCreator, [str]],
+          [this.$refs.material.savemains, []],
+          [this.$refs.material.savewheats, []],
+          [this.$refs.material.savepulps, []],
+          [this.$refs.excrecord.saveOrSubmitExc, [{
+            orderId: this.formHeader.orderId,
+            orderHouseId: this.formHeader.orderHouseId,
+            blongProc: this.formHeader.processId
+          }, str]],
+          [this.$refs.textrecord.UpdateText, [{
+            orderId: this.formHeader.orderId,
+            orderHouseId: this.formHeader.orderHouseId,
+            blongProc: this.formHeader.processId
+          }, str]]
+        ], [
+          [this.$refs.material.submitwheats, []],
+          [this.$refs.material.submitpulps, []],
+          [this.$refs.material.submitmains, []],
+          [this.$refs.craft.updatezhu, []]
+        ], [
+          [this.$refs.craft.updatelishui, []],
+          [this.$refs.craft.updatezhengzhu, []],
+          [this.$refs.craft.updatehunhe, []],
+          [this.$refs.material.savestauts, []]
+        ])
+      },
       activeName: '1',
       formHeader: {},
       orderStatus: '',
@@ -132,14 +287,45 @@ export default {
     this.GetholderList()
   },
   methods: {
+    formHeaderRul () {
+      let ty = true
+      if (!this.formHeader.cookingNoId || this.formHeader.cookingNoId === '') {
+        this.$warning_SHINHO('请选择连续蒸煮号')
+        ty = false
+        return false
+      }
+      return ty
+    },
     tabClick (val) {
       this.$refs.tabs.setCurrentName(val.name)
+    },
+    HeadUpdate (str) {
+      this.$http(`${KJM_API.DOUHEAERLIST}`, `POST`, {orderHouseId: this.$store.state.common.ZQWorkshop.params.beanOrderHouseId, deptName: '煮豆'}, false, false, false).then((res) => {
+        if (res.data.code === 0) {
+          this.formHeader = res.data.headList[0]
+          this.formHeader = res.data.headList[0]
+          // this.cookingNoId = this.formHeader.cookingNoName
+          this.orderStatus = res.data.headList[0].beanStatus
+          if (str === 'wheat') {
+            this.$refs.material.getMaiholdList(this.formHeader)
+          }
+          if (str === 'soy') {
+            this.$refs.material.getDouholdList(this.formHeader)
+            this.$refs.material.GetPuplList(this.formHeader)
+          }
+          this.$refs.excrecord.GetequipmentType(this.formHeader.processId)
+          this.$refs.excrecord.getDataList(this.formHeader.factory)
+          this.$refs.material.partialUpdates(this.formHeader, str)
+        } else {
+          this.$error_SHINHO(res.data.msg)
+        }
+      })
     },
     GetheadList () {
       this.$http(`${KJM_API.DOUHEAERLIST}`, `POST`, {orderHouseId: this.$store.state.common.ZQWorkshop.params.beanOrderHouseId, deptName: '煮豆'}, false, false, false).then((res) => {
         if (res.data.code === 0) {
           this.formHeader = res.data.headList[0]
-          this.cookingNoId = this.formHeader.cookingNoName
+          // this.cookingNoId = this.formHeader.cookingNoName
           this.orderStatus = res.data.headList[0].beanStatus
           // this.$refs.material.GetrealTime(this.formHeader)
           // this.$refs.material.GetrealWheatTime(this.formHeader)
@@ -172,32 +358,38 @@ export default {
       this.$http(`${BASICDATA_API.CONTAINERLIST_API}`, 'POST', {currPage: 1, holder_type: '008', pageSize: 9999, type: 'holder_type'}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.holderList = data.page.list
+          this.headerBase[8].option.list = data.page.list
         } else {
           this.$error_SHINHO(data.msg)
         }
       })
     },
     // 表头更改
-    UpdateHeader (str, resolve) {
-      let holderNamestr = this.holderList.find(item => item.holderName === this.cookingNoId)['holderId']
-      this.$http(`${KJM_API.DOUHEADER_API}`, 'POST', {cookingNoId: holderNamestr, orderHouseId: this.formHeader.orderHouseId}).then(({data}) => {
+    UpdateHeader (str, resolve, reject) {
+      this.$http(`${KJM_API.DOUHEADER_API}`, 'POST', {cookingNoId: this.formHeader.cookingNoId, orderHouseId: this.formHeader.orderHouseId}).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
           this.$error_SHINHO('保存表头' + data.msg)
-        }
-        if (resolve) {
-          resolve('resolve')
+          if (reject) {
+            reject('resolve')
+          }
         }
       })
     },
-    UpdateHeaderCreator (str, resolve) {
+    UpdateHeaderCreator (str, resolve, reject) {
       this.$http(`${KJM_API.DOUMATERHEADCREATOR_API}`, 'POST', {orderId: this.formHeader.orderId}).then(({data}) => {
         if (data.code === 0) {
+          if (resolve) {
+            resolve('resolve')
+          }
         } else {
           this.$error_SHINHO('保存表头' + data.msg)
-        }
-        if (resolve) {
-          resolve('resolve')
+          if (reject) {
+            reject('resolve')
+          }
         }
       })
     },
@@ -291,11 +483,15 @@ export default {
     },
     setApplyMaterielState (status) {
       this.applyMaterielState = status
-      this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
+      this.tabs[0].status = status
+      // 强制刷新tabs
+      this.$refs.dataEntry.updateTabs()
     },
     setApplyCraftState (status) {
       this.applyCraftState = status
-      this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName) - 1])
+      this.tabs[1].status = status
+      // 强制刷新tabs
+      this.$refs.dataEntry.updateTabs()
     }
   },
   components: {

@@ -221,6 +221,7 @@ export default {
       if (data.prsDays.one.length) {
         this.tabs[0].tableData.unshift({
           days: '月计',
+          tbdays: '月计',
           collarUse: data.prsDays.one[0].collarUseSum,
           produce: data.prsDays.one[0].produceSum,
           oneNums: data.prsDays.one[0].oneNumsSum,
@@ -229,7 +230,6 @@ export default {
           fourNums: data.prsDays.one[0].fourNumsSum,
           plateNums: data.prsDays.one[0].plateNumsSum,
           oilYield: data.prsDays.one[0].monthOilYield,
-          tbdays: data.prsDays.oneTb[0].days,
           tbcollarUse: data.prsDays.oneTb[0].collarUse,
           tbproduce: data.prsDays.oneTb[0].produce,
           tboneNums: data.prsDays.oneTb[0].oneNums,

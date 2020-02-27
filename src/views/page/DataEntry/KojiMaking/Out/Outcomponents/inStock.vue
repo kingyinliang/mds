@@ -1,51 +1,53 @@
 <template>
   <div>
-    <el-table header-row-class-name="tableHead" :data="InStock" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-      <el-table-column type="index" width="50" label="序号"></el-table-column>
-      <el-table-column width="130" label="豆粕量（KG）">
-        <template slot-scope="scope">
-          {{scope.row.pulpWeight = ThreeNum.allP}}
-        </template>
-      </el-table-column>
-      <el-table-column width="130" label="麦粉量（KG）">
-        <template slot-scope="scope">
-          {{scope.row.wheatWeight = ThreeNum.allM}}
-        </template>
-      </el-table-column>
-      <el-table-column width="130" label="盐水量（L）">
-        <template slot-scope="scope">
-          {{scope.row.saltWaterWeight = BrineNum}}
-        </template>
-      </el-table-column>
-      <el-table-column width="125" label="入库酱醪量">
-        <template slot-scope="scope">
-          <p>{{scope.row.sauceWeight = parseInt(((scope.row.pulpWeight*1 + scope.row.wheatWeight*1) * params.params1 + scope.row.saltWaterWeight * params.params2) / params.params3)}}</p>
-          <!--<p v-show="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')">{{(scope.row.websign === scope.row.saltWaterWeight? scope.row.sauceWeight = scope.row.sauceWeight : scope.row.sauceWeight =  (((scope.row.pulpWeight*1 + scope.row.wheatWeight*1) * params.params1 + scope.row.saltWaterWeight * params.params2) / params.params3).toFixed(2))}}</p>-->
-          <!--<el-input v-if="(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" v-model="scope.row.sauceWeight" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" placeholder="手工录入"></el-input>-->
-        </template>
-      </el-table-column>
-      <el-table-column width="150" label="入库批次">
-        <template slot="header">
-          <i class="reqI">*</i>
-          <span>入库批次</span>
-        </template>
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.batch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" placeholder="手工录入" maxlength="10"></el-input>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column width="85" label="入罐罐号" show-overflow-tooltip>
-        <template slot-scope="scope">{{scope.row.holderName}}</template>
-      </el-table-column> -->
-      <el-table-column width="50" label="单位" prop="unit"></el-table-column>
-      <el-table-column width="" label="操作人" prop="changer" show-overflow-tooltip></el-table-column>
-      <el-table-column width="" label="操作时间" prop="changed" show-overflow-tooltip></el-table-column>
-      <el-table-column width="70" label="操作" fixed="right">
-        <template slot-scope="scope">
-          <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delInStock(scope.row)" v-if="scope.row.isSplit === '1' ">删除</el-button>
-          <el-button type="text" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="addInStock(scope.row, scope.$index)" v-if="scope.row.isSplit === '0' "><i class="icons iconfont factory-chaifen"></i>拆分</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <mds-card :title="'生产入库'" :name="'instock'">
+      <el-table class="newTable" header-row-class-name="tableHead" :data="InStock" :row-class-name="RowDelFlag" border tooltip-effect="dark">
+        <el-table-column type="index" width="50" label="序号"></el-table-column>
+        <el-table-column width="130" label="豆粕量（KG）">
+          <template slot-scope="scope">
+            {{scope.row.pulpWeight = ThreeNum.allP}}
+          </template>
+        </el-table-column>
+        <el-table-column width="130" label="麦粉量（KG）">
+          <template slot-scope="scope">
+            {{scope.row.wheatWeight = ThreeNum.allM}}
+          </template>
+        </el-table-column>
+        <el-table-column width="130" label="盐水量（L）">
+          <template slot-scope="scope">
+            {{scope.row.saltWaterWeight = BrineNum}}
+          </template>
+        </el-table-column>
+        <el-table-column width="125" label="入库酱醪量">
+          <template slot-scope="scope">
+            <p>{{scope.row.sauceWeight = parseInt(((scope.row.pulpWeight*1 + scope.row.wheatWeight*1) * params.params1 + scope.row.saltWaterWeight * params.params2) / params.params3)}}</p>
+            <!--<p v-show="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')">{{(scope.row.websign === scope.row.saltWaterWeight? scope.row.sauceWeight = scope.row.sauceWeight : scope.row.sauceWeight =  (((scope.row.pulpWeight*1 + scope.row.wheatWeight*1) * params.params1 + scope.row.saltWaterWeight * params.params2) / params.params3).toFixed(2))}}</p>-->
+            <!--<el-input v-if="(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" v-model="scope.row.sauceWeight" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" placeholder="手工录入"></el-input>-->
+          </template>
+        </el-table-column>
+        <el-table-column width="150" label="入库批次">
+          <template slot="header">
+            <i class="reqI">*</i>
+            <span>入库批次</span>
+          </template>
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.batch" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" placeholder="手工录入" maxlength="10"></el-input>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column width="85" label="入罐罐号" show-overflow-tooltip>
+          <template slot-scope="scope">{{scope.row.holderName}}</template>
+        </el-table-column> -->
+        <el-table-column width="50" label="单位" prop="unit"></el-table-column>
+        <el-table-column width="" label="操作人" prop="changer" show-overflow-tooltip></el-table-column>
+        <el-table-column width="" label="操作时间" prop="changed" show-overflow-tooltip></el-table-column>
+        <el-table-column width="70" label="操作" fixed="right">
+          <template slot-scope="scope">
+            <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delInStock(scope.row)" v-if="scope.row.isSplit === '1' ">删除</el-button>
+            <el-button type="text" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="addInStock(scope.row, scope.$index)" v-if="scope.row.isSplit === '0' "><i class="icons iconfont factory-chaifen"></i>拆分</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </mds-card>
     <audit-log :tableData="InStockAuditlog"></audit-log>
   </div>
 </template>

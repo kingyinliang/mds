@@ -23,10 +23,23 @@
         <el-form-item label="订单号：">
           <el-input v-model="formHeader.orderNo"></el-input>
         </el-form-item>
-        <el-form-item label="品项：">
+        <el-form-item label="生产物料：">
           <el-select v-model="formHeader.materialCode" filterable placeholder="请选择" style="width: 140px;">
+            <el-option label="请选择"  value=""></el-option>
             <el-option v-for="(sole, index) in this.materiaList" :key="index" :value="sole.MATERIAL_CODE" :label="`${sole.MATERIAL_CODE}`+ ' ' +`${sole.MATERIAL_NAME}`"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="生产批次：">
+          <el-input v-model="formHeader.batch" class="width140px"></el-input>
+        </el-form-item>
+        <el-form-item label="组件物料：">
+          <el-select v-model="formHeader.materialCodeLittle" filterable placeholder="请选择" style="width: 140px;">
+            <el-option label="请选择"  value=""></el-option>
+            <el-option :label="item.materialCode + ' ' + item.materialName" v-for="(item, index) in materialList" :key="index" :value="item.materialCode"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="组件批次：">
+          <el-input v-model="formHeader.batchLittle" class="width140px"></el-input>
         </el-form-item>
         <el-form-item label="生产日期：">
           <el-date-picker type="date" v-model="formHeader.orderStartDate" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;"></el-date-picker> - <el-date-picker type="date" v-model="formHeader.orderEndDate" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;"></el-date-picker>
@@ -38,27 +51,27 @@
     </el-card>
     <el-card class="secondcard">
       <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
-        <el-table-column label="日期" show-overflow-tooltip prop="orderDate" width="110"></el-table-column>
+        <el-table-column label="日期" show-overflow-tooltip prop="orderDate" width="100"></el-table-column>
         <el-table-column label="工厂" show-overflow-tooltip prop="factory"></el-table-column>
         <el-table-column label="车间" show-overflow-tooltip prop="workShopName"></el-table-column>
-        <el-table-column label="产线" show-overflow-tooltip prop="productLineName" width="120"></el-table-column>
+        <el-table-column label="产线" show-overflow-tooltip prop="productLineName" width="100"></el-table-column>
         <el-table-column label="订单" show-overflow-tooltip prop="orderNo" width="120"></el-table-column>
         <el-table-column label="生产物料" show-overflow-tooltip prop="material">
           <template slot-scope="scope">
             {{scope.row.materialCode}}{{scope.row.materialName}}
           </template>
         </el-table-column>
-        <el-table-column label="生产数量" show-overflow-tooltip prop="realInAmount" width="110"></el-table-column>
-        <el-table-column label="单位" show-overflow-tooltip prop="inUnit"></el-table-column>
-        <el-table-column label="生产批次" show-overflow-tooltip prop="inBatch" width="50"></el-table-column>
+        <el-table-column label="生产数量" show-overflow-tooltip prop="realInAmount" width="90"></el-table-column>
+        <el-table-column label="单位" show-overflow-tooltip prop="inUnit" width="50"></el-table-column>
+        <el-table-column label="生产批次" show-overflow-tooltip prop="inBatch" width="110"></el-table-column>
         <el-table-column label="组件物料" show-overflow-tooltip prop="mainBatch" width="110">
           <template slot-scope="scope">
             {{scope.row.useMaterialCode}}{{scope.row.useMaterialName}}
           </template>
         </el-table-column>
-        <el-table-column label="组件物料数量" show-overflow-tooltip prop="useInAmount" width="110"></el-table-column>
-        <el-table-column label="单位" show-overflow-tooltip prop="useUnit"></el-table-column>
-        <el-table-column label="组件物料批次" show-overflow-tooltip prop="useBatch"></el-table-column>
+        <el-table-column label="组件物料数量" show-overflow-tooltip prop="useInAmount" width="90"></el-table-column>
+        <el-table-column label="单位" show-overflow-tooltip prop="useUnit" width="50"></el-table-column>
+        <el-table-column label="组件物料批次" show-overflow-tooltip prop="useBatch" width="110"></el-table-column>
       </el-table>
       <el-row >
         <el-pagination
@@ -76,7 +89,7 @@
 </template>
 
 <script>
-import { BASICDATA_API, REP_API } from '@/api/api'
+import { BASICDATA_API, REP_API, AUDIT_API } from '@/api/api'
 // import { exportFile } from '@/net/validate'
 export default {
   name: 'TwoOneRetrospect',
@@ -100,7 +113,8 @@ export default {
       workshop: [],
       productline: [],
       materiaList: [],
-      dataList: []
+      dataList: [],
+      materialList: []
     }
   },
   mounted () {
@@ -110,6 +124,7 @@ export default {
   watch: {
     'formHeader.factory' (n, o) {
       this.Getdeptbyid(n)
+      this.getMaterial(n)
     },
     'workShopStr' (n, o) {
       this.GetParentline(n.deptId)
@@ -167,6 +182,16 @@ export default {
           this.materiaList = data.materielTraceSelectInfo
         } else {
           this.$error_SHINHO(data.msg)
+        }
+      })
+    },
+    // 组件物料
+    getMaterial (factory) {
+      this.$http(`${AUDIT_API.AUDIT_ISSUE_MATERIAL_API}`, 'POST', {factory: factory}, false, false, false).then(({data}) => {
+        if (data.code === 0) {
+          this.materialList = data.list
+        } else {
+          this.$warning_SHINHO(data.msg)
         }
       })
     },

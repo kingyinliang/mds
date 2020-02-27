@@ -274,7 +274,16 @@ export const BASICDATA_API = {
   DEPLOY_MATERIAL_SAVE: HOST + '/ste/material/save',
   DEPLOY_MATERIAL_UPDATE: HOST + '/ste/material/dataInsert',
   DEPLOY_MATERIAL_ROWLIST: HOST + '/ste/material/updateList',
-  DEPLOY_MATERIAL_DEL: HOST + '/ste/material/del'
+  DEPLOY_MATERIAL_DEL: HOST + '/ste/material/del',
+  /**
+   *  JBS中间表
+   */
+  JBS_REPROT_LIST: HOST + '/jbs/report/list', // 查询
+  JBS_MATERIAL_LIST: HOST + '/jbs/report/materialList', // 物料
+  JBS_GETTYPE_LIST: HOST + '/jbs/report/jbsGetType', // 大类
+  JBS_DATA_INSERT: HOST + '/jbs/report/jbsDataInsert', // 新增
+  JBS_DATA_UPDATE: HOST + '/jbs/report/jbsDataUpdata', // 保存
+  JBS_DATA_DEL: HOST + '/jbs/report/jbsDataDel' // 删除
 }
 /*
 *系统设置api
@@ -939,7 +948,22 @@ export const REP_API = {
   SQUEEZEDAYS_LIST: HOST + '/report/production/prsDays',
   SQUEEZEDAYS_OUT: HOST + '/report/production/prsDaysExport',
   STERILIZATIONDAYS_LIAT_API: HOST + '/report/fromEs/shajunDaily', // 杀菌日报表
-  STERILIZATIONDAYS_EXPORT_API: HOST + '/report/fromEs/expectShajunDaily' // 杀菌日报表导出
+  STERILIZATIONDAYS_EXPORT_API: HOST + '/report/fromEs/expectShajunDaily', // 杀菌日报表导出
+  /** *************** 生管审核 start ************** */
+  PACKINGYUELD_LIST_API: HOST + '/report/production/packingYield',
+  PACKINGYUELD_EXPORT_API: HOST + '/report/production/packingYieldExport',
+  FERMENTATION_LIST_API: HOST + '/report/production/fermentationStatus', // 发酵一览表
+  FERMENTATION_EXPORT_API: HOST + '/report/production/fermentationStatusExport', // 发酵一览表导出
+  JBS_REPORT_LIST: HOST + '/jbs/report/jbsReport', // JBS查询
+  JBS_REPORT_EXPORT: HOST + '/jbs/report/jbsReportExport', // JBS导出
+  PKGOUTPUT_LIST_API: HOST + '/report/fromEs/materialSummary', // 包装品项产量汇总查询
+  PKGOUTPUT_EXPORT_API: HOST + '/report/fromEs/expectMaterialSummary', // 包装品项产量汇总导出
+  /** ************************* 吹瓶车间报表 ************************** */
+  BOTTLEQUALITY_MATERIALCODE_API: HOST + '/report/production/bottleQualityMaterialCode', // 品项下拉
+  BOTTLEQUALITY_LIST_API: HOST + '/report/production/bottleQuality', // 查询
+  BOTTLEQUALITY_EXPORT_API: HOST + '/report/production/bottleQualityExport', // 导出
+  BOTTLEEMRE_LIST_API: HOST + '/report/fromEs/embryoRecord', // 投胚记录查询
+  BOTTLEEMRE_EXPORT_API: HOST + '/report/fromEs/expectEmbryoRecord' // 投胚记录导出
 }
 /*
 *炒麦api
