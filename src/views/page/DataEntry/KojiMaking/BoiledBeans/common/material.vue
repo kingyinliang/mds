@@ -19,7 +19,7 @@
             <span>种曲</span>
           </template>
           <template slot-scope="scope">
-            <el-select v-model.trim="scope.row.materialCode" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
+            <el-select v-model="scope.row.materialCode" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
               <el-option :label="item.code +' '+ item.value" v-for="(item, index) in materialShort" :key="index" :value="item.code"></el-option>
             </el-select>
           </template>
@@ -1412,6 +1412,9 @@ export default {
     savemains (resolve, reject) {
       this.materialList.map((item) => {
         if (item.materialCode !== undefined) {
+          console.log(item.materialCode)
+          console.log(this.materialShort[0].code)
+          console.log(this.materialShort[0].code === item.materialCode)
           let materstrName = this.materialShort.filter(ite => item.materialCode === ite.code)[0].value
           this.$set(item, 'materialName', materstrName)
         }
@@ -1659,7 +1662,6 @@ export default {
           //   this.soyliang = this.soyList[0].materialCode + ' ' + this.soyList[0].materialName
           // }
           this.materialList.map((item) => {
-            this.$set(item, 'materialCode', item.materialCode + ' ' + item.materialName)
             if (item.status === 'noPass') {
               no = no + 1
             } else if (item.status === 'submit') {
