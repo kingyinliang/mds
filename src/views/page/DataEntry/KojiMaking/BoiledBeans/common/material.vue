@@ -1592,7 +1592,6 @@ export default {
             this.soyList = data.pulpList
           }
           this.materialList.map((item) => {
-            this.$set(item, 'materialCode', item.materialCode + ' ' + item.materialName)
             if (item.status === 'noPass') {
               no = no + 1
             } else if (item.status === 'submit') {

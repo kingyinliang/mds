@@ -201,7 +201,7 @@
           </el-table-column>
         </el-table-column>
         <el-table-column label="操作人" prop="changer" width="140"></el-table-column>
-        <el-table-column label="操作时间" prop="changed"></el-table-column>
+        <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column width="70" fixed="right">
           <template slot-scope="scope">
             <el-button class="delBtn" type="text" @click="delrow(scope.row)" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" icon="el-icon-delete" size="small">删除</el-button>
