@@ -13,6 +13,29 @@
       :export-excel="true"
       :export-option="exportOption">
     </query-table>
+    <el-table :data="tableData">
+      <el-table-column
+        v-for="item in column"
+        v-if="!item.hide"
+        :key="item.prop"
+        :fixed="item.fixed"
+        :prop="item.prop"
+        :label="item.label"
+        :width="item.width || ''"
+        :formatter="item.formatter"
+        :show-overflow-tooltip="true">
+        <el-table-column
+          v-for="chind in item.child"
+          v-if="item.child"
+          :key="chind.prop"
+          :prop="chind.prop"
+          :label="chind.label"
+          :formatter="chind.formatter"
+          :show-overflow-tooltip="chind.showOverFlowTooltip"
+          :width="chind.width || ''">
+        </el-table-column>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -76,56 +99,51 @@ export default {
         exportInterface: REP_API.PKGOUTPUT_EXPORT_API,
         auth: 'report:fromEs:expectMaterialSummary',
         text: '包装品项产量汇总导出'
-      },
-      column: [
-        {
-          prop: 'brand',
-          label: '品相'
-        },
-        {
-          prop: 'productLine',
-          label: '产线'
-        },
-        {
-          prop: 'type',
-          label: '类别'
-        },
-        {
-          prop: 'boxNums',
-          label: '箱数'
-        },
-        {
-          prop: 'boxNumsSum',
-          label: '小计'
-        },
-        {
-          prop: 'squareNums',
-          label: '方数'
-        },
-        {
-          prop: 'squareNumsSum',
-          label: '小计'
-        }
-      ]
+      }
     }
   },
   mounted () {
   },
   methods: {
     getDataSuccess (data) {
-      if (this.$refs.queryTable.tableData.length) {
-        this.$refs.queryTable.tableData.push({
-          brand: '总计',
-          productLine: '',
-          type: '',
-          boxNums: this.$refs.queryTable.tableData[0].boxNumsTotal,
-          boxNumsSum: '',
-          squareNums: this.$refs.queryTable.tableData[0].squareNumsTotal,
-          squareNumsSum: '',
-          boxNumsTotal: 0,
-          squareNumsTotal: 0,
-          mergeNums: 1
-        })
+      if (data.list.length) {
+        let arr = []
+        let keyIndex = 0
+        for (var item of data.list) {
+          let arrTwo = []
+          if (item.summary.length) {
+            for (var it of item.summary) {
+              arrTwo.push({
+                label: it.largeClassName,
+                prop: 'item' + keyIndex
+              })
+              keyIndex++
+            }
+          }
+          arr.push({
+            label: item.brand,
+            child: arrTwo
+          })
+        }
+        console.log(arr)
+        let obj = {}
+        let num = 0
+        for (var items of data.content) {
+          obj['item' + num] = items
+          num++
+        }
+        console.log(obj)
+        this.column = arr
+        this.$refs.queryTable.tableData = [{
+          item0: 395062,
+          item1: 5551722.86,
+          item2: 469521.2,
+          item3: 1656567.8,
+          item4: 5620.5,
+          item5: 344197.5,
+          item6: 14595,
+          item7: 21957
+        }]
       }
     }
   },

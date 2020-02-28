@@ -19,8 +19,8 @@
             <span>种曲</span>
           </template>
           <template slot-scope="scope">
-            <el-select v-model.trim="scope.row.materialCode" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
-              <el-option :label="item.code +' '+ item.value" v-for="(item, index) in materialShort" :key="index" :value="item.code +' '+ item.value"></el-option>
+            <el-select v-model="scope.row.materialCode" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
+              <el-option :label="item.code +' '+ item.value" v-for="(item, index) in materialShort" :key="index" :value="item.code"></el-option>
             </el-select>
           </template>
         </el-table-column>
@@ -151,22 +151,22 @@
         </el-col>
       </el-row>
       <el-table class="newTable" border ref="pulpTable" max-height="275" header-row-class-name="tableHead" :data="soyList" @row-dblclick="editsoy" :row-class-name="rowDelFlag" style="margin-top: 10px;">
-        <el-table-column label="日期" prop="pulpDate" width="110"></el-table-column>
-        <el-table-column label="物料">
+        <el-table-column label="日期" prop="pulpDate" width="110" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="物料" width="160" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             {{scope.row.materialCode}} {{scope.row.materialName}}
           </template>
         </el-table-column>
-        <el-table-column label="领用粮仓" prop="foodHolderName" width="100"></el-table-column>
-        <el-table-column label="豆粕仓" prop="pulpHolderName" width="130"></el-table-column>
-        <el-table-column label="批次" prop="batch" width="110"></el-table-column>
-        <el-table-column label="起始" prop="startWeight" width="70"></el-table-column>
-        <el-table-column label="结束" prop="endWeight" width="70"></el-table-column>
-        <el-table-column label="数量" prop="useWeight" width="70"></el-table-column>
-        <el-table-column label="单位" prop="unit" width="50"></el-table-column>
-        <el-table-column label="入罐/出罐" prop="useType" width="90"></el-table-column>
-        <el-table-column label="操作人员" prop="changer" width="140"></el-table-column>
-        <el-table-column label="操作时间" prop="changed" width="160"></el-table-column>
+        <el-table-column label="领用粮仓" prop="foodHolderName" width="100" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="豆粕仓" prop="pulpHolderName" width="130" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="批次" prop="batch" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="起始" prop="startWeight" width="70" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="结束" prop="endWeight" width="70" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="数量" prop="useWeight" width="70" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="入罐/出罐" prop="useType" width="90" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="操作人员" prop="changer" width="140" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="操作时间" prop="changed" width="160" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="操作" width="70" fixed="right">
           <template slot-scope="scope">
             <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delsoyRow(scope.row)">删除</el-button>
@@ -1388,10 +1388,7 @@ export default {
     submitmains (resolve, reject) {
       this.materialList.map((item) => {
         if (item.materialCode !== undefined) {
-          let materstrchai = []
-          materstrchai = item.materialCode.split(' ')
-          let materstrName = materstrchai[1] === undefined ? '' : materstrchai[1]
-          this.$set(item, 'materialCode', materstrchai[0])
+          let materstrName = this.materialShort.filter(ite => item.materialCode === ite.code)[0].value
           this.$set(item, 'materialName', materstrName)
         }
         if (item.status === null || item.status === '' || item.status === 'saved' || item.status === 'noPass') {
@@ -1415,10 +1412,10 @@ export default {
     savemains (resolve, reject) {
       this.materialList.map((item) => {
         if (item.materialCode !== undefined) {
-          let materstrchai = []
-          materstrchai = item.materialCode.split(' ')
-          let materstrName = materstrchai[1] === undefined ? '' : materstrchai[1]
-          this.$set(item, 'materialCode', materstrchai[0])
+          console.log(item.materialCode)
+          console.log(this.materialShort[0].code)
+          console.log(this.materialShort[0].code === item.materialCode)
+          let materstrName = this.materialShort.filter(ite => item.materialCode === ite.code)[0].value
           this.$set(item, 'materialName', materstrName)
         }
         if (item.status === null || item.status === '' || item.status === 'saved' || item.status === 'noPass') {
@@ -1595,7 +1592,6 @@ export default {
             this.soyList = data.pulpList
           }
           this.materialList.map((item) => {
-            this.$set(item, 'materialCode', item.materialCode + ' ' + item.materialName)
             if (item.status === 'noPass') {
               no = no + 1
             } else if (item.status === 'submit') {
@@ -1665,7 +1661,6 @@ export default {
           //   this.soyliang = this.soyList[0].materialCode + ' ' + this.soyList[0].materialName
           // }
           this.materialList.map((item) => {
-            this.$set(item, 'materialCode', item.materialCode + ' ' + item.materialName)
             if (item.status === 'noPass') {
               no = no + 1
             } else if (item.status === 'submit') {
