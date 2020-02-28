@@ -688,7 +688,7 @@ export default class Index extends Vue {
         Vue.prototype.$warning_SHINHO('生产入库-入库批次不一致,请确认')
         return false
       } else {
-        this.inStockBatch = item.inStockBatch
+        this.inStockBatch = item.batch
       }
     }
     // for (let item of this.workHourList) {
