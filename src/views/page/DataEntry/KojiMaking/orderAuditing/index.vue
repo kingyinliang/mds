@@ -354,7 +354,7 @@ export default class Index extends Vue {
   inStorageState = ''
   // 物料申请状态
   applyMaterielState = ''
-  inStockBatch = 0
+  // inStockBatch = 0
   mounted () {
     this.getList()
   }
@@ -683,14 +683,14 @@ export default class Index extends Vue {
       Vue.prototype.$warning_SHINHO('机器工时之和不能小于0')
       return false
     }
-    for (let item of this.inStockList) {
-      if (this.inStockBatch !== 0 && item.batch !== this.inStockBatch) {
-        Vue.prototype.$warning_SHINHO('生产入库-入库批次不一致,请确认')
-        return false
-      } else {
-        this.inStockBatch = item.batch
-      }
-    }
+    // for (let item of this.inStockList) {
+    //   if (this.inStockBatch !== 0 && item.batch !== this.inStockBatch) {
+    //     Vue.prototype.$warning_SHINHO('生产入库-入库批次不一致,请确认')
+    //     return false
+    //   } else {
+    //     this.inStockBatch = item.batch
+    //   }
+    // }
     // for (let item of this.workHourList) {
     //   if (item.confActivity2 === '' || item.confActivity2 === null) {
     //     iskong = 1
