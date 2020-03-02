@@ -113,7 +113,11 @@
         </el-table-column>
         <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="批次" width="100" prop="batch" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column label="领用数量" width="100" prop="receiveAmount" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="领用数量" width="100" prop="receiveAmount" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            {{scope.row.receiveAmount = scope.row.adjustAmount}}
+          </template>
+        </el-table-column>
         <el-table-column label="备注" width="100">
           <template slot-scope="scope">
             <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
@@ -158,7 +162,11 @@
             <el-input v-model="scope.row.batch" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="领用数量" width="80" prop="receiveAmount" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="领用数量" width="80" prop="receiveAmount" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            {{scope.row.receiveAmount = scope.row.addAmount}}
+          </template>
+        </el-table-column>
         <el-table-column label="备注" width="90">
           <template slot-scope="scope">
             <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
