@@ -108,16 +108,12 @@
         </el-table-column>
         <el-table-column label="调整后需求数量" width="120" prop="unit" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.adjustAmount" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
+            <el-input v-model="scope.row.adjustAmount" @input="AddSupChange(scope.row)" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="批次" width="100" prop="batch" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column label="领用数量" width="100" prop="receiveAmount" :show-overflow-tooltip="true">
-          <template slot-scope="scope">
-            {{scope.row.receiveAmount = scope.row.adjustAmount}}
-          </template>
-        </el-table-column>
+        <el-table-column label="领用数量" width="100" prop="receiveAmount" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="备注" width="100">
           <template slot-scope="scope">
             <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
@@ -145,7 +141,7 @@
         <el-table-column label="添加数量" width="110" prop="addAmount" :show-overflow-tooltip="true">
           <template slot="header"><i class="reqI">*</i><span>添加数量</span></template>
           <template slot-scope="scope">
-            <el-input v-model="scope.row.addAmount" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
+            <el-input v-model="scope.row.addAmount" @input="AddSupDataChange(scope.row)" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="单位" width="100" prop="unit" :show-overflow-tooltip="true">
@@ -162,11 +158,7 @@
             <el-input v-model="scope.row.batch" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="领用数量" width="80" prop="receiveAmount" :show-overflow-tooltip="true">
-          <template slot-scope="scope">
-            {{scope.row.receiveAmount = scope.row.addAmount}}
-          </template>
-        </el-table-column>
+        <el-table-column label="领用数量" width="80" prop="receiveAmount" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="备注" width="90">
           <template slot-scope="scope">
             <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
@@ -227,6 +219,12 @@ export default {
     getFactory(this)
   },
   methods: {
+    AddSupChange (row) {
+      row.receiveAmount = row.adjustAmount
+    },
+    AddSupDataChange (row) {
+      row.receiveAmount = row.addAmount
+    },
     GetDataList (st) {
       if (st) {
         this.formHeader.currPage = 1
