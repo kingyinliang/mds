@@ -61,7 +61,7 @@
             </div>
           </div>
           <el-row class="bottom">
-            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" @click="GnProp(item)" style='border: none; padding: 0;'>GN搅罐</el-button>
+            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus !== '2'" @click="GnProp(item)" style='border: none; padding: 0;'>GN搅罐</el-button>
             <div class="bottom-split"></div>
             <!-- <el-col :span="12" class="dataList_item_btn_item"><p @click="GnProp(item)">GN搅罐</p></el-col> -->
             <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" @click="JsbProp(item)" style='border: none; padding: 0;'>JBS出库</el-button>

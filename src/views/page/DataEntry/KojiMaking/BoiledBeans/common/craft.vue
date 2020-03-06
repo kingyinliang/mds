@@ -18,7 +18,7 @@
       </el-form>
     </mds-card>
     <mds-card :title="'煮豆润水参数设置'" :name="'rateRunWater'" :iconBg="'#ffbf00'">
-      <el-form :inline="true" size="small" label-width="130px" :model="craftfrom">
+      <el-form :inline="true" size="small" label-width="145px" :model="craftfrom">
         <el-form-item label="润水比例：">
           <el-input class="liInputWidth" v-model="craftfrom.rateRunWater" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
@@ -46,7 +46,7 @@
         <el-form-item label="二次预热温度：" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.secondPreheatTemp" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
-        <el-form-item label="下料速度(KG/H)：" :required="true">
+        <el-form-item label="下料速度(KG/MIN)：" :required="true">
           <el-input class="liInputWidth" v-model="craftfrom.unloadingSpeed" :disabled="!(isRedact && this.craftfrom.status !== 'submit' && this.craftfrom.status !== 'checked')"></el-input>
         </el-form-item>
       </el-form>

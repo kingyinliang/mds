@@ -96,6 +96,7 @@
                 <el-table-column label="版本" width="120">
                   <template slot-scope="scope">
                     <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px;">
+                      <el-option value="">请选择</el-option>
                       <el-option v-for="(item, index) in versionsList" :label="item.value"  :value="item.code" :key="index"></el-option>
                     </el-select>
                   </template>
