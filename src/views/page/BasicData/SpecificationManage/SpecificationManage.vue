@@ -38,6 +38,7 @@
               width="55">
             </el-table-column>
             <el-table-column
+              width="230"
               label="工厂"
               :show-overflow-tooltip="true" prop="factoryName"></el-table-column>
             <el-table-column
@@ -50,43 +51,43 @@
             <el-table-column
               prop="brand"
               label="品牌"
-              width="100"
+              width="80"
               :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
               prop="largeClassName"
               label="大类"
-              width="100"
+              width="80"
               :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
               prop="boxSpec"
-              width="80"
+              width="70"
               label="箱规格"
               :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
               prop="boxSpecUnitName"
               label="单位"
-              width="80"
+              width="70"
               :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
               prop="productSpec"
-              width="80"
+              width="70"
               label="瓶规格"
               :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
               prop="productSpecUnitName"
               label="单位"
-              width="80"
+              width="70"
               :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column
               prop="changer"
               label="维护人"
-              width="150"
+              width="120"
               :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column

@@ -6,7 +6,7 @@
     <div>
       <el-form :model="dataForm" status-icon :rules="dataRule" ref="dataForm"  @keyup.enter.native="dataFormSubmit()" label-width="100px" size="small">
         <el-form-item label="工厂：">
-          <el-select v-model="dataForm.factory">
+          <el-select v-model="dataForm.factory" style="width: 100%;">
             <el-option label=""  value="">请选择</el-option>
             <el-option :label="item.deptName" v-for="(item, index) in factory" :key="index" :value="item.deptId"></el-option>
           </el-select>
@@ -15,7 +15,7 @@
           <el-select v-model="dataForm.material" filterable placeholder="请选择" style="width: 100%;" @change="setBrand" v-if="!SpecificationId">
             <el-option
               v-for="item in SerchSapList"
-              :key="item.sapCode+' '+item.itemName+' '+item.kondm"
+              :key="item.itemId"
               :label="item.sapCode+' '+item.itemName+' '+item.kondm"
               :value="item.sapCode+' '+item.itemName+' '+item.kondm">
             </el-option>
@@ -23,7 +23,7 @@
           <el-select v-model="dataForm.material" filterable placeholder="请选择" style="width: 100%;" @change="setBrand" v-else disabled>
             <el-option
               v-for="item in SerchSapList"
-              :key="item.sapCode+' '+item.itemName+' '+item.kondm"
+              :key="item.itemId"
               :label="item.sapCode+' '+item.itemName+' '+item.kondm"
               :value="item.sapCode+' '+item.itemName+' '+item.kondm">
             </el-option>
@@ -126,6 +126,7 @@ export default {
     },
     // 设置品牌
     setBrand (val) {
+      console.log(val)
       this.dataForm.brand = val.split(' ')[2]
     },
     // 大类下拉
@@ -150,9 +151,11 @@ export default {
     },
     init (data) {
       if (data) {
+        console.log(data)
         this.SpecificationId = data.id
+        this.dataForm.factory = data.factory
         this.dataForm.id = data.id
-        this.dataForm.material = data.materialCode + ' ' + data.materialName
+        this.dataForm.material = data.materialCode + ' ' + data.materialName + ' ' + data.brand
         this.dataForm.brand = data.brand
         this.dataForm.largeClass = data.largeClass
         this.dataForm.boxSpec = data.boxSpec
