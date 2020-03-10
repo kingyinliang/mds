@@ -42,11 +42,11 @@
 
 <script>
 import { BASICDATA_API, REP_API } from '@/api/api'
-import { accAdd } from '@/net/validate'
+import { accAdd, dateFormat, accSub } from '@/net/validate'
 export default {
   name: 'index',
   data () {
-    let self = this
+    // let self = this
     return {
       tableData: [],
       datas: [],
@@ -69,32 +69,38 @@ export default {
           label: '月份',
           prop: 'productDate',
           dataType: 'month',
-          valueFormat: 'yyyy-MM'
+          valueFormat: 'yyyy-MM',
+          defaultValue: dateFormat(new Date(), 'yyyy-MM')
         }
       ],
       listInterface: (params) => {
         return this.$http(`${REP_API.PKGOUTPUT_LIST_API}`, 'POST', params)
       },
       spanMethod: ({ row, column, rowIndex, columnIndex }) => {
-        if (rowIndex === 2) {
-          return [1, self.datas.length]
-        }
         if (rowIndex === 1) {
-          // let num = 0
-          // for (let i = 0; i < row.spanMethodArr.length; i++) {
-          //   if (i === 0 && columnIndex === 0) {
-          //     return [num + 1, row.spanMethodArr[i]]
-          //   } else if (columnIndex === row.spanMethodArr[i]) {
-          //     return [row.spanMethodArr[i] + 1, row.spanMethodArr[i + 1]]
-          //   }
-          // }
-          // for (let key in row.spanMethodObj) {
-          //   console.log(key)
-          //   if (columnIndex === key) {
-          //     console.log([key + 1, key + row.spanMethodObj[key]])
-          //     return [key + 1, key + row.spanMethodObj[key]]
-          //   }
-          // }
+          if (columnIndex === Number(accSub(this.datas.length, 2))) {
+            return {
+              rowspan: 2,
+              colspan: 2
+            }
+          } else {
+            if (this.tableData[1].spanMethodObj.hasOwnProperty(columnIndex)) {
+              return {
+                rowspan: 1,
+                colspan: this.tableData[1].spanMethodObj[columnIndex]
+              }
+            } else {
+              return {
+                rowspan: 1,
+                colspan: 0
+              }
+            }
+          }
+        } else if (rowIndex === 2 && this.datas.length > 2) {
+          return {
+            rowspan: 1,
+            colspan: Number(accSub(this.datas.length, 2))
+          }
         }
       },
       column: [],
@@ -141,14 +147,11 @@ export default {
           spanMethodArr: []
         }
         let obj2 = {
-          item0: 0
+          item0: data.total
         }
         let num = 0
         let sNum = 0
         arr.forEach((item, index) => {
-          if (arr.length > 1) {
-            obj2.item0 = obj2.item0 + item.spanMethod
-          }
           obj1['item' + sNum] = item.spanMethod
           obj1.spanMethodObj[sNum] = item.spanMethodNum
           obj1.spanMethodArr.push(sNum)
@@ -164,8 +167,6 @@ export default {
         } else {
           this.tableData = [obj, obj1]
         }
-        console.log(this.column)
-        console.log(this.tableData)
       }
     }
   },

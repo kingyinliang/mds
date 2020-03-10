@@ -126,7 +126,6 @@ export default {
     },
     // 设置品牌
     setBrand (val) {
-      console.log(val)
       this.dataForm.brand = val.split(' ')[2]
     },
     // 大类下拉
@@ -151,7 +150,6 @@ export default {
     },
     init (data) {
       if (data) {
-        console.log(data)
         this.SpecificationId = data.id
         this.dataForm.factory = data.factory
         this.dataForm.id = data.id
