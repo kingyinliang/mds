@@ -127,7 +127,7 @@
             <slot name="mds-button-middle"></slot>
           </el-col>
         </el-row>
-        <el-table :data="tableData" ref="table" :height="tableHeight" :span-method="spanMethod" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+        <el-table v-if="showTable" :data="tableData" ref="table" :height="tableHeight" :span-method="spanMethod" @selection-change="handleSelectionChange" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
           <el-table-column
             v-if="showSelectColumn"
             :selectable="selectableFn"
@@ -172,6 +172,7 @@
             </template>
           </el-table-column>
         </el-table>
+        <slot v-if="!showTable" name="card-main"></slot>
         <el-row v-if="showPage === true">
           <el-pagination
             @size-change="handleSizeChange"
@@ -208,6 +209,10 @@ export default {
     }
   },
   props: {
+    showTable: {
+      type: Boolean,
+      default: true
+    },
     customData: {
       type: Boolean,
       default: false

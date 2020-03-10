@@ -5,7 +5,7 @@
         <span slot="label" class="spanview">发酵一览表</span>
         <div class="titleLeft">
           (单位:罐)
-          <el-button type="primary" size="small" @click="FormExportExcel(true)"  v-if="isAuth('report:production:fermentationExport')" style="float: right;">导出</el-button>
+          <el-button type="primary" size="small" @click="ExportExcelA(true)"  v-if="isAuth('report:production:fermentationExport')" style="float: right;">导出</el-button>
         </div>
         <el-table :data="dataList2" border header-row-class-name="tableHead" style="margin-top: 10px;">
           <el-table-column label=" " prop="type"></el-table-column>
