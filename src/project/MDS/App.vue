@@ -1,16 +1,24 @@
 <template>
-  <div id="app">
-    <div>MDS</div>
-    <router-view id="Router"/>
-  </div>
+    <div id="app">
+        <router-view id="Router" />
+    </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+export default {
+    name: 'App',
+    mounted() {
+        // if (this.$route.meta.title) document.title = this.$route.meta.title
+        // if (self === top) {
+        //   document.documentElement.style.visibility = 'visible'
+        // } else {
+        //   alert('在iframe中,请检查链接')
+        // }
+    }
+};
+</script>
+
+<style>
+@import "assets/css/base.css";
+@import "assets/icon/iconfont.css";
 </style>

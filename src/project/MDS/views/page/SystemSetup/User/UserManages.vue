@@ -1,0 +1,225 @@
+<template>
+    <el-col>
+        <div class="main">
+            <el-card>
+                <el-row class="clearfix">
+                    <div style="float: right;">
+                        <el-form :inline="true" :model="condition" size="small" labelWidth="68px" class="topforms2" @keyup.enter.native="getList(true)">
+                            <el-form-item>
+                                <el-input v-model="condition.param" placeholder="用户名/工号" suffixIcon="el-icon-search" />
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" size="small" @click="getList(true)">
+                                    查询
+                                </el-button>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                </el-row>
+                <el-row type="flex" :gutter="20">
+                    <el-col :span="8">
+                        <el-card>
+                            <div slot="header" class="clearfix">
+                                <span>组织架构</span>
+                            </div>
+                            <el-tree :data="OrgTree" nodeKey="deptId" :defaultExpandedKeys="arrList" :expandOnClickNode="false" @node-click="setdetail" />
+                        </el-card>
+                    </el-col>
+                    <el-col v-if="isAuth('sys:user:checkList')" :span="16">
+                        <el-card>
+                            <div slot="header" class="clearfix">
+                                <span>人员</span>
+                            </div>
+                            <div>
+                                <el-button v-if="isAuth('sys:user:delete')" type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" @click="remove()">
+                                    批量删除
+                                </el-button>
+                                <el-button v-if="isAuth('sys:user:save')" type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrupdate()">
+                                    增加
+                                </el-button>
+                                <el-table ref="table1" :data="userArr" headerRowClassName="tableHead" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                                    <el-table-column type="selection" width="34" />
+                                    <el-table-column type="index" :index="indexMethod" width="55" />
+                                    <el-table-column prop="workNum" label="人员工号" width="87" />
+                                    <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
+                                    <el-table-column prop="realName" label="人员姓名" width="87" />
+                                    <el-table-column prop="deptName" label="所属部门" width="87" :showOverflowTooltip="true" />
+                                    <el-table-column prop="post" label="职务" :showOverflowTooltip="true" width="150" />
+                                    <el-table-column prop="email" label="邮箱" :showOverflowTooltip="true" width="250" />
+                                    <el-table-column prop="mobile" label="手机号" :showOverflowTooltip="true" width="112" />
+                                    <el-table-column prop="created" label="创建日期" width="160" />
+                                    <el-table-column label="操作" fixed="right" width="65">
+                                        <template slot-scope="scope">
+                                            <el-button v-if="isAuth('sys:user:update') && isAuth('sys:user:info')" style="padding: 0;" type="text" @click="addOrupdate(scope.row.userId)">
+                                                编辑
+                                            </el-button>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                            <el-row>
+                                <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                            </el-row>
+                        </el-card>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </div>
+        <user-add-or-update v-if="visible" ref="addOrupdate" :OrgTree="OrgTree" @refreshDataList="getList" />
+    </el-col>
+</template>
+
+<script>
+import UserAddOrUpdate from './UserAddOrUpdate';
+import { BASICDATA_API, SYSTEMSETUP_API } from '@/api/api';
+export default {
+    name: 'UserManages',
+    components: {
+        UserAddOrUpdate
+    },
+    data() {
+        return {
+            condition: {
+                param: ''
+            },
+            visible: false,
+            deptId: '',
+            deptName: '',
+            OrgTree: [],
+            userArr: [],
+            multipleSelection: [],
+            totalCount: 1,
+            currPage: 1,
+            arrList: [],
+            pageSize: 10
+        };
+    },
+    computed: {},
+    mounted() {
+        this.getTree();
+    },
+    methods: {
+        // 序号
+        indexMethod(index) {
+            return index + 1 + (Number(this.currPage) - 1) * (Number(this.pageSize));
+        },
+        // 获取组织结构树
+        getTree() {
+            this.$http(`${BASICDATA_API.ORGSTRUCTURE_API}`, 'GET', {}).then(({ data }) => {
+                if (data.code === 0) {
+                    this.OrgTree = data.deptList;
+                    this.arrList = [this.OrgTree[0].children[0].deptId];
+                } else {
+                    this.$error_SHINHO(data.msg);
+                }
+            });
+        },
+        // 根据deptId查询用户
+        setdetail(data) {
+            this.deptId = data.deptId;
+            this.deptName = data.deptName;
+            this.getList();
+        },
+        // 获取列表
+        getList(st) {
+            if (st) {
+                this.currPage = 1;
+            }
+            if (!this.deptId) {
+                this.$notify.error({ title: '错误', message: '请选择组织层级' });
+                return;
+            }
+            this.$http(`${SYSTEMSETUP_API.USERLIST1_API}`, 'POST', {
+                deptId: this.deptId,
+                param: this.condition.param,
+                currPage: JSON.stringify(this.currPage),
+                pageSize: JSON.stringify(this.pageSize)
+            }).then(({ data }) => {
+                if (data.code === 0) {
+                    this.multipleSelection = [];
+                    this.userArr = data.page.list;
+                    this.currPage = data.page.currPage;
+                    this.pageSize = data.page.pageSize;
+                    this.totalCount = data.page.totalCount;
+                } else {
+                    this.$error_SHINHO(data.msg);
+                }
+                this.visible = false;
+            });
+        },
+        // 表格选中
+        handleSelectionChange(val) {
+            this.multipleSelection = [];
+            val.forEach((item, index) => {
+                this.multipleSelection.push(item);
+            });
+        },
+        // 新增  修改
+        addOrupdate(id) {
+            if (this.deptId) {
+                this.visible = true;
+                this.$nextTick(() => {
+                    this.$refs.addOrupdate.init(this.deptId, this.deptName, id);
+                });
+            } else {
+                this.$notify.error({ title: '错误', message: '请先选择部门' });
+            }
+        },
+        // 删除
+        remove() {
+            if (this.multipleSelection.length === 0) {
+                this.$notify.error({
+                    title: '错误',
+                    message: '请选择要删除的用户'
+                });
+            } else {
+                const roleName = [];
+                const userId = [];
+                this.multipleSelection.forEach(item => {
+                    if (item.roleName) {
+                        roleName.push(item.roleName);
+                    }
+                    userId.push(item.userId);
+                });
+                if (roleName.length) {
+                    this.$confirm(`有 ${roleName.join(',')}权限，不能删除，请联系IT`, '删除用户', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {});
+                } else {
+                    this.$confirm('此用户无权限，是否删除?', '删除用户', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    })
+                        .then(() => {
+                            this.$http(`${SYSTEMSETUP_API.USERDEL_API}`, 'POST', userId).then(({ data }) => {
+                                if (data.code === 0) {
+                                    this.$success_SHINHO('删除成功!');
+                                    this.multipleSelection = [];
+                                    this.getList();
+                                } else {
+                                    this.$error_SHINHO(data.msg);
+                                }
+                            });
+                        })
+                        .catch(() => {});
+                }
+            }
+        },
+        // 改变每页条数
+        handleSizeChange(val) {
+            this.pageSize = val;
+            this.getList();
+        },
+        // 跳转页数
+        handleCurrentChange(val) {
+            this.currPage = val;
+            this.getList();
+        }
+    }
+};
+</script>
+
+<style scoped></style>

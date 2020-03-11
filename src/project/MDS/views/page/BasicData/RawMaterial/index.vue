@@ -1,0 +1,243 @@
+<template>
+    <el-col>
+        <div class="main">
+            <el-card>
+                <div class="clearfix">
+                    <el-row style="float: right;">
+                        <el-form :inline="true" :model="form" size="small" labelWidth="68px" class="topforms2" @keyup.enter.native="GetLocationList(true)" @submit.native.prevent>
+                            <el-form-item>
+                                <el-input v-model="form.batch" placeholder="批次" suffixIcon="el-icon-search" />
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button v-if="isAuth('sys:sapGranaryMaterial:list')" type="primary" size="small" @click="GetList(true)">
+                                    查询
+                                </el-button>
+                                <el-button v-if="isAuth('sys:sapGranaryMaterial:list')" type="primary" size="small" @click="visible1 = true">
+                                    高级查询
+                                </el-button>
+                                <el-button v-if="isAuth('sys:sapGranaryMaterial:syncInstorageManual')" type="primary" size="small" @click="DataSynchronism()">
+                                    同步
+                                </el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-row>
+                </div>
+                <el-row>
+                    <el-table ref="table1" headerRowClassName="tableHead" :data="list" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+                        <el-table-column label="物料" :showOverflowTooltip="true" width="170px">
+                            <template slot-scope="scope">
+                                {{ scope.row.materialCode }}
+                                {{ scope.row.materialName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="物料类型" :showOverflowTooltip="true" width="130px">
+                            <template slot-scope="scope">
+                                {{ scope.row.materialTypeCode }}
+                                {{ scope.row.materialTypeName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="工厂" :showOverflowTooltip="true" prop="factoryName" />
+                        <el-table-column label="过账日期" :showOverflowTooltip="true" prop="postingDate" width="100px" />
+                        <el-table-column label="批次" :showOverflowTooltip="true" prop="batch" width="120px" />
+                        <el-table-column label="数量" :showOverflowTooltip="true" prop="quantity" width="100px" />
+                        <el-table-column label="单位" :showOverflowTooltip="true" prop="unit" width="60px" />
+                        <el-table-column label="移动类型" :showOverflowTooltip="true" prop="moveType" width="90px" />
+                        <el-table-column label="库存" :showOverflowTooltip="true" prop="quantity" width="80px" />
+                        <el-table-column label="罐号" :showOverflowTooltip="true" prop="holderNo" width="60px" />
+                        <el-table-column label="同步日期" :showOverflowTooltip="true" prop="syncDate" width="100px" />
+                    </el-table>
+                </el-row>
+                <el-row>
+                    <el-pagination :currentPage="currentPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                </el-row>
+            </el-card>
+        </div>
+        <el-dialog :closeOnClickModal="false" :visible.sync="visible1" width="510px" customClass="dialog__class">
+            <div slot="title">
+                高级查询
+            </div>
+            <el-form :model="form" size="small" labelWidth="130px" class="locationdialog">
+                <el-form-item label="批次：" prop="orderNo1">
+                    <el-input v-model="form.batch" style="width: 283px;" />
+                </el-form-item>
+                <el-form-item label="物料：" prop="orderNo2">
+                    <el-input v-model="form.materialCode" style="width: 283px;" />
+                </el-form-item>
+                <el-form-item label="罐号：" prop="holderId">
+                    <el-select v-model="form.holderId" placeholder="请选择" filterable style="width: 283px;">
+                        <el-option v-for="(sole, index) in guanList" :key="index" :value="sole.holderId" :label="sole.holderName" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="过账日期：">
+                    <el-date-picker v-model="form.commitDateOne" type="date" placeholder="选择日期" style="width: 135px;" />
+                    -
+                    <el-date-picker v-model="form.commitDateTwo" type="date" placeholder="选择日期" style="width: 135px;" />
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visible1 = false">取消</el-button>
+                <el-button type="primary" @click="GetList(true, 'highc')">确定</el-button>
+            </span>
+        </el-dialog>
+    </el-col>
+</template>
+
+<script>
+import { BASICDATA_API } from '@/api/api';
+import { Loading } from 'element-ui';
+export default {
+    name: 'RawMaterial',
+    components: {},
+    data() {
+        return {
+            loading: {},
+            visible1: false,
+            form: {
+                bath: '',
+                materialCode: '',
+                commitDateOne: '',
+                commitDateTwo: ''
+            },
+            serch: {},
+            list: [],
+            multipleSelection: [],
+            sapList: [],
+            workshop: [],
+            SerchSapList: [],
+            currentPage: 1,
+            currPage: 1,
+            pageSize: 10,
+            totalCount: 0,
+            guanList: []
+        };
+    },
+    computed: {},
+    mounted() {
+        this.GetList();
+        this.PuplWheatList();
+    },
+    methods: {
+        // 获取库位列表
+        GetList(st, type = 'normal') {
+            if (st) {
+                this.currPage = 1;
+            }
+            if (type === 'normal') {
+                this.form = {
+                    batch: this.form.batch,
+                    materialCode: '',
+                    commitDateOne: '',
+                    commitDateTwo: ''
+                };
+            }
+            this.$http(`${BASICDATA_API.MATERIALRAWLIST_API}`, 'POST', {
+                batch: this.form.batch,
+                materialCode: this.form.materialCode,
+                commitDateOne: this.form.commitDateOne,
+                commitDateTwo: this.form.commitDateTwo,
+                currPage: JSON.stringify(this.currPage),
+                pageSize: JSON.stringify(this.pageSize),
+                holderId: this.form.holderId
+            }).then(({ data }) => {
+                this.visible1 = false;
+                if (data.code === 0) {
+                    this.list = data.page.list;
+                    this.currPage = data.page.currPage;
+                    this.pageSize = data.page.pageSize;
+                    this.totalCount = data.page.totalCount;
+                } else {
+                    this.$error_SHINHO(data.msg);
+                }
+            });
+        },
+        // 改变每页条数
+        handleSizeChange(val) {
+            this.pageSize = val;
+            this.GetList();
+        },
+        // 跳转页数
+        handleCurrentChange(val) {
+            this.currPage = val;
+            this.GetList();
+        },
+        // 数据同步
+        DataSynchronism() {
+            this.loading = Loading.service({
+                lock: true,
+                spinner: 'loadingGif',
+                text: '加载中……',
+                background: 'rgba(255, 255, 255, 0.7)'
+            });
+            this.$http(`${BASICDATA_API.MATERIALRAWSYNCHRONISM_API}`, 'GET', {}, false, false, false)
+                .then(({ data }) => {
+                    if (data.code === 0) {
+                        this.orderTime = setInterval(() => {
+                            this.GetDataSynchronismStatus();
+                        }, 4000);
+                    }
+                })
+                .catch(() => {
+                    this.loading.close();
+                });
+        },
+        GetDataSynchronismStatus() {
+            this.$http(`${BASICDATA_API.MATERIALRAWSYNCHRONISMSTASUS_API}`, 'GET', { asyncType: 'ASYNC_SAP_INSTORAGE' }, false, false, false)
+                .then(({ data }) => {
+                    if (data.code === 0) {
+                        if (data.asyncRecord) {
+                            if (data.asyncRecord.asyncStatus === '0') {
+                                this.loading.close();
+                                clearInterval(this.orderTime);
+                                this.$notify.error({
+                                    title: '错误',
+                                    message: '同步失败'
+                                });
+                            } else if (data.asyncRecord.asyncStatus === '1') {
+                                this.loading.close();
+                                clearInterval(this.orderTime);
+                                this.$notify({
+                                    title: '成功',
+                                    message: '同步成功',
+                                    type: 'success'
+                                });
+                                this.GetList();
+                            }
+                        }
+                    } else {
+                        this.loading.close();
+                        clearInterval(this.orderTime);
+                        this.$error_SHINHO(data.msg);
+                    }
+                })
+                .catch(() => {
+                    this.loading.close();
+                    clearInterval(this.orderTime);
+                });
+        },
+        // 罐号
+        PuplWheatList() {
+            this.$http(`${BASICDATA_API.PUPLWHEATLIST}`, 'POST', {
+                types: ['002', '012']
+            }).then(({ data }) => {
+                this.guanList = data.list;
+            });
+        }
+    }
+};
+</script>
+
+<style lang="scss">
+.dialog__class {
+    border-radius: 6px 6px 6px 6px !important;
+    .el-dialog__header {
+        height: 59px;
+        background: rgba(24, 144, 255, 1);
+        border-radius: 6px 6px 0 0;
+        color: #fff;
+        font-size: 20px;
+        .el-dialog__headerbtn .el-dialog__close {
+            color: #fff;
+        }
+    }
+}
+</style>
