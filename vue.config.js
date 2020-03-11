@@ -1,3 +1,9 @@
+const path = require('path')
+
+const resolve = (dir) => {
+  return path.join(__dirname, './', dir)
+}
+
 module.exports = {
   pages: {
     index: {
@@ -15,5 +21,20 @@ module.exports = {
       template: 'public/DFMDS.html',
       filename: 'DFMDS.html'
     }
+  },
+  configureWebpack: {
+    resolve: {
+      extensions: ['js', 'vue', '.json', 'ts', 'tsx'],
+      modules: ['src', 'node_modules'],
+      alias: {
+        vue$: 'vue/dist/vue.esm.js',
+        '@': resolve('src/project/MDS'),
+        MDS: resolve('src/project/MDS'),
+        DFMDS: resolve('src/project/DFMDS')
+      }
+    }
+  },
+  chainWebpack: config => {
+  //  chainWebpack
   }
 }
