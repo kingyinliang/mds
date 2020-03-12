@@ -6,7 +6,7 @@ import { BASICDATA_API } from '@/api/api'
  * @param {*} Vue = this
  */
 export function Getdeptcode (Vue) {
-  Vue.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false).then(({data}) => {
+  Vue.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false).then(({ data }) => {
     if (data.code === 0) {
       Vue.factory = data.typeList
       if (data.typeList.length > 0) {
@@ -24,7 +24,7 @@ export function Getdeptcode (Vue) {
 export function Getdeptbyid (Vue, id, str) {
   Vue.plantList.workShop = ''
   if (id) {
-    Vue.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {deptId: id, deptName: str}, false, false, false).then(({data}) => {
+    Vue.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: id, deptName: str }, false, false, false).then(({ data }) => {
       if (data.code === 0) {
         Vue.workshop = data.typeList
         if (data.typeList.length > 0) {
@@ -38,9 +38,9 @@ export function Getdeptbyid (Vue, id, str) {
 }
 // 深拷贝
 export function deepCopy (obj) {
-  let objClone = Array.isArray(obj) ? [] : {}
+  const objClone = Array.isArray(obj) ? [] : {}
   if (obj && typeof obj === 'object') {
-    for (let key in obj) {
+    for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
         // 判断ojb子元素是否为对象，如果是，递归复制
         if (obj[key] && typeof obj[key] === 'object') {
