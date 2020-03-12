@@ -22,93 +22,93 @@ import { dateFormat } from '@/net/validate.js'
 export default {
   name: 'index',
   data () {
-    let self = this
-    // let kojimakingColumn = [{
-    //   prop: 'theDate',
-    //   label: '工序',
-    //   fixed: 'left'
-    // }, {
-    //   prop: 'workShopName',
-    //   label: '炒麦',
-    //   child: [{
-    //     label: '小麦/kg',
-    //     prop: 'wheat'
-    //   }, {
-    //     label: '粉麦数/kg',
-    //     prop: 'wheatFlour',
-    //     width: '120'
-    //   }, {
-    //     label: '粉麦率/%',
-    //     prop: 'wheatFlourRate',
-    //     width: '120'
-    //   }, {
-    //     label: '损耗率/%',
-    //     prop: 'wheatFlourLossRate',
-    //     width: '120'
-    //   }]
-    // }, {
-    //   prop: 'productLineName',
-    //   label: 'PW小麦',
-    //   child: [{
-    //     label: '小麦/kg',
-    //     prop: 'pwWheatOut'
-    //   }, {
-    //     label: 'PW小麦/kg',
-    //     prop: 'pwWheatIn',
-    //     width: '120'
-    //   }, {
-    //     label: '小颗粒/kg',
-    //     prop: 'pwWheatSmall',
-    //     width: '120'
-    //   }, {
-    //     label: '出仁率/%',
-    //     prop: 'pwKernelRate',
-    //     width: '120'
-    //   }, {
-    //     label: '损耗率/%',
-    //     prop: 'pwKernelLossRate',
-    //     width: '120'
-    //   }]
-    // }, {
-    //   prop: 'productDate',
-    //   label: '制曲',
-    //   child: [{
-    //     label: '豆粕/kg',
-    //     prop: 'zhiquPulp'
-    //   }, {
-    //     label: '小麦粉/kg',
-    //     prop: 'zhiquWheatFlour',
-    //     width: '120'
-    //   }, {
-    //     label: '盐水/方',
-    //     prop: 'zhiquSalt'
-    //   }, {
-    //     label: '菌种/盒',
-    //     prop: 'zhiquBacteria'
-    //   }, {
-    //     label: '入曲/批',
-    //     prop: 'zhiquHolderPatch'
-    //   }, {
-    //     label: '曲房号/号',
-    //     prop: 'zhiquHouseNo',
-    //     width: '120',
-    //     showOverFlowTooltip: true
-    //   }, {
-    //     label: '产量/方',
-    //     prop: 'zhiquProduction'
-    //   }]
-    // }, {
-    //   prop: 'orderNo',
-    //   label: '出曲',
-    //   child: [{
-    //     label: '出曲/批',
-    //     prop: 'outHolderPatch'
-    //   }, {
-    //     label: '出曲数量/方',
-    //     prop: 'outProduction',
-    //     width: '130'
-    //   }]
-    // }]
+    // let self = this
+    let kojimakingColumn = [{
+      prop: 'theDate',
+      label: '工序',
+      fixed: 'left'
+    }, {
+      prop: 'workShopName',
+      label: '炒麦',
+      child: [{
+        label: '小麦/kg',
+        prop: 'wheat'
+      }, {
+        label: '粉麦数/kg',
+        prop: 'wheatFlour',
+        width: '120'
+      }, {
+        label: '粉麦率/%',
+        prop: 'wheatFlourRate',
+        width: '120'
+      }, {
+        label: '损耗率/%',
+        prop: 'wheatFlourLossRate',
+        width: '120'
+      }]
+    }, {
+      prop: 'productLineName',
+      label: 'PW小麦',
+      child: [{
+        label: '小麦/kg',
+        prop: 'pwWheatOut'
+      }, {
+        label: 'PW小麦/kg',
+        prop: 'pwWheatIn',
+        width: '120'
+      }, {
+        label: '小颗粒/kg',
+        prop: 'pwWheatSmall',
+        width: '120'
+      }, {
+        label: '出仁率/%',
+        prop: 'pwKernelRate',
+        width: '120'
+      }, {
+        label: '损耗率/%',
+        prop: 'pwKernelLossRate',
+        width: '120'
+      }]
+    }, {
+      prop: 'productDate',
+      label: '制曲',
+      child: [{
+        label: '豆粕/kg',
+        prop: 'zhiquPulp'
+      }, {
+        label: '小麦粉/kg',
+        prop: 'zhiquWheatFlour',
+        width: '120'
+      }, {
+        label: '盐水/方',
+        prop: 'zhiquSalt'
+      }, {
+        label: '菌种/盒',
+        prop: 'zhiquBacteria'
+      }, {
+        label: '入曲/批',
+        prop: 'zhiquHolderPatch'
+      }, {
+        label: '曲房号/号',
+        prop: 'zhiquHouseNo',
+        width: '120',
+        showOverFlowTooltip: true
+      }, {
+        label: '产量/方',
+        prop: 'zhiquProduction'
+      }]
+    }, {
+      prop: 'orderNo',
+      label: '出曲',
+      child: [{
+        label: '出曲/批',
+        prop: 'outHolderPatch'
+      }, {
+        label: '出曲数量/方',
+        prop: 'outProduction',
+        width: '130'
+      }]
+    }]
     return {
       rules: [{
         prop: 'factory',
@@ -210,11 +210,11 @@ export default {
       tabs: [{
         label: '制曲一车间',
         tableData: [],
-        column: self.abc
+        column: kojimakingColumn
       }, {
         label: '制曲二车间',
         tableData: [],
-        column: self.abc
+        column: kojimakingColumn
       }],
       queryFormData: [
         {
