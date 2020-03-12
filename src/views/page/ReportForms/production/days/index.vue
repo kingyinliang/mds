@@ -3,14 +3,15 @@
     <query-table
       ref="queryTable"
       :queryFormData="queryFormData"
+      :rules="rules"
       :list-interface="listInterface"
       :query-auth="'report:fromEs:zhiquDaily'"
-      :column="column"
       :export-excel="true"
       :export-option="exportOption"
       :fixTableHeightFromTop="180"
       :showPage="false"
-      :rules="rules">
+      :tabs="tabs"
+      @get-data-success="setData">
     </query-table>
   </div>
 </template>
@@ -21,16 +22,199 @@ import { dateFormat } from '@/net/validate.js'
 export default {
   name: 'index',
   data () {
+    let self = this
+    // let kojimakingColumn = [{
+    //   prop: 'theDate',
+    //   label: '工序',
+    //   fixed: 'left'
+    // }, {
+    //   prop: 'workShopName',
+    //   label: '炒麦',
+    //   child: [{
+    //     label: '小麦/kg',
+    //     prop: 'wheat'
+    //   }, {
+    //     label: '粉麦数/kg',
+    //     prop: 'wheatFlour',
+    //     width: '120'
+    //   }, {
+    //     label: '粉麦率/%',
+    //     prop: 'wheatFlourRate',
+    //     width: '120'
+    //   }, {
+    //     label: '损耗率/%',
+    //     prop: 'wheatFlourLossRate',
+    //     width: '120'
+    //   }]
+    // }, {
+    //   prop: 'productLineName',
+    //   label: 'PW小麦',
+    //   child: [{
+    //     label: '小麦/kg',
+    //     prop: 'pwWheatOut'
+    //   }, {
+    //     label: 'PW小麦/kg',
+    //     prop: 'pwWheatIn',
+    //     width: '120'
+    //   }, {
+    //     label: '小颗粒/kg',
+    //     prop: 'pwWheatSmall',
+    //     width: '120'
+    //   }, {
+    //     label: '出仁率/%',
+    //     prop: 'pwKernelRate',
+    //     width: '120'
+    //   }, {
+    //     label: '损耗率/%',
+    //     prop: 'pwKernelLossRate',
+    //     width: '120'
+    //   }]
+    // }, {
+    //   prop: 'productDate',
+    //   label: '制曲',
+    //   child: [{
+    //     label: '豆粕/kg',
+    //     prop: 'zhiquPulp'
+    //   }, {
+    //     label: '小麦粉/kg',
+    //     prop: 'zhiquWheatFlour',
+    //     width: '120'
+    //   }, {
+    //     label: '盐水/方',
+    //     prop: 'zhiquSalt'
+    //   }, {
+    //     label: '菌种/盒',
+    //     prop: 'zhiquBacteria'
+    //   }, {
+    //     label: '入曲/批',
+    //     prop: 'zhiquHolderPatch'
+    //   }, {
+    //     label: '曲房号/号',
+    //     prop: 'zhiquHouseNo',
+    //     width: '120',
+    //     showOverFlowTooltip: true
+    //   }, {
+    //     label: '产量/方',
+    //     prop: 'zhiquProduction'
+    //   }]
+    // }, {
+    //   prop: 'orderNo',
+    //   label: '出曲',
+    //   child: [{
+    //     label: '出曲/批',
+    //     prop: 'outHolderPatch'
+    //   }, {
+    //     label: '出曲数量/方',
+    //     prop: 'outProduction',
+    //     width: '130'
+    //   }]
+    // }]
     return {
       rules: [{
         prop: 'factory',
         text: '请选择工厂'
       }, {
-        prop: 'workShop',
-        text: '请选择车间'
-      }, {
+      // {
+      //  prop: 'workShop',
+      //  text: '请选择车间'
+      // },
         prop: 'productDate',
         text: '请选择月份'
+      }],
+      abc: [{
+        prop: 'theDate',
+        label: '工序',
+        fixed: 'left'
+      }, {
+        prop: 'workShopName',
+        label: '炒麦',
+        child: [{
+          label: '小麦/kg',
+          prop: 'wheat'
+        }, {
+          label: '粉麦数/kg',
+          prop: 'wheatFlour',
+          width: '120'
+        }, {
+          label: '粉麦率/%',
+          prop: 'wheatFlourRate',
+          width: '120'
+        }, {
+          label: '损耗率/%',
+          prop: 'wheatFlourLossRate',
+          width: '120'
+        }]
+      }, {
+        prop: 'productLineName',
+        label: 'PW小麦',
+        child: [{
+          label: '小麦/kg',
+          prop: 'pwWheatOut'
+        }, {
+          label: 'PW小麦/kg',
+          prop: 'pwWheatIn',
+          width: '120'
+        }, {
+          label: '小颗粒/kg',
+          prop: 'pwWheatSmall',
+          width: '120'
+        }, {
+          label: '出仁率/%',
+          prop: 'pwKernelRate',
+          width: '120'
+        }, {
+          label: '损耗率/%',
+          prop: 'pwKernelLossRate',
+          width: '120'
+        }]
+      }, {
+        prop: 'productDate',
+        label: '制曲',
+        child: [{
+          label: '豆粕/kg',
+          prop: 'zhiquPulp'
+        }, {
+          label: '小麦粉/kg',
+          prop: 'zhiquWheatFlour',
+          width: '120'
+        }, {
+          label: '盐水/方',
+          prop: 'zhiquSalt'
+        }, {
+          label: '菌种/盒',
+          prop: 'zhiquBacteria'
+        }, {
+          label: '入曲/批',
+          prop: 'zhiquHolderPatch'
+        }, {
+          label: '曲房号/号',
+          prop: 'zhiquHouseNo',
+          width: '120',
+          showOverFlowTooltip: true
+        }, {
+          label: '产量/方',
+          prop: 'zhiquProduction'
+        }]
+      }, {
+        prop: 'orderNo',
+        label: '出曲',
+        child: [{
+          label: '出曲/批',
+          prop: 'outHolderPatch'
+        }, {
+          label: '出曲数量/方',
+          prop: 'outProduction',
+          width: '130'
+        }]
+      }],
+      tabs: [{
+        label: '制曲一车间',
+        tableData: [],
+        column: self.abc
+      }, {
+        label: '制曲二车间',
+        tableData: [],
+        column: self.abc
       }],
       queryFormData: [
         {
@@ -39,19 +223,6 @@ export default {
           prop: 'factory',
           defaultOptionsFn: () => {
             return this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false)
-          },
-          resVal: {
-            resData: 'typeList',
-            label: ['deptName'],
-            value: 'deptId'
-          },
-          linkageProp: ['workShop']
-        }, {
-          type: 'select',
-          label: '生产车间',
-          prop: 'workShop',
-          optionsFn: (val) => {
-            return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: val, deptName: '制曲' })
           },
           resVal: {
             resData: 'typeList',
@@ -74,110 +245,18 @@ export default {
         exportInterface: REP_API.DAYS_REPROT_EXOECT,
         auth: 'report:fromEs:expectZhiquDaily',
         text: '制曲日报表数据导出'
-      },
-      column: [
-        {
-          prop: 'theDate',
-          label: '工序',
-          fixed: 'left'
-        }, {
-          prop: 'workShopName',
-          label: '炒麦',
-          child: [{
-            label: '小麦/kg',
-            prop: 'wheat'
-          }, {
-            label: '粉麦数/kg',
-            prop: 'wheatFlour',
-            width: '120'
-          }, {
-            label: '粉麦率/%',
-            prop: 'wheatFlourRate',
-            width: '120'
-          }, {
-            label: '损耗率/%',
-            prop: 'wheatFlourLossRate',
-            width: '120'
-          }]
-        }, {
-          prop: 'productLineName',
-          label: 'PW小麦',
-          child: [
-            {
-              label: '小麦/kg',
-              prop: 'pwWheatOut'
-            }, {
-              label: 'PW小麦/kg',
-              prop: 'pwWheatIn',
-              width: '120'
-            }, {
-              label: '小颗粒/kg',
-              prop: 'pwWheatSmall',
-              width: '120'
-            }, {
-              label: '出仁率/%',
-              prop: 'pwKernelRate',
-              width: '120'
-            }, {
-              label: '损耗率/%',
-              prop: 'pwKernelLossRate',
-              width: '120'
-            }
-          ]
-        },
-        {
-          prop: 'productDate',
-          label: '制曲',
-          child: [
-            {
-              label: '豆粕/kg',
-              prop: 'zhiquPulp'
-            }, {
-              label: '小麦粉/kg',
-              prop: 'zhiquWheatFlour',
-              width: '120'
-            }, {
-              label: '盐水/方',
-              prop: 'zhiquSalt'
-            }, {
-              label: '菌种/盒',
-              prop: 'zhiquBacteria'
-            }, {
-              label: '入曲/批',
-              prop: 'zhiquHolderPatch'
-            }, {
-              label: '曲房号/号',
-              prop: 'zhiquHouseNo',
-              width: '120',
-              showOverFlowTooltip: true
-            }, {
-              label: '产量/方',
-              prop: 'zhiquProduction'
-            }
-          ]
-        },
-        {
-          prop: 'orderNo',
-          label: '出曲',
-          child: [
-            {
-              label: '出曲/批',
-              prop: 'outHolderPatch'
-            }, {
-              label: '出曲数量/方',
-              prop: 'outProduction',
-              width: '130'
-            }
-          ]
-        }
-      ]
+      }
     }
   },
   mounted () {},
-  methods: {},
+  methods: {
+    setData (data) {
+      this.tabs[0].tableData = data.page.list
+      this.tabs[1].tableData = data.page2.list
+    }
+  },
   computed: {},
-  components: {
-  }
+  components: {}
 }
 </script>
 
