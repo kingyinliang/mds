@@ -88,13 +88,10 @@
               <el-date-picker v-model="scope.row.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :disabled="ReturnStatus(scope.row)" size="small" type="date" placeholder="请选择" style="width: 140px;"></el-date-picker>
             </template>
           </el-table-column>
-          <el-table-column width="140">
-            <template slot="header">
-              <i class="reqI">*</i>
-              <span>锅号</span>
-            </template>
+          <el-table-column width="140" label="锅号">
             <template slot-scope="scope">
               <el-select v-model="scope.row.panId" :disabled="ReturnStatus(scope.row)" size="small" placeholder="请选择">
+                <el-option value=''>请选择</el-option>
                 <el-option v-for="(item, index) of holderList" :key="index" :value="item.holderId" :label="item.holderName"></el-option>
               </el-select>
             </template>
@@ -291,8 +288,8 @@ export default {
         return false
       } else {
         for (let item of this.multipleSelection) {
-          if (!item.productDate || !item.panId) {
-            this.$warning_SHINHO('生产日期与锅号为必填项')
+          if (!item.productDate) {
+            this.$warning_SHINHO('请填写生产日期')
             return false
           }
         }
@@ -305,7 +302,7 @@ export default {
         })
         this.$http(`${STERILIZED_API.ORDERALLOTSAVE}`, 'POST', this.multipleSelection).then(({data}) => {
           if (data.code === 0) {
-            this.$notify({title: '成功', message: '保存成功', type: 'success'})
+            this.$success_SHINHO('保存成功')
             this.isRedact = false
             this.GetList()
           } else {

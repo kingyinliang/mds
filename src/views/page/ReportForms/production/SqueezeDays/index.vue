@@ -230,14 +230,14 @@ export default {
           fourNums: data.prsDays.one[0].fourNumsSum,
           plateNums: data.prsDays.one[0].plateNumsSum,
           oilYield: data.prsDays.one[0].monthOilYield,
-          tbcollarUse: data.prsDays.oneTb[0].collarUse,
-          tbproduce: data.prsDays.oneTb[0].produce,
-          tboneNums: data.prsDays.oneTb[0].oneNums,
-          tbtwoNums: data.prsDays.oneTb[0].twoNums,
-          tbthreeNums: data.prsDays.oneTb[0].threeNums,
-          tbfourNums: data.prsDays.oneTb[0].fourNums,
-          tbplateNums: data.prsDays.oneTb[0].plateNums,
-          tboilYield: data.prsDays.oneTb[0].oilYield
+          tbcollarUse: data.prsDays.oneTb[0].collarUseSum,
+          tbproduce: data.prsDays.oneTb[0].produceSum,
+          tboneNums: data.prsDays.oneTb[0].oneNumsSum,
+          tbtwoNums: data.prsDays.oneTb[0].twoNumsSum,
+          tbthreeNums: data.prsDays.oneTb[0].threeNumsSum,
+          tbfourNums: data.prsDays.oneTb[0].fourNumsSum,
+          tbplateNums: data.prsDays.oneTb[0].plateNumsSum,
+          tboilYield: data.prsDays.oneTb[0].monthOilYield
         })
       }
       if (data.prsDays.two.length) {
