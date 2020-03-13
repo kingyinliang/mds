@@ -138,7 +138,7 @@
 
 <script>
 import {BASICDATA_API, KJM_API, FILTRATION_API} from '@/api/api'
-import { headanimation, Readyanimation, getNewDate } from '@/net/validate'
+import { headanimation, Readyanimation, dateFormat } from '@/net/validate'
 import Worker from '@/views/components/Worker'
 export default {
   name: 'index',
@@ -160,7 +160,8 @@ export default {
         status: '',
         factory: '',
         workShop: '',
-        inKjmDate: getNewDate(),
+        // inKjmDate: getNewDate(),
+        inKjmDate: dateFormat(new Date(new Date().getTime() - 24 * 60 * 60 * 1000), 'yyyy-MM-dd'),
         deptId: ''
       },
       readyTimeDate: {

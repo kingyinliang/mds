@@ -218,10 +218,10 @@ export default {
         let net1 = new Promise((resolve, reject) => {
           that.$refs.material.savesecond(resolve, reject)
         })
-        let net2 = new Promise((resolve, reject) => {
-          that.$refs.material.savepeople(resolve, reject)
-        })
-        Promise.all([net1, net2, excSaveNet, textSaveNet]).then(function () {
+        // let net2 = new Promise((resolve, reject) => {
+        //   that.$refs.material.savepeople(resolve, reject)
+        // })
+        Promise.all([net1, excSaveNet, textSaveNet]).then(function () {
           that.$notify({title: '成功', message: that.succmessage, type: 'success'})
           that.SearchList()
           that.isRedact = false
