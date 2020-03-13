@@ -6,12 +6,12 @@
  * @readonly
  */
 const HTTP_RESPONSE_STATE = {
-  /**
-   * 成功
-   */
-  SUCCESS: 99999
-  // Others failure state
-}
+    /**
+     * 成功
+     */
+    SUCCESS: 99999
+    // Others failure state
+};
 
 /**
  * 请求方法
@@ -20,19 +20,16 @@ const HTTP_RESPONSE_STATE = {
  * @readonly
  */
 const HTTP_METHOD = {
-  /** GET */
-  GET: 'GET',
-  /** POST */
-  POST: 'POST',
-  /** PUT */
-  PUT: 'PUT',
-  /** PATCH */
-  PATCH: 'PATCH',
-  /** DELETE */
-  DELETE: 'DELETE'
-}
+    /** GET */
+    GET: 'GET',
+    /** POST */
+    POST: 'POST',
+    /** PUT */
+    PUT: 'PUT',
+    /** PATCH */
+    PATCH: 'PATCH',
+    /** DELETE */
+    DELETE: 'DELETE'
+};
 
-export {
-  HTTP_RESPONSE_STATE,
-  HTTP_METHOD
-}
+export { HTTP_RESPONSE_STATE, HTTP_METHOD };

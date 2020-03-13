@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
-    <div>DFMDS</div>
-    <router-view id="Router"/>
-  </div>
+    <div id="app">
+        <div>DFMDS</div>
+        <router-view id="Router" />
+    </div>
 </template>
 
 <style lang="scss">

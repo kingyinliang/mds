@@ -32,3 +32,8 @@ yarn lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+### MDS
+```
+api.js const HOST = process.env.VUE_APP_MDS_API
+router/index.js const _import = process.env.NODE_ENV !== 'local' ? require('./import-production') : require('./import-development')
+```

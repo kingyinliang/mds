@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <div>domain home</div>
-  </div>
+    <div id="app">
+        <div>domain home</div>
+    </div>
 </template>
 
 <style lang="scss">

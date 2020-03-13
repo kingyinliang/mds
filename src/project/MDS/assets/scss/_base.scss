@@ -740,6 +740,7 @@ img {
         }
       }
     }
+
     /* 类似炒麦首页 */
     .queryHead .el-select,
     .cardList .el-select {
@@ -757,6 +758,7 @@ img {
         }
       }
     }
+
     /* 色块布局带批次的首页布局 */
     .cardList {
       margin-top: 6px;
@@ -785,7 +787,7 @@ img {
         height: 180px;
         box-shadow: 3px 3px 5px 0 rgba(214, 210, 196, 1);
         border-radius: 8px;
-        background: #487BFF;
+        background: #487bff;
         &_icon {
           font-size: 22px;
           position: absolute;
@@ -813,8 +815,8 @@ img {
               flex: 1;
               width: 100%;
               height: 50%;
-              box-shadow: 3px 3px 5px 0 #F7701F;
-              background-image: radial-gradient(at center top, #FAD961, #F76B1C);
+              box-shadow: 3px 3px 5px 0 #f7701f;
+              background-image: radial-gradient(at center top, #fad961, #f76b1c);
             }
           }
           img {
@@ -839,7 +841,7 @@ img {
       }
       .card-item-color-lump_text {
         &__title {
-          color: #666666;
+          color: #666;
           line-height: 18px;
           padding: 17px 0 8px 0;
           span {
@@ -849,8 +851,8 @@ img {
             float: right;
             margin-top: -8px;
             color: white;
-            background-color: #487BFF;
-            border-color: #487BFF;
+            background-color: #487bff;
+            border-color: #487bff;
             span {
               font-size: 12px;
             }
@@ -872,10 +874,10 @@ img {
           &__head {
             th {
               color: white;
-              background: #487BFF;
+              background: #487bff;
             }
             .gutter {
-              border-bottom: 1px solid #ebeef5
+              border-bottom: 1px solid #ebeef5;
             }
           }
           .el-table__body-wrapper table {
@@ -886,19 +888,21 @@ img {
           }
           .el-table__row:hover {
             td:first-child {
-              border-left: 2px solid #487BFF;
+              border-left: 2px solid #487bff;
             }
           }
         }
       }
     }
+
     /* 数据录入左右色块布局 */
     .dataEntry-head-leftRight {
-      .card-left,.card-right {
+      .card-left,
+      .card-right {
         height: 190px;
         padding: 12px;
-        box-shadow:3px 3px 5px 1px rgba(214,210,196,1);
-        border-radius:8px;
+        box-shadow: 3px 3px 5px 1px rgba(214, 210, 196, 1);
+        border-radius: 8px;
       }
       &__title {
         color: white;
@@ -931,8 +935,8 @@ img {
             flex: 1;
             width: 100%;
             height: 50%;
-            box-shadow: 3px 3px 5px 0 #F7701F;
-            background-image: radial-gradient(at center top, #FAD961, #F76B1C);
+            box-shadow: 3px 3px 5px 0 #f7701f;
+            background-image: radial-gradient(at center top, #fad961, #f76b1c);
           }
         }
       }
@@ -969,6 +973,7 @@ img {
         }
       }
     }
+
     /* 标签页样式 */
     .tabsPages {
       margin-top: 10px;
@@ -985,11 +990,11 @@ img {
         line-height: 22px !important;
         font-size: $base-sise+2;
         font-weight: bold;
-        color: #666666;
+        color: #666;
         padding: 6px 16px !important;
         background: rgba(235, 235, 235, 1);
         border-radius: 8px 8px 0 0;
-        box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.1);
+        box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(226, 226, 226, 1);
       }
       .el-tabs__item.is-active {
@@ -1000,7 +1005,7 @@ img {
         padding: 16px 10px;
         background: white;
         border-radius: 0 8px 0 0;
-        box-shadow:3px 3px 5px 0 rgba(0,0,0,0.1);
+        box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
       }
       .el-button--text {
         padding: 2px 0;
@@ -1008,7 +1013,7 @@ img {
       .el-input.is-disabled .el-input__inner {
         background-color: #f5f5f5;
         border: none;
-        color: #666666 !important;
+        color: #666 !important;
       }
       .el-button--primary {
         background-color: #487bff;
@@ -1021,21 +1026,23 @@ img {
         border-color: #a0cfff;
       }
     }
+
     /* table样式 */
-    .borderTable.el-table td, .borderTable.el-table th.is-leaf {
-      border-bottom: 1px solid #EBEEF5 !important;
+    .borderTable.el-table td,
+    .borderTable.el-table th.is-leaf {
+      border-bottom: 1px solid #ebeef5 !important;
     }
     .borderTable.el-table--border th {
-      border-right: 1px solid #EBEEF5 !important;
-      border-bottom: 1px solid #EBEEF5 !important;
+      border-right: 1px solid #ebeef5 !important;
+      border-bottom: 1px solid #ebeef5 !important;
     }
     .newTable {
       .el-table__header {
         th {
           text-align: center;
           color: white;
-          background: #487BFF;
-          background-color: #487BFF !important;
+          background: #487bff;
+          background-color: #487bff !important;
           border-left: none;
           border-right: none;
           border-top: none;
@@ -1047,15 +1054,16 @@ img {
       }
       .el-table__row:hover {
         td:first-child {
-          border-left: 2px solid #487BFF;
+          border-left: 2px solid #487bff;
         }
       }
       .el-input.is-disabled .el-input__inner {
         background: none;
         border: none;
-        color: #666666 !important;
+        color: #666 !important;
       }
     }
+
     /* card样式 */
     .box-card {
       box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.1);
@@ -1093,6 +1101,7 @@ img {
       }
     }
   }
+
   /* 数据录入头部 */
   .dataEntry-head {
     width: 100%;
@@ -1112,7 +1121,7 @@ img {
         font-size: $base-sise+4;
       }
       &__status {
-        color: #333333;
+        color: #333;
         position: relative;
         font-size: $base-sise;
         float: right;
@@ -1188,6 +1197,7 @@ img {
       }
     }
   }
+
   /* 数据录入编辑 */
   .redactBox {
     transition: all 0.3s;
@@ -1229,6 +1239,7 @@ img {
       }
     }
   }
+
   /* 红黄蓝背景图色块 */
   .forColor {
     .colorItem:nth-child(3n+1) {
@@ -1250,27 +1261,28 @@ img {
       }
     }
   }
+
   /* 订单状态颜色 */
   .noPass {
-    color: #ff0000;
+    color: #f00;
     &::before {
-      background: #ff0000;
+      background: #f00;
     }
   }
   .saved {
-    color: #333333;
+    color: #333;
     &::before {
       background: $main-color;
     }
   }
   .submit {
-    color: #333333;
+    color: #333;
     &::before {
       background: $main-color;
     }
   }
   .checked {
-    color: #66C039;
+    color: #66c039;
     &::before {
       background: #66c039;
     }
@@ -1279,6 +1291,7 @@ img {
 
 @media (max-width: 1367px) {
   $base-sise: 12px;
+
   @include dataEntry-head($base-sise);
   .header_main {
     /* 色块布局带批次的首页布局 */
@@ -1318,20 +1331,23 @@ img {
           }
         }
         &__table {
-          height: 164px!important;
+          height: 164px !important;
           .cell {
             line-height: 20px;
           }
-          td, th {
+          td,
+          th {
             font-size: 12px;
             padding: 4px 0 !important;
           }
         }
       }
     }
+
     /* 数据录入左右色块布局 */
     .dataEntry-head-leftRight {
-      .card-left,.card-right {
+      .card-left,
+      .card-right {
         height: 150px;
         padding: 10px;
       }
@@ -1358,33 +1374,40 @@ img {
     }
   }
 }
+
 @media (min-width: 1367px) {
   $base-sise: 12px;
+
   @include dataEntry-head($base-sise);
   .site-content {
     min-height: 726px;
   }
 }
+
 @media (min-width: 1600px) {
   $base-sise: 14px;
+
   @include dataEntry-head($base-sise);
   .site-content {
     min-height: 926px;
   }
 }
+
 /*
 * ui2.0
 *
 */
 // tabs加z-index
 $indexlist : (1: 11, 2: 10, 3: 9, 4: 8, 5: 7, 6: 6, 7: 5, 8: 4, 9: 3, 10: 2, 11: 1);
+
 @each $i, $index in $indexlist {
   .tabsPages .el-tabs__item:nth-child(#{$i}) {
     z-index: $index;
   }
 }
 // tabs加z-index
-/*table scrollbar*/
+
+/* table scrollbar */
 .el-table__body-wrapper::-webkit-scrollbar {
   width: 6px;
   background: #ebeef5;
@@ -1399,7 +1422,9 @@ $indexlist : (1: 11, 2: 10, 3: 9, 4: 8, 5: 7, 6: 6, 7: 5, 8: 4, 9: 3, 10: 2, 11:
   border-radius: 3px;
   background: rgba(255, 255, 255, 1);
 }
-/*table scrollbar*/
+
+/* table scrollbar */
+
 /* dialog */
 .ShinHoDialog {
   .el-dialog {
@@ -1478,5 +1503,5 @@ $indexlist : (1: 11, 2: 10, 3: 9, 4: 8, 5: 7, 6: 6, 7: 5, 8: 4, 9: 3, 10: 2, 11:
 .bg_dialog.el-dialog {
   background: #f5f5f5;
 }
-/* dialog */
 
+/* dialog */
