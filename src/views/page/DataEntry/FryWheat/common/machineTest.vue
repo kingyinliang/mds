@@ -73,7 +73,7 @@ export default {
       this.machineId = machine.deviceId
       this.machineName = machine.deviceName
       this.orderId = orderId
-      this.$http(`${WHT_API.MACHINETESTlist_API}`, 'POST', {
+      this.$http(`${WHT_API.MACHINETESTLIST_API}`, 'POST', {
         device_id: this.machineId,
         order_id: this.orderId
       }).then(({data}) => {

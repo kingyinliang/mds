@@ -988,7 +988,7 @@ export const WHT_API = {
   /**
    * @property {string} MACHINETESTUPDATE_API 机器检测列表
    */
-  MACHINETESTlist_API: HOST + '/wht/ready/whtCheckRecordList',
+  MACHINETESTLIST_API: HOST + '/wht/ready/whtCheckRecordList',
   /**
    * @property {string} MACHINETESTUPDATE_API 机器检测列表
    */
