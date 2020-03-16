@@ -192,31 +192,31 @@ export default {
       },
       savedDatas: (str) => {
         if (this.formHeader.materialCode === 'SS02010001') {
-          let that = this
-          let meaterielStock = new Promise((resolve, reject) => {
-            that.$refs.meateriel.getRepertory(str, resolve, reject)
-          })
-          return meaterielStock.then((data) => {
-            if (data === 1) {
-              that.$warning_SHINHO('原料领用库存量不能为负')
-              return false
-            }
-            return AsyncHook([
-              [this.UpdateOrderHead, [str]],
-              [this.$refs.meateriel.SaveOrSubmitMateriel, [str]],
-              [this.$refs.outinstorage.SaveOrSubmitInStock, [str]],
-              [this.$refs.excrecord.saveOrSubmitExc, [{
-                orderId: this.formHeader.orderId,
-                orderHouseId: this.formHeader.id,
-                blongProc: this.formHeader.prolineId
-              }, str]],
-              [this.$refs.textrecord.UpdateText, [{
-                orderId: this.formHeader.orderId,
-                orderHouseId: this.formHeader.id,
-                blongProc: this.formHeader.prolineId
-              }, str]]
-            ])
-          })
+          // let that = this
+          // let meaterielStock = new Promise((resolve, reject) => {
+          //   that.$refs.meateriel.getRepertory(str, resolve, reject)
+          // })
+          // return meaterielStock.then((data) => {
+          // if (data === 1) {
+          //   that.$warning_SHINHO('原料领用库存量不能为负')
+          //   return false
+          // }
+          return AsyncHook([
+            [this.UpdateOrderHead, [str]],
+            [this.$refs.meateriel.SaveOrSubmitMateriel, [str]],
+            [this.$refs.outinstorage.SaveOrSubmitInStock, [str]],
+            [this.$refs.excrecord.saveOrSubmitExc, [{
+              orderId: this.formHeader.orderId,
+              orderHouseId: this.formHeader.id,
+              blongProc: this.formHeader.prolineId
+            }, str]],
+            [this.$refs.textrecord.UpdateText, [{
+              orderId: this.formHeader.orderId,
+              orderHouseId: this.formHeader.id,
+              blongProc: this.formHeader.prolineId
+            }, str]]
+          ])
+          // })
         } else {
           return AsyncHook([
             [this.UpdateOrderHead, [str]],
@@ -237,32 +237,32 @@ export default {
       },
       submitDatas: (str) => {
         if (this.formHeader.materialCode === 'SS02010001') {
-          let that = this
-          let meaterielStock = new Promise((resolve, reject) => {
-            that.$refs.meateriel.getRepertory(str, resolve, reject)
-          })
-          return meaterielStock.then((data) => {
-            if (data === 1) {
-              that.$warning_SHINHO('原料领用库存量不能为负')
-              return false
-            }
-            return AsyncHook([
-              [this.UpdateOrderHead, [str]],
-              [this.$refs.excrecord.saveOrSubmitExc, [{
-                orderId: this.formHeader.orderId,
-                orderHouseId: this.formHeader.id,
-                blongProc: this.formHeader.prolineId
-              }, str]],
-              [this.$refs.textrecord.UpdateText, [{
-                orderId: this.formHeader.orderId,
-                orderHouseId: this.formHeader.id,
-                blongProc: this.formHeader.prolineId
-              }, str]]
-            ], [
-              [this.$refs.meateriel.SaveOrSubmitMateriel, [str]],
-              [this.$refs.outinstorage.SaveOrSubmitInStock, [str]]
-            ])
-          })
+          // let that = this
+          // let meaterielStock = new Promise((resolve, reject) => {
+          //   that.$refs.meateriel.getRepertory(str, resolve, reject)
+          // })
+          // return meaterielStock.then((data) => {
+          // if (data === 1) {
+          //   that.$warning_SHINHO('原料领用库存量不能为负')
+          //   return false
+          // }
+          return AsyncHook([
+            [this.UpdateOrderHead, [str]],
+            [this.$refs.excrecord.saveOrSubmitExc, [{
+              orderId: this.formHeader.orderId,
+              orderHouseId: this.formHeader.id,
+              blongProc: this.formHeader.prolineId
+            }, str]],
+            [this.$refs.textrecord.UpdateText, [{
+              orderId: this.formHeader.orderId,
+              orderHouseId: this.formHeader.id,
+              blongProc: this.formHeader.prolineId
+            }, str]]
+          ], [
+            [this.$refs.meateriel.SaveOrSubmitMateriel, [str]],
+            [this.$refs.outinstorage.SaveOrSubmitInStock, [str]]
+          ])
+          // })
         } else {
           return AsyncHook([
             [this.UpdateOrderHead, [str]],
@@ -385,7 +385,7 @@ export default {
       if (this.formHeader.materialCode === 'SS02010001') {
         let that = this
         let meaterielStock = new Promise((resolve, reject) => {
-          that.$refs.meateriel.getRepertory(str, resolve, reject)
+          // that.$refs.meateriel.getRepertory(str, resolve, reject)
         })
         meaterielStock.then(function (data) {
           if (data === 1) {
