@@ -247,10 +247,10 @@
               </div>
               <div>
                 <div style="line-height: 32px; float: left; margin-right: 20px;">出曲加水</div>
-                <el-form-item label="起始数：" :required="true">
+                <el-form-item label="起始数：">
                   <el-input size="small" v-model="tech.outStartWeight" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')"></el-input>
                 </el-form-item>
-                <el-form-item label="结束数：" :required="true">
+                <el-form-item label="结束数：">
                   <el-input size="small" v-model="tech.outEndWeight" :disabled="!(data.isRedact && tech.status !== 'submit' && tech.status !== 'checked')"></el-input>
                 </el-form-item>
                 <el-form-item label="加水量（L）：">
@@ -1053,14 +1053,14 @@ export default {
           }
         }
       }
-      if (!this.tech.overStartWeight || !this.tech.overEndWeight || !this.tech.outStartWeight || !this.tech.outEndWeight || this.tech.overStartWeight === '' || this.tech.overEndWeight === '' || this.tech.outStartWeight === '' || this.tech.outEndWeight === '') {
+      if (!this.tech.overStartWeight || !this.tech.overEndWeight || this.tech.overStartWeight === '' || this.tech.overEndWeight === '') {
         ty = false
-        this.$warning_SHINHO('加水量记录全必填')
+        this.$warning_SHINHO('请填写翻曲加水记录')
         return false
       }
-      if (this.tech.overWeight < 0 || this.tech.outWeight < 0) {
+      if (this.tech.overWeight < 0) {
         ty = false
-        this.$warning_SHINHO('加水量不能为负数')
+        this.$warning_SHINHO('翻曲加水量不能为负数')
         return false
       }
       this.assessList.map((item) => {

@@ -349,7 +349,7 @@ export default {
   methods: {
     // 获取工厂
     GetFactoryList () {
-      this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST').then(({data}) => {
+      this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.factory = data.typeList
           this.form.factory = data.typeList[0].deptId
@@ -362,7 +362,7 @@ export default {
     GetWorkshopList (id) {
       this.form.workShop = ''
       if (id) {
-        this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {deptId: id, deptName: '发酵'}).then(({data}) => {
+        this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {deptId: id, deptName: '发酵'}, false, false, false).then(({data}) => {
           if (data.code === 0) {
             this.workshop = data.typeList
             if (data.typeList.length > 0) {
@@ -381,7 +381,7 @@ export default {
     },
     // 罐
     GetHolderList () {
-      this.$http(`${FERMENTATION_API.CATEGORYJUDGEMENT_API}`, 'POST', {factory: this.form.factory, deptId: this.form.workShop}).then(({data}) => {
+      this.$http(`${FERMENTATION_API.CATEGORYJUDGEMENT_API}`, 'POST', {factory: this.form.factory, deptId: this.form.workShop}, false, false, false).then(({data}) => {
         if (data.code === 0) {
           this.holderList = data.data
         } else {

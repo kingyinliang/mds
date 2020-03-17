@@ -6,7 +6,7 @@
       </div>
       <div style="margin-top: 10px;" >
         <el-table :data="materialList" @selection-change="handleSelectionChange" @row-dblclick="editmaterial" border header-row-class-name="tableHead" :row-class-name="rowDelFlag">
-          <el-table-column type="selection" width="35" :disabled="!isRedact"></el-table-column>
+          <el-table-column type="selection" width="35" fixed="left" :disabled="!isRedact"></el-table-column>
           <el-table-column type="index" label="序号" width="50px"></el-table-column>
           <el-table-column width="100px">
             <template slot="header"><i class="reqI">*</i><span>布浆机</span></template>
@@ -48,45 +48,19 @@
             <template slot-scope="scope">{{scope.row.potOne}}</template>
           </el-table-column >
           <el-table-column prop="potTwo" label="发酵罐号2" width="150px"></el-table-column>
+          <el-table-column prop="classes" width="100px">
+            <template slot="header"><i class="reqI">*</i><span>白/中/夜班</span></template>
+            <template slot-scope="scope">{{scope.row.classes}}</template>
+          </el-table-column>
+          <el-table-column prop="man" show-overflow-tooltip width="210px">
+            <template slot="header"><i class="reqI">*</i><span>人员</span></template>
+            <template slot-scope="scope">{{scope.row.man}}</template>
+          </el-table-column>
+          <el-table-column label="操作时间" prop="changed" show-overflow-tooltip width="170px"></el-table-column>
+          <el-table-column label="操作人" prop="changer" show-overflow-tooltip width="160px"></el-table-column>
           <el-table-column prop="remark" label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!isRedact" size="mini" @click="delrow(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-card>
-    <el-card>
-      <div>
-        <span class="lh32px">布浆人员</span>
-        <el-button type="text" class="readyshiftBtn" name="people" style="margin-left: 30px;">收起<i class="el-icon-caret-top"></i></el-button>
-        <el-button type="primary" size="small" @click="addpeople" :disabled="!isRedact" style="float: right;"> + 新增</el-button>
-      </div>
-      <div class="peopleBox">
-        <el-table ref="peopleTable" border style="margin-top: 10px;" header-row-class-name="tableHead" :data="peopleList" :row-class-name="rowDelFlag">
-          <el-table-column label="白/中/夜班">
-            <template slot="header"><i class="reqI">*</i><span>白/中/夜班</span></template>
-            <template slot-scope="scope">
-              <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
-                <el-option v-for="item in classesList" :key="item" :label="item" :value="item"></el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column label="人员" :show-overflow-tooltip="true">
-            <template slot="header"><i class="reqI">*</i><span>人员</span></template>
-            <template slot-scope="scope">
-              <el-col v-if="!scope.row.man">
-                <span :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">
-                  <i>{{scope.row.man}}</i>
-                  <i>点击选择人员</i>
-                </span>
-              </el-col>
-              <span v-else :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">{{scope.row.man}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button type="danger" icon="el-icon-delete" :disabled="!isRedact" circle size="mini" @click="delrow(scope.row)"></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -141,6 +115,20 @@
         </el-form-item>
         <el-form-item label="发酵罐号2：" :label-width="formLabelWidth" prop="potTwo" :style="{'display': guanTwoDisplayNo ? 'none' : ''}">
           <el-input v-model="sauce.potTwo" style="width: 259px; float: left;"></el-input><el-button type="danger" icon="el-icon-delete" circle size="small" @click="delGuan()" style="float: left; margin-left: 10px;"></el-button>
+        </el-form-item>
+        <el-form-item label="白/中/夜班：" :label-width="formLabelWidth" prop="classes">
+          <el-select v-model="sauce.classes" placeholder="请选择"  style="width: 310px;" size="small">
+            <el-option v-for="item in classesList" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="人员：" :label-width="formLabelWidth" prop="man">
+          <el-col v-if="!sauce.man">
+            <span :style="{'cursor':'pointer'}" @click="selectUser()">
+              <i>{{sauce.man}}</i>
+              <i>[点击选择人员]</i>
+            </span>
+          </el-col>
+          <span v-else :style="{'cursor':'pointer'}" @click="selectUser()">{{sauce.man}}[点击选择人员]</span>
         </el-form-item>
         <el-form-item label="操作时间：" :label-width="formLabelWidth">{{sauce.changed}}</el-form-item>
         <el-form-item label="操作人：" :label-width="formLabelWidth">{{sauce.changer}}</el-form-item>
@@ -258,7 +246,7 @@ export default {
         param: '气垫小车',
         deptId: workshop,
         currPage: '1',
-        pageSize: '50',
+        pageSize: '500',
         status: '0'
       }).then(({data}) => {
         if (data.code === 0) {
@@ -271,7 +259,7 @@ export default {
         param: '气垫小车',
         deptId: workshop,
         currPage: '1',
-        pageSize: '50'
+        pageSize: '500'
       }).then(({data}) => {
         if (data.code === 0) {
           this.hovercraftAll = data.list.list
@@ -281,6 +269,19 @@ export default {
       })
     },
     addmaterial () {
+      let classes = ''
+      let man = ''
+      this.materialList.map((item) => {
+        if (item.productDate === this.formHeader.productDate && item.delFlag === '0') {
+          classes = item.classes
+          man = item.man
+        }
+      })
+      // let copyData = this.materialList.find(item => item.productDate === this.formHeader.productDate && item.delFlag === '0')
+      // if (copyData !== undefined) {
+      //   classes = copyData.classes
+      //   man = copyData.man
+      // }
       this.dialogFormVisibleMai = true
       this.isSelect = true
       this.guanTwoDisplayNo = true
@@ -301,7 +302,10 @@ export default {
         changer: this.$store.state.user.realName + `(${this.$store.state.user.name})`,
         delFlag: '0',
         clothNo: '',
-        sauceClass: ''
+        sauceClass: '',
+        productDate: this.formHeader.productDate,
+        classes: classes,
+        man: man
       }
     },
     editmaterial (row) {
@@ -318,35 +322,39 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let currentRecord = []
+          let pulpName = this.pulpMachineList.find(item => item.deviceId === this.sauce.pulpMachine).deviceName
+          let hovercraName = this.hovercraftAll.find(item => item.deviceId === this.sauce.hovercraftNo).deviceName
+          this.sauce.pulpMachineName = pulpName
+          this.sauce.hovercraftName = hovercraName
+          // this.sauce = {
+          //   id: this.sauce.id,
+          //   pulpMachine: this.sauce.pulpMachine,
+          //   hovercraftNo: this.sauce.hovercraftNo,
+          //   pulpMachineName: pulpName,
+          //   hovercraftName: hovercraName,
+          //   pulpNum: this.sauce.pulpNum,
+          //   pulpStartDate: this.sauce.pulpStartDate,
+          //   pulpEndDate: this.sauce.pulpEndDate,
+          //   pulpAmount: this.sauce.pulpAmount,
+          //   unit: 'L',
+          //   selfDrenchTime: this.sauce.selfDrenchTime,
+          //   potOne: this.sauce.potOne,
+          //   potTwo: this.sauce.potTwo,
+          //   changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+          //   changer: this.$store.state.user.realName + `(${this.$store.state.user.name})`,
+          //   delFlag: this.sauce.delFlag,
+          //   clothNo: this.sauce.clothNo,
+          //   sauceClass: this.sauce.sauceClass,
+          //   productDate: this.sauce.productDate,
+          //   classes: this.sauce.classes,
+          //   man: this.sauce.man
+          // }
           if (this.sauce.hasOwnProperty('uid')) {
             // 新增行
             currentRecord = this.materialList.filter(data => data.uid === this.sauce.uid)
           } else {
             // 原有行
             currentRecord = this.materialList.filter(data => data.id === this.sauce.id)
-          }
-          let pulpName = this.pulpMachineList.find(item => item.deviceId === this.sauce.pulpMachine).deviceName
-          let hovercraName = this.hovercraftAll.find(item => item.deviceId === this.sauce.hovercraftNo).deviceName
-          this.sauce = {
-            id: this.sauce.id,
-            uid: this.sauce.uid,
-            pulpMachine: this.sauce.pulpMachine,
-            hovercraftNo: this.sauce.hovercraftNo,
-            pulpMachineName: pulpName,
-            hovercraftName: hovercraName,
-            pulpNum: this.sauce.pulpNum,
-            pulpStartDate: this.sauce.pulpStartDate,
-            pulpEndDate: this.sauce.pulpEndDate,
-            pulpAmount: this.sauce.pulpAmount,
-            unit: 'L',
-            selfDrenchTime: this.sauce.selfDrenchTime,
-            potOne: this.sauce.potOne,
-            potTwo: this.sauce.potTwo,
-            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-            changer: this.$store.state.user.realName + `(${this.$store.state.user.name})`,
-            delFlag: this.sauce.delFlag,
-            clothNo: this.sauce.clothNo,
-            sauceClass: this.sauce.sauceClass
           }
           let chaTime
           if (!this.sauce.pulpEndDate || !this.sauce.pulpStartDate) {
@@ -378,7 +386,7 @@ export default {
             this.formHeader.id = ''
           }
           this.materialList = data.propulp
-          this.peopleList = data.propulpMan
+          // this.peopleList = data.propulpMan
         } else {
           this.$error_SHINHO(data.msg)
         }
@@ -397,19 +405,24 @@ export default {
           this.$warning_SHINHO('物料必填项不能为空')
           return false
         }
-      }
-      if (this.peopleList.length === 0) {
-        ty = false
-        this.$warning_SHINHO('请填写布浆人员')
-        return false
-      }
-      for (let items of this.peopleList) {
         if (!items.classes || items.classes === '' || !items.man || items.man === '') {
           ty = false
-          this.$warning_SHINHO('人员必填项不能为空')
+          this.$warning_SHINHO('请选择白/中/夜班与人员')
           return false
         }
       }
+      // if (this.peopleList.length === 0) {
+      //   ty = false
+      //   this.$warning_SHINHO('请填写布浆人员')
+      //   return false
+      // }
+      // for (let items of this.peopleList) {
+      //   if (!items.classes || items.classes === '' || !items.man || items.man === '') {
+      //     ty = false
+      //     this.$warning_SHINHO('人员必填项不能为空')
+      //     return false
+      //   }
+      // }
       for (let item of this.multipleSelection) {
         if (item.id === '') {
           ty = false
@@ -476,24 +489,24 @@ export default {
         }
       })
     },
-    savepeople (resolve, reject) {
-      this.peopleList.map((item) => {
-        this.$set(item, 'processId', this.formHeader.id)
-      })
-      this.$http(`${SQU_API.CLOTHMATERIALMAN_API}`, 'POST', this.peopleList).then(({data}) => {
-        if (data.code === 0) {
-        } else {
-          this.$error_SHINHO(data.msg)
-        }
-        if (resolve) {
-          resolve('resolve')
-        }
-      }).catch(() => {
-        if (resolve) {
-          reject('reject')
-        }
-      })
-    },
+    // savepeople (resolve, reject) {
+    //   this.peopleList.map((item) => {
+    //     this.$set(item, 'processId', this.formHeader.id)
+    //   })
+    //   this.$http(`${SQU_API.CLOTHMATERIALMAN_API}`, 'POST', this.peopleList).then(({data}) => {
+    //     if (data.code === 0) {
+    //     } else {
+    //       this.$error_SHINHO(data.msg)
+    //     }
+    //     if (resolve) {
+    //       resolve('resolve')
+    //     }
+    //   }).catch(() => {
+    //     if (resolve) {
+    //       reject('reject')
+    //     }
+    //   })
+    // },
     delrow (row) {
       this.$confirm('是否删除?', '提示', {
         confirmButtonText: '确定',
@@ -510,17 +523,17 @@ export default {
         return ''
       }
     },
-    addpeople () {
-      this.peopleList.push({
-        id: '',
-        classes: '',
-        delFlag: '0'
-      })
-    },
-    selectUser (row) {
+    // addpeople () {
+    //   this.peopleList.push({
+    //     id: '',
+    //     classes: '',
+    //     delFlag: '0'
+    //   })
+    // },
+    selectUser () {
       if (this.isRedact) {
-        this.row = row
-        this.$http(`${SYSTEMSETUP_API.USERLIST_API}`, 'POST', {deptId: this.formHeader.workShop, pageSize: '9999', currPage: '1'}).then(({data}) => {
+        this.row = this.sauce
+        this.$http(`${SYSTEMSETUP_API.USERLIST_API}`, 'POST', {deptId: this.formHeader.workShop, pageSize: '9999', currPage: '1'}, false, false, false).then(({data}) => {
           if (data.code === 0) {
             this.userlist = setUserList(data.page.list)
             if (this.row.man) {
@@ -556,7 +569,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .reqI {
   color: red;
 }

@@ -142,14 +142,19 @@ export default {
     },
     savedDatas: {
       type: Function,
-      default: () => {}
+      default: () => {
+        //  default
+      }
     },
     submitDatas: {
       type: Function,
-      default: () => {}
+      default: () => {
+        //  default
+      }
     }
   },
   mounted () {
+    //  default
   },
   methods: {
     tabClick (val) {
@@ -168,8 +173,8 @@ export default {
     // 保存
     savedData (str) {
       if (str === 'saved') {
-        let arr = this.savedRules()
-        for (let rule of arr) {
+        const arr = this.savedRules()
+        for (const rule of arr) {
           if (!rule()) {
             return false
           }
@@ -193,8 +198,8 @@ export default {
     },
     // 提交
     submitData () {
-      let arr = this.submitRules()
-      for (let rule of arr) {
+      const arr = this.submitRules()
+      for (const rule of arr) {
         if (!rule()) {
           return false
         }

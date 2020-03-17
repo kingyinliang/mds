@@ -19,13 +19,13 @@ function startLoading () {
     background: 'rgba(255, 255, 255, 0.7)'
   })
 }
+let needLoadingRequestCount = 0
 // 使用Element loading-close 方法
 function endLoading () {
   needLoadingRequestCount = 0
   loading.close()
 }
 
-let needLoadingRequestCount = 0
 export function showFullScreenLoading () {
   if (needLoadingRequestCount === 0 && Vue.prototype.lodingState) {
     startLoading()
@@ -82,7 +82,7 @@ export default (url, method = HTTP_METHOD.GET, data = {}, ContentType = false, r
    * 请求拦截
    */
   axios.interceptors.request.use(config => {
-    config.headers['Authorization'] = Vue.cookie.get('token') // 请求头带上token
+    config.headers.Authorization = Vue.cookie.get('token') // 请求头带上token
     showFullScreenLoading()// 显示遮罩
     return config
   }, error => {
@@ -95,7 +95,7 @@ export default (url, method = HTTP_METHOD.GET, data = {}, ContentType = false, r
     if (response.data && response.data.code === 401) { // 401, token失效
       Vue.cookie.delete('token')
       router.options.isAddDynamicMenuRoutes = false
-      router.push({path: '/login'})
+      router.push({ path: '/login' })
     }
     if (response.data && response.data.code === 500) {
       // Vue.prototype.$log.writeErrorLog(new Error(`接口错误：${url}`), `msg:${response.data.msg},data: ${JSON.stringify(data)}`)
