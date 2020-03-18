@@ -43,24 +43,24 @@
       <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
         <i class="el-icon-caret-bottom"></i>
       </div>
-      <el-card style="margin-top: 5px;" v-show="contentshow">
+      <el-card style="margin-top: 5px;" >
         <el-table :data="waterList" @selection-change="handleSelectionChange" border header-row-class-name="tableHead">
-          <el-table-column type="selection" width="35"></el-table-column>
-          <el-table-column label="工序" width="50px">自淋</el-table-column>
-          <el-table-column label="气垫车号" prop="gx">
+          <el-table-column type="selection" width="50"></el-table-column>
+          <el-table-column label="工序" width="50">自淋</el-table-column>
+          <el-table-column label="气垫车号" prop="gx" :show-overflow-tooltip="true">
             <template slot="header"><i class="reqI">*</i><span>气垫车号</span></template>
             <template slot-scope="scope">
               {{scope.row.deviceName}}
             </template>
           </el-table-column>
-          <el-table-column label="布浆线" prop="deptName"></el-table-column>
-          <el-table-column label="布浆结束时间" prop="pulpEndDate"></el-table-column>
+          <el-table-column label="布浆线" :show-overflow-tooltip="true" prop="deptName"></el-table-column>
+          <el-table-column label="布浆结束时间" prop="pulpEndDate" width="150"></el-table-column>
           <el-table-column label="自淋结束时间" prop="drenchEndDate" width="200">
             <template slot-scope="scope">
-              <el-date-picker v-model="scope.row.drenchEndDate" type="datetime" @input="changedDranch(scope.row)" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 175px;" :disabled="!isRedact"></el-date-picker>
+              <el-date-picker v-model="scope.row.drenchEndDate" type="datetime" :disabled="!isRedact" @input="changedDranch(scope.row)" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 172px;"></el-date-picker>
             </template>
           </el-table-column>
-          <el-table-column label="自淋时间(H)" prop="drenchTime"></el-table-column>
+          <el-table-column label="自淋时间(H)" width="100" prop="drenchTime"></el-table-column>
           <el-table-column label="挪笼操作员" :show-overflow-tooltip="true">
             <template slot="header"><i class="reqI">*</i><span>挪笼操作员</span></template>
             <template slot-scope="scope">
@@ -73,7 +73,7 @@
               <span v-else :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">{{scope.row.moveOperator}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="布浆操作员" prop="drenchOperator"></el-table-column>
+          <el-table-column label="布浆操作员" prop="drenchOperator" width="150"></el-table-column>
         </el-table>
       </el-card>
     </div>
