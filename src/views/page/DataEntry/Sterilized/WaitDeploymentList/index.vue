@@ -2,7 +2,7 @@
   <div class="header_main">
     <el-card class="searchCard">
       <el-row>
-        <el-col style="width: 975px; float: left;">
+        <el-col style="width: 1133px; float: left;">
           <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="sole_row">
             <el-form-item label="生产工厂：">
               <el-select v-model="formHeader.factory" placeholder="请选择" class="width150px">
@@ -24,6 +24,9 @@
             </el-form-item>
             <el-form-item label="生产日期：">
               <el-date-picker v-model="formHeader.created" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择" style="width: 140px;"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="订单：" label-width="45px">
+              <el-input v-model="formHeader.pkgOrderNo" clearable placeholder="请选择" style="width: 140px;"></el-input>
             </el-form-item>
           </el-form>
         </el-col>

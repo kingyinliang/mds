@@ -73,7 +73,7 @@
             </el-table-column>
             <el-table-column label="操作" width="115" fixed="right">
               <template slot-scope="scope">
-                <el-button type="text" size="mini" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" @click="addOver(multipleSelectionAddSup, 'addSup', scope.row)" v-if="isAuth('ste:supMaterial:mySaveOrUpdate')">添加完成</el-button>
+                <el-button type="text" size="mini" :disabled="!isRedact || (scope.row.status === 'checked' || scope.row.status === 'submit' || scope.row.addStatus === '已添加')" @click="addOver(multipleSelectionAddSup, 'addSup', scope.row)" v-if="isAuth('ste:supMaterial:mySaveOrUpdate')">添加完成</el-button>
                 <el-button type="text" size="mini" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" @click="delRow(scope.row)"  v-if="scope.row.isSplit !== '0'">删除</el-button>
               </template>
             </el-table-column>
@@ -233,10 +233,19 @@ export default {
     },
     // 拆分
     addData (row, index, data) {
+      let status
+      let addStatus
+      if (row.status === 'noPass') {
+        status = 'noPass'
+        addStatus = '不通过'
+      } else {
+        status = 'saved'
+        addStatus = '未添加'
+      }
       data.splice(index + 1, 0, {
         addAmount: row.addAmount,
         // addStatus: '未添加',
-        addStatus: row.addStatus,
+        addStatus: addStatus,
         adjustAmount: row.adjustAmount,
         adjustAmountPro: row.adjustAmountPro,
         batch: '',
@@ -252,7 +261,7 @@ export default {
         planAmount: row.planAmount,
         receiveAmount: '',
         remark: '',
-        status: '',
+        status: status,
         supStatus: row.supStatus,
         unit: row.unit
       })
@@ -453,7 +462,6 @@ export default {
     },
     // 验证
     dataRul (data, data1, st) {
-      console.log(data)
       let ty = true
       for (var item of data) {
         if (item.delFlag === '0') {
