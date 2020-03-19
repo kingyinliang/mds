@@ -55,7 +55,7 @@
               style="width: 100%; margin-bottom: 20px;">
               <el-table-column
                 type="selection"
-                width="34">
+                width="45">
               </el-table-column>
               <el-table-column
                 type="index"
@@ -92,6 +92,7 @@
                 :show-overflow-tooltip="true"
                 width="80">
               </el-table-column>
+              <el-table-column label="状态" prop="holderStatusName" width="120"></el-table-column>
               <el-table-column
                 prop="holderArea"
                 label="物理区域"
@@ -102,7 +103,7 @@
                 prop="factoryName"
                 label="归属工厂"
                 :show-overflow-tooltip="true"
-                width="92">
+                width="120">
               </el-table-column>
               <el-table-column
                 prop="deptName"
