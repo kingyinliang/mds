@@ -350,13 +350,13 @@ export default {
             if (this.rules.length) {
                 for (const item of this.rules) {
                     if (!this.queryForm[item.prop]) {
-                        this.$warning_SHINHO(item.text);
+                        this.$warningTost(item.text);
                         return false;
                     }
                 }
             }
             if (!this.isAuth(this.queryAuth) && this.queryAuth !== '') {
-                this.$warning_SHINHO('无查询权限');
+                this.$warningTost('无查询权限');
                 return false;
             }
             if (st) {
@@ -386,13 +386,13 @@ export default {
             if (this.rules.length) {
                 for (const item of this.rules) {
                     if (!this.queryForm[item.prop]) {
-                        this.$warning_SHINHO(item.text);
+                        this.$warningTost(item.text);
                         return false;
                     }
                 }
             }
             if (!this.isAuth(this.exportOption.auth) && this.exportOption.auth !== '') {
-                this.$warning_SHINHO('无导出权限');
+                this.$warningTost('无导出权限');
                 return false;
             }
             const that = this; // eslint-disable-line

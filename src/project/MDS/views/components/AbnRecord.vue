@@ -1,0 +1,47 @@
+<template>
+    <div>
+        <div class="audit">
+            <span>异常情况记录</span>
+        </div>
+        <div>
+            <el-input type="textarea" class="textarea" style="width: 100%; height: 90px;" />
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'AbnRecord',
+    components: {},
+    props: {
+        tableData: {
+            type: Object,
+            default: () => {
+            //    default
+            }
+        }
+    },
+    data() {
+        return {};
+    },
+    computed: {},
+    mounted() {
+    //    mounted
+    },
+    methods: {}
+};
+</script>
+
+<style lang="scss" scoped>
+.audit {
+    line-height: 32px;
+    margin: 10px 0;
+    i {
+        font-size: 22px;
+        float: left;
+    }
+    span {
+        font-size: 16px;
+    }
+}
+</style>
