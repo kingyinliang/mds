@@ -294,6 +294,7 @@ export default {
     },
     // 半成品罐下拉
     PotinTankAmount (id, st) {
+      this.dataForm.holderType = this.PotList.find(item => item.holderId === id).holderType
       if (this.PotList.filter(item => item.holderId === id).length === 0) {
         this.dialogDisabled = true
       } else if (st) {
@@ -324,7 +325,7 @@ export default {
           this.PotObject.inTankAmount = false
         }
         if (this.dataForm.batch) {
-          if (this.PotList.filter(item => item.holderId === id)[0].isEmpty === '1') {
+          if (this.PotList.filter(item => item.holderId === id)[0].holderStatus === '0') {
             this.PotObject.batch = false
           } else {
             this.PotObject.batch = true
