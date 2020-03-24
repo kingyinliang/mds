@@ -36,6 +36,7 @@
                 label="上级菜单">
               </el-table-column>
               <el-table-column
+                width="80"
                 header-align="left"
                 align="left"
                 :show-overflow-tooltip=true
@@ -45,6 +46,7 @@
                 </template>
               </el-table-column>
               <el-table-column
+                width="90"
                 prop="type"
                 header-align="left"
                 align="left"
@@ -70,7 +72,6 @@
                 prop="url"
                 header-align="left"
                 align="left"
-                width="180"
                 :show-overflow-tooltip=true
                 label="菜单URL">
               </el-table-column>

@@ -42,8 +42,19 @@
                     <el-option v-for="(item, index) in orderTypeList" :label="item.value"  :value="item.code" :key="index"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="生产日期：">
+                <!-- <el-form-item label="生产日期：">
                   <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.prodDate" style="width: 160px;"></el-date-picker>
+                </el-form-item> -->
+                <el-form-item label="生产日期：" class="dateinput">
+                  <el-row>
+                    <el-col :span="12">
+                      <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.prodDateBegin" style="width: 135px;"></el-date-picker>
+                      <span>-</span>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-date-picker type="date" placeholder="选择" value-format="yyyy-MM-dd" v-model="plantList.prodDateEnd" style="width: 135px;"></el-date-picker>
+                    </el-col>
+                  </el-row>
                 </el-form-item>
                 <el-form-item class="floatr">
                   <el-button type="primary" size="small" @click="GetAuditList(true)" v-if="isAuth('sys:verifyInStorage:list')">查询</el-button>
@@ -301,7 +312,8 @@ export default {
         factory: '',
         workShop: '',
         productLine: '',
-        prodDate: new Date(new Date() - 24 * 60 * 60 * 1000).getFullYear().toString() + '-' + ((new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1) >= 10 ? (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1).toString() : '0' + (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1)) + '-' + (new Date(new Date() - 24 * 60 * 60 * 1000).getDate() >= 10 ? new Date(new Date() - 24 * 60 * 60 * 1000).getDate().toString() : ('0' + new Date(new Date() - 24 * 60 * 60 * 1000).getDate())),
+        prodDateBegin: new Date(new Date() - 24 * 60 * 60 * 1000).getFullYear().toString() + '-' + ((new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1) >= 10 ? (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1).toString() : '0' + (new Date(new Date() - 24 * 60 * 60 * 1000).getMonth() + 1)) + '-' + (new Date(new Date() - 24 * 60 * 60 * 1000).getDate() >= 10 ? new Date(new Date() - 24 * 60 * 60 * 1000).getDate().toString() : ('0' + new Date(new Date() - 24 * 60 * 60 * 1000).getDate())),
+        prodDateEnd: '',
         pstngDate: '',
         orderType: '',
         headerTxt: '',

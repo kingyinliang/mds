@@ -549,6 +549,12 @@ export default {
         this.formTransfer.inHolderId = ''
         this.GetRuPotList(n)
       }
+      this.formTransfer.inBatch = ''
+    },
+    'formTransfer.inHolderId' (n, o) {
+      if (n) {
+        this.formTransfer.inBatch = this.thrwHolderList.find(item => item.HOLDER_ID === n).batch
+      }
     }
   },
   mounted () {
