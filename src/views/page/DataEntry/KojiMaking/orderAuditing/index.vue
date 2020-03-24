@@ -144,7 +144,8 @@
             <el-row>
               <el-table header-row-class-name="tableHead" :data="inStockList"  border tooltip-effect="dark" >
                 <el-table-column type="index" width="55" label="序号"></el-table-column>
-                <el-table-column label="曲房" width="100">
+                <el-table-column label="制曲日期" width="100" prop="inKjmDate"></el-table-column>
+                <el-table-column label="曲房" width="100" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
                     {{scope.row.houseName}}
                   </template>
@@ -234,19 +235,20 @@
             <el-row>
               <el-table header-row-class-name="tableHead" :data="applyMaterieList"  border tooltip-effect="dark" >
                 <el-table-column type="index" width="55" label="序号"></el-table-column>
-                <el-table-column label="曲房" width="140">
+                <el-table-column label="制曲日期" width="100" prop="inKjmDate"></el-table-column>
+                <el-table-column label="曲房" width="100" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
                     {{scope.row.houseName}}
                   </template>
                 </el-table-column>
-                <el-table-column label="物料" show-overflow-tooltip>
+                <el-table-column label="物料" show-overflow-tooltip width="150">
                   <template slot-scope="scope">
                     {{scope.row.materialCode + ' ' + scope.row.materialName}}
                   </template>
                 </el-table-column>
                 <el-table-column
                   label="领用容器"
-                  width="160">
+                  width="150" :show-overflow-tooltip="true">
                   <template slot-scope="scope">
                     {{scope.row.holderName}}
                   </template>

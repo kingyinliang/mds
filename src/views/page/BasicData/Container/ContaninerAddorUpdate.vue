@@ -24,6 +24,12 @@
         <el-form-item label="批数：">
           <el-input type="number" v-model="dataForm.holderPatch" placeholder="手动输入" min="0"></el-input>
         </el-form-item>
+        <el-form-item label="状态：" v-show="holderStutusDisabled[0] === true">
+          <el-select v-model="dataForm.holderStatus" placeholder="请选择" style="width: 100%;">
+            <el-option label="" value="">请选择</el-option>
+            <el-option v-for="(item, index) in holderStatusList" :key="index" :value="item.code" :label="item.value"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="物理区域：">
           <el-input v-model="dataForm.holderArea" placeholder="手动输入" clearable></el-input>
         </el-form-item>
@@ -62,6 +68,7 @@ export default {
         holderNo: '',
         holderName: '',
         holderHold: 0,
+        holderStatus: '',
         holderPatch: '',
         holderArea: '',
         factory: '',
@@ -97,13 +104,30 @@ export default {
         deptId: [
           { required: true, message: '归属车间不能为空', trigger: 'blur' }
         ]
-      }
+      },
+      holderStatusList: [],
+      holderCorresponding: {
+        '006': 'ste_holder_status',
+        '007': 'filter_holder_status',
+        '013': 'juice_holder_status'
+      },
+      holderStutusDisabled: [true]
     }
   },
   mounted () {
     this.getDictList()
     this.getFactoryList()
     // this.Getdeptcode(this.dataForm.factory)
+  },
+  watch: {
+    'dataForm.factory' (n) {
+      this.Getdeptcode(n, false)
+      this.getDictList(n)
+    },
+    // 'workshop' (n) {},
+    'dataForm.holderType' (n, o) {
+      this.ChangePot(n)
+    }
   },
   methods: {
     closeDialog () {
@@ -128,6 +152,7 @@ export default {
             this.dataForm.factory = data.sysHolder.factory
             // this.factoryId = data.sysHolder.factory
             this.dataForm.deptId = data.sysHolder.deptId
+            this.dataForm.holderStatus = data.sysHolder.holderStatus
             this.Getdeptcode(data.sysHolder.factory, data.sysHolder.deptId)
           } else {
             this.$error_SHINHO(data.msg)
@@ -218,14 +243,22 @@ export default {
           }
         })
       }
-    }
-  },
-  watch: {
-    'dataForm.factory' (n) {
-      this.Getdeptcode(n, false)
-      this.getDictList(n)
     },
-    'workshop' (n) {
+    ChangePot (n) {
+      this.holderStatusList = []
+      if (n && this.holderCorresponding.hasOwnProperty(n)) {
+        this.holderStatus = ''
+        this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {type: this.holderCorresponding[n]}, false, false, false).then(({data}) => {
+          if (data.code === 0) {
+            this.holderStatusList = data.dicList
+          } else {
+            this.$notify.error({title: '错误', message: data.msg})
+          }
+        })
+        this.$set(this.holderStutusDisabled, 0, true)
+      } else {
+        this.$set(this.holderStutusDisabled, 0, false)
+      }
     }
   },
   computed: {},

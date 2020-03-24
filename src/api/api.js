@@ -958,6 +958,8 @@ export const REP_API = {
   JBS_REPORT_EXPORT: HOST + '/jbs/report/jbsReportExport', // JBS导出
   PKGOUTPUT_LIST_API: HOST + '/report/fromEs/materialSummary', // 包装品项产量汇总查询
   PKGOUTPUT_EXPORT_API: HOST + '/report/fromEs/expectMaterialSummary', // 包装品项产量汇总导出
+  MaterialTraceability_LIST_API: HOST + '/materialView/list', // 物料追溯报表
+  MaterialTraceability_checkOver_API: HOST + '/materialView/checkOver',
   /** ************************* 吹瓶车间报表 ************************** */
   BOTTLEQUALITY_MATERIALCODE_API: HOST + '/report/production/bottleQualityMaterialCode', // 品项下拉
   BOTTLEQUALITY_LIST_API: HOST + '/report/production/bottleQuality', // 查询
