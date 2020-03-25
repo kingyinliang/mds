@@ -6,6 +6,7 @@ yarn install
 ```
 
 ### Compiles and hot-reloads for development
+新建.env.local环境文件存放全局变量和接口host
 ```
 yarn serve
 ```
@@ -13,6 +14,16 @@ yarn serve
 ### Compiles and minifies for production
 ```
 yarn build
+```
+
+### Compiles and minifies for production test
+```
+yarn build:test
+```
+
+### Compiles and minifies for production dev
+```
+yarn build:dev
 ```
 
 ### Run your unit tests
@@ -30,8 +41,6 @@ yarn test:e2e
 yarn lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
 ### MDS
 ```
 api.js const HOST = process.env.VUE_APP_MDS_API

@@ -18,7 +18,7 @@ export class OrderDetail extends Order {
     planOutput?: number, outputUnit?: string, remark?: string, delFlag?: string, id?: string, status?: string, inPotNo?: string, inPotName?: string, houseNo?: string,
     houseName?: string, cookingNo?: string, cookingName?: string, inKjmDate?: string, productDate?: string, isFirst?: boolean
     ) {
-    super(orderId, orderNo, orderDate, orderStatus, materialCode, materialName, planOutput, outputUnit, remark, delFlag)
+    super(orderId || '', orderNo || '', orderDate || '', orderStatus || '', materialCode || '', materialName || '', planOutput || 0, outputUnit || '', remark || '', delFlag || '')
     this.id = ''
     this._status = ''
     this.inKjmDate = ''
