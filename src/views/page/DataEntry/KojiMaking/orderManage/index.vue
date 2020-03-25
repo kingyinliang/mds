@@ -131,7 +131,7 @@
                   订单明细
                 </el-col>
                 <el-col :span="12" class="rowButton" style='margin-top: -13px;'>
-                   <el-button type="primary" size="small"  style="float: right;" @click="delDetail">删除</el-button>
+                   <!-- <el-button type="primary" size="small"  style="float: right;" @click="delDetail">删除</el-button> -->
                 </el-col>
               </el-row>
               <el-row>
