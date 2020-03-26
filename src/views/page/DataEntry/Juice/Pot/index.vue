@@ -172,7 +172,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="满灌时间：">
-          <el-date-picker v-model="formTransfer.fullDate" type="datetime" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm"></el-date-picker>
+          <el-date-picker v-model="formTransfer.fullDate" type="date" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-form>
     </div>

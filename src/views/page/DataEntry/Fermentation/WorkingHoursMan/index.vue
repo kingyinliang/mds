@@ -61,7 +61,7 @@
     <el-tabs v-model="activeName" @tab-click="tabClick" type="border-card" style="margin-top: 15px;">
       <el-tab-pane name="noMatureReport" label="未成熟">
         <el-table :data="dataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
-          <el-table-column type="selection" :selectable="CheckBoxInit"></el-table-column>
+          <el-table-column type="selection" :selectable="CheckBoxInit" fixed="left"></el-table-column>
           <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
             <template slot-scope="scope">
               <label :style="{'color': scope.row.status === 'fail'? 'red' : scope.row.status === 'success'? '#7ED321' : '' }">{{scope.row.status === 'success' ? '已审核' : scope.row.status === 'fail' ? '审核不通过' : scope.row.status === 'init' ? '已保存' : scope.row.status === 'submit' ? '已提交' : ''}}</label>
@@ -101,12 +101,19 @@
           <el-table-column label="单位" :show-overflow-tooltip="true" prop="humanTimesUnit" width="50"></el-table-column>
           <el-table-column label="执行开始日期" width="150">
             <template slot-scope="scope">
-              <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="scope.row.startDate" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;"></el-date-picker>
+              <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="scope.row.startDate" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 135px;"></el-date-picker>
             </template>
           </el-table-column>
-          <el-table-column label="执行结束日期" prop="amount" width="150">
+          <el-table-column width="150">
+            <template slot="header" slot-scope="scope">
+              执行结束日期&nbsp;
+              <el-tooltip class="item" effect="dark" content="点击批量修改`执行结束时间`" placement="top-start">
+                <i class="el-input__icon el-icon-date" @click="checkedDateCommonFun()"></i>
+              </el-tooltip>
+              <i class="header-date-common"><el-date-picker v-model="DateCommon" ref="DateInput" @change="changeDateCommon()" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" clearable></el-date-picker></i>
+            </template>
             <template slot-scope="scope">
-              <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="scope.row.endDate" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;"></el-date-picker>
+              <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="scope.row.endDate" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 135px;"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column label="部分/完全报工" :show-overflow-tooltip="true" width="150">
@@ -328,7 +335,8 @@ export default {
       multipleSelection: [],
       holderList: [],
       dataList: [],
-      LogList: []
+      LogList: [],
+      DateCommon: ''
     }
   },
   mounted () {
@@ -337,16 +345,35 @@ export default {
   watch: {
     'form.factory' (n, o) {
       this.GetWorkshopList(n)
-      this.GetHolderList()
     },
     'form.workShop' (n, o) {
       setTimeout(() => {
         this.GetHolderList()
       }, 900)
-      // this.GetHolderList()
     }
   },
   methods: {
+    // 时间控件弹框
+    checkedDateCommonFun () {
+      if (this.isRedact === false) {
+        this.$warning_SHINHO('请先点击编辑')
+        return false
+      }
+      if (this.multipleSelection.length === 0) {
+        this.$warning_SHINHO('请先勾选需要批量修改的数据')
+        return false
+      } else {
+        this.$refs.DateInput.focus()
+      }
+    },
+    // 批量更改结束时间数据
+    changeDateCommon () {
+      if (this.DateCommon) {
+        this.multipleSelection.map(item => {
+          item.endDate = this.DateCommon
+        })
+      }
+    },
     // 获取工厂
     GetFactoryList () {
       this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', false, false, false).then(({data}) => {
@@ -381,7 +408,7 @@ export default {
     },
     // 罐
     GetHolderList () {
-      this.$http(`${FERMENTATION_API.CATEGORYJUDGEMENT_API}`, 'POST', {factory: this.form.factory, deptId: this.form.workShop}, false, false, false).then(({data}) => {
+      this.$http(`${FERMENTATION_API.CATEGORYJUDGEMENT_API}`, 'POST', {factory: this.form.factory, deptId: this.form.workShop}).then(({data}) => {
         if (data.code === 0) {
           this.holderList = data.data
         } else {
@@ -563,5 +590,11 @@ export default {
     color: #fff;
     border-color: #1890ff;
   }
+}
+.header-date-common {
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  display: block;
 }
 </style>
