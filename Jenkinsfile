@@ -1,5 +1,5 @@
 @Library('ops-pipeline-library') _
-VueCI {
+VueNewCI {
   //Jenkins Slave Node
   jenkins_node = 'ecs-agent-vuejs'
   //Project Name
