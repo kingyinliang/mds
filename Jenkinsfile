@@ -1,5 +1,5 @@
 @Library('ops-pipeline-library') _
-VueNewCI {
+VueCI {
   //Jenkins Slave Node
   jenkins_node = 'ecs-agent-vuejs'
   //Project Name
@@ -21,4 +21,3 @@ VueNewCI {
   //PRD URL
   prod_service_url = 'mds.shinho.net.cn'
 }
-
