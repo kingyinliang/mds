@@ -187,13 +187,15 @@ export default {
     },
     // 日志
     GetLog (row) {
-      this.$http(`${SQU_API.SUM_LOG_MATERIAL_API}`, 'POST', {orderNo: row.fumet.orderNo}).then(({data}) => {
-        if (data.code === 0) {
-          this.MaterialAudit = data.listRecord
-        } else {
-          this.$error_SHINHO(data.msg)
-        }
-      })
+      if (row.fumet.orderNo) {
+        this.$http(`${SQU_API.SUM_LOG_MATERIAL_API}`, 'POST', {orderNo: row.fumet.orderNo}).then(({data}) => {
+          if (data.code === 0) {
+            this.MaterialAudit = data.listRecord
+          } else {
+            this.$error_SHINHO(data.msg)
+          }
+        })
+      }
     },
     // 修改酱
     updateMaterial (str, resolve, reject, st = false) {
