@@ -1636,6 +1636,7 @@ export const STERILIZED_API = {
   SEMIFINISHEDPRODUCTHROWHOLDER: HOST + '/ste/allocate/yzHolderList',
   SEMIFINIS_DROPDOWN_LIST: HOST + '/all/dropDown/getDumpHolder', // 转储打入罐下拉
   SEMIFINIS_DROPDOWN_DETAIL: HOST + '/ste/semi/steItemList', // 半成品罐详情
+  SEMIFINISH_CLEAN_HOLDER: HOST + '/ste/semi/cleanSteHolder', // 清罐
   /**
    *  调配列表
    */

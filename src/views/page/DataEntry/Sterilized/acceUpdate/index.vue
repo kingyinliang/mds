@@ -108,7 +108,7 @@
         </el-table-column>
         <el-table-column label="调整后需求数量" width="120" prop="unit" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.adjustAmount" @input="AddSupChange(scope.row)" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
+            <el-input v-model="scope.row.adjustAmount" @input="AddSupChange(scope.row)" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加' || scope.row.delFlag === '1'" placeholder="请输入" size="mini"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true"></el-table-column>
@@ -116,7 +116,7 @@
         <el-table-column label="领用数量" width="100" prop="receiveAmount" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column label="备注" width="100">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini"></el-input>
+            <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加' || scope.row.delFlag === '1'" placeholder="请输入" size="mini"></el-input>
           </template>
         </el-table-column>
       </el-table>

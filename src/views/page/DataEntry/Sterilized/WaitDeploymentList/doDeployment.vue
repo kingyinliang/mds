@@ -26,7 +26,7 @@
                 <p class="input_bottom">&nbsp;{{this.formHeaders.CREATED}}</p>
               </el-form-item>
               <el-form-item :label="typeString + '日期：'">
-                <p class="input_bottom">&nbsp;{{this.formHeaders.ALLOCATE_DATE}}</p>
+                <el-date-picker v-model="formHeaders.ALLOCATE_DATE" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" style="width: 145px;"></el-date-picker>
               </el-form-item>
               <el-form-item label="杀菌物料：">
                 <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + `${formHeader.materialName}`" placement="top-start">
@@ -332,7 +332,8 @@ export default {
           unit: this.orderList[0].outputUnit,
           remark: this.remark,
           id: this.allocateId,
-          type: this.$store.state.common.Sterilized.type
+          type: this.$store.state.common.Sterilized.type,
+          allocateDate: this.formHeaders.ALLOCATE_DATE
         }
         this.$http(`${STERILIZED_API.DODEPLOYMENTHEADERSAVE}`, 'POST', params).then(({data}) => {
           if (data.code === 0) {

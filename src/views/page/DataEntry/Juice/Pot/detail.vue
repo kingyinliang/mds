@@ -97,13 +97,23 @@
             <el-table-column label="类别" :show-overflow-tooltip="true" prop="RECEIVE_TYPE" width="70"></el-table-column>
             <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="move" width="80"></el-table-column>
             <el-table-column label="领用" :show-overflow-tooltip="true" prop="source" width="70"></el-table-column>
-            <el-table-column label="物料批次" :show-overflow-tooltip="true" prop="BATCH" width="110"></el-table-column>
-            <el-table-column label="来源批次" :show-overflow-tooltip="true" prop="RECEIVE_BATCH" width="110"></el-table-column>
+            <el-table-column label="物料批次" :show-overflow-tooltip="true" width="110">
+              <template slot-scope="scope">
+                <span v-if="scope.row.move === '转储'">{{scope.row.RECEIVE_BATCH}}</span>
+                <span v-else>{{scope.row.BATCH}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="转出批次" :show-overflow-tooltip="true" width="110">
+              <template slot-scope="scope">
+                <span v-if="scope.row.move === '转储'">{{scope.row.BATCH}}</span>
+                <span v-else>{{scope.row.RECEIVE_BATCH}}</span>
+              </template>
+            </el-table-column>
             <el-table-column label="数量" :show-overflow-tooltip="true" prop="RECEIVE_AMOUNT" width="80"></el-table-column>
             <el-table-column label="单位" :show-overflow-tooltip="true" prop="UNIT" width="50"></el-table-column>
             <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="FULL_DATE" width="160"></el-table-column>
             <el-table-column label="单号" :show-overflow-tooltip="true" prop="ORDER_NO" width="120"></el-table-column>
-            <el-table-column label="订单类型" :show-overflow-tooltip="true" prop="ORDER_TYPE" width="80"></el-table-column>
+            <el-table-column label="罐号" :show-overflow-tooltip="true" prop="HOLDER_NAME" width="80"></el-table-column>
             <el-table-column label="领用人" :show-overflow-tooltip="true" prop="CREATOR" width="120"></el-table-column>
             <el-table-column label="领用时间" :show-overflow-tooltip="true" prop="CREATED" width="120"></el-table-column>
           </el-table>

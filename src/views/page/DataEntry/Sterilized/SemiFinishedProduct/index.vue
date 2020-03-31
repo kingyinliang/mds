@@ -40,17 +40,17 @@
       <el-col :span="4" v-for="(item, index) in DataList" :key="index">
         <el-card class="dataList_item">
           <h3 class="dataList_item_tit">
-            {{item.holderNo}} - <span style="color: rgb(51, 51, 51); font-weight: normal; font-size: 14px;">{{item.holderStatus === '1' ? '入库中' : item.holderStatus === '0' ? '空罐' : item.holderStatus === '2' ? '满罐' : item.holderStatus === '3' ? '领用中' : ''}}</span>
+            {{item.holderNo}} - <span style="color: rgb(51, 51, 51); font-weight: normal; font-size: 14px;">{{item.holderStatus === '1' ? '入库中' : item.holderStatus === '0' ? '空罐' : item.holderStatus === '2' ? '满罐' : item.holderStatus === '3' ? '领用中' : item.holderStatus === '4' ? '领用完' : ''}}</span>
             <span @click="godetails(item)" v-if="isAuth('filter:holder:list')" style="cursor: pointer; color: #1890ff; float: right; font-size: 12px;">详情>></span>
           </h3>
           <div class="dataList_item_pot clearfix" style="position: relative;">
             <img src="@/assets/img/RD.png" alt="" v-if="item.isRdSign === '1'" style="position: absolute; left: 10px; top: 10px;">
             <div class="dataList_item_pot_box">
               <div class="dataList_item_pot_box1" style="display: flex; flex-wrap: wrap; align-content: flex-end; position: relative;">
-                <div v-if="item.holderStatus === '1' || item.holderStatus === '3'" class="dataList_item_pot_box_item1" :style="`height:${item.amount <= 0 ? '0' : (item.amount / item.holderHold) > 1 ? '100' : (item.amount / item.holderHold) * 100}%`"></div>
+                <div v-if="item.holderStatus === '1' || item.holderStatus === '3' || item.holderStatus === '4'" class="dataList_item_pot_box_item1" :style="`height:${item.amount <= 0 ? '0' : (item.amount / item.holderHold) > 1 ? '100' : (item.amount / item.holderHold) * 100}%`"></div>
                 <div v-if="item.holderStatus === '2'" class="dataList_item_pot_box_item2 dataList_item_pot_box_item2s"  :style="`height:150%`"></div>
                 <div v-else class="dataList_item_pot_box_item1" :style="`height:0%`"><p></p></div>
-                <div class="dataList_item_pot_detail" v-if="item.holderStatus === '1' || item.holderStatus === '2' || item.holderStatus === '3'">
+                <div class="dataList_item_pot_detail" v-if="item.holderStatus === '1' || item.holderStatus === '2' || item.holderStatus === '3' || item.holderStatus === '4'">
                   <p>{{item.batch}}</p>
                   <p>{{item.materialName}}</p>
                   <p>{{(item.amount / 1000).toFixed(3)}}方</p>
@@ -61,7 +61,9 @@
             </div>
           </div>
           <el-row class="bottom">
-            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus !== '2'" @click="GnProp(item)" style='border: none; padding: 0;'>GN搅罐</el-button>
+            <el-button class="bottom-item" :disabled="!isAuth('ste:semi:cleanSteHolder') || item.holderStatus !== '4'" @click="clearPot(item)">清罐</el-button>
+            <div class="bottom-split"></div>
+            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus !== '2'" @click="GnProp(item)" style='border: none; padding: 0; font-size: 12px;'>GN搅罐</el-button>
             <div class="bottom-split"></div>
             <!-- <el-col :span="12" class="dataList_item_btn_item"><p @click="GnProp(item)">GN搅罐</p></el-col> -->
             <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" @click="JsbProp(item)" style='border: none; padding: 0;'>JBS出库</el-button>
@@ -569,6 +571,27 @@ export default {
           }
         })
       }
+    },
+    // 清罐
+    clearPot (item) {
+      if (item.holderStatus !== '4') {
+        this.$warning_SHINHO('未领用完不能清罐')
+        return false
+      }
+      this.$confirm('清罐后，账务将清零，请确认实物已空！', '清罐确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http(`${STERILIZED_API.SEMIFINISH_CLEAN_HOLDER}`, 'POST', item).then(({data}) => {
+          if (data.code === 0) {
+            this.$success_SHINHO('操作成功')
+            this.GetList()
+          } else {
+            this.$error_SHINHO(data.msg)
+          }
+        })
+      })
     }
   },
   computed: {
@@ -695,7 +718,7 @@ export default {
       .bottom-item {
         text-align: center;
         flex: 1;
-        font-size: 14px;
+        font-size: 12px;
         line-height: 40px;
         background: #f7f9fa;
         border-radius: 0;
