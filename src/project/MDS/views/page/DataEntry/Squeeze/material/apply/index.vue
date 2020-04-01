@@ -410,10 +410,6 @@ export default class Index extends Vue {
         this.getFermentPot(this.params.factoryId);
     }
 
-    isAuth(key) {
-        return Vue.prototype.isAuth(key);
-    }
-
     delRow(row) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',

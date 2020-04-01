@@ -121,7 +121,7 @@
                             <el-input v-model="addDep.costCenter" autoComplete="off" />
                         </el-form-item>
                         <el-form-item v-if="addDep.deptType == 'proLine'" label="产线图片：">
-                            <el-upload :action="FILE_API" :limit="1" :httpRequest="httpRequest" listType="picture" :headers="heads" :onSuccess="addfile">
+                            <el-upload :action="FILE_API" :limit="1" :httpRequest="httpRequest" listType="picture" :headers="heads" :onSuccess="addfileaddfile">
                                 <el-button size="small" type="primary">
                                     选取文件
                                 </el-button>

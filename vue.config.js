@@ -1,30 +1,25 @@
-const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
-const IS_PROD = ["production", "test", "development"].includes(process.env.NODE_ENV);
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
+const IS_PROD = ['production', 'test', 'development'].includes(process.env.NODE_ENV)
+
+const pagesInfo = require('./pages.config')
 
 const resolve = (dir) => {
-    return path.join(__dirname, './', dir);
-};
+    return path.join(__dirname, './', dir)
+}
 
 module.exports = {
-    pages: {
-        index: {
-            entry: 'src/common/main.ts',
-            template: 'public/index.html',
-            filename: 'index.html',
-        },
-        MDS: {
-            entry: 'src/project/MDS/main.ts',
-            template: 'public/MDS.html',
-            filename: 'MDS.html',
-        },
-        DFMDS: {
-            entry: 'src/project/DFMDS/main.ts',
-            template: 'public/DFMDS.html',
-            filename: 'DFMDS.html',
-        },
-    },
+    productionSourceMap: !IS_PROD,
+    lintOnSave: 'warning',
+    pages: pagesInfo,
+    // css: {
+    //     extract: true,
+    //     sourceMap: false,
+    //     loaderOptions: {}
+    // },
     configureWebpack: {
         resolve: {
             extensions: ['js', 'vue', '.json', 'ts', 'tsx'],
@@ -32,8 +27,11 @@ module.exports = {
             alias: {
                 vue$: 'vue/dist/vue.esm.js',
                 '@': resolve('src/project/MDS'),
-                MDS: resolve('src/project/MDS'),
-                DFMDS: resolve('src/project/DFMDS'),
+                'src': resolve('src'),
+                'utils': resolve('src/utils'),
+                'common': resolve('src/common'),
+                'MDS': resolve('src/project/MDS'),
+                'DFMDS': resolve('src/project/DFMDS'),
             },
         },
         plugins: [
@@ -43,14 +41,14 @@ module.exports = {
                     to: 'static',
                     ignore: ['.*'],
                 },
-            ]),
+            ])
         ]
     },
     chainWebpack: config => {
         // // 3s白屏
         // config.plugins.delete('prefetch');
         // 修复HMR
-        config.resolve.symlinks(true);
+        config.resolve.symlinks(true)
         // Chunks
         // config.optimization.splitChunks({
         //     cacheGroups: {
@@ -94,26 +92,33 @@ module.exports = {
         if (IS_PROD) {
             // 压缩图片
             config.module
-                .rule("images")
+                .rule('images')
                 .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
-                .use("image-webpack-loader")
-                .loader("image-webpack-loader")
+                .use('image-webpack-loader')
+                .loader('image-webpack-loader')
                 .options({
-                    mozjpeg: { progressive: true, quality: 65 },
+                    mozjpeg: {
+                        progressive: true,
+                        quality: 65
+                    },
                     optipng: { enabled: false },
-                    pngquant: { quality: [0.65, 0.90], speed: 4 },
+                    pngquant: {
+                        quality: [0.65, 0.90],
+                        speed: 4
+                    },
                     gifsicle: { interlaced: false }
-                });
+                })
         }
         // 添加打包分析
         if (process.env.npm_config_report) {
-            return enabledAnalyz(config);
+            config.plugin('webpack-report').use(BundleAnalyzerPlugin, [{
+                analyzerHost: '127.0.0.1',
+                analyzerPort: 8888,
+                reportFilename: 'report.html',
+                defaultSizes: 'parsed',
+                openAnalyzer: true
+            }])
         }
     }
-};
-
-function enabledAnalyz (config) {
-    config
-        .plugin('webpack-bundle-analyzer')
-        .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin);
 }
+

@@ -1,42 +1,61 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "noImplicitAny": false,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "types": [
-      "webpack-env",
-      "jest"
-    ],
-    "paths": {
-      "@/*": [
-        "src/project/MDS/*"
-      ]
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "strict": true,
+        "jsx": "preserve",
+        "importHelpers": true,
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "noImplicitAny": false,
+        "strictPropertyInitialization": false, // 变量等必须初始化
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "baseUrl": ".",
+        "types": [
+            "webpack-env",
+            "jest"
+        ],
+        "paths": {
+            "@/*": [
+                "src/project/MDS/*"
+            ],
+            "src/*": [
+                "src/*"
+            ],
+            "MDS/*": [
+                "src/project/MDS/*"
+            ],
+            "utils/*": [
+                "src/utils/*"
+            ],
+            "common/*": [
+                "src/common/*"
+            ],
+            "DFMDS/*": [
+                "src/project/DFMDS/*"
+            ]
+        },
+        "lib": [
+            "es5",
+            "es2015.promise",
+            "esnext",
+            "dom",
+            "dom.iterable",
+            "scripthost"
+        ]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
+    "include": [
+        "src/**/*",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
+        "tests/**/*.ts",
+        "tests/**/*.tsx"
+    ],
+    "exclude": [
+        "node_modules",
+        "tests"
     ]
-  },
-  "include": [
-    "src/**/*",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
 }

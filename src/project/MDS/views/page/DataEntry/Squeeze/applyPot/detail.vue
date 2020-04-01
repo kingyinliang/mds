@@ -205,10 +205,6 @@ export default class Index extends Vue {
         // this.getFermentPot(this.params.factoryId)
     }
 
-    isAuth(key) {
-        return Vue.prototype.isAuth(key);
-    }
-
     get isEdit() {
         // 提交之后不能再修改
         return this.formHeader.status !== 'submit';

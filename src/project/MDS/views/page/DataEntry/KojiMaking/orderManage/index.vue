@@ -376,10 +376,6 @@ export default class Index extends Vue {
         }
     }
 
-    isAuth(key) {
-        return Vue.prototype.isAuth(key);
-    }
-
     changeOptions(flag: string) {
         if (flag === 'factory') {
             const item = this.factoryList.find(ele => ele['deptId'] === this.params.factoryId);

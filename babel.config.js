@@ -1,6 +1,6 @@
 const IS_PROD = ['production', 'test', 'development'].includes(process.env.NODE_ENV);
 
-const plugins = [];
+const plugins = [["component", { "libraryName": "element-ui", "styleLibraryName": "theme-chalk" }]];
 if (IS_PROD) {
     plugins.push('transform-remove-console');
 }

@@ -141,11 +141,6 @@ export default class Index extends Vue {
         this.getWorkshop(this.params.factoryId);
     }
 
-    // button 权限
-    isAuth(key) {
-        return Vue.prototype.isAuth(key);
-    }
-
     // 切换表头选项
     changeOptions(flag: string) {
         if (flag === 'factory') {

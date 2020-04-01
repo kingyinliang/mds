@@ -223,10 +223,6 @@ export default class Index extends Vue {
         // this.getFermentPot(this.params.factoryId)
     }
 
-    isAuth(key) {
-        return Vue.prototype.isAuth(key);
-    }
-
     get mainTabs() {
         return this.$store.state.common.mainTabs;
     }

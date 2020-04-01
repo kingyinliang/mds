@@ -230,10 +230,6 @@ export default class Index extends Vue {
         }
     }
 
-    isAuth(key) {
-        return Vue.prototype.isAuth(key);
-    }
-
     get mainTabs() {
         return this.$store.state.common.mainTabs;
     }

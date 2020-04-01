@@ -549,10 +549,6 @@ export default class Index extends Vue {
         this.getTree();
     }
 
-    isAuth(key) {
-        return Vue.prototype.isAuth(key);
-    }
-
     get isMyAuth() {
         if (this.params.productStatus === 'abnormal') {
             // 无生产的查询权限

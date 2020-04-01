@@ -465,10 +465,6 @@ export default class Index extends Vue {
         return parseInt(total.toString(), 10);
     }
 
-    isAuth(key) {
-        return Vue.prototype.isAuth(key);
-    }
-
     GetTime() {
         Vue.prototype.$http(`${KJM_API.GETKJMAKINGCHECKTIME_API}`, 'POST', this.newForHeader).then(({ data }) => {
             if (data.code === 0) {

@@ -247,7 +247,6 @@
 </template>
 
 <script lang="ts">
-import ElementUI from 'element-ui';
 import { BASICDATA_API, FERMENTATION_API, SYSTEMSETUP_API, REP_API } from '@/api/api';
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { headanimation } from '@/net/validate';
@@ -289,10 +288,6 @@ export default class Index extends Vue {
         this.getMaterialList(this.params.factoryId);
         this.getFermentPot(this.params.factoryId, this.params.workshopId);
         this.getVersionList(this.params.workshopId);
-    }
-
-    isAuth(key) {
-        return Vue.prototype.isAuth(key);
     }
 
     get mainTabs() {
@@ -559,7 +554,7 @@ export default class Index extends Vue {
             type: 'warning'
         }).then(() => {
             // this.lodingS = true
-            this.lodingS = ElementUI.Loading.service({
+            this.lodingS = this.$loading({
                 lock: true,
                 spinner: 'loadingGif',
                 text: '加载中……',
