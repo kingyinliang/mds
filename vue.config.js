@@ -1,5 +1,6 @@
 const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const StyleLintPlugin = require('stylelint-webpack-plugin')
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
@@ -41,7 +42,13 @@ module.exports = {
                     to: 'static',
                     ignore: ['.*'],
                 },
-            ])
+            ]),
+            new StyleLintPlugin({
+                files: ['src/**/*.{vue,html,css,scss,sass,less}'],
+                failOnError: false,
+                cache: true,
+                fix: true,
+            })
         ]
     },
     chainWebpack: config => {
