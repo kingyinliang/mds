@@ -14,7 +14,7 @@
             </el-menu>
             <el-menu v-if="menuList.filter(item => item.type === '4').length > 0" class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
                 <el-menu-item class="site-navbar__switch" index="4" style="padding: 8px 0;" @click="goEacharts">
-                    <span style="font-size: 16px; border-left: 1px solid #d9d9d9; color: #00a2d4; padding: 0 11px; height: 16px; display: block; line-height: 16px;">数据面板 <i class="iconfont factory-mianban" style="color: #00a2d4;" /></span>
+                    <span style=" display: block; height: 16px; padding: 0 11px; color: #00a2d4; font-size: 16px; line-height: 16px; border-left: 1px solid #d9d9d9;">数据面板 <i class="iconfont factory-mianban" style="color: #00a2d4;" /></span>
                 </el-menu-item>
             </el-menu>
             <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
@@ -131,7 +131,6 @@ export default {
 <style lang="scss" scoped>
 .site-navbar {
     background: #002140 !important;
-    background-color: red;
 }
 .packup {
     transform: rotate(0deg);
@@ -140,7 +139,7 @@ export default {
     transform: rotate(180deg);
 }
 .switching {
-    transition: 500ms;
     display: block;
+    transition: 500ms;
 }
 </style>

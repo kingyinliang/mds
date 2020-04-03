@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <mds-card :title="'组织架构'" :name="'org'" :packUp="false" style="background: #ffffff">
+        <mds-card :title="'组织架构'" :name="'org'" :packUp="false" style="background: #fff;">
             <el-row :gutter="20">
                 <el-col :span="8">
                     <div class="orgCard">
@@ -26,30 +26,30 @@
                             <div class="detailMainForm">
                                 <el-form :model="OrgDetail" size="small" :inline="true" labelWidth="90px" class="orgDetailForm">
                                     <el-form-item label="部门编码：">
-                                        <el-input v-model="OrgDetail.deptCode" :disabled="true" autoComplete="off" style="width: 250px" />
+                                        <el-input v-model="OrgDetail.deptCode" :disabled="true" autoComplete="off" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item label="部门名称：">
-                                        <el-input v-model="OrgDetail.deptName" :disabled="true" autoComplete="off" style="width: 250px" />
+                                        <el-input v-model="OrgDetail.deptName" :disabled="true" autoComplete="off" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item label="上级部门：">
-                                        <el-input v-model="OrgDetail.parentName" :disabled="true" autoComplete="off" style="width: 250px" />
+                                        <el-input v-model="OrgDetail.parentName" :disabled="true" autoComplete="off" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item label="生产调度员：">
-                                        <el-input v-model="OrgDetail.dispatchMan" :disabled="isRedact" autoComplete="off" style="width: 250px" />
+                                        <el-input v-model="OrgDetail.dispatchMan" :disabled="isRedact" autoComplete="off" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item label="部门类型：">
-                                        <el-select v-model="OrgDetail.deptType" :disabled="isRedact" style="width: 250px">
+                                        <el-select v-model="OrgDetail.deptType" :disabled="isRedact" style="width: 250px;">
                                             <el-option v-for="(item, index) in dictList" :key="index" :label="item.value" :value="item.code" />
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="产线属性：">
-                                        <el-select v-model="OrgDetail.properties" placeholder="请选择部门类型" :disabled="isRedact" style="width: 250px">
+                                        <el-select v-model="OrgDetail.properties" placeholder="请选择部门类型" :disabled="isRedact" style="width: 250px;">
                                             <el-option label="普通产线" value="普通产线" />
                                             <el-option label="二合一&礼盒产线" value="二合一&礼盒产线" />
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="成本中心：">
-                                        <el-input v-model="OrgDetail.costCenter" autoComplete="off" :disabled="isRedact" style="width: 250px" />
+                                        <el-input v-model="OrgDetail.costCenter" autoComplete="off" :disabled="isRedact" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="产线图片：" :class="{'limitUpload': fileList.length}">
                                         <el-upload class="orgImgUpload" listType="picture-card" :action="FILE_API" :limit="1" :httpRequest="httpRequest" :fileList="fileList" :onSuccess="addfile" :onRemove="removeFile" :onPreview="handlePictureCardPreview">
@@ -57,13 +57,13 @@
                                         </el-upload>
                                     </el-form-item>
                                     <el-form-item label="联系人：">
-                                        <el-input v-model="OrgDetail.lxr" :disabled="isRedact" style="width: 250px" />
+                                        <el-input v-model="OrgDetail.lxr" :disabled="isRedact" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item label="电话：">
-                                        <el-input v-model="OrgDetail.phone" :disabled="isRedact" style="width: 250px" />
+                                        <el-input v-model="OrgDetail.phone" :disabled="isRedact" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item label="备注：">
-                                        <el-input v-model="OrgDetail.remark" type="textarea" :disabled="isRedact" style="width: 590px" />
+                                        <el-input v-model="OrgDetail.remark" type="textarea" :disabled="isRedact" style="width: 590px;" />
                                     </el-form-item>
                                 </el-form>
                             </div>
@@ -193,6 +193,7 @@ export default class OrgStructure extends Vue {
     }
 
     mounted() {
+        this.$alert('ss')
         this.FILE_API = MAIN_API.FILE_API;
         this.getTree(true);
         this.getDictList();
@@ -381,81 +382,96 @@ interface FileObject {
 
 <style scoped lang="scss">
 #menu {
-    cursor: pointer;
-    z-index: 99;
-    padding: 10px;
-    margin: 0;
-    list-style: none;
     position: fixed;
+    z-index: 99;
+    margin: 0;
+    padding: 10px;
+    list-style: none;
     background: white;
     border-radius: 5px;
     box-shadow: 2px 2px 25px 5px rgba(213, 221, 238, 0.45);
+    cursor: pointer;
+
     li {
         line-height: 28px;
     }
 }
-.orgCard{
+
+.orgCard {
     position: relative;
     display: flex;
     flex-direction: column;
     height: 500px;
     overflow: hidden;
-    box-shadow: 3px 3px 5px 0px rgba(0, 0 ,0, 0.09);
-    border-radius: 4px;
     border: 1px solid rgba(232, 232, 232, 1);
-    ::v-deep .el-tree-node__expand-icon{
-        color: #487BFF;
+    border-radius: 4px;
+    box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.09);
+
+    ::v-deep .el-tree-node__expand-icon {/* stylelint-disable-line */
+        color: #487bff;
     }
-    .orgCard_title{
-        color: white;
-        line-height: 40px;
+
+    .orgCard_title {
         height: 40px;
         padding-left: 10px;
-        background: rgba(72,123,255,1);
+        color: white;
+        line-height: 40px;
+        background: rgba(72, 123, 255, 1);
     }
-    .filterInput{
+
+    .filterInput {
         padding: 6px 10px;
     }
-    .treeMain{
+
+    .treeMain {
         flex: 1;
         overflow-y: scroll;
     }
-    .detailMain{
+
+    .detailMain {
         padding-top: 44px;
-        .detailMainForm{
+
+        .detailMainForm {
             margin: auto;
         }
-        .orgDetailForm{
+
+        .orgDetailForm {
             min-width: 700px;
             margin: auto;
             text-align: center;
-            .el-form-item{
-                /*float: left;*/
+
+            .el-form-item {
+                /* float: left; */
             }
-            .orgImgUpload{
+
+            .orgImgUpload {
                 width: 250px;
                 height: 48px;
-                ::v-deep .el-upload--picture-card{
+
+                ::v-deep .el-upload--picture-card {/* stylelint-disable-line */
                     width: 60px;
                     height: 60px;
                     line-height: 70px;
                 }
-                ::v-deep .el-upload-list--picture-card .el-upload-list__item{
+
+                ::v-deep .el-upload-list--picture-card .el-upload-list__item {/* stylelint-disable-line */
                     width: 60px;
                     height: 60px;
                 }
             }
-            .limitUpload{
-                ::v-deep  .el-upload--picture-card {
+
+            .limitUpload {
+                ::v-deep .el-upload--picture-card {/* stylelint-disable-line */
                     display: none;
                 }
             }
         }
     }
-    .orgDetailBtn{
+
+    .orgDetailBtn {
         position: absolute;
-        bottom: 10px;
         right: 10px;
+        bottom: 10px;
     }
 }
 </style>

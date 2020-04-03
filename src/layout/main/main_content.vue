@@ -174,28 +174,28 @@ export default {
 </script>
 <style lang="scss" scoped>
 .footer {
-    text-align: center;
-    width: 100%;
     position: absolute;
     bottom: 55px;
+    width: 100%;
     color: rgba(0, 0, 0, 0.45);
-    line-height: 20px;
     font-size: 12px;
+    line-height: 20px;
+    text-align: center;
     a {
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.45);
         margin: 0 10px;
+        color: rgba(0, 0, 0, 0.45);
+        font-size: 14px;
     }
 }
 
 @keyframes rollin {
     0% {
-        opacity: 0;
         transform: translate3d(-100%, 0, 0) rotate(-0deg);
+        opacity: 0;
     }
     to {
-        opacity: 1;
         transform: none;
+        opacity: 1;
     }
 }
 
