@@ -77,16 +77,17 @@ export default () => {
     Vue.use(Tag)
     Vue.use(InputNumber)
     Vue.use(Scrollbar)
-    MessageBox.install = (vue) => {
-        vue.prototype.$confirm = MessageBox.confirm;
-        vue.prototype.$alert = MessageBox.alert;
-        vue.prototype.$prompt = MessageBox.prompt;
-    }
+    const MB = MessageBox
+    // MessageBox.install = (vue) => {
+    //     vue.prototype.$confirm = MessageBox.confirm;
+    //     vue.prototype.$alert = MessageBox.alert;
+    //     vue.prototype.$prompt = MessageBox.prompt;
+    // }
     Vue.prototype.$loading = Loading.service
-    Vue.prototype.$msgbox = MessageBox
-    // Vue.prototype.$alert = MessageBox.alert
-    // Vue.prototype.$confirm = MessageBox.confirm
-    // Vue.prototype.$prompt = MessageBox.prompt
+    Vue.prototype.$msgbox = MB
+    Vue.prototype.$alert = MB.alert
+    Vue.prototype.$confirm = MB.confirm
+    Vue.prototype.$prompt = MB.prompt
     Vue.prototype.$notify = Notification
     Vue.prototype.$message = Message
 }

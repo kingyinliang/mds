@@ -193,7 +193,6 @@ export default class OrgStructure extends Vue {
     }
 
     mounted() {
-        this.$alert('ss')
         this.FILE_API = MAIN_API.FILE_API;
         this.getTree(true);
         this.getDictList();
