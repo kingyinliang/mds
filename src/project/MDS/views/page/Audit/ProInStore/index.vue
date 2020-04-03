@@ -556,38 +556,45 @@ export default {
 .searchCard {
     margin-bottom: 0;
 }
+
 .searchCard .el-card__body {
     padding-bottom: 0;
 }
+
 .searchCard,
 .tableCard {
     position: relative;
+
     .toggleSearchTop {
-        width: 100%;
         position: absolute;
         top: 0;
         left: 0;
+        display: none;
+        width: 100%;
         text-align: center;
         cursor: pointer;
-        display: none;
     }
+
     .toggleSearchBottom {
-        width: 100%;
         position: absolute;
         bottom: 0;
         left: 0;
+        width: 100%;
         text-align: center;
         cursor: pointer;
     }
+
     .el-icon-caret-top::before,
     .el-icon-caret-bottom::before {
         color: #dcdfe6;
     }
 }
+
 .topforms {
     .el-date-editor.el-input {
         width: auto;
     }
+
     .formtextarea {
         .el-form-item__content {
             width: 500px;
