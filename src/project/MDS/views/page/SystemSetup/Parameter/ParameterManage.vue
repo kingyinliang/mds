@@ -198,6 +198,7 @@ export default {
 .el-card__header {
     padding: 13px 15px;
 }
+
 .main-header .el-card__header {
     padding: 0 15px !important;
 }

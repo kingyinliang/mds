@@ -240,32 +240,38 @@ export default {
             cursor: pointer;
         }
     }
+
     &__icon-popover {
         max-width: 370px;
     }
+
     &__icon-list {
         max-height: 180px;
-        padding: 0;
         margin: -8px 0 0 -8px;
+        padding: 0;
+
         > .el-button {
-            padding: 8px;
             margin: 8px 0 0 8px;
+            padding: 8px;
+
             > span {
                 display: inline-block;
-                vertical-align: middle;
                 width: 18px;
                 height: 18px;
                 font-size: 18px;
+                vertical-align: middle;
             }
         }
     }
+
     .icon-list__tips {
+        color: #e6a23c;
         font-size: 18px;
         text-align: center;
-        color: #e6a23c;
         cursor: pointer;
     }
 }
+
 .el-dialog__body {
     padding: 10px 20px;
 }

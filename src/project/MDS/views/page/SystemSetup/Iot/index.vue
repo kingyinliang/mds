@@ -13,8 +13,8 @@
             :exportOption="exportOption"
         >
             <template slot="mds-button-middle">
-                <div style="width: 220px; float: right;">
-                    <el-upload class="upload-demo" style="width: 56px; float: left;" :action="uploadApi" :showFileList="false" :headers="myHeaders" :beforeUpload="beforeUp" :onSuccess="importSuccess" :onError="improtError">
+                <div style=" float: right; width: 220px;">
+                    <el-upload class="upload-demo" style=" float: left; width: 56px;" :action="uploadApi" :showFileList="false" :headers="myHeaders" :beforeUpload="beforeUp" :onSuccess="importSuccess" :onError="improtError">
                         <el-button size="small" type="primary">
                             导入
                         </el-button>
