@@ -139,17 +139,17 @@ export default {
 
 <style lang="scss" scoped>
 .pageMain {
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    height: 100%;
 
     .Container {
-        flex: 1;
         display: flex;
+        flex: 1;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
         padding-left: 120px;
 
         &_box {
@@ -162,10 +162,10 @@ export default {
 
                 ul,
                 li {
-                    font-size: 12px;
                     color: white;
-                    list-style: none;
+                    font-size: 12px;
                     line-height: 20px;
+                    list-style: none;
                 }
             }
 
@@ -173,22 +173,22 @@ export default {
                 width: 600px;
 
                 &_top {
-                    width: 100%;
                     display: flex;
                     flex-direction: column;
-                    padding-left: 15px;
+                    width: 100%;
                     padding-top: 15px;
+                    padding-left: 15px;
                     background: url("~@/assets/img/echartsDetailLeftBg.png") no-repeat;
                     background-size: 100% 100%;
 
                     &_title {
-                        margin-left: 10px;
                         height: 20px;
-                        line-height: 20px;
-                        font-size: 16px;
-                        color: #00dfff;
-                        border-left: 6px solid #00dfff;
+                        margin-left: 10px;
                         padding-left: 10px;
+                        color: #00dfff;
+                        font-size: 16px;
+                        line-height: 20px;
+                        border-left: 6px solid #00dfff;
                     }
 
                     &_echarts {
@@ -199,10 +199,10 @@ export default {
 
                 &_bottom {
                     width: 100%;
+                    padding-top: 10px;
+                    padding-left: 15px;
                     background: url("~@/assets/img/echartsDetailLeftBg1.png") no-repeat;
                     background-size: 100% 100%;
-                    padding-left: 15px;
-                    padding-top: 10px;
                 }
             }
 
@@ -211,34 +211,34 @@ export default {
                 margin-left: 50px;
 
                 &_top {
-                    text-align: center;
                     position: relative;
+                    width: 100%;
                     color: #00051a;
                     font-size: 14px;
                     line-height: 20px;
-                    width: 100%;
+                    text-align: center;
                     background: url("~@/assets/img/echartsDetailLeftBg2.png") no-repeat;
                     background-size: 100% 100%;
 
                     &_temp {
-                        width: 100%;
                         position: absolute;
+                        width: 100%;
 
                         p {
-                            margin: auto;
                             width: 200px;
+                            margin: auto;
                         }
 
                         p span {
-                            width: 50%;
                             float: left;
+                            width: 50%;
                             line-height: 25px;
                         }
                     }
 
                     &_text {
-                        width: 100%;
                         position: absolute;
+                        width: 100%;
 
                         p {
                             display: inline-block;
@@ -250,10 +250,10 @@ export default {
 
                 &_bottom {
                     width: 100%;
+                    padding-top: 10px;
+                    padding-left: 15px;
                     background: url("~@/assets/img/echartsDetailLeftBg1.png") no-repeat;
                     background-size: 100% 100%;
-                    padding-left: 15px;
-                    padding-top: 10px;
                 }
             }
         }
@@ -266,29 +266,37 @@ export default {
             &_box {
                 width: 1153px;
                 height: 630px;
+
                 &_left {
                     width: 600px;
+
                     &_top {
                         height: 450px;
                         margin-bottom: 30px;
                     }
+
                     &_bottom {
                         height: 150px;
                     }
                 }
+
                 &_right {
                     width: 450px;
                     margin-left: 50px;
+
                     &_top {
                         height: 450px;
                         margin-bottom: 30px;
+
                         &_temp {
                             top: 100px;
                         }
+
                         &_text {
                             bottom: 170px;
                         }
                     }
+
                     &_bottom {
                         height: 150px;
                     }
@@ -304,37 +312,46 @@ export default {
             &_box {
                 width: 1380px;
                 height: 730px;
+
                 &_ul {
                     li {
                         font-size: 14px;
                     }
                 }
+
                 &_left {
                     width: 780px;
+
                     &_top {
                         height: 550px;
                         margin-bottom: 30px;
                     }
+
                     &_bottom {
                         height: 150px;
                     }
                 }
+
                 &_right {
                     width: 550px;
                     margin-left: 50px;
+
                     &_top {
                         height: 550px;
                         margin-bottom: 30px;
+
                         &_temp {
-                            font-size: 16px;
                             top: 130px;
+                            font-size: 16px;
                         }
+
                         &_text {
                             bottom: 210px;
                             font-size: 16px;
                             line-height: 25px;
                         }
                     }
+
                     &_bottom {
                         height: 150px;
                     }

@@ -296,52 +296,59 @@ export default {
 
 <style lang="scss" scoped>
 .pageMain {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
 }
+
 .totalContainer {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     padding-left: 120px;
+
     .totalContainer_box {
         display: flex;
         justify-content: left;
     }
+
     &_dataItem {
-        transition: all 1s;
         background: url("~@/assets/img/echartsItemBg.png") no-repeat;
         background-size: 100% 100%;
+        transition: all 1s;
+
         &_title {
-            font-size: 14px;
+            margin-bottom: 10px;
+            color: #2fd5ff;
             font-weight: 400;
+            font-size: 14px;
             font-stretch: normal;
             line-height: 26px;
-            text-align: center;
             letter-spacing: 0;
-            color: #2fd5ff;
-            margin-bottom: 10px;
+            text-align: center;
         }
+
         &_tit {
             width: 268px;
             margin: auto;
+
             span {
                 float: left;
-                font-size: 12px;
-                color: #00dfff;
                 padding-bottom: 4px;
+                color: #00dfff;
+                font-size: 12px;
                 border-bottom: 2px transparent solid;
                 border-image: linear-gradient(to right, #2d77f3, #21e7ff) 1 10;
             }
+
             img {
+                float: left;
                 width: 98px;
                 height: 8px;
                 margin-top: 4px;
-                float: left;
             }
         }
     }
@@ -352,16 +359,16 @@ export default {
         &_top {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
 
             &_imgBox {
                 position: relative;
 
                 &_img {
                     position: absolute;
-                    text-align: center;
                     color: white;
+                    text-align: center;
                     background: url("~@/assets/img/echartsItemCircle.png") no-repeat;
                     background-size: 100% 100%;
 
@@ -370,11 +377,11 @@ export default {
                     }
 
                     p span {
-                        font-size: 24px;
+                        color: #00ffd4;
                         font-weight: 600;
+                        font-size: 24px;
                         font-stretch: normal;
                         letter-spacing: 0;
-                        color: #00ffd4;
                     }
 
                     &:nth-child(1) {
@@ -397,10 +404,10 @@ export default {
         }
 
         &_bottom {
-            transition: all 2s;
             margin: auto;
             background: url("~@/assets/img/echartsItemBottomBg.png") no-repeat;
             background-size: 100% 100%;
+            transition: all 2s;
         }
     }
 }
@@ -423,14 +430,14 @@ export default {
 
     .pillar {
         width: 100%;
-        margin-top: 10px;
         height: 220px;
+        margin-top: 10px;
     }
 
     .pie {
         width: 100%;
-        margin-top: 10px;
         height: 149px;
+        margin-top: 10px;
     }
 
     .totalContainer {
@@ -478,8 +485,8 @@ export default {
 
     .pillar {
         width: 100%;
-        margin-top: 10px;
         height: 285px;
+        margin-top: 10px;
     }
 
     .pie {

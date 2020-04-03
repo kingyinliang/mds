@@ -19,19 +19,21 @@ export default {
 
 <style lang="scss" scoped>
 .EchartsHead {
+    position: relative;
     width: 100%;
     height: 90px;
     padding-top: 5px;
-    position: relative;
+
     p {
-        padding-top: 7px;
-        font-size: 30px;
-        color: white;
-        text-align: center;
-        width: 100%;
         position: absolute;
         top: 0;
+        width: 100%;
+        padding-top: 7px;
+        color: white;
+        font-size: 30px;
+        text-align: center;
     }
+
     img {
         display: block;
         width: 100%;

@@ -221,60 +221,72 @@ export default {
     &.el-table::before {
         height: 0 !important;
     }
+
     &.el-table,
     .el-table__expanded-cell {
         background-color: rgba(0, 0, 0, 0);
     }
+
     .el-table__row:hover {
         background-color: inherit;
     }
+
     th {
         text-align: center;
-        border-bottom: none !important;
         background: rgba(0, 104, 190, 0.1) !important;
+        border-bottom: none !important;
     }
 
     &_row,
     tr,
     &_row:hover {
         background: rgba(0, 0, 0, 0) !important;
+
         td {
             text-align: center;
-            border-bottom: none !important;
             background: rgba(0, 181, 246, 0.1) !important;
+            border-bottom: none !important;
         }
     }
+
     &_row.el-table__row--striped {
         background: rgba(0, 0, 0, 0) !important;
+
         td {
             text-align: center;
-            border-bottom: none !important;
             background: rgba(0, 104, 190, 0.1) !important;
+            border-bottom: none !important;
         }
     }
+
     tr:hover {
         background: rgba(0, 0, 0, 0) !important;
+
         td {
             text-align: center;
-            border-bottom: none !important;
             background: rgba(0, 181, 246, 0.1) !important;
+            border-bottom: none !important;
         }
     }
+
     &_row.el-table__row--striped:hover {
         background: rgba(0, 0, 0, 0) !important;
+
         td {
             text-align: center;
-            border-bottom: none !important;
             background: rgba(0, 104, 190, 0.1) !important;
+            border-bottom: none !important;
         }
     }
+
     &.el-table--scrollable-y .el-table__body-wrapper {
+        -ms-overflow-style: none;
+        overflow: -moz-scrollbars-none;
+
         &::-webkit-scrollbar {
             width: 0 !important;
         }
 
-        -ms-overflow-style: none;
-        overflow: -moz-scrollbars-none;
         .el-table__body {
             width: 100% !important;
         }
@@ -284,78 +296,91 @@ export default {
 
 <style lang="scss" scoped>
 .pageMain {
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    height: 100%;
+
     .Container {
-        flex: 1;
         display: flex;
+        flex: 1;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
         padding-left: 120px;
+
         &_box {
             display: flex;
             justify-content: left;
+
             &_table {
+                display: flex;
+                flex-direction: column;
                 height: 100%;
                 background: url("~@/assets/img/echartsWorkShopBg.png") no-repeat;
                 background-size: 100% 100%;
-                display: flex;
-                flex-direction: column;
+
                 &_title {
-                    text-align: center;
+                    margin-bottom: 10px;
+                    color: #19f5fe;
                     font-size: 20px;
                     line-height: 48px;
-                    color: #19f5fe;
-                    margin-bottom: 10px;
+                    text-align: center;
                 }
+
                 .tableBox {
                     flex: 1;
                 }
             }
+
             &_echarts {
                 height: 100%;
                 margin-left: 25px;
                 padding-top: 50px;
+
                 &_bg {
                     width: 100%;
                     height: 100%;
                     background: url("~@/assets/img/echartsWorkShopRightBg.png") no-repeat;
                     background-size: 100% 100%;
+
                     &_title {
-                        text-align: center;
-                        font-size: 24px;
                         color: #19f5fe;
+                        font-size: 24px;
+                        text-align: center;
                     }
+
                     &_box {
-                        width: 100%;
                         position: relative;
+                        width: 100%;
+
                         &_left,
                         &_right {
-                            top: 77px;
                             position: absolute;
+                            top: 77px;
                             color: #59baf2;
                             font-size: 45px;
                             cursor: pointer;
                         }
+
                         &_e {
-                            width: 100%;
-                            overflow: hidden;
                             position: relative;
+                            width: 100%;
                             height: 200px;
+                            overflow: hidden;
                         }
+
                         &_barOrPie {
-                            width: 300%;
-                            height: 200px;
                             position: absolute;
                             left: 0;
+                            width: 300%;
+                            height: 200px;
                         }
+
                         &_barPie {
+                            float: left;
                             width: 33.333333%;
                             height: 200px;
-                            float: left;
                         }
                     }
                 }
@@ -370,20 +395,26 @@ export default {
             &_box {
                 width: 1153px;
                 height: 500px;
+
                 &_table {
                     width: 655px;
                 }
+
                 &_echarts {
                     width: 427px;
+
                     &_bg {
                         &_title {
                             padding-top: 25px;
                         }
+
                         &_box {
                             padding: 0 80px;
+
                             &_left {
                                 left: 35px;
                             }
+
                             &_right {
                                 right: 35px;
                             }
@@ -399,26 +430,33 @@ export default {
     body {
         min-height: 670px !important;
     }
+
     .pageMain {
         .Container {
             &_box {
                 width: 1353px;
                 height: 580px;
+
                 &_table {
                     width: 755px;
                 }
+
                 &_echarts {
                     width: 503px;
                     margin-left: 40px;
+
                     &_bg {
                         &_title {
                             padding-top: 35px;
                         }
+
                         &_box {
                             padding: 0 90px;
+
                             &_left {
                                 left: 45px;
                             }
+
                             &_right {
                                 right: 45px;
                             }

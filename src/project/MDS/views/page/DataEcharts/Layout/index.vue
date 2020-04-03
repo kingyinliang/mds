@@ -97,44 +97,49 @@ export default {
 
 <style lang="scss">
 .DataEchartsMenu {
-    border-right: none !important;
-    width: 107px;
     position: fixed !important;
-    z-index: 999;
-    left: 0;
     top: 80px;
-    background-color: rgba(255, 255, 255, 0) !important;
+    left: 0;
+    z-index: 999;
+    width: 107px;
     max-height: 80%;
+    overflow: -moz-scrollbars-none;
     overflow-y: scroll;
+    background-color: rgba(255, 255, 255, 0) !important;
+    border-right: none !important;
+    -ms-overflow-style: none;
+
     &::-webkit-scrollbar {
         width: 0 !important;
     }
 
-    -ms-overflow-style: none;
-    overflow: -moz-scrollbars-none;
     .el-menu {
         background-color: rgba(255, 255, 255, 0);
     }
+
     .el-menu-item *,
     .el-submenu__title * {
         vertical-align: inherit;
     }
+
     .el-menu-item,
     .el-submenu__title {
-        font-size: 15px;
-        color: #59baf2;
         height: 40px !important;
-        line-height: 40px !important;
         padding-left: 13px !important;
+        color: #59baf2;
+        font-size: 15px;
+        line-height: 40px !important;
         background-image: linear-gradient(-90deg, #112041 0%, rgba(17, 32, 65, 0.5) 66%, #112041 100%);
         border: 2px solid #2461d1;
         border-left: none;
         border-radius: 0 20px 20px 0;
     }
+
     .el-submenu .el-menu-item {
         width: 85px;
         min-width: 0 !important;
     }
+
     .el-submenu__title:hover,
     .el-submenu.is-active .el-submenu__title,
     .el-menu-item.is-active,
@@ -144,26 +149,29 @@ export default {
         border: 2px solid #fff;
         border-left: none;
     }
+
     li {
         margin-top: 10px;
         margin-bottom: 10px;
     }
 }
+
 .DataEchartsContent {
+    width: 100%;
+
     /* padding-left: 107px; */
     min-width: 1000px;
+    height: 100%;
+    overflow: -moz-scrollbars-none;
+    overflow-y: scroll;
 
     /* background: #0e0e40; */
     background: url("~@/assets/img/echartsBgs.png") no-repeat;
     background-size: 100% 100%;
-    width: 100%;
-    height: 100%;
-    overflow-y: scroll;
+    -ms-overflow-style: none;
+
     &::-webkit-scrollbar {
         width: 0 !important;
     }
-
-    -ms-overflow-style: none;
-    overflow: -moz-scrollbars-none;
 }
 </style>
