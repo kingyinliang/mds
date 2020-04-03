@@ -5,6 +5,7 @@ import VueCookie from 'vue-cookie'
 import httpProxy from 'utils/net/httpProxy'
 import elementUi from './elementUi'
 import 'element-ui/lib/theme-chalk/index.css'
+import 'common/icon/iconfont.css'
 
 Vue.config.productionTip = false
 
