@@ -3,7 +3,7 @@
         <el-row>
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
-                    <el-row style="font-size: 16px; color: black; margin-bottom: 10px;">
+                    <el-row style=" margin-bottom: 10px; color: black; font-size: 16px;">
                         组织架构
                     </el-row>
                     <el-tree ref="orgtree" :data="orgTree" nodeKey="deptId" :defaultExpandedKeys="arrList" :expandOnClickNode="false" @node-click="setdetail" />

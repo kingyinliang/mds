@@ -27,32 +27,36 @@ export default {
 
 <style lang="scss" scoped>
 .error {
-    padding: 30px 0;
     width: 790px;
     margin: auto;
     margin-top: 120px;
+    padding: 30px 0;
+
     img {
+        float: left;
         width: 419px;
         height: 202px;
-        float: left;
     }
+
     .errortxt {
+        float: left;
+        width: 300px;
         margin-top: 20px;
         margin-left: 60px;
-        width: 300px;
-        float: left;
     }
+
     h3 {
-        text-align: left;
-        font-size: 60px;
         font-weight: bold;
+        font-size: 60px;
         letter-spacing: 5px;
-    }
-    p {
         text-align: left;
-        font-size: 20px;
+    }
+
+    p {
         color: #8a979e;
+        font-size: 20px;
         line-height: 45px;
+        text-align: left;
     }
 }
 </style>

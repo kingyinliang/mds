@@ -457,14 +457,17 @@ export default {
     > .el-alert {
         margin-bottom: 10px;
     }
+
     > .el-row {
         margin-top: -10px;
         margin-bottom: -10px;
+
         .el-col {
             padding-top: 10px;
             padding-bottom: 10px;
         }
     }
+
     .chart-box {
         min-height: 400px;
     }

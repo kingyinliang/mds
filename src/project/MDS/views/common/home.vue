@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img src="@/assets/img/index.svg" style="width: 80%; display: block; margin: 120px auto;" alt="welcome">
+        <img src="@/assets/img/index.svg" style=" display: block; width: 80%; margin: 120px auto;" alt="welcome">
     </div>
 </template>
 

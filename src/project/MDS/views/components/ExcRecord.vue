@@ -99,7 +99,7 @@
             </el-table-column>
         </el-table>
         <div>
-            <p style="line-height: 32px; font-size: 12px;">
+            <p style=" font-size: 12px; line-height: 32px;">
                 总停线时间：{{ ExcNum }}
             </p>
         </div>

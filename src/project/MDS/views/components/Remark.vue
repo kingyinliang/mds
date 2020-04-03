@@ -3,11 +3,11 @@
         <div class="kt-tooltip-input__hidden" style="position: fixed; left: -19800px;">
             {{ value }}
         </div>
-        <div v-show="flag" style="cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" :style="{ width: width }" @click="visibilityChange($event)">
+        <div v-show="flag" style=" overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" :style="{ width: width }" @click="visibilityChange($event)">
             {{ value ? value : '点击修改备注' }}
         </div>
         <el-tooltip v-show="!flag" ref="toolTip" :placement="placement" :effect="effect" :manual="true">
-            <div slot="content" style="width: 300px; display: flex; flex: 1; flex-direction: column; justify-content: space-between;">
+            <div slot="content" style=" display: flex; flex: 1; flex-direction: column; justify-content: space-between; width: 300px;">
                 <div style="flex: 1;">
                     <textarea ref="textArea" rows="10" style="width: 300px; font-size: 14px;" placeholder="请输入备注" :value="value" @input="changeInput($event.target.value)" />
                 </div>
@@ -20,7 +20,7 @@
                     </el-button>
                 </div>
             </div>
-            <div style="cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" :style="{ width: width }">
+            <div style=" overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" :style="{ width: width }">
                 {{ content ? content : '' }}
             </div>
         </el-tooltip>
