@@ -117,39 +117,45 @@ export default {
 
 <style lang="scss" scoped>
 .row {
+    display: flex;
     width: 100%;
     height: 100%;
-    display: flex;
+
     .lefttab {
-        max-width: 200px;
         min-width: 160px;
-        background: #545c64;
+        max-width: 200px;
         overflow: auto;
+        background: #545c64;
     }
+
     .lefttab::-webkit-scrollbar {
         display: none;
     }
+
     .rightmain {
         flex: 1;
         height: 100%;
+
         .headfa {
-            width: 100%;
             position: relative;
-        }
-        .head {
             width: 100%;
+        }
+
+        .head {
             position: absolute;
+            width: 100%;
             height: 50px;
-            line-height: 30px;
             padding: 10px;
+            line-height: 30px;
             background: white;
             box-shadow: 0 1px 4px 0 rgba(0, 21, 41, 0.12);
         }
+
         #childrenRouter {
             height: 100%;
-            background: #f0f2f5;
             padding-top: 50px;
             overflow: auto;
+            background: #f0f2f5;
         }
     }
 }
