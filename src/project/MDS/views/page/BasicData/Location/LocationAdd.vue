@@ -209,6 +209,7 @@ export default {
     input {
         width: 100% !important;
     }
+
     .el-dialog {
         min-width: 450px;
     }

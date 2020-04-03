@@ -34,7 +34,7 @@
                                 <el-button v-if="isAuth('sys:device:delete')" type="danger" size="small" style="float: right; margin-bottom: 20px;" @click="remove()">
                                     批量删除
                                 </el-button>
-                                <el-button v-if="isAuth('sys:device:save')" type="primary" size="small" style="float: right; margin-bottom: 20px; margin-right: 10px;" @click="addOrupdate(deptId)">
+                                <el-button v-if="isAuth('sys:device:save')" type="primary" size="small" style="float: right; margin-right: 10px; margin-bottom: 20px;" @click="addOrupdate(deptId)">
                                     新增
                                 </el-button>
                                 <el-table ref="table1" border headerRowClassName="tableHead" :data="deviceList" tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">

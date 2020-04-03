@@ -86,8 +86,8 @@ export default {
         border-top: 1px solid #bbb;
 
         p {
-            line-height: 40px;
             width: 100px;
+            line-height: 40px;
             text-align: right;
         }
     }

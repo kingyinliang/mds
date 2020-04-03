@@ -75,7 +75,7 @@
                                         <span v-if="update">{{ OrgDetail.remark }}</span>
                                         <el-input v-else v-model="OrgDetail.remark" type="textarea" />
                                     </el-form-item>
-                                    <div style="text-align: center; margin-top: 30px;">
+                                    <div style=" margin-top: 30px; text-align: center;">
                                         <el-button v-if="update && isAuth('sys:dept:update')" type="primary" size="small" @click="update = !update">
                                             编辑
                                         </el-button>
@@ -409,40 +409,47 @@ export default {
     width: 100px;
     height: 100px;
 }
+
 .el-card__header {
-    font-size: 14px;
     padding: 13px 20px;
-    background-color: #f9f9f9;
     color: black;
     font-weight: 600;
+    font-size: 14px;
+    background-color: #f9f9f9;
 }
+
 .head {
     width: 100%;
-    background: white;
     padding: 20px 24px 0;
+    background: white;
+
     h3 {
-        font-size: 20px;
         font-weight: 600;
+        font-size: 20px;
         line-height: 50px;
     }
 }
+
 .rightmain {
     flex: 1;
 }
+
 #menu {
-    cursor: pointer;
-    z-index: 99;
-    padding: 10px;
-    margin: 0;
-    list-style: none;
     position: fixed;
+    z-index: 99;
+    margin: 0;
+    padding: 10px;
+    list-style: none;
     background: white;
     border-radius: 5px;
     box-shadow: 2px 2px 25px 5px rgba(213, 221, 238, 0.45);
+    cursor: pointer;
+
     li {
         line-height: 28px;
     }
 }
+
 #adddepform {
     .el-form-item {
         margin-bottom: 5px;
@@ -454,6 +461,7 @@ export default {
     height: 450px;
     overflow: auto;
 }
+
 .orgcard .el-form-item--mini.el-form-item,
 .orgcard .el-form-item--small.el-form-item {
     margin-bottom: 5px;

@@ -240,12 +240,13 @@ export default {
 <style lang="scss">
 .main {
     h3 {
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 38px;
         margin-bottom: 10px;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 38px;
     }
 }
+
 .topforms1 {
     input {
         width: 140px !important;

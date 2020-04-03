@@ -172,7 +172,7 @@ export default {
 
 <style scoped>
 .el-select {
-    display: block;
     position: relative;
+    display: block;
 }
 </style>
