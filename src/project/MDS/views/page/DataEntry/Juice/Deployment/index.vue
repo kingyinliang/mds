@@ -54,7 +54,7 @@
         </el-card>
         <div class="secondcard" style="padding-top: 0;">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
             </div>
@@ -957,12 +957,14 @@ export default {
 <style lang="scss">
 .dialog__class {
     border-radius: 6px !important;
+
     .el-dialog__header {
         height: 59px;
-        background: rgba(24, 144, 255, 1);
-        border-radius: 6px 6px 0 0;
         color: #fff;
         font-size: 20px;
+        background: rgba(24, 144, 255, 1);
+        border-radius: 6px 6px 0 0;
+
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }

@@ -4,8 +4,8 @@
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">原汁库存汇总</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;" />原汁库存汇总表（单位：方）
-                    <el-button v-if="isAuth('juice:pot:juiceStockItemExport')" type="primary" size="small" style="background-color: #1890ff; color: #fff; float: right;" @click="ExportExcelC(true)">
+                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />原汁库存汇总表（单位：方）
+                    <el-button v-if="isAuth('juice:pot:juiceStockItemExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelC(true)">
                         导出
                     </el-button>
                 </div>
@@ -37,8 +37,8 @@
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">原汁库存明细</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;" />原汁总库存（单位:方）
-                    <el-button v-if="isAuth('juice:pot:juiceStockItemExport')" type="primary" size="small" style="background-color: #1890ff; color: #fff; float: right;" @click="ExportExcelA(true)">
+                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />原汁总库存（单位:方）
+                    <el-button v-if="isAuth('juice:pot:juiceStockItemExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelA(true)">
                         导出
                     </el-button>
                 </div>
@@ -53,7 +53,7 @@
                     <el-table-column label="原汁总库存量" :showOverflowTooltip="true" prop="sum" />
                 </el-table>
                 <div class="titleLeft">
-                    <i class="iconfont factory-icon_function_keyongkucun" style="color: #666; margin-right: 10px;" />原汁总库存列表（单位:方）
+                    <i class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />原汁总库存列表（单位:方）
                 </div>
                 <el-table headerRowClassName="tableHead" :data="dataLeftListOrder" border tooltipEffect="dark">
                     <el-table-column type="index" label="序号" width="55" :index="indexOrderMethod" />
@@ -89,8 +89,8 @@
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">可用原汁明细</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;" />原汁总库存（单位:方）
-                    <el-button v-if="isAuth('juice:pot:juiceStockItemExport')" type="primary" size="small" style="background-color: #1890ff; color: #fff; float: right;" @click="ExportExcelB(true)">
+                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />原汁总库存（单位:方）
+                    <el-button v-if="isAuth('juice:pot:juiceStockItemExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
                         导出
                     </el-button>
                 </div>
@@ -105,7 +105,7 @@
                     <el-table-column label="原汁总库存量" :showOverflowTooltip="true" prop="sum" />
                 </el-table>
                 <div class="titleLeft">
-                    <i class="iconfont factory-icon_function_keyongkucun" style="color: #666; margin-right: 10px;" />可用原汁列表（单位:方）
+                    <i class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />可用原汁列表（单位:方）
                 </div>
                 <el-table headerRowClassName="tableHead" :data="dataRightListOrder" border tooltipEffect="dark">
                     <el-table-column type="index" label="序号" width="55" :index="indexOrderMethodRight" />
@@ -261,8 +261,8 @@ export default {
 
 <style lang="scss" scoped>
 .titleLeft {
-    font-weight: 600;
     margin: 15px 0;
+    font-weight: 600;
     line-height: 32px;
 }
 </style>
