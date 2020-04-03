@@ -341,10 +341,11 @@ export default {
 .icons {
     display: block;
     float: left;
-    height: 14px;
     width: 14px;
+    height: 14px;
     margin-right: 5px;
 }
+
 .reqI {
     color: red;
 }

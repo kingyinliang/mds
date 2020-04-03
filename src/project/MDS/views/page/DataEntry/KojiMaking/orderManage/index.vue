@@ -49,7 +49,7 @@
                     <el-col :span="12">
                         <el-card>
                             <el-row style="margin-bottom: 5px;">
-                                <el-col style="font-size: 16px; font-weight: 500; color: #000;">
+                                <el-col style=" color: #000; font-weight: 500; font-size: 16px;">
                                     订单管理
                                 </el-col>
                             </el-row>
@@ -125,7 +125,7 @@
                     <el-col v-if="showdetails" :span="12">
                         <el-card>
                             <el-row style="margin-bottom: 5px;">
-                                <el-col :span="12" style="font-size: 16px; font-weight: 500; color: #000;">
+                                <el-col :span="12" style=" color: #000; font-weight: 500; font-size: 16px;">
                                     订单明细
                                 </el-col>
                                 <el-col :span="12" class="rowButton" style="margin-top: -13px;">
@@ -278,7 +278,7 @@
                     <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible = false">
                         取消
                     </el-button>
-                    <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="splitOrder()">
+                    <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="splitOrder()">
                         保存
                     </el-button>
                 </div>
@@ -315,7 +315,7 @@
                     <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible2 = false">
                         取消
                     </el-button>
-                    <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="modifyDetial()">
+                    <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="modifyDetial()">
                         保存
                     </el-button>
                 </div>
@@ -836,162 +836,185 @@ export default class Index extends Vue {
 </style>
 <style lang="scss" scoped>
 .box-item {
-    height: 220px;
     box-sizing: border-box;
+    height: 220px;
     background: rgba(255, 255, 255, 1);
-    border-radius: 2px;
     border: 1px solid rgba(232, 232, 232, 1);
+    border-radius: 2px;
+
     .box-item-top {
         height: 178px;
         padding: 10px;
         padding-bottom: 0;
         border-bottom: 1px solid rgba(232, 232, 232, 1);
+
         .box-item-title {
             display: flex;
             flex: 1;
             justify-content: space-between;
             height: 34px;
+
             .box-item-title-name {
                 display: flex;
                 flex: 1;
+
                 :first-child {
-                    height: 30px;
                     width: 30px;
-                    border-radius: 15px;
-                    background: #ffbf00;
-                    font-size: 12px;
-                    font-weight: 500;
+                    height: 30px;
                     color: #fff;
+                    font-weight: 500;
+                    font-size: 12px;
                     line-height: 30px;
                     text-align: center;
+                    background: #ffbf00;
+                    border-radius: 15px;
                 }
+
                 :nth-child(2) {
-                    font-size: 16px;
-                    font-weight: 400;
-                    color: rgba(0, 0, 0, 0.85);
-                    line-height: 22px;
                     margin-top: 4px;
                     margin-left: 5px;
+                    color: rgba(0, 0, 0, 0.85);
+                    font-weight: 400;
+                    font-size: 16px;
+                    line-height: 22px;
                 }
             }
+
             .box-item-title-state {
                 flex: 1;
-                font-size: 14px;
-                font-weight: 500;
+                margin-top: 4px;
                 color: rgba(0, 0, 0, 0.65);
+                font-weight: 500;
+                font-size: 14px;
                 line-height: 20px;
                 text-align: right;
-                margin-top: 4px;
+
                 &::before {
-                    content: "";
                     display: inline-block;
-                    height: 6px;
                     width: 6px;
+                    height: 6px;
                     margin-right: 10px;
                     margin-bottom: 2px;
                     background: rgba(126, 211, 33, 1);
+                    content: "";
                 }
             }
         }
+
         .box-item-container {
             display: flex;
             flex: 1;
             justify-content: space-between;
             height: 129px;
+
             .box-item-container-left {
                 display: flex;
                 justify-content: center;
                 width: 130px;
                 padding-top: 10px;
+
                 .box-item-container-img {
                     width: 94px;
                     height: 86px;
                     background: url("~@/assets/img/fajiaoguan.png");
                 }
             }
+
             .box-item-container-right {
-                flex: 1;
                 display: flex;
+                flex: 1;
                 flex-direction: column;
                 margin-left: 10px;
+
                 .box-item-container-item {
-                    flex: 1;
                     display: flex;
+                    flex: 1;
                     justify-content: space-between;
+
                     .name {
                         width: 60px;
-                        font-size: 12px;
-                        font-weight: 400;
                         color: rgba(0, 0, 0, 0.45);
+                        font-weight: 400;
+                        font-size: 12px;
                         line-height: 20px;
                     }
+
                     .detail {
                         flex: 1;
-                        font-size: 14px;
-                        font-weight: 500;
                         color: rgba(0, 0, 0, 0.65);
+                        font-weight: 500;
+                        font-size: 14px;
                         line-height: 17px;
                     }
                 }
             }
         }
     }
+
     .box-item-bottom {
-        height: 40px;
-        box-sizing: border-box;
         display: flex;
         justify-content: space-between;
+        box-sizing: border-box;
+        height: 40px;
         background: rgba(247, 249, 250, 1);
         border-radius: 0 0 2px 2px;
+
         .box-item-bottom-item {
             flex: 1;
-            text-align: center;
-            line-height: 40px;
-            font-size: 12px;
-            font-weight: 500;
             color: rgba(0, 0, 0, 0.65);
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 40px;
+            text-align: center;
+
             &:hover {
                 color: #fff;
                 background: #1890ff;
                 cursor: pointer;
             }
         }
+
         .box-item-bottom-split {
             width: 1px;
             height: 16px;
-            background: rgba(232, 232, 232, 1);
             margin-top: 12px;
+            background: rgba(232, 232, 232, 1);
         }
     }
 }
+
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
+
 .operator {
-    font-size: 14px;
-    font-weight: 400;
-    color: rgba(24, 144, 255, 1);
-    line-height: 22px;
     display: flex;
+    color: rgba(24, 144, 255, 1);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+
     &:hover {
         cursor: pointer;
     }
 }
+
 .operator .split {
-    height: 22px;
     width: 14px;
+    height: 22px;
     background: url("~@/assets/img/chaifen.png");
-    background-position: center center;
     background-repeat: no-repeat;
+    background-position: center center;
 }
+
 .operator .check {
-    height: 22px;
     width: 14px;
+    height: 22px;
     background: url("~@/assets/img/heshi.png");
-    background-position: center center;
     background-repeat: no-repeat;
+    background-position: center center;
 }
 // .operator:nth-child(2){
 //   &:after{
@@ -1006,19 +1029,23 @@ export default class Index extends Vue {
 <style lang="scss">
 .dialog__class {
     border-radius: 6px 6px 0 0 !important;
+
     .el-dialog__header {
         height: 59px;
-        background: rgba(24, 144, 255, 1);
-        border-radius: 6px 6px 0 0;
         color: #fff;
         font-size: 20px;
+        background: rgba(24, 144, 255, 1);
+        border-radius: 6px 6px 0 0;
+
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }
     }
+
     .reqI {
         color: red;
     }
+
     .rowDel {
         display: none;
     }

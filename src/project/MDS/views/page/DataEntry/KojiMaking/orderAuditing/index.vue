@@ -53,7 +53,7 @@
                         </el-form>
                     </el-col>
                     <el-col :span="4">
-                        <div style="float: right; line-height: 31px; font-size: 14px;">
+                        <div style="float: right; font-size: 14px; line-height: 31px;">
                             <div style="float: left;">
                                 <span
                                     class="point"
@@ -110,10 +110,10 @@
         </div>
         <div class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
-                <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card" style="border-radius: 15px; overflow: hidden;" @tab-click="tabClick">
+                <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card" style=" overflow: hidden; border-radius: 15px;" @tab-click="tabClick">
                     <el-tab-pane name="1">
                         <span slot="label" class="spanview">
                             <el-tooltip class="item" effect="dark" :content="readyState === 'noPass' ? '不通过' : readyState === 'saved' ? '已保存' : readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过' : readyState === 'toBeAudited' ? '待审核' : '未录入'" placement="top-start">
@@ -1009,11 +1009,12 @@ export default class Index extends Vue {
 .input_bommom {
     width: 147px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     line-height: 32px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     border-bottom: solid 1px #d8d8d8;
 }
+
 .el-form-item--mini.el-form-item,
 .el-form-item--small.el-form-item {
     margin-bottom: 8px;

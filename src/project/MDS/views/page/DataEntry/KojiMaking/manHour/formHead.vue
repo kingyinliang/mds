@@ -63,11 +63,12 @@ export default {
 .el-form-item--small.el-form-item {
     margin-bottom: 8px !important;
 }
+
 .el-input {
     width: 145px !important;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     line-height: 32px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 </style>

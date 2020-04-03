@@ -521,15 +521,17 @@ export default {
 .input_bommom {
     width: 147px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     line-height: 32px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     border-bottom: solid 1px #d8d8d8;
 }
+
 .el-form-item--mini.el-form-item,
 .el-form-item--small.el-form-item {
     margin-bottom: 8px;
 }
+
 .searchCard {
     .el-button--primary,
     .el-button--primary:focus {
@@ -537,20 +539,24 @@ export default {
         background-color: #fff;
         border-color: #d9d9d9;
     }
+
     .el-button--primary:hover {
-        background-color: #1890ff;
         color: #fff;
+        background-color: #1890ff;
     }
+
     .el-button--primary:first-child {
-        background-color: #1890ff;
         color: #fff;
+        background-color: #1890ff;
         border-color: #1890ff;
     }
 }
+
 #DaatTtabs {
-    border-radius: 15px;
     overflow: hidden;
+    border-radius: 15px;
 }
+
 .htitle {
     margin: 0 0 10px;
 }

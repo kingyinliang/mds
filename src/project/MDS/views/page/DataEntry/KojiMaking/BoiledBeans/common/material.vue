@@ -73,7 +73,7 @@
         </mds-card>
         <mds-card :title="'小麦粉'" :name="'wheat'" :iconBg="'#ffbf00'">
             <p style="line-height: 30px;">
-                小麦粉用量：<span style="display: inline-block; width: 140px; height: 30px; background: #f5f5f5; padding-left: 5px;">{{ wheatUseNum }}</span>
+                小麦粉用量：<span style="display: inline-block; width: 140px; height: 30px; padding-left: 5px; background: #f5f5f5;">{{ wheatUseNum }}</span>
             </p>
             <el-row style="margin-top: 10px;">
                 <el-col v-for="(sole, indexss) in MaiHoldList" :key="indexss" class="box">
@@ -106,10 +106,10 @@
                         </el-popover>
                     </div>
                     <div style="width: 100%; text-align: center;">
-                        <el-button class="boxButton" :disabled="!isRedact" style="margin: 15px auto; width: 75px; float: initial; line-height: 30px; height: 30px;" @click="startwheat(sole)">
+                        <el-button class="boxButton" :disabled="!isRedact" style=" float: initial; width: 75px; height: 30px; margin: 15px auto; line-height: 30px;" @click="startwheat(sole)">
                             开始领用
                         </el-button>
-                        <el-button class="boxButton" :disabled="!isRedact" style="margin: 15px auto; width: 75px; float: initial; line-height: 30px; height: 30px;" @click="endwheat(sole)">
+                        <el-button class="boxButton" :disabled="!isRedact" style=" float: initial; width: 75px; height: 30px; margin: 15px auto; line-height: 30px;" @click="endwheat(sole)">
                             结束领用
                         </el-button>
                     </div>
@@ -142,7 +142,7 @@
         </mds-card>
         <mds-card :title="'豆粕'" :name="'soy'" :iconBg="'#5bd171'">
             <p style="line-height: 30px;">
-                豆粕用量：<span style="display: inline-block; width: 140px; height: 30px; background: #f5f5f5; padding-left: 5px;">{{ soyUseNum }}</span>
+                豆粕用量：<span style="display: inline-block; width: 140px; height: 30px; padding-left: 5px; background: #f5f5f5;">{{ soyUseNum }}</span>
             </p>
             <el-row style="margin-top: 10px;">
                 <el-col v-for="sole in DouHoldList" :key="sole.holderid" class="box">
@@ -174,7 +174,7 @@
                             </div>
                         </el-popover>
                     </div>
-                    <div style="text-align: center; width: 140px; margin: 5px auto; overflow: hidden;">
+                    <div style=" width: 140px; margin: 5px auto; overflow: hidden; text-align: center;">
                         <el-button type="button" class="boxButton" :disabled="!isRedact" @click="rusoyM(sole)">
                             入罐
                         </el-button><el-button class="boxButton" :disabled="!isRedact" @click="chusoyM(sole)">
@@ -1863,19 +1863,21 @@ export default {
 
 <style>
 .boxContent {
+    padding: 12px 10px 0;
     font-size: 12px;
     text-align: center;
-    padding: 12px 10px 0;
 }
+
 .boxText {
-    font-size: 12px;
     margin-top: 9px;
-    text-align: left;
     padding-left: 2px;
-    color: rgb(32, 16, 16);
-    line-height: 22px;
     overflow: hidden;
+    color: rgb(32, 16, 16);
+    font-size: 12px;
+    line-height: 22px;
+    text-align: left;
 }
+
 .boxText span {
     float: right;
 }
@@ -1884,59 +1886,68 @@ export default {
 .input_bommom {
     width: 147px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     line-height: 32px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     border-bottom: solid 1px #d8d8d8;
 }
+
 .lh32px {
     line-height: 32px;
 }
+
 .solecontent {
     overflow: hidden;
+
     p {
         float: left;
     }
 }
+
 .box {
-    border: 1px solid #e8e8e8;
     width: 207px;
     margin: 0 4px 10px;
+    border: 1px solid #e8e8e8;
+
     .boxTitle {
+        padding-left: 10px;
         color: white;
+        font-weight: 600;
         line-height: 32px;
         background: #487bff;
-        padding-left: 10px;
-        font-weight: 600;
         border-radius: 3px 3px 0 0;
     }
+
     .boxButton {
+        float: left;
+        width: 50px;
+        height: 26px;
         margin: 10px;
         margin-top: 11px;
-        height: 26px;
-        width: 50px;
+        padding: 0;
+        color: #fff;
+        font-weight: 400;
         font-size: 14px;
         line-height: 24px;
         text-align: center;
-        border-radius: 4px;
-        font-weight: 400;
-        float: left;
         background: #1890ff;
-        color: #fff;
+        border-radius: 4px;
         cursor: pointer;
-        padding: 0;
     }
+
     .boxButton.is-disabled,
     .boxButton.is-disabled:focus,
     .boxButton.is-disabled:hover {
-        cursor: not-allowed;
         background-color: #a0cfff;
         border-color: #a0cfff;
+        cursor: not-allowed;
     }
 }
+
 .chart-box {
     min-height: 140px;
 }
+
 .reqI {
     color: red;
 }

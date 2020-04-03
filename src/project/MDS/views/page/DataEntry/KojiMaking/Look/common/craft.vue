@@ -47,7 +47,7 @@
             </div>
             <div class="lookarBox">
                 <look-echarts ref="LookEcharts" :formHeader="formHeader" />
-                <el-row style="line-height: 32px; margin-bottom: 10px;">
+                <el-row style=" margin-bottom: 10px; line-height: 32px;">
                     <el-col
                         :span="5"
                     >
@@ -701,15 +701,17 @@ export default {
 
 <style>
 .guard-form-input .el-input__inner {
+    text-align: center;
     border: 0 none;
     border-bottom: 1px solid #ccc;
     border-radius: 0;
-    text-align: center;
 }
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     appearance: none;
 }
+
 input[type="number"] {
     appearance: textfield;
 }
@@ -718,21 +720,26 @@ input[type="number"] {
 .rowDel {
     display: none;
 }
+
 .htitle {
     margin: 0 0 10px;
     overflow: hidden;
 }
+
 .audit {
-    line-height: 32px;
     margin: 0 0 10px;
+    line-height: 32px;
+
     i {
-        font-size: 22px;
         float: left;
+        font-size: 22px;
     }
+
     span {
         font-size: 16px;
     }
 }
+
 .reqI {
     color: red;
 }

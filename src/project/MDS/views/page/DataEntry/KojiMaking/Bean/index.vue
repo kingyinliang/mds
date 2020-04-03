@@ -3,7 +3,7 @@
         <el-col>
             <div class="main">
                 <el-card class="newCard">
-                    <el-row type="flex" style="border-bottom: 1px solid #e9e9e9; margin-bottom: 12px;">
+                    <el-row type="flex" style=" margin-bottom: 12px; border-bottom: 1px solid #e9e9e9;">
                         <el-col>
                             <el-form :model="params" size="small" :inline="true" labelPosition="right" labelWidth="42px">
                                 <el-form-item label="工厂：">
@@ -350,7 +350,7 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <el-row style="font-size: 14px; line-height: 30px; margin-top: 10px;">
+                        <el-row style=" margin-top: 10px; font-size: 14px; line-height: 30px;">
                             实际作业人数: {{ countMan }}
                         </el-row>
                     </div>
@@ -838,180 +838,209 @@ export default class Index extends Vue {
 </style>
 <style lang="scss" scoped>
 .box-item {
-    height: 220px;
     box-sizing: border-box;
+    height: 220px;
     background: rgba(255, 255, 255, 1);
-    border-radius: 2px;
     border: 1px solid rgba(232, 232, 232, 1);
+    border-radius: 2px;
+
     .box-item-top {
         height: 178px;
         padding: 10px;
         padding-bottom: 0;
         border-bottom: 1px solid rgba(232, 232, 232, 1);
+
         .box-item-title {
             display: flex;
-            justify-content: space-between;
             flex: 1;
+            justify-content: space-between;
             height: 34px;
+
             .box-item-title-name {
                 display: flex;
                 flex: 1;
+
                 :first-child {
-                    height: 30px;
                     width: 30px;
-                    border-radius: 15px;
-                    background: #ffbf00;
-                    font-size: 12px;
-                    font-weight: 500;
+                    height: 30px;
                     color: #fff;
+                    font-weight: 500;
+                    font-size: 12px;
                     line-height: 30px;
                     text-align: center;
+                    background: #ffbf00;
+                    border-radius: 15px;
                 }
+
                 :nth-child(2) {
-                    font-size: 16px;
-                    font-weight: 400;
-                    color: rgba(0, 0, 0, 0.85);
-                    line-height: 22px;
                     margin-top: 4px;
                     margin-left: 5px;
+                    color: rgba(0, 0, 0, 0.85);
+                    font-weight: 400;
+                    font-size: 16px;
+                    line-height: 22px;
                 }
             }
+
             .box-item-title-state {
                 flex: 1;
-                font-size: 14px;
-                font-weight: 500;
+                margin-top: 4px;
                 color: rgba(0, 0, 0, 0.65);
+                font-weight: 500;
+                font-size: 14px;
                 line-height: 20px;
                 text-align: right;
-                margin-top: 4px;
+
                 &::before {
-                    content: "";
                     display: inline-block;
-                    height: 6px;
                     width: 6px;
+                    height: 6px;
                     margin-right: 10px;
                     margin-bottom: 2px;
                     background: rgba(126, 211, 33, 1);
+                    content: "";
                 }
             }
         }
+
         .box-item-container {
             display: flex;
             flex: 1;
             justify-content: space-between;
             height: 129px;
+
             .box-item-container-left {
                 display: flex;
                 justify-content: center;
                 width: 130px;
                 padding-top: 10px;
+
                 .box-item-container-img {
                     width: 94px;
                     height: 86px;
                     background: url("~@/assets/img/fajiaoguan.png");
                 }
             }
+
             .box-item-container-right {
-                flex: 1;
                 display: flex;
+                flex: 1;
                 flex-direction: column;
                 margin-left: 10px;
+
                 .box-item-container-item {
-                    flex: 1;
                     display: flex;
+                    flex: 1;
                     justify-content: space-between;
+
                     .name {
                         width: 60px;
-                        font-size: 12px;
-                        font-weight: 400;
                         color: rgba(0, 0, 0, 0.45);
+                        font-weight: 400;
+                        font-size: 12px;
                         line-height: 20px;
                     }
+
                     .detail {
                         flex: 1;
-                        font-size: 14px;
-                        font-weight: 500;
-                        color: rgba(0, 0, 0, 0.65);
-                        line-height: 17px;
                         overflow: hidden;
-                        text-overflow: ellipsis;
+                        color: rgba(0, 0, 0, 0.65);
+                        font-weight: 500;
+                        font-size: 14px;
+                        line-height: 17px;
                         white-space: nowrap;
+                        text-overflow: ellipsis;
                     }
                 }
             }
         }
     }
+
     .box-item-bottom {
-        height: 40px;
-        box-sizing: border-box;
         display: flex;
         justify-content: space-between;
+        box-sizing: border-box;
+        height: 40px;
         background: rgba(247, 249, 250, 1);
         border-radius: 0 0 2px 2px;
+
         .box-item-bottom-item {
             flex: 1;
-            text-align: center;
-            line-height: 40px;
-            font-size: 12px;
-            font-weight: 500;
             color: rgba(0, 0, 0, 0.65);
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 40px;
+            text-align: center;
+
             &:hover {
                 color: #fff;
                 background: #1890ff;
                 cursor: pointer;
             }
         }
+
         .box-item-bottom-split {
             width: 1px;
             height: 16px;
-            background: rgba(232, 232, 232, 1);
             margin-top: 12px;
+            background: rgba(232, 232, 232, 1);
         }
     }
 }
+
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
+
 .box-card {
     .pro-line {
         border-bottom: 1px solid #dcdfe6;
     }
+
     .pro-line p {
         color: red;
         font-size: 16px;
         letter-spacing: 0.1em;
     }
+
     b {
+        float: left;
         font-size: 16px;
         line-height: 32px;
-        float: left;
     }
+
     .item {
-        margin-top: 20px;
         display: flex;
+        margin-top: 20px;
+
         img {
             float: left;
             width: 220px;
             height: 220px;
-            border-radius: 6px;
-            border: 1px solid #dcdfe6;
             margin-right: 20px;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
         }
+
         .itemForm {
             flex: 1;
+
             p {
                 color: #8a979e;
             }
         }
+
         .margb20px {
             margin-bottom: 10px;
         }
     }
 }
+
 .el-row {
     margin-bottom: 20px;
+
     &:last-child {
         margin-bottom: 0;
     }

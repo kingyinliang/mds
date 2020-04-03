@@ -692,21 +692,26 @@ export default {
 .liInputWidth {
     width: 119px;
 }
+
 .htitle {
     margin: 0 0 10px;
     overflow: hidden;
 }
+
 .audit {
-    line-height: 32px;
     margin: 10px 0;
+    line-height: 32px;
+
     i {
-        font-size: 22px;
         float: left;
+        font-size: 22px;
     }
+
     span {
         font-size: 16px;
     }
 }
+
 .reqI {
     color: red;
 }

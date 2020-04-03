@@ -60,7 +60,7 @@
                         <div id="test1Content" style="display: none;">
                             <look-echarts ref="LookEcharts" />
                         </div>
-                        <el-row style="line-height: 32px; margin-bottom: 10px;">
+                        <el-row style=" margin-bottom: 10px; line-height: 32px;">
                             <el-col
                                 :span="5"
                             >
@@ -278,7 +278,7 @@
                     <mds-card :title="'加水量记录'" :name="'jiashui'" :iconBg="'#5bd171'">
                         <el-form :inline="true" :model="tech" size="small">
                             <div>
-                                <div style="line-height: 32px; float: left; margin-right: 20px;">
+                                <div style=" float: left; margin-right: 20px; line-height: 32px;">
                                     翻曲加水
                                 </div>
                                 <el-form-item label="起始数：" :required="true">
@@ -292,7 +292,7 @@
                                 </el-form-item>
                             </div>
                             <div>
-                                <div style="line-height: 32px; float: left; margin-right: 20px;">
+                                <div style=" float: left; margin-right: 20px; line-height: 32px;">
                                     出曲加水
                                 </div>
                                 <el-form-item label="起始数：" :required="true">
@@ -1025,16 +1025,19 @@ export default {
 .rowDel {
     display: none;
 }
+
 .guard-form-input .el-input__inner {
+    text-align: center;
     border: 0 none;
     border-bottom: 1px solid #ccc;
     border-radius: 0;
-    text-align: center;
 }
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     appearance: none;
 }
+
 input[type="number"] {
     appearance: textfield;
 }
@@ -1043,15 +1046,17 @@ input[type="number"] {
 .input_bommom {
     width: 147px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     line-height: 32px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     border-bottom: solid 1px #d8d8d8;
 }
+
 .el-form-item--mini.el-form-item,
 .el-form-item--small.el-form-item {
     margin-bottom: 8px;
 }
+
 .searchCard {
     .el-button--primary,
     .el-button--primary:focus {
@@ -1059,35 +1064,43 @@ input[type="number"] {
         background-color: #fff;
         border-color: #d9d9d9;
     }
+
     .el-button--primary:hover {
-        background-color: #1890ff;
         color: #fff;
+        background-color: #1890ff;
     }
+
     .el-button--primary:first-child {
-        background-color: #1890ff;
         color: #fff;
+        background-color: #1890ff;
         border-color: #1890ff;
     }
 }
+
 #DaatTtabs {
-    border-radius: 15px;
     overflow: hidden;
+    border-radius: 15px;
 }
+
 .htitle {
     margin: 0 0 10px;
     overflow: hidden;
 }
+
 .audit {
-    line-height: 32px;
     margin: 0 0 10px;
+    line-height: 32px;
+
     i {
-        font-size: 22px;
         float: left;
+        font-size: 22px;
     }
+
     span {
         font-size: 16px;
     }
 }
+
 .reqI {
     color: red;
 }
