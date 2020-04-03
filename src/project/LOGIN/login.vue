@@ -194,7 +194,7 @@ export default {
                             } else {
                                 // window.sessionStorage.setItem('menuList', JSON.stringify(res.data.data.menuList))
                                 // this.$router.push({ path: '/home' });
-                                window.location.href = '/MDS'
+                                window.location.href = '/MDS.html'
                             }
                         } else {
                             this.$notify.error({
