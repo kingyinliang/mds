@@ -68,7 +68,7 @@
                 <i class="el-icon-caret-bottom" />
             </div>
             <el-row>
-                <el-col style="text-align: right; margin-bottom: 10px;">
+                <el-col style=" margin-bottom: 10px; text-align: right;">
                     <slot name="mds-button-middle" />
                 </el-col>
             </el-row>

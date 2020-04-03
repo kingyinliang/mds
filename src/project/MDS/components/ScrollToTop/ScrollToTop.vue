@@ -75,24 +75,26 @@ export default {
 
 <style lang="scss" scoped>
 .scroll-to-top {
+    position: fixed;
+    right: 30px;
+    bottom: 47px;
+    z-index: 99999;
     width: 40px;
     height: 40px;
-    background: rgba(72, 123, 255, 0.88);
-    position: fixed;
-    bottom: 47px;
-    right: 30px;
-    z-index: 99999;
-    border-radius: 50%;
-    text-align: center;
     color: white;
+    text-align: center;
+    background: rgba(72, 123, 255, 0.88);
+    border-radius: 50%;
     cursor: pointer;
+
     i {
+        display: block;
         font-size: 18px;
-        display: block;
     }
+
     span {
-        font-size: 12px;
         display: block;
+        font-size: 12px;
     }
 }
 </style>
