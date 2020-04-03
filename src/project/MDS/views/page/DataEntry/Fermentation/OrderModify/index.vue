@@ -53,10 +53,10 @@
         </div>
         <div class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
-                <el-tabs id="DaatTtabs" ref="multipleTable" v-model="activeName" class="NewDaatTtabs" type="border-card" style="border-radius: 15px; overflow: hidden;" @tab-click="handleClick">
+                <el-tabs id="DaatTtabs" ref="multipleTable" v-model="activeName" class="NewDaatTtabs" type="border-card" style=" overflow: hidden; border-radius: 15px;" @tab-click="handleClick">
                     <el-tab-pane name="0" label="未修改">
                         <el-row>
                             <el-col>

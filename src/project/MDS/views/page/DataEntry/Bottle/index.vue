@@ -68,7 +68,7 @@
                                     品项：
                                 </div>
                                 <el-tooltip class="item" effect="dark" :content="item.materialCode + item.materialName" placement="bottom-start">
-                                    <div style="float: left; width: 140px; color: rgba(0, 0, 0, 0.65); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    <div style="float: left; width: 140px; overflow: hidden; color: rgba(0, 0, 0, 0.65); white-space: nowrap; text-overflow: ellipsis;">
                                         {{ item.materialCode }}{{ item.materialName }}
                                     </div>
                                 </el-tooltip>
@@ -277,33 +277,40 @@ export default {
 <style lang="scss">
 .sole {
     background: rgba(255, 255, 255, 1);
-    border-radius: 2px;
     border: 1px solid rgba(232, 232, 232, 1);
+    border-radius: 2px;
+
     .top {
-        height: 40px;
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
-        padding: 0 10px;
         align-items: center;
+        justify-content: space-between;
+        height: 40px;
+        padding: 0 10px;
+
         .status {
             font-size: 14px;
             line-height: 20px;
         }
     }
+
     .content {
         padding: 10px;
+
         .img {
-            text-align: center;
             margin-top: 10px;
+            text-align: center;
         }
+
         .right {
             height: 120px;
+
             .lines {
-                color: rgba(0, 0, 0, 0.45);
-                line-height: 26px;
-                font-size: 12px;
                 overflow: hidden;
+                color: rgba(0, 0, 0, 0.45);
+                font-size: 12px;
+                line-height: 26px;
+
                 span {
                     color: rgba(0, 0, 0, 0.65);
                     font-size: 12px;
@@ -311,35 +318,41 @@ export default {
             }
         }
     }
+
     .bottom {
         display: flex;
         flex-direction: row;
+        align-items: center;
         justify-content: space-between;
+        width: 100%;
         height: 40px;
         background: rgba(247, 249, 250, 1);
-        align-items: center;
-        width: 100%;
+
         .bottom-item {
-            text-align: center;
             flex: 1;
-            font-size: 14px;
-            line-height: 40px;
-            background: #f7f9fa;
-            border-radius: 0;
-            border: none;
             height: 40px;
             padding: 0;
+            font-size: 14px;
+            line-height: 40px;
+            text-align: center;
+            background: #f7f9fa;
+            border: none;
+            border-radius: 0;
+
             &:hover {
                 color: #fff;
                 background: #1890ff;
             }
+
             &.is-disabled {
                 color: #606266;
             }
+
             &.is-disabled:hover {
                 color: #fff;
             }
         }
+
         .bottom-split {
             width: 1px;
             height: 16px;

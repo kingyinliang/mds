@@ -72,8 +72,8 @@
             </el-row>
         </el-card>
         <el-card class="searchCard  newCard" style="margin-top: 5px;">
-            <h2 style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">
-                <i class="iconfont factory-liebiao" style="color: #666; margin-right: 10px;" />发料列表
+            <h2 style=" margin-bottom: 10px; font-weight: 600; font-size: 16px;">
+                <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />发料列表
             </h2>
             <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" @selection-change="handleSelectionChange" @row-dblclick="GetLog">
                 <el-table-column type="selection" :selectable="checkboxT" width="34" />
@@ -134,7 +134,7 @@
                         <el-button v-if="scope.row.approveStatus !== 'submit' && scope.row.approveStatus !== 'checked'" type="text" style="" size="mini" :disabled="!isRedact" @click="AddData(scope.row, scope.$index)">
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
-                        <el-button v-if="scope.row.approveStatus !== 'submit' && scope.row.approveStatus !== 'checked'" type="text" style="color: red; margin-left: 0;" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="delData(scope.row)">
+                        <el-button v-if="scope.row.approveStatus !== 'submit' && scope.row.approveStatus !== 'checked'" type="text" style=" margin-left: 0; color: red;" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="delData(scope.row)">
                             删除
                         </el-button>
                     </template>

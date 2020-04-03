@@ -45,7 +45,7 @@
         </el-card>
         <el-card v-show="fastS" class="searchCard  newCard ferCard" style="margin-top: 5px; overflow: initial;">
             <h3 class="cardTit">
-                <i class="iconfont factory-shujuzonglan" style="color: #666; margin-right: 10px;" />发酵情况总览
+                <i class="iconfont factory-shujuzonglan" style=" margin-right: 10px; color: #666;" />发酵情况总览
                 <i class="gotop" @click="gotop"><span>收起</span><i class="el-icon-caret-top" /></i>
             </h3>
             <div class="sumbox">
@@ -59,7 +59,7 @@
                                         :style="{ background: `linear-gradient(to right,${item.startColor} 0%,${item.startColor} 10%,${item.startColor})`}"
                                     />
                                 </div>
-                                <div style="float: left; line-height: 30px; width: 32px; text-align: center; font-size: 14px;">
+                                <div style="float: left; width: 32px; font-size: 14px; line-height: 30px; text-align: center;">
                                     {{ item.middleText }}
                                 </div>
                                 <div class="topBox_boxItem_bar">
@@ -95,8 +95,8 @@
             </div>
         </el-card>
         <el-card v-show="fastS" class="searchCard  newCard ferCard" style="margin-top: 5px;">
-            <h3 style="color: black; margin-bottom: 8px; line-height: 20px;">
-                <i class="iconfont factory-liebiao" style="color: #666; margin-right: 10px;" />发酵罐列表
+            <h3 style=" margin-bottom: 8px; color: black; line-height: 20px;">
+                <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />发酵罐列表
                 <i v-if="isAuth('report:production:fermentation')" class="gotop" @click="goSummary()"><a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a></i>
             </h3>
             <el-row class="dataList" :gutter="10" style="min-height: 150px;">
@@ -111,7 +111,7 @@
                             <span v-if="isAuth('fer:holderManage:detail')" class="dataList_item_a" style="font-size: 14px;" @click="godetails(item)">详情>></span>
                         </h3>
                         <div class="dataList_item_pot clearfix" style="position: relative;">
-                            <img v-if="item.ferOrderNo.slice(0, 4) === RDorder" src="@/assets/img/RD.png" alt="" style="position: absolute; left: 10px; top: 10px;">
+                            <img v-if="item.ferOrderNo.slice(0, 4) === RDorder" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
                             <div class="dataList_item_pot_box">
                                 <div class="dataList_item_pot_box1">
                                     <div v-if="item.holderStatus !== '4'" class="dataList_item_pot_box_item1" :style="`height:${item.reWorkAmount ? (item.reWorkAmount / item.holderAmout) * 100 : 0}%`" />
@@ -690,17 +690,20 @@ export default {
     .el-card__body {
         padding: 7px;
     }
+
     .cardTit {
-        font-size: 16px;
+        padding-bottom: 10px;
         color: black;
         font-weight: 400;
-        padding-bottom: 10px;
+        font-size: 16px;
     }
+
     .gotop {
         float: right;
         color: #1890ff;
         font-size: 14px;
         cursor: pointer;
+
         i {
             ::before {
                 color: #1890ff;
@@ -708,177 +711,203 @@ export default {
         }
     }
 }
+
 .topBox {
     width: 1260px;
-    padding: 10px 0;
     margin: auto;
+    padding: 10px 0;
+
     &_boxItem {
         position: relative;
-        cursor: pointer;
         // width: 102px;
         float: left;
+        cursor: pointer;
+
         &_bar {
+            float: left;
             width: 30px;
             height: 2px;
             margin: 15px 0 0;
             background: #f2f2f2;
-            float: left;
+
             &_box {
                 height: 2px;
             }
         }
+
         &_tit {
+            height: 32px;
             color: black;
             font-size: 14px;
+            line-height: 32px;
             // margin-top: 10px;
             text-align: center;
-            line-height: 32px;
-            height: 32px;
         }
+
         &_detail {
+            color: #666;
             font-size: 14px;
             text-align: center;
-            color: #666;
+
             span {
                 color: black;
                 font-size: 16px;
             }
         }
+
         &_popover {
-            display: none;
+            position: absolute;
             top: -60px;
+            z-index: 999999;
+            display: none;
             min-width: 150px;
             min-height: 52px;
             padding: 10px 16px;
-            border-radius: 4px;
             font-size: 13px;
             line-height: 18px;
-            position: absolute;
-            z-index: 999999;
             background: white;
+            border-radius: 4px;
             box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+
             .dot {
+                float: left;
                 width: 6px;
                 height: 6px;
-                float: left;
                 margin: 4px 5px 0 0;
                 border-radius: 50%;
             }
+
             &_ar {
                 position: absolute;
                 bottom: -12px;
                 width: 0;
                 height: 0;
-                border-width: 6px;
-                border-style: solid;
                 border-color: #fff transparent transparent;
+                border-style: solid;
+                border-width: 6px;
             }
         }
     }
+
     &_circle {
+        float: left;
         width: 32px;
         height: 32px;
-        float: left;
+        margin: 0 2px;
+        color: white;
         line-height: 32px;
         text-align: center;
-        color: white;
-        border-radius: 50%;
         background: #999;
+        border-radius: 50%;
         transition: all 0.5s;
-        margin: 0 2px;
     }
 }
+
 .dataList {
     margin-top: 10px;
+
     &_item {
         margin-bottom: 10px;
+
         &_tit {
-            font-weight: 600;
-            color: black;
-            font-size: 16px;
             padding: 0 10px;
+            color: black;
+            font-weight: 600;
+            font-size: 16px;
             line-height: 45px;
             border-bottom: 1px solid #e8e8e8;
         }
+
         &_a {
-            cursor: pointer;
-            color: #1890ff;
             float: right;
+            color: #1890ff;
+            cursor: pointer;
         }
+
         &_pot {
-            padding: 17px 10px 10px;
             display: flex;
-            justify-content: center;
             align-items: flex-start;
+            justify-content: center;
+            padding: 17px 10px 10px;
             overflow: hidden;
+
             &_box1 {
                 position: relative;
-                overflow: hidden;
+                display: flex;
+                flex-wrap: wrap;
+                align-content: flex-end;
                 width: 102px;
                 height: 197px;
-                display: flex;
-                flex-wrap: wrap;
-                align-content: flex-end;
-            }
-            &_box {
                 overflow: hidden;
-                padding: 25px 9px 9px;
-                color: white;
-                float: left;
+            }
+
+            &_box {
                 display: flex;
                 flex-wrap: wrap;
                 align-content: flex-end;
+                float: left;
                 width: 120px;
-                height: 229px;
                 min-width: 120px;
+                height: 229px;
+                padding: 25px 9px 9px;
+                overflow: hidden;
+                color: white;
                 background: url("~@/assets/img/ferPot.png") no-repeat;
                 background-size: contain;
+
                 &_detail {
-                    width: 100%;
                     position: absolute;
-                    font-size: 14px;
                     top: 70px;
-                    color: black;
                     left: 3px;
+                    width: 100%;
+                    color: black;
+                    font-size: 14px;
                 }
+
                 &_item1,
                 &_item2 {
-                    width: 100%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    width: 100%;
                     font-size: 14px;
                 }
+
                 &_item2s,
                 &_item1 {
-                    height: 50px;
-                    background: #69c0ff;
                     position: relative;
+                    height: 50px;
                     overflow: hidden;
+                    background: #69c0ff;
+
                     &::before,
                     &::after {
-                        content: "";
                         position: absolute;
                         left: 50%;
                         min-width: 175px;
                         min-height: 165px;
                         background: #fff;
                         animation: roateTwo 10s linear infinite;
+                        content: "";
                     }
+
                     &::before {
                         top: -158px;
                         border-radius: 45%;
                     }
+
                     &::after {
                         top: -152px;
-                        opacity: 0.5;
                         border-radius: 47%;
+                        opacity: 0.5;
                     }
                 }
+
                 &_item2 {
                     height: 100px;
                     background: #1890ff;
                 }
+
                 &:hover &_item1::before,
                 &:hover &_item1::after,
                 &:hover &_item2s::before,
@@ -886,18 +915,19 @@ export default {
                     animation: roateOne 10s linear infinite;
                 }
             }
+
             &_detail {
+                float: left;
                 max-width: 112px;
                 height: auto;
-                float: left;
                 margin-top: 25px;
                 margin-left: 10px;
+                padding: 5px;
                 color: #333;
                 font-size: 14px;
                 line-height: 18px;
-                padding: 5px;
-                border-radius: 4px;
                 border: 1px solid #1890ff;
+                border-radius: 4px;
             }
         }
     }
@@ -907,9 +937,11 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     50% {
         transform: translate(-50%, -1%) rotateZ(180deg);
     }
+
     100% {
         transform: translate(-50%, -0%) rotateZ(360deg);
     }
@@ -919,9 +951,11 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     50% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     100% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }

@@ -1,9 +1,9 @@
 <template>
     <div>
-        <el-card style="margin-bottom: 10px; position: relative;" class="newCard">
+        <el-card style=" position: relative; margin-bottom: 10px;" class="newCard">
             <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" labelWidth="125px">
                 <el-row class="clearfix">
-                    <h3 style="font-size: 14px; line-height: 32px; font-weight: 600; float: left;">
+                    <h3 style=" float: left; font-weight: 600; font-size: 14px; line-height: 32px;">
                         准备时间（分钟：min）
                     </h3>
                     <el-form-item label="班次：" style="float: right; margin-right: 0; margin-bottom: 10px;">
@@ -66,8 +66,8 @@
                 </div>
             </el-form>
         </el-card>
-        <el-card style="margin-bottom: 10px; position: relative;" class="newCard">
-            <h3 style="font-size: 14px; line-height: 32px; font-weight: 600; float: none;">
+        <el-card style=" position: relative; margin-bottom: 10px;" class="newCard">
+            <h3 style=" float: none; font-weight: 600; font-size: 14px; line-height: 32px;">
                 设备时间（分钟：min）
             </h3>
             <el-row type="flex">
@@ -452,32 +452,36 @@ export default {
 
 <style lang="scss" scoped>
 .equ {
+    position: relative;
     width: 154px;
     height: 246px;
-    position: relative;
+    margin-right: 5px;
+    overflow: hidden;
     border: 1px solid #eee;
     border-radius: 5px;
-    margin-right: 5px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
-    overflow: hidden;
+
     img {
         margin-top: 40px;
     }
+
     &_btn {
-        cursor: pointer;
-        font-size: 14px;
-        border-top: 1px solid #eee;
-        text-align: center;
-        line-height: 40px;
         color: black;
+        font-size: 14px;
+        line-height: 40px;
+        text-align: center;
+        border-top: 1px solid #eee;
+        cursor: pointer;
+
         &_row {
             position: absolute;
             bottom: 0;
             width: 100%;
         }
+
         &:hover {
-            background: #1890ff;
             color: white;
+            background: #1890ff;
         }
     }
 }

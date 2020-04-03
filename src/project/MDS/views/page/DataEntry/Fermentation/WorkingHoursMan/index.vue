@@ -564,16 +564,19 @@ export default {
 .width170px {
     width: 170px;
 }
+
 .audit {
     line-height: 40px;
+
     i {
-        font-size: 22px;
         float: left;
+        font-size: 22px;
     }
+
     span {
         margin-left: 12px;
-        font-size: 16px;
         font-weight: 600;
+        font-size: 16px;
     }
 }
 </style>
@@ -585,13 +588,15 @@ export default {
         background-color: #fff;
         border-color: #d9d9d9;
     }
+
     .el-button--primary:hover {
-        background-color: #1890ff;
         color: #fff;
+        background-color: #1890ff;
     }
+
     .el-button--primary:first-child {
-        background-color: #1890ff;
         color: #fff;
+        background-color: #1890ff;
         border-color: #1890ff;
     }
 }

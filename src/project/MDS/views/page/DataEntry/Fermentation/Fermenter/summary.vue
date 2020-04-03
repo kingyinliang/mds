@@ -24,8 +24,8 @@
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">发酵库存列表</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;" />发酵罐分布情况
-                    <el-button v-if="isAuth('report:production:fermentationExport')" type="primary" size="small" style="background-color: #1890ff; color: #fff; float: right;" @click="ExportExcelA(true)">
+                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />发酵罐分布情况
+                    <el-button v-if="isAuth('report:production:fermentationExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelA(true)">
                         导出
                     </el-button>
                 </div>
@@ -44,7 +44,7 @@
                     <el-table-column label="发酵一总罐数" showOverflowTooltip prop="sum" width="110" />
                 </el-table>
                 <div class="titleLeft" style="margin-top: 15px;">
-                    <i class="iconfont factory-icon_function_keyongkucun" style="color: #666; margin-right: 10px;" />发酵总库存列表
+                    <i class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />发酵总库存列表
                 </div>
                 <el-table :data="dataList" border headerRowClassName="tableHead" style="margin-top: 10px;">
                     <el-table-column label="罐号" showOverflowTooltip prop="holderNo" width="50" />
@@ -168,8 +168,8 @@ export default {
 
 <style lang="scss" scoped>
 .titleLeft {
-    font-weight: 600;
     margin: 0;
+    font-weight: 600;
     line-height: 32px;
 }
 </style>

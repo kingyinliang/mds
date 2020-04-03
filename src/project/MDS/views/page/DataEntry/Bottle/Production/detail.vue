@@ -5,9 +5,9 @@
                 <el-col>
                     <form-head :formHeader="formHeader" :isRedact="isRedact" />
                 </el-col>
-                <el-col style="width: 244px; position: relative;" class="clearfix">
+                <el-col style=" position: relative; width: 244px;" class="clearfix">
                     <el-row class="clearfix">
-                        <div style="float: right; line-height: 31px; font-size: 14px;">
+                        <div style="float: right; font-size: 14px; line-height: 31px;">
                             <span
                                 class="point"
                                 :style="{
@@ -21,7 +21,7 @@
                             >{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
                         </div>
                     </el-row>
-                    <el-row style="text-align: right; position: absolute; bottom: 10px; right: 0;">
+                    <el-row style=" position: absolute; right: 0; bottom: 10px; text-align: right;">
                         <template style="float: right; margin-left: 10px;">
                             <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('bottle:inStorage:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                                 {{ isRedact ? '取消' : '编辑' }}

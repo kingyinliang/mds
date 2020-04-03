@@ -472,10 +472,10 @@ export default {
 
 <style>
 .bottom {
-    border-bottom: 1px solid #d8d8d8;
     width: 150px;
     overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #d8d8d8;
 }
 </style>

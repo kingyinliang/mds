@@ -49,10 +49,10 @@
         </div>
         <div class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
-                <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card" style="border-radius: 15px; overflow: hidden;">
+                <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card" style=" overflow: hidden; border-radius: 15px;">
                     <el-tab-pane name="1">
                         <span slot="label" class="spanview">
                             <el-button>未申请</el-button>

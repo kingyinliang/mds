@@ -53,7 +53,7 @@
                         </el-form>
                     </el-col>
                 </el-row>
-                <el-row style="text-align: right; right: 8px; position: absolute; top: 49px;">
+                <el-row style=" position: absolute; top: 49px; right: 8px; text-align: right;">
                     <template style="float: right; margin-left: 10px;">
                         <el-button v-if="isAuth('fer:inStore:list')" type="primary" size="small" @click="getOrderList()">
                             查询
@@ -81,13 +81,13 @@
         </div>
         <div class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
                 <el-card>
                     <el-row>
                         <div style="line-height: 40px;">
-                            <i style="font-size: 22px; float: left;" class="iconfont factory-shouqicaidan" /><span style="font-size: 16px; font-weight: 600; margin-left: 12px;">入库列表</span>
+                            <i style=" float: left; font-size: 22px;" class="iconfont factory-shouqicaidan" /><span style=" margin-left: 12px; font-weight: 600; font-size: 16px;">入库列表</span>
                         </div>
                     </el-row>
                     <el-row>
@@ -588,10 +588,11 @@ export default class Index extends Vue {
 .required {
     position: relative;
     padding-left: 15px;
+
     .reqI {
-        color: red;
         position: absolute;
         left: 0;
+        color: red;
         line-height: 32px;
     }
 }

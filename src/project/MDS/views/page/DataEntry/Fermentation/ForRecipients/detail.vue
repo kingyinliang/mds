@@ -437,11 +437,11 @@ export default {
 
 <style lang="scss">
 .bottomline {
-    border-bottom: 1px solid #d8d8d8;
     width: 152px;
-    overflow: hidden;
     height: 32px;
-    text-overflow: ellipsis;
+    overflow: hidden;
     white-space: nowrap;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #d8d8d8;
 }
 </style>

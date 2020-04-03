@@ -213,39 +213,45 @@ export default {
         height: 32px;
         border-bottom: 1px solid #d8d8d8;
     }
+
     .noneBorder {
         .el-form-item__content {
             border-bottom: none;
         }
     }
+
     .el-input {
         width: 145px !important;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         line-height: 32px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 }
+
 .header_pot {
     width: 160px;
+
     &_label {
-        font-size: 18px;
-        font-weight: 400;
-        color: rgba(102, 102, 102, 1);
         margin-bottom: 15px;
+        color: rgba(102, 102, 102, 1);
+        font-weight: 400;
+        font-size: 18px;
     }
+
     &_image {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
         width: 160px;
         height: 190px;
         background: url("~@/assets/img/ferPot.png") no-repeat center center;
         background-size: contain;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
+
         &_content {
-            margin-bottom: 8px;
             width: 84px;
             height: 90px;
+            margin-bottom: 8px;
             background: linear-gradient(#35c3ff, #1890ff);
         }
     }
