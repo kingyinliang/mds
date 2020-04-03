@@ -494,8 +494,8 @@ export default {
 
 <style lang="scss" scoped>
 .readyshiftBtn {
+    color: #3a8ee6;
     font-weight: 400;
     cursor: pointer;
-    color: #3a8ee6;
 }
 </style>

@@ -83,10 +83,10 @@
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="showMoreDetail(scope.row.batch)">
-                                <em class="iconfont factory-fangdajing-copy" style="font-size: 12px; margin-right: 5px;" />查看
+                                <em class="iconfont factory-fangdajing-copy" style=" margin-right: 5px; font-size: 12px;" />查看
                             </el-button>
                             <el-button v-if="isAuth('Gra:adjust:material:soybeanUpdate')" type="text" size="small" @click="makeAdjust(scope.row)">
-                                <em class="iconfont factory-banshou" style="font-size: 12px; margin-right: 5px;" />调整
+                                <em class="iconfont factory-banshou" style=" margin-right: 5px; font-size: 12px;" />调整
                             </el-button>
                         </template>
                     </el-table-column>
@@ -234,7 +234,7 @@
                 <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="isShowMessageBoxAdjust = false">
                     取消
                 </el-button>
-                <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="isShowMessageBoxAdjust = false">
+                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="isShowMessageBoxAdjust = false">
                     确定
                 </el-button>
             </div>
@@ -296,7 +296,7 @@
                 <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="cannalSaveAdjust('adjustForm')">
                     取消
                 </el-button>
-                <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveAdjust('adjustForm')">
+                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveAdjust('adjustForm')">
                     确定
                 </el-button>
             </div>

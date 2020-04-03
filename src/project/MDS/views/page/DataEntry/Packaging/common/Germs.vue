@@ -63,7 +63,7 @@
             </el-table-column>
         </el-table>
         <div>
-            <p style="line-height: 52px; font-size: 14px;">
+            <p style=" font-size: 14px; line-height: 52px;">
                 待杀菌数量（L）：{{ GermsNum }}
             </p>
         </div>

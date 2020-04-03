@@ -53,7 +53,7 @@
                 </div>
             </el-col>
         </el-row>
-        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" style="border-radius: 15px; overflow: hidden;">
+        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" style=" overflow: hidden; border-radius: 15px;">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
                     当前库存信息
@@ -83,10 +83,10 @@
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="showMoreDetail(scope.row.batch)">
-                                <em class="iconfont factory-fangdajing-copy" style="font-size: 12px; margin-right: 5px;" />查看
+                                <em class="iconfont factory-fangdajing-copy" style=" margin-right: 5px; font-size: 12px;" />查看
                             </el-button>
                             <el-button v-if="isAuth('Gra:adjust:material:wheatUpdate')" type="text" size="small" @click="makeAdjust(scope.row)">
-                                <em class="iconfont factory-banshou" style="font-size: 12px; margin-right: 5px;" />调整
+                                <em class="iconfont factory-banshou" style=" margin-right: 5px; font-size: 12px;" />调整
                             </el-button>
                         </template>
                     </el-table-column>
@@ -242,7 +242,7 @@
                 <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="isShowMessageBoxAdjust = false">
                     取消
                 </el-button>
-                <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="isShowMessageBoxAdjust = false">
+                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="isShowMessageBoxAdjust = false">
                     确定
                 </el-button>
             </div>
@@ -304,7 +304,7 @@
                 <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="cannalSaveAdjust('adjustForm')">
                     取消
                 </el-button>
-                <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveAdjust('adjustForm')">
+                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveAdjust('adjustForm')">
                     确定
                 </el-button>
             </div>
@@ -655,54 +655,61 @@ export default class Index extends Vue {
 <style lang="scss">
 @import "@/assets/scss/_common.scss";
 @import "@/assets/scss/_share.scss";
+
 .wheat-pot-data-entry {
     .header {
         height: 200px;
+
         .header-pot {
             width: 250px;
+
             .header-pot__label {
-                font-size: 18px;
-                font-weight: 400;
-                color: rgba(102, 102, 102, 1);
-                line-height: 30px;
-                height: 30px;
                 width: 300px;
+                height: 30px;
                 overflow: hidden;
-                text-overflow: ellipsis;
+                color: rgba(102, 102, 102, 1);
+                font-weight: 400;
+                font-size: 18px;
+                line-height: 30px;
                 white-space: nowrap;
+                text-overflow: ellipsis;
             }
+
             .header-pot__image {
                 position: relative;
-                margin-top: 10px;
-                height: 160px;
                 width: 250px;
+                height: 160px;
+                margin-top: 10px;
                 background: url("~@/assets/img/pot.png") no-repeat top right;
                 background-size: contain;
+
                 .header-pot__image_content {
-                    height: 65px;
-                    width: 46px;
                     position: absolute;
                     right: 40px;
                     bottom: 61px;
+                    width: 46px;
+                    height: 65px;
                     background: linear-gradient(#35c3ff, #1890ff);
                 }
             }
         }
+
         .header-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 600px;
             margin-left: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+
             .header-form_input {
                 width: 150px;
+                overflow: hidden;
+                color: rgba(0, 0, 0, 0.85);
+                font-weight: 400;
                 font-size: 14px;
                 font-family: PingFangSC-Regular, sans-serif;
-                font-weight: 400;
-                color: rgba(0, 0, 0, 0.85);
-                overflow: hidden;
-                text-overflow: ellipsis;
                 white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
     }

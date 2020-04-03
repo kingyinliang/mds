@@ -71,7 +71,7 @@
                             </el-table-column>
                             <el-table-column prop="currentQuantity" width="auto" headerAlign="left">
                                 <template slot="header">
-                                    <i class="iconfont factory-shuliang" style="font-size: 18px; margin-right: 5px;" />数量
+                                    <i class="iconfont factory-shuliang" style=" margin-right: 5px; font-size: 18px;" />数量
                                 </template>
                                 <template slot-scope="scope">
                                     {{ (scope.row.amount * 1).toLocaleString() }}

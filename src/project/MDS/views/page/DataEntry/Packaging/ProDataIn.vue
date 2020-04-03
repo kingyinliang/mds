@@ -7,7 +7,7 @@
                         <form-header ref="formheader" :formHeader="formHeader" :isRedact="isRedact" :pro="true" />
                     </el-col>
                     <el-col :span="8" style="font-size: 14px; line-height: 32px;">
-                        <div style="text-align: left; overflow: hidden; float: right;">
+                        <div style=" float: right; overflow: hidden; text-align: left;">
                             <span
                                 class="point"
                                 :style="{
@@ -21,7 +21,7 @@
                             >{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
                         </div>
                         <div style="clear: both;" />
-                        <div style="width: 100%; text-align: right; margin-top: 50px;">
+                        <div style="width: 100%; margin-top: 50px; text-align: right;">
                             <template style="float: right; margin-bottom: 13px;">
                                 <el-button
                                     type="primary"

@@ -74,7 +74,7 @@
                             </el-table-column>
                             <el-table-column prop="currentQuantity" width="auto" headerAlign="left">
                                 <template slot="header">
-                                    <i class="iconfont factory-shuliang" style="font-size: 18px; margin-right: 5px;" />数量
+                                    <i class="iconfont factory-shuliang" style=" margin-right: 5px; font-size: 18px;" />数量
                                 </template>
                                 <template slot-scope="scope">
                                     {{ (scope.row.amount * 1).toLocaleString() }}
@@ -193,7 +193,7 @@
                 <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="cannalInParn('inParnForm')">
                     取消
                 </el-button>
-                <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveInParn('inParnForm')">
+                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveInParn('inParnForm')">
                     确定
                 </el-button>
             </div>

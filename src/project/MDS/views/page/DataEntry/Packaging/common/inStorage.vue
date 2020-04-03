@@ -332,13 +332,13 @@
             </el-table>
         </div>
         <div>
-            <p style="line-height: 52px; font-size: 14px;">
+            <p style=" font-size: 14px; line-height: 52px;">
                 产出数合计：{{ countOutputNum }}
             </p>
         </div>
         <div v-if="order.properties !== '二合一&礼盒产线' && order.workShopName !== '包装三车间' && order.factoryCode !== '6010'">
             <div class="clearfix">
-                <span style="font-size: 14px; font-weight: 700; line-height: 40px;">机维组数量确认</span>
+                <span style=" font-weight: 700; font-size: 14px; line-height: 40px;">机维组数量确认</span>
                 <el-button type="primary" size="small" style="float: right;" @click="GetMaintain()">
                     刷新
                 </el-button>

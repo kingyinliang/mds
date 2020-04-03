@@ -42,7 +42,7 @@
                                                 数据录入
                                             </el-button>
                                             <span
-                                                style="float: right; color: #8a979e; font-size: 14px; min-width: 150px;"
+                                                style="float: right; min-width: 150px; color: #8a979e; font-size: 14px;"
                                             >订单状态：<i
                                                 :style="{
                                                     color: item.orderStatus === 'noPass' ? 'red' : item.orderStatus === 'checked' ? '#67C23A' : '',
@@ -333,36 +333,43 @@ export default {
 <style lang="scss" scoped>
 .hiddenP {
     max-height: 64px;
-    overflow: hidden;
     margin-top: 0 !important;
+    overflow: hidden;
 }
+
 .box-card {
     .pro-line {
         border-bottom: 1px solid #dcdfe6;
     }
+
     .pro-line p {
         color: red;
         font-size: 16px;
         letter-spacing: 0.1em;
     }
+
     b {
+        float: left;
         font-size: 16px;
         line-height: 32px;
-        float: left;
     }
+
     .item {
-        margin-top: 20px;
         display: flex;
+        margin-top: 20px;
+
         img {
             float: left;
             width: 220px;
             height: 220px;
-            border-radius: 6px;
-            border: 1px solid #dcdfe6;
             margin-right: 20px;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
         }
+
         .itemForm {
             flex: 1;
+
             p {
                 color: #8a979e;
             }
