@@ -32,7 +32,7 @@
             </el-row>
             <el-row :gutter="20">
                 <el-col v-for="(item, index) in dataList" id="normal" :key="index" :span="12" style="margin-top: 12px; padding-bottom: 20px;">
-                    <div class="title_left" style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">
+                    <div class="title_left" style=" margin-bottom: 8px; font-weight: 600; font-size: 16px;">
                         工序：
                         <font style="color: red;">
                             {{ item.productLineName }}
@@ -44,7 +44,7 @@
                                 <img :src="'data:image/gif;base64,' + item.img" alt="" style="width: 100%; min-height: 181px;">
                             </div>
                             <div class="title_left">
-                                <div style="float: left; font-size: 14px; font-weight: 400; line-height: 60px;">
+                                <div style="float: left; font-weight: 400; font-size: 14px; line-height: 60px;">
                                     <span
                                         class="points"
                                         :style="{
@@ -56,7 +56,7 @@
                                         }"
                                     >{{ item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus }}</i>
                                 </div>
-                                <el-button v-if="isAuth('filter:instorage:list')" type="primary" size="small" style="float: right; margin-top: 14px; background-color: #1890ff; color: white;" @click="go(item)">
+                                <el-button v-if="isAuth('filter:instorage:list')" type="primary" size="small" style="float: right; margin-top: 14px; color: white; background-color: #1890ff;" @click="go(item)">
                                     数据录入
                                 </el-button>
                             </div>
@@ -206,106 +206,126 @@ export default {
     min-height: 181px;
     overflow: hidden;
     cursor: pointer;
+
     img {
         transition: all 1s ease-in-out;
     }
 }
+
 .itemImg:hover {
     img {
         transform: scale(1.2);
     }
 }
+
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
+
 .box-card {
     .pro-line {
         border-bottom: 1px solid #dcdfe6;
     }
+
     .pro-line p {
         color: red;
         font-size: 16px;
         letter-spacing: 0.1em;
     }
+
     b {
+        float: left;
         font-size: 16px;
         line-height: 32px;
-        float: left;
     }
+
     .item {
-        margin-top: 20px;
         display: flex;
+        margin-top: 20px;
+
         img {
             float: left;
             width: 220px;
             height: 220px;
-            border-radius: 6px;
-            border: 1px solid #dcdfe6;
             margin-right: 20px;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
         }
+
         .itemForm {
             flex: 1;
+
             p {
                 color: #8a979e;
             }
         }
+
         .margb20px {
             margin-bottom: 10px;
         }
     }
 }
+
 #normal {
     .sole_cont {
         border: #e9e9e9 1px solid;
+
         .sole_status {
+            position: absolute;
+            top: 20px;
+            right: 15px;
             float: right;
+            min-width: 150px;
             color: #565656;
             font-size: 14px;
-            min-width: 150px;
-            position: absolute;
-            right: 15px;
-            top: 20px;
         }
+
         .points {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
             display: block;
             float: left;
+            width: 5px;
+            height: 5px;
             margin-top: 27px;
             margin-right: 8px;
+            border-radius: 50%;
         }
+
         .title_left {
-            border-bottom: #e9e9e9 1px solid;
+            display: block;
+            height: 60px;
             padding: 0 15px;
             font-weight: 600;
-            height: 60px;
             line-height: 60px;
-            display: block;
+            border-bottom: #e9e9e9 1px solid;
         }
+
         .el-form-item__content {
             width: 61%;
             border-bottom: #ccc solid 1px;
         }
+
         .width50b {
             width: 49%;
             margin: 5px 0;
         }
+
         .normal_bottom {
             padding: 5px 0;
         }
     }
 }
+
 .selectwpx {
     width: 120px;
 }
+
 .hiddenP {
     width: 180px;
-    border-bottom: 1px solid #ccc;
     overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #ccc;
 }
 </style>

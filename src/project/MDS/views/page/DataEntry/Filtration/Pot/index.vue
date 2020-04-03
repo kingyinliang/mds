@@ -28,8 +28,8 @@
             </el-form>
         </el-card>
         <el-card v-show="fastS" class="searchCard newCard ferCard" style="margin-top: 5px;">
-            <h3 style="color: black; margin-bottom: 8px;">
-                <i class="iconfont factory-liebiao" style="color: #666; margin-right: 10px;" />成品罐区
+            <h3 style=" margin-bottom: 8px; color: black;">
+                <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />成品罐区
                 <i v-if="isAuth('ste:semi:reportForm')" class="gotop" @click="goPot"><a>杀菌罐区库存情况>></a></i>
             </h3>
             <el-row class="dataList" :gutter="10" style="min-height: 150px;">
@@ -43,7 +43,7 @@
                             <span v-if="isAuth('filter:holder:list')" class="dataList_item_a" style="font-size: 14px;" @click="godetails(item)">详情>></span>
                         </h3>
                         <div class="dataList_item_pot clearfix" style="position: relative;">
-                            <img v-if="item.isRdSign === '1'" src="@/assets/img/RD.png" alt="" style="position: absolute; left: 10px; top: 10px;">
+                            <img v-if="item.isRdSign === '1'" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
                             <div class="dataList_item_pot_box">
                                 <div class="dataList_item_pot_box1">
                                     <div class="dataList_item_pot_box_item2" :style="`height:${item.holderStatus === '0' ? 0 : item.amount < 0 ? 0 : ((item.amount * 1) / (item.holderHold * 1)) * 100}%`" />
@@ -532,18 +532,21 @@ export default {
     .el-card__body {
         padding: 7px;
     }
+
     .cardTit {
-        font-size: 16px;
+        padding-bottom: 10px;
         color: black;
         font-weight: 400;
-        padding-bottom: 10px;
+        font-size: 16px;
         border-bottom: 1px solid #e9e9e9;
     }
+
     .gotop {
         float: right;
         color: #1890ff;
         font-size: 14px;
         cursor: pointer;
+
         i {
             &::before {
                 color: #1890ff;
@@ -551,95 +554,109 @@ export default {
         }
     }
 }
+
 .dataList {
     margin-top: 10px;
+
     &_item {
         margin-bottom: 10px;
+
         &_tit {
-            font-weight: 600;
-            color: black;
-            font-size: 16px;
             padding: 0 10px;
+            color: black;
+            font-weight: 600;
+            font-size: 16px;
             line-height: 45px;
             border-bottom: 1px solid #e8e8e8;
         }
+
         &_a {
-            cursor: pointer;
-            color: #1890ff;
             float: right;
+            color: #1890ff;
+            cursor: pointer;
         }
+
         &_pot {
-            padding: 17px 10px 10px;
             display: flex;
-            justify-content: center;
             align-items: flex-start;
+            justify-content: center;
+            padding: 17px 10px 10px;
             overflow: hidden;
+
             &_box1 {
                 position: relative;
-                overflow: hidden;
+                display: flex;
+                flex-wrap: wrap;
+                align-content: flex-end;
                 width: 102px;
                 height: 197px;
-                display: flex;
-                flex-wrap: wrap;
-                align-content: flex-end;
-            }
-            &_box {
                 overflow: hidden;
-                padding: 25px 9px 9px;
-                color: white;
-                float: left;
+            }
+
+            &_box {
                 display: flex;
                 flex-wrap: wrap;
                 align-content: flex-end;
+                float: left;
                 width: 120px;
-                height: 229px;
                 min-width: 120px;
+                height: 229px;
+                padding: 25px 9px 9px;
+                overflow: hidden;
+                color: white;
                 background: url("~@/assets/img/ferPot.png") no-repeat;
                 background-size: contain;
+
                 &_detail {
-                    width: 100%;
                     position: absolute;
-                    font-size: 14px;
                     top: 70px;
-                    color: black;
                     left: 3px;
+                    width: 100%;
+                    color: black;
+                    font-size: 14px;
                 }
+
                 &_item2,
                 &_item1 {
+                    position: absolute;
+                    bottom: 0;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 14px;
                     width: 100%;
                     height: 50px;
-                    background: #69c0ff;
-                    position: absolute;
-                    bottom: 0;
                     overflow: hidden;
+                    font-size: 14px;
+                    background: #69c0ff;
+
                     &::before,
                     &::after {
-                        content: "";
                         position: absolute;
                         left: 50%;
                         min-width: 175px;
                         min-height: 165px;
                         background: #fff;
                         animation: roateTwo 10s linear infinite;
+                        content: "";
                     }
+
                     &::before {
                         top: -158px;
                         border-radius: 45%;
                     }
+
                     &::after {
                         top: -152px;
-                        opacity: 0.5;
                         border-radius: 47%;
+                        opacity: 0.5;
                     }
                 }
+
                 &_item2 {
                     height: 100px;
                     background: #1890ff;
                 }
+
                 &:hover &_item1::before,
                 &:hover &_item1::after,
                 &:hover &_item2::before,
@@ -647,18 +664,19 @@ export default {
                     animation: roateOne 10s linear infinite;
                 }
             }
+
             &_detail {
+                float: left;
                 max-width: 112px;
                 height: auto;
-                float: left;
                 margin-top: 25px;
                 margin-left: 10px;
+                padding: 5px;
                 color: #333;
                 font-size: 14px;
                 line-height: 18px;
-                padding: 5px;
-                border-radius: 4px;
                 border: 1px solid #1890ff;
+                border-radius: 4px;
             }
         }
     }
@@ -668,9 +686,11 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     50% {
         transform: translate(-50%, -1%) rotateZ(180deg);
     }
+
     100% {
         transform: translate(-50%, -0%) rotateZ(360deg);
     }
@@ -680,9 +700,11 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     50% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     100% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }

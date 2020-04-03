@@ -468,54 +468,65 @@ export default {
         .el-form-item__label {
             font-size: $base-sise;
         }
+
         .el-form-item {
             margin-bottom: 10px;
         }
     }
+
     .readyBox {
         .el-form-item {
             margin-bottom: 10px !important;
         }
+
         input {
             width: 153px;
         }
     }
+
     .readyshiftBtn {
-        padding: 0;
         margin-left: 15px;
+        padding: 0;
         line-height: 32px;
     }
+
     .machineBox {
         color: white;
+
         &_item {
             padding: 10px;
-            box-shadow: 2px 2px 4px 0 rgba(232, 232, 232, 1);
             border-radius: 8px;
+            box-shadow: 2px 2px 4px 0 rgba(232, 232, 232, 1);
+
             &_title {
-                font-size: $base-sise + 2;
                 margin-bottom: 5px;
+                font-size: $base-sise + 2;
+
                 i {
                     margin-right: 5px;
                 }
             }
+
             &_text {
-                padding-left: 20px;
-                line-height: 22px;
-                font-size: $base-sise;
                 margin-bottom: 5px;
+                padding-left: 20px;
+                font-size: $base-sise;
+                line-height: 22px;
             }
         }
+
         .machineBtn {
-            font-size: $base-sise;
-            line-height: 32px;
-            padding: 0;
             width: 65px;
             height: 32px;
+            padding: 0;
+            font-size: $base-sise;
+            line-height: 32px;
         }
+
         .machineBtn:first-child {
+            color: white;
             background-color: #487bff;
             border: none;
-            color: white;
         }
     }
 }

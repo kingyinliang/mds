@@ -49,13 +49,13 @@
                     </el-col>
                     <el-col style="max-width: 210px; height: 30px;">
                         <div
-                            style="padding-top: 0; float: right; font-size: 14px;"
+                            style=" float: right; padding-top: 0; font-size: 14px;"
                             :style="{
                                 color: orderStatus === 'noPass' ? 'red' : '',
                             }"
                         >
                             <span
-                                style="width: 5px; height: 5px; float: left; background: #1890ff; border-radius: 50%; margin-top: 7px; margin-right: 3px;"
+                                style=" float: left; width: 5px; height: 5px; margin-top: 7px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
                                 :style="{
                                     background: orderStatus === 'noPass' ? 'red' : '#1890FF',
                                 }"
@@ -63,7 +63,7 @@
                         </div>
                     </el-col>
                 </el-row>
-                <el-row style="text-align: right; position: absolute; top: 44px; right: 7px;">
+                <el-row style=" position: absolute; top: 44px; right: 7px; text-align: right;">
                     <template style="float: right; margin-left: 10px;">
                         <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('filter:instorage:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                             {{ isRedact ? '取消' : '编辑' }}
@@ -85,7 +85,7 @@
         </div>
         <div class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
             </div>
@@ -376,10 +376,10 @@ export default {
 <style lang="scss">
 .input_bottom {
     width: 150px;
-    border-bottom: 1px solid rgba(216, 216, 216, 1);
-    overflow: hidden;
     height: 33px;
+    overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    border-bottom: 1px solid rgba(216, 216, 216, 1);
 }
 </style>

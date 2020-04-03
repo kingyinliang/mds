@@ -500,44 +500,52 @@ export default {
 .stock-box {
     padding: 10px;
     color: white;
-    box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
     border: 1px solid rgba(171, 171, 171, 0.5);
+    border-radius: 8px;
+    box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.1);
+
     .stock-title {
+        overflow: hidden;
         font-size: 12px;
         line-height: 12px;
-        text-overflow: ellipsis;
-        overflow: hidden;
         white-space: nowrap;
+        text-overflow: ellipsis;
     }
+
     .stock-container {
         margin-top: 20px;
+
         .stock-img {
+            float: left;
             width: 82px;
             margin-left: 10px;
-            float: left;
         }
+
         .stock-button {
-            margin-top: 32px;
             float: right;
             width: 65px;
             height: 32px;
-            font-size: 12px;
+            margin-top: 32px;
             color: white;
+            font-size: 12px;
             line-height: 32px;
             text-align: center;
             border-radius: 4px;
         }
+
         .enabled {
             background: #487bff;
+
             &:hover {
                 color: #fff;
                 background: #1890ff;
                 cursor: pointer;
             }
         }
+
         .disabled {
             background: #a0cfff;
+
             &:hover {
                 cursor: not-allowed;
             }

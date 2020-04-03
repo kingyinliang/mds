@@ -135,42 +135,47 @@ export default {
         height: 32px;
         border-bottom: 1px solid #d8d8d8;
     }
+
     .noneBorder {
         .el-form-item__content {
             border-bottom: none;
         }
     }
+
     .el-input {
         width: 145px !important;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         line-height: 32px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 }
 </style>
 <style lang="scss" scoped>
 .header_pot {
     width: 160px;
+
     &_label {
-        font-size: 14px;
-        font-weight: 400;
-        color: rgba(102, 102, 102, 1);
         margin-bottom: 15px;
+        color: rgba(102, 102, 102, 1);
+        font-weight: 400;
+        font-size: 14px;
     }
+
     &_image {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
         width: 70px;
         height: 100px;
         margin-left: 20px;
         background: url("~@/assets/img/ferPot.png") no-repeat center center;
         background-size: contain;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
+
         &_content {
-            margin-bottom: 4px;
             width: 42px;
             height: 45px;
+            margin-bottom: 4px;
             background: linear-gradient(#35c3ff, #1890ff);
         }
     }

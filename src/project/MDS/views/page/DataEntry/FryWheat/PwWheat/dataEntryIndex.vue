@@ -416,47 +416,56 @@ export default {
 <style lang="scss">
 #DaatTtabs {
     border-top: 1px solid #e8e8e8;
+
     h3 {
-        font-size: 16px;
-        font-weight: 600;
         float: left;
+        font-weight: 600;
+        font-size: 16px;
     }
+
     span {
         .el-button {
-            background-color: inherit;
-            font-size: 16px;
             padding: 0;
+            font-size: 16px;
+            background-color: inherit;
             border: none;
         }
     }
+
     .el-tabs__item {
         height: 40px;
         line-height: 40px;
     }
+
     table {
         .el-form-item {
             margin-bottom: 0;
         }
     }
+
     .notNull {
         color: red;
     }
+
     .el-table .warning-row > td {
         background: #bbb !important;
         background-color: #bbb !important;
     }
+
     .el-table .warning-row:hover > td {
         background: #bbb !important;
         background-color: #bbb !important;
     }
 }
+
 .required {
     position: relative;
     padding-left: 15px;
+
     .reqI {
-        color: red;
         position: absolute;
         left: 0;
+        color: red;
         line-height: 32px;
     }
 }

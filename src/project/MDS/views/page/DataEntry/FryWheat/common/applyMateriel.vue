@@ -52,7 +52,7 @@
                                 </el-table-column>
                                 <el-table-column prop="currentQuantity" width="auto" headerAlign="left">
                                     <template slot="header">
-                                        <i class="iconfont factory-shuliang" style="font-size: 18px; margin-right: 5px;" />数量
+                                        <i class="iconfont factory-shuliang" style=" margin-right: 5px; font-size: 18px;" />数量
                                     </template>
                                     <template slot-scope="scope">
                                         {{ (scope.row.currentQuantity * 1).toLocaleString() }}
@@ -572,55 +572,64 @@ export default {
 .Card_item {
     .el-card__header {
         padding: 15px 20px;
-        font-size: 16px;
         color: #666;
+        font-size: 16px;
     }
+
     &_detail {
         float: right;
-        cursor: pointer;
         color: #1890ff;
+        cursor: pointer;
     }
+
     &_img {
-        width: 250px;
         position: relative;
+        width: 250px;
+
         img {
             width: 250px;
         }
+
         &_box {
-            width: 89px;
-            height: 161px;
             position: absolute;
-            left: 83px;
             top: 33px;
+            left: 83px;
             display: flex;
             flex-wrap: wrap;
             align-content: flex-end;
+            width: 89px;
+            height: 161px;
+
             &_bg {
-                flex: 1;
-                height: 161px;
-                align-items: center;
                 position: relative;
-                background: linear-gradient(#35c3ff, #1890ff);
+                flex: 1;
+                align-items: center;
+                height: 161px;
                 overflow: hidden;
+                background: linear-gradient(#35c3ff, #1890ff);
+
                 &::before {
                     top: -138px;
                     border-radius: 45%;
                 }
+
                 &::after {
                     top: -132px;
-                    opacity: 0.5;
                     border-radius: 47%;
+                    opacity: 0.5;
                 }
+
                 &::before,
                 &::after {
-                    content: "";
                     position: absolute;
                     left: 50%;
                     min-width: 155px;
                     min-height: 145px;
                     background: #fff;
                     animation: roateTwo 10s linear infinite;
+                    content: "";
                 }
+
                 &:hover {
                     &::before,
                     &::after {
@@ -630,39 +639,46 @@ export default {
             }
         }
     }
+
     &_text {
         flex: 1;
+
         .el-card__header {
-            font-size: 14px;
             padding: 10px 12px;
-            background: #1890ff;
             color: white;
+            font-size: 14px;
+            background: #1890ff;
         }
+
         &_box {
             position: relative;
-            padding-bottom: 6px;
             max-height: 180px;
+            padding-bottom: 6px;
             overflow: scroll;
+
             &_bg1,
             &_bg2 {
                 position: absolute;
+                z-index: 999;
                 width: 100%;
                 height: 20px;
                 background: linear-gradient(rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
-                z-index: 999;
             }
+
             &_bg2 {
                 bottom: 0;
                 background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
             }
         }
+
         .Card_item_text_box::-webkit-scrollbar {
             display: none;
         }
+
         &_item {
+            padding-top: 10px;
             color: #4a4a4a;
             font-size: 14px;
-            padding-top: 10px;
         }
     }
 }
@@ -671,9 +687,11 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     50% {
         transform: translate(-50%, -1%) rotateZ(180deg);
     }
+
     100% {
         transform: translate(-50%, -0%) rotateZ(360deg);
     }
@@ -683,9 +701,11 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     50% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     100% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }

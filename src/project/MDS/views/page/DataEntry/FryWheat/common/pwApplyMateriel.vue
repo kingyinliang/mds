@@ -12,7 +12,7 @@
                         申请订单
                     </el-button>
                 </div>
-                <el-form ref="form" labelWidth="100px" size="small" style="float: right; margin-bottom: 10px; margin-right: 5px;">
+                <el-form ref="form" labelWidth="100px" size="small" style="float: right; margin-right: 5px; margin-bottom: 10px;">
                     <el-form-item label="生产调度员：" style="margin-bottom: 0;">
                         <el-select v-model="dispatcherCode" size="small" valueKey="dispatcherCode" placeholder="请选择生产调度员" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'">
                             <el-option v-for="(item, index) in dictListObj['PW_FEVOR']" :key="index" :label="item.code" :value="item.code" />

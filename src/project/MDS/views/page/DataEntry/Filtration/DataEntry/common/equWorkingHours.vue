@@ -279,38 +279,43 @@ export default {
 .rowDel {
     display: none;
 }
+
 .grid-content {
-    height: 176px;
-    border-radius: 2px;
-    border: 1px solid rgba(233, 233, 233, 1);
-    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
+    height: 176px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(233, 233, 233, 1);
+    border-radius: 2px;
+
     .title {
-        font-size: 14px;
-        font-weight: 600;
-        color: rgba(0, 0, 0, 0.85);
-        line-height: 24px;
         margin-top: 20px;
+        color: rgba(0, 0, 0, 0.85);
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 24px;
     }
+
     .content {
         margin-top: 7px;
-        font-size: 12px;
-        font-weight: 400;
         color: rgba(153, 153, 153, 1);
+        font-weight: 400;
+        font-size: 12px;
         line-height: 22px;
     }
+
     .footer {
         background: rgba(247, 249, 250, 1);
         border-top: 1px solid rgba(233, 233, 233, 1);
+
         .button {
-            border: none;
-            background: none;
-            padding: 0;
-            border-right: 1px solid #e8e8e8;
             width: 100%;
-            line-height: 20px;
             margin: 10px 0;
+            padding: 0;
+            line-height: 20px;
+            background: none;
+            border: none;
+            border-right: 1px solid #e8e8e8;
         }
     }
 }

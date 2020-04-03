@@ -520,25 +520,28 @@ export default {
     height: 184px;
     border: 1px solid #e9e9e9;
     border-radius: 2px;
+
     .stock-img {
+        float: left;
         width: 48px;
         height: 48px;
-        border-radius: 24px;
-        float: left;
-        margin-left: 24px;
         margin-top: 24px;
+        margin-left: 24px;
         // background: url('../../../../../assets/img/wheat.png')
         background: url("~@/assets/img/wheat.png");
+        border-radius: 24px;
         // ~ 表示根目录，@表示src目录
     }
+
     .stock-text {
         float: left;
-        margin-left: 20px;
         margin-top: 30px;
-        font-size: 16px;
+        margin-left: 20px;
         font-weight: 500;
+        font-size: 16px;
         font-family: PingFangSC-Medium, sans-serif;
     }
+
     .stock-button {
         height: 48px;
         margin-top: 62px;
@@ -548,17 +551,21 @@ export default {
         border-top: 1px solid #e9e9e9;
         border-radius: 0 0 2px 2px;
     }
+
     .enabled {
         background: #f7f9fa;
+
         &:hover {
             color: #fff;
             background: #1890ff;
             cursor: pointer;
         }
     }
+
     .disabled {
         color: rgba(0, 0, 0, 0.6);
         background: #f7f9fa;
+
         &:hover {
             cursor: not-allowed;
         }

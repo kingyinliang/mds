@@ -45,7 +45,7 @@
                         </el-form>
                     </el-col>
                     <el-col :span="6" style="font-size: 14px; line-height: 32px;">
-                        <div style="text-align: left; overflow: hidden; float: right;">
+                        <div style=" float: right; overflow: hidden; text-align: left;">
                             <span
                                 class="point"
                                 :style="{
@@ -59,7 +59,7 @@
                             >{{ headList.status === 'noPass' ? '审核不通过' : headList.status === 'saved' ? '已保存' : headList.status === 'submit' ? '已提交' : headList.status === 'checked' ? '通过' : headList.status === '已同步' ? '未录入' : headList.status }}</span>
                         </div>
                         <div style="clear: both;" />
-                        <div style="width: 100%; text-align: right; margin-top: 47px;">
+                        <div style="width: 100%; margin-top: 47px; text-align: right;">
                             <template style="float: right; margin-left: 10px;">
                                 <el-button v-if="isAuth('filter:timeSheet:list')" type="primary" size="small" @click="GetTimeList">
                                     查询
@@ -86,14 +86,14 @@
         </div>
         <div class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
             </div>
             <div v-show="searchCard">
                 <el-card class="box-cards NewDaatTtabs">
                     <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" labelWidth="125px">
-                        <mds-card :title="'准备时间（分钟：min）'" :name="'ready'" style="margin-bottom: 10px; position: relative;" class="readyCard">
+                        <mds-card :title="'准备时间（分钟：min）'" :name="'ready'" style=" position: relative; margin-bottom: 10px;" class="readyCard">
                             <template slot="titleBtn">
                                 <el-form-item label="班次：" style="float: right; margin-bottom: 10px;">
                                     <el-select v-model="readyTimeDate.classes" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))">
@@ -552,8 +552,8 @@ export default {
 <style lang="scss" scoped>
 .manHour {
     position: absolute;
-    bottom: 8px;
     right: 10px;
+    bottom: 8px;
     z-index: 999;
 }
 </style>
@@ -564,6 +564,7 @@ export default {
         padding: 12px !important;
     }
 }
+
 .readyCard {
     input {
         width: 147px !important;

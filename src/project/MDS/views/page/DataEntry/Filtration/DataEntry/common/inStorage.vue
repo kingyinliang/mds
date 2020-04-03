@@ -3,7 +3,7 @@
         <div class="inStorage_card">
             <div style="width: 138px;" class="inStorage_card_left">
                 <p>过滤罐</p>
-                <div style="text-align: center; padding: 0 10px; position: relative;">
+                <div style=" position: relative; padding: 0 10px; text-align: center;">
                     <img src="@/assets/img/ferPot.png" alt="" style="width: 112px; height: 190px;">
                     <div class="potDetail">
                         <p>{{ PotDetail.batch }}</p>
@@ -46,7 +46,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div style="line-height: 32px; font-size: 14px; margin-top: 8px;">
+                <div style=" margin-top: 8px; font-size: 14px; line-height: 32px;">
                     产出数合计：{{ countOutputNum }}
                 </div>
             </div>
@@ -468,39 +468,44 @@ export default {
 .inStorage_card_left_btn {
     width: 100%;
     margin-top: 10px;
-    border-radius: 0 0 6px 6px;
     background: #f7f9fa;
+    border-radius: 0 0 6px 6px;
 }
 </style>
 <style lang="scss" scoped>
 .inStorage_card {
     display: flex;
+
     &_left {
-        padding: 0;
-        margin-right: 5px;
         width: 158px;
+        margin-right: 5px;
+        padding: 0;
         background: rgba(255, 255, 255, 1);
-        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
-        border-radius: 6px;
         border: 1px solid rgba(0, 0, 0, 0.09);
+        border-radius: 6px;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
+
         p {
             padding: 10px;
             font-size: 14px;
         }
     }
 }
+
 .inStorage_card_left_btn:hover {
     color: #fff !important;
     background: #1890ff !important;
 }
+
 .potDetail {
-    width: 92px;
     position: absolute;
     top: 40px;
     left: 20px;
+    width: 92px;
+
     p {
-        line-height: 20px;
         padding: 0;
+        line-height: 20px;
     }
 }
 </style>

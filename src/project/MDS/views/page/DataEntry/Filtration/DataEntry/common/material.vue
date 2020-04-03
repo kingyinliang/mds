@@ -3,7 +3,7 @@
         <div class="inStorage_card">
             <div style="width: 158px;" class="inStorage_card_left">
                 <p>半成品罐</p>
-                <div style="text-align: center; padding: 0 20px;">
+                <div style=" padding: 0 20px; text-align: center;">
                     <img src="@/assets/img/ferPot.png" alt="" style="width: 92px; height: 190px;">
                 </div>
                 <el-button type="text" class="button" size="small" :disabled="!isRedact" @click="ShowDialog()">
@@ -321,28 +321,33 @@ export default {
 .rowDel {
     display: none;
 }
+
 .inStorage_card {
     display: flex;
+
     .button {
-        border: none;
-        padding: 0;
         width: 100%;
-        line-height: 32px;
         margin-top: 10px;
-        background: #f7f9fa;
-    }
-    &_left {
         padding: 0;
-        margin-right: 5px;
+        line-height: 32px;
+        background: #f7f9fa;
+        border: none;
+    }
+
+    &_left {
         width: 158px;
+        margin-right: 5px;
+        padding: 0;
         background: rgba(255, 255, 255, 1);
-        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
-        border-radius: 6px;
         border: 1px solid rgba(0, 0, 0, 0.09);
+        border-radius: 6px;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
+
         p {
             padding: 10px;
             font-size: 14px;
         }
+
         &_btn {
             width: 100%;
             margin-top: 10px;
