@@ -260,15 +260,19 @@ export default {
 .el-table th > .cell {
     text-align: center;
 }
+
 .width199px {
     width: 199px;
 }
+
 .el-date-editor .el-range-input {
     width: 100px;
 }
+
 .el-range-editor--small .el-range-separator {
     padding-right: 20px;
 }
+
 .search-card {
     .el-button--primary,
     .el-button--primary:focus {
@@ -276,13 +280,15 @@ export default {
         background-color: #fff;
         border-color: #d9d9d9;
     }
+
     .el-button--primary:hover {
-        background-color: #1890ff;
         color: #fff;
+        background-color: #1890ff;
     }
+
     .el-button--primary:first-child {
-        background-color: #1890ff;
         color: #fff;
+        background-color: #1890ff;
         border-color: #1890ff;
     }
 }

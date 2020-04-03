@@ -1,5 +1,5 @@
 <template>
-    <div class="header_main" style="background: #fff; margin: 10px; padding: 15px;">
+    <div class="header_main" style=" margin: 10px; padding: 15px; background: #fff;">
         <div style="overflow: hidden;">
             <div class="titleLeft">
                 (单位:罐)
@@ -56,8 +56,8 @@ export default {
 
 <style scoped>
 .titleLeft {
+    float: left;
     font-weight: 600;
     line-height: 32px;
-    float: left;
 }
 </style>

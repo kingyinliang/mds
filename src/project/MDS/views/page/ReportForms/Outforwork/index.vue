@@ -6,7 +6,7 @@
                     <el-col>
                         <linkage :plantList="plantList" />
                     </el-col>
-                    <el-col style="width: 200px; text-align: right; margin-top: 42px;">
+                    <el-col style="width: 200px; margin-top: 42px; text-align: right;">
                         <el-button v-if="isAuth('report:form:listShopAttM')" type="primary" size="small" @click="GetList(true)">
                             查询
                         </el-button>
