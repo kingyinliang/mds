@@ -7,13 +7,13 @@
                 </el-col>
                 <el-col style="width: 100px;">
                     <div
-                        style="padding-top: 0; float: right;"
+                        style=" float: right; padding-top: 0;"
                         :style="{
                             color: orderStatus === 'noPass' ? 'red' : '',
                         }"
                     >
                         <span
-                            style="width: 5px; height: 5px; float: left; background: #1890ff; border-radius: 50%; margin-top: 7px; margin-right: 3px;"
+                            style=" float: left; width: 5px; height: 5px; margin-top: 7px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
                             :style="{
                                 background: orderStatus === 'noPass' ? 'red' : '#1890FF',
                             }"
@@ -21,7 +21,7 @@
                     </div>
                 </el-col>
             </el-row>
-            <el-row style="text-align: right; position: absolute; bottom: 10px; right: 20px;" class="buttonCss">
+            <el-row style=" position: absolute; right: 20px; bottom: 10px; text-align: right;" class="buttonCss">
                 <template style="float: right; margin-left: 10px;">
                     <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:tec:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                         {{ isRedact ? '取消' : '编辑' }}

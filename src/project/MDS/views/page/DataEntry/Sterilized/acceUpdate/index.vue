@@ -142,7 +142,7 @@
         </el-card>
         <el-card class="newCard">
             <div class="clearfix" style="padding-top: 5px; padding-bottom: 5px;">
-                <h3 style="line-height: 32px; float: left;">
+                <h3 style=" float: left; line-height: 32px;">
                     增补料记录
                 </h3>
                 <el-button type="primary" icon="el-icon-plus" circle size="mini" :disabled="!isRedact" style="float: right;" @click="addSup()" />

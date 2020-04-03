@@ -7,13 +7,13 @@
                 </el-col>
                 <el-col style="width: 100px;">
                     <div
-                        style="padding-top: 0; float: right;"
+                        style=" float: right; padding-top: 0;"
                         :style="{
                             color: orderStatus === 'noPass' ? 'red' : '',
                         }"
                     >
                         <span
-                            style="width: 5px; height: 5px; float: left; background: #1890ff; border-radius: 50%; margin-top: 7px; margin-right: 3px;"
+                            style=" float: left; width: 5px; height: 5px; margin-top: 7px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
                             :style="{
                                 background: orderStatus === 'noPass' ? 'red' : '#1890FF',
                             }"
@@ -21,7 +21,7 @@
                     </div>
                 </el-col>
             </el-row>
-            <el-row style="text-align: right; position: absolute; bottom: 10px; right: 20px;" class="buttonCss">
+            <el-row style=" position: absolute; right: 20px; bottom: 10px; text-align: right;" class="buttonCss">
                 <template style="float: right; margin-left: 10px;">
                     <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:inStorage:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                         {{ isRedact ? '取消' : '编辑' }}
@@ -45,7 +45,7 @@
                 <div class="instorage-card" style="min-width: 1128px;">
                     <div style="width: 138px;" class="instorage-card-left">
                         <p>杀菌罐</p>
-                        <div style="text-align: center; padding: 0 10px; position: relative;">
+                        <div style=" position: relative; padding: 0 10px; text-align: center;">
                             <img src="@/assets/img/ferPot.png" alt="" style="width: 112px; height: 190px;">
                             <div class="pot-detail">
                                 <p>{{ PotDetail.batch }}</p>
@@ -553,14 +553,15 @@ export default {
 <style lang="scss" scoped>
 .instorage-card {
     display: flex;
+
     &_left {
-        padding: 0;
-        margin-right: 5px;
         width: 158px;
+        margin-right: 5px;
+        padding: 0;
         background: rgba(255, 255, 255, 1);
-        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
-        border-radius: 6px;
         border: 1px solid rgba(0, 0, 0, 0.09);
+        border-radius: 6px;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
 
         p {
             padding: 10px;
@@ -568,14 +569,16 @@ export default {
         }
     }
 }
+
 .pot-detail {
-    width: 92px;
     position: absolute;
     top: 40px;
     left: 20px;
+    width: 92px;
+
     p {
-        line-height: 20px;
         padding: 0;
+        line-height: 20px;
     }
 }
 </style>

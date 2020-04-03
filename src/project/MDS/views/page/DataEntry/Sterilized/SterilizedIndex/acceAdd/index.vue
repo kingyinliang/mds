@@ -7,13 +7,13 @@
                 </el-col>
                 <el-col style="width: 100px;">
                     <div
-                        style="padding-top: 0; float: right;"
+                        style=" float: right; padding-top: 0;"
                         :style="{
                             color: orderStatus === 'noPass' ? 'red' : '',
                         }"
                     >
                         <span
-                            style="width: 5px; height: 5px; float: left; background: #1890ff; border-radius: 50%; margin-top: 7px; margin-right: 3px;"
+                            style=" float: left; width: 5px; height: 5px; margin-top: 7px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
                             :style="{
                                 background: orderStatus === 'noPass' ? 'red' : '#1890FF',
                             }"
@@ -22,7 +22,7 @@
                 </el-col>
                 <img v-if="supStatus" src="@/assets/img/zhang.png" alt="" class="sup-status">
             </el-row>
-            <el-row style="text-align: right; position: absolute; bottom: 10px; right: 20px;" class="buttonCss">
+            <el-row style=" position: absolute; right: 20px; bottom: 10px; text-align: right;" class="buttonCss">
                 <template style="float: right; margin-left: 10px;">
                     <el-button type="primary" class="button" size="small" @click="Refresh">
                         刷新
@@ -261,10 +261,10 @@
                     'overflow-y': addSupOverData.length > 5 || SupOverData.length > 5 ? 'scroll' : 'initial',
                 }"
             >
-                <p v-for="(item, index) in addSupOverData" :key="index" style="line-height: 20px; margin-bottom: 8px;">
+                <p v-for="(item, index) in addSupOverData" :key="index" style=" margin-bottom: 8px; line-height: 20px;">
                     {{ item.materialCode + ' ' + item.materialName }}已经添加{{ item.receiveAmount + item.unit }},确认添加完成！
                 </p>
-                <p v-for="(item, index) in SupOverData" :key="index" style="line-height: 20px; margin-bottom: 8px;">
+                <p v-for="(item, index) in SupOverData" :key="index" style=" margin-bottom: 8px; line-height: 20px;">
                     {{ item.materialCode + ' ' + item.materialName }}已经添加{{ item.receiveAmount + item.unit }},确认添加完成！
                 </p>
             </div>
@@ -756,11 +756,11 @@ export default {
 }
 
 .sup-status {
+    position: absolute;
+    top: 20px;
+    right: 90px;
     width: 100px;
     height: 100px;
-    position: absolute;
-    right: 90px;
-    top: 20px;
     transform: rotateZ(-30deg);
 }
 </style>

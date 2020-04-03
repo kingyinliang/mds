@@ -401,46 +401,54 @@ export default {
 #printMain {
     width: 297mm;
     height: 210mm;
+
     td,
     th,
     tr {
         font-size: 12px;
         text-align: center !important;
     }
+
     table {
         td {
             padding: 2px 5px;
         }
     }
 }
+
 .search-card {
     margin-bottom: 0;
 }
+
 .search-card,
 .table-card {
     position: relative;
+
     .toggle-search_top {
-        width: 100%;
         position: absolute;
         top: 0;
         left: 0;
+        display: none;
+        width: 100%;
         text-align: center;
         cursor: pointer;
-        display: none;
     }
+
     .toggle-search_bottom {
-        width: 100%;
         position: absolute;
         bottom: 0;
         left: 0;
+        width: 100%;
         text-align: center;
         cursor: pointer;
     }
+
     .el-icon-caret-top::before,
     .el-icon-caret-bottom::before {
         color: #dcdfe6;
     }
 }
+
 .topforms {
     .el-date-editor.el-input {
         width: auto;

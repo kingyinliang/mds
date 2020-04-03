@@ -327,106 +327,122 @@ export default {
 
 .dataList {
     margin-top: 10px;
+
     &_item {
         margin-bottom: 10px;
+
         &_tit {
-            font-weight: 200;
-            color: black;
-            font-size: 16px;
             padding: 0 10px;
+            color: black;
+            font-weight: 200;
+            font-size: 16px;
             line-height: 40px;
             border-bottom: 1px solid #e8e8e8;
+
             &_right {
-                float: right;
-                font-size: 14px;
                 position: relative;
+                float: right;
                 padding-left: 8px;
+                font-size: 14px;
             }
+
             &_dian {
+                position: absolute;
+                top: 17px;
+                left: 0;
                 width: 6px;
                 height: 6px;
-                border-radius: 50%;
-                position: absolute;
                 background: #1890ff;
-                left: 0;
-                top: 17px;
+                border-radius: 50%;
             }
         }
+
         &_body {
             position: relative;
-            padding-top: 10px;
             display: flex;
             justify-content: center;
+            padding-top: 10px;
+
             &_ptobox {
+                position: relative;
                 width: 100px;
                 min-width: 100px;
                 height: 111px;
                 margin-top: 10px;
-                position: relative;
                 background: url("~@/assets/img/sterilized.png") no-repeat;
                 background-size: contain;
+
                 &_pto {
-                    width: 41px;
-                    border-bottom-right-radius: 53px 21px;
-                    border-bottom-left-radius: 53px 21px;
-                    height: 53px;
                     position: absolute;
                     top: 13px;
                     left: 28px;
                     display: flex;
                     flex-wrap: wrap;
                     align-content: flex-end;
+                    width: 41px;
+                    height: 53px;
                     overflow: hidden;
+                    border-bottom-right-radius: 53px 21px;
+                    border-bottom-left-radius: 53px 21px;
+
                     &_bg {
-                        flex: 1;
-                        height: 40px;
-                        align-items: center;
-                        overflow: hidden;
                         position: relative;
+                        flex: 1;
+                        align-items: center;
+                        height: 40px;
+                        overflow: hidden;
                         background: linear-gradient(#35c3ff, #1890ff);
+
                         &::before,
                         &::after {
-                            content: "";
                             position: absolute;
                             left: 50%;
                             min-width: 65px;
                             min-height: 60px;
                             background: #fff;
                             animation: roateTwo 10s linear infinite;
+                            content: "";
                         }
+
                         &::before {
                             top: -55px;
                             border-radius: 45%;
                         }
+
                         &::after {
                             top: -51px;
-                            opacity: 0.5;
                             border-radius: 47%;
+                            opacity: 0.5;
                         }
                     }
                 }
+
                 &:hover &_pto_bg::before,
                 &:hover &_pto_bg::after {
                     animation: roateOne 10s linear infinite;
                 }
             }
+
             &_text {
+                position: relative;
                 width: 170px;
                 min-width: 170px;
-                position: relative;
+
                 .el-form-item {
-                    margin-bottom: 4px !important;
                     margin-right: 0 !important;
+                    margin-bottom: 4px !important;
                 }
+
                 &_tit {
                     width: 100px;
                     min-height: 29px;
-                    font-size: 12px;
-                    border-bottom: 1px solid #d8d8d8;
                     overflow: hidden;
-                    text-overflow: ellipsis;
+                    font-size: 12px;
                     white-space: nowrap;
+                    text-overflow: ellipsis;
+                    border-bottom: 1px solid #d8d8d8;
                 }
+
                 &_img {
                     position: absolute;
                     top: 10px;
@@ -444,9 +460,11 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     50% {
         transform: translate(-50%, -1%) rotateZ(180deg);
     }
+
     100% {
         transform: translate(-50%, -0%) rotateZ(360deg);
     }
@@ -456,9 +474,11 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     50% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     100% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
@@ -468,9 +488,11 @@ export default {
 .el-select-dropdown__wrap {
     max-height: 200px;
 }
+
 .header_main .dataList_item .el-card__body {
     padding: 0 !important;
 }
+
 .header_main .dataList_item_body_text .el-form-item {
     .el-form-item__label {
         font-size: 12px;

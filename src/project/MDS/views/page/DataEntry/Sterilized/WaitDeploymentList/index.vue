@@ -2,7 +2,7 @@
     <div class="header_main">
         <el-card class="searchCard">
             <el-row>
-                <el-col style="width: 975px; float: left;">
+                <el-col style=" float: left; width: 975px;">
                     <el-form :model="formHeader" :inline="true" size="small" labelWidth="70px" class="sole_row">
                         <el-form-item label="生产工厂：">
                             <el-select v-model="formHeader.factory" placeholder="请选择" class="width150px">
@@ -33,7 +33,7 @@
                         </el-form-item>
                     </el-form>
                 </el-col>
-                <el-col style="width: 127px; float: right;">
+                <el-col style=" float: right; width: 127px;">
                     <el-button v-if="isAuth('ste:pkgOrder:orderList')" type="primary" size="small" @click="GetList(true)">
                         查询
                     </el-button>
@@ -43,7 +43,7 @@
                 </el-col>
             </el-row>
         </el-card>
-        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs secondcard" type="border-card" style="border-radius: 15px; overflow: hidden;" @tab-click="handleClick">
+        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs secondcard" type="border-card" style=" overflow: hidden; border-radius: 15px;" @tab-click="handleClick">
             <el-tab-pane name="BL">
                 <span slot="label" class="spanview">
                     <el-button>待调配</el-button>

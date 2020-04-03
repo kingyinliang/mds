@@ -63,7 +63,7 @@
         </div>
         <div class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
             </div>

@@ -36,8 +36,8 @@
             </el-form>
         </el-card>
         <el-card v-show="fastS" class="searchCard  newCard ferCard" style="margin-top: 5px; padding: 0 !important;">
-            <h3 style="color: black; margin-bottom: 8px;">
-                <i class="iconfont factory-liebiao" style="color: #666; margin-right: 10px;" />半成品罐列表
+            <h3 style=" margin-bottom: 8px; color: black;">
+                <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />半成品罐列表
                 <i v-if="isAuth('ste:semi:reportForm')" class="gotop" @click="goPot"><a>杀菌罐区库存情况>></a></i>
             </h3>
             <el-row class="dataList" :gutter="10" style="min-height: 150px;">
@@ -46,12 +46,12 @@
                         <h3 class="dataList_item_tit">
                             {{ item.holderNo }} -
                             <span style="color: rgb(51, 51, 51); font-weight: 400; font-size: 14px;">{{ item.holderStatus === '1' ? '入库中' : item.holderStatus === '0' ? '空罐' : item.holderStatus === '2' ? '满罐' : item.holderStatus === '3' ? '领用中' : '' }}</span>
-                            <span v-if="isAuth('filter:holder:list')" style="cursor: pointer; color: #1890ff; float: right; font-size: 12px;" @click="godetails(item)">详情>></span>
+                            <span v-if="isAuth('filter:holder:list')" style=" float: right; color: #1890ff; font-size: 12px; cursor: pointer;" @click="godetails(item)">详情>></span>
                         </h3>
                         <div class="dataList_item_pot clearfix" style="position: relative;">
-                            <img v-if="item.isRdSign === '1'" src="@/assets/img/RD.png" alt="" style="position: absolute; left: 10px; top: 10px;">
+                            <img v-if="item.isRdSign === '1'" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
                             <div class="dataList_item_pot_box">
-                                <div class="dataList_item_pot_box1" style="display: flex; flex-wrap: wrap; align-content: flex-end; position: relative;">
+                                <div class="dataList_item_pot_box1" style=" position: relative; display: flex; flex-wrap: wrap; align-content: flex-end;">
                                     <div v-if="item.holderStatus === '1' || item.holderStatus === '3'" class="dataList_item_pot_box_item1" :style="`height:${item.amount <= 0 ? '0' : item.amount / item.holderHold > 1 ? '100' : (item.amount / item.holderHold) * 100}%`" />
                                     <div v-if="item.holderStatus === '2'" class="dataList_item_pot_box_item2 dataList_item_pot_box_item2s" :style="`height:150%`" />
                                     <div v-else class="dataList_item_pot_box_item1" :style="`height:0%`">
@@ -70,15 +70,15 @@
                             </div>
                         </div>
                         <el-row class="bottom">
-                            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" style="border: none; padding: 0;" @click="GnProp(item)">
+                            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" style=" padding: 0; border: none;" @click="GnProp(item)">
                                 GN搅罐
                             </el-button>
                             <div class="bottom-split" />
-                            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" style="border: none; padding: 0;" @click="JsbProp(item)">
+                            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" style=" padding: 0; border: none;" @click="JsbProp(item)">
                                 JBS出库
                             </el-button>
                             <div class="bottom-split" />
-                            <el-button class="bottom-item" :disabled="!isAuth('ste:semi:dumpSemiMaterial') || item.holderStatus === '0'" style="border: none; padding: 0;" @click="ZcProp(item)">
+                            <el-button class="bottom-item" :disabled="!isAuth('ste:semi:dumpSemiMaterial') || item.holderStatus === '0'" style=" padding: 0; border: none;" @click="ZcProp(item)">
                                 转储
                             </el-button>
                         </el-row>
@@ -673,82 +673,95 @@ export default {
 <style lang="scss" scoped>
 .dataList {
     margin-top: 10px;
+
     &_item {
         margin-bottom: 10px;
+
         &_tit {
-            font-weight: 600;
-            color: black;
-            font-size: 16px;
             padding: 0 10px;
+            color: black;
+            font-weight: 600;
+            font-size: 16px;
             line-height: 45px;
             border-bottom: 1px solid #e8e8e8;
         }
+
         &_a {
-            cursor: pointer;
-            color: #1890ff;
             float: right;
+            color: #1890ff;
+            cursor: pointer;
         }
+
         &_pot {
-            padding: 17px 10px 10px;
             display: flex;
-            justify-content: center;
             align-items: flex-start;
+            justify-content: center;
+            padding: 17px 10px 10px;
             overflow: hidden;
+
             &_box1 {
-                overflow: hidden;
                 width: 102px;
                 height: 197px;
-            }
-            &_box {
                 overflow: hidden;
-                padding: 25px 9px 9px;
-                float: left;
+            }
+
+            &_box {
                 display: flex;
                 flex-wrap: wrap;
                 align-content: flex-end;
+                float: left;
                 width: 120px;
-                height: 229px;
                 min-width: 120px;
+                height: 229px;
+                padding: 25px 9px 9px;
+                overflow: hidden;
                 background: url("~@/assets/img/ferPot.png") no-repeat;
                 background-size: contain;
+
                 &_item1,
                 &_item2 {
-                    width: 100%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    width: 100%;
                     font-size: 14px;
                 }
+
                 &_item2s,
                 &_item1 {
-                    height: 50px;
-                    background: #69c0ff;
                     position: relative;
+                    height: 50px;
                     overflow: hidden;
+                    background: #69c0ff;
+
                     &::before,
                     &::after {
-                        content: "";
                         position: absolute;
                         left: 50%;
                         min-width: 175px;
                         min-height: 165px;
                         background: #fff;
                         animation: roateTwo 10s linear infinite;
+                        content: "";
                     }
+
                     &::before {
                         top: -158px;
                         border-radius: 45%;
                     }
+
                     &::after {
                         top: -152px;
-                        opacity: 0.5;
                         border-radius: 47%;
+                        opacity: 0.5;
                     }
                 }
+
                 &_item2 {
                     height: 100px;
                     background: #69c0ff;
                 }
+
                 &:hover &_item1::before,
                 &:hover &_item1::after,
                 &:hover &_item2s::before,
@@ -756,48 +769,55 @@ export default {
                     animation: roateOne 10s linear infinite;
                 }
             }
+
             &_detail {
-                max-width: 112px;
                 position: absolute;
-                height: auto;
+                top: 66px;
+                left: 0;
                 float: left;
+                max-width: 112px;
+                height: auto;
                 color: #333;
                 font-size: 14px;
                 line-height: 18px;
                 border-radius: 4px;
-                left: 0;
-                top: 66px;
             }
         }
+
         .bottom {
             display: flex;
             flex-direction: row;
+            align-items: center;
             justify-content: space-between;
+            width: 100%;
             height: 40px;
             background: rgba(247, 249, 250, 1);
-            align-items: center;
-            width: 100%;
+
             .bottom-item {
-                text-align: center;
                 flex: 1;
-                font-size: 14px;
-                line-height: 40px;
-                background: #f7f9fa;
-                border-radius: 0;
-                border: none;
                 height: 40px;
                 padding: 0;
+                font-size: 14px;
+                line-height: 40px;
+                text-align: center;
+                background: #f7f9fa;
+                border: none;
+                border-radius: 0;
+
                 &:hover {
                     color: #fff;
                     background: #1890ff;
                 }
+
                 &.is-disabled {
                     color: #606266;
                 }
+
                 &.is-disabled:hover {
                     color: #fff;
                 }
             }
+
             .bottom-split {
                 width: 1px;
                 height: 16px;
@@ -811,9 +831,11 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     50% {
         transform: translate(-50%, -1%) rotateZ(180deg);
     }
+
     100% {
         transform: translate(-50%, -0%) rotateZ(360deg);
     }
@@ -823,9 +845,11 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     50% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
+
     100% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
@@ -836,18 +860,21 @@ export default {
     .el-card__body {
         padding: 7px;
     }
+
     .cardTit {
-        font-size: 16px;
+        padding-bottom: 10px;
         color: black;
         font-weight: 400;
-        padding-bottom: 10px;
+        font-size: 16px;
         border-bottom: 1px solid #e9e9e9;
     }
+
     .gotop {
         float: right;
         color: #1890ff;
         font-size: 14px;
         cursor: pointer;
+
         i {
             &::before {
                 color: #1890ff;
@@ -855,14 +882,17 @@ export default {
         }
     }
 }
+
 .dialog__class {
     border-radius: 6px !important;
+
     .el-dialog__header {
         height: 59px;
-        background: rgba(24, 144, 255, 1);
-        border-radius: 6px 6px 0 0;
         color: #fff;
         font-size: 20px;
+        background: rgba(24, 144, 255, 1);
+        border-radius: 6px 6px 0 0;
+
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }

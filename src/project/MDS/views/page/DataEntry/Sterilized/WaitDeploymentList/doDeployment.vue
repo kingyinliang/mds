@@ -55,10 +55,10 @@
                                 </p>
                             </el-form-item>
                             <el-form-item>
-                                <span v-if="typeString === '调配'" style="color: #606266; float: left; margin-left: 5px;">
+                                <span v-if="typeString === '调配'" style=" float: left; margin-left: 5px; color: #606266;">
                                     计划BL原汁总量（L）：
                                 </span>
-                                <span v-else style="color: #606266; float: left; margin-left: 5px;">
+                                <span v-else style=" float: left; margin-left: 5px; color: #606266;">
                                     原汁总量（L）：
                                 </span>
                                 <p style="float: left;" class="input_bottom">
@@ -66,7 +66,7 @@
                                 </p>
                             </el-form-item>
                             <el-form-item label="备注：">
-                                <textarea v-model="remark" :disabled="!isRedact" style="width: 850px; height: 50px; background: rgba(255, 255, 255, 1); border-radius: 4px; border: 1px solid rgba(217, 217, 217, 1);" />
+                                <textarea v-model="remark" :disabled="!isRedact" style="width: 850px; height: 50px; background: rgba(255, 255, 255, 1); border: 1px solid rgba(217, 217, 217, 1); border-radius: 4px;" />
                             </el-form-item>
                         </el-col>
                         <el-col :span="3" style="text-align: right;">
@@ -96,7 +96,7 @@
         </div>
         <div class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
             </div>
@@ -535,20 +535,23 @@ export default {
 <style lang="scss">
 .input_bottom {
     width: 150px;
-    border-bottom: 1px solid rgba(216, 216, 216, 1);
-    overflow: hidden;
     height: 33px;
+    overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    border-bottom: 1px solid rgba(216, 216, 216, 1);
 }
+
 .dialog__class {
     border-radius: 6px !important;
+
     .el-dialog__header {
         height: 59px;
-        background: rgba(24, 144, 255, 1);
-        border-radius: 6px 6px 0 0;
         color: #fff;
         font-size: 20px;
+        background: rgba(24, 144, 255, 1);
+        border-radius: 6px 6px 0 0;
+
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }
