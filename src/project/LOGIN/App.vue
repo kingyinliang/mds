@@ -27,10 +27,14 @@ export default class Index extends Vue {}
 </script>
 
 <style lang="scss">
-    html,body{
+    html,
+    body {
         margin: 0;
     }
-    html,body,#app{
+
+    html,
+    body,
+    #app {
         width: 100%;
         height: 100%;
     }

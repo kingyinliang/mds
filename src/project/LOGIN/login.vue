@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100%;height: 100%;">
+    <div style="width: 100%; height: 100%;">
         <el-row class="login_box">
             <el-col :span="16">
                 <div class="canvas_box">
@@ -218,75 +218,89 @@ export default {
 
 <style lang="scss">
 .bg1 {
-    width: 200px;
     position: absolute;
-    transform-style: preserve-3d;
+    width: 200px;
     transform: rotateY(35deg);
+    transform-style: preserve-3d;
 }
+
 video {
     object-fit: fill;
 }
+
 .loginForm {
-    width: 320px;
-    height: 254px;
     position: fixed;
     top: 200px;
     right: 105px;
     z-index: 999;
+    width: 320px;
+    height: 254px;
+
     label {
         color: white !important;
     }
+
     input {
         background: #fff !important;
     }
+
     .el-form-item__content {
         margin-left: 0 !important;
     }
+
     .el-input__prefix {
         margin-left: 6px;
     }
+
     .reset {
-        float: right;
-        color: white;
         position: absolute;
         right: 0;
         bottom: -22px;
+        float: right;
         padding: 0;
+        color: white;
         font-size: 12px;
     }
 }
+
 .loginFormBg {
-    border-radius: 10px;
-    background-color: rgba(60, 60, 60, 0.6);
-    box-shadow: 0 5px 19px 1px rgba(214, 221, 237, 0.45);
-    width: 405px;
-    height: 321px;
     position: fixed;
     top: 165px;
     right: 65px;
+    width: 405px;
+    height: 321px;
+    background-color: rgba(60, 60, 60, 0.6);
+    border-radius: 10px;
+    box-shadow: 0 5px 19px 1px rgba(214, 221, 237, 0.45);
 }
+
 .login_box {
     width: 100%;
     height: 100%;
+
     .el-col {
         height: 100%;
         overflow: hidden;
     }
+
     .login_icon {
-        margin-left: 20px;
-        margin-top: 20px;
         width: 300px;
+        margin-top: 20px;
         margin-bottom: 84px;
+        margin-left: 20px;
     }
+
     .canvas_box {
-        width: 100%;
-        height: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
+        width: 100%;
+        height: 100%;
         background: linear-gradient(135deg, #070f6e 0%, #141bb7 51%, #1582ff 100%);
+
         &_main {
             width: 100%;
+
             canvas {
                 width: 100%;
                 height: 100%;
@@ -294,46 +308,56 @@ video {
         }
     }
 }
+
 .loginForm_ui2 {
-    padding-top: 20px;
     width: 300px;
     margin: auto;
+    padding-top: 20px;
+
     p {
         color: #333;
     }
+
     .login_title1 {
+        margin-bottom: 10px;
         font-size: 22px;
         line-height: 26px;
-        margin-bottom: 10px;
     }
+
     .login_title2 {
+        margin-bottom: 15px;
         font-size: 28px;
         line-height: 40px;
-        margin-bottom: 15px;
     }
+
     .loginBtn {
         width: 100%;
         margin-top: 20px;
     }
+
     label {
         color: white !important;
     }
+
     input {
         background: #fff !important;
     }
+
     .el-form-item__content {
         margin-left: 0 !important;
     }
+
     .el-input__prefix {
         margin-left: 6px;
     }
+
     .reset {
-        float: right;
-        color: #487bff;
         position: absolute;
         right: 0;
         bottom: -22px;
+        float: right;
         padding: 0;
+        color: #487bff;
         font-size: 12px;
     }
 }
@@ -342,14 +366,17 @@ video {
     .loginForm_ui2 {
         width: 360px;
         padding-top: 60px;
+
         .login_title1 {
-            font-size: 26px;
             font-weight: bold;
+            font-size: 26px;
         }
+
         .login_title2 {
             font-weight: bold;
             font-size: 32px;
         }
+
         .loginBtn {
             margin-top: 40px;
         }
