@@ -142,8 +142,8 @@
                 </el-col>
             </el-row>
             <span slot="footer" class="dialog-footer">
-                <el-button style="background-color: #fff; color: #606266; border: 1px solid #dcdfe6; font-weight: 500; padding: 12px 20px; font-size: 14px; border-radius: 4px;" @click="visible = false">取消</el-button>
-                <el-button type="primary" style="background-color: #1890ff; color: #fff; border-color: #1890ff; font-weight: 500; padding: 12px 20px; font-size: 14px; border-radius: 4px;" @click="updatauser(row)">确定</el-button>
+                <el-button style=" padding: 12px 20px; color: #606266; font-weight: 500; font-size: 14px; background-color: #fff; border: 1px solid #dcdfe6; border-radius: 4px;" @click="visible = false">取消</el-button>
+                <el-button type="primary" style=" padding: 12px 20px; color: #fff; font-weight: 500; font-size: 14px; background-color: #1890ff; border-color: #1890ff; border-radius: 4px;" @click="updatauser(row)">确定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -396,17 +396,19 @@ export default {
 
 <style lang="scss">
 .dialog-footer .el-button--primary {
-    background-color: #1890ff;
     color: #fff;
+    background-color: #1890ff;
     border-color: #1890ff;
 }
+
 .dialog-footer .el-button--primary:focus {
     color: #000;
     background-color: #fff;
     border-color: #d9d9d9;
 }
+
 .dialog-footer .el-button--primary:hover {
-    background-color: #1890ff;
     color: #fff;
+    background-color: #1890ff;
 }
 </style>

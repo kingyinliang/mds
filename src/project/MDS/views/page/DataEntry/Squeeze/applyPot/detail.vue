@@ -5,7 +5,7 @@
                 <el-row>
                     <el-col>
                         <div style="line-height: 40px;">
-                            <i style="font-size: 22px; float: left;" class="iconfont factory-shouqicaidan" /><span style="font-size: 16px; font-weight: 600; margin-left: 12px;">申请基本信息</span>
+                            <i style=" float: left; font-size: 22px;" class="iconfont factory-shouqicaidan" /><span style=" margin-left: 12px; font-weight: 600; font-size: 16px;">申请基本信息</span>
                         </div>
                     </el-col>
                 </el-row>
@@ -86,13 +86,13 @@
         </div>
         <div class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
                 <el-card>
                     <el-row>
                         <div style="line-height: 40px;">
-                            <i style="font-size: 22px; float: left;" class="iconfont factory-shouqicaidan" /><span style="font-size: 16px; font-weight: 600; margin-left: 12px;">申请反馈信息</span>
+                            <i style=" float: left; font-size: 22px;" class="iconfont factory-shouqicaidan" /><span style=" margin-left: 12px; font-weight: 600; font-size: 16px;">申请反馈信息</span>
                         </div>
                     </el-row>
                     <el-row>
@@ -448,16 +448,17 @@ export default class Index extends Vue {
 </style>
 <style lang="scss" scoped>
 @import "@/assets/scss/_common.scss";
+
 .header-form {
     .header-form_input {
         width: 140px;
+        overflow: hidden;
+        color: rgba(0, 0, 0, 0.85);
+        font-weight: 400;
         font-size: 14px;
         font-family: PingFangSC-Regular, sans-serif;
-        font-weight: 400;
-        color: rgba(0, 0, 0, 0.85);
-        overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
+        text-overflow: ellipsis;
     }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-row class="clearfix">
-            <h3 style="color: rgba(0, 0, 0, 0.65); font-size: 14px; float: left;">
+            <h3 style=" float: left; color: rgba(0, 0, 0, 0.65); font-size: 14px;">
                 原汁信息
             </h3>
             <el-button type="primary" style="float: right;" size="small" :disabled="!isRedact" @click="ApplyOrder">

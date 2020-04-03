@@ -33,7 +33,7 @@
                         </el-form>
                     </el-col>
                     <el-col :span="6" style="font-size: 14px; line-height: 32px;">
-                        <div style="text-align: left; overflow: hidden; float: right;">
+                        <div style=" float: right; overflow: hidden; text-align: left;">
                             <span
                                 class="point"
                                 :style="{
@@ -47,7 +47,7 @@
                             >{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
                         </div>
                         <div style="clear: both;" />
-                        <div style="width: 100%; text-align: right; margin-top: 10px;">
+                        <div style="width: 100%; margin-top: 10px; text-align: right;">
                             <template style="float: right; margin-left: 10px;">
                                 <el-button v-if="isAuth('mid:prsOrder:orderList')" type="primary" size="small" @click="GetList">
                                     查询
@@ -74,7 +74,7 @@
         </div>
         <div v-show="isSerch" class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
             </div>

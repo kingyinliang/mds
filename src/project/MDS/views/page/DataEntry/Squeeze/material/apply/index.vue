@@ -191,7 +191,7 @@
                     <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible = false">
                         取消
                     </el-button>
-                    <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveStart()">
+                    <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveStart()">
                         保存
                     </el-button>
                 </div>
@@ -235,7 +235,7 @@
                     <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible2 = false">
                         取消
                     </el-button>
-                    <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveEnd()">
+                    <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveEnd()">
                         保存
                     </el-button>
                 </div>
@@ -284,7 +284,7 @@
                     <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible3 = false">
                         取消
                     </el-button>
-                    <el-button type="primary" size="small" style="background-color: #1890ff; color: #fff; border-color: #1890ff;" @click="saveModify()">
+                    <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveModify()">
                         保存
                     </el-button>
                 </div>
@@ -925,16 +925,19 @@ export default class Index extends Vue {
 <style lang="scss">
 .dialog__class {
     border-radius: 6px 6px 0 0 !important;
+
     .el-dialog__header {
         height: 59px;
-        background: rgba(24, 144, 255, 1);
-        border-radius: 6px 6px 0 0;
         color: #fff;
         font-size: 20px;
+        background: rgba(24, 144, 255, 1);
+        border-radius: 6px 6px 0 0;
+
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }
     }
+
     .reqI {
         color: red;
     }
@@ -942,91 +945,107 @@ export default class Index extends Vue {
 </style>
 <style lang="scss" scoped>
 @import "@/assets/scss/_common.scss";
+
 .pot-box {
     width: 217px;
     height: 250px;
-    border-radius: 2px;
-    border: 1px solid rgba(232, 232, 232, 1);
     margin-right: 50px;
+    border: 1px solid rgba(232, 232, 232, 1);
+    border-radius: 2px;
+
     .pot-box-header {
         height: 40px;
         line-height: 40px;
         background: rgba(235, 235, 235, 1);
         border-radius: 4px 4px 0 0;
+
         .pot-box-title {
+            color: rgba(0, 0, 0, 0.65);
+            font-weight: 500;
             font-size: 14px;
             font-family: PingFangSC-Medium, sans-serif;
-            font-weight: 500;
-            color: rgba(0, 0, 0, 0.65);
         }
     }
+
     .pot-box-container {
         width: 120px;
         height: 120px;
         margin: auto;
         margin-top: 16px;
     }
+
     .img {
         background: url("~@/assets/img/sq_G1.png");
     }
+
     .pot-box-footer {
-        margin-top: 20px;
         display: flex;
         justify-content: center;
+        margin-top: 20px;
+
         .pot-box-button {
             width: 72px;
             height: 24px;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.25);
-            text-align: center;
-            cursor: pointer;
-            margin-left: 4px;
             margin-right: 4px;
+            margin-left: 4px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.25);
+            border-radius: 4px;
+            cursor: pointer;
+
             &:hover {
                 background: rgba(24, 144, 255, 1);
             }
         }
+
         .pot-box-button-title {
-            line-height: 24px;
+            color: #000;
+            font-weight: 400;
             font-size: 14px;
             font-family: PingFangSC-Regular, sans-serif;
-            font-weight: 400;
-            color: #000;
+            line-height: 24px;
+
             &:hover {
                 color: #fff;
             }
         }
+
         .pot-box-button-disabled {
             width: 72px;
             height: 24px;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.25);
-            text-align: center;
-            cursor: pointer;
-            margin-left: 4px;
             margin-right: 4px;
+            margin-left: 4px;
             color: rgba(0, 0, 0, 0.6);
+            text-align: center;
             background: #f7f9fa;
+            border: 1px solid rgba(0, 0, 0, 0.25);
+            border-radius: 4px;
+            cursor: pointer;
+
             &:hover {
                 cursor: not-allowed;
             }
         }
+
         .pot-box-button-title-disabled {
-            line-height: 24px;
+            color: rgba(0, 0, 0, 0.6);
+            font-weight: 400;
             font-size: 14px;
             font-family: PingFangSC-Regular, sans-serif;
-            font-weight: 400;
-            color: rgba(0, 0, 0, 0.6);
+            line-height: 24px;
         }
     }
 }
+
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
+
 .el-row {
     margin-bottom: 20px;
+
     &:last-child {
         margin-bottom: 0;
     }

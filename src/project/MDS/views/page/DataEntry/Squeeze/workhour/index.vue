@@ -39,7 +39,7 @@
                         </el-form>
                     </el-col>
                     <el-col :span="6" style="font-size: 14px; line-height: 32px;">
-                        <div style="text-align: left; overflow: hidden; float: right;">
+                        <div style=" float: right; overflow: hidden; text-align: left;">
                             <span
                                 class="point"
                                 :style="{
@@ -53,7 +53,7 @@
                             >{{ headList.status === 'noPass' ? '审核不通过' : headList.status === 'saved' ? '已保存' : headList.status === 'submit' ? '已提交' : headList.status === 'checked' ? '通过' : headList.status === '已同步' ? '未录入' : headList.status }}</span>
                         </div>
                         <div style="clear: both;" />
-                        <div style="width: 100%; text-align: right; margin-top: 10px;">
+                        <div style="width: 100%; margin-top: 10px; text-align: right;">
                             <template style="float: right; margin-left: 10px;">
                                 <el-button v-if="isAuth('prs:timeSheet:list')" type="primary" size="small" @click="GetTimeList">
                                     查询
@@ -80,16 +80,16 @@
         </div>
         <div class="main">
             <div class="tableCard">
-                <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
             </div>
             <div v-show="searchCard">
                 <el-card class="box-cards NewDaatTtabs">
-                    <el-card style="margin-bottom: 10px; position: relative;" class="readyCard">
+                    <el-card style=" position: relative; margin-bottom: 10px;" class="readyCard">
                         <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" labelWidth="125px">
                             <div class="clearfix">
-                                <h3 style="font-size: 14px; line-height: 32px; font-weight: 600; float: left;">
+                                <h3 style=" float: left; font-weight: 600; font-size: 14px; line-height: 32px;">
                                     准备时间（分钟：min）
                                 </h3>
                                 <el-button type="text" class="readyshiftBtn manHour" name="manHourReady" style="bottom: 15px;">
@@ -151,7 +151,7 @@
                         </el-form>
                     </el-card>
                     <el-card style="margin-bottom: 10px;">
-                        <h3 style="font-size: 14px; line-height: 32px; font-weight: 600;">
+                        <h3 style=" font-weight: 600; font-size: 14px; line-height: 32px;">
                             人员(小时:H)
                         </h3>
                         <worker ref="workerref" :isRedact="isRedact" :order="userOrder" />
@@ -530,8 +530,8 @@ export default {
 <style lang="scss" scoped>
 .manHour {
     position: absolute;
-    bottom: 8px;
     right: 10px;
+    bottom: 8px;
     z-index: 999;
 }
 </style>
@@ -542,6 +542,7 @@ export default {
         padding: 12px !important;
     }
 }
+
 .readyCard {
     input {
         width: 147px !important;

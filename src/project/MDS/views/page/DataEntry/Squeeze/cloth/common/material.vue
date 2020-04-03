@@ -192,12 +192,12 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="发酵罐号：" :labelWidth="formLabelWidth" prop="potOne">
-                    <el-input v-model="sauce.potOne" style="width: 259px; float: left;" /><el-button style="float: left; margin-left: 10px;" @click="addGuan()">
+                    <el-input v-model="sauce.potOne" style=" float: left; width: 259px;" /><el-button style="float: left; margin-left: 10px;" @click="addGuan()">
                         +
                     </el-button>
                 </el-form-item>
                 <el-form-item label="发酵罐号2：" :labelWidth="formLabelWidth" prop="potTwo" :style="{ display: guanTwoDisplayNo ? 'none' : '' }">
-                    <el-input v-model="sauce.potTwo" style="width: 259px; float: left;" /><el-button type="danger" icon="el-icon-delete" circle size="small" style="float: left; margin-left: 10px;" @click="delGuan()" />
+                    <el-input v-model="sauce.potTwo" style=" float: left; width: 259px;" /><el-button type="danger" icon="el-icon-delete" circle size="small" style="float: left; margin-left: 10px;" @click="delGuan()" />
                 </el-form-item>
                 <el-form-item label="操作时间：" :labelWidth="formLabelWidth">
                     {{ sauce.changed }}
@@ -222,8 +222,8 @@
                 </el-col>
             </el-row>
             <span slot="footer" class="dialog-footer">
-                <el-button style="border: 1px solid #dcdfe6; padding: 12px 20px; font-size: 14px; border-radius: 4px;" @click="visible = false">取消</el-button>
-                <el-button type="primary" style="background-color: #1890ff; padding: 12px 20px; font-size: 14px; border-radius: 4px;" @click="updatauser(row)">确定</el-button>
+                <el-button style=" padding: 12px 20px; font-size: 14px; border: 1px solid #dcdfe6; border-radius: 4px;" @click="visible = false">取消</el-button>
+                <el-button type="primary" style=" padding: 12px 20px; font-size: 14px; background-color: #1890ff; border-radius: 4px;" @click="updatauser(row)">确定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -666,21 +666,25 @@ export default {
 .reqI {
     color: red;
 }
+
 .rowDel {
     display: none;
 }
+
 .dialog-footer .el-button--primary {
-    background-color: #1890ff;
     color: #fff;
+    background-color: #1890ff;
     border-color: #1890ff;
 }
+
 .dialog-footer .el-button--primary:focus {
     color: #000;
     background-color: #fff;
     border-color: #d9d9d9;
 }
+
 .dialog-footer .el-button--primary:hover {
-    background-color: #1890ff;
     color: #fff;
+    background-color: #1890ff;
 }
 </style>

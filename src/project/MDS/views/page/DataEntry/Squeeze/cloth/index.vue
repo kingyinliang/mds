@@ -51,7 +51,7 @@
             </div>
         </el-card>
         <div class="tableCard">
-            <div class="toggleSearchTop" style="background-color: white; margin-bottom: 8px; position: relative; border-radius: 5px;">
+            <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                 <i class="el-icon-caret-bottom" />
             </div>
             <el-tabs id="DaatTtabs" v-model="activeName" class="NewDaatTtabs" type="border-card" style="margin-top: 5px;" :style="{ display: contentshow ? 'block' : 'none' }">
@@ -262,6 +262,7 @@ export default {
 .width180px {
     width: 180px;
 }
+
 .searchCard {
     .el-button--primary,
     .el-button--primary:focus {
@@ -269,18 +270,21 @@ export default {
         background-color: #fff;
         border-color: #d9d9d9;
     }
+
     .el-button--primary:hover {
-        background-color: #1890ff;
         color: #fff;
+        background-color: #1890ff;
     }
+
     .el-button--primary:first-child {
-        background-color: #1890ff;
         color: #fff;
+        background-color: #1890ff;
         border-color: #1890ff;
     }
 }
+
 #DaatTtabs {
-    border-radius: 15px;
     overflow: hidden;
+    border-radius: 15px;
 }
 </style>

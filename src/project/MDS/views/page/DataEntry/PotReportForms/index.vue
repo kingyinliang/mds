@@ -4,8 +4,8 @@
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">半成品罐区报表</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;" />半成品罐区报表
-                    <el-button v-if="isAuth('ste:semi:reportFormExport')" type="primary" size="small" style="background-color: #1890ff; color: #fff; float: right;" @click="ExportExcelB(true)">
+                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />半成品罐区报表
+                    <el-button v-if="isAuth('ste:semi:reportFormExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
                         导出
                     </el-button>
                 </div>
@@ -19,8 +19,8 @@
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">成品罐区报表</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;" />成品罐区报表
-                    <el-button v-if="isAuth('ste:semi:reportFormExport')" type="primary" size="small" style="background-color: #1890ff; color: #fff; float: right;" @click="ExportExcelB(true)">
+                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />成品罐区报表
+                    <el-button v-if="isAuth('ste:semi:reportFormExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
                         导出
                     </el-button>
                 </div>
@@ -34,8 +34,8 @@
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">半成品库存汇总</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;" />半成品库存汇总
-                    <el-button v-if="isAuth('ste:semi:steStock')" type="primary" size="small" style="background-color: #1890ff; color: #fff; float: right;" @click="ExportExcelB(true)">
+                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />半成品库存汇总
+                    <el-button v-if="isAuth('ste:semi:steStock')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
                         导出
                     </el-button>
                 </div>
@@ -49,8 +49,8 @@
             <el-tab-pane name="4">
                 <span slot="label" class="spanview">成品库存汇总</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style="color: #666; margin-right: 10px;" />成品库存汇总
-                    <el-button v-if="isAuth('ste:semi:steStock')" type="primary" size="small" style="background-color: #1890ff; color: #fff; float: right;" @click="ExportExcelB(true)">
+                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />成品库存汇总
+                    <el-button v-if="isAuth('ste:semi:steStock')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
                         导出
                     </el-button>
                 </div>
