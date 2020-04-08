@@ -3,28 +3,28 @@
         <mds-card :title="'组织架构'" :name="'org'" :packUp="false" style="background: #fff;">
             <el-row :gutter="20">
                 <el-col :span="8">
-                    <div class="orgCard">
-                        <div class="orgCard_title">
+                    <div class="org-card">
+                        <div class="org-card_title">
                             组织架构一览
                         </div>
-                        <div class="filterInput">
+                        <div class="filter-input">
                             <el-input v-model="filterText" placeholder="部门名称" size="small">
                                 <i slot="suffix" class="el-input__icon el-icon-search" />
                             </el-input>
                         </div>
-                        <div class="treeMain SelfScrollbar">
+                        <div class="tree-main SelfScrollbar">
                             <el-tree ref="tree" :data="OrgTree" nodeKey="deptId" :expandOnClickNode="false" :defaultExpandedKeys="arrList" :filterNodeMethod="filterNode" @node-click="setdetail" @node-contextmenu="showMenu" />
                         </div>
                     </div>
                 </el-col>
                 <el-col :span="16">
-                    <div class="orgCard">
-                        <div class="orgCard_title">
+                    <div class="org-card">
+                        <div class="org-card_title">
                             组织详细信息
                         </div>
-                        <div class="detailMain">
-                            <div class="detailMainForm">
-                                <el-form :model="OrgDetail" size="small" :inline="true" labelWidth="90px" class="orgDetailForm">
+                        <div class="detail-main">
+                            <div class="detail-main-form">
+                                <el-form :model="OrgDetail" size="small" :inline="true" labelWidth="90px" class="org-detail-form">
                                     <el-form-item label="部门编码：">
                                         <el-input v-model="OrgDetail.deptCode" :disabled="true" autoComplete="off" style="width: 250px;" />
                                     </el-form-item>
@@ -51,8 +51,8 @@
                                     <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="成本中心：">
                                         <el-input v-model="OrgDetail.costCenter" autoComplete="off" :disabled="isRedact" style="width: 250px;" />
                                     </el-form-item>
-                                    <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="产线图片：" :class="{'limitUpload': fileList.length}">
-                                        <el-upload class="orgImgUpload" listType="picture-card" :action="FILE_API" :limit="1" :httpRequest="httpRequest" :fileList="fileList" :onSuccess="addfile" :onRemove="removeFile" :onPreview="handlePictureCardPreview">
+                                    <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="产线图片：" :class="{'limit-upload': fileList.length}">
+                                        <el-upload class="org-img-upload" listType="picture-card" :action="FILE_API" :limit="1" :httpRequest="httpRequest" :fileList="fileList" :onSuccess="addfile" :onRemove="removeFile" :onPreview="handlePictureCardPreview">
                                             <i class="el-icon-plus" />
                                         </el-upload>
                                     </el-form-item>
@@ -67,7 +67,7 @@
                                     </el-form-item>
                                 </el-form>
                             </div>
-                            <div class="orgDetailBtn">
+                            <div class="org-detail-btn">
                                 <el-button type="primary" size="small" @click="isRedact = !isRedact">
                                     {{ isRedact? '编辑' : '取消' }}
                                 </el-button>
@@ -396,7 +396,7 @@ interface FileObject {
     }
 }
 
-.orgCard {
+.org-card {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -410,7 +410,7 @@ interface FileObject {
         color: #487bff;
     }
 
-    .orgCard_title {
+    .org-card_title {
         height: 40px;
         padding-left: 10px;
         color: white;
@@ -418,23 +418,25 @@ interface FileObject {
         background: rgba(72, 123, 255, 1);
     }
 
-    .filterInput {
+    .filter-input {
         padding: 6px 10px;
     }
 
-    .treeMain {
+    .tree-main {
         flex: 1;
         overflow-y: scroll;
     }
 
-    .detailMain {
+    .detail-main {
         padding-top: 44px;
 
-        .detailMainForm {
+        .detail-main-form {
             margin: auto;
         }
 
-        .orgDetailForm {
+        .org-detail-form {
+            display: flex;
+            flex-flow: row wrap;
             min-width: 700px;
             margin: auto;
             text-align: center;
@@ -443,7 +445,7 @@ interface FileObject {
                 /* float: left; */
             }
 
-            .orgImgUpload {
+            .org-img-upload {
                 width: 250px;
                 height: 48px;
 
@@ -459,7 +461,7 @@ interface FileObject {
                 }
             }
 
-            .limitUpload {
+            .limit-upload {
                 ::v-deep .el-upload--picture-card {/* stylelint-disable-line */
                     display: none;
                 }
@@ -467,7 +469,7 @@ interface FileObject {
         }
     }
 
-    .orgDetailBtn {
+    .org-detail-btn {
         position: absolute;
         right: 10px;
         bottom: 10px;
