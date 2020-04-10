@@ -1,6 +1,6 @@
 <template>
     <div class="site-wrapper" :class="{ 'site-sidebar--fold': sidebarFold }">
-        <template v-if="!loading">
+        <template>
             <main-navbar :updatePassword="updatePassword" />
             <main-sidebar />
             <div class="site-content__wrapper SelfScrollbar" :style="{ 'min-height': documentClientHeight + 'px' }">
@@ -14,7 +14,6 @@
 
 <script>
 import UpdatePass from './UpdatePass';
-import { MAIN_API } from '@/api/api';
 
 export default {
     name: 'MainFrame',
@@ -32,8 +31,7 @@ export default {
     },
     data() {
         return {
-            pasVisible: false,
-            loading: true
+            pasVisible: false
         };
     },
     computed: {
@@ -101,14 +99,17 @@ export default {
         },
         // 获取当前管理员信息
         getUserInfo() {
-            this.$http(`${MAIN_API.USERINFO_API}`, 'GET', {}).then(({ data }) => {
-                if (data && data.code === 0) {
-                    this.loading = false;
-                    this.userId = data.user.userId;
-                    this.userName = data.user.userName;
-                    this.realName = data.user.realName;
-                }
-            });
+            // this.$http(`${MAIN_API.USERINFO_API}`, 'GET', {}).then(({ data }) => {
+            //     if (data && data.code === 0) {
+            //         this.loading = false;
+            //         this.userId = data.user.userId;
+            //         this.userName = data.user.userName;
+            //         this.realName = data.user.realName;
+            //     }
+            // });
+            this.userId = sessionStorage.getItem('userId');
+            this.userName = sessionStorage.getItem('userName');
+            this.realName = sessionStorage.getItem('realName');
         }
     }
 };

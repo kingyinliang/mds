@@ -38,6 +38,7 @@
                 </el-form>
             </el-col>
         </el-row>
+        <!--修改密码-->
         <el-dialog :closeOnClickModal="false" width="500px" title="修改密码" :visible.sync="visible">
             <div>
                 <el-form ref="dataForm" :model="dataForm" :rules="dataRule" labelWidth="100px" @keyup.enter.native="dataFormSubmit()">
@@ -56,11 +57,21 @@
                 <el-button type="primary" icon="el-icon-edit-outline" @click="dataFormSubmit">修改密码</el-button>
             </span>
         </el-dialog>
+        <!--选择工厂-->
+        <el-dialog :showClose="false" :visible.sync="factoryVisible" class="selectFa">
+            <div class="factoryBox">
+                <div v-for="(item, index) in factory" :key="index" class="factoryItem" @click="goFa(item)">
+                    <div class="itemBox">
+                        {{ item.deptName }}
+                    </div>
+                </div>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { MAIN_API } from '@/api/api';
+import { COMMON_API } from 'common/api/api';
 import { LoginAnimation } from './loginCanvas';
 
 export default {
@@ -125,6 +136,8 @@ export default {
                 ]
             },
             visible: false,
+            factoryVisible: false,
+            factory: [],
             dataForm: {
                 password: '',
                 newPassword: '',
@@ -155,6 +168,13 @@ export default {
         canvas.init();
     },
     methods: {
+        goFa(item) {
+            if (item.deptCode === '6010' || item.deptCode === '7100') {
+                window.location.href = '/MDS.html'
+            } else {
+                window.location.href = '/DFMDS.html'
+            }
+        },
         play() {
             this.curr++;
             if (this.curr >= this.videoList.length) this.curr = 0;
@@ -164,16 +184,15 @@ export default {
         dataFormSubmit() {
             this.$refs['dataForm'].validate(valid => {
                 if (valid) {
-                    this.$http(`${MAIN_API.UPPASS_API}`, 'POST', this.dataForm).then(({ data }) => {
+                    COMMON_API.UPPASS_API(this.dataForm).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('操作成功');
+                            this.$successToast('操作成功');
                             this.visible = false;
-                            this.$router.push({ path: '/home' });
-                        } else {
-                            this.$notify.error({
-                                title: '错误',
-                                message: data.msg
-                            });
+                            if (this.factory.length > 1) {
+                                this.factoryVisible = true
+                            } else if (this.factory.length === 1) {
+                                this.goFa(this.factory[0])
+                            }
                         }
                     });
                 }
@@ -182,32 +201,35 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    this.$http(`${MAIN_API.LOGIN_API}`, 'POST', {
-                        // this.$http(`http://localhost:3000/mds/login`, 'POST', {
-                        username: this.ruleForm2.user,
+                    COMMON_API.LOGIN_API({
+                        userName: this.ruleForm2.user,
                         password: this.ruleForm2.pass
                     }).then(res => {
-                        if (res.data.code === 0) {
-                            this.$cookie.set('token', res.data.Authorization);
-                            if (res.data.list[0].isFirst === '1') {
+                        if (res.data.code === 200) {
+                            this.$cookie.set('token', res.data.data.token);
+                            sessionStorage.setItem('userId', res.data.data.uid || '');
+                            sessionStorage.setItem('userName', res.data.data.userName || '');
+                            sessionStorage.setItem('realName', res.data.data.realName || '');
+                            if (res.data.data.firstFlag === '1') {
                                 this.visible = true;
+                                this.factory = res.data.data.userFactory
                             } else {
-                                // window.sessionStorage.setItem('menuList', JSON.stringify(res.data.data.menuList))
-                                // this.$router.push({ path: '/home' });
-                                window.location.href = '/MDS.html'
+                                this.selectFactory(res.data.data)
                             }
-                        } else {
-                            this.$notify.error({
-                                title: '错误',
-                                message: res.data.msg
-                            });
                         }
                     });
                 } else {
-                    console.log('error submit!!');
                     return false;
                 }
             });
+        },
+        selectFactory(data) {
+            this.factory = data.userFactory
+            if (data.userFactory.length > 1) {
+                this.factoryVisible = true
+            } else if (data.userFactory.length === 1) {
+                this.goFa(data.userFactory[0])
+            }
         },
         resetForm(formName) {
             this.$refs[formName].resetFields();
@@ -217,6 +239,28 @@ export default {
 </script>
 
 <style lang="scss">
+.selectFa {
+    .el-dialog {
+        width: 100%;
+        background: none;
+        box-shadow: none;
+        .el-dialog__body {
+            display: flex;
+            justify-content: center;
+        }
+    }
+    .factoryItem {
+        display: inline-block;
+        padding: 5px;
+        .itemBox {
+            padding: 6px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
+            cursor: pointer;
+        }
+    }
+}
 .bg1 {
     position: absolute;
     width: 200px;

@@ -9,7 +9,19 @@ const HTTP_RESPONSE_STATE = {
     /**
      * 成功
      */
-    SUCCESS: 99999
+    SUCCESS: 200,
+    /**
+     * token过期
+     */
+    EXPIRED_TOKEN: 401,
+    /**
+     * 系统异常
+     */
+    SYSTEM_ERROR: 500,
+    /**
+     * 警告
+     */
+    WARNING: 110
     // Others failure state
 };
 
