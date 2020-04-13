@@ -1,9 +1,13 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import VueRouter, { RouterOptions } from 'vue-router';
+import { fnCurrentRouteType, fnAddDynamicMenuRoutes } from 'utils/utils'
+import { COMMON_API } from 'common/api/api';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
-const routes = [
+// 全局路由(无需嵌套上左右整体布局)
+const globalRoutes: object[] = [];
+const mainRoutes: object[] = [
     {
         path: '/',
         name: 'index',
@@ -21,13 +25,29 @@ const routes = [
             }
         ]
     }
-]
+];
 
 const router = new VueRouter({
     // mode: 'history',
     mode: 'hash',
     base: process.env.BASE_URL,
-    routes
-})
+    isAddDynamicMenuRoutes: false,
+    routes: globalRoutes.concat(mainRoutes)
+} as RouterOptions);
+
+router.beforeEach((to, from, next) => {
+    if (router['options'].isAddDynamicMenuRoutes || fnCurrentRouteType(to, globalRoutes) === 'global') {
+        return next();
+    }
+    COMMON_API.NAV_API({
+        factory: 'zzz'
+    }).then(({ data }) => {
+        console.log(data);
+        fnAddDynamicMenuRoutes(data.menuList);
+        router['options'].isAddDynamicMenuRoutes = true;
+        sessionStorage.setItem('menuList', JSON.stringify(data.menuList || '[]'));
+        sessionStorage.setItem('permissions', JSON.stringify(data.permissions || '[]'));
+    })
+});
 
 export default router

@@ -1,16 +1,6 @@
 <template>
     <div id="app">
         <login />
-        <div>
-            <ul>
-                <li>
-                    <a href="/MDS">MDS</a>
-                </li>
-                <li>
-                    <a href="/DFMDS">DF-MDS</a>
-                </li>
-            </ul>
-        </div>
     </div>
 </template>
 
