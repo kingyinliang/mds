@@ -84,11 +84,9 @@ export default {
             this.$refs['dataForm'].validate(valid => {
                 if (valid) {
                     COMMON_API.UPPASS_API(this.dataForm).then(({ data }) => {
-                        if (data.code === 0) {
+                        if (data.code === 200) {
                             this.$successToast('操作成功');
                             this.visible = false;
-                        } else {
-                            this.$errorToast(data.msg);
                         }
                     });
                 }

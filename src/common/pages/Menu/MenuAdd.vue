@@ -5,14 +5,14 @@
                 <el-input v-model="dataForm.id" placeholder="请输入id" />
             </el-form-item>
             <el-form-item label="类型" prop="type">
-                <el-radio-group v-model="dataForm.type">
+                <el-radio-group v-model="dataForm.menuType">
                     <el-radio v-for="(subType, index) in dataForm.typeList" :key="index" :label="index">
                         {{ subType }}
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item :label="dataForm.typeList[dataForm.type] + '名称'" prop="name">
-                <el-input v-model="dataForm.name" :placeholder="dataForm.typeList[dataForm.type] + '名称'" />
+            <el-form-item :label="dataForm.typeList[dataForm.menuType] + '名称'" prop="name">
+                <el-input v-model="dataForm.menuName" :placeholder="dataForm.typeList[dataForm.menuType] + '名称'" />
             </el-form-item>
             <el-form-item label="上级菜单" prop="parentName">
                 <el-popover ref="menuListPopover" placement="bottom-start" trigger="click" style="height: 100%; overflow: auto;">
@@ -20,7 +20,7 @@
                 </el-popover>
                 <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input" />
             </el-form-item>
-            <el-form-item v-if="dataForm.type === 1 || dataForm.type === 3 || dataForm.type === 0 || dataForm.type === 4" label="菜单路由" prop="url">
+            <el-form-item v-if="dataForm.menuType !== 'B'" label="菜单路由" prop="url">
                 <el-input v-model="dataForm.url" placeholder="菜单路由" />
             </el-form-item>
             <el-form-item v-if="dataForm.type !== 0" label="授权标识" prop="perms">
@@ -117,8 +117,13 @@ export default class MenuAdd extends Vue {
     type = true
     dataForm = {
         id: 0,
-        type: 1,
-        typeList: ['目录', '菜单', '按钮', '三级页面', '看板'],
+        menuType: 'C',
+        typeList: [{
+            C: '目录',
+            M: '菜单',
+            B: '按钮',
+            P: '三级页面'
+        }],
         name: '',
         parentId: 0,
         parentName: '',
@@ -163,7 +168,7 @@ export default class MenuAdd extends Vue {
     submitType = true
 
     validateUrl(rule, value, callback) {
-        if (this.dataForm.type === 1 && !/\S/.test(value)) {
+        if (this.dataForm.menuType === 'M' && !/\S/.test(value)) {
             return callback(new Error('菜单URL不能为空'));
         }
         return callback();
@@ -191,7 +196,7 @@ export default class MenuAdd extends Vue {
                     this.type = false;
                     this.$http(`${SYSTEMSETUP_API.MENUINFO_API}/${this.dataForm.id}`, 'GET', {}).then(({ data }) => {
                         this.dataForm.id = data.menu.menuId;
-                        this.dataForm.type = Number(data.menu.type);
+                        this.dataForm.menuType = data.menu.type;
                         this.dataForm.name = data.menu.name;
                         this.dataForm.parentId = data.menu.parentId;
                         this.dataForm.url = data.menu.url;
@@ -229,7 +234,7 @@ export default class MenuAdd extends Vue {
                 if (valid) {
                     this.$http(`${this.type ? SYSTEMSETUP_API.MENUADD_API : SYSTEMSETUP_API.MENUUPDATE_API}`, 'POST', {
                         menuId: this.dataForm.id || null,
-                        type: this.dataForm.type,
+                        type: this.dataForm.menuType,
                         name: this.dataForm.name,
                         parentId: this.dataForm.parentId,
                         url: this.dataForm.url,
