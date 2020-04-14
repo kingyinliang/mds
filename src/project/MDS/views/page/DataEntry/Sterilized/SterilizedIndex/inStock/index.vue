@@ -3,7 +3,7 @@
         <el-card class="searchCard" style="margin-bottom: 5px;">
             <el-row type="flex">
                 <el-col>
-                    <form-head :formHeader="formHeader" />
+                    <form-head :form-header="formHeader" />
                 </el-col>
                 <el-col style="width: 100px;">
                     <div
@@ -58,25 +58,25 @@
                         </el-button>
                     </div>
                     <div style="flex: 1; min-width: 990px;">
-                        <el-table headerRowClassName="tableHead" :data="InStorageDate" border tooltipEffect="dark" :rowClassName="RowDelFlag" @row-dblclick="updateRow">
-                            <el-table-column type="index" width="50" label="序号" :showOverflowTooltip="true" />
-                            <el-table-column label="日期" width="80" prop="date" :showOverflowTooltip="true" />
-                            <el-table-column label="半成品罐号" width="95" prop="holderName" :showOverflowTooltip="true" />
-                            <el-table-column label="半成品批次" width="95" prop="batch" :showOverflowTooltip="true" />
-                            <el-table-column label="入罐数量" width="80" prop="inAmount" :showOverflowTooltip="true" />
-                            <el-table-column label="满罐数量" width="80" prop="fullAmount" :showOverflowTooltip="true" />
-                            <el-table-column label="单位" width="50" prop="unit" :showOverflowTooltip="true" />
-                            <el-table-column label="罐内库存" width="80" prop="inTankAmount" :showOverflowTooltip="true" />
-                            <el-table-column label="满罐" width="60" prop="isFull" :showOverflowTooltip="true">
+                        <el-table header-row-class-name="tableHead" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow">
+                            <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" />
+                            <el-table-column label="日期" width="80" prop="date" :show-overflow-tooltip="true" />
+                            <el-table-column label="半成品罐号" width="95" prop="holderName" :show-overflow-tooltip="true" />
+                            <el-table-column label="半成品批次" width="95" prop="batch" :show-overflow-tooltip="true" />
+                            <el-table-column label="入罐数量" width="80" prop="inAmount" :show-overflow-tooltip="true" />
+                            <el-table-column label="满罐数量" width="80" prop="fullAmount" :show-overflow-tooltip="true" />
+                            <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true" />
+                            <el-table-column label="罐内库存" width="80" prop="inTankAmount" :show-overflow-tooltip="true" />
+                            <el-table-column label="满罐" width="60" prop="isFull" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.isFull === '1' ? '是' : '否' }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="满罐时间" width="120" prop="fullDate" :showOverflowTooltip="true" />
-                            <el-table-column label="备注" prop="remark" :showOverflowTooltip="true" />
-                            <el-table-column label="操作时间" prop="changed" :showOverflowTooltip="true" />
-                            <el-table-column label="操作人" width="80" prop="changer" :showOverflowTooltip="true" />
-                            <el-table-column label="操作" fixed="right" width="50" prop="changer" :showOverflowTooltip="true">
+                            <el-table-column label="满罐时间" width="120" prop="fullDate" :show-overflow-tooltip="true" />
+                            <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
+                            <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
+                            <el-table-column label="操作人" width="80" prop="changer" :show-overflow-tooltip="true" />
+                            <el-table-column label="操作" fixed="right" width="50" prop="changer" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     <el-button class="delBtn" type="text" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delRow(scope.row)">
                                         删除
@@ -86,23 +86,23 @@
                         </el-table>
                     </div>
                 </div>
-                <auditLog :tableData="DataAudit" />
+                <audit-log :table-data="DataAudit" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     异常记录
                 </span>
-                <exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader" />
+                <exc-record ref="excrecord" :is-redact="isRedact" :order="formHeader" />
             </el-tab-pane>
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">
                     文本记录
                 </span>
-                <text-record ref="textrecord" :isRedact="isRedact" />
+                <text-record ref="textrecord" :is-redact="isRedact" />
             </el-tab-pane>
         </el-tabs>
-        <el-dialog width="400px" title="入罐" class="ShinHoDialog" :closeOnClickModal="false" :visible.sync="visible">
-            <el-form ref="dataForm" :model="dataForm" :rules="dataRule" labelWidth="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
+        <el-dialog width="400px" title="入罐" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible">
+            <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
                 <el-form-item label="半成品罐号：" prop="holderId">
                     <el-select v-model="dataForm.holderId" filterable placeholder="请选择" style="width: 100%;" @change="PotinTankAmount">
                         <el-option v-for="(item, index) in PotList" :key="index" :label="item.holderName" :value="item.holderId" />
@@ -128,7 +128,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="满罐时间：">
-                    <el-date-picker v-model="dataForm.fullDate" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" style="width: 190px;" />
+                    <el-date-picker v-model="dataForm.fullDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" style="width: 190px;" />
                 </el-form-item>
                 <el-form-item label="备注：">
                     <el-input v-model="dataForm.remark" placeholder="请输入" />
@@ -239,7 +239,7 @@ export default {
                         };
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -363,7 +363,7 @@ export default {
                         this.GetDataList();
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -375,6 +375,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -384,7 +386,7 @@ export default {
                     inAmountSum = accAdd(inAmountSum, item.inAmount);
                 }
                 if (inAmountSum <= 0) {
-                    this.$error_SHINHO('杀菌入库入罐数量必须大于0');
+                    this.$errorTost('杀菌入库入罐数量必须大于0');
                     return false;
                 }
             }
@@ -502,6 +504,8 @@ export default {
                         item.amount = Number(item.amount) - Number(row.inAmount);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 获取订单表头
@@ -529,7 +533,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         }
@@ -553,7 +557,6 @@ export default {
 <style lang="scss" scoped>
 .instorage-card {
     display: flex;
-
     &_left {
         width: 158px;
         margin-right: 5px;
@@ -569,13 +572,11 @@ export default {
         }
     }
 }
-
 .pot-detail {
     position: absolute;
     top: 40px;
     left: 20px;
     width: 92px;
-
     p {
         padding: 0;
         line-height: 20px;

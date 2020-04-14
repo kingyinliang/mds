@@ -8,7 +8,7 @@
                 导出
             </el-button>
         </div>
-        <el-table :data="dataList" border headerRowClassName="tableHead" style="margin-top: 10px;">
+        <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
             <el-table-column label=" " prop="type" />
             <el-table-column label="<30" prop="ltThirty" />
             <el-table-column label="30≤N<60" prop="ltSixty" />
@@ -43,7 +43,7 @@ export default {
                 if (data.code === 0) {
                     this.dataList = data.fermentationStatus;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

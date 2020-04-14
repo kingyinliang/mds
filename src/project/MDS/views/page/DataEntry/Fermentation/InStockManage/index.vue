@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <el-form :model="params" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                        <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
                                     <el-option label="请选择" value="" />
@@ -24,12 +24,12 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="订单日期：">
-                                <el-date-picker v-model="params.startDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
+                                <el-date-picker v-model="params.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                                 -
-                                <el-date-picker v-model="params.endDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
+                                <el-date-picker v-model="params.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                             </el-form-item>
                             <el-form-item label="订单号：">
-                                <el-select v-model="params.orderList" class="selectwpx" style="width: 140px;" filterable multiple allowCreate @change="changeOptions('order')">
+                                <el-select v-model="params.orderList" class="selectwpx" style="width: 140px;" filterable multiple allow-create @change="changeOptions('order')">
                                     <el-option label="请选择" value="" />
                                     <el-option v-for="sole in orderDataList" :key="sole.orderNo" :label="sole.orderNo" :value="sole.orderNo" />
                                 </el-select>
@@ -91,10 +91,10 @@
                         </div>
                     </el-row>
                     <el-row>
-                        <el-table headerRowClassName="tableHead" :data="dataList" border tooltipEffect="dark" @selection-change="handleChange" @row-dblclick="showDetail">
+                        <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleChange" @row-dblclick="showDetail">
                             <el-table-column type="selection" :selectable="selectable" width="55" />
                             <el-table-column type="index" label="序号" width="55" />
-                            <el-table-column label="状态" :showOverflowTooltip="true" width="100">
+                            <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
                                 <template slot-scope="scope">
                                     <label
                                         :style="{
@@ -103,17 +103,17 @@
                                     >{{ scope.row.status === 'checked' ? '已审核' : scope.row.status == 'noPass' ? '审核不通过' : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'saved' ? '已保存' : '未录入' }}</label>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="订单号" :showOverflowTooltip="true" width="120">
+                            <el-table-column label="订单号" :show-overflow-tooltip="true" width="120">
                                 <template slot-scope="scope">
                                     {{ scope.row.orderNo }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="容器" :showOverflowTooltip="true" width="100">
+                            <el-table-column label="容器" :show-overflow-tooltip="true" width="100">
                                 <template slot-scope="scope">
                                     {{ scope.row.holderName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="物料" :showOverflowTooltip="true" width="120">
+                            <el-table-column label="物料" :show-overflow-tooltip="true" width="120">
                                 <template slot-scope="scope">
                                     {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                 </template>
@@ -167,7 +167,7 @@
                         </el-table>
                     </el-row>
                     <el-row>
-                        <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                        <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                     </el-row>
                 </el-card>
             </div>
@@ -177,7 +177,7 @@
                 <el-card>
                     <el-row>
                         <el-col :span="24">
-                            <auditLog :tableData="readAudit" />
+                            <audit-log :table-data="readAudit" />
                         </el-col>
                     </el-row>
                 </el-card>
@@ -466,7 +466,7 @@ export default class Index extends Vue {
             }
             Vue.prototype.$http(`${FERMENTATION_API.ORDER_IN_STOCK_DEL_API}`, `POST`, this.selectedList).then(res => {
                 if (res.data.code === 0) {
-                    Vue.prototype.$success_SHINHO('删除成功');
+                    Vue.prototype.$successTost('删除成功');
                     this.retrieveOrderList();
                 } else {
                     this.$notify.error({
@@ -475,6 +475,8 @@ export default class Index extends Vue {
                     });
                 }
             });
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 
@@ -500,6 +502,8 @@ export default class Index extends Vue {
                         });
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         }
     }
@@ -588,7 +592,6 @@ export default class Index extends Vue {
 .required {
     position: relative;
     padding-left: 15px;
-
     .reqI {
         position: absolute;
         left: 0;

@@ -1,7 +1,7 @@
 <template>
     <el-row>
         <div class="header_main">
-            <query-table ref="queryTable" :queryFormData="queryFormData" :listInterface="listInterface" :queryAuth="'report:form:listJBS'" :column="column" :exportExcel="true" :exportOption="exportOption" />
+            <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:form:listJBS'" :column="column" :export-excel="true" :export-option="exportOption" />
         </div>
     </el-row>
 </template>

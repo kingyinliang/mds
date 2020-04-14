@@ -4,9 +4,9 @@
             <el-card>
                 <el-row class="clearfix">
                     <div style="float: right;">
-                        <el-form :inline="true" :model="condition" size="small" labelWidth="68px" class="topforms2" @keyup.enter.native="getList(true)">
+                        <el-form :inline="true" :model="condition" size="small" label-width="68px" class="topforms2" @keyup.enter.native="getList(true)">
                             <el-form-item>
-                                <el-input v-model="condition.param" placeholder="用户名/工号" suffixIcon="el-icon-search" />
+                                <el-input v-model="condition.param" placeholder="用户名/工号" suffix-icon="el-icon-search" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" size="small" @click="getList(true)">
@@ -22,7 +22,7 @@
                             <div slot="header" class="clearfix">
                                 <span>组织架构</span>
                             </div>
-                            <el-tree :data="OrgTree" nodeKey="deptId" :defaultExpandedKeys="arrList" :expandOnClickNode="false" @node-click="setdetail" />
+                            <el-tree :data="OrgTree" node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
                         </el-card>
                     </el-col>
                     <el-col v-if="isAuth('sys:user:checkList')" :span="16">
@@ -37,16 +37,16 @@
                                 <el-button v-if="isAuth('sys:user:save')" type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrupdate()">
                                     增加
                                 </el-button>
-                                <el-table ref="table1" :data="userArr" headerRowClassName="tableHead" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                                <el-table ref="table1" :data="userArr" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                                     <el-table-column type="selection" width="34" />
                                     <el-table-column type="index" :index="indexMethod" width="55" />
                                     <el-table-column prop="workNum" label="人员工号" width="87" />
                                     <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
                                     <el-table-column prop="realName" label="人员姓名" width="87" />
-                                    <el-table-column prop="deptName" label="所属部门" width="87" :showOverflowTooltip="true" />
-                                    <el-table-column prop="post" label="职务" :showOverflowTooltip="true" width="150" />
-                                    <el-table-column prop="email" label="邮箱" :showOverflowTooltip="true" width="250" />
-                                    <el-table-column prop="mobile" label="手机号" :showOverflowTooltip="true" width="112" />
+                                    <el-table-column prop="deptName" label="所属部门" width="87" :show-overflow-tooltip="true" />
+                                    <el-table-column prop="post" label="职务" :show-overflow-tooltip="true" width="150" />
+                                    <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="true" width="250" />
+                                    <el-table-column prop="mobile" label="手机号" :show-overflow-tooltip="true" width="112" />
                                     <el-table-column prop="created" label="创建日期" width="160" />
                                     <el-table-column label="操作" fixed="right" width="65">
                                         <template slot-scope="scope">
@@ -58,14 +58,14 @@
                                 </el-table>
                             </div>
                             <el-row>
-                                <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                             </el-row>
                         </el-card>
                     </el-col>
                 </el-row>
             </el-card>
         </div>
-        <user-add-or-update v-if="visible" ref="addOrupdate" :OrgTree="OrgTree" @refreshDataList="getList" />
+        <user-add-or-update v-if="visible" ref="addOrupdate" :org-tree="OrgTree" @refreshDataList="getList" />
     </el-col>
 </template>
 
@@ -110,7 +110,7 @@ export default {
                     this.OrgTree = data.deptList;
                     this.arrList = [this.OrgTree[0].children[0].deptId];
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -142,7 +142,7 @@ export default {
                     this.pageSize = data.page.pageSize;
                     this.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.visible = false;
             });
@@ -188,6 +188,8 @@ export default {
                         type: 'warning'
                     }).then(() => {
                     //    then
+                    }).catch(() => {
+                        // this.$infoTost('已取消删除');
                     });
                 } else {
                     this.$confirm('此用户无权限，是否删除?', '删除用户', {
@@ -198,11 +200,11 @@ export default {
                         .then(() => {
                             this.$http(`${SYSTEMSETUP_API.USERDEL_API}`, 'POST', userId).then(({ data }) => {
                                 if (data.code === 0) {
-                                    this.$success_SHINHO('删除成功!');
+                                    this.$successTost('删除成功!');
                                     this.multipleSelection = [];
                                     this.getList();
                                 } else {
-                                    this.$error_SHINHO(data.msg);
+                                    this.$errorTost(data.msg);
                                 }
                             });
                         })

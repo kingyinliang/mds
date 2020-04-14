@@ -148,7 +148,7 @@ export default {
                         twoWorkShop: data.twoWorkShop
                     };
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -160,7 +160,7 @@ export default {
                     this.NightingaleRose2.setOption(this.NightingaleRoseData(data.twoWorkShop));
                     this.pie.setOption(this.PieData1(data));
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -171,7 +171,7 @@ export default {
                     this.pillar2.setOption(this.PillarData(data.twoWorkShop));
                     this.pie.setOption(this.PieData2(data));
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -301,7 +301,6 @@ export default {
     width: 100%;
     height: 100%;
 }
-
 .totalContainer {
     display: flex;
     flex: 1;
@@ -309,17 +308,14 @@ export default {
     align-items: center;
     justify-content: center;
     padding-left: 120px;
-
     .totalContainer_box {
         display: flex;
         justify-content: left;
     }
-
     &_dataItem {
         background: url("~@/assets/img/echartsItemBg.png") no-repeat;
         background-size: 100% 100%;
         transition: all 1s;
-
         &_title {
             margin-bottom: 10px;
             color: #2fd5ff;
@@ -330,11 +326,9 @@ export default {
             letter-spacing: 0;
             text-align: center;
         }
-
         &_tit {
             width: 268px;
             margin: auto;
-
             span {
                 float: left;
                 padding-bottom: 4px;
@@ -343,7 +337,6 @@ export default {
                 border-bottom: 2px transparent solid;
                 border-image: linear-gradient(to right, #2d77f3, #21e7ff) 1 10;
             }
-
             img {
                 float: left;
                 width: 98px;

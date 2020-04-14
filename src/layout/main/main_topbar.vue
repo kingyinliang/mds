@@ -19,7 +19,7 @@
             </el-menu>
             <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
                 <el-menu-item class="site-navbar__avatar" index="3" style="padding: 0 4px;">
-                    <el-dropdown :showTimeout="0" placement="bottom">
+                    <el-dropdown :show-timeout="0" placement="bottom">
                         <span class="el-dropdown-link"><img src="@/assets/img/avatar.png" :alt="userName"><span>{{ realName + '（' + userName + '）' }}</span></span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="updatePassword">

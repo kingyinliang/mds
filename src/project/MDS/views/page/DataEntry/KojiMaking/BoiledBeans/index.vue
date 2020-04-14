@@ -2,30 +2,30 @@
     <div>
         <data-entry
             ref="dataEntry"
-            :redactAuth="'kjm:bean:material:update'"
-            :saveAuth="'kjm:bean:material:update'"
-            :submitAuth="'kjm:bean:material:update'"
-            :submitRules="submitRules"
-            :savedRules="savedRules"
-            :savedDatas="savedDatas"
-            :submitDatas="submitDatas"
-            :orderStatus="orderStatus"
-            :headerBase="headerBase"
-            :formHeader="formHeader"
+            :redact-auth="'kjm:bean:material:update'"
+            :save-auth="'kjm:bean:material:update'"
+            :submit-auth="'kjm:bean:material:update'"
+            :submit-rules="submitRules"
+            :saved-rules="savedRules"
+            :saved-datas="savedDatas"
+            :submit-datas="submitDatas"
+            :order-status="orderStatus"
+            :header-base="headerBase"
+            :form-header="formHeader"
             :tabs="tabs"
             @success="GetheadList"
         >
             <template slot="1" slot-scope="data">
-                <Material ref="material" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyMaterielState="setApplyMaterielState" @HeadUpdate="HeadUpdate" />
+                <Material ref="material" :is-redact="data.isRedact" :form-header="formHeader" @setApplyMaterielState="setApplyMaterielState" @HeadUpdate="HeadUpdate" />
             </template>
             <template slot="2" slot-scope="data">
-                <Craft ref="craft" :isRedact="data.isRedact" :formHeader="formHeader" @setApplyCraftState="setApplyCraftState" />
+                <Craft ref="craft" :is-redact="data.isRedact" :form-header="formHeader" @setApplyCraftState="setApplyCraftState" />
             </template>
             <template slot="3" slot-scope="data">
-                <exc-record ref="excrecord" :isRedact="data.isRedact" :order="formHeader" />
+                <exc-record ref="excrecord" :is-redact="data.isRedact" :order="formHeader" />
             </template>
             <template slot="4" slot-scope="data">
-                <text-record ref="textrecord" :isRedact="data.isRedact" />
+                <text-record ref="textrecord" :is-redact="data.isRedact" />
             </template>
         </data-entry>
     </div>
@@ -287,7 +287,7 @@ export default {
                     this.$refs.excrecord.getDataList(this.formHeader.factory);
                     this.$refs.material.partialUpdates(this.formHeader, str);
                 } else {
-                    this.$error_SHINHO(res.data.msg);
+                    this.$errorTost(res.data.msg);
                 }
             });
         },
@@ -330,7 +330,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$error_SHINHO(res.data.msg);
+                    this.$errorTost(res.data.msg);
                 }
             });
         },
@@ -355,7 +355,7 @@ export default {
                     this.holderList = data.page.list;
                     this.headerBase[8].option.list = data.page.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -371,7 +371,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO('保存表头' + data.msg);
+                    this.$errorTost('保存表头' + data.msg);
                     if (reject) {
                         reject('resolve');
                     }
@@ -387,7 +387,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO('保存表头' + data.msg);
+                    this.$errorTost('保存表头' + data.msg);
                     if (reject) {
                         reject('resolve');
                     }
@@ -411,6 +411,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -491,7 +493,7 @@ export default {
                             this.isRedact = false;
                         })
                         .catch(() => {
-                            this.$error_SHINHO('网络请求失败，请刷新重试');
+                            this.$errorTost('网络请求失败，请刷新重试');
                         });
                 });
             });
@@ -526,12 +528,10 @@ export default {
     text-overflow: ellipsis;
     border-bottom: solid 1px #d8d8d8;
 }
-
 .el-form-item--mini.el-form-item,
 .el-form-item--small.el-form-item {
     margin-bottom: 8px;
 }
-
 .searchCard {
     .el-button--primary,
     .el-button--primary:focus {
@@ -539,24 +539,20 @@ export default {
         background-color: #fff;
         border-color: #d9d9d9;
     }
-
     .el-button--primary:hover {
         color: #fff;
         background-color: #1890ff;
     }
-
     .el-button--primary:first-child {
         color: #fff;
         background-color: #1890ff;
         border-color: #1890ff;
     }
 }
-
 #DaatTtabs {
     overflow: hidden;
     border-radius: 15px;
 }
-
 .htitle {
     margin: 0 0 10px;
 }

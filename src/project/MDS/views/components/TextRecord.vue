@@ -23,16 +23,14 @@ export default {
         };
     },
     computed: {},
-    mounted() {
-    //    mounted
-    },
     methods: {
         // 获取文本记录
+        /* eslint-disable @typescript-eslint/camelcase*/
         GetText(id) {
             let postdata;
             if (typeof id === 'string') {
                 postdata = {
-                    order_id: id// eslint-disable-line
+                    order_id: id
                 };
             } else if (typeof id === 'object') {
                 postdata = id;
@@ -46,6 +44,7 @@ export default {
                 }
             });
         },
+        /* eslint-enable @typescript-eslint/camelcase*/
         UpdateText(formHeader, str, resolve, reject) {
             if (formHeader.orderHouseId) {
                 this.textObj.orderHouseId = formHeader.orderHouseId;

@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-card style=" position: relative; margin-bottom: 10px;" class="newCard">
-            <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" labelWidth="125px">
+            <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
                 <el-row class="clearfix">
                     <h3 style=" float: left; font-weight: 600; font-size: 14px; line-height: 32px;">
                         准备时间（分钟：min）
@@ -20,13 +20,13 @@
                         <el-form-item label="交接班（白班）：">
                             <el-input v-model="readyTimeDate.dayChange" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
-                        <el-form-item label="班前会：" labelWidth="80px">
+                        <el-form-item label="班前会：" label-width="80px">
                             <el-input v-model="readyTimeDate.dayChangeBefore" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
-                        <el-form-item label="生产前准备：" labelWidth="100px">
+                        <el-form-item label="生产前准备：" label-width="100px">
                             <el-input v-model="readyTimeDate.dayChangePre" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
-                        <el-form-item label="生产后清场：" labelWidth="100px">
+                        <el-form-item label="生产后清场：" label-width="100px">
                             <el-input v-model="readyTimeDate.dayChangeAfter" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
                     </el-row>
@@ -34,13 +34,13 @@
                         <el-form-item label="交接班（中班）：">
                             <el-input v-model="readyTimeDate.midChange" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
-                        <el-form-item label="班前会：" labelWidth="80px">
+                        <el-form-item label="班前会：" label-width="80px">
                             <el-input v-model="readyTimeDate.midChangeBefore" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
-                        <el-form-item label="生产前准备：" labelWidth="100px">
+                        <el-form-item label="生产前准备：" label-width="100px">
                             <el-input v-model="readyTimeDate.midChangePre" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
-                        <el-form-item label="生产后清场：" labelWidth="100px">
+                        <el-form-item label="生产后清场：" label-width="100px">
                             <el-input v-model="readyTimeDate.midChangeAfter" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
                     </el-row>
@@ -48,18 +48,18 @@
                         <el-form-item label="交接班（夜班）：">
                             <el-input v-model="readyTimeDate.nightChange" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
-                        <el-form-item label="班前会：" labelWidth="80px">
+                        <el-form-item label="班前会：" label-width="80px">
                             <el-input v-model="readyTimeDate.nightChangeBefore" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
-                        <el-form-item label="生产前准备：" labelWidth="100px">
+                        <el-form-item label="生产前准备：" label-width="100px">
                             <el-input v-model="readyTimeDate.nightChangePre" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
-                        <el-form-item label="生产后清场：" labelWidth="100px">
+                        <el-form-item label="生产后清场：" label-width="100px">
                             <el-input v-model="readyTimeDate.nightChangeAfter" size="mini" style="width: 130px;" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
                     </el-row>
                     <el-row>
-                        <el-form-item label="交接班事项：" labelWidth="100px">
+                        <el-form-item label="交接班事项：" label-width="100px">
                             <el-input v-model="readyTimeDate.matters" type="textarea" size="mini" style="width: 870px;" :rows="3" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                         </el-form-item>
                     </el-row>
@@ -96,17 +96,17 @@
                     </div>
                 </el-col>
                 <el-col style="max-width: 942px;">
-                    <el-table headerRowClassName="tableHead" :rowClassName="RowDelFlag" :data="dataList" border tooltipEffect="dark" @row-dblclick="updateRow">
+                    <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="dataList" border tooltip-effect="dark" @row-dblclick="updateRow">
                         <el-table-column type="index" label="序号" width="55" />
-                        <el-table-column label="班次" :showOverflowTooltip="true" prop="classesName" width="70" />
-                        <el-table-column label="工作内容" :showOverflowTooltip="true" prop="content" width="110" />
-                        <el-table-column label="开始时间" :showOverflowTooltip="true" prop="startDate" width="130" />
-                        <el-table-column label="结束时间" :showOverflowTooltip="true" prop="endDate" width="130" />
-                        <el-table-column label="时长" :showOverflowTooltip="true" prop="dateLength" width="80" />
-                        <el-table-column label="备注" :showOverflowTooltip="true" prop="remark" width="100" />
-                        <el-table-column label="操作时间" :showOverflowTooltip="true" prop="changed" width="105" />
-                        <el-table-column label="操作人" :showOverflowTooltip="true" prop="changer" width="105" />
-                        <el-table-column label="操作" :showOverflowTooltip="true" width="70" fixed="right">
+                        <el-table-column label="班次" :show-overflow-tooltip="true" prop="classesName" width="70" />
+                        <el-table-column label="工作内容" :show-overflow-tooltip="true" prop="content" width="110" />
+                        <el-table-column label="开始时间" :show-overflow-tooltip="true" prop="startDate" width="130" />
+                        <el-table-column label="结束时间" :show-overflow-tooltip="true" prop="endDate" width="130" />
+                        <el-table-column label="时长" :show-overflow-tooltip="true" prop="dateLength" width="80" />
+                        <el-table-column label="备注" :show-overflow-tooltip="true" prop="remark" width="100" />
+                        <el-table-column label="操作时间" :show-overflow-tooltip="true" prop="changed" width="105" />
+                        <el-table-column label="操作人" :show-overflow-tooltip="true" prop="changer" width="105" />
+                        <el-table-column label="操作" :show-overflow-tooltip="true" width="70" fixed="right">
                             <template slot-scope="scope">
                                 <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delData(scope.row)">
                                     删除
@@ -117,9 +117,9 @@
                 </el-col>
             </el-row>
         </el-card>
-        <auditLog :tableData="TimeAudit" />
-        <el-dialog width="400px" :title="dataForm.content" class="ShinHoDialog" :closeOnClickModal="false" :visible.sync="visible">
-            <el-form ref="dataForm" :model="dataForm" :rules="dataRule" labelWidth="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="Confirmed()" @submit.native.prevent>
+        <audit-log :table-data="TimeAudit" />
+        <el-dialog width="400px" :title="dataForm.content" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible">
+            <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="Confirmed()" @submit.native.prevent>
                 <el-form-item label="班次：" prop="classes">
                     <el-select v-model="dataForm.classes" size="mini" placeholder="请选择" style="width: 160px;" @change="ChangeProductShift">
                         <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
@@ -129,10 +129,10 @@
                     {{ dataForm.content }}
                 </el-form-item>
                 <el-form-item label="开始时间：" prop="startDate">
-                    <el-date-picker v-model="dataForm.startDate" size="mini" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" style="width: 160px;" />
+                    <el-date-picker v-model="dataForm.startDate" size="mini" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" style="width: 160px;" />
                 </el-form-item>
                 <el-form-item label="结束时间：">
-                    <el-date-picker v-model="dataForm.endDate" size="mini" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" style="width: 160px;" />
+                    <el-date-picker v-model="dataForm.endDate" size="mini" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" style="width: 160px;" />
                 </el-form-item>
                 <el-form-item label="时长：">
                     {{ (dataForm.dateLength = mistiming(dataForm.endDate, dataForm.startDate)) }}
@@ -239,7 +239,7 @@ export default {
                         this.dataList = data.listMachine;
                         this.TimeAudit = data.vrList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .finally(() => {
@@ -329,7 +329,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                     if (resolve) {
                         reject('修改准备时间' + data.msg);
                     }
@@ -355,7 +355,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                     if (reject) {
                         reject('修改设备时间' + data.msg);
                     }
@@ -436,6 +436,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag
@@ -460,11 +462,9 @@ export default {
     border: 1px solid #eee;
     border-radius: 5px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
-
     img {
         margin-top: 40px;
     }
-
     &_btn {
         color: black;
         font-size: 14px;
@@ -472,13 +472,11 @@ export default {
         text-align: center;
         border-top: 1px solid #eee;
         cursor: pointer;
-
         &_row {
             position: absolute;
             bottom: 0;
             width: 100%;
         }
-
         &:hover {
             color: white;
             background: #1890ff;

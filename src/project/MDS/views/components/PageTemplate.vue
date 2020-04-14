@@ -67,10 +67,7 @@ import { Vue } from 'vue-property-decorator';
 
 export default class Index extends Vue {
     // 将common中的参数复制一份到本地
-    activeName = '1';
-    mounted() {
-    //    mounted
-    }
+    activeName: '1';
 }
 </script>
 <style lang="scss" scoped></style>

@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :model="formHeader" size="small" labelWidth="75px" class="topform marbottom">
+    <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="topform marbottom">
         <el-form-item label="生产车间：">
             <p class="el-input">
                 {{ formHeader.workShopName || '' }}
@@ -73,7 +73,6 @@ export default {
 .el-form-item--small.el-form-item {
     margin-bottom: 8px !important;
 }
-
 .el-input {
     width: 145px !important;
     overflow: hidden;

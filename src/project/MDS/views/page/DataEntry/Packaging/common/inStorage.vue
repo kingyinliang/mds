@@ -7,7 +7,7 @@
         </div>
         <div v-if="order.factoryCode !== '6010'" class="a">
             <div v-if="order.properties && order.properties !== '二合一&礼盒产线'">
-                <el-table v-if="order.properties && order.properties !== '二合一&礼盒产线'" ref="table1" headerRowClassName="tableHead" :data="InDate" :rowClassName="RowDelFlag" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+                <el-table v-if="order.properties && order.properties !== '二合一&礼盒产线'" ref="table1" header-row-class-name="tableHead" :data="InDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" width="55" label="序号" />
                     <el-table-column label="白/中/夜班" width="120">
                         <template slot-scope="scope">
@@ -130,7 +130,7 @@
                 </el-table>
             </div>
             <div v-if="order.properties && order.properties === '二合一&礼盒产线'">
-                <el-table v-if="order.properties && order.properties === '二合一&礼盒产线'" ref="table1" headerRowClassName="tableHead" :data="InDate" :rowClassName="RowDelFlag" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+                <el-table v-if="order.properties && order.properties === '二合一&礼盒产线'" ref="table1" header-row-class-name="tableHead" :data="InDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" width="55" label="序号" />
                     <el-table-column label="白/中/夜班" width="120">
                         <template slot-scope="scope">
@@ -221,7 +221,7 @@
             </div>
         </div>
         <div v-if="order.factoryCode === '6010'" class="b">
-            <el-table ref="table1" headerRowClassName="tableHead" :data="InDate" :rowClassName="RowDelFlag" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+            <el-table ref="table1" header-row-class-name="tableHead" :data="InDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                 <el-table-column type="index" width="55" label="序号" />
                 <el-table-column label="白/中/夜班" width="120">
                     <template slot-scope="scope">
@@ -343,7 +343,7 @@
                     刷新
                 </el-button>
             </div>
-            <el-table ref="table1" headerRowClassName="tableHead" :data="InVlist" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+            <el-table ref="table1" header-row-class-name="tableHead" :data="InVlist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                 <el-table-column type="index" width="55" label="序号" />
                 <el-table-column prop="orderNo" label="生产订单号" width="120" />
                 <el-table-column prop="batch" label="生产批次" width="120" />
@@ -357,7 +357,7 @@
                 <el-table-column prop="jwzMan" label="机维组确认人" />
             </el-table>
         </div>
-        <auditLog :tableData="InAudit" />
+        <audit-log :table-data="InAudit" />
     </div>
 </template>
 
@@ -537,7 +537,7 @@ export default {
                     if (reject) {
                         reject('提交失败');
                     }
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -638,7 +638,7 @@ export default {
                 if (data.code === 0) {
                     this.productShift = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -667,7 +667,7 @@ export default {
                     this.Instatus = GetStatus(this.InDate);
                     this.$emit('GetinstorageState', this.Instatus);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -685,7 +685,7 @@ export default {
                         type: 'success'
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -777,6 +777,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag

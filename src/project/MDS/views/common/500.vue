@@ -31,27 +31,23 @@ export default {
     margin: auto;
     margin-top: 120px;
     padding: 30px 0;
-
     img {
         float: left;
         width: 419px;
         height: 202px;
     }
-
     .errortxt {
         float: left;
         width: 300px;
         margin-top: 20px;
         margin-left: 60px;
     }
-
     h3 {
-        font-weight: bold;
+        font-weight: 600;
         font-size: 60px;
         letter-spacing: 5px;
         text-align: left;
     }
-
     p {
         color: #8a979e;
         font-size: 20px;

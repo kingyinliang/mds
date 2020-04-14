@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard queryHead">
-            <el-form :model="params" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="sole_row">
+            <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="params.factoryId" class="selectwpx" style="width: 150px;">
                         <el-option label="请选择" value="" />
@@ -153,7 +153,7 @@ export default {
                 if (data.code === 0) {
                     this.orderList = this.ProcessingData(data.list);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -233,7 +233,9 @@ export default {
                     if (res.data.code === 0) {
                         this.workshopList = res.data.typeList;
                         if (!this.params.workShop) {
-                            this.params.workShop = res.data.typeList[0].deptId;
+                            if (res.data.typeList.length !== 0) {
+                                this.params.workShop = res.data.typeList[0].deptId;
+                            }
                         }
                     } else {
                         this.$notify.error({
@@ -254,33 +256,27 @@ export default {
         background: #f05c4a !important;
     }
 }
-
 .nopassBtn {
     background: #f05c4a;
     border: none;
 }
-
 .box-item {
     box-sizing: border-box;
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(232, 232, 232, 1);
     border-radius: 2px;
-
     .box-item-top {
         padding: 10px 10px 20px;
         border-bottom: 1px solid rgba(232, 232, 232, 1);
-
         .box-item-title {
             display: flex;
             flex: 1;
             justify-content: space-between;
             height: 34px;
             margin-bottom: 16px;
-
             .box-item-title-name {
                 display: flex;
                 flex: 1;
-
                 :first-child {
                     width: 30px;
                     height: 30px;
@@ -292,7 +288,6 @@ export default {
                     background: #ffbf00;
                     border-radius: 15px;
                 }
-
                 :nth-child(2) {
                     margin-top: 4px;
                     margin-left: 5px;
@@ -303,7 +298,6 @@ export default {
                 }
             }
         }
-
         .box-item-title-state {
             flex: 1;
             margin-top: 4px;
@@ -314,7 +308,6 @@ export default {
             font-size: 12px;
             line-height: 20px;
             text-align: right;
-
             &::before {
                 display: inline-block;
                 width: 6px;
@@ -326,12 +319,10 @@ export default {
                 content: "";
             }
         }
-
         .box-item-container {
             display: flex;
             flex: 1;
             justify-content: space-between;
-
             .box-item-container-left {
                 display: flex;
                 align-items: center;
@@ -339,33 +330,27 @@ export default {
                 width: 40%;
                 background: rgba(242, 242, 242, 1);
                 border-radius: 8px;
-
                 .box-item-container-img {
                     width: 150px;
-
                     .bgimg {
                         width: 100%;
                     }
                 }
             }
-
             .box-item-container-right {
                 display: flex;
                 flex: 1;
                 flex-direction: column;
                 width: 60%;
                 margin-left: 16px;
-
                 .btn {
                     text-align: right;
                 }
-
                 .box-item-container-item {
                     display: flex;
                     flex: 1;
                     justify-content: space-between;
                     margin-bottom: 10px;
-
                     .name {
                         width: 60px;
                         color: black;
@@ -373,7 +358,6 @@ export default {
                         font-size: 12px;
                         line-height: 32px;
                     }
-
                     .detail {
                         flex: 1;
                         padding-left: 10px;
@@ -391,7 +375,6 @@ export default {
             }
         }
     }
-
     .box-item-bottom {
         display: flex;
         justify-content: space-between;
@@ -399,7 +382,6 @@ export default {
         height: 40px;
         background: rgba(247, 249, 250, 1);
         border-radius: 0 0 2px 2px;
-
         .box-item-bottom-item {
             flex: 1;
             color: rgba(0, 0, 0, 0.65);
@@ -407,14 +389,12 @@ export default {
             font-size: 12px;
             line-height: 40px;
             text-align: center;
-
             &:hover {
                 color: #fff;
                 background: #1890ff;
                 cursor: pointer;
             }
         }
-
         .box-item-bottom-split {
             width: 1px;
             height: 16px;
@@ -423,34 +403,28 @@ export default {
         }
     }
 }
-
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
-
 .box-card {
     .pro-line {
         border-bottom: 1px solid #dcdfe6;
     }
-
     .pro-line p {
         color: red;
         font-size: 16px;
         letter-spacing: 0.1em;
     }
-
     b {
         float: left;
         font-size: 16px;
         line-height: 32px;
     }
-
     .item {
         display: flex;
         margin-top: 20px;
-
         img {
             float: left;
             width: 220px;
@@ -459,24 +433,19 @@ export default {
             border: 1px solid #dcdfe6;
             border-radius: 6px;
         }
-
         .itemForm {
             flex: 1;
-
             p {
                 color: #8a979e;
             }
         }
-
         .margb20px {
             margin-bottom: 10px;
         }
     }
 }
-
 .el-row {
     margin-bottom: 20px;
-
     &:last-child {
         margin-bottom: 0;
     }

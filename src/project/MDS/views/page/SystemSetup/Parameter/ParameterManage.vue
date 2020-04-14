@@ -7,7 +7,7 @@
                         <el-option label="请选择" value="" />
                         <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
                     </el-select>
-                    <el-input v-model="searchType" placeholder="请输入" suffixIcon="el-icon-search" style="width: 200px;" />
+                    <el-input v-model="searchType" placeholder="请输入" suffix-icon="el-icon-search" style="width: 200px;" />
                     <el-button type="primary" @click="getdictList">
                         查询
                     </el-button>
@@ -22,13 +22,13 @@
                                 </div>
                             </div>
                             <div>
-                                <el-table headerRowClassName="tableHead" :data="parameterType" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @row-click="setTypeDetail">
+                                <el-table header-row-class-name="tableHead" :data="parameterType" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @row-click="setTypeDetail">
                                     <el-table-column type="index" width="50" label="序号" />
-                                    <el-table-column :showOverflowTooltip="true" label="工厂" prop="factoryName" />
-                                    <el-table-column prop="type" :showOverflowTooltip="true" label="参数类型编码" width="110" />
-                                    <el-table-column prop="name" :showOverflowTooltip="true" label="参数类型名称" width="110" />
+                                    <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" />
+                                    <el-table-column prop="type" :show-overflow-tooltip="true" label="参数类型编码" width="110" />
+                                    <el-table-column prop="name" :show-overflow-tooltip="true" label="参数类型名称" width="110" />
                                 </el-table>
-                                <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                             </div>
                         </el-card>
                     </el-col>
@@ -39,13 +39,13 @@
                                 <el-button v-if="isAuth('sys:dict:save')" type="text" icon="el-icon-plus" style="display: inline-block; float: right; padding: 12px;" @click="addorupdate('param', false, true)" />
                             </div>
                             <div>
-                                <el-table ref="table1" headerRowClassName="tableHead" :data="parameter" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+                                <el-table ref="table1" header-row-class-name="tableHead" :data="parameter" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                                     <el-table-column type="index" width="50" label="序号" />
-                                    <el-table-column :showOverflowTooltip="true" label="工厂" prop="factoryName" width="100" />
-                                    <el-table-column prop="type" :showOverflowTooltip="true" label="参数类型编码" />
-                                    <el-table-column prop="name" :showOverflowTooltip="true" label="参数类型名称" />
-                                    <el-table-column prop="code" :showOverflowTooltip="true" label="参数编码" />
-                                    <el-table-column prop="value" :showOverflowTooltip="true" label="参数名称" />
+                                    <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" width="100" />
+                                    <el-table-column prop="type" :show-overflow-tooltip="true" label="参数类型编码" />
+                                    <el-table-column prop="name" :show-overflow-tooltip="true" label="参数类型名称" />
+                                    <el-table-column prop="code" :show-overflow-tooltip="true" label="参数编码" />
+                                    <el-table-column prop="value" :show-overflow-tooltip="true" label="参数名称" />
                                     <el-table-column width="96" label="操作">
                                         <template slot-scope="scope">
                                             <el-button v-if="isAuth('sys:dict:delete')" type="text" @click="remove(scope.row)">
@@ -63,7 +63,7 @@
                 </el-row>
             </el-card>
         </div>
-        <add-or-update v-if="visible" ref="addOrupdate" :factoryList="factoryList" @refreshDataList="getList()" />
+        <add-or-update v-if="visible" ref="addOrupdate" :factory-list="factoryList" @refreshDataList="getList()" />
     </el-col>
 </template>
 
@@ -111,7 +111,7 @@ export default {
                     this.currPage = data.list.currPage;
                     this.pageSize = data.list.pageSize;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -124,12 +124,14 @@ export default {
             }).then(() => {
                 this.$http(`${SYSTEMSETUP_API.PARAMETERDEL_API}`, 'POST', [row.id]).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$success_SHINHO('删除成功!');
+                        this.$successTost('删除成功!');
                         this.getList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  设置类型详情
@@ -147,7 +149,7 @@ export default {
                 if (data.code === 0) {
                     this.parameter = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -198,7 +200,6 @@ export default {
 .el-card__header {
     padding: 13px 15px;
 }
-
 .main-header .el-card__header {
     padding: 0 15px !important;
 }

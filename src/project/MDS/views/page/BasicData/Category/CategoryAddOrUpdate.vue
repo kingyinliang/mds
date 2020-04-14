@@ -1,6 +1,6 @@
 <template>
-    <el-dialog width="450px" class="ShinHoDialog" :title="id ? '修改类别' : '新增类别'" :closeOnClickModal="false" :visible.sync="visible" @close="closeDialog">
-        <el-form ref="dataForm" :model="dataForm" :rules="dataRule" labelWidth="155px" size="small" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
+    <el-dialog width="450px" class="ShinHoDialog" :title="id ? '修改类别' : '新增类别'" :close-on-click-modal="false" :visible.sync="visible" @close="closeDialog">
+        <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="155px" size="small" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
             <el-form-item label="生产工厂：" prop="factory">
                 <el-select v-model="dataForm.factory" placeholder="请选择" style="width: 100%;">
                     <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
@@ -117,11 +117,11 @@ export default {
                     this.dataForm.materialName = this.material.find(item => item.materialCode === this.dataForm.materialCode).materialName;
                     this.$http(`${this.id ? BASICDATA_API.CATEGORY_UPDATE : BASICDATA_API.CATEGORY_SAVE}`, 'POST', this.dataForm).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('操作成功');
+                            this.$successTost('操作成功');
                             this.visible = false;
                             this.$emit('refreshDataList');
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 }
@@ -144,7 +144,7 @@ export default {
                     if (data.code === 0) {
                         this.material = data.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }

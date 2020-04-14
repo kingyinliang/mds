@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table ref="queryTable" :queryFormData="queryFormData" :listInterface="listInterface" :queryAuth="'o3:board:charList'" :column="column" :exportExcel="true" :exportOption="exportOption" :showPage="true" />
+        <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'o3:board:charList'" :column="column" :export-excel="true" :export-option="exportOption" :show-page="true" />
     </div>
 </template>
 

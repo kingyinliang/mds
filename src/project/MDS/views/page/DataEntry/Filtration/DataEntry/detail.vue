@@ -4,7 +4,7 @@
             <el-card class="searchCards searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <el-form :model="formHeader" :inline="true" size="small" labelWidth="70px" class="marbottom multi_row">
+                        <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="marbottom multi_row">
                             <el-form-item label="生产车间：">
                                 <p class="input_bottom">
                                     {{ formHeader.workShopName }}
@@ -33,7 +33,7 @@
                                 </p>
                             </el-form-item>
                             <el-form-item label="生产日期：">
-                                <el-date-picker v-model="formHeader.productDate" size="small" type="date" :disabled="!isRedact" valueFormat="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 145px;" />
+                                <el-date-picker v-model="formHeader.productDate" size="small" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 145px;" />
                             </el-form-item>
                             <el-form-item label="提交人员：">
                                 <p class="input_bottom">
@@ -100,7 +100,7 @@
                             >设备工时</el-button>
                         </el-tooltip>
                     </span>
-                    <Equ-workinghours ref="equworkinghours" :isRedact="isRedact" :formHeader="formHeader" @setEquState="setEquState" />
+                    <Equ-workinghours ref="equworkinghours" :is-redact="isRedact" :form-header="formHeader" @setEquState="setEquState" />
                 </el-tab-pane>
                 <el-tab-pane name="2">
                     <span slot="label" class="spanview">
@@ -112,13 +112,13 @@
                             >工艺控制</el-button>
                         </el-tooltip>
                     </span>
-                    <Craft ref="craft" :isRedact="isRedact" @setCraftStatus="setCraftStatus" />
+                    <Craft ref="craft" :is-redact="isRedact" @setCraftStatus="setCraftStatus" />
                 </el-tab-pane>
                 <el-tab-pane name="3">
                     <span slot="label" class="spanview">
                         <el-button>异常记录</el-button>
                     </span>
-                    <exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader" />
+                    <exc-record ref="excrecord" :is-redact="isRedact" :order="formHeader" />
                 </el-tab-pane>
                 <el-tab-pane name="4">
                     <span slot="label" class="spanview">
@@ -130,7 +130,7 @@
                             >物料领用</el-button>
                         </el-tooltip>
                     </span>
-                    <Material ref="material" :isRedact="isRedact" @setMaterialStatus="setMaterialStatus" />
+                    <Material ref="material" :is-redact="isRedact" @setMaterialStatus="setMaterialStatus" />
                 </el-tab-pane>
                 <el-tab-pane name="5">
                     <span slot="label" class="spanview">
@@ -142,13 +142,13 @@
                             >生产入库</el-button>
                         </el-tooltip>
                     </span>
-                    <in-storage ref="instorage" :isRedact="isRedact" :formHeader="formHeader" @setInstorageState="setInstorageState" />
+                    <in-storage ref="instorage" :is-redact="isRedact" :form-header="formHeader" @setInstorageState="setInstorageState" />
                 </el-tab-pane>
                 <el-tab-pane name="6">
                     <span slot="label" class="spanview">
                         <el-button>文本记录</el-button>
                     </span>
-                    <text-record ref="textrecord" :isRedact="isRedact" />
+                    <text-record ref="textrecord" :is-redact="isRedact" />
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -241,7 +241,7 @@ export default {
                     this.$refs.excrecord.GetExcDate(this.formHeader.orderId);
                     this.$refs.textrecord.GetText(this.formHeader.orderId);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -288,9 +288,11 @@ export default {
                     if (data.code === 0) {
                         this.savedOrSubmitForm('submit');
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -357,16 +359,16 @@ export default {
                                         this.isRedact = false;
                                     })
                                     .catch(() => {
-                                        this.$error_SHINHO('1网络请求失败，请刷新重试');
+                                        this.$errorTost('1网络请求失败，请刷新重试');
                                     });
                             })
                             .catch(() => {
-                                this.$error_SHINHO('2网络请求失败，请刷新重试');
+                                this.$errorTost('2网络请求失败，请刷新重试');
                             });
                     }
                 })
                 .catch((reason) => {
-                    this.$error_SHINHO('网络请求失败，请刷新重试' + reason);
+                    this.$errorTost('网络请求失败，请刷新重试' + reason);
                 });
         }
     }

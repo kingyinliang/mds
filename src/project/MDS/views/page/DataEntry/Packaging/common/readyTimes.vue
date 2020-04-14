@@ -1,8 +1,8 @@
 <template>
-    <el-form ref="timesForm" :inline="true" :model="readyDate" size="small" labelWidth="125px">
+    <el-form ref="timesForm" :inline="true" :model="readyDate" size="small" label-width="125px">
         <div class="clearfix topBox">
             <h3>录入数据单位：MIN</h3>
-            <el-form-item v-if="readyDate.isCause === '1'" label="班次：" style="float: right; width: 162px;" labelWidth="60px">
+            <el-form-item v-if="readyDate.isCause === '1'" label="班次：" style="float: right; width: 162px;" label-width="60px">
                 <el-select v-model="readyDate.classes" style="width: 100px;" placeholder="请选择" :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))">
                     <el-option label="白班" value="白班" />
                     <el-option label="中班" value="中班" />
@@ -27,7 +27,7 @@
                     <el-date-picker
                         v-model="readyDate.dayStartDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -38,7 +38,7 @@
                     <el-date-picker
                         v-model="readyDate.dayStartLineDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -52,7 +52,7 @@
                     <el-date-picker
                         v-model="readyDate.dayEndDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -63,7 +63,7 @@
                     <el-date-picker
                         v-model="readyDate.dayCauseDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -85,7 +85,7 @@
                     <el-date-picker
                         v-model="readyDate.midStartDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -96,7 +96,7 @@
                     <el-date-picker
                         v-model="readyDate.midStartLineDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -110,7 +110,7 @@
                     <el-date-picker
                         v-model="readyDate.midEndDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -121,7 +121,7 @@
                     <el-date-picker
                         v-model="readyDate.midCauseDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -143,7 +143,7 @@
                     <el-date-picker
                         v-model="readyDate.nightStartDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -154,7 +154,7 @@
                     <el-date-picker
                         v-model="readyDate.nightStartLineDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -168,7 +168,7 @@
                     <el-date-picker
                         v-model="readyDate.nightEndDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -179,7 +179,7 @@
                     <el-date-picker
                         v-model="readyDate.nightCauseDate"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                         :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))"
@@ -205,7 +205,7 @@
                 <el-input v-model="readyDate.clear" placeholder="手工录入" :disabled="!(isRedact && (readyDate.status === 'noPass' || readyDate.status === 'saved' || readyDate.status === ''))" />
             </el-form-item>
         </div>
-        <auditLog :tableData="ReadAudit" />
+        <audit-log :table-data="ReadAudit" />
     </el-form>
 </template>
 
@@ -332,7 +332,7 @@ export default {
                         this.ReadAudit = data.listApproval;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -476,7 +476,7 @@ export default {
             this.$http(`${PACKAGING_API.PKGREADYUPDATE_API}`, 'POST', this.readyDate)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');

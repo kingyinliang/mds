@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :model="formHeader" size="small" labelWidth="75px" class="topform marbottom">
+    <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="topform marbottom">
         <el-form-item label="生产车间：">
             <p class="input_bottom">
                 {{ formHeader.workShopName || '' }}
@@ -31,7 +31,7 @@
             </p>
         </el-form-item>
         <el-form-item label="生产日期：">
-            <el-date-picker v-model="formHeader.productDate" size="mini" type="date" :disabled="!isRedact" valueFormat="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 145px;" />
+            <el-date-picker v-model="formHeader.productDate" size="mini" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 145px;" />
         </el-form-item>
         <el-form-item label="提交人员：">
             <p class="input_bottom">

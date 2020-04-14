@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCards newCard">
-            <el-form :model="formHeader" :inline="true" size="small" labelWidth="70px" class="multi_row">
+            <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" class="width180px">
                         <el-option value="">
@@ -54,13 +54,13 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item class="floatr">
-                    <el-button v-if="isAuth('ver:adjust:list')" type="primary" size="small" @click="GetList()">
+                    <el-button v-if="isAuth('ver:adjust:list')" type="primary" size="small" @click="getList()">
                         查询
                     </el-button>
-                    <el-button v-if="isAuth('ver:adjust:adjust')" type="primary" size="small" @click="SubmitInfo()">
+                    <el-button v-if="isAuth('ver:adjust:adjust')" type="primary" size="small" @click="submitInfo()">
                         调整
                     </el-button>
-                    <el-button v-if="isAuth('ver:adjust:exportList')" type="primary" size="small" @click="ExportExcel(true)">
+                    <el-button v-if="isAuth('ver:adjust:exportList')" type="primary" size="small" @click="exportExcel(true)">
                         导出
                     </el-button>
                 </el-form-item>
@@ -71,79 +71,79 @@
                 <span slot="label" class="spanview">
                     <el-button>待调整</el-button>
                 </span>
-                <el-table ref="multipleTable1" :data="dataList" :rowKey="GetRowKeys" headerRowClassName="tableHead" border @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" :reserveSelection="true" width="34" fixed="left" />
-                    <el-table-column label="容器类型" prop="holderTypeName" showOverflowTooltip />
-                    <el-table-column label="容器号" prop="holderName" width="100" showOverflowTooltip />
-                    <el-table-column label="物料" width="190" showOverflowTooltip>
+                <el-table ref="multipleTable1" :data="dataList" :row-key="getRowKeys" header-row-class-name="tableHead" border @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" :reserve-selection="true" width="34" fixed="left" />
+                    <el-table-column label="容器类型" prop="holderTypeName" show-overflow-tooltip />
+                    <el-table-column label="容器号" prop="holderName" width="100" show-overflow-tooltip />
+                    <el-table-column label="物料" width="190" show-overflow-tooltip>
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
                             {{ scope.row.materialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="成品批次" width="110" prop="batch" showOverflowTooltip />
-                    <el-table-column label="盈/亏" width="60" prop="surplusLose" showOverflowTooltip />
-                    <el-table-column label="移动数量" prop="amount" showOverflowTooltip />
-                    <el-table-column label="移动类型" prop="moveType" showOverflowTooltip />
-                    <el-table-column label="打入罐类型" width="100" prop="inHolderTypeName" showOverflowTooltip />
-                    <el-table-column label="打入罐罐号" width="100" prop="inHolderName" showOverflowTooltip />
-                    <el-table-column label="单位" width="50" prop="unit" showOverflowTooltip />
-                    <el-table-column label="备注" prop="remark" showOverflowTooltip />
-                    <el-table-column label="操作时间" width="170" prop="changed" showOverflowTooltip />
-                    <el-table-column label="操作人" prop="changer" showOverflowTooltip />
+                    <el-table-column label="成品批次" width="110" prop="batch" show-overflow-tooltip />
+                    <el-table-column label="盈/亏" width="60" prop="surplusLose" show-overflow-tooltip />
+                    <el-table-column label="移动数量" prop="amount" show-overflow-tooltip />
+                    <el-table-column label="移动类型" prop="moveType" show-overflow-tooltip />
+                    <el-table-column label="打入罐类型" width="100" prop="inHolderTypeName" show-overflow-tooltip />
+                    <el-table-column label="打入罐罐号" width="100" prop="inHolderName" show-overflow-tooltip />
+                    <el-table-column label="单位" width="50" prop="unit" show-overflow-tooltip />
+                    <el-table-column label="备注" prop="remark" show-overflow-tooltip />
+                    <el-table-column label="操作时间" width="170" prop="changed" show-overflow-tooltip />
+                    <el-table-column label="操作人" prop="changer" show-overflow-tooltip />
                 </el-table>
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     <el-button>调整中</el-button>
                 </span>
-                <el-table ref="multipleTable2" :data="dataList" headerRowClassName="tableHead" border tooltipEffect="dark" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" :reserveSelection="true" width="34" fixed="left" />
-                    <el-table-column label="容器类型" prop="holderTypeName" showOverflowTooltip />
-                    <el-table-column label="容器号" width="100" prop="holderName" showOverflowTooltip />
-                    <el-table-column label="物料" width="190" showOverflowTooltip>
+                <el-table ref="multipleTable2" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark" @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" :reserve-selection="true" width="34" fixed="left" />
+                    <el-table-column label="容器类型" prop="holderTypeName" show-overflow-tooltip />
+                    <el-table-column label="容器号" width="100" prop="holderName" show-overflow-tooltip />
+                    <el-table-column label="物料" width="190" show-overflow-tooltip>
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
                             {{ scope.row.materialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="成品批次" width="110" prop="batch" showOverflowTooltip />
-                    <el-table-column label="盈/亏" width="60" prop="surplusLose" showOverflowTooltip />
-                    <el-table-column label="移动数量" prop="amount" showOverflowTooltip />
-                    <el-table-column label="移动类型" prop="moveType" showOverflowTooltip />
-                    <el-table-column label="打入罐类型" width="100" prop="inHolderTypeName" showOverflowTooltip />
-                    <el-table-column label="打入罐罐号" width="100" prop="inHolderName" showOverflowTooltip />
-                    <el-table-column label="单位" width="50" prop="unit" showOverflowTooltip />
-                    <el-table-column label="备注" prop="remark" showOverflowTooltip />
-                    <el-table-column label="操作时间" width="170" prop="changed" showOverflowTooltip />
-                    <el-table-column label="操作人" prop="changer" showOverflowTooltip />
+                    <el-table-column label="成品批次" width="110" prop="batch" show-overflow-tooltip />
+                    <el-table-column label="盈/亏" width="60" prop="surplusLose" show-overflow-tooltip />
+                    <el-table-column label="移动数量" prop="amount" show-overflow-tooltip />
+                    <el-table-column label="移动类型" prop="moveType" show-overflow-tooltip />
+                    <el-table-column label="打入罐类型" width="100" prop="inHolderTypeName" show-overflow-tooltip />
+                    <el-table-column label="打入罐罐号" width="100" prop="inHolderName" show-overflow-tooltip />
+                    <el-table-column label="单位" width="50" prop="unit" show-overflow-tooltip />
+                    <el-table-column label="备注" prop="remark" show-overflow-tooltip />
+                    <el-table-column label="操作时间" width="170" prop="changed" show-overflow-tooltip />
+                    <el-table-column label="操作人" prop="changer" show-overflow-tooltip />
                 </el-table>
             </el-tab-pane>
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">
                     <el-button>已调整</el-button>
                 </span>
-                <el-table ref="multipleTable3" :data="dataList" headerRowClassName="tableHead" border tooltipEffect="dark">
+                <el-table ref="multipleTable3" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column label="订单号" width="120" prop="orderNo" />
-                    <el-table-column label="容器类型" prop="holderTypeName" showOverflowTooltip />
-                    <el-table-column label="容器号" width="100" prop="holderName" showOverflowTooltip />
-                    <el-table-column label="物料" width="190" showOverflowTooltip>
+                    <el-table-column label="容器类型" prop="holderTypeName" show-overflow-tooltip />
+                    <el-table-column label="容器号" width="100" prop="holderName" show-overflow-tooltip />
+                    <el-table-column label="物料" width="190" show-overflow-tooltip>
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
                             {{ scope.row.materialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="成品批次" width="110" prop="batch" showOverflowTooltip />
-                    <el-table-column label="盈/亏" width="60" prop="surplusLose" showOverflowTooltip />
-                    <el-table-column label="移动数量" prop="amount" showOverflowTooltip />
-                    <el-table-column label="移动类型" prop="moveType" showOverflowTooltip />
-                    <el-table-column label="单位" width="50" prop="unit" showOverflowTooltip />
-                    <el-table-column label="备注" prop="remark" showOverflowTooltip />
-                    <el-table-column label="操作时间" width="170" prop="changed" showOverflowTooltip />
-                    <el-table-column label="操作人" prop="changer" showOverflowTooltip />
+                    <el-table-column label="成品批次" width="110" prop="batch" show-overflow-tooltip />
+                    <el-table-column label="盈/亏" width="60" prop="surplusLose" show-overflow-tooltip />
+                    <el-table-column label="移动数量" prop="amount" show-overflow-tooltip />
+                    <el-table-column label="移动类型" prop="moveType" show-overflow-tooltip />
+                    <el-table-column label="单位" width="50" prop="unit" show-overflow-tooltip />
+                    <el-table-column label="备注" prop="remark" show-overflow-tooltip />
+                    <el-table-column label="操作时间" width="170" prop="changed" show-overflow-tooltip />
+                    <el-table-column label="操作人" prop="changer" show-overflow-tooltip />
                 </el-table>
             </el-tab-pane>
-            <el-pagination :currentPage="pages.currentPage" :pageSizes="[10, 20, 50]" :pageSize="pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pages.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            <el-pagination :current-page="pages.currentPage" :page-sizes="[10, 20, 50]" :page-size="pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pages.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             <el-row style="margin: 20px 0;">
                 <div style="display: block; float: left;">
                     移动数量合计（方）：
@@ -206,7 +206,7 @@ export default {
     },
     watch: {
         'formHeader.factory'(n) {
-            this.GetWorkshopList(n);
+            this.getWorkshopList(n);
         },
         'formHeader.workShop'() {
             this.formHeader.holderType = '';
@@ -215,29 +215,29 @@ export default {
         },
         'formHeader.holderType'(n) {
             if (n) {
-                this.GetHolderList(n);
+                this.getHolderList(n);
             }
         }
     },
     mounted() {
-        this.GetFactoryList();
-        this.GetPageCurrenList();
-        this.GetMaterialList();
+        this.getFactoryList();
+        this.getPageCurrenList();
+        this.getMaterialList();
     },
     methods: {
         // 获取工厂
-        GetFactoryList() {
+        getFactoryList() {
             this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', false, false, false).then(({ data }) => {
                 if (data.code === 0) {
                     this.factoryList = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
         // 获取车间
-        GetWorkshopList(id) {
+        getWorkshopList(id) {
             this.formHeader.workShop = '';
             this.formHeader.holderType = '';
             this.formHeader.holderId = '';
@@ -250,7 +250,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -258,7 +258,7 @@ export default {
             }
         },
         // 容器号
-        GetHolderList(id) {
+        getHolderList(id) {
             this.formHeader.holderId = '';
             this.formHeader.holderNoList = [];
             const param = {
@@ -269,17 +269,17 @@ export default {
                 if (data.code === 0) {
                     this.holderNoList = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
         // 物料
-        GetMaterialList() {
+        getMaterialList() {
             this.$http(`${AUDIT_API.AUDIT_ADJUST_MATERIAL}`, 'POST', {}, false, false, false).then(({ data }) => {
                 if (data.code === 0) {
                     this.materialList = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -288,23 +288,23 @@ export default {
         },
         handleSizeChange(val) {
             this.pages.pageSize = val;
-            this.GetPageCurrenList();
+            this.getPageCurrenList();
         },
         handleCurrentChange(val) {
             this.pages.currentPage = val;
-            this.GetPageCurrenList();
+            this.getPageCurrenList();
         },
-        GetPageCurrenList() {
+        getPageCurrenList() {
             this.dataList = this.dataListAll.slice((this.pages.currentPage - 1) * this.pages.pageSize, (this.pages.currentPage - 1) * this.pages.pageSize + this.pages.pageSize);
         },
-        GetRowKeys(row) {
-            return row.id;
+        getRowKeys(row) {
+                return row.id;
         },
         TabClick(tab) {
             this.activeName = tab.name;
-            this.GetList();
+            this.getList();
         },
-        GetList() {
+        getList() {
             this.formHeader.witchTable = this.activeName;
             this.$refs.multipleTable1.clearSelection();
             this.$refs.multipleTable2.clearSelection();
@@ -313,13 +313,13 @@ export default {
                     this.dataListAll = data.list;
                     this.pages.currentPage = 1;
                     this.pages.total = this.dataListAll.length;
-                    this.GetPageCurrenList();
+                    this.getPageCurrenList();
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
-        SubmitInfo() {
+        submitInfo() {
             if (this.multipleSelection.length === 0) {
                 this.$warningTost('请勾选调整数据');
                 return false;
@@ -353,13 +353,13 @@ export default {
                         message: '调整成功',
                         type: 'success'
                     });
-                    this.GetList();
+                    this.getList();
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
-        ExportExcel() {
+        exportExcel() {
             this.plantList = this.formHeader;
             exportFile(`${REP_API.REP_ADJUST_LIST_API}`, '调整明细', this);
         }

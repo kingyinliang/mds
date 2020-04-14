@@ -16,18 +16,13 @@ export default {
     props: {
         tableData: {
             type: Object,
-            default: () => {
-            //    default
-            }
+            default: function() { return {} }
         }
     },
     data() {
         return {};
     },
     computed: {},
-    mounted() {
-    //    mounted
-    },
     methods: {}
 };
 </script>
@@ -36,12 +31,10 @@ export default {
 .audit {
     margin: 10px 0;
     line-height: 32px;
-
     i {
         float: left;
         font-size: 22px;
     }
-
     span {
         font-size: 16px;
     }

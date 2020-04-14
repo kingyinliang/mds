@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row>
                     <el-col :span="24">
-                        <el-form :inline="true" :model="form" size="small" labelWidth="70px" class="multi_row">
+                        <el-form :inline="true" :model="form" size="small" label-width="70px" class="multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="form.factory" placeholder="请选择" class="width160px">
                                     <el-option value="">
@@ -71,14 +71,14 @@
         </div>
         <div class="main">
             <el-card>
-                <el-table :data="dataList" border headerRowClassName="tableHead">
+                <el-table :data="dataList" border header-row-class-name="tableHead">
                     <el-table-column label="状态" width="50">
                         <template slot-scope="scope">
                             <!-- {{scope.row.judge}} -->
                             {{ scope.row.judge ? (scope.row.judge.frozenStatus === '0' ? '正常' : '冻结') : '' }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="发酵罐" width="100" showOverflowTooltip>
+                    <el-table-column label="发酵罐" width="100" show-overflow-tooltip>
                         <template slot-scope="scope">
                             {{ scope.row.order.holderName }}
                         </template>
@@ -88,7 +88,7 @@
                             {{ scope.row.order.ferOrderNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="物料" width="180" showOverflowTooltip>
+                    <el-table-column label="物料" width="180" show-overflow-tooltip>
                         <template slot-scope="scope">
                             {{ scope.row.order.ferMaterialCode }}{{ scope.row.order.ferMaterialName }}
                         </template>
@@ -131,14 +131,14 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :currentPage="form.currPage" :pageSizes="[10, 20, 50]" :pageSize="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-card>
         </div>
-        <el-dialog :visible.sync="dialogVisible" :closeOnClickModal="false" width="400px" customClass="dialog__class">
+        <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" custom-class="dialog__class">
             <div slot="title">
                 类别判定
             </div>
-            <el-form ref="judge" :model="judge" size="small" labelWidth="130px" :rules="judgerules">
+            <el-form ref="judge" :model="judge" size="small" label-width="130px" :rules="judgerules">
                 <el-form-item label="订单编号：">
                     {{ judge.ferOrderNo }}
                 </el-form-item>
@@ -263,7 +263,7 @@ export default {
                         this.form.factory = this.factory[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -283,7 +283,7 @@ export default {
                             }
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -296,7 +296,7 @@ export default {
                 if (data.code === 0) {
                     this.holderList = data.data;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -306,7 +306,7 @@ export default {
                 if (data.code === 0) {
                     this.materialList = data.materialList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -316,7 +316,7 @@ export default {
                 if (data.code === 0) {
                     this.materialTypeList = data.ferList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -336,7 +336,7 @@ export default {
                 if (data.code === 0) {
                     this.materialTypeList = data.ferList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -352,9 +352,8 @@ export default {
                     this.$store.state.common.Fermentation.category.materialCode = '';
                     this.$store.state.common.Fermentation.category.ferDays = '';
                     this.$store.state.common.Fermentation.category.halfId = '';
-                    // console.log(this.dataList)
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -416,10 +415,10 @@ export default {
                     this.dialogVisible = false;
                     this.$http(`${FERMENTATION_API.CATEGORYJUDGEMENTTODO_API}`, 'POST', this.judge).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('调整成功');
+                            this.$successTost('调整成功');
                             this.GetList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 } else {
@@ -435,17 +434,14 @@ export default {
 .width160px {
     width: 160px;
 }
-
 .dialog__class {
     border-radius: 6px !important;
-
     .el-dialog__header {
         height: 59px;
         color: #fff;
         font-size: 20px;
         background: rgba(24, 144, 255, 1);
         border-radius: 6px 6px 0 0;
-
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }

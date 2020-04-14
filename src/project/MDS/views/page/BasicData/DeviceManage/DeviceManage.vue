@@ -4,9 +4,9 @@
             <el-card>
                 <el-row class="clearfix">
                     <div style="float: right;">
-                        <el-form :inline="true" :model="param" size="small" labelWidth="68px" class="topforms2" @keyup.enter.native="getList(true)" @submit.native.prevent>
+                        <el-form :inline="true" :model="param" size="small" label-width="68px" class="topforms2" @keyup.enter.native="getList(true)" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="param.param" placeholder="设备编号" suffixIcon="el-icon-search" />
+                                <el-input v-model="param.param" placeholder="设备编号" suffix-icon="el-icon-search" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button v-if="isAuth('sys:device:checkList')" type="primary" size="small" @click="getList(true)">
@@ -22,7 +22,7 @@
                             <div slot="header" class="clearfix">
                                 <span>组织架构一览</span>
                             </div>
-                            <el-tree :data="OrgTree" nodeKey="deptId" :defaultExpandedKeys="arrList" :expandOnClickNode="false" @node-click="setdetail" />
+                            <el-tree ref="treeList" :data="OrgTree" node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
                         </el-card>
                     </el-col>
                     <el-col :span="16">
@@ -37,11 +37,11 @@
                                 <el-button v-if="isAuth('sys:device:save')" type="primary" size="small" style="float: right; margin-right: 10px; margin-bottom: 20px;" @click="addOrupdate(deptId)">
                                     新增
                                 </el-button>
-                                <el-table ref="table1" border headerRowClassName="tableHead" :data="deviceList" tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                                <el-table ref="table1" border header-row-class-name="tableHead" :data="deviceList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                                     <el-table-column type="selection" width="34" />
                                     <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
-                                    <el-table-column prop="deviceNo" width="120" :showOverflowTooltip="true" label="设备编号" />
-                                    <el-table-column prop="deviceName" label="设备描述" :showOverflowTooltip="true" />
+                                    <el-table-column prop="deviceNo" width="120" :show-overflow-tooltip="true" label="设备编号" />
+                                    <el-table-column prop="deviceName" label="设备描述" :show-overflow-tooltip="true" />
                                     <el-table-column fixed="right" label="操作" width="65">
                                         <template slot-scope="scope">
                                             <el-button v-if="isAuth('sys:device:update')" type="text" @click="addOrupdate(deptId, scope.row)">
@@ -52,7 +52,7 @@
                                 </el-table>
                             </div>
                             <el-row>
-                                <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                             </el-row>
                         </el-card>
                     </el-col>
@@ -98,8 +98,12 @@ export default {
                 if (data.code === 0) {
                     this.OrgTree = data.deptList;
                     this.arrList = [this.OrgTree[0].children[0].deptId];
+                    this.deptId = this.OrgTree[0]['deptId'];
+                    this.$nextTick(() => {
+                        this.$refs.treeList.setCurrentKey(this.deptId);
+                    })
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -126,7 +130,7 @@ export default {
                     this.totalCount = data.list.totalCount;
                     this.currPage = data.list.currPage;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.multipleSelection = [];
             });
@@ -166,11 +170,11 @@ export default {
                     .then(() => {
                         this.$http(`${BASICDATA_API.DEVICEDEL_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$success_SHINHO('删除成功!');
+                                this.$successTost('删除成功!');
                                 this.multipleSelection = [];
                                 this.getList();
                             } else {
-                                this.$error_SHINHO(data.msg);
+                                this.$errorTost(data.msg);
                             }
                         });
                     })

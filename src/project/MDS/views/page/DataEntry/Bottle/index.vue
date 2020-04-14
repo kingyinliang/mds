@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="newCard">
-            <el-form :model="formHeader" :inline="true" size="small" labelWidth="70px" class="sole_row">
+            <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" class="width150px">
                         <el-option value="">
@@ -19,13 +19,13 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="formHeader.productDate" type="date" valueFormat="yyyy-MM-dd" placeholder="请选择日期" style="width: 150px;" />
+                    <el-date-picker v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 150px;" />
                 </el-form-item>
                 <el-form-item label="生产订单：">
                     <el-input v-model.trim="formHeader.orderNo" style="width: 150px;" />
                 </el-form-item>
                 <el-form-item class="floatr">
-                    <el-button v-if="isAuth('bottle:workshop:indexList')" type="primary" size="small" class="floatr" @click="GetList">
+                    <el-button v-if="isAuth('bottle:workshop:indexList')" type="primary" size="small" class="floatr" @click="getList">
                         查询
                     </el-button>
                 </el-form-item>
@@ -165,7 +165,7 @@ export default {
                     this.factoryList = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -183,14 +183,14 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
                 this.workshopList = [];
             }
         },
-        GetList() {
+        getList() {
             if (this.formHeader.factory === '') {
                 this.$warningTost('请选择工厂');
                 return false;
@@ -205,6 +205,10 @@ export default {
             }
             this.$http(`${BOTTLE_API.BOTTLE_INDEX_LIST}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
+                    if (data.indexInfo.length === 0) {
+                        this.$infoTost('该搜寻条件无任何数据');
+                        return false
+                    }
                     this.AllList = data.indexInfo;
                     this.dataList = [];
                     data.indexInfo.map(item => {
@@ -229,7 +233,7 @@ export default {
                         }
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -279,7 +283,6 @@ export default {
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(232, 232, 232, 1);
     border-radius: 2px;
-
     .top {
         display: flex;
         flex-direction: row;
@@ -287,30 +290,24 @@ export default {
         justify-content: space-between;
         height: 40px;
         padding: 0 10px;
-
         .status {
             font-size: 14px;
             line-height: 20px;
         }
     }
-
     .content {
         padding: 10px;
-
         .img {
             margin-top: 10px;
             text-align: center;
         }
-
         .right {
             height: 120px;
-
             .lines {
                 overflow: hidden;
                 color: rgba(0, 0, 0, 0.45);
                 font-size: 12px;
                 line-height: 26px;
-
                 span {
                     color: rgba(0, 0, 0, 0.65);
                     font-size: 12px;
@@ -318,7 +315,6 @@ export default {
             }
         }
     }
-
     .bottom {
         display: flex;
         flex-direction: row;
@@ -327,7 +323,6 @@ export default {
         width: 100%;
         height: 40px;
         background: rgba(247, 249, 250, 1);
-
         .bottom-item {
             flex: 1;
             height: 40px;
@@ -338,21 +333,17 @@ export default {
             background: #f7f9fa;
             border: none;
             border-radius: 0;
-
             &:hover {
                 color: #fff;
                 background: #1890ff;
             }
-
             &.is-disabled {
                 color: #606266;
             }
-
             &.is-disabled:hover {
                 color: #fff;
             }
         }
-
         .bottom-split {
             width: 1px;
             height: 16px;

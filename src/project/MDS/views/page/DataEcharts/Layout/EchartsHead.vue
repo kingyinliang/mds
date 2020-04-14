@@ -23,7 +23,6 @@ export default {
     width: 100%;
     height: 90px;
     padding-top: 5px;
-
     p {
         position: absolute;
         top: 0;
@@ -33,7 +32,6 @@ export default {
         font-size: 30px;
         text-align: center;
     }
-
     img {
         display: block;
         width: 100%;

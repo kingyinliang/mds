@@ -2,31 +2,32 @@
     <el-col>
         <data-entry
             ref="dataEntry"
-            :redactAuth="'sys:whtPwMaterial:update'"
-            :saveAuth="'sys:whtPwMaterial:update'"
-            :submitAuth="'sys:whtPwMaterial:update'"
-            :orderStatus="orderStatus"
-            :formHeader="formHeader"
-            :headerBase="headerBase"
+            :redact-auth="'sys:whtPwMaterial:update'"
+            :save-auth="'sys:whtPwMaterial:update'"
+            :submit-auth="'sys:whtPwMaterial:update'"
+            :order-status="orderStatus"
+            :form-header="formHeader"
+            :header-base="headerBase"
             :tabs="tabs"
-            :beforeLeave="beforeLeave"
-            :submitRules="submitRules"
-            :savedDatas="savedDatas"
-            :submitDatas="submitDatas"
+            :before-leave="beforeLeave"
+            :saved-rules="savedRules"
+            :submit-rules="submitRules"
+            :saved-datas="savedDatas"
+            :submit-datas="submitDatas"
             @updateProductDate="updateProductDate"
             @success="GetOrderList"
         >
             <template slot="1" slot-scope="data">
-                <pw-apply-materiel ref="pwapplymateriel" :isRedact="data.isRedact" :order="formHeader" :appyMaterielState="appyMaterielState" @updateOrderInfo="updateOrderInfo" @setAppyMaterielState="setAppyMaterielState" />
+                <pw-apply-materiel ref="pwapplymateriel" :is-redact="data.isRedact" :order="formHeader" :appy-materiel-state="appyMaterielState" @updateOrderInfo="updateOrderInfo" @setAppyMaterielState="setAppyMaterielState" />
             </template>
             <template slot="2" slot-scope="data">
-                <pw-time ref="pwtime" :isRedact="data.isRedact" :order="formHeader" @SetReadyStatus="SetReadyStatus" />
+                <pw-time ref="pwtime" :is-redact="data.isRedact" :order="formHeader" @SetReadyStatus="SetReadyStatus" />
             </template>
             <template slot="3" slot-scope="data">
-                <exc-record ref="excrecord" :isRedact="data.isRedact" :order="formHeader" />
+                <exc-record ref="excrecord" :is-redact="data.isRedact" :order="formHeader" />
             </template>
             <template slot="4" slot-scope="data">
-                <text-record ref="textrecord" :isRedact="data.isRedact" />
+                <text-record ref="textrecord" :is-redact="data.isRedact" />
             </template>
         </data-entry>
     </el-col>
@@ -124,13 +125,16 @@ export default {
             ],
             beforeLeave: (activeName) => {
                 if (!this.enableOpt && activeName !== '1') {
-                    this.$error_SHINHO('请申请订单之后操作');
+                    this.$warningTost('请申请订单之后操作');
                     return false;
                 }
                 return true;
             },
+            savedRules: () => {
+            return [this.$refs.pwapplymateriel.saveAndSubmitRule];
+            },
             submitRules: () => {
-                return [this.$refs.pwtime.timerul, this.$refs.excrecord.excrul, this.$refs.pwapplymateriel.validate];
+                return [this.$refs.pwapplymateriel.saveAndSubmitRule, this.$refs.pwtime.timerul, this.$refs.excrecord.excrul, this.$refs.pwapplymateriel.validate];
             },
             savedDatas: str => {
                 return AsyncHook([
@@ -240,7 +244,7 @@ export default {
         },
         // beforeLeave (activeName, oldActiveName) {
         //   if (!this.enableOpt && activeName !== '1') {
-        //     this.$error_SHINHO('请申请订单之后操作')
+        //     this.$errorTost('请申请订单之后操作')
         //     return false
         //   }
         //   return true
@@ -299,6 +303,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -373,7 +379,7 @@ export default {
                 }
             ]).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 if (resolve) {
                     resolve('resolve');
@@ -416,13 +422,11 @@ export default {
 <style lang="scss">
 #DaatTtabs {
     border-top: 1px solid #e8e8e8;
-
     h3 {
         float: left;
         font-weight: 600;
         font-size: 16px;
     }
-
     span {
         .el-button {
             padding: 0;
@@ -431,37 +435,30 @@ export default {
             border: none;
         }
     }
-
     .el-tabs__item {
         height: 40px;
         line-height: 40px;
     }
-
     table {
         .el-form-item {
             margin-bottom: 0;
         }
     }
-
     .notNull {
         color: red;
     }
-
     .el-table .warning-row > td {
         background: #bbb !important;
         background-color: #bbb !important;
     }
-
     .el-table .warning-row:hover > td {
         background: #bbb !important;
         background-color: #bbb !important;
     }
 }
-
 .required {
     position: relative;
     padding-left: 15px;
-
     .reqI {
         position: absolute;
         left: 0;

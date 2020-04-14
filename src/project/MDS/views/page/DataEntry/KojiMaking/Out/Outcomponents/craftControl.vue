@@ -8,29 +8,29 @@
                 保存
             </el-button>
         </el-row>
-        <el-form :inline="true" :model="CraftControlDate" size="small" labelWidth="82px" class="topform">
-            <el-form-item label="出曲开始时间：" labelWidth="125px">
-                <el-date-picker v-model="CraftControlDate.outStartTime" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(CraftControlDate.status !== 'submit')" style="width: 184px;" />
+        <el-form :inline="true" :model="CraftControlDate" size="small" label-width="82px" class="topform">
+            <el-form-item label="出曲开始时间：" label-width="125px">
+                <el-date-picker v-model="CraftControlDate.outStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(CraftControlDate.status !== 'submit')" style="width: 184px;" />
             </el-form-item>
-            <el-form-item label="出曲结束时间：" labelWidth="125px">
-                <el-date-picker v-model="CraftControlDate.outEndTime" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(CraftControlDate.status !== 'submit')" style="width: 184px;" />
+            <el-form-item label="出曲结束时间：" label-width="125px">
+                <el-date-picker v-model="CraftControlDate.outEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(CraftControlDate.status !== 'submit')" style="width: 184px;" />
             </el-form-item>
-            <el-form-item label="制曲时间：" labelWidth="125px">
+            <el-form-item label="制曲时间：" label-width="125px">
                 <p style="min-width: 184px;">
                     {{ (CraftControlDate.kojoMakingTime = kojoMakingTime) }} H
                 </p>
             </el-form-item>
-            <el-form-item label="盐水用量：" labelWidth="125px">
+            <el-form-item label="盐水用量：" label-width="125px">
                 <el-input v-model="CraftControlDate.saltWaterUsed" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" />
             </el-form-item>
-            <el-form-item label="盐水温度：" labelWidth="125px">
+            <el-form-item label="盐水温度：" label-width="125px">
                 <el-input v-model="CraftControlDate.saltWaterTemp" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" />
             </el-form-item>
-            <el-form-item label="盐水浓度：" labelWidth="125px">
+            <el-form-item label="盐水浓度：" label-width="125px">
                 <el-input v-model="CraftControlDate.saltWaterNd" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" />
             </el-form-item>
             <el-row>
-                <el-form-item label="出曲品温：" labelWidth="125px" class="techitem">
+                <el-form-item label="出曲品温：" label-width="125px" class="techitem">
                     <el-input v-model="CraftControlDate.outTempOne" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" style="width: 149px; margin-right: 17px;" />
                     <el-input v-model="CraftControlDate.outTempTwo" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" style="width: 149px; margin-right: 17px;" />
                     <el-input v-model="CraftControlDate.outTempThree" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" style="width: 149px; margin-right: 17px;" />
@@ -39,7 +39,7 @@
                 </el-form-item>
             </el-row>
             <el-row>
-                <el-form-item label="混合料温度：" labelWidth="125px" class="techitem" style="height: 78px;">
+                <el-form-item label="混合料温度：" label-width="125px" class="techitem" style="height: 78px;">
                     <el-input v-model="CraftControlDate.blendTempOne" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" style="width: 149px; margin-right: 17px;" />
                     <el-input v-model="CraftControlDate.blendTempTwo" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" style="width: 149px; margin-right: 17px;" />
                     <el-input v-model="CraftControlDate.blendTempThree" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" style="width: 149px; margin-right: 17px;" />
@@ -54,7 +54,7 @@
                 </el-form-item>
             </el-row>
             <el-row>
-                <el-form-item label="风速：" labelWidth="125px" class="techitem">
+                <el-form-item label="风速：" label-width="125px" class="techitem">
                     <el-input v-model="CraftControlDate.windSpeedOne" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" style="width: 149px; margin-right: 17px;" />
                     <el-input v-model="CraftControlDate.windSpeedTwo" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" style="width: 149px; margin-right: 17px;" />
                     <el-input v-model="CraftControlDate.windSpeedThree" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" style="width: 149px; margin-right: 17px;" />
@@ -63,18 +63,18 @@
                 </el-form-item>
             </el-row>
             <el-row>
-                <el-form-item label="风速单位：" labelWidth="120px">
+                <el-form-item label="风速单位：" label-width="120px">
                     <el-select v-model="CraftControlDate.windSpeedUnit" placeholder="请选择" :disabled="!(CraftControlDate.status !== 'submit')" style="width: 149px;" size="small">
                         <el-option label="R/min" value="R/min" />
                         <el-option label="HZ" value="HZ" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="操作人：" labelWidth="120px">
+                <el-form-item label="操作人：" label-width="120px">
                     <el-input v-model="CraftControlDate.operator" :disabled="!(CraftControlDate.status !== 'submit')" size="small" placeholder="手工录入" />
                 </el-form-item>
             </el-row>
         </el-form>
-        <el-dialog title="异常说明" :closeOnClickModal="false" :visible.sync="visible">
+        <el-dialog title="异常说明" :close-on-click-modal="false" :visible.sync="visible">
             <p style="line-height: 42px;">
                 制曲时间小于36小时，请填写异常说明
             </p>
@@ -152,7 +152,7 @@ export default {
                     const CraftControlStatus = this.CraftControlDate.status ? this.CraftControlDate.status : '';
                     this.$emit('GetCraftControlStatus', CraftControlStatus);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -191,7 +191,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -251,7 +251,7 @@ export default {
                 if (data.code === 0) {
                     this.userlist = data.page.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         }

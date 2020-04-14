@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col :span="18">
-                        <el-form :inline="true" :model="formHeader" size="small" labelWidth="70px" class="topform multi_row">
+                        <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
                                     <el-option label="请选择" value="" />
@@ -18,7 +18,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="生产日期：">
-                                <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择" valueFormat="yyyy-MM-dd" style="width: 180px;" />
+                                <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 180px;" />
                             </el-form-item>
                             <el-form-item label="提交人员：">
                                 <p class="el-input" style="width: 180px;">
@@ -90,7 +90,7 @@
                             >物料领用</el-button>
                         </el-tooltip>
                     </span>
-                    <materiel ref="materielref" :isRedact="isRedact" :fumet="fumet" :SerchSapList="SerchSapListM" @PoTest="PoTest" />
+                    <materiel ref="materielref" :is-redact="isRedact" :fumet="fumet" :serch-sap-list="SerchSapListM" @PoTest="PoTest" />
                 </el-tab-pane>
                 <el-tab-pane name="2">
                     <span slot="label" class="spanview">
@@ -105,13 +105,13 @@
                     </span>
                     <apply-order
                         ref="applyorder"
-                        :PoTestVar="PoTestVar"
-                        :isRedact="isRedact"
-                        :orderAudit="orderAudit"
+                        :po-test-var="PoTestVar"
+                        :is-redact="isRedact"
+                        :order-audit="orderAudit"
                         :fumet="orderFumet"
-                        :SerchSapList="SerchSapList"
-                        :VersionList="VersionList"
-                        :orderTypeList="orderTypeList"
+                        :serch-sap-list="SerchSapList"
+                        :version-list="VersionList"
+                        :order-type-list="orderTypeList"
                         @GetFunet="GetFunet"
                         @ApplyOrder="ApplyOrder"
                         @GetList="GetList"
@@ -128,7 +128,7 @@
                             >工时计算</el-button>
                         </el-tooltip>
                     </span>
-                    <man-hour ref="manhour" :isRedact="isRedact" :formHeader="formHeader" @GetList="GetList" />
+                    <man-hour ref="manhour" :is-redact="isRedact" :form-header="formHeader" @GetList="GetList" />
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -222,10 +222,10 @@ export default {
                 });
                 this.$http(`${SQU_API.SUM_APPLYORDER_API}`, 'POST', paras).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$success_SHINHO('申请成功');
+                        this.$successTost('申请成功');
                         this.GetList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             });
@@ -283,7 +283,7 @@ export default {
                         });
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -337,7 +337,7 @@ export default {
                                 this.GetList();
                             },
                             err => {
-                                this.$error_SHINHO(err);
+                                this.$errorTost(err);
                             }
                         );
                     });
@@ -362,7 +362,7 @@ export default {
                             this.GetList();
                         },
                         err => {
-                            this.$error_SHINHO(err);
+                            this.$errorTost(err);
                         }
                     );
                 });
@@ -385,6 +385,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 获取物料下拉
@@ -393,7 +395,7 @@ export default {
                 if (data.code === 0) {
                     this.SerchSapList = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -403,7 +405,7 @@ export default {
                 if (data.code === 0) {
                     this.SerchSapListM = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -414,7 +416,7 @@ export default {
                     if (data.code === 0) {
                         this.orderTypeList = data.dicList[0].prolist;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -428,7 +430,7 @@ export default {
                     if (data.code === 0) {
                         this.VersionList = data.dicList[0].prolist;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -442,7 +444,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -457,7 +459,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }

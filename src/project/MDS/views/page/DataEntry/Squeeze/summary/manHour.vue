@@ -5,7 +5,7 @@
                 获取工时
             </el-button>
         </el-row>
-        <el-table ref="table1" headerRowClassName="tableHead" :data="timeDate" tooltipEffect="dark" @row-dblclick="GetLog">
+        <el-table ref="table1" header-row-class-name="tableHead" :data="timeDate" tooltip-effect="dark" @row-dblclick="GetLog">
             <el-table-column label="状态" width="95">
                 <template slot-scope="scope">
                     <span
@@ -17,7 +17,7 @@
             </el-table-column>
             <el-table-column label="生产订单" width="120" prop="orderNo" />
             <el-table-column label="工序" width="120" prop="processIdName" />
-            <el-table-column label="生产品项" prop="ssssss" :showOverflowTooltip="true">
+            <el-table-column label="生产品项" prop="ssssss" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                     {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                 </template>
@@ -39,7 +39,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <auditLog :tableData="TimeAudit" />
+        <audit-log :table-data="TimeAudit" />
     </div>
 </template>
 
@@ -98,7 +98,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -110,7 +110,7 @@ export default {
                 if (data.code === 0) {
                     this.TimeAudit = data.listRecord;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -120,7 +120,7 @@ export default {
                 if (data.code === 0) {
                     this.GetTimeList(this.formHeader);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -146,7 +146,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -178,11 +178,11 @@ export default {
                         if (data.code === 0) {
                             this.GetTimeList(this.formHeader);
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         }

@@ -97,7 +97,7 @@ export default (url, method = HTTP_METHOD.GET, data = {}, ContentType = false, r
                 // 401, token失效
                 Vue.cookie.delete('token');
                 router.options.isAddDynamicMenuRoutes = false;
-                router.push({ path: '/login' });
+                window.location.href = `${process.env.VUE_APP_HOST}`;
             }
             if (response.data && response.data.code === 500) {
                 // Vue.prototype.$log.writeErrorLog(new Error(`接口错误：${url}`), `msg:${response.data.msg},data: ${JSON.stringify(data)}`)
@@ -107,7 +107,7 @@ export default (url, method = HTTP_METHOD.GET, data = {}, ContentType = false, r
         },
         error => {
             // Vue.prototype.$log.writeErrorLog(new Error(`网络请求失败，接口：${url}`), `${error}`)
-            Notification({ title: '错误', message: '网络请求失败，请刷新重试', type: 'error' });
+            Notification({ title: '服务器错误', message: '网络连接请求失败，请稍后刷新重试', type: 'error' });
             endLoading(); // 关闭遮罩
             return Promise.reject(error);
         }

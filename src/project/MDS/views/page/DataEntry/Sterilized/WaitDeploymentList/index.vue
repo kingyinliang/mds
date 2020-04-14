@@ -2,8 +2,8 @@
     <div class="header_main">
         <el-card class="searchCard">
             <el-row>
-                <el-col style=" float: left; width: 975px;">
-                    <el-form :model="formHeader" :inline="true" size="small" labelWidth="70px" class="sole_row">
+                <el-col style=" float: left; width: 1133px;">
+                    <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="sole_row">
                         <el-form-item label="生产工厂：">
                             <el-select v-model="formHeader.factory" placeholder="请选择" class="width150px">
                                 <el-option value="">
@@ -29,7 +29,10 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="生产日期：">
-                            <el-date-picker v-model="formHeader.created" type="date" format="yyyy-MM-dd" valueFormat="yyyy-MM-dd" placeholder="请选择" style="width: 140px;" />
+                            <el-date-picker v-model="formHeader.created" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="请选择" style="width: 140px;" />
+                        </el-form-item>
+                        <el-form-item label="订单：" label-width="45px">
+                            <el-input v-model="formHeader.pkgOrderNo" clearable placeholder="请选择" style="width: 140px;" />
                         </el-form-item>
                     </el-form>
                 </el-col>
@@ -38,7 +41,7 @@
                         查询
                     </el-button>
                     <el-button v-if="isAuth('ste:allocate:allocateOrderSave')" type="primary" size="small" @click="isRedact = !isRedact">
-                        {{ isRedact === false ? '编辑' : '取消' }}
+                        {{ isRedact === false? '编辑' : '取消' }}
                     </el-button>
                 </el-col>
             </el-row>
@@ -55,20 +58,20 @@
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="dataList" :rowKey="getRowKeys" border headerRowClassName="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
+                <el-table :data="dataList" :row-key="getRowKeys" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="35" :selectable="CheckBoxInit" />
                     <el-table-column label="订单号" prop="orderNo" width="120" />
-                    <el-table-column label="物料" :showOverflowTooltip="true" width="180">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode }}
-                            {{ scope.row.materialName }}
+                            {{ scope.row.materialCode }} {{ scope.row.materialName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="订单数量" prop="planOutput" width="80" />
                     <el-table-column label="订单单位" prop="outputUnit" width="80" />
                     <el-table-column label="订单开始日期" prop="productDate" />
+                    <!-- <el-table-column label="订单结束日期"></el-table-column> -->
                     <el-table-column label="生产调度员" prop="dispatchMan" />
-                    <el-table-column label="订单备注" prop="remark" :showOverflowTooltip="true" />
+                    <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
                     <el-table-column label="操作" />
                 </el-table>
             </el-tab-pane>
@@ -83,24 +86,31 @@
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="dataList" border headerRowClassName="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
+                <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="35" :selectable="CheckBoxInit" />
                     <el-table-column label="订单号" prop="orderNo" width="120" />
-                    <el-table-column label="物料" :showOverflowTooltip="true" width="180">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode }}
-                            {{ scope.row.materialName }}
+                            {{ scope.row.materialCode }} {{ scope.row.materialName }}
                         </template>
                     </el-table-column>
                     <el-table-column label="订单数量" prop="planOutput" width="80" />
                     <el-table-column label="订单单位" prop="outputUnit" width="80" />
                     <el-table-column label="订单开始日期" prop="productDate" />
                     <el-table-column label="生产调度员" prop="dispatchMan" />
-                    <el-table-column label="订单备注" prop="remark" :showOverflowTooltip="true" />
+                    <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
                     <el-table-column label="操作" />
                 </el-table>
             </el-tab-pane>
-            <el-pagination :currentPage="formHeader.currPage" :pageSizes="[10, 20, 50]" :pageSize="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            <el-pagination
+                :current-page="formHeader.currPage"
+                :page-sizes="[10, 20, 50]"
+                :page-size="formHeader.pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="formHeader.totalCount"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+            />
         </el-tabs>
     </div>
 </template>
@@ -169,7 +179,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -189,7 +199,7 @@ export default {
                             this.formHeader.workShop = '';
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -206,7 +216,7 @@ export default {
                 if (data.code === 0) {
                     this.materialList = data.productsInfo;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -248,7 +258,7 @@ export default {
                     // this.dataList = data.orderInfo.list.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, Number((this.formHeader.currPage - 1) * this.formHeader.pageSize) + Number(this.formHeader.pageSize))
                     this.formHeader.totalCount = data.orderInfo.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -289,7 +299,7 @@ export default {
                     materialName: this.multipleSelection[0].materialName,
                     type: this.activeName
                 };
-                console.log(this.Sterilized);
+                // console.log(this.Sterilized);
                 this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Sterilized-WaitDeploymentList-doDeployment');
                 setTimeout(() => {
                     this.$router.push({

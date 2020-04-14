@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="raw-souce-mash-report-forms">
-            <el-form :inline="true" :model="plantList" size="small" labelWidth="70px" class="multi_row">
+            <el-form :inline="true" :model="plantList" size="small" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="plantList.factory" style="width: 150px;">
                         <el-option label="请选择" value="" />
@@ -15,7 +15,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="发酵罐：">
-                    <el-select v-model="plantList.inPotNo" style="width: 150px;">
+                    <el-select v-model="plantList.inPotNo" filterable style="width: 150px;">
                         <el-option label="请选择" value="" />
                         <el-option v-for="sole in Pot" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
                     </el-select>
@@ -24,9 +24,9 @@
                     <el-input v-model="plantList.orderNo" placeholder="订单号" />
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="plantList.commitDateOne" type="date" valueFormat="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
+                    <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
                     -
-                    <el-date-picker v-model="plantList.commitDateTwo" type="date" valueFormat="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
+                    <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
                 </el-form-item>
                 <el-form-item class="floatr">
                     <el-button v-if="isAuth('report:formh:kjmSauceList')" type="primary" size="small" @click="GetList(true)">
@@ -39,25 +39,25 @@
             </el-form>
         </el-card>
         <el-card style="margin-top: 5px;">
-            <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;">
-                <el-table-column label="生产日期" width="100" prop="productDate" :showOverflowTooltip="true" />
-                <el-table-column label="工厂" width="170" prop="factoryName" :showOverflowTooltip="true" />
-                <el-table-column label="车间" prop="workShopName" width="100" :showOverflowTooltip="true" />
-                <el-table-column label="生产订单" prop="orderNo" width="120" :showOverflowTooltip="true" />
-                <el-table-column label="品项" prop="material" width="150" :showOverflowTooltip="true" />
-                <el-table-column label="发酵罐" prop="holderName" width="100" :showOverflowTooltip="true" />
-                <el-table-column label="发酵罐容量" prop="holderHold" width="95" :showOverflowTooltip="true" />
-                <el-table-column label="计划产量" prop="planOutput" :showOverflowTooltip="true" />
-                <el-table-column label="实际产量" prop="realOutput" :showOverflowTooltip="true" />
-                <el-table-column label="投罐日期" prop="canningDate" width="100" :showOverflowTooltip="true" />
-                <el-table-column label="满罐日期" prop="canfulDate" width="100" :showOverflowTooltip="true" />
-                <el-table-column label="180天成熟期" prop="oheDate" width="110" :showOverflowTooltip="true" />
-                <el-table-column label="130天成熟期" prop="ohtDate" width="110" :showOverflowTooltip="true" />
-                <el-table-column label="日期" prop="nowDate" width="100" :showOverflowTooltip="true" />
-                <el-table-column label="发酵天数" prop="fDate" />
+            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+                <el-table-column label="生产日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
+                <el-table-column label="工厂" width="170" prop="factoryName" :show-overflow-tooltip="true" />
+                <el-table-column label="车间" prop="workShopName" width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="生产订单" prop="orderNo" width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="品项" prop="material" width="150" :show-overflow-tooltip="true" />
+                <el-table-column label="发酵罐" prop="holderName" width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="发酵罐容量" prop="holderHold" width="95" :show-overflow-tooltip="true" />
+                <el-table-column label="计划产量" prop="planOutput" :show-overflow-tooltip="true" />
+                <el-table-column label="实际产量" prop="realOutput" :show-overflow-tooltip="true" />
+                <el-table-column label="投罐日期" prop="canningDate" width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="满罐日期" prop="canfulDate" width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="180天成熟期" prop="oheDate" width="110" :show-overflow-tooltip="true" />
+                <el-table-column label="130天成熟期" prop="ohtDate" width="110" :show-overflow-tooltip="true" />
+                <el-table-column label="日期" prop="nowDate" width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="发酵天数" prop="ferDate" />
             </el-table>
             <el-row>
-                <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
     </div>
@@ -110,7 +110,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -125,7 +125,7 @@ export default {
                             this.plantList.workshop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -157,7 +157,7 @@ export default {
                     if (data.code === 0) {
                         this.Pot = data.page.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -178,7 +178,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.lodingS = false;
             });

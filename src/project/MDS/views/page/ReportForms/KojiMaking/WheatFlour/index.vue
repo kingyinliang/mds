@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="wheat-flour-report-forms">
-            <el-form :inline="true" :model="plantList" size="small" labelWidth="70px" class="multi_row">
+            <el-form :inline="true" :model="plantList" size="small" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="plantList.factory" style="width: 150px;">
                         <el-option label="请选择" value="" />
@@ -24,9 +24,9 @@
                     <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 150px;" />
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="plantList.commitDateOne" type="date" valueFormat="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
+                    <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
                     -
-                    <el-date-picker v-model="plantList.commitDateTwo" type="date" valueFormat="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
+                    <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
                 </el-form-item>
                 <el-form-item class="floatr">
                     <el-button v-if="isAuth('report:kjmORwht:checkRecordList')" type="primary" size="small" @click="GetList(true)">
@@ -39,21 +39,21 @@
             </el-form>
         </el-card>
         <el-card style="margin-top: 5px;">
-            <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;">
-                <el-table-column label="工厂" width="150" prop="factoryName" :showOverflowTooltip="true" />
-                <el-table-column label="车间" prop="workShopName" width="100" :showOverflowTooltip="true" />
-                <el-table-column label="生产订单" prop="orderNo" width="120" :showOverflowTooltip="true" />
+            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+                <el-table-column label="工厂" width="150" prop="factoryName" :show-overflow-tooltip="true" />
+                <el-table-column label="车间" prop="workShopName" width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="生产订单" prop="orderNo" width="120" :show-overflow-tooltip="true" />
                 <el-table-column label="生产日期" width="110" prop="productDate" />
-                <el-table-column label="炒麦机" prop="deviceName" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="检测时间" prop="checkTime" width="120" :showOverflowTooltip="true" />
-                <el-table-column label="焦糊率" prop="cokingRate" width="65" :showOverflowTooltip="true" />
-                <el-table-column label="膨胀率" prop="expandRate" width="65" :showOverflowTooltip="true" />
-                <el-table-column label="粉碎度" prop="piecesRate" width="65" :showOverflowTooltip="true" />
-                <el-table-column label="检测人员" prop="changer" width="140" :showOverflowTooltip="true" />
-                <el-table-column label="备注" prop="remark" :showOverflowTooltip="true" />
+                <el-table-column label="炒麦机" prop="deviceName" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="检测时间" prop="checkTime" width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="焦糊率" prop="cokingRate" width="65" :show-overflow-tooltip="true" />
+                <el-table-column label="膨胀率" prop="expandRate" width="65" :show-overflow-tooltip="true" />
+                <el-table-column label="粉碎度" prop="piecesRate" width="65" :show-overflow-tooltip="true" />
+                <el-table-column label="检测人员" prop="changer" width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
             </el-table>
             <el-row>
-                <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
     </div>
@@ -106,7 +106,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -121,7 +121,7 @@ export default {
                             this.plantList.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -137,7 +137,7 @@ export default {
                 if (data.code === 0) {
                     this.Machine = data.list.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -152,7 +152,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

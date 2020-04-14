@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <el-form :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="maintain multi_row">
+                        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="maintain multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="plantList.factory" placeholder="请选择">
                                     <el-option label="请选择" value="" />
@@ -27,7 +27,7 @@
                                 <el-input v-model="plantList.orderNo" placeholder="订单号" />
                             </el-form-item>
                             <el-form-item label="日期：">
-                                <el-date-picker v-model="plantList.productdate" type="date" placeholder="选择" valueFormat="yyyy-MM-dd HH:mm:ss" />
+                                <el-date-picker v-model="plantList.productdate" type="date" placeholder="选择" value-format="yyyy-MM-dd HH:mm:ss" />
                             </el-form-item>
                             <el-form-item class="floatr">
                                 <el-button type="primary" size="small" @click="GetMaintainList(true)">
@@ -53,11 +53,11 @@
                 <div class="toggleSearchTop">
                     <i class="el-icon-caret-bottom" />
                 </div>
-                <el-table ref="maintain" headerRowClassName="tableHead" :data="noMaintainList" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                <el-table ref="maintain" header-row-class-name="tableHead" :data="noMaintainList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" :selectable="checkboxT" width="34" />
                     <el-table-column type="index" width="55" />
-                    <el-table-column prop="orderNo" label="生产订单号" :showOverflowTooltip="true" width="120" />
-                    <el-table-column label="品项" :showOverflowTooltip="true" width="300">
+                    <el-table-column prop="orderNo" label="生产订单号" :show-overflow-tooltip="true" width="120" />
+                    <el-table-column label="品项" :show-overflow-tooltip="true" width="300">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                         </template>
@@ -65,7 +65,7 @@
                     <el-table-column prop="batch" label="生产批次" width="120" />
                     <el-table-column prop="aiShelves" label="自动上架数-立体库" width="140" />
                     <el-table-column prop="aiShelvesUnitName" label="单位" width="50" />
-                    <el-table-column label="车间确认人" :showOverflowTooltip="true" width="92">
+                    <el-table-column label="车间确认人" :show-overflow-tooltip="true" width="92">
                         <template slot-scope="scope">
                             {{ scope.row.workShopMan }}
                         </template>
@@ -103,14 +103,14 @@
                             <span v-else>{{ scope.row.orgnDifferent }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="差异说明" :showOverflowTooltip="true" width="78">
+                    <el-table-column label="差异说明" :show-overflow-tooltip="true" width="78">
                         <template slot-scope="scope">
                             <el-input v-if="scope.row.redact" v-model="scope.row.differentInfo" />
                             <span v-else>{{ scope.row.differentInfo }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="jwzMan" label="机维组确认人" width="107" />
-                    <el-table-column label="备注" :showOverflowTooltip="true">
+                    <el-table-column label="备注" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span>{{ scope.row.remark }}</span>
                         </template>
@@ -124,7 +124,7 @@
                     </el-table-column>
                 </el-table>
                 <el-row>
-                    <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
@@ -186,7 +186,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -199,7 +199,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -218,7 +218,7 @@ export default {
                             this.plantList.workshop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -233,7 +233,7 @@ export default {
                     if (data.code === 0) {
                         this.productline = data.childList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -300,7 +300,7 @@ export default {
                         this.noMaintainList.splice(this.noMaintainList.length, 0, {});
                         this.noMaintainList.splice(this.noMaintainList.length - 1, 1);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -326,10 +326,12 @@ export default {
                             });
                             this.GetMaintainList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                     this.GetMaintainList();
+                }).catch(() => {
+                    // this.$infoTost('已取消删除');
                 });
             } else {
                 this.$warningTost('请勾选后保存');
@@ -360,9 +362,11 @@ export default {
                             });
                             this.GetMaintainList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
+                }).catch(() => {
+                    // this.$infoTost('已取消删除');
                 });
             } else {
                 this.$warningTost('请勾选后保存');
@@ -387,11 +391,9 @@ export default {
 .searchCard {
     margin-bottom: 0;
 }
-
 .searchCard,
 .tableCard {
     position: relative;
-
     .toggleSearchTop {
         position: absolute;
         top: 0;
@@ -401,7 +403,6 @@ export default {
         text-align: center;
         cursor: pointer;
     }
-
     .toggleSearchBottom {
         position: absolute;
         bottom: 0;
@@ -410,7 +411,6 @@ export default {
         text-align: center;
         cursor: pointer;
     }
-
     .el-icon-caret-top::before,
     .el-icon-caret-bottom::before {
         color: #dcdfe6;

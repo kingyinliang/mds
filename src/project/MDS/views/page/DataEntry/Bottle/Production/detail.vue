@@ -3,7 +3,7 @@
         <el-card class="searchCard newCard" style="margin-bottom: 5px;">
             <el-row type="flex">
                 <el-col>
-                    <form-head :formHeader="formHeader" :isRedact="isRedact" />
+                    <form-head :form-header="formHeader" :is-redact="isRedact" />
                 </el-col>
                 <el-col style=" position: relative; width: 244px;" class="clearfix">
                     <el-row class="clearfix">
@@ -50,7 +50,7 @@
                         >准备时间</el-button>
                     </el-tooltip>
                 </span>
-                <ready-times ref="readytimes" :isRedact="isRedact" :formHeader="formHeader" :productShift="productShift" @SetReadyStatus="SetReadyStatus" />
+                <ready-times ref="readytimes" :is-redact="isRedact" :form-header="formHeader" :product-shift="productShift" @SetReadyStatus="SetReadyStatus" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
@@ -62,15 +62,15 @@
                         >人员</el-button>
                     </el-tooltip>
                 </span>
-                <worker ref="workerref" :isRedact="isRedact" :order="formHeader" :Attendance="Attendance" :att="true" />
+                <worker ref="workerref" :is-redact="isRedact" :order="formHeader" :attendance="Attendance" :att="true" />
             </el-tab-pane>
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">投胚记录</span>
-                <record ref="record" :isRedact="isRedact" :Supplier="Supplier" />
+                <record ref="record" :is-redact="isRedact" :supplier="Supplier" />
             </el-tab-pane>
             <el-tab-pane name="4">
                 <span slot="label" class="spanview">异常记录</span>
-                <exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader" />
+                <exc-record ref="excrecord" :is-redact="isRedact" :order="formHeader" />
             </el-tab-pane>
             <el-tab-pane name="5">
                 <span slot="label" class="spanview">
@@ -82,7 +82,7 @@
                         >生产入库</el-button>
                     </el-tooltip>
                 </span>
-                <in-storage ref="instorage" :isRedact="isRedact" :productShift="productShift" @setInStorageState="setInStorageState" @SetMeaterielNum="SetMeaterielNum" />
+                <in-storage ref="instorage" :is-redact="isRedact" :product-shift="productShift" @setInStorageState="setInStorageState" @SetMeaterielNum="SetMeaterielNum" />
             </el-tab-pane>
             <el-tab-pane name="6">
                 <span slot="label" class="spanview">
@@ -94,11 +94,11 @@
                         >物料领用</el-button>
                     </el-tooltip>
                 </span>
-                <material ref="material" :isRedact="isRedact" :Supplier="Supplier" @SetMeaterielNum="SetMeaterielNum" @setApplyMaterielState="setApplyMaterielState" />
+                <material ref="material" :is-redact="isRedact" :supplier="Supplier" @SetMeaterielNum="SetMeaterielNum" @setApplyMaterielState="setApplyMaterielState" />
             </el-tab-pane>
             <el-tab-pane name="7">
                 <span slot="label" class="spanview">文本记录</span>
-                <text-record ref="textrecord" :isRedact="isRedact" />
+                <text-record ref="textrecord" :is-redact="isRedact" />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -199,7 +199,7 @@ export default {
                         this.$refs.textrecord.GetText(this.formHeader.orderId);
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -212,7 +212,7 @@ export default {
                     this.$refs.workerref.GetTimeUserList(data.listuser, data.vrList);
                     this.Attendance = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -267,6 +267,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -360,7 +362,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                     if (reject) {
                         reject('工时提交' + data.msg);
                     }
@@ -376,7 +378,7 @@ export default {
                 if (data.code === 0) {
                     this.productShift = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -389,7 +391,7 @@ export default {
                 if (data.code === 0) {
                     this.Supplier = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         }

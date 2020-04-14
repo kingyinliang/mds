@@ -3,7 +3,7 @@
         <el-card class="search-card">
             <el-row>
                 <el-col>
-                    <el-form :model="formHeader" :inline="true" size="small" labelWidth="70px" class="multi_row">
+                    <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
                         <el-form-item label="生产工厂：">
                             <el-select v-model="formHeader.factory" placeholder="请选择" class="width180px">
                                 <el-option label="请选择" value="" />
@@ -28,7 +28,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="生产日期：">
-                            <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择日期" format="yyyy-MM-dd" valueFormat="yyyy-MM-dd" style="width: 180px;" />
+                            <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 180px;" />
                         </el-form-item>
                         <el-form-item class="floatr">
                             <template style="float: right;">
@@ -61,13 +61,13 @@
             </div>
             <el-tabs v-show="contentshow" id="DaatTtabs" v-model="activeName" class="NewDaatTtabs" type="border-card" style="margin-top: 5px;">
                 <el-tab-pane name="1" label="物料领用">
-                    <Material ref="material" :isRedact="isRedact" :formHeader="formHeader" />
+                    <Material ref="material" :is-redact="isRedact" :form-header="formHeader" />
                 </el-tab-pane>
                 <el-tab-pane name="2" label="异常记录">
-                    <exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader" />
+                    <exc-record ref="excrecord" :is-redact="isRedact" :order="formHeader" />
                 </el-tab-pane>
                 <el-tab-pane name="3" label="文本记录">
-                    <text-record ref="textrecord" :isRedact="isRedact" />
+                    <text-record ref="textrecord" :is-redact="isRedact" />
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -149,7 +149,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -168,7 +168,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -187,7 +187,7 @@ export default {
                         this.productline = data.childList;
                         this.formHeader.productLine = data.childList[0].deptId;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -242,6 +242,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 保存
@@ -275,7 +277,7 @@ export default {
                     this.isRedact = false;
                 })
                 .catch(() => {
-                    this.$error_SHINHO('网络请求失败，请刷新重试');
+                    this.$errorTost('网络请求失败，请刷新重试');
                 });
         },
         tabClick(val) {
@@ -289,7 +291,6 @@ export default {
 .width180px {
     width: 180px;
 }
-
 .search-card {
     .el-button--primary,
     .el-button--primary:focus {
@@ -297,12 +298,10 @@ export default {
         background-color: #fff;
         border-color: #d9d9d9;
     }
-
     .el-button--primary:hover {
         color: #fff;
         background-color: #1890ff;
     }
-
     .el-button--primary:first-child {
         color: #fff;
         background-color: #1890ff;

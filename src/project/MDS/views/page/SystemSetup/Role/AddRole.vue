@@ -1,18 +1,16 @@
 <template>
-    <el-dialog :title="roleId ? '修改角色信息' : '新增角色'" :closeOnClickModal="false" :visible.sync="visible">
-        <div>
-            <el-form ref="dataForm" :model="dataForm" labelWidth="85px" @keyup.enter.native="dataFormSubmit()">
-                <el-form-item label="角色名称：">
-                    <el-input v-model="dataForm.roleName" placeholder="手动输入" />
-                </el-form-item>
-                <el-form-item label="描述：">
-                    <el-input v-model="dataForm.roleCode" placeholder="手动输入" />
-                </el-form-item>
-            </el-form>
-        </div>
+    <el-dialog :title="roleId ? '修改角色信息' : '新增角色'" :close-on-click-modal="false" :visible.sync="visible">
+        <el-form ref="dataForm" :rules="dataRules" :model="dataForm" label-width="100px" :hide-required-asterisk="false" @keyup.enter.native="dataFormSubmit('dataForm')">
+            <el-form-item label="角色名称：" prop="roleName">
+                <el-input v-model="dataForm.roleName" placeholder="手动输入" />
+            </el-form-item>
+            <el-form-item label="描述：" prop="roleCode">
+                <el-input v-model="dataForm.roleCode" placeholder="手动输入" />
+            </el-form-item>
+        </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="visible = false">取消</el-button>
-            <el-button type="primary" @click="dataFormSubmit">确定</el-button>
+            <el-button @click="visible = false; dataFormReset('dataForm')">取消</el-button>
+            <el-button type="primary" @click="dataFormSubmit('dataForm')">确定</el-button>
         </span>
     </el-dialog>
 </template>
@@ -31,7 +29,15 @@ export default {
                 roleName: '',
                 roleCode: ''
             },
-            type: true
+            type: true,
+            dataRules: {
+                roleName: [
+                    { required: true, message: '请输入角色名称', trigger: 'blur' }
+                ],
+                roleCode: [
+                    { required: true, message: '请输入角色描述', trigger: 'blur' }
+                ]
+            }
         };
     },
     computed: {},
@@ -52,21 +58,25 @@ export default {
             this.visible = true;
         },
         // 提交
-        dataFormSubmit() {
-            if (this.type) {
-                this.type = false;
-                this.$http(`${this.roleId ? SYSTEMSETUP_API.ROLEUPDATE_API : SYSTEMSETUP_API.ROLEADD_API}`, 'POST', this.dataForm).then(({ data }) => {
-                    if (data.code === 0) {
-                        this.$success_SHINHO('操作成功');
-                        this.type = true;
-                        this.visible = false;
-                        this.$emit('refreshDataList');
-                    } else {
-                        this.type = true;
-                        this.$error_SHINHO(data.msg);
-                    }
-                });
-            }
+        dataFormSubmit(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.$http(`${this.roleId ? SYSTEMSETUP_API.ROLEUPDATE_API : SYSTEMSETUP_API.ROLEADD_API}`, 'POST', this.dataForm).then(({ data }) => {
+                        if (data.code === 0) {
+                            this.$successTost('操作成功');
+                            this.visible = false;
+                            this.$emit('refreshDataList');
+                        } else {
+                            this.$errorTost(data.msg);
+                        }
+                    });
+                } else {
+                    return false;
+                }
+            });
+        },
+        dataFormReset(formName) {
+            this.$refs[formName].resetFields();
         }
     }
 };

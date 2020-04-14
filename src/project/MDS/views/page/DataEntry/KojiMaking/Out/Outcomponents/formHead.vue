@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :model="formHeader" size="small" labelWidth="82px" class="topform">
+    <el-form :inline="true" :model="formHeader" size="small" label-width="82px" class="topform">
         <el-form-item label="生产车间：">
             <p class="el-input">
                 {{ formHeader.workShopName ? formHeader.workShopName : '' }}
@@ -32,7 +32,7 @@
                 <el-option v-for="iteam in InPot" :key="iteam.holderId" :label="iteam.holderName" :value="iteam.holderId" />
             </el-select>
         </el-form-item>
-        <el-form-item label="连续蒸煮号：" labelWidth="85px">
+        <el-form-item label="连续蒸煮号：" label-width="85px">
             <p class="el-input">
                 {{ formHeader.cookingName ? formHeader.cookingName : '' }}
             </p>
@@ -89,7 +89,7 @@ export default {
                 if (data.code === 0) {
                     this.InPot = data.page.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.visible = false;
             });
@@ -111,7 +111,6 @@ export default {
 .el-form-item--small.el-form-item {
     margin-bottom: 8px !important;
 }
-
 .el-input {
     width: 145px !important;
     overflow: hidden;

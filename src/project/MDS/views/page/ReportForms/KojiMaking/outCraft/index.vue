@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="out-craft-report-forms">
-            <el-form :inline="true" :model="plantList" size="small" labelWidth="70px" class="multi_row">
+            <el-form :inline="true" :model="plantList" size="small" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="plantList.factory" style="width: 150px;">
                         <el-option label="请选择" value="" />
@@ -29,11 +29,11 @@
                 <el-form-item label="制曲日期：" class="dateinput">
                     <el-row style="width: 300px;">
                         <el-col :span="12">
-                            <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 135px;" />
+                            <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;" />
                             <span>-</span>
                         </el-col>
                         <el-col :span="12">
-                            <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 135px;" />
+                            <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;" />
                         </el-col>
                     </el-row>
                 </el-form-item>
@@ -48,34 +48,34 @@
             </el-form>
         </el-card>
         <el-card style="margin-top: 5px;">
-            <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;">
-                <el-table-column label="工厂" width="170" prop="factoryName" :showOverflowTooltip="true" />
-                <el-table-column label="车间" prop="workShopName" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="曲房" prop="houseName" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="发酵罐" prop="inPotName" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="制曲日期" prop="inKjmDate" width="100" :showOverflowTooltip="true" />
-                <el-table-column label="出曲开始时间" prop="outStartTime" width="120" :showOverflowTooltip="true" />
-                <el-table-column label="出曲结束时间" prop="outEndTime" width="120" :showOverflowTooltip="true" />
-                <el-table-column label="盐水温度" prop="saltWaterTemp" :showOverflowTooltip="true" />
-                <el-table-column label="盐水浓度" prop="saltWaterNd" :showOverflowTooltip="true" />
-                <el-table-column label="出曲温度1" prop="outTempOne" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="出曲混合料温度1" prop="blendTempOne" width="128" :showOverflowTooltip="true" />
-                <el-table-column label="出曲风速1" prop="windSpeedOne" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="出曲温度2" prop="outTempTwo" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="出曲混合料温度2" prop="blendTempTwo" width="128" :showOverflowTooltip="true" />
-                <el-table-column label="出曲风速2" prop="windSpeedTwo" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="出曲温度3" prop="outTempThree" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="出曲混合料温度3" prop="blendTempThree" width="128" :showOverflowTooltip="true" />
-                <el-table-column label="出曲风速3" prop="windSpeedThree" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="出曲温度4" prop="outTempFour" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="出曲混合料温度4" prop="blendTempFour" width="128" :showOverflowTooltip="true" />
-                <el-table-column label="出曲风速4" prop="windSpeedFour" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="出曲温度5" prop="outTempFive" width="90" :showOverflowTooltip="true" />
-                <el-table-column label="出曲混合料温度5" prop="blendTempFive" width="128" :showOverflowTooltip="true" />
-                <el-table-column label="出曲风速5" prop="windSpeedFive" width="90" :showOverflowTooltip="true" />
+            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+                <el-table-column label="工厂" width="170" prop="factoryName" :show-overflow-tooltip="true" />
+                <el-table-column label="车间" prop="workShopName" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="曲房" prop="houseName" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="发酵罐" prop="inPotName" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="制曲日期" prop="inKjmDate" width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲开始时间" prop="outStartTime" width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲结束时间" prop="outEndTime" width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="盐水温度" prop="saltWaterTemp" :show-overflow-tooltip="true" />
+                <el-table-column label="盐水浓度" prop="saltWaterNd" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲温度1" prop="outTempOne" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲混合料温度1" prop="blendTempOne" width="128" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲风速1" prop="windSpeedOne" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲温度2" prop="outTempTwo" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲混合料温度2" prop="blendTempTwo" width="128" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲风速2" prop="windSpeedTwo" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲温度3" prop="outTempThree" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲混合料温度3" prop="blendTempThree" width="128" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲风速3" prop="windSpeedThree" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲温度4" prop="outTempFour" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲混合料温度4" prop="blendTempFour" width="128" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲风速4" prop="windSpeedFour" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲温度5" prop="outTempFive" width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲混合料温度5" prop="blendTempFive" width="128" :show-overflow-tooltip="true" />
+                <el-table-column label="出曲风速5" prop="windSpeedFive" width="90" :show-overflow-tooltip="true" />
             </el-table>
             <el-row>
-                <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
     </div>
@@ -130,7 +130,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -145,7 +145,7 @@ export default {
                             this.plantList.workshop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -171,7 +171,7 @@ export default {
                     if (data.code === 0) {
                         this.room = data.page.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -204,7 +204,7 @@ export default {
                     if (data.code === 0) {
                         this.Pot = data.page.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -225,7 +225,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

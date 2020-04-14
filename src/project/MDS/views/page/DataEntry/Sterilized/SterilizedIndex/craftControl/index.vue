@@ -3,7 +3,7 @@
         <el-card class="searchCard" style="margin-bottom: 5px;">
             <el-row type="flex">
                 <el-col>
-                    <form-head :formHeader="formHeader" />
+                    <form-head :form-header="formHeader" />
                 </el-col>
                 <el-col style="width: 100px;">
                     <div
@@ -43,38 +43,38 @@
                     工艺控制
                 </span>
                 <el-form ref="dataForm" :inline="true" size="small" :model="crafData" :rules="dataRule" class="topform">
-                    <el-form-item label="原汁换热介质：" labelWidth="120px">
+                    <el-form-item label="原汁换热介质：" label-width="120px">
                         <el-checkbox-group v-model="crafData.hotMedium" :disabled="!isRedact" style="width: 170px;">
                             <el-checkbox label="热水" name="type" />
                             <el-checkbox label="酱油" name="type" />
                         </el-checkbox-group>
                     </el-form-item>
-                    <el-form-item label="热水温度：" labelWidth="110px">
+                    <el-form-item label="热水温度：" label-width="110px">
                         <el-input v-model="crafData.hotTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;" />
                     </el-form-item>
-                    <el-form-item label="酱油温度：" labelWidth="80px">
+                    <el-form-item label="酱油温度：" label-width="80px">
                         <el-input v-model="crafData.sauceTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;" />
                     </el-form-item>
-                    <el-form-item label="原汁入锅温度：" prop="originalTemp" labelWidth="120px">
+                    <el-form-item label="原汁入锅温度：" prop="originalTemp" label-width="120px">
                         <el-input v-model="crafData.originalTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 170px;" />
                     </el-form-item>
                     <el-form-item label="升温开始时间：" prop="upStartTime">
-                        <el-date-picker v-model="crafData.upStartTime" type="datetime" placeholder="选择日期" :disabled="!isRedact" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 180px;" />
+                        <el-date-picker v-model="crafData.upStartTime" type="datetime" placeholder="选择日期" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 180px;" />
                     </el-form-item>
                     <div style="padding: 8px 12px;">
                         <el-form-item label="冷却开始时间：" prop="coolingStartTime">
-                            <el-date-picker v-model="crafData.coolingStartTime" type="datetime" placeholder="选择日期" :disabled="!isRedact" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 170px;" />
+                            <el-date-picker v-model="crafData.coolingStartTime" type="datetime" placeholder="选择日期" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 170px;" />
                         </el-form-item>
-                        <el-form-item label="机械温度：" labelWidth="108px">
+                        <el-form-item label="机械温度：" label-width="108px">
                             <el-input v-model="crafData.mechanicalTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;" />
                         </el-form-item>
                         <el-form-item label="出料温度：" prop="dischargeTemp">
                             <el-input v-model="crafData.dischargeTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;" />
                         </el-form-item>
                         <el-form-item label="冷却结束时间：" prop="coolingEndTime">
-                            <el-date-picker v-model="crafData.coolingEndTime" type="datetime" placeholder="选择日期" :disabled="!isRedact" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 170px;" />
+                            <el-date-picker v-model="crafData.coolingEndTime" type="datetime" placeholder="选择日期" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" style="width: 170px;" />
                         </el-form-item>
-                        <el-form-item label="数显温度：" labelWidth="108px">
+                        <el-form-item label="数显温度：" label-width="108px">
                             <el-input v-model="crafData.displayTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;" />
                         </el-form-item>
                         <el-row>
@@ -83,7 +83,7 @@
                                 新增
                             </el-button>
                         </el-row>
-                        <el-table headerRowClassName="tableHead" :data="crafData.result" :rowClassName="RowDelFlag" border tooltipEffect="dark">
+                        <el-table header-row-class-name="tableHead" :data="crafData.result" :row-class-name="RowDelFlag" border tooltip-effect="dark">
                             <el-table-column width="55" label="序号" type="index" />
                             <el-table-column label="屏显温度(℃)">
                                 <template slot-scope="scope">
@@ -92,7 +92,7 @@
                             </el-table-column>
                             <el-table-column label="记录时间">
                                 <template slot-scope="scope">
-                                    <el-date-picker v-model="scope.row.logTime" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" size="small" placeholder="选择日期" :disabled="!isRedact" @change="changeDate(scope.row)" />
+                                    <el-date-picker v-model="scope.row.logTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" size="small" placeholder="选择日期" :disabled="!isRedact" @change="changeDate(scope.row)" />
                                 </template>
                             </el-table-column>
                             <el-table-column label="备注">
@@ -110,19 +110,19 @@
                         </el-table>
                     </div>
                 </el-form>
-                <auditLog :tableData="DataAudit" />
+                <audit-log :table-data="DataAudit" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     异常记录
                 </span>
-                <exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader" />
+                <exc-record ref="excrecord" :is-redact="isRedact" :order="formHeader" />
             </el-tab-pane>
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">
                     文本记录
                 </span>
-                <text-record ref="textrecord" :isRedact="isRedact" />
+                <text-record ref="textrecord" :is-redact="isRedact" />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -218,7 +218,7 @@ export default {
     },
     computed: {},
     mounted() {
-        this.GetOrderHead();
+        this.getOrderHead();
     },
     methods: {
         indexMethod(index) {
@@ -230,7 +230,7 @@ export default {
             }
         },
         // 获取工艺数据
-        GetCraft() {
+        getCraft() {
             this.$http(`${STERILIZED_API.STE_ENTER_CRAF_LIST_API}`, 'POST', {
                 orderId: this.$store.state.common.sterilized.craftOrderId
             }).then(({ data }) => {
@@ -252,6 +252,8 @@ export default {
                                 techId: '',
                                 temp: ''
                             });
+                        } else {
+                            console.log(this.crafData.result)
                         }
                         this.crafData.hotMedium = this.crafData.hotMedium.split(',');
                     } else {
@@ -270,7 +272,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -307,6 +309,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag
@@ -329,7 +333,6 @@ export default {
                 this.crafData.status = str;
             }
             this.crafData.orderId = this.formHeader.orderId;
-            console.log(this.crafData.hotMedium);
             this.crafData.hotMedium = this.crafData.hotMedium.join(',');
             this.$http(`${STERILIZED_API.STE_ENTER_CRAF_UPDATE_API}`, 'POST', this.crafData).then(({ data }) => {
                 if (data.code === 0) {
@@ -400,6 +403,8 @@ export default {
                         type: 'warning'
                     }).then(() => {
                         this.savedOrSubmitForm('submit');
+                    }).catch(() => {
+                        // this.$infoTost('已取消删除');
                     });
                 }
             });
@@ -439,7 +444,7 @@ export default {
                                     message: '提交成功',
                                     type: 'success'
                                 });
-                                this.GetOrderHead();
+                                this.getOrderHead();
                             });
                         }).catch(err => {
                             this.$notify.error({ title: '错误', message: err });
@@ -461,7 +466,7 @@ export default {
                                 message: '保存成功',
                                 type: 'success'
                             });
-                            this.GetOrderHead();
+                            this.getOrderHead();
                         }).catch(err => {
                             this.$notify.error({ title: '错误', message: err });
                         });
@@ -485,7 +490,7 @@ export default {
         },
         /* eslint-disable @typescript-eslint/camelcase */
         // 获取订单表头
-        GetOrderHead() {
+        getOrderHead() {
             this.$http(`${STERILIZED_API.STE_ORDER_HEAD_API}`, 'POST', {
                 orderId: this.$store.state.common.sterilized.craftOrderId
             }).then(({ data }) => {
@@ -497,7 +502,7 @@ export default {
                     this.$refs.excrecord.GetequipmentType(this.formHeader.productLine);
                     this.$refs.excrecord.getDataList(this.formHeader.factory);
                     if (this.formHeader.status !== '') {
-                        this.GetCraft();
+                        this.getCraft();
                         this.$refs.excrecord.GetExcDate({
                             order_id: this.formHeader.orderId,
                             sign: 'Craft'
@@ -508,7 +513,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         }

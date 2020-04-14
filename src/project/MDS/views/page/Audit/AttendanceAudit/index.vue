@@ -5,7 +5,7 @@
                 <el-card class="searchCard">
                     <el-row type="flex">
                         <el-col>
-                            <el-form :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row" @keyup.enter.native="GetAuditList()" @submit.native.prevent>
+                            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row" @keyup.enter.native="GetAuditList()" @submit.native.prevent>
                                 <el-form-item label="生产工厂：">
                                     <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px;">
                                         <el-option label="请选择" value="" />
@@ -25,7 +25,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="日期：">
-                                    <el-date-picker v-model="plantList.setDate" type="date" placeholder="选择" valueFormat="yyyy-MM-dd" style="width: 160px;" />
+                                    <el-date-picker v-model="plantList.setDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
                                 </el-form-item>
                                 <el-form-item label="考勤类型：">
                                     <el-select v-model="plantList.kqlx" placeholder="请选择" size="small" style="width: 160px;">
@@ -68,36 +68,36 @@
                     <div class="toggleSearchTop">
                         <i class="el-icon-caret-bottom" />
                     </div>
-                    <el-table ref="table1" headerRowClassName="tableHead" :data="AuditList" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                    <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" :selectable="checkboxT" width="34" />
                         <el-table-column label="审核状态" width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? '审核通过' : scope.row.status === 'noPass' ? '审核不通过' : '' }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="reqno" label="订单号" :showOverflowTooltip="true" width="120" />
-                        <el-table-column prop="kqrq" label="日期" :showOverflowTooltip="true" width="120" />
-                        <el-table-column prop="workShopName" label="车间" :showOverflowTooltip="true" width="120" />
-                        <el-table-column prop="kqdlName" label="考勤大类" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="kqlxName" label="考勤类型" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="productLineName" label="产线" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="deptIdName" label="班组" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="userType" label="人员属性" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="userId" label="姓名（工号）" :showOverflowTooltip="true" width="160" />
-                        <el-table-column prop="classTypeName" label="白/中/夜班" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="content" label="工作内容" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="timedTime" label="计时时数（小时）" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="pieceTime" label="计件时数（小时）" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="workTime" label="出勤时数（小时）" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="remark" label="考勤备注" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="memo" label="审核意见" :showOverflowTooltip="true" width="80" />
+                        <el-table-column prop="reqno" label="订单号" :show-overflow-tooltip="true" width="120" />
+                        <el-table-column prop="kqrq" label="日期" :show-overflow-tooltip="true" width="120" />
+                        <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="120" />
+                        <el-table-column prop="kqdlName" label="考勤大类" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="kqlxName" label="考勤类型" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="productLineName" label="产线" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="deptIdName" label="班组" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="userType" label="人员属性" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true" width="160" />
+                        <el-table-column prop="classTypeName" label="白/中/夜班" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="content" label="工作内容" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="timedTime" label="计时时数（小时）" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="pieceTime" label="计件时数（小时）" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="workTime" label="出勤时数（小时）" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="remark" label="考勤备注" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="80" />
                     </el-table>
                     <el-row>
-                        <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                        <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                     </el-row>
                 </el-card>
             </div>
-            <el-dialog title="审核拒绝" :closeOnClickModal="false" :visible.sync="visible">
+            <el-dialog title="审核拒绝" :close-on-click-modal="false" :visible.sync="visible">
                 <p style="line-height: 42px;">
                     请填写不通过原因
                 </p>
@@ -180,11 +180,11 @@ export default {
                         if (data.code === 0) {
                             this.ARtype = this.ARtype.concat(data.dicList);
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -202,7 +202,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.dataListLoading = false;
             });
@@ -214,7 +214,7 @@ export default {
                     this.factory = data.typeList;
                     this.plantList.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -232,7 +232,7 @@ export default {
                             this.plantList.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -249,7 +249,7 @@ export default {
                     if (data.code === 0) {
                         this.productline = data.childList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -293,7 +293,7 @@ export default {
                         this.AuditList.splice(this.AuditList.length, 0, {});
                         this.AuditList.splice(this.AuditList.length - 1, 1);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     this.GetAuditList();
                 });
@@ -337,9 +337,11 @@ export default {
                                 type: 'success'
                             });
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
+                }).catch(() => {
+                // this.$infoTost('已取消删除');
                 });
             }
         },
@@ -369,9 +371,11 @@ export default {
                             this.GetAuditList();
                         } else {
                             this.GetAuditList();
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
+                }).catch(() => {
+                // this.$infoTost('已取消删除');
                 });
             }
         },
@@ -393,11 +397,9 @@ export default {
 .searchCard {
     margin-bottom: 0;
 }
-
 .searchCard,
 .tableCard {
     position: relative;
-
     .toggleSearchTop {
         position: absolute;
         top: 0;
@@ -407,7 +409,6 @@ export default {
         text-align: center;
         cursor: pointer;
     }
-
     .toggleSearchBottom {
         position: absolute;
         bottom: 0;
@@ -416,13 +417,11 @@ export default {
         text-align: center;
         cursor: pointer;
     }
-
     .el-icon-caret-top::before,
     .el-icon-caret-bottom::before {
         color: #dcdfe6;
     }
 }
-
 .topforms {
     .el-date-editor.el-input {
         width: auto;

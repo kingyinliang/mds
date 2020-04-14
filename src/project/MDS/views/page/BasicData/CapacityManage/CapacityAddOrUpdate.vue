@@ -1,7 +1,7 @@
 <template>
-    <el-dialog :title="CapacityId ? '修改产能信息' : '新增产能'" :closeOnClickModal="false" :visible.sync="visible">
+    <el-dialog :title="CapacityId ? '修改产能信息' : '新增产能'" :close-on-click-modal="false" :visible.sync="visible">
         <div>
-            <el-form ref="dataForm" :model="dataForm" statusIcon :rules="dataRule" labelWidth="125px" size="small" @keyup.enter.native="dataFormSubmit()">
+            <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="物料：" prop="material">
                     <el-select v-if="!CapacityId" v-model="dataForm.material" filterable placeholder="请选择">
                         <el-option v-for="item in serchSapList" :key="item.sapCode + ' ' + item.itemName" :label="item.sapCode + ' ' + item.itemName" :value="item.sapCode + ' ' + item.itemName" />
@@ -28,10 +28,10 @@
                     <el-input v-model="dataForm.standardOfMan" placeholder="手动输入" />
                 </el-form-item>
                 <el-form-item label="有效开始日期：" prop="effecStartDate">
-                    <el-date-picker v-model="dataForm.effecStartDate" type="date" valueFormat="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
+                    <el-date-picker v-model="dataForm.effecStartDate" type="date" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
                 </el-form-item>
                 <el-form-item label="有效结束日期：" prop="effecEndDate">
-                    <el-date-picker v-model="dataForm.effecEndDate" type="date" valueFormat="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
+                    <el-date-picker v-model="dataForm.effecEndDate" type="date" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
                 </el-form-item>
                 <el-form-item v-if="CapacityId" label="维护人：">
                     <el-input v-model="dataForm.changer" placeholder="手动输入" disabled />
@@ -129,7 +129,7 @@ export default {
                 if (data.code === 0) {
                     this.Unit = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -155,12 +155,12 @@ export default {
                     this.dataForm.materialName = this.dataForm.material.substring(this.dataForm.material.indexOf(' ') + 1);
                     this.$http(`${BASICDATA_API.CAPAADDORUPDATE_API}`, 'POST', this.dataForm).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('操作成功');
+                            this.$successTost('操作成功');
                             this.visible = false;
                             this.$emit('refreshDataList');
                         } else {
                             this.submitType = true;
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 }

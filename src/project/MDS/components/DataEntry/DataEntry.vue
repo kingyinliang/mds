@@ -33,7 +33,7 @@
                                 {{ item.value | itemValue(formHeader) }}
                             </p>
                         </el-tooltip>
-                        <el-date-picker v-if="item.type === 'date-picker'" v-model="formHeader[item.value]" size="mini" type="date" :disabled="!isRedact" valueFormat="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 120px;" @change="updateProductDate" />
+                        <el-date-picker v-if="item.type === 'date-picker'" v-model="formHeader[item.value]" size="mini" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 120px;" @change="updateProductDate" />
                         <el-select v-if="item.type === 'select'" v-model="formHeader[item.value]" size="mini" style="width: 120px;" :disabled="!(isRedact && item.disabled)">
                             <el-option v-for="(optionIt, subIndex) in item.option.list" :key="subIndex" :label="optionIt[item.option.label]" :value="optionIt[item.option.value]" />
                         </el-select>
@@ -42,7 +42,7 @@
             </div>
         </div>
         <!--tabs-->
-        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :beforeLeave="beforeLeave" @tab-click="tabClick">
+        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
             <el-tab-pane v-for="(item, index) in tabs" :key="index" :name="setKey(index)">
                 <span v-if="item.status !== undefined" slot="label" class="spanview">
                     <el-tooltip class="item" effect="dark" :content="item.status === 'noPass' ? '不通过' : item.status === 'saved' ? '已保存' : item.status === 'submit' ? '已提交' : item.status === 'checked' ? '通过' : '未录入'" placement="top-start">
@@ -207,7 +207,7 @@
                     this.savedDatas(str).then(res => {
                         if (res !== false) {
                             this.isRedact = false;
-                            this.$success_SHINHO('保存成功');
+                            this.$successTost('保存成功');
                             this.$emit('success');
                         }
                     });
@@ -215,7 +215,7 @@
                     this.submitDatas(str).then(res => {
                         if (res !== false) {
                             this.isRedact = false;
-                            this.$success_SHINHO('提交成功');
+                            this.$successTost('提交成功');
                             this.$emit('success');
                         }
                     });
@@ -235,6 +235,8 @@
                     type: 'warning'
                 }).then(() => {
                     this.savedData('submit');
+                }).catch(() => {
+                // this.$infoTost('已取消删除');
                 });
             }
         }

@@ -58,7 +58,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -118,40 +118,32 @@ export default {
     width: 100%;
     height: 100%;
     transition: all 1s;
-
     .Container {
         position: relative;
         padding: 20px 30px 0 140px;
-
         &_bg {
             width: 100%;
         }
-
         &_box {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             padding: 20px 30px 0 140px;
-
             &_title {
                 display: block;
                 width: 250px;
                 margin: auto;
             }
-
             &_row {
                 margin-top: 10px;
                 padding: 0 25px;
-
                 &_col {
                     position: relative;
                     margin-bottom: 10px;
-
                     img {
                         width: 100%;
                     }
-
                     &_echarts {
                         position: absolute;
                         top: 0;

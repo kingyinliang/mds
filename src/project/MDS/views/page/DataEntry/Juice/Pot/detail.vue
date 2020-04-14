@@ -11,7 +11,7 @@
                     </div>
                 </el-col>
                 <el-col>
-                    <el-form :inline="true" size="small" labelWidth="84px" class="topforms topformsde" style="margin-top: 30px;">
+                    <el-form :inline="true" size="small" label-width="84px" class="topforms topformsde" style="margin-top: 30px;">
                         <el-form-item label="生产车间：">
                             <p class="el-input">
                                 {{ formData.WORK_SHOP ? formData.WORK_SHOP : '' }}
@@ -73,56 +73,66 @@
             <el-tabs v-model="activeName" class="NewDaatTtabs" type="border-card">
                 <el-tab-pane name="1">
                     <span slot="label" class="spanview">当前订单信息</span>
-                    <el-table headerRowClassName="tableHead" :data="dataListOrder" border tooltipEffect="dark">
+                    <el-table header-row-class-name="tableHead" :data="dataListOrder" border tooltip-effect="dark">
                         <el-table-column type="index" label="序号" width="55" :index="indexOrderMethod" />
-                        <el-table-column label="车间" :showOverflowTooltip="true" prop="WORK_SHOP" width="90" />
-                        <el-table-column label="物料" :showOverflowTooltip="true" width="160">
+                        <el-table-column label="车间" :show-overflow-tooltip="true" prop="WORK_SHOP" width="90" />
+                        <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                             <template slot-scope="scope">
                                 {{ scope.row.MATERIAL_CODE }}{{ scope.row.MATERIAL_NAME }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="类别" :showOverflowTooltip="true" prop="TYPE" width="70" />
-                        <el-table-column label="移动类型" :showOverflowTooltip="true" prop="move" width="80" />
-                        <el-table-column label="来源" :showOverflowTooltip="true" prop="source" width="70" />
-                        <el-table-column label="物料批次" :showOverflowTooltip="true" prop="BATCH" width="110" />
-                        <el-table-column label="来源批次" :showOverflowTooltip="true" prop="IN_BATCH" width="110" />
-                        <el-table-column label="数量" :showOverflowTooltip="true" prop="IN_POT_AMOUNT" width="80" />
-                        <el-table-column label="单位" :showOverflowTooltip="true" prop="UNIT" width="50" />
-                        <el-table-column label="满罐日期" :showOverflowTooltip="true" prop="FULL_POT_DATE" width="160" />
-                        <el-table-column label="单号" :showOverflowTooltip="true" prop="ORDER_NO" width="120" />
-                        <el-table-column label="订单类型" :showOverflowTooltip="true" prop="ORDER_TYPE" width="80" />
-                        <el-table-column label="领用人" :showOverflowTooltip="true" prop="CREATOR" width="120" />
-                        <el-table-column label="领用时间" :showOverflowTooltip="true" prop="CREATED" width="120" />
+                        <el-table-column label="类别" :show-overflow-tooltip="true" prop="TYPE" width="70" />
+                        <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="move" width="80" />
+                        <el-table-column label="来源" :show-overflow-tooltip="true" prop="source" width="70" />
+                        <el-table-column label="物料批次" :show-overflow-tooltip="true" prop="BATCH" width="110" />
+                        <el-table-column label="来源批次" :show-overflow-tooltip="true" prop="IN_BATCH" width="110" />
+                        <el-table-column label="数量" :show-overflow-tooltip="true" prop="IN_POT_AMOUNT" width="80" />
+                        <el-table-column label="单位" :show-overflow-tooltip="true" prop="UNIT" width="50" />
+                        <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="FULL_POT_DATE" width="160" />
+                        <el-table-column label="单号" :show-overflow-tooltip="true" prop="ORDER_NO" width="120" />
+                        <el-table-column label="订单类型" :show-overflow-tooltip="true" prop="ORDER_TYPE" width="80" />
+                        <el-table-column label="领用人" :show-overflow-tooltip="true" prop="CREATOR" width="120" />
+                        <el-table-column label="领用时间" :show-overflow-tooltip="true" prop="CREATED" width="120" />
                     </el-table>
                     <el-row>
-                        <el-pagination :currentPage="dataCurrPage" :pageSizes="[10, 20, 50]" :pageSize="dataPageSize" layout="total, sizes, prev, pager, next, jumper" :total="dataTotalCount" @size-change="handleDataSizeChange" @current-change="handleDataCurrentChange" />
+                        <el-pagination :current-page="dataCurrPage" :page-sizes="[10, 20, 50]" :page-size="dataPageSize" layout="total, sizes, prev, pager, next, jumper" :total="dataTotalCount" @size-change="handleDataSizeChange" @current-change="handleDataCurrentChange" />
                     </el-row>
                 </el-tab-pane>
                 <el-tab-pane name="2">
                     <span slot="label" class="spanview">当前领用信息</span>
-                    <el-table headerRowClassName="tableHead" :data="dataListUse" border tooltipEffect="dark">
+                    <el-table header-row-class-name="tableHead" :data="dataListUse" border tooltip-effect="dark">
                         <el-table-column type="index" label="序号" width="55" :index="indexUseMethod" />
-                        <el-table-column label="车间" :showOverflowTooltip="true" prop="WORK_SHOP" width="90" />
-                        <el-table-column label="物料" :showOverflowTooltip="true" width="160">
+                        <el-table-column label="车间" :show-overflow-tooltip="true" prop="WORK_SHOP" width="90" />
+                        <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                             <template slot-scope="scope">
                                 {{ scope.row.MATERIAL_CODE }}{{ scope.row.MATERIAL_NAME }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="类别" :showOverflowTooltip="true" prop="RECEIVE_TYPE" width="70" />
-                        <el-table-column label="移动类型" :showOverflowTooltip="true" prop="move" width="80" />
-                        <el-table-column label="领用" :showOverflowTooltip="true" prop="source" width="70" />
-                        <el-table-column label="物料批次" :showOverflowTooltip="true" prop="BATCH" width="110" />
-                        <el-table-column label="来源批次" :showOverflowTooltip="true" prop="RECEIVE_BATCH" width="110" />
-                        <el-table-column label="数量" :showOverflowTooltip="true" prop="RECEIVE_AMOUNT" width="80" />
-                        <el-table-column label="单位" :showOverflowTooltip="true" prop="UNIT" width="50" />
-                        <el-table-column label="满罐日期" :showOverflowTooltip="true" prop="FULL_DATE" width="160" />
-                        <el-table-column label="单号" :showOverflowTooltip="true" prop="ORDER_NO" width="120" />
-                        <el-table-column label="订单类型" :showOverflowTooltip="true" prop="ORDER_TYPE" width="80" />
-                        <el-table-column label="领用人" :showOverflowTooltip="true" prop="CREATOR" width="120" />
-                        <el-table-column label="领用时间" :showOverflowTooltip="true" prop="CREATED" width="120" />
+                        <el-table-column label="类别" :show-overflow-tooltip="true" prop="RECEIVE_TYPE" width="70" />
+                        <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="move" width="80" />
+                        <el-table-column label="领用" :show-overflow-tooltip="true" prop="source" width="70" />
+                        <el-table-column label="物料批次" :show-overflow-tooltip="true" width="110">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.move === '转储'">{{ scope.row.RECEIVE_BATCH }}</span>
+                                <span v-else>{{ scope.row.BATCH }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="转出批次" :show-overflow-tooltip="true" width="110">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.move === '转储'">{{ scope.row.BATCH }}</span>
+                                <span v-else>{{ scope.row.RECEIVE_BATCH }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="数量" :show-overflow-tooltip="true" prop="RECEIVE_AMOUNT" width="80" />
+                        <el-table-column label="单位" :show-overflow-tooltip="true" prop="UNIT" width="50" />
+                        <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="FULL_DATE" width="160" />
+                        <el-table-column label="单号" :show-overflow-tooltip="true" prop="ORDER_NO" width="120" />
+                        <el-table-column label="罐号" :show-overflow-tooltip="true" prop="HOLDER_NAME" width="80" />
+                        <el-table-column label="领用人" :show-overflow-tooltip="true" prop="CREATOR" width="120" />
+                        <el-table-column label="领用时间" :show-overflow-tooltip="true" prop="CREATED" width="120" />
                     </el-table>
                     <el-row>
-                        <el-pagination :currentPage="dataUseCurrPage" :pageSizes="[10, 20, 50]" :pageSize="dataUsePageSize" layout="total, sizes, prev, pager, next, jumper" :total="dataUseTotalCount" @size-change="handleUseDataSizeChange" @current-change="handleUseDataCurrentChange" />
+                        <el-pagination :current-page="dataUseCurrPage" :page-sizes="[10, 20, 50]" :page-size="dataUsePageSize" layout="total, sizes, prev, pager, next, jumper" :total="dataUseTotalCount" @size-change="handleUseDataSizeChange" @current-change="handleUseDataCurrentChange" />
                     </el-row>
                 </el-tab-pane>
             </el-tabs>
@@ -172,7 +182,7 @@ export default {
                     this.dataListOrder = data.juiceItem.infoEnter.slice((this.dataCurrPage - 1) * this.dataPageSize, (this.dataCurrPage - 1) * this.dataPageSize + this.dataPageSize);
                     this.dataListUse = data.juiceItem.infoOut.slice((this.dataUseCurrPage - 1) * this.dataUsePageSize, (this.dataUseCurrPage - 1) * this.dataUsePageSize + this.dataUsePageSize);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -212,13 +222,11 @@ export default {
         height: 32px;
         border-bottom: 1px solid #d8d8d8;
     }
-
     .noneBorder {
         .el-form-item__content {
             border-bottom: none;
         }
     }
-
     .el-input {
         width: 145px !important;
         overflow: hidden;
@@ -227,17 +235,14 @@ export default {
         text-overflow: ellipsis;
     }
 }
-
 .header_pot {
     width: 160px;
-
     &_label {
         margin-bottom: 15px;
         color: rgba(102, 102, 102, 1);
         font-weight: 400;
         font-size: 18px;
     }
-
     &_image {
         display: flex;
         align-items: flex-end;
@@ -246,7 +251,6 @@ export default {
         height: 190px;
         background: url("~@/assets/img/ferPot.png") no-repeat center center;
         background-size: contain;
-
         &_content {
             width: 84px;
             height: 90px;

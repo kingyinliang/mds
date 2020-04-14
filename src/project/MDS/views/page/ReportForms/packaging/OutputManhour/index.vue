@@ -4,8 +4,8 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <linkage :plantList="plantList" :lablewidth="true" :isPackaging="true" />
-                        <el-form :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                        <linkage :plant-list="plantList" :lablewidth="true" :is-packaging="true" />
+                        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                             <el-form-item label="班组：">
                                 <el-select v-model="plantList.teamId" filterable placeholder="请选择">
                                     <el-option label="请选择" value="" />
@@ -18,17 +18,17 @@
                             <el-form-item label="品项：">
                                 <el-select v-model="plantList.material" filterable placeholder="请选择">
                                     <el-option label="请选择" value="" />
-                                    <el-option v-for="item in SerchSapList" :key="item.sapCode + ' ' + item.itemName" :label="item.sapCode + ' ' + item.itemName" :value="item.sapCode + ' ' + item.itemName" />
+                                    <el-option v-for="item in SerchSapList" :key="item.sapCode + '-' + item.itemId" :label="item.sapCode + ' ' + item.itemName" :value="item.sapCode + ' ' + item.itemName" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="生产日期：" class="dateinput">
                                 <el-row>
                                     <el-col :span="12">
-                                        <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 135px;" />
+                                        <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;" />
                                         <span>-</span>
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 135px;" />
+                                        <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;" />
                                     </el-col>
                                 </el-row>
                             </el-form-item>
@@ -53,14 +53,14 @@
                 <div class="toggleSearchTop">
                     <i class="el-icon-caret-bottom" />
                 </div>
-                <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead">
+                <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead">
                     <el-table-column prop="productDate" label="生产日期" width="100" />
-                    <el-table-column prop="factoryName" label="工厂" width="120" :showOverflowTooltip="true" />
+                    <el-table-column prop="factoryName" label="工厂" width="120" :show-overflow-tooltip="true" />
                     <el-table-column prop="workShopName" label="车间" width="110" />
                     <el-table-column prop="productLineName" label="产线" width="120" />
                     <el-table-column prop="orderNo" label="生产订单号" width="140" />
-                    <el-table-column prop="materialName" label="生产品项" width="120" :showOverflowTooltip="true" />
-                    <el-table-column prop="batch" label="生产批次" width="120" :showOverflowTooltip="true" />
+                    <el-table-column prop="materialName" label="生产品项" width="120" :show-overflow-tooltip="true" />
+                    <el-table-column prop="batch" label="生产批次" width="120" :show-overflow-tooltip="true" />
                     <el-table-column prop="className" label="班次" width="50" />
                     <el-table-column prop="team" label="班组" width="80" />
                     <el-table-column prop="realOutPut" label="产量" width="80" />
@@ -70,7 +70,7 @@
                     <el-table-column prop="workTime" label="人工工时（H）" width="80" />
                 </el-table>
                 <el-row>
-                    <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
@@ -118,7 +118,7 @@ export default {
             if (data.code === 0) {
                 this.SerchSapList = data.list;
             } else {
-                this.$error_SHINHO(data.msg);
+                this.$errorTost(data.msg);
             }
         });
 
@@ -133,7 +133,7 @@ export default {
                 if (data.code === 0) {
                     this.Team = data.teamList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -156,7 +156,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.lodingS = false;
             });

@@ -8,16 +8,16 @@
                     </el-button>
                 </el-row>
                 <el-row>
-                    <el-table headerRowClassName="tableHead" :data="dataList" border tooltipEffect="dark" style="width: 100%;">
-                        <el-table-column prop="id" headerAlign="left" align="left" width="80" label="ID" />
-                        <table-tree-column prop="menuName" headerAlign="left" width="150" :showOverflowTooltip="true" label="名称" />
-                        <el-table-column prop="parentName" headerAlign="left" align="left" width="100" :showOverflowTooltip="true" label="上级菜单" />
-                        <el-table-column headerAlign="left" align="left" :showOverflowTooltip="true" label="图标">
+                    <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" style="width: 100%;">
+                        <el-table-column prop="id" header-align="left" align="left" width="80" label="ID" />
+                        <table-tree-column prop="menuName" header-align="left" width="150" :show-overflow-tooltip="true" label="名称" />
+                        <el-table-column prop="parentName" header-align="left" align="left" width="100" :show-overflow-tooltip="true" label="上级菜单" />
+                        <el-table-column header-align="left" align="left" :show-overflow-tooltip="true" label="图标">
                             <template slot-scope="scope">
                                 <i class="iconfont" :class="scope.row.menuIcon" />
                             </template>
                         </el-table-column>
-                        <el-table-column prop="type" headerAlign="left" align="left" :showOverflowTooltip="true" label="类型">
+                        <el-table-column prop="type" header-align="left" align="left" :show-overflow-tooltip="true" label="类型">
                             <template slot-scope="scope">
                                 <el-tag v-if="scope.row.menuType === 'C'" size="small">
                                     目录
@@ -36,10 +36,10 @@
                                 </el-tag>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="menuOrder" headerAlign="left" align="left" width="80" :showOverflowTooltip="true" label="排序号" />
-                        <el-table-column prop="menuUrl" headerAlign="left" align="left" width="180" :showOverflowTooltip="true" label="菜单URL" />
-                        <el-table-column prop="permission" headerAlign="left" align="left" width="180" :showOverflowTooltip="true" label="授权标识" />
-                        <el-table-column fixed="right" headerAlign="left" align="left" width="88" label="操作">
+                        <el-table-column prop="menuOrder" header-align="left" align="left" width="80" :show-overflow-tooltip="true" label="排序号" />
+                        <el-table-column prop="menuUrl" header-align="left" align="left" width="180" :show-overflow-tooltip="true" label="菜单URL" />
+                        <el-table-column prop="permission" header-align="left" align="left" width="180" :show-overflow-tooltip="true" label="授权标识" />
+                        <el-table-column fixed="right" header-align="left" align="left" width="88" label="操作">
                             <template slot-scope="scope">
                                 <el-button v-if="isAuth('sys:menu:update')" style="padding: 0;" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">
                                     修改

@@ -3,7 +3,7 @@
         <el-card class="searchCard">
             <el-row>
                 <el-col>
-                    <el-form :model="formHeader" :inline="true" size="small" labelWidth="70px" class="sole_row">
+                    <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="sole_row">
                         <el-form-item label="生产工厂：">
                             <el-select v-model="formHeader.factory" placeholder="请选择" class="width180px">
                                 <el-option label="请选择" value="" />
@@ -28,7 +28,7 @@
                                     查询
                                 </el-button>
                                 <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('prs:dernchUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                                    {{ isRedact ? '取消' : '编辑' }}
+                                    {{ isRedact?'取消':'编辑' }}
                                 </el-button>
                             </template>
                             <template v-if="isRedact" style="float: right;">
@@ -51,13 +51,13 @@
             <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                 <i class="el-icon-caret-bottom" />
             </div>
-            <el-card v-show="contentshow" style="margin-top: 5px;">
-                <el-table :data="waterList" border headerRowClassName="tableHead" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="35" />
-                    <el-table-column label="工序" width="50px">
+            <el-card style="margin-top: 5px;">
+                <el-table :data="waterList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="50" />
+                    <el-table-column label="工序" width="50">
                         自淋
                     </el-table-column>
-                    <el-table-column label="气垫车号" prop="gx">
+                    <el-table-column label="气垫车号" prop="gx" :show-overflow-tooltip="true">
                         <template slot="header">
                             <i class="reqI">*</i><span>气垫车号</span>
                         </template>
@@ -65,48 +65,32 @@
                             {{ scope.row.deviceName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="布浆线" prop="deptName" />
-                    <el-table-column label="布浆结束时间" prop="pulpEndDate" />
+                    <el-table-column label="布浆线" :show-overflow-tooltip="true" prop="deptName" />
+                    <el-table-column label="布浆结束时间" prop="pulpEndDate" width="150" />
                     <el-table-column label="自淋结束时间" prop="drenchEndDate" width="200">
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.drenchEndDate" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm" valueFormat="yyyy-MM-dd HH:mm" size="small" style="width: 175px;" :disabled="!isRedact" @input="changedDranch(scope.row)" />
+                            <el-date-picker v-model="scope.row.drenchEndDate" type="datetime" :disabled="!isRedact" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 172px;" @input="changedDranch(scope.row)" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="自淋时间(H)" prop="drenchTime" />
-                    <el-table-column label="挪笼操作员" :showOverflowTooltip="true">
+                    <el-table-column label="自淋时间(H)" width="100" prop="drenchTime" />
+                    <el-table-column label="挪笼操作员" :show-overflow-tooltip="true">
                         <template slot="header">
                             <i class="reqI">*</i><span>挪笼操作员</span>
                         </template>
                         <template slot-scope="scope">
                             <el-col v-if="!scope.row.moveOperator">
-                                <span
-                                    :style="{
-                                        cursor: isRedact ? 'pointer' : '',
-                                    }"
-                                    @click="selectUser(scope.row)"
-                                >
+                                <span :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">
                                     <i>{{ scope.row.moveOperator }}</i>
                                     <i>点击选择人员</i>
                                 </span>
                             </el-col>
-                            <span v-else :style="{ cursor: isRedact ? 'pointer' : '' }" @click="selectUser(scope.row)">{{ scope.row.moveOperator }}</span>
+                            <span v-else :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">{{ scope.row.moveOperator }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="布浆操作员" prop="drenchOperator" />
+                    <el-table-column label="布浆操作员" prop="drenchOperator" width="150" />
                 </el-table>
             </el-card>
         </div>
-        <el-dialog title="人员分配" :closeOnClickModal="false" :visible.sync="visible">
-            <el-row>
-                <el-col style="width: 500px;">
-                    <el-transfer v-model="selctId" filterable :titles="['未分配人员', '已分配人员']" :filterMethod="filterMethod" filterPlaceholder="请输入用户名称" :data="userlist" />
-                </el-col>
-            </el-row>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="visible = false">取消</el-button>
-                <el-button type="primary" @click="updatauser(row)">确定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
@@ -163,7 +147,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -182,7 +166,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -201,7 +185,7 @@ export default {
                         this.productline = data.childList;
                         this.formHeader.productLine = data.childList[0].deptId;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -237,7 +221,7 @@ export default {
                         item.drenchEndDate = item.drenchEndDate ? item.drenchEndDate : dateFormat(new Date(), 'yyyy-MM-dd hh:mm');
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -256,7 +240,7 @@ export default {
                         }
                         this.visible = true;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -285,6 +269,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 保存
@@ -303,7 +289,7 @@ export default {
                         });
                         this.isRedact = false;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -319,7 +305,7 @@ export default {
                         });
                         this.isRedact = false;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -338,7 +324,6 @@ export default {
 .width180px {
     width: 180px;
 }
-
 .searchCard {
     .el-button--primary,
     .el-button--primary:focus {
@@ -346,12 +331,10 @@ export default {
         background-color: #fff;
         border-color: #d9d9d9;
     }
-
     .el-button--primary:hover {
         color: #fff;
         background-color: #1890ff;
     }
-
     .el-button--primary:first-child {
         color: #fff;
         background-color: #1890ff;

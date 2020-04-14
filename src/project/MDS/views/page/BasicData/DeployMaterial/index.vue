@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table ref="queryTable" :queryAuth="'ste:material:list'" :showOperationColumn="true" :operationColumnWidth="70" :showSelectColumn="true" :listInterface="listInterface" :queryFormData="queryFormData" :column="column">
+        <query-table ref="queryTable" :query-auth="'ste:material:list'" :show-operation-column="true" :operation-column-width="70" :show-select-column="true" :list-interface="listInterface" :query-form-data="queryFormData" :column="column">
             <template slot="mds-button">
                 <el-button v-if="isAuth('ste:material:dataInsert')" type="primary" size="small" @click="addOrupdate()">
                     新增
@@ -15,11 +15,11 @@
                 </el-button>
             </template>
         </query-table>
-        <el-dialog :visible.sync="AddDialogTableVisible" :closeOnClickModal="false" width="550px" customClass="dialog__class">
+        <el-dialog :visible.sync="AddDialogTableVisible" :close-on-click-modal="false" width="550px" custom-class="dialog__class">
             <div slot="title">
                 {{ addAndupdate ? '新增调配物料' : '修改调配物料' }}
             </div>
-            <el-form ref="AddDialogTable" :model="AddDialogTable" labelWidth="100px" size="small">
+            <el-form ref="AddDialogTable" :model="AddDialogTable" label-width="100px" size="small">
                 <el-form-item label="工厂：">
                     <el-select v-model="AddDialogTable.factory" placeholder="请选择" style="width: 100%;">
                         <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
@@ -56,7 +56,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col style="width: 180px;">
-                            <el-form-item label="BL_LY标识：" labelWidth="90px">
+                            <el-form-item label="BL_LY标识：" label-width="90px">
                                 <el-select v-model="item.type" placeholder="请选择" style="width: 100%;">
                                     <el-option v-for="(sunItem, subIndex) in queryFormData[3].options" :key="subIndex" :label="sunItem.label" :value="sunItem.value" />
                                 </el-select>
@@ -223,7 +223,7 @@ export default {
                     this.productionMaterielCode = data.materielList.productionMateriel;
                     this.useMaterielCode = data.materielList.useMateriel;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -245,7 +245,7 @@ export default {
                             remark: row.remark
                         };
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -282,10 +282,10 @@ export default {
                     this.$http(`${!this.addAndupdate ? BASICDATA_API.DEPLOY_MATERIAL_SAVE : BASICDATA_API.DEPLOY_MATERIAL_UPDATE}`, 'POST', this.AddDialogTable).then(({ data }) => {
                         if (data.code === 0) {
                             this.AddDialogTableVisible = false;
-                            this.$success_SHINHO('操作成功');
+                            this.$successTost('操作成功');
                             this.$refs.queryTable.GetDataList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 }
@@ -300,12 +300,14 @@ export default {
                 }).then(() => {
                     this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_DEL}`, 'POST', this.$refs.queryTable.multipleSelection).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('操作成功');
+                            this.$successTost('操作成功');
                             this.$refs.queryTable.GetDataList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
+                }).catch(() => {
+                    // this.$infoTost('已取消删除');
                 });
             } else {
                 this.$warningTost('请选择数据');

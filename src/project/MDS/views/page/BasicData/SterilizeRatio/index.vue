@@ -3,7 +3,7 @@
         <el-card class="searchCard searchCards">
             <el-row>
                 <el-col>
-                    <el-form :model="formHeader" size="small" :inline="true" labelWidth="70px" class="sole_row">
+                    <el-form :model="formHeader" size="small" :inline="true" label-width="70px" class="sole_row">
                         <el-form-item label="生产工厂：">
                             <el-select v-model="formHeader.factory">
                                 <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
@@ -39,24 +39,24 @@
             <div class="toggleSearchTop">
                 <i class="el-icon-caret-bottom" />
             </div>
-            <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;" @row-dblclick="EditInfo" @selection-change="handleSelectionChange">
+            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @row-dblclick="EditInfo" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
-                <el-table-column prop="factoryName" label="工厂" :showOverflowTooltip="true" />
-                <el-table-column label="物料" :showOverflowTooltip="true">
+                <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" />
+                <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode }}
                         {{ scope.row.materialName }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="ratio" label="比例" :showOverflowTooltip="true" />
-                <el-table-column prop="remark" label="备注" :showOverflowTooltip="true" />
+                <el-table-column prop="ratio" label="比例" :show-overflow-tooltip="true" />
+                <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" />
             </el-table>
         </el-card>
-        <el-dialog :closeOnClickModal="false" :visible.sync="dialogVisibleAdd" width="400px" customClass="dialog__class">
+        <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisibleAdd" width="400px" custom-class="dialog__class">
             <div slot="title">
                 新增
             </div>
-            <el-form ref="Addstar" :model="formAdd" :inline="true" size="small" :rules="Addrulestar" labelWidth="85px">
+            <el-form ref="Addstar" :model="formAdd" :inline="true" size="small" :rules="Addrulestar" label-width="85px">
                 <el-form-item label="工厂：">
                     {{ factoryName }}
                 </el-form-item>
@@ -129,7 +129,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -144,7 +144,7 @@ export default {
                     if (data.code === 0) {
                         this.materialList = data.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -159,7 +159,7 @@ export default {
                 if (data.code === 0) {
                     this.dataList = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -197,7 +197,7 @@ export default {
                             this.$refs[formName].resetFields();
                             this.GetList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 } else {
@@ -232,9 +232,11 @@ export default {
                         });
                         this.GetList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         }
     }
@@ -244,14 +246,12 @@ export default {
 <style scoped lang="scss">
 .dialog__class {
     border-radius: 6px !important;
-
     .el-dialog__header {
         height: 59px;
         color: #fff;
         font-size: 20px;
         background: rgba(24, 144, 255, 1);
         border-radius: 6px 6px 0 0;
-
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }

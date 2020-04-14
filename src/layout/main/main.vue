@@ -1,14 +1,14 @@
 <template>
     <div class="site-wrapper" :class="{ 'site-sidebar--fold': sidebarFold }">
         <template>
-            <main-navbar :updatePassword="updatePassword" />
+            <main-navbar :update-password="updatePassword" />
             <main-sidebar />
             <div class="site-content__wrapper SelfScrollbar" :style="{ 'min-height': documentClientHeight + 'px' }">
                 <main-content />
             </div>
             <scroll-top />
         </template>
-        <update-pass v-if="pasVisible" id="upPass" ref="upPass" :refreshDataList="refreshDataList" />
+        <update-pass v-if="pasVisible" id="upPass" ref="upPass" :refresh-data-list="refreshDataList" />
     </div>
 </template>
 

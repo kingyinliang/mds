@@ -1,5 +1,5 @@
 <template>
-    <el-submenu v-if="!getChildren" :index="menu.id + ''" :popperClass="'site-sidebar--' + sidebarLayoutSkin + '-popper'">
+    <el-submenu v-if="!getChildren" :index="menu.id + ''" :popper-class="'site-sidebar--' + sidebarLayoutSkin + '-popper'">
         <template slot="title">
             <div @click="gotoRouteHandle(menu)">
                 <i :class="menu.menuIcon || ''" class="site-sidebar__menu-icon iconfont" />
@@ -7,7 +7,7 @@
             </div>
         </template>
         <template v-for="item in menu.list">
-            <sub-menu v-if="item.type != '3' && item.type != '2' && item.type != '4'" :key="item.id" :menu="item" :dynamicMenuRoutes="dynamicMenuRoutes" />
+            <sub-menu v-if="item.type != '3' && item.type != '2' && item.type != '4'" :key="item.id" :menu="item" :dynamic-menu-routes="dynamicMenuRoutes" />
         </template>
     </el-submenu>
     <el-menu-item v-else :index="menu.id + ''" @click="gotoRouteHandle(menu)">

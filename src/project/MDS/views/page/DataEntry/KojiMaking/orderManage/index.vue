@@ -5,7 +5,7 @@
                 <el-card class="searchCard">
                     <el-row type="flex">
                         <el-col>
-                            <el-form :model="params" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                            <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                                 <el-form-item label="生产工厂：">
                                     <el-select v-model="params.factoryId" size="small" class="selectwpx" style="width: 150px;" @change="changeOptions('factory')">
                                         <el-option label="请选择" value="" />
@@ -18,8 +18,14 @@
                                         <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
                                     </el-select>
                                 </el-form-item>
+                                <el-form-item label="发酵罐号：">
+                                    <el-select v-model="params.holderId" size="small" filterable style="width: 150px;">
+                                        <el-option label="请选择" value="" />
+                                        <el-option v-for="sole in holderSemList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
+                                    </el-select>
+                                </el-form-item>
                                 <el-form-item label="订单日期：" class="selectwpx">
-                                    <el-date-picker v-model="params.orderDate" size="small" type="date" valueFormat="yyyy-MM-dd" style="width: 150px;" />
+                                    <el-date-picker v-model="params.orderDate" size="small" type="date" value-format="yyyy-MM-dd" style="width: 150px;" />
                                 </el-form-item>
                                 <el-form-item label="订单号：">
                                     <el-input v-model.trim="params.orderNo" size="small" type="text" placeholder="请输入" style="width: 150px;" />
@@ -47,7 +53,7 @@
                 </el-card>
                 <el-row v-if="searched" :gutter="5" style="margin-top: 5px;">
                     <el-col :span="12">
-                        <el-card>
+                        <el-card style="min-height: 730px;">
                             <el-row style="margin-bottom: 5px;">
                                 <el-col style=" color: #000; font-weight: 500; font-size: 16px;">
                                     订单管理
@@ -55,7 +61,7 @@
                             </el-row>
                             <el-row>
                                 <el-col>
-                                    <el-table headerRowClassName="tableHead" :data="currentOrderList" border tooltipEffect="dark" :rowClassName="rowDelFlag" @row-dblclick="showDetail">
+                                    <el-table header-row-class-name="tableHead" :data="currentOrderList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="showDetail">
                                         <el-table-column type="index" width="55" label="序号" />
                                         <el-table-column label="订单状态" width="80">
                                             <template slot-scope="scope">
@@ -81,7 +87,7 @@
                                                 {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column width="70" label="数量" showOverflowTooltip>
+                                        <el-table-column width="70" label="数量" show-overflow-tooltip>
                                             <template slot-scope="scope">
                                                 {{ scope.row.planOutput }}
                                             </template>
@@ -91,7 +97,7 @@
                                                 <span>{{ scope.row.outputUnit }}</span>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column label="备注" width="100" showOverflowTooltip>
+                                        <el-table-column label="备注" width="100" show-overflow-tooltip>
                                             <template slot-scope="scope">
                                                 <span>{{ scope.row.remark }}</span>
                                             </template>
@@ -107,7 +113,7 @@
                                                 </el-button>
                                                 <el-button
                                                     type="text"
-                                                    :disabled="!(scope.row.orderStatus === '待审核' || scope.row.orderStatus === '已提交' || scope.row.orderStatus === '不通过' || scope.row.orderStatus === '通过') || !isAuth('sys:midInStorage:list')"
+                                                    :disabled="scope.row.orderStatus === '已同步' || scope.row.orderStatus === '未录入' || !isAuth('sys:midInStorage:list')"
                                                     @click="orderCheck(scope.row)"
                                                 >
                                                     <i class="iconfont factory-renzhengshenhe_huaban" />审核
@@ -118,12 +124,12 @@
                                 </el-col>
                             </el-row>
                             <el-row>
-                                <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                             </el-row>
                         </el-card>
                     </el-col>
                     <el-col v-if="showdetails" :span="12">
-                        <el-card>
+                        <el-card style="min-height: 730px;">
                             <el-row style="margin-bottom: 5px;">
                                 <el-col :span="12" style=" color: #000; font-weight: 500; font-size: 16px;">
                                     订单明细
@@ -136,7 +142,7 @@
                             </el-row>
                             <el-row>
                                 <el-col>
-                                    <el-table ref="multipleTable" headerRowClassName="tableHead" :data="orderDetailList" border tooltipEffect="dark" :rowClassName="rowDelFlag" @selection-change="handleChange" @row-dblclick="showModifyDetial">
+                                    <el-table ref="multipleTable" header-row-class-name="tableHead" :data="orderDetailList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @selection-change="handleChange" @row-dblclick="showModifyDetial">
                                         <el-table-column type="selection" width="55" />
                                         <el-table-column type="index" width="55" label="序号" />
                                         <el-table-column label="曲房状态" width="80">
@@ -181,12 +187,12 @@
                     </el-col>
                 </el-row>
             </div>
-            <el-dialog :closeOnClickModal="false" :visible.sync="dialogFormVisible" width="1200px" customClass="dialog__class">
+            <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="1200px" custom-class="dialog__class">
                 <div slot="title" class="title">
                     <span>订单分配</span>
                 </div>
                 <div class="orderForm">
-                    <el-table headerRowClassName="tableHead" :data="splitDetailList" border tooltipEffect="dark" :rowClassName="rowDelFlag">
+                    <el-table header-row-class-name="tableHead" :data="splitDetailList" border tooltip-effect="dark" :row-class-name="rowDelFlag">
                         <el-table-column type="index" width="55" label="序号" />
                         <el-table-column label="订单号" width="120">
                             <template slot-scope="scope">
@@ -213,7 +219,7 @@
                                 {{ scope.row.outputUnit }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="备注" width="80" showOverflowTooltip>
+                        <el-table-column label="备注" width="80" show-overflow-tooltip>
                             <template slot-scope="scope">
                                 <span>{{ scope.row.remark }}</span>
                             </template>
@@ -254,7 +260,7 @@
                                 <span>制曲日期</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-date-picker v-model="scope.row.inKjmDate" type="date" format="yyyy-MM-dd" valueFormat="yyyy-MM-dd" placeholder="选择日期" size="small" style="width: 135px;" />
+                                <el-date-picker v-model="scope.row.inKjmDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" size="small" style="width: 135px;" />
                             </template>
                         </el-table-column>
                         <el-table-column label="生产日期" width="165">
@@ -263,7 +269,7 @@
                                 <span>生产日期</span>
                             </template>
                             <template slot-scope="scope">
-                                <el-date-picker v-model="scope.row.productDate" type="date" format="yyyy-MM-dd" valueFormat="yyyy-MM-dd" placeholder="选择日期" size="small" style="width: 135px;" />
+                                <el-date-picker v-model="scope.row.productDate" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" size="small" style="width: 135px;" />
                             </template>
                         </el-table-column>
                         <el-table-column fixed="right" label="操作" width="60">
@@ -283,32 +289,32 @@
                     </el-button>
                 </div>
             </el-dialog>
-            <el-dialog :closeOnClickModal="false" title="明细修改" :visible.sync="dialogFormVisible2" width="450px">
+            <el-dialog :close-on-click-modal="false" title="明细修改" :visible.sync="dialogFormVisible2" width="450px">
                 <el-form ref="detailForm" :model="detailForm" class="orderForm">
-                    <el-form-item label="订单号" :labelWidth="formLabelWidth">
+                    <el-form-item label="订单号" :label-width="formLabelWidth">
                         <label>{{ detailForm.orderNo }}</label>
                     </el-form-item>
-                    <el-form-item label="入罐号" :labelWidth="formLabelWidth" required>
+                    <el-form-item label="入罐号" :label-width="formLabelWidth" required>
                         <el-select v-model="detailForm.inPotNo" placeholder="请选择" @change="changeOptions('inPot')">
                             <el-option v-for="(item, index) in potList" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="曲房" :labelWidth="formLabelWidth" required>
+                    <el-form-item label="曲房" :label-width="formLabelWidth" required>
                         <el-select v-model="detailForm.houseNo" placeholder="请选择" @change="changeOptions('house')">
                             <el-option v-for="(item, index) in kjmRoomList" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="连续蒸煮" :labelWidth="formLabelWidth">
+                    <el-form-item label="连续蒸煮" :label-width="formLabelWidth">
                         <el-select v-model="detailForm.cookingNo" placeholder="请选择" @change="changeOptions('cooking')">
                             <el-option value="" label="" />
                             <el-option v-for="(item, index) in continueList" :key="index" :label="item.holderName" :value="item.holderId" />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="制曲日期" :labelWidth="formLabelWidth" required>
-                        <el-date-picker v-model="detailForm.inKjmDate" type="date" valueFormat="yyyy-MM-dd" format="yyyy-MM-dd" />
+                    <el-form-item label="制曲日期" :label-width="formLabelWidth" required>
+                        <el-date-picker v-model="detailForm.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" />
                     </el-form-item>
-                    <el-form-item label="生产日期" :labelWidth="formLabelWidth" required>
-                        <el-date-picker v-model="detailForm.productDate" type="date" valueFormat="yyyy-MM-dd" format="yyyy-MM-dd" />
+                    <el-form-item label="生产日期" :label-width="formLabelWidth" required>
+                        <el-date-picker v-model="detailForm.productDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" />
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -361,10 +367,14 @@ export default class Index extends Vue {
     formLabelWidth = '120px';
     currPage = 1;
     pageSize = 10;
+    holderSemList = [];
 
     mounted() {
         this.getFactory();
         this.getWorkshop(this.params.factoryId);
+        if (this.params.workshopId) {
+            this.getSemHolderList(this.params.workshopId, this.params.workshopName);
+        }
         // this.retrieveHolders(this.params.workshopId, this.params.workshopName)
     }
 
@@ -386,7 +396,8 @@ export default class Index extends Vue {
         } else if (flag === 'workshop') {
             const item = this.workshopList.find(ele => ele['deptId'] === this.params.workshopId);
             this.params.workshopName = item ? item['deptName'] : '';
-            this.retrieveHolders(this.params.workshopId, this.params.workshopName);
+            this.getSemHolderList(this.params.workshopId, this.params.workshopName);
+            // this.retrieveHolders(this.params.workshopId, this.params.workshopName);
         } else if (flag === 'inPot') {
             const item = this.potList.find(ele => ele['holderId'] === this.detailForm.inPotNo);
             this.detailForm.inPotName = item ? item['holderName'] : '';
@@ -426,6 +437,26 @@ export default class Index extends Vue {
                 }
             });
         }
+    }
+
+    // 表头发酵罐
+    /* eslint-disable @typescript-eslint/camelcase */
+    getSemHolderList(workshopId, workshopName) {
+        const params = {
+            dept_id: workshopId,
+            workShopName: workshopName,
+            type: 'holder_type',
+            holder_type: '001',
+            pageSize: 9999,
+            currPage: 1
+        }
+        Vue.prototype.$http(`${BASICDATA_API.CONTAINERLIST_API}`, 'POST', params, false, false, false).then(({ data }) => {
+            if (data.code === 0) {
+                this.holderSemList = data.page.list;
+            } else {
+                Vue.prototype.$errorTost(data.msg);
+            }
+        })
     }
 
     // 入罐/曲房/蒸煮
@@ -494,7 +525,8 @@ export default class Index extends Vue {
             workShop: this.params.workshopId,
             orderDate: this.params.orderDate,
             orderNo: this.params.orderNo,
-            orderStatus: this.params.orderStatus
+            orderStatus: this.params.orderStatus,
+            holderId: this.params.holderId
         };
         this.retrieveOrderData(params);
     }
@@ -538,6 +570,8 @@ export default class Index extends Vue {
             type: 'warning'
         }).then(() => {
             row.delFlag = '1';
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 
@@ -722,6 +756,8 @@ export default class Index extends Vue {
                 .catch(err => {
                     console.log('catch data::', err);
                 });
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 
@@ -841,23 +877,19 @@ export default class Index extends Vue {
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(232, 232, 232, 1);
     border-radius: 2px;
-
     .box-item-top {
         height: 178px;
         padding: 10px;
         padding-bottom: 0;
         border-bottom: 1px solid rgba(232, 232, 232, 1);
-
         .box-item-title {
             display: flex;
             flex: 1;
             justify-content: space-between;
             height: 34px;
-
             .box-item-title-name {
                 display: flex;
                 flex: 1;
-
                 :first-child {
                     width: 30px;
                     height: 30px;
@@ -869,7 +901,6 @@ export default class Index extends Vue {
                     background: #ffbf00;
                     border-radius: 15px;
                 }
-
                 :nth-child(2) {
                     margin-top: 4px;
                     margin-left: 5px;
@@ -879,7 +910,6 @@ export default class Index extends Vue {
                     line-height: 22px;
                 }
             }
-
             .box-item-title-state {
                 flex: 1;
                 margin-top: 4px;
@@ -888,7 +918,6 @@ export default class Index extends Vue {
                 font-size: 14px;
                 line-height: 20px;
                 text-align: right;
-
                 &::before {
                     display: inline-block;
                     width: 6px;
@@ -900,37 +929,31 @@ export default class Index extends Vue {
                 }
             }
         }
-
         .box-item-container {
             display: flex;
             flex: 1;
             justify-content: space-between;
             height: 129px;
-
             .box-item-container-left {
                 display: flex;
                 justify-content: center;
                 width: 130px;
                 padding-top: 10px;
-
                 .box-item-container-img {
                     width: 94px;
                     height: 86px;
                     background: url("~@/assets/img/fajiaoguan.png");
                 }
             }
-
             .box-item-container-right {
                 display: flex;
                 flex: 1;
                 flex-direction: column;
                 margin-left: 10px;
-
                 .box-item-container-item {
                     display: flex;
                     flex: 1;
                     justify-content: space-between;
-
                     .name {
                         width: 60px;
                         color: rgba(0, 0, 0, 0.45);
@@ -938,7 +961,6 @@ export default class Index extends Vue {
                         font-size: 12px;
                         line-height: 20px;
                     }
-
                     .detail {
                         flex: 1;
                         color: rgba(0, 0, 0, 0.65);
@@ -950,7 +972,6 @@ export default class Index extends Vue {
             }
         }
     }
-
     .box-item-bottom {
         display: flex;
         justify-content: space-between;
@@ -958,7 +979,6 @@ export default class Index extends Vue {
         height: 40px;
         background: rgba(247, 249, 250, 1);
         border-radius: 0 0 2px 2px;
-
         .box-item-bottom-item {
             flex: 1;
             color: rgba(0, 0, 0, 0.65);
@@ -966,14 +986,12 @@ export default class Index extends Vue {
             font-size: 12px;
             line-height: 40px;
             text-align: center;
-
             &:hover {
                 color: #fff;
                 background: #1890ff;
                 cursor: pointer;
             }
         }
-
         .box-item-bottom-split {
             width: 1px;
             height: 16px;
@@ -982,25 +1000,21 @@ export default class Index extends Vue {
         }
     }
 }
-
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
-
 .operator {
     display: flex;
     color: rgba(24, 144, 255, 1);
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
-
     &:hover {
         cursor: pointer;
     }
 }
-
 .operator .split {
     width: 14px;
     height: 22px;
@@ -1008,7 +1022,6 @@ export default class Index extends Vue {
     background-repeat: no-repeat;
     background-position: center center;
 }
-
 .operator .check {
     width: 14px;
     height: 22px;
@@ -1029,23 +1042,19 @@ export default class Index extends Vue {
 <style lang="scss">
 .dialog__class {
     border-radius: 6px 6px 0 0 !important;
-
     .el-dialog__header {
         height: 59px;
         color: #fff;
         font-size: 20px;
         background: rgba(24, 144, 255, 1);
         border-radius: 6px 6px 0 0;
-
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }
     }
-
     .reqI {
         color: red;
     }
-
     .rowDel {
         display: none;
     }

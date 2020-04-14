@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard  newCard" style="margin-bottom: 5px;">
-            <el-form :inline="true" size="small" :model="formHeader" labelWidth="80px" class="topform multi_row">
+            <el-form :inline="true" size="small" :model="formHeader" label-width="80px" class="topform multi_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
                         <el-option label="请选择" value="" />
@@ -15,7 +15,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择" valueFormat="yyyy-MM-dd" style="width: 180px;" />
+                    <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 180px;" />
                 </el-form-item>
                 <el-form-item label="生产订单：">
                     <el-input v-model="formHeader.orderNo" type="text" clearable style="width: 140px;" />
@@ -28,9 +28,9 @@
             </el-form>
         </el-card>
         <el-card class="tableCard">
-            <el-form ref="pstngDate" :model="formHeader" :rules="plantListRule" size="small" :inline="true" labelPosition="right" labelWidth="100px" class="topforms">
+            <el-form ref="pstngDate" :model="formHeader" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="100px" class="topforms">
                 <el-form-item label="记账日期：" prop="pstngDate">
-                    <el-date-picker v-model="formHeader.pstngDate" type="date" placeholder="选择" valueFormat="yyyy-MM-dd" style="width: 160px;" />
+                    <el-date-picker v-model="formHeader.pstngDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
                 </el-form-item>
                 <el-form-item label="抬头文本：">
                     <el-input v-model="formHeader.headerTxt" placeholder="抬头文本" style="width: 160px;" />
@@ -44,7 +44,7 @@
                     </el-button>
                 </el-form-item>
             </el-form>
-            <el-table ref="table1" headerRowClassName="tableHead" :data="AuditList" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+            <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" :selectable="checkboxT" width="34" />
                 <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
                 <el-table-column label="审核状态" width="100">
@@ -52,34 +52,34 @@
                         {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? (scope.row.interfaceReturnStatus === '0' ? '接口失败' : '审核通过') : scope.row.status === 'noPass' ? '审核不通过' : '' }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="productDate" label="生产日期" :showOverflowTooltip="true" width="80" />
-                <el-table-column prop="orderNo" label="生产订单" :showOverflowTooltip="true" width="80" />
-                <el-table-column prop="confActiUnit3" label="生产物料" :showOverflowTooltip="true" width="120">
+                <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="confActiUnit3" label="生产物料" :show-overflow-tooltip="true" width="120">
                     <template slot-scope="scope">
                         {{ scope.row.materialCodeH + ' ' + scope.row.materialNameH }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="planOutput" label="计划生产数量" :showOverflowTooltip="true" width="110" />
-                <el-table-column prop="outputUnitName" label="单位" :showOverflowTooltip="true" width="50" />
-                <el-table-column prop="confActiUnit3" label="组件物料" :showOverflowTooltip="true" width="120">
+                <el-table-column prop="planOutput" label="计划生产数量" :show-overflow-tooltip="true" width="110" />
+                <el-table-column prop="outputUnitName" label="单位" :show-overflow-tooltip="true" width="50" />
+                <el-table-column prop="confActiUnit3" label="组件物料" :show-overflow-tooltip="true" width="120">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="entryQnt" label="发料组件数量" :showOverflowTooltip="true" width="110" />
-                <el-table-column prop="entryUomName" label="单位" :showOverflowTooltip="true" width="50" />
-                <el-table-column prop="batch" label="物料批次" :showOverflowTooltip="true" width="100">
+                <el-table-column prop="entryQnt" label="发料组件数量" :show-overflow-tooltip="true" width="110" />
+                <el-table-column prop="entryUomName" label="单位" :show-overflow-tooltip="true" width="50" />
+                <el-table-column prop="batch" label="物料批次" :show-overflow-tooltip="true" width="100">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.batch" size="small" :disabled="!scope.row.redact" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="stgeLoc" label="出库库位" :showOverflowTooltip="true" width="80">
+                <el-table-column prop="stgeLoc" label="出库库位" :show-overflow-tooltip="true" width="80">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.stgeLoc" size="small" :disabled="!scope.row.redact" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="manufacturer" label="厂家" :showOverflowTooltip="true" width="80" />
-                <el-table-column prop="workShopRemar" label="车间备注" :showOverflowTooltip="true" width="80" />
+                <el-table-column prop="manufacturer" label="厂家" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="workShopRemar" label="车间备注" :show-overflow-tooltip="true" width="80" />
                 <el-table-column label="移动类型" width="78">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.moveType" size="small" :disabled="!scope.row.redact" />
@@ -93,10 +93,10 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="stckType" label="库存类型" :showOverflowTooltip="true" width="80" />
-                <el-table-column prop="interfaceReturn" label="接口回写" :showOverflowTooltip="true" width="80" />
-                <el-table-column prop="memo" label="审核意见" :showOverflowTooltip="true" width="80" />
-                <el-table-column prop="remark" label="备注" :showOverflowTooltip="true" width="80">
+                <el-table-column prop="stckType" label="库存类型" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" width="80">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" placeholder="手工录入" size="small" :disabled="!scope.row.redact" />
                     </template>
@@ -113,7 +113,7 @@
                 </el-table-column>
             </el-table>
         </el-card>
-        <el-dialog title="审核拒绝" :closeOnClickModal="false" :visible.sync="visible">
+        <el-dialog title="审核拒绝" :close-on-click-modal="false" :visible.sync="visible">
             <p style="line-height: 42px;">
                 请填写不通过原因
             </p>
@@ -123,7 +123,7 @@
                 <el-button type="primary" @click="repulseAutio()">确定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="反审" :closeOnClickModal="false" :visible.sync="visibleRe">
+        <el-dialog title="反审" :close-on-click-modal="false" :visible.sync="visibleRe">
             <p style="line-height: 42px;">
                 请填写反审意见
             </p>
@@ -206,7 +206,7 @@ export default {
                     this.formHeader.pageSize = data.page.pageSize;
                     this.formHeader.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -230,7 +230,7 @@ export default {
                         this.AuditList.splice(this.AuditList.length, 0, {});
                         this.AuditList.splice(this.AuditList.length - 1, 1);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     this.GetDataList();
                 });
@@ -270,9 +270,11 @@ export default {
                                     });
                                     this.GetDataList();
                                 } else {
-                                    this.$error_SHINHO(data.msg);
+                                    this.$errorTost(data.msg);
                                 }
                             });
+                        }).catch(() => {
+                            // this.$infoTost('已取消删除');
                         });
                     }
                 });
@@ -305,10 +307,12 @@ export default {
                                     });
                                     this.GetDataList();
                                 } else {
-                                    this.$error_SHINHO(data.msg);
+                                    this.$errorTost(data.msg);
                                     this.GetDataList();
                                 }
                             });
+                        }).catch(() => {
+                            // this.$infoTost('已取消删除');
                         });
                     }
                 });
@@ -341,9 +345,11 @@ export default {
                             type: 'success'
                         });
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 获取移动原因
@@ -354,7 +360,7 @@ export default {
                 if (data.code === 0) {
                     this.MoveReas = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

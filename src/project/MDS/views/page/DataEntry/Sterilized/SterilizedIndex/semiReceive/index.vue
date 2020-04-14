@@ -3,7 +3,7 @@
         <el-card class="searchCard  newCard" style="margin-bottom: 5px;">
             <el-row type="flex">
                 <el-col>
-                    <form-head :formHeader="formHeader" />
+                    <form-head :form-header="formHeader" />
                 </el-col>
                 <el-col style="width: 100px;">
                     <div
@@ -42,9 +42,9 @@
                 <span slot="label" class="spanview">
                     原汁领用
                 </span>
-                <el-table headerRowClassName="tableHead" :data="MaterialDate" :rowClassName="RowDelFlag" border tooltipEffect="dark">
+                <el-table header-row-class-name="tableHead" :data="MaterialDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
                     <el-table-column type="index" width="55" label="序号" />
-                    <el-table-column label="领用物料" :showOverflowTooltip="true">
+                    <el-table-column label="领用物料" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                         </template>
@@ -68,7 +68,7 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column width="200" label="罐内物料" showOverflowTooltip>
+                    <el-table-column width="200" label="罐内物料" show-overflow-tooltip>
                         <template slot-scope="scope">
                             <i v-if="scope.row.holderMaterialCode !== null">{{ scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName }}</i>
                         </template>
@@ -102,19 +102,19 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <auditLog :tableData="DataAudit" />
+                <audit-log :table-data="DataAudit" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     异常记录
                 </span>
-                <exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader" />
+                <exc-record ref="excrecord" :is-redact="isRedact" :order="formHeader" />
             </el-tab-pane>
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">
                     文本记录
                 </span>
-                <text-record ref="textrecord" :isRedact="isRedact" />
+                <text-record ref="textrecord" :is-redact="isRedact" />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -182,7 +182,7 @@ export default {
                         }
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -215,7 +215,7 @@ export default {
                 if (data.code === 0) {
                     this.PotList = data.halfList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 if (this.formHeader.status !== '') {
                     this.GetDataList();
@@ -261,6 +261,8 @@ export default {
                 } else {
                     row.delFlag = '1';
                 }
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag
@@ -302,6 +304,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -325,7 +329,6 @@ export default {
                                 return false;
                             }
                         } else if (this.MaterialDate1.filter(it => it.holderId === item.holderId).length) {
-                                console.log(Number(this.PotList.filter(it => item.holderId === it.holderId)[0].amount) + Number(this.MaterialDate1.filter(it => it.holderId === item.holderId)[0].receiveAmount));
                                 if (Number(this.PotList.filter(it => item.holderId === it.holderId)[0].amount) + Number(this.MaterialDate1.filter(it => it.holderId === item.holderId)[0].receiveAmount) < item.receiveAmount) {
                                     this.$warningTost(`${item.holderName}库存不足,请调整`);
                                     return false;
@@ -431,7 +434,7 @@ export default {
                     this.$refs.excrecord.GetequipmentType(this.formHeader.productLine);
                     this.$refs.excrecord.getDataList(this.formHeader.factory);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         }

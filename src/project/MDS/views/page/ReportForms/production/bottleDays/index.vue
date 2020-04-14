@@ -2,7 +2,7 @@
     <div class="header_main">
         <div>
             <el-card class="searchCard" style="margin-bottom: 5px;">
-                <el-form :model="plantList" :inline="true" size="small" labelWidth="70px" class="multi_row clearfix" style="font-size: 0;">
+                <el-form :model="plantList" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
                     <el-form-item label="生产工厂：">
                         <el-select v-model="plantList.factory" style="width: 170px;">
                             <el-option label="请选择" value="" />
@@ -10,7 +10,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="月份：">
-                        <el-date-picker v-model="plantList.productDate" type="month" placeholder="请选择" valueFormat="yyyy-MM" style="width: 170px;" />
+                        <el-date-picker v-model="plantList.productDate" type="month" placeholder="请选择" value-format="yyyy-MM" style="width: 170px;" />
                     </el-form-item>
                     <el-form-item class="floatr">
                         <el-button v-if="isAuth('report:fromEs:chuipingDaily')" type="primary" size="small" @click="GetDataList(true)">
@@ -24,7 +24,7 @@
             </el-card>
             <el-tabs v-model="activeName" type="border-card" style="margin-top: 5px;">
                 <el-tab-pane name="0" label="吹瓶一车间">
-                    <el-table :data="dataList" height="400" border headerRowClassName="tableHead">
+                    <el-table :data="dataList" height="400" border header-row-class-name="tableHead">
                         <el-table-column label="名称" prop="theDate" />
                         <el-table-column label="瓶胚领用/个">
                             <el-table-column label="普利思" prop="plsRec" />
@@ -43,7 +43,7 @@
                     </el-table>
                 </el-tab-pane>
                 <el-tab-pane name="1" label="吹瓶二车间">
-                    <el-table :data="dataList2" height="400" border headerRowClassName="tableHead">
+                    <el-table :data="dataList2" height="400" border header-row-class-name="tableHead">
                         <el-table-column label="名称" prop="theDate" />
                         <el-table-column label="瓶胚领用/个">
                             <el-table-column label="普利思" prop="plsRec" />
@@ -98,7 +98,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -117,14 +117,12 @@ export default {
                     this.dataList = data.list1;
                     this.dataList2 = data.list2;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
         // 导出
         FormExportExcel() {
-
-            // console.log('123')
             exportFile(`${REP_API.BOTTLE_REPORT_API}`, '吹瓶日报表', this);
         }
     }

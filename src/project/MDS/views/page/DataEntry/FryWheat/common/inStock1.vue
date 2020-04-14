@@ -75,13 +75,13 @@
                     <!--table-->
                     <el-row style="margin-top: 20px;">
                         <el-col>
-                            <el-table headerRowClassName="tableHead" :data="wheatDataList" border tooltipEffect="dark" :rowClassName="rowDelFlag" @row-dblclick="modifyOldRecord">
+                            <el-table header-row-class-name="tableHead" :data="wheatDataList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="modifyOldRecord">
                                 <el-table-column label="日期" width="130">
                                     <template slot-scope="scope">
                                         {{ scope.row.inPortDate | formatDate }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="麦粉计量仓" :showOverflowTooltip="true" width="120">
+                                <el-table-column label="麦粉计量仓" :show-overflow-tooltip="true" width="120">
                                     <template slot-scope="scope">
                                         {{ scope.row.flourDeviceName }}
                                     </template>
@@ -142,29 +142,29 @@
         <!--审批-->
         <el-row>
             <el-col :span="24">
-                <auditLog :tableData="readAudit" />
+                <audit-log :table-data="readAudit" />
             </el-col>
         </el-row>
-        <el-dialog :closeOnClickModal="false" :title="stockForm.flourDeviceName" :visible.sync="dialogFormVisible" width="450px">
+        <el-dialog :close-on-click-modal="false" :title="stockForm.flourDeviceName" :visible.sync="dialogFormVisible" width="450px">
             <el-form ref="stockForm" :model="stockForm" :rules="dataRule">
-                <el-form-item label="粮仓" :labelWidth="formLabelWidth" required prop="wheatDeviceId">
-                    <el-select v-model="stockForm.wheatDeviceId" valueKey="wheatDeviceId" placeholder="请选择粮仓" style="width: 220px;" :disabled="!isRedact" @change="changeWheatContainer">
+                <el-form-item label="粮仓" :label-width="formLabelWidth" required prop="wheatDeviceId">
+                    <el-select v-model="stockForm.wheatDeviceId" value-key="wheatDeviceId" placeholder="请选择粮仓" style="width: 220px;" :disabled="!isRedact" @change="changeWheatContainer">
                         <el-option v-for="(item, index) in wheatContainerList" :key="index" :label="item.holderName" :value="item.holderId" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="起始(KG)" :labelWidth="formLabelWidth" required prop="startWeight">
+                <el-form-item label="起始(KG)" :label-width="formLabelWidth" required prop="startWeight">
                     <el-input v-model.number="stockForm.startWeight" tyle="number" style="width: 220px;" :disabled="!isRedact" />
                 </el-form-item>
-                <el-form-item label="结束(KG)" :labelWidth="formLabelWidth" required prop="endWeight">
+                <el-form-item label="结束(KG)" :label-width="formLabelWidth" required prop="endWeight">
                     <el-input v-model.number="stockForm.endWeight" tyle="number" style="width: 220px;" :disabled="!isRedact" />
                 </el-form-item>
-                <el-form-item label="入库批次" :labelWidth="formLabelWidth" required prop="inPortBatch">
+                <el-form-item label="入库批次" :label-width="formLabelWidth" required prop="inPortBatch">
                     <el-input v-model="stockForm.inPortBatch" maxlength="10" style="width: 220px;" :disabled="!isRedact" />
                 </el-form-item>
-                <el-form-item label="操作时间" :labelWidth="formLabelWidth">
+                <el-form-item label="操作时间" :label-width="formLabelWidth">
                     <label>{{ stockForm.changed }}</label>
                 </el-form-item>
-                <el-form-item label="操作人" :labelWidth="formLabelWidth">
+                <el-form-item label="操作人" :label-width="formLabelWidth">
                     <label>{{ stockForm.changer }}</label>
                 </el-form-item>
             </el-form>
@@ -282,7 +282,7 @@ export default {
                     if (data.code === 0) {
                         this.flourContainerList = data.page.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -310,7 +310,7 @@ export default {
                     if (data.code === 0) {
                         this.wheatContainerList = data.page.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -358,7 +358,7 @@ export default {
                         }
                         this.$emit('setInStorageState', inState);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -444,7 +444,7 @@ export default {
                 this.$http(WHT_API.INSTORAGESAVE_API, 'POST', this.wheatDataList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -468,7 +468,7 @@ export default {
                 this.$http(`${WHT_API.INSTORAGESUBMIT_API}`, 'POST', this.wheatDataList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -499,6 +499,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // RowDelFlag
@@ -520,7 +522,6 @@ export default {
     height: 184px;
     border: 1px solid #e9e9e9;
     border-radius: 2px;
-
     .stock-img {
         float: left;
         width: 48px;
@@ -532,7 +533,6 @@ export default {
         border-radius: 24px;
         // ~ 表示根目录，@表示src目录
     }
-
     .stock-text {
         float: left;
         margin-top: 30px;
@@ -541,7 +541,6 @@ export default {
         font-size: 16px;
         font-family: PingFangSC-Medium, sans-serif;
     }
-
     .stock-button {
         height: 48px;
         margin-top: 62px;
@@ -551,21 +550,17 @@ export default {
         border-top: 1px solid #e9e9e9;
         border-radius: 0 0 2px 2px;
     }
-
     .enabled {
         background: #f7f9fa;
-
         &:hover {
             color: #fff;
             background: #1890ff;
             cursor: pointer;
         }
     }
-
     .disabled {
         color: rgba(0, 0, 0, 0.6);
         background: #f7f9fa;
-
         &:hover {
             cursor: not-allowed;
         }

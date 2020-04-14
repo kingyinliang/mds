@@ -4,9 +4,9 @@
             <el-card>
                 <div class="clearfix">
                     <el-row style="float: right;">
-                        <el-form :inline="true" :model="form" size="small" labelWidth="68px" class="topforms2" @keyup.enter.native="querys(true)" @submit.native.prevent>
+                        <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="querys(true)" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="form.param" placeholder="物料/物料类型" suffixIcon="el-icon-search" />
+                                <el-input v-model="form.param" placeholder="物料/物料类型" suffix-icon="el-icon-search" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button v-if="isAuth('sys:sapMaterial:list')" type="primary" size="small" @click="querys(true)">
@@ -20,28 +20,28 @@
                     </el-row>
                 </div>
                 <el-row>
-                    <el-table ref="table1" headerRowClassName="tableHead" :data="saplist" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column :showOverflowTooltip="true" label="物料">
+                    <el-table ref="table1" header-row-class-name="tableHead" :data="saplist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                        <el-table-column :show-overflow-tooltip="true" label="物料">
                             <template slot-scope="scope">
                                 <el-button style="padding: 0;" type="text" @click="showdetail(scope.row.materialId)">
                                     {{ scope.row.materialCode }} {{ scope.row.materialName }}
                                 </el-button>
                             </template>
                         </el-table-column>
-                        <el-table-column :showOverflowTooltip="true" label="工厂" width="180" prop="factoryName" />
-                        <el-table-column :showOverflowTooltip="true" label="物料类型" width="180">
+                        <el-table-column :show-overflow-tooltip="true" label="工厂" width="180" prop="factoryName" />
+                        <el-table-column :show-overflow-tooltip="true" label="物料类型" width="180">
                             <template slot-scope="scope">
                                 {{ scope.row.materialTypeCode }}
                                 {{ scope.row.materialTypeName }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="basicUnit" label="基本单位" :showOverflowTooltip="true" width="79" />
-                        <el-table-column prop="productUnit" label="生产单位" :showOverflowTooltip="true" width="79" />
+                        <el-table-column prop="basicUnit" label="基本单位" :show-overflow-tooltip="true" width="79" />
+                        <el-table-column prop="productUnit" label="生产单位" :show-overflow-tooltip="true" width="79" />
                         <el-table-column prop="syncDate" label="同步日期" width="100" />
                     </el-table>
                 </el-row>
                 <el-row>
-                    <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
@@ -90,7 +90,7 @@ export default {
                     this.totalCount = data.page.totalCount;
                     this.currPage = data.page.currPage;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -115,7 +115,7 @@ export default {
                     }, 4000);
                 } else {
                     this.loading.close();
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -145,7 +145,7 @@ export default {
                     } else {
                         this.loading.close();
                         clearInterval(this.sapTime);
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(() => {

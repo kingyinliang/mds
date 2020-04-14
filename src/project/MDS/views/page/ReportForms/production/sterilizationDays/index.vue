@@ -2,7 +2,7 @@
     <div class="header_main">
         <div>
             <el-card class="searchCard" style="margin-bottom: 5px;">
-                <el-form :model="plantList" :inline="true" size="small" labelWidth="70px" class="multi_row clearfix" style="font-size: 0;">
+                <el-form :model="plantList" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
                     <el-form-item label="生产工厂：">
                         <el-select v-model="plantList.factory" style="width: 170px;">
                             <el-option label="请选择" value="" />
@@ -10,7 +10,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="月份：">
-                        <el-date-picker v-model="plantList.productDate" type="month" placeholder="请选择" valueFormat="yyyy-MM" style="width: 170px;" />
+                        <el-date-picker v-model="plantList.productDate" type="month" placeholder="请选择" value-format="yyyy-MM" style="width: 170px;" />
                     </el-form-item>
                     <el-form-item class="floatr">
                         <el-button v-if="isAuth('report:fromEs:shajunDaily')" type="primary" size="small" @click="GetDataList(true)">
@@ -24,14 +24,14 @@
             </el-card>
             <el-tabs v-model="activeName" type="border-card" style="margin-top: 5px;">
                 <el-tab-pane name="0" label="杀菌一车间">
-                    <el-table :data="dataList" height="400" border headerRowClassName="tableHead" :spanMethod="objectSpanMethod">
-                        <el-table-column label="产出物料" prop="materialH" width="190" showOverflowTooltip fixed />
-                        <el-table-column label="投入物料" prop="material" width="180" showOverflowTooltip fixed />
+                    <el-table :data="dataList" height="400" border header-row-class-name="tableHead" :span-method="objectSpanMethod">
+                        <el-table-column label="产出物料" prop="materialH" width="190" show-overflow-tooltip fixed />
+                        <el-table-column label="投入物料" prop="material" width="180" show-overflow-tooltip fixed />
                         <el-table-column label="月汇总" width="180" fixed>
                             <el-table-column label="产出/方" prop="monthOutput" />
                             <el-table-column label="投入/方" prop="monthInput" width="110" />
                         </el-table-column>
-                        <el-table-column label="出品率" prop="monthProductRate" width="90" showOverflowTooltip fixed />
+                        <el-table-column label="出品率" prop="monthProductRate" width="90" show-overflow-tooltip fixed />
                         <el-table-column v-for="(item, index) in daySizeList" :key="index" :label="item + '日'">
                             <el-table-column label="产出/方" :prop="`output${item}`" />
                             <el-table-column label="投入/方" :prop="`input${item}`" />
@@ -39,14 +39,14 @@
                     </el-table>
                 </el-tab-pane>
                 <el-tab-pane name="1" label="杀菌二车间">
-                    <el-table :data="dataList2" height="400" border headerRowClassName="tableHead" :spanMethod="objectSpanMethod2">
-                        <el-table-column label="产出物料" prop="materialH" width="190" showOverflowTooltip fixed />
-                        <el-table-column label="投入物料" prop="material" width="180" showOverflowTooltip fixed />
+                    <el-table :data="dataList2" height="400" border header-row-class-name="tableHead" :span-method="objectSpanMethod2">
+                        <el-table-column label="产出物料" prop="materialH" width="190" show-overflow-tooltip fixed />
+                        <el-table-column label="投入物料" prop="material" width="180" show-overflow-tooltip fixed />
                         <el-table-column label="月汇总" width="180" fixed>
                             <el-table-column label="产出/方" prop="monthOutput" />
                             <el-table-column label="投入/方" prop="monthInput" width="110" />
                         </el-table-column>
-                        <el-table-column label="出品率" prop="monthProductRate" width="90" showOverflowTooltip fixed />
+                        <el-table-column label="出品率" prop="monthProductRate" width="90" show-overflow-tooltip fixed />
                         <el-table-column v-for="(item, index) in daySizeList" :key="index" :label="item + '日'">
                             <el-table-column label="产出/方" :prop="`output${item}`" />
                             <el-table-column label="投入/方" :prop="`input${item}`" />
@@ -118,7 +118,7 @@ export default {
                     this.merge(this.dataList, 1);
                     this.merge(this.dataList2, 2);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

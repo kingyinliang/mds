@@ -1,5 +1,5 @@
 <template>
-    <el-form :inline="true" :model="formHeader" size="small" labelWidth="70px" class="topform">
+    <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform">
         <el-form-item label="生产车间：">
             <p class="el-input">
                 {{ formHeader.workShopName || '' }}
@@ -39,7 +39,7 @@
             </p>
         </el-form-item>
         <el-form-item label="生产日期：">
-            <el-date-picker v-model="formHeader.productDate" size="small" type="date" :disabled="!isRedact" valueFormat="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 145px;" @change="updateProductDate" />
+            <el-date-picker v-model="formHeader.productDate" size="small" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 145px;" @change="updateProductDate" />
         </el-form-item>
         <el-form-item label="提交人员：">
             <p class="el-input">
@@ -70,9 +70,7 @@ export default {
     props: {
         formHeader: {
             type: Object,
-            default: () => {
-            //    Object
-            }
+            default: function() { return {} }
         },
         pro: Boolean,
         isRedact: Boolean,
@@ -87,9 +85,6 @@ export default {
         };
     },
     computed: {},
-    mounted() {
-    //    mounted
-    },
     methods: {
         updateProductDate: function(val) {
             this.$emit('updateProductDateCallback', val);
@@ -118,12 +113,10 @@ export default {
 </style>
 <style lang="scss" scoped>
 @import "@/assets/scss/_common.scss";
-
 .el-form-item--mini.el-form-item,
 .el-form-item--small.el-form-item {
     margin-bottom: 8px !important;
 }
-
 .el-input {
     width: 145px !important;
     overflow: hidden;

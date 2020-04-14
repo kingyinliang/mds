@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table :queryFormData="queryFormData" :listInterface="listInterface" :queryAuth="'report:form:listJWZPIS'" :column="column" :exportExcel="true" :exportOption="exportOption" />
+        <query-table :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:form:listJWZPIS'" :column="column" :export-excel="true" :export-option="exportOption" />
     </div>
 </template>
 

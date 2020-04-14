@@ -1,7 +1,7 @@
 <template>
-    <el-dialog :title="type ? (id ? '修改类型' : '新增类型') : id ? '修改参数' : '新增参数'" :closeOnClickModal="false" :visible.sync="visible">
+    <el-dialog :title="type ? (id ? '修改类型' : '新增类型') : id ? '修改参数' : '新增参数'" :close-on-click-modal="false" :visible.sync="visible">
         <div style="height: 330px; overflow: auto;">
-            <el-form ref="dataForm" :model="dataForm" :rules="dataForm" labelWidth="125px" @keyup.enter.native="dataFormSubmit()">
+            <el-form ref="dataForm" :model="dataForm" :rules="dataForm" label-width="125px" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="工厂：">
                     <span v-if="!type">{{ dataForm.factoryName }}</span>
                     <el-select v-if="type" v-model="dataForm.factory" @change="changeFactory">
@@ -90,13 +90,13 @@ export default {
                 this.$http(`${this.id ? SYSTEMSETUP_API.PARAMETERUPDATE_API : SYSTEMSETUP_API.PARAMETERADD_API}`, 'POST', this.dataForm).then(({ data }) => {
                     if (data.code === 0) {
                         this.dataForm = {};
-                        this.$success_SHINHO('操作成功');
+                        this.$successTost('操作成功');
                         this.submitType = true;
                         this.visible = false;
                         this.$emit('refreshDataList');
                     } else {
                         this.submitType = true;
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }

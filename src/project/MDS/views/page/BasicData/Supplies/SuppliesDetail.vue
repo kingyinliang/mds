@@ -1,6 +1,6 @@
 <template>
-    <el-dialog class="sapdetail" title="物料详情" :closeOnClickModal="false" :visible.sync="visible">
-        <el-form :inline="true" :model="detailDialog" size="small" labelWidth="124px">
+    <el-dialog class="sapdetail" title="物料详情" :close-on-click-modal="false" :visible.sync="visible">
+        <el-form :inline="true" :model="detailDialog" size="small" label-width="124px">
             <div class="title">
                 <p>基础信息：</p>
             </div>
@@ -63,7 +63,7 @@ export default {
                     if (data.code === 0) {
                         this.detailDialog = data.sapMaterialItemEntity;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .then(() => {

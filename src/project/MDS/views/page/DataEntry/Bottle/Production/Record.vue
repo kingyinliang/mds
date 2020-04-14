@@ -3,17 +3,17 @@
         <el-button type="primary" size="small" :disabled="!isRedact" style="float: right; margin-bottom: 5px;" @click="AddRecord">
             新增
         </el-button>
-        <el-table headerRowClassName="tableHead" :rowClassName="RowDelFlag" :data="RecordList.filter(item => item.delFlag === '0').slice((currPage - 1) * pageSize, currPage * pageSize)" border tooltipEffect="dark">
+        <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="RecordList.filter(item => item.delFlag === '0').slice((currPage - 1) * pageSize, currPage * pageSize)" border tooltip-effect="dark">
             <el-table-column type="index" label="序号" width="55" />
             <el-table-column label="时间" prop="kjmWorkShopName">
                 <template slot="header">
                     <i class="reqI">*</i><span>时间</span>
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.date" style="width: 100%;" size="mini" type="datetime" :disabled="!isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked'" valueFormat="yyyy-MM-dd  HH:mm:ss" format="yyyy-MM-dd  HH:mm" />
+                    <el-date-picker v-model="scope.row.date" style="width: 100%;" size="mini" type="datetime" :disabled="!isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked'" value-format="yyyy-MM-dd  HH:mm:ss" format="yyyy-MM-dd  HH:mm" />
                 </template>
             </el-table-column>
-            <el-table-column label="瓶胚批号" :showOverflowTooltip="true" width="180">
+            <el-table-column label="瓶胚批号" :show-overflow-tooltip="true" width="180">
                 <template slot="header">
                     <i class="reqI">*</i><span>瓶胚批号</span>
                 </template>
@@ -21,7 +21,7 @@
                     <el-input v-model="scope.row.embryoBatch" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
                 </template>
             </el-table-column>
-            <el-table-column label="瓶胚数量 " :showOverflowTooltip="true" width="180">
+            <el-table-column label="瓶胚数量 " :show-overflow-tooltip="true" width="180">
                 <template slot="header">
                     <i class="reqI">*</i><span>瓶胚数量</span>
                 </template>
@@ -29,12 +29,12 @@
                     <el-input v-model="scope.row.embryoAmount" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
                 </template>
             </el-table-column>
-            <el-table-column label="单位" :showOverflowTooltip="true" prop="kjmWorkShopName" width="60">
+            <el-table-column label="单位" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="60">
                 <template slot-scope="scope">
                     {{ (scope.row.unit = '个') }}
                 </template>
             </el-table-column>
-            <el-table-column label="是否除尘" :showOverflowTooltip="true" prop="isDust" width="180">
+            <el-table-column label="是否除尘" :show-overflow-tooltip="true" prop="isDust" width="180">
                 <template slot-scope="scope">
                     <el-select v-model="scope.row.isDust" placeholder="请选择" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')">
                         <el-option label="是" value="1" />
@@ -42,19 +42,19 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="供应商" :showOverflowTooltip="true" prop="kjmWorkShopName" width="180">
+            <el-table-column label="供应商" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="180">
                 <template slot-scope="scope">
                     <el-select v-model="scope.row.supplier" placeholder="请选择" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')">
                         <el-option v-for="(iteam, index) in supplier" :key="index" :label="iteam.value" :value="iteam.code" />
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="备注" :showOverflowTooltip="true" prop="kjmWorkShopName" width="140">
+            <el-table-column label="备注" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="140">
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.remark" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
                 </template>
             </el-table-column>
-            <el-table-column label="操作" :showOverflowTooltip="true" prop="kjmWorkShopName" width="70" fixed="right">
+            <el-table-column label="操作" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="70" fixed="right">
                 <template slot-scope="scope">
                     <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="delRecord(scope.row)">
                         删除
@@ -62,7 +62,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+        <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         <p style="font-size: 14px; line-height: 32px;">
             合计数量：{{ sumNum }}个
         </p>
@@ -117,7 +117,7 @@ export default {
                     this.pageSize = 10;
                     this.totalCount = data.embryoRecordList.length;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -200,6 +200,8 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
                 this.totalCount = this.RecordList.filter(item => item.delFlag === '0').length;
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag

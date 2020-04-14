@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard">
-            <el-form :inline="true" :model="formHeader" size="small" labelWidth="80px" class="multi_row">
+            <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="multi_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 160px;">
                         <el-option label="请选择" value="" />
@@ -41,8 +41,8 @@
                         <el-option v-for="(sole, index) in OrderList" :key="index" :value="sole.ferOrderNo" :label="sole.ferOrderNo" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="罐号：" prop="holderId" labelWidth="82px">
-                    <el-select v-model="formHeader.holderIds" placeholder="请选择" multiple filterable allowCreate defaultFirstOp style="width: 160px;">
+                <el-form-item label="罐号：" prop="holderId">
+                    <el-select v-model="formHeader.holderIds" placeholder="请选择" multiple filterable allow-create default-first-op style="width: 160px;">
                         <el-option v-for="(sole, index) in guanList" :key="index" :value="sole.holderId" :label="sole.holderName" />
                     </el-select>
                 </el-form-item>
@@ -51,31 +51,31 @@
                     -
                     <el-date-picker v-model="formHeader.productDateTwo" type="date" placeholder="选择日期" style="width: 160px; margin-left: 15px;" />
                 </el-form-item>
+                <el-form-item class="floatr">
+                    <template style="float: right; margin-left: 10px;">
+                        <el-button v-if="isAuth('fer:shoot:list')" type="primary" size="small" @click="GetDataList()">
+                            查 询
+                        </el-button>
+                        <el-button v-if="isAuth('fer:shoot:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                            {{ isRedact ? '取消' : '编辑' }}
+                        </el-button>
+                    </template>
+                    <template v-if="isRedact" style="float: right; margin-left: 10px;">
+                        <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                            保存
+                        </el-button>
+                        <el-button type="primary" size="small" @click="SubmitForm">
+                            提交
+                        </el-button>
+                    </template>
+                </el-form-item>
             </el-form>
-            <el-row style="text-align: right;" class="button_three_goup">
-                <template style="float: right; margin-left: 10px;">
-                    <el-button v-if="isAuth('fer:shoot:list')" type="primary" size="small" @click="GetDataList()">
-                        查 询
-                    </el-button>
-                    <el-button v-if="isAuth('fer:shoot:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                        {{ isRedact ? '取消' : '编辑' }}
-                    </el-button>
-                </template>
-                <template v-if="isRedact" style="float: right; margin-left: 10px;">
-                    <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                        保存
-                    </el-button>
-                    <el-button type="primary" size="small" @click="SubmitForm">
-                        提交
-                    </el-button>
-                </template>
-            </el-row>
         </el-card>
         <el-card class="searchCard  newCard" style="margin-top: 5px;">
             <h2 style=" margin-bottom: 10px; font-weight: 600; font-size: 16px;">
                 <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />发料列表
             </h2>
-            <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" @selection-change="handleSelectionChange" @row-dblclick="GetLog">
+            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="GetLog">
                 <el-table-column type="selection" :selectable="checkboxT" width="34" />
                 <el-table-column type="index" label="序号" width="55" />
                 <el-table-column label="订单号" width="120" prop="ferOrderNo" />
@@ -90,15 +90,15 @@
                         </p>
                     </template>
                 </el-table-column>
-                <el-table-column label="容器" width="110" prop="holderName" :showOverflowTooltip="true" />
-                <el-table-column label="物料" width="180" :showOverflowTooltip="true">
+                <el-table-column label="容器" width="110" prop="holderName" :show-overflow-tooltip="true" />
+                <el-table-column label="物料" width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.ferMaterialCode + ' ' + scope.row.ferMaterialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="订单量" width="80" prop="ferAmount" :showOverflowTooltip="true" />
+                <el-table-column label="订单量" width="80" prop="ferAmount" :show-overflow-tooltip="true" />
                 <el-table-column label="单位" width="50" prop="ferUnit" />
-                <el-table-column label="领用物料" width="180" :showOverflowTooltip="true">
+                <el-table-column label="领用物料" width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.kjmMaterialCode + ' ' + scope.row.kjmMaterialName }}
                     </template>
@@ -127,8 +127,8 @@
                         <el-input v-model="scope.row.remark" size="mini" placeholder="手工录入" :disabled="!(isRedact && (scope.row.approveStatus === 'noPass' || scope.row.approveStatus === 'saved' || scope.row.approveStatus === ''))" />
                     </template>
                 </el-table-column>
-                <el-table-column label="提交人员" width="120" prop="changer" :showOverflowTooltip="true" />
-                <el-table-column label="提交时间" width="120" prop="changed" :showOverflowTooltip="true" />
+                <el-table-column label="提交人员" width="120" prop="changer" :show-overflow-tooltip="true" />
+                <el-table-column label="提交时间" width="120" prop="changed" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" width="112" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.approveStatus !== 'submit' && scope.row.approveStatus !== 'checked'" type="text" style="" size="mini" :disabled="!isRedact" @click="AddData(scope.row, scope.$index)">
@@ -141,11 +141,11 @@
                 </el-table-column>
             </el-table>
             <el-row>
-                <el-pagination :currentPage="currPage" :pageSizes="[20, 30, 40]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="currPage" :page-sizes="[20, 30, 40]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
         <el-card class="searchCard  newCard" style="margin-top: 10px;">
-            <auditLog :tableData="Audit" />
+            <audit-log :table-data="Audit" />
         </el-card>
     </div>
 </template>
@@ -216,7 +216,7 @@ export default {
                     if (data.code === 0) {
                         this.orderTypeList = data.dicList[0].prolist;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -233,7 +233,7 @@ export default {
                     this.Audit = [];
                     this.$store.commit('common/updateFermentationM', this.formHeader);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -245,7 +245,7 @@ export default {
                 if (data.code === 0) {
                     this.Audit = data.verList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -257,6 +257,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         check() {
@@ -306,11 +308,11 @@ export default {
                                 });
                                 this.GetDataList();
                             } else {
-                                this.$error_SHINHO(data.msg);
+                                this.$errorTost(data.msg);
                             }
                         });
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -323,7 +325,7 @@ export default {
                         });
                         this.GetDataList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -356,7 +358,7 @@ export default {
                         });
                         this.GetDataList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -385,7 +387,7 @@ export default {
                         this.formHeader.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -399,7 +401,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -457,7 +459,7 @@ export default {
                     if (data.code === 0) {
                         this.material = data.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -480,5 +482,11 @@ export default {
 <style scoped>
 .reqI {
     color: red;
+}
+.button_three_goup {
+    position: relative;
+    top: 0;
+    right: 0;
+    padding: 10px;
 }
 </style>

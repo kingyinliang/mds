@@ -1,7 +1,7 @@
 <template>
-    <el-dialog title="部门分配" :closeOnClickModal="false" :visible.sync="visible">
+    <el-dialog title="部门分配" :close-on-click-modal="false" :visible.sync="visible">
         <div style="height: 300px; overflow: auto;">
-            <el-tree ref="deptListTree" :data="OrgTree" nodeKey="deptId" :defaultExpandAll="true" showCheckbox />
+            <el-tree ref="deptListTree" :data="OrgTree" node-key="deptId" :default-expand-all="true" show-checkbox />
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="visible = false">取消</el-button>
@@ -38,7 +38,7 @@ export default {
                     if (data.code === 0) {
                         this.OrgTree = data.deptList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     this.visible = true;
                 })
@@ -49,7 +49,7 @@ export default {
                         if (data.code === 0) {
                             this.$refs.deptListTree.setCheckedKeys(data.list);
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 });
@@ -63,12 +63,12 @@ export default {
                     deptId: [[].concat(this.$refs.deptListTree.getCheckedKeys()), [].concat(this.$refs.deptListTree.getHalfCheckedKeys())]
                 }).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$success_SHINHO('操作成功');
+                        this.$successTost('操作成功');
                         this.type = true;
                         this.visible = false;
                         this.$emit('refreshDataList');
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     this.visible = true;
                 });

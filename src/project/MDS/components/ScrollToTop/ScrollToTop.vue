@@ -25,8 +25,9 @@ export default {
         });
     },
     destroyed() {
-        const dom = document.getElementsByClassName('site-content__wrapper')[0];
-        dom.addEventListener('scroll', this.handleScroll, true);
+        // const dom = document.getElementsByClassName('site-content__wrapper')[0];
+        // dom.addEventListener('scroll', this.handleScroll, true);
+        // dom.removeEventListener('scroll', this.handleScroll, true);
     },
     methods: {
         handleScroll() {
@@ -86,12 +87,10 @@ export default {
     background: rgba(72, 123, 255, 0.88);
     border-radius: 50%;
     cursor: pointer;
-
     i {
         display: block;
         font-size: 18px;
     }
-
     span {
         display: block;
         font-size: 12px;

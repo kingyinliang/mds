@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <linkage :plantList="plantList" />
+                        <linkage :plant-list="plantList" />
                     </el-col>
                     <el-col style="width: 200px; margin-top: 42px; text-align: right;">
                         <el-button v-if="isAuth('report:form:listShopAttM')" type="primary" size="small" @click="GetList(true)">
@@ -25,20 +25,20 @@
                 <div class="toggleSearchTop">
                     <i class="el-icon-caret-bottom" />
                 </div>
-                <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column prop="factoryName" label="工厂" :showOverflowTooltip="true" width="90" />
-                    <el-table-column prop="workShopName" label="车间" :showOverflowTooltip="true" width="95" />
-                    <el-table-column prop="productLineName" label="产线" :showOverflowTooltip="true" width="70" />
-                    <el-table-column prop="teamName" label="班组" :showOverflowTooltip="true" width="120" />
-                    <el-table-column prop="userId" label="人员" :showOverflowTooltip="true" width="80" />
+                <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+                    <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" width="90" />
+                    <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="95" />
+                    <el-table-column prop="productLineName" label="产线" :show-overflow-tooltip="true" width="70" />
+                    <el-table-column prop="teamName" label="班组" :show-overflow-tooltip="true" />
+                    <el-table-column prop="userId" label="人员" :show-overflow-tooltip="true" width="80" />
                     <template v-if="dataList.length > 0">
                         <el-table-column v-for="(item, index) in dataList[0].listMonth.length" :key="item" :label="month + '月' + (index + 1).toString() + '日'">
-                            <el-table-column label="白班时数" :showOverflowTooltip="true" width="80">
+                            <el-table-column label="白班时数" :show-overflow-tooltip="true" width="80">
                                 <template slot-scope="scope">
                                     {{ scope.row.listMonth[index].dayTime }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="夜班时数" :showOverflowTooltip="true" width="80">
+                            <el-table-column label="夜班时数" :show-overflow-tooltip="true" width="80">
                                 <template slot-scope="scope">
                                     {{ scope.row.listMonth[index].nightTime }}
                                 </template>
@@ -46,15 +46,15 @@
                         </el-table-column>
                     </template>
                     <el-table-column label="统计">
-                        <el-table-column prop="dayAllDay" label="白班天数" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="nightAllDay" label="夜班天数" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="allTime" label="总计出勤数（H）" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="workAllDay" label="上班天数" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="offDutyAllDay" label="休班天数" :showOverflowTooltip="true" width="80" />
+                        <el-table-column prop="dayAllDay" label="白班天数" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="nightAllDay" label="夜班天数" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="allTime" label="总计出勤数（H）" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="workAllDay" label="上班天数" :show-overflow-tooltip="true" width="80" />
+                        <el-table-column prop="offDutyAllDay" label="休班天数" :show-overflow-tooltip="true" width="80" />
                     </el-table-column>
                 </el-table>
                 <el-row>
-                    <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
@@ -115,7 +115,7 @@ export default {
                             ? this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1).slice(1)
                             : this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.lodingS = false;
             });
@@ -133,7 +133,7 @@ export default {
                     }, 4000);
                 } else {
                     this.lodingS = false;
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
             // let that = this
@@ -173,7 +173,7 @@ export default {
                     } else {
                         this.lodingS = false;
                         clearInterval(this.ExportTime);
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(() => {

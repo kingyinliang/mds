@@ -4,9 +4,9 @@
             <el-card>
                 <div class="clearfix">
                     <el-row style="float: right;">
-                        <el-form :inline="true" :model="form" size="small" labelWidth="68px" class="topforms2" @keyup.enter.native="querys(true)" @submit.native.prevent>
+                        <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="querys(true)" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="form.orderNo" placeholder="订单号" suffixIcon="el-icon-search" />
+                                <el-input v-model="form.orderNo" placeholder="订单号" suffix-icon="el-icon-search" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button v-if="isAuth('sys:sapOrder:list')" type="primary" size="small" @click="querys(true)">
@@ -26,7 +26,7 @@
                     </el-row>
                 </div>
                 <el-row>
-                    <el-table ref="table1" class="orderTable" border headerRowClassName="tableHead" :data="sapOrderlist" tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table ref="table1" class="orderTable" border header-row-class-name="tableHead" :data="sapOrderlist" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                         <el-table-column width="122" label="生产订单">
                             <template slot-scope="scope">
                                 {{ scope.row.orderNo }}
@@ -38,28 +38,28 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="factory" label="工厂" width="77" />
-                        <el-table-column prop="commitDate" label="基本完成日期" headerAlign="center" width="105" />
-                        <el-table-column prop="startDate" label="基本开始日期" headerAlign="center" width="105" />
-                        <el-table-column label="物料" :showOverflowTooltip="true">
+                        <el-table-column prop="commitDate" label="基本完成日期" header-align="center" width="105" />
+                        <el-table-column prop="startDate" label="基本开始日期" header-align="center" width="105" />
+                        <el-table-column label="物料" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode }}
                                 {{ scope.row.materialName }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="orderNum" label="订单数量" headerAlign="center" align="left" width="80" />
-                        <el-table-column prop="orderUnit" label="订单单位" headerAlign="center" width="80" />
-                        <el-table-column prop="dispatchMan" label="生产调度员" headerAlign="center" width="91" />
+                        <el-table-column prop="orderNum" label="订单数量" header-align="center" align="left" width="80" />
+                        <el-table-column prop="orderUnit" label="订单单位" header-align="center" width="80" />
+                        <el-table-column prop="dispatchMan" label="生产调度员" header-align="center" width="91" />
                         <el-table-column prop="syncDate" label="同步日期" width="100" />
                     </el-table>
                 </el-row>
                 <el-row>
-                    <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
-        <el-dialog title="高级查询" :closeOnClickModal="false" :visible.sync="visible">
+        <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="visible">
             <div class="formdata">
-                <el-form :model="form" size="small" labelWidth="110px" class="orderdialog">
+                <el-form :model="form" size="small" label-width="110px" class="orderdialog">
                     <el-form-item label="工厂：">
                         <el-select v-model="form.factory" placeholder="请选择">
                             <el-option label="" value="">
@@ -80,20 +80,20 @@
                     <el-form-item label="基本开始日期：" class="times">
                         <el-row>
                             <el-col :span="12">
-                                <el-date-picker v-model="form.startDateOne" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 150px;" />
+                                <el-date-picker v-model="form.startDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
                             </el-col>
                             <el-col :span="12">
-                                <el-date-picker v-model="form.startDateTwo" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 150px;" />
+                                <el-date-picker v-model="form.startDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
                             </el-col>
                         </el-row>
                     </el-form-item>
                     <el-form-item label="基本完成日期：" class="times">
                         <el-row>
                             <el-col :span="12">
-                                <el-date-picker v-model="form.commitDateOne" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 150px;" />
+                                <el-date-picker v-model="form.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
                             </el-col>
                             <el-col :span="12">
-                                <el-date-picker v-model="form.commitDateTwo" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 150px;" />
+                                <el-date-picker v-model="form.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
                             </el-col>
                         </el-row>
                     </el-form-item>
@@ -145,7 +145,7 @@ export default {
                 if (data.code === 0) {
                     this.factory = data.typeList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -162,7 +162,7 @@ export default {
                     this.currPage = data.page.currPage;
                     this.visible = false;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -225,7 +225,7 @@ export default {
                         // this.loading = false
                         this.loadings.close();
                         clearInterval(this.orderTime);
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(() => {

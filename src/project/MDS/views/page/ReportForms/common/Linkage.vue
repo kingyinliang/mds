@@ -1,6 +1,6 @@
 <template>
     <el-col>
-        <el-form v-if="!lablewidth" :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+        <el-form v-if="!lablewidth" :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
             <el-form-item label="生产工厂：">
                 <el-select v-model="plantList.factory" placeholder="请选择">
                     <el-option label="请选择" value="" />
@@ -26,10 +26,10 @@
                 </el-select>
             </el-form-item>
             <el-form-item v-if="plantList.deptId !== undefined" label="日期：">
-                <el-date-picker v-model="plantList.productDate" type="month" placeholder="选择月份" valueFormat="yyyy-MM" style="width: 199px;" />
+                <el-date-picker v-model="plantList.productDate" type="month" placeholder="选择月份" value-format="yyyy-MM" style="width: 199px;" />
             </el-form-item>
         </el-form>
-        <el-form v-if="lablewidth" :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+        <el-form v-if="lablewidth" :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
             <el-form-item label="生产工厂：">
                 <el-select v-model="plantList.factory" placeholder="请选择">
                     <el-option label="请选择" value="" />
@@ -55,7 +55,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item v-if="plantList.deptId !== undefined" label="日期：">
-                <el-date-picker v-model="plantList.productDate" type="month" placeholder="选择月份" valueFormat="yyyy-MM" style="width: 199px;" />
+                <el-date-picker v-model="plantList.productDate" type="month" placeholder="选择月份" value-format="yyyy-MM" style="width: 199px;" />
             </el-form-item>
         </el-form>
     </el-col>
@@ -115,7 +115,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -131,7 +131,7 @@ export default {
                             this.plantList.workshop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -144,7 +144,7 @@ export default {
                     if (data.code === 0) {
                         this.productline = data.childList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }

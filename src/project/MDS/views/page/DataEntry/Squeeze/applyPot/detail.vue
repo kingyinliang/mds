@@ -11,7 +11,7 @@
                 </el-row>
                 <el-row type="flex">
                     <el-col class="header-form" :span="24">
-                        <el-form :model="formHeader" size="small" :inline="true" labelPosition="right" labelWidth="100px" class="topform multi_row">
+                        <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="100px" class="topform multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="formHeader.factory" class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('factory')">
                                     <el-option label="请选择" value="" />
@@ -30,17 +30,17 @@
                                     <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="半成品类别：" labelWidth="100px">
+                            <el-form-item label="半成品类别：" label-width="100px">
                                 <el-select v-model="formHeader.halfType" filterable class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('halfType')">
                                     <el-option label="请选择" value="" />
                                     <el-option v-for="sole in halfTypeList" :key="sole.halfType" :label="sole.halfName" :value="sole.halfType" />
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="申请数量：" labelWidth="100px">
+                            <el-form-item label="申请数量：" label-width="100px">
                                 <el-input v-model.number="formHeader.amount" type="number" size="small" style="width: 140px;" :disabled="!isEdit" />
                             </el-form-item>
                             <el-form-item label="生产日期：">
-                                <el-date-picker v-model="formHeader.productDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" :disabled="!isEdit" />
+                                <el-date-picker v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" :disabled="!isEdit" />
                             </el-form-item>
                             <el-form-item label="申请编号：">
                                 <p class="header-form_input">
@@ -62,7 +62,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="24">
-                        <el-form :model="formHeader" size="small" :inline="true" labelPosition="right" labelWidth="100px" class="topform">
+                        <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="100px" class="topform">
                             <el-form-item label="备注：">
                                 <el-input v-model.trim="formHeader.remark" type="textarea" :rows="3" style="width: 500px;" :disabled="!isEdit" placeholder="请输入内容" />
                             </el-form-item>
@@ -96,29 +96,29 @@
                         </div>
                     </el-row>
                     <el-row>
-                        <el-table headerRowClassName="tableHead" :data="detailList" border tooltipEffect="dark">
+                        <el-table header-row-class-name="tableHead" :data="detailList" border tooltip-effect="dark">
                             <el-table-column type="index" label="序号" width="55" />
                             <el-table-column label="申请编码" width="140">
                                 <template slot-scope="scope">
                                     {{ scope.row.applyNo }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="罐号" :showOverflowTooltip="true" width="120">
+                            <el-table-column label="罐号" :show-overflow-tooltip="true" width="120">
                                 <template slot-scope="scope">
                                     {{ scope.row.holderName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="订单类型" :showOverflowTooltip="true" width="120">
+                            <el-table-column label="订单类型" :show-overflow-tooltip="true" width="120">
                                 <template slot-scope="scope">
                                     {{ scope.row.orderTypeName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="发酵天数/天" :showOverflowTooltip="true" width="100">
+                            <el-table-column label="发酵天数/天" :show-overflow-tooltip="true" width="100">
                                 <template slot-scope="scope">
                                     {{ scope.row.ferDays }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="半成品类别" :showOverflowTooltip="true" width="130">
+                            <el-table-column label="半成品类别" :show-overflow-tooltip="true" width="130">
                                 <template slot-scope="scope">
                                     {{ scope.row.halfType }}
                                 </template>
@@ -138,7 +138,7 @@
                                     {{ scope.row.changer }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="确认时间" :showOverflowTooltip="true">
+                            <el-table-column label="确认时间" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.changed }}
                                 </template>
@@ -385,6 +385,8 @@ export default class Index extends Vue {
                         });
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         }
     }
@@ -448,7 +450,6 @@ export default class Index extends Vue {
 </style>
 <style lang="scss" scoped>
 @import "@/assets/scss/_common.scss";
-
 .header-form {
     .header-form_input {
         width: 140px;

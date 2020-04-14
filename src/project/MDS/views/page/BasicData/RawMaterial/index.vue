@@ -4,9 +4,9 @@
             <el-card>
                 <div class="clearfix">
                     <el-row style="float: right;">
-                        <el-form :inline="true" :model="form" size="small" labelWidth="68px" class="topforms2" @keyup.enter.native="GetLocationList(true)" @submit.native.prevent>
+                        <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetLocationList(true)" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="form.batch" placeholder="批次" suffixIcon="el-icon-search" />
+                                <el-input v-model="form.batch" placeholder="批次" suffix-icon="el-icon-search" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button v-if="isAuth('sys:sapGranaryMaterial:list')" type="primary" size="small" @click="GetList(true)">
@@ -23,40 +23,40 @@
                     </el-row>
                 </div>
                 <el-row>
-                    <el-table ref="table1" headerRowClassName="tableHead" :data="list" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column label="物料" :showOverflowTooltip="true" width="170px">
+                    <el-table ref="table1" header-row-class-name="tableHead" :data="list" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                        <el-table-column label="物料" :show-overflow-tooltip="true" width="170px">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode }}
                                 {{ scope.row.materialName }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="物料类型" :showOverflowTooltip="true" width="130px">
+                        <el-table-column label="物料类型" :show-overflow-tooltip="true" width="130px">
                             <template slot-scope="scope">
                                 {{ scope.row.materialTypeCode }}
                                 {{ scope.row.materialTypeName }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="工厂" :showOverflowTooltip="true" prop="factoryName" />
-                        <el-table-column label="过账日期" :showOverflowTooltip="true" prop="postingDate" width="100px" />
-                        <el-table-column label="批次" :showOverflowTooltip="true" prop="batch" width="120px" />
-                        <el-table-column label="数量" :showOverflowTooltip="true" prop="quantity" width="100px" />
-                        <el-table-column label="单位" :showOverflowTooltip="true" prop="unit" width="60px" />
-                        <el-table-column label="移动类型" :showOverflowTooltip="true" prop="moveType" width="90px" />
-                        <el-table-column label="库存" :showOverflowTooltip="true" prop="quantity" width="80px" />
-                        <el-table-column label="罐号" :showOverflowTooltip="true" prop="holderNo" width="60px" />
-                        <el-table-column label="同步日期" :showOverflowTooltip="true" prop="syncDate" width="100px" />
+                        <el-table-column label="工厂" :show-overflow-tooltip="true" prop="factoryName" />
+                        <el-table-column label="过账日期" :show-overflow-tooltip="true" prop="postingDate" width="100px" />
+                        <el-table-column label="批次" :show-overflow-tooltip="true" prop="batch" width="120px" />
+                        <el-table-column label="数量" :show-overflow-tooltip="true" prop="quantity" width="100px" />
+                        <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" width="60px" />
+                        <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="moveType" width="90px" />
+                        <el-table-column label="库存" :show-overflow-tooltip="true" prop="quantity" width="80px" />
+                        <el-table-column label="罐号" :show-overflow-tooltip="true" prop="holderNo" width="60px" />
+                        <el-table-column label="同步日期" :show-overflow-tooltip="true" prop="syncDate" width="100px" />
                     </el-table>
                 </el-row>
                 <el-row>
-                    <el-pagination :currentPage="currentPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
-        <el-dialog :closeOnClickModal="false" :visible.sync="visible1" width="510px" customClass="dialog__class">
+        <el-dialog :close-on-click-modal="false" :visible.sync="visible1" width="510px" custom-class="dialog__class">
             <div slot="title">
                 高级查询
             </div>
-            <el-form :model="form" size="small" labelWidth="130px" class="locationdialog">
+            <el-form :model="form" size="small" label-width="130px" class="locationdialog">
                 <el-form-item label="批次：" prop="orderNo1">
                     <el-input v-model="form.batch" style="width: 283px;" />
                 </el-form-item>
@@ -146,7 +146,7 @@ export default {
                     this.pageSize = data.page.pageSize;
                     this.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -206,7 +206,7 @@ export default {
                     } else {
                         this.loading.close();
                         clearInterval(this.orderTime);
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(() => {
@@ -229,14 +229,12 @@ export default {
 <style lang="scss">
 .dialog__class {
     border-radius: 6px !important;
-
     .el-dialog__header {
         height: 59px;
         color: #fff;
         font-size: 20px;
         background: rgba(24, 144, 255, 1);
         border-radius: 6px 6px 0 0;
-
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }

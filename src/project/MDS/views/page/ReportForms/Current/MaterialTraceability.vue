@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <el-card class="searchCard  newCard ferCard">
-            <el-form :inline="true" :model="formHeader" size="small" labelWidth="75px" class="marbottom">
+            <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="marbottom">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" class="width140px">
                         <el-option value="">
@@ -11,7 +11,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产车间：">
-                    <el-select v-model="workShopStr" valueKey="deptId" palceholder="请选择" class="width140px">
+                    <el-select v-model="workShopStr" value-key="deptId" palceholder="请选择" class="width140px">
                         <el-option value="">
                             请选择
                         </el-option>
@@ -46,9 +46,9 @@
                     <el-input v-model="formHeader.batchLittle" class="width140px" />
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="formHeader.orderStartDate" type="date" valueFormat="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;" />
+                    <el-date-picker v-model="formHeader.orderStartDate" type="date" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;" />
                     -
-                    <el-date-picker v-model="formHeader.orderEndDate" type="date" valueFormat="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;" />
+                    <el-date-picker v-model="formHeader.orderEndDate" type="date" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;" />
                 </el-form-item>
                 <el-form-item style="float: right;">
                     <el-button v-if="isAuth('report:production:materielTrace')" type="primary" size="small" style="float: right;" @click="GetList(true)">
@@ -58,31 +58,31 @@
             </el-form>
         </el-card>
         <el-card class="secondcard">
-            <el-table :data="dataList" border headerRowClassName="tableHead" style="margin-top: 10px;">
-                <el-table-column label="日期" showOverflowTooltip prop="orderDate" width="100" />
-                <el-table-column label="工厂" showOverflowTooltip prop="factory" />
-                <el-table-column label="车间" showOverflowTooltip prop="workShopName" />
-                <el-table-column label="产线" showOverflowTooltip prop="productLineName" width="100" />
-                <el-table-column label="订单" showOverflowTooltip prop="orderNo" width="120" />
-                <el-table-column label="生产物料" showOverflowTooltip prop="material">
+            <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
+                <el-table-column label="日期" show-overflow-tooltip prop="orderDate" width="100" />
+                <el-table-column label="工厂" show-overflow-tooltip prop="factory" />
+                <el-table-column label="车间" show-overflow-tooltip prop="workShopName" />
+                <el-table-column label="产线" show-overflow-tooltip prop="productLineName" width="100" />
+                <el-table-column label="订单" show-overflow-tooltip prop="orderNo" width="120" />
+                <el-table-column label="生产物料" show-overflow-tooltip prop="material">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode }}{{ scope.row.materialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="生产数量" showOverflowTooltip prop="realInAmount" width="90" />
-                <el-table-column label="单位" showOverflowTooltip prop="inUnit" width="50" />
-                <el-table-column label="生产批次" showOverflowTooltip prop="inBatch" width="110" />
-                <el-table-column label="组件物料" showOverflowTooltip prop="mainBatch" width="110">
+                <el-table-column label="生产数量" show-overflow-tooltip prop="realInAmount" width="90" />
+                <el-table-column label="单位" show-overflow-tooltip prop="inUnit" width="50" />
+                <el-table-column label="生产批次" show-overflow-tooltip prop="inBatch" width="110" />
+                <el-table-column label="组件物料" show-overflow-tooltip prop="mainBatch" width="110">
                     <template slot-scope="scope">
                         {{ scope.row.useMaterialCode }}{{ scope.row.useMaterialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="组件物料数量" showOverflowTooltip prop="useInAmount" width="90" />
-                <el-table-column label="单位" showOverflowTooltip prop="useUnit" width="50" />
-                <el-table-column label="组件物料批次" showOverflowTooltip prop="useBatch" width="110" />
+                <el-table-column label="组件物料数量" show-overflow-tooltip prop="useInAmount" width="90" />
+                <el-table-column label="单位" show-overflow-tooltip prop="useUnit" width="50" />
+                <el-table-column label="组件物料批次" show-overflow-tooltip prop="useBatch" width="110" />
             </el-table>
             <el-row>
-                <el-pagination :currentPage="formHeader.currPage" :pageSizes="[10, 20, 50]" :pageSize="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 50]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
     </div>
@@ -140,7 +140,7 @@ export default {
                         this.formHeader.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -157,7 +157,7 @@ export default {
                             this.workShopStr = data.typeList[0];
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -170,7 +170,7 @@ export default {
                     if (data.code === 0) {
                         this.productline = data.childList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -181,7 +181,7 @@ export default {
                 if (data.code === 0) {
                     this.materiaList = data.materielTraceSelectInfo;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -213,7 +213,7 @@ export default {
                     this.formHeader.pageSize = data.materielTrace.pageSize;
                     this.formHeader.totalCount = data.materielTrace.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="queryHead">
-            <el-form :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="auto" class="sole_row">
+            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="auto" class="sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="plantList.factoryIDValue" class="w300" placeholder="请选择" @change="changeSearchOptions(plantList.factoryIDValue)">
                         <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
@@ -60,7 +60,7 @@
                             <i class="card-item-color-lump_text__icon" />
                             <span>库存明细</span>
                         </p>
-                        <el-table :data="item.wheatList" headerRowClassName="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="165">
+                        <el-table :data="item.wheatList" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="165">
                             <el-table-column
                                 prop="batch"
                                 width="auto"
@@ -69,7 +69,7 @@
                                     <i class="iconfont factory-pici" style="margin-right: 5px;" />批次
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="currentQuantity" width="auto" headerAlign="left">
+                            <el-table-column prop="currentQuantity" width="auto" header-align="left">
                                 <template slot="header">
                                     <i class="iconfont factory-shuliang" style=" margin-right: 5px; font-size: 18px;" />数量
                                 </template>
@@ -254,7 +254,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

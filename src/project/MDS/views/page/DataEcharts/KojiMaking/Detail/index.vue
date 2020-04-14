@@ -100,7 +100,7 @@ export default {
                     this.rightText = data.list[2];
                     this.warningList = data.list[3];
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -266,37 +266,29 @@ export default {
             &_box {
                 width: 1153px;
                 height: 630px;
-
                 &_left {
                     width: 600px;
-
                     &_top {
                         height: 450px;
                         margin-bottom: 30px;
                     }
-
                     &_bottom {
                         height: 150px;
                     }
                 }
-
                 &_right {
                     width: 450px;
                     margin-left: 50px;
-
                     &_top {
                         height: 450px;
                         margin-bottom: 30px;
-
                         &_temp {
                             top: 100px;
                         }
-
                         &_text {
                             bottom: 170px;
                         }
                     }
-
                     &_bottom {
                         height: 150px;
                     }
@@ -312,46 +304,37 @@ export default {
             &_box {
                 width: 1380px;
                 height: 730px;
-
                 &_ul {
                     li {
                         font-size: 14px;
                     }
                 }
-
                 &_left {
                     width: 780px;
-
                     &_top {
                         height: 550px;
                         margin-bottom: 30px;
                     }
-
                     &_bottom {
                         height: 150px;
                     }
                 }
-
                 &_right {
                     width: 550px;
                     margin-left: 50px;
-
                     &_top {
                         height: 550px;
                         margin-bottom: 30px;
-
                         &_temp {
                             top: 130px;
                             font-size: 16px;
                         }
-
                         &_text {
                             bottom: 210px;
                             font-size: 16px;
                             line-height: 25px;
                         }
                     }
-
                     &_bottom {
                         height: 150px;
                     }

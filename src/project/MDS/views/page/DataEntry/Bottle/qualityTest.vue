@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCards">
-            <el-form :model="formHeader" :inline="true" size="small" labelWidth="70px" class="multi_row">
+            <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
                 <el-form-item label="生产车间：">
                     <p class="bottom">
                         {{ formHeader.workShopName }}
@@ -53,8 +53,7 @@
                             @click="
                                 $router.push({
                                     path: '/DataEntry-Bottle-index',
-                                })
-                            "
+                                })"
                         >
                             返回
                         </el-button>
@@ -73,17 +72,17 @@
         <el-card class="secondcard">
             <el-row>
                 <el-col style="float: right;">
-                    <el-button type="primary" :disabled="!isRedact" size="small" style="float: right;" @click="AddRow">
+                    <el-button type="primary" :disabled="!isRedact" size="small" style="float: right;" @click="addRow">
                         新增
                     </el-button>
                 </el-col>
             </el-row>
-            <el-table :data="dataList" :rowClassName="rowDelFlag" border headerRowClassName="tableHead" style="margin-top: 10px;">
+            <el-table :data="dataList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
                 <el-table-column type="index" label="序号" width="50" fixed="left" />
-                <el-table-column label="参数" showOverflowTooltip width="85" prop="parameter" fixed="left" />
+                <el-table-column label="参数" show-overflow-tooltip width="85" prop="parameter" fixed="left" />
                 <el-table-column label="时间" width="200" prop="date">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.date" type="datetime" size="small" :disabled="!isRedact" valueFormat="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.date" type="datetime" size="small" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="1#" width="100">
@@ -177,7 +176,7 @@
                         <el-input v-else v-model="scope.row.sevenWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="8#" showOverflowTooltip width="100">
+                <el-table-column label="8#" show-overflow-tooltip width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.eightWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -190,7 +189,7 @@
                         <el-input v-else v-model="scope.row.eightWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="9#" showOverflowTooltip width="100">
+                <el-table-column label="9#" show-overflow-tooltip width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.nineWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -203,7 +202,7 @@
                         <el-input v-else v-model="scope.row.nineWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="10#" showOverflowTooltip width="100">
+                <el-table-column label="10#" show-overflow-tooltip width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.tenWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -216,7 +215,7 @@
                         <el-input v-else v-model="scope.row.tenWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="11#" showOverflowTooltip width="100">
+                <el-table-column label="11#" show-overflow-tooltip width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.elevenWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -229,7 +228,7 @@
                         <el-input v-else v-model="scope.row.elevenWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="12#" showOverflowTooltip width="100">
+                <el-table-column label="12#" show-overflow-tooltip width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.twelveWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -242,7 +241,7 @@
                         <el-input v-else v-model="scope.row.twelveWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="检测人" showOverflowTooltip width="150">
+                <el-table-column label="检测人" show-overflow-tooltip width="150">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.changer" :disabled="!isRedact" size="small">
                             <el-option
@@ -254,7 +253,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作时间" showOverflowTooltip width="160">
+                <el-table-column label="操作时间" show-overflow-tooltip width="160">
                     <template slot-scope="scope">
                         {{ scope.row.changed }}
                     </template>
@@ -267,7 +266,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination :currentPage="pages.currPage" :pageSize="pages.pageSize" layout="prev, pager, next, jumper" :total="pages.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            <el-pagination :current-page="pages.currPage" :page-size="pages.pageSize" layout="prev, pager, next, jumper" :total="pages.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </el-card>
         <el-card class="secondcard">
             <div style="font-weight: 600;">
@@ -305,10 +304,10 @@ export default {
         };
     },
     mounted() {
-        this.GetHeader();
+        this.getHeader();
     },
     methods: {
-        GetHeader() {
+        getHeader() {
             this.$http(`${BOTTLE_API.BOTTLE_PRO_HEAD}`, 'POST', {
                 orderId: this.orderId,
                 type: 'quality'
@@ -316,9 +315,9 @@ export default {
                 if (data.code === 0) {
                     this.formHeader = data.headInfo;
                     this.getUsers();
-                    this.GetList();
+                    this.getList();
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -332,11 +331,11 @@ export default {
                 if (data.code === 0) {
                     this.userlist = data.page.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
-        GetList() {
+        getList() {
             this.pages.orderId = this.orderId;
             this.$http(`${BOTTLE_API.BOTTLE_QUALITY_LIST}`, 'POST', this.pages).then(({ data }) => {
                 if (data.code === 0) {
@@ -348,11 +347,11 @@ export default {
                     this.pages.pageSize = data.qualityInspectionList.pageSize;
                     this.pages.totalCount = data.qualityInspectionList.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
-        AddRow() {
+        addRow() {
             const dataList = this.dataList.filter(item => {
                 return item.delFlag === '0';
             });
@@ -410,7 +409,6 @@ export default {
                         });
                     }
                 });
-                console.log(this.dataList);
             }
             // this.loading = false
         },
@@ -419,7 +417,7 @@ export default {
         },
         handleCurrentChange(val) {
             this.pages.currPage = val;
-            this.GetList();
+            this.getList();
         },
         savedOrSubmitForm(str) {
             this.dataList.map(item => {
@@ -429,20 +427,16 @@ export default {
             });
             this.$http(`${BOTTLE_API.BOTTLE_QUALITY_SAVE}`, 'POST', this.dataList).then(({ data }) => {
                 if (data.code === 0) {
-                    if (data.code === 0) {
-                        this.$notify({
-                            title: '成功',
-                            message: '保存成功',
-                            type: 'success'
-                        });
-                        this.pages.currPage = 1;
-                        this.isRedact = false;
-                        this.GetHeader();
-                    } else {
-                        this.$error_SHINHO(data.msg);
-                    }
+                    this.$notify({
+                        title: '成功',
+                        message: '保存成功',
+                        type: 'success'
+                    });
+                    this.pages.currPage = 1;
+                    this.isRedact = false;
+                    this.getHeader();
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -457,6 +451,8 @@ export default {
                     this.dataList[is].delFlag = '1';
                     is++;
                 }
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         rowDelFlag({ row }) {

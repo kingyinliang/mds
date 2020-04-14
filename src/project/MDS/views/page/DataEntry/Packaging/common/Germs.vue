@@ -5,7 +5,7 @@
                 新增
             </el-button>
         </div>
-        <el-table ref="table1" headerRowClassName="tableHead" :data="GermsDate" :rowClassName="RowDelFlag" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+        <el-table ref="table1" header-row-class-name="tableHead" :data="GermsDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
             <el-table-column type="index" width="55" label="序号" />
             <el-table-column label="白/中/夜班">
                 <template slot-scope="scope">
@@ -128,7 +128,7 @@ export default {
                 if (data.code === 0) {
                     this.GermsDate = data.listForm;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -141,7 +141,7 @@ export default {
                 if (data.code === 0) {
                     this.productShift = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -153,6 +153,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 新增待杀菌

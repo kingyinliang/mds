@@ -4,7 +4,7 @@
             <el-card>
                 <el-row type="flex">
                     <el-col>
-                        <el-form :inline="true" :model="form" size="small" labelWidth="85px" class="topforms" @keyup.enter.native="GetRoleList(true)">
+                        <el-form :inline="true" :model="form" size="small" label-width="85px" class="topforms" @keyup.enter.native="GetRoleList(true)">
                             <el-form-item label="角色名称：">
                                 <el-input v-model="form.username" placeholder="角色名称" />
                             </el-form-item>
@@ -20,10 +20,10 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-table ref="userlist" headerRowClassName="tableHead" :data="role" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table ref="userlist" header-row-class-name="tableHead" :data="role" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                         <el-table-column type="selection" width="34" />
                         <el-table-column type="index" :index="indexMethod" width="55" />
-                        <el-table-column prop="roleName" label="角色名称" :showOverflowTooltip="true" width="" />
+                        <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
                         <el-table-column label="操作" width="320">
                             <template slot-scope="scope">
                                 <a v-if="isAuth('sys:role:updateuser')" @click="userManage(scope.row.roleId)">人员管理</a>
@@ -33,14 +33,14 @@
                                 <a v-if="isAuth('sys:role:delete')" @click="removes(scope.row.roleId)">删除角色</a>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="creator" label="创建人" :showOverflowTooltip="true" width="" />
+                        <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="" />
                         <el-table-column prop="created" label="创建时间" width="160" />
-                        <el-table-column prop="changer" label="修改人" :showOverflowTooltip="true" width="" />
+                        <el-table-column prop="changer" label="修改人" :show-overflow-tooltip="true" width="" />
                         <el-table-column prop="changed" label="修改时间" width="160" />
                     </el-table>
                 </el-row>
                 <el-row>
-                    <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
@@ -106,7 +106,7 @@ export default {
                     this.pageSize = data.page.pageSize;
                     this.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.addOrUpdateVisible1 = false;
                 this.addOrUpdateVisible2 = false;
@@ -154,10 +154,10 @@ export default {
                         roleId: id
                     }).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('删除成功!');
+                            this.$successTost('删除成功!');
                             this.GetRoleList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 })

@@ -1,7 +1,7 @@
 <template>
     <div>
         <mds-card :title="'生产入库'" :name="'instock'">
-            <el-table class="newTable" headerRowClassName="tableHead" :data="InStock" :rowClassName="RowDelFlag" border tooltipEffect="dark">
+            <el-table class="newTable" header-row-class-name="tableHead" :data="InStock" :row-class-name="RowDelFlag" border tooltip-effect="dark">
                 <el-table-column type="index" width="50" label="序号" />
                 <el-table-column width="130" label="豆粕量（KG）">
                     <template slot-scope="scope">
@@ -35,8 +35,8 @@
                     </template>
                 </el-table-column>
                 <el-table-column width="50" label="单位" prop="unit" />
-                <el-table-column width="" label="操作人" prop="changer" showOverflowTooltip />
-                <el-table-column width="" label="操作时间" prop="changed" showOverflowTooltip />
+                <el-table-column width="" label="操作人" prop="changer" show-overflow-tooltip />
+                <el-table-column width="" label="操作时间" prop="changed" show-overflow-tooltip />
                 <el-table-column width="70" label="操作" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.isSplit === '1'" class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delInStock(scope.row)">
@@ -49,7 +49,7 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <audit-log :tableData="InStockAuditlog" />
+        <audit-log :table-data="InStockAuditlog" />
     </div>
 </template>
 
@@ -136,7 +136,7 @@ export default {
                         this.ThreeNum = data.list[0];
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -158,7 +158,7 @@ export default {
                         }
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -227,7 +227,7 @@ export default {
                         ];
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -294,7 +294,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                     if (reject) {
                         reject('生产入库' + data.msg);
                     }
@@ -323,6 +323,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag
@@ -345,7 +347,6 @@ export default {
     height: 14px;
     margin-right: 5px;
 }
-
 .reqI {
     color: red;
 }

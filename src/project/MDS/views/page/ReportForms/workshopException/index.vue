@@ -4,15 +4,15 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <linkage :plantList="plantList" :lablewidth="true" />
-                        <el-form :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                        <linkage :plant-list="plantList" :lablewidth="true" />
+                        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                             <el-form-item label="生产日期：" class="dateinput">
                                 <el-row>
                                     <el-col :span="12">
-                                        <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 135px;" />
+                                        <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;" />
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 135px;" />
+                                        <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;" />
                                     </el-col>
                                 </el-row>
                             </el-form-item>
@@ -37,32 +37,32 @@
                 <div class="toggleSearchTop">
                     <i class="el-icon-caret-bottom" />
                 </div>
-                <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column prop="productDate" label="生产日期" :showOverflowTooltip="true" width="100" />
-                    <el-table-column prop="factoryName" label="工厂" :showOverflowTooltip="true" width="90" />
-                    <el-table-column prop="workShopName" label="车间" :showOverflowTooltip="true" width="95" />
-                    <el-table-column prop="productLineName" label="产线" :showOverflowTooltip="true" width="70" />
-                    <el-table-column prop="orderNo" label="生产订单" :showOverflowTooltip="true" width="120" />
-                    <el-table-column label="物料" :showOverflowTooltip="true" width="180">
+                <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+                    <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="100" />
+                    <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" width="90" />
+                    <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="95" />
+                    <el-table-column prop="productLineName" label="产线" :show-overflow-tooltip="true" width="70" />
+                    <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="120" />
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
                             {{ scope.row.materialH }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="expCodeName" label="异常情况" :showOverflowTooltip="true" width="80" />
-                    <el-table-column prop="expInfo" label="异常描述" :showOverflowTooltip="true" width="80" />
-                    <el-table-column prop="expStartDate" label="异常开始时间" :showOverflowTooltip="true" width="120" />
-                    <el-table-column prop="expEndDate" label="异常结束时间" :showOverflowTooltip="true" width="120" />
-                    <el-table-column prop="expContinue" label="异常时间" :showOverflowTooltip="true" width="77" />
-                    <el-table-column prop="expContinueUnit" label="单位" :showOverflowTooltip="true" width="50" />
-                    <el-table-column prop="deviceIdName" label="设备" :showOverflowTooltip="true" width="100" />
-                    <el-table-column prop="materialShortName" label="物料分类简称" :showOverflowTooltip="true" width="105" />
-                    <el-table-column prop="energyName" label="能源" :showOverflowTooltip="true" width="50" />
-                    <el-table-column prop="affectProduction" label="影响产量" :showOverflowTooltip="true" width="80" />
-                    <el-table-column prop="affectProductionUnitName" label="单位" :showOverflowTooltip="true" width="50" />
-                    <el-table-column prop="remark" label="备注" :showOverflowTooltip="true" width="80" />
+                    <el-table-column prop="expCodeName" label="异常情况" :show-overflow-tooltip="true" width="80" />
+                    <el-table-column prop="expInfo" label="异常描述" :show-overflow-tooltip="true" width="80" />
+                    <el-table-column prop="expStartDate" label="异常开始时间" :show-overflow-tooltip="true" width="120" />
+                    <el-table-column prop="expEndDate" label="异常结束时间" :show-overflow-tooltip="true" width="120" />
+                    <el-table-column prop="expContinue" label="异常时间" :show-overflow-tooltip="true" width="77" />
+                    <el-table-column prop="expContinueUnit" label="单位" :show-overflow-tooltip="true" width="50" />
+                    <el-table-column prop="deviceIdName" label="设备" :show-overflow-tooltip="true" width="100" />
+                    <el-table-column prop="materialShortName" label="物料分类简称" :show-overflow-tooltip="true" width="105" />
+                    <el-table-column prop="energyName" label="能源" :show-overflow-tooltip="true" width="50" />
+                    <el-table-column prop="affectProduction" label="影响产量" :show-overflow-tooltip="true" width="80" />
+                    <el-table-column prop="affectProductionUnitName" label="单位" :show-overflow-tooltip="true" width="50" />
+                    <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" width="80" />
                 </el-table>
                 <el-row>
-                    <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
@@ -115,7 +115,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.lodingS = false;
             });
@@ -139,7 +139,7 @@ export default {
                         });
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -159,7 +159,7 @@ export default {
                         });
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

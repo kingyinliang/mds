@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="fry-wheat-report-forms">
-            <el-form :inline="true" :model="plantList" size="small" labelWidth="70px" class="sole_row">
+            <el-form :inline="true" :model="plantList" size="small" label-width="70px" class="sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="plantList.factory" style="width: 150px;">
                         <el-option label="请选择" value="" />
@@ -15,9 +15,9 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="plantList.commitDateOne" type="date" valueFormat="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
+                    <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
                     -
-                    <el-date-picker v-model="plantList.commitDateTwo" type="date" valueFormat="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
+                    <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
                 </el-form-item>
                 <el-form-item class="floatr">
                     <el-button v-if="isAuth('report:formh:pwList')" type="primary" size="small" @click="GetList(true)">
@@ -30,9 +30,9 @@
             </el-form>
         </el-card>
         <el-card style="margin-top: 5px;">
-            <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;">
+            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
                 <el-table-column label="生产日期" width="120" prop="productDate" />
-                <el-table-column label="工厂" width="220" prop="factoryName" :showOverflowTooltip="true" />
+                <el-table-column label="工厂" width="220" prop="factoryName" :show-overflow-tooltip="true" />
                 <el-table-column label="车间" prop="workShopName" />
                 <el-table-column label="小麦领用量" prop="issueWeight" />
                 <el-table-column label="PW小麦量" prop="inStorageWeight" />
@@ -41,7 +41,7 @@
                 <el-table-column label="损耗率" prop="loss" />
             </el-table>
             <el-row>
-                <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
     </div>
@@ -88,7 +88,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -103,7 +103,7 @@ export default {
                             this.plantList.workshop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -123,7 +123,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.lodingS = false;
             });

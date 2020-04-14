@@ -4,10 +4,10 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <linkage :plantList="plantList" />
-                        <el-form :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                        <linkage :plant-list="plantList" />
+                        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                             <el-form-item label="日期：">
-                                <el-date-picker v-model="plantList.productDate" type="month" placeholder="选择月份" valueFormat="yyyy-MM" style="width: 199px;" />
+                                <el-date-picker v-model="plantList.productDate" type="month" placeholder="选择月份" value-format="yyyy-MM" style="width: 199px;" />
                             </el-form-item>
                             <el-form-item class="floatr">
                                 <el-button v-if="isAuth('report:form:listWorkshopWHoursM')" type="primary" size="small" @click="GetList(true)">
@@ -30,22 +30,22 @@
                 <div class="toggleSearchTop">
                     <i class="el-icon-caret-bottom" />
                 </div>
-                <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column prop="factoryName" label="工厂" :showOverflowTooltip="true" />
-                    <el-table-column prop="workShopName" label="车间" :showOverflowTooltip="true" />
-                    <el-table-column prop="productLineName" label="产线" :showOverflowTooltip="true" />
-                    <el-table-column prop="boxSpec" label="箱规格" :showOverflowTooltip="true" width="65" />
-                    <el-table-column prop="boxSpecUnitName" label="单位" :showOverflowTooltip="true" width="55" />
-                    <el-table-column prop="productSpec" label="瓶规格" :showOverflowTooltip="true" width="65" />
-                    <el-table-column prop="productSpecUnitName" label="单位" :showOverflowTooltip="true" width="50" />
+                <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+                    <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" />
+                    <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" />
+                    <el-table-column prop="productLineName" label="产线" :show-overflow-tooltip="true" />
+                    <el-table-column prop="boxSpec" label="箱规格" :show-overflow-tooltip="true" width="65" />
+                    <el-table-column prop="boxSpecUnitName" label="单位" :show-overflow-tooltip="true" width="55" />
+                    <el-table-column prop="productSpec" label="瓶规格" :show-overflow-tooltip="true" width="65" />
+                    <el-table-column prop="productSpecUnitName" label="单位" :show-overflow-tooltip="true" width="50" />
                     <template v-if="dataList.length > 0">
                         <el-table-column v-for="(item, index) in dataList[0].listMonth.length" :key="item" :label="month + '月' + (index + 1).toString() + '日'">
-                            <el-table-column prop="machineWorking" label="机器工时" :showOverflowTooltip="true" width="80">
+                            <el-table-column prop="machineWorking" label="机器工时" :show-overflow-tooltip="true" width="80">
                                 <template slot-scope="scope">
                                     {{ scope.row.listMonth[index].machineWorking }}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="peopleWorking" label="人工工时" :showOverflowTooltip="true" width="80">
+                            <el-table-column prop="peopleWorking" label="人工工时" :show-overflow-tooltip="true" width="80">
                                 <template slot-scope="scope">
                                     {{ scope.row.listMonth[index].peopleWorking }}
                                 </template>
@@ -54,7 +54,7 @@
                     </template>
                 </el-table>
                 <el-row>
-                    <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
@@ -113,7 +113,7 @@ export default {
                             ? this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1).slice(1)
                             : this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.lodingS = false;
             });

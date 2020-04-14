@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard  newCard" style="margin-bottom: 5px;">
-            <el-form :inline="true" size="small" :model="formHeader" labelWidth="70px" class="topform sole_row">
+            <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
                         <el-option label="请选择" value="" />
@@ -14,13 +14,13 @@
                         <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="生产日期：" labelWidth="70px">
-                    <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择" valueFormat="yyyy-MM-dd" style="width: 180px;" />
+                <el-form-item label="生产日期：" label-width="70px">
+                    <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 180px;" />
                 </el-form-item>
                 <el-form-item label="订单：">
                     <el-input v-model="formHeader.orderNo" type="text" clearable />
                 </el-form-item>
-                <el-button v-if="isAuth('ste:order:list')" type="primary" size="small" style="float: right;" @click="GetDataList(true)">
+                <el-button v-if="isAuth('ste:order:list')" type="primary" size="small" style="float: right;" @click="getResultData(true)">
                     查询
                 </el-button>
             </el-form>
@@ -57,7 +57,7 @@
                             <div class="dataList_item_body_text">
                                 <el-form :inline="true" size="mini">
                                     <el-form-item label="订单编号：">
-                                        <el-select v-model="item.selectOrderId" class="orderSelect" placeholder="请选择" style="width: 100px;" valueKey="orderId" @change="OrderChange($event, item)">
+                                        <el-select v-model="item.selectOrderId" class="orderSelect" placeholder="请选择" style="width: 100px;" value-key="orderId" @change="OrderChange($event, item)">
                                             <el-option v-for="(item1, index1) in item.steList" :key="index1" :label="item1.orderNo" :value="item1.orderId">
                                                 <div
                                                     :style="{
@@ -188,7 +188,7 @@ export default {
         getFactory(this);
     },
     methods: {
-        GetDataList() {
+        getResultData() {
             if (!this.formHeader.factory || !this.formHeader.workShop) {
                 this.$warningTost('请选择工厂与车间');
                 return;
@@ -199,19 +199,24 @@ export default {
             }
             this.$http(`${STERILIZED_API.STE_HOME_LIST_API}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
-                    this.GetMaterails(this.formHeader.factory);
-                    // this.dataList = data.list
-                    this.dataList = data.list;
-                    this.dataList.forEach((item) => {
-                        if (item.steList.length === 1) {
-                            item.selectOrder = item.steList[0];
-                            item.selectOrderId = item.steList[0].orderId;
-                        } else {
-                            item.selectOrder = {};
-                        }
-                    });
+                    if (data.list.length !== 0) {
+                        this.GetMaterails(this.formHeader.factory);
+                        // this.dataList = data.list
+                        this.dataList = data.list;
+                        this.dataList.forEach((item) => {
+                            if (item.steList.length === 1) {
+                                item.selectOrder = item.steList[0];
+                                item.selectOrderId = item.steList[0].orderId;
+                            } else {
+                                item.selectOrder = {};
+                            }
+                        });
+                    } else {
+                        this.$infoTost('该搜寻条件无任何资料！');
+                    }
+
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -227,7 +232,7 @@ export default {
                 if (data.code === 0) {
                     this.Materails = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -291,7 +296,7 @@ export default {
                             }, 100);
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else if (str === '3') {
@@ -327,10 +332,8 @@ export default {
 
 .dataList {
     margin-top: 10px;
-
     &_item {
         margin-bottom: 10px;
-
         &_tit {
             padding: 0 10px;
             color: black;
@@ -338,14 +341,12 @@ export default {
             font-size: 16px;
             line-height: 40px;
             border-bottom: 1px solid #e8e8e8;
-
             &_right {
                 position: relative;
                 float: right;
                 padding-left: 8px;
                 font-size: 14px;
             }
-
             &_dian {
                 position: absolute;
                 top: 17px;
@@ -356,13 +357,11 @@ export default {
                 border-radius: 50%;
             }
         }
-
         &_body {
             position: relative;
             display: flex;
             justify-content: center;
             padding-top: 10px;
-
             &_ptobox {
                 position: relative;
                 width: 100px;
@@ -371,7 +370,6 @@ export default {
                 margin-top: 10px;
                 background: url("~@/assets/img/sterilized.png") no-repeat;
                 background-size: contain;
-
                 &_pto {
                     position: absolute;
                     top: 13px;
@@ -384,7 +382,6 @@ export default {
                     overflow: hidden;
                     border-bottom-right-radius: 53px 21px;
                     border-bottom-left-radius: 53px 21px;
-
                     &_bg {
                         position: relative;
                         flex: 1;
@@ -392,7 +389,6 @@ export default {
                         height: 40px;
                         overflow: hidden;
                         background: linear-gradient(#35c3ff, #1890ff);
-
                         &::before,
                         &::after {
                             position: absolute;
@@ -403,12 +399,10 @@ export default {
                             animation: roateTwo 10s linear infinite;
                             content: "";
                         }
-
                         &::before {
                             top: -55px;
                             border-radius: 45%;
                         }
-
                         &::after {
                             top: -51px;
                             border-radius: 47%;
@@ -416,23 +410,19 @@ export default {
                         }
                     }
                 }
-
                 &:hover &_pto_bg::before,
                 &:hover &_pto_bg::after {
                     animation: roateOne 10s linear infinite;
                 }
             }
-
             &_text {
                 position: relative;
                 width: 170px;
                 min-width: 170px;
-
                 .el-form-item {
                     margin-right: 0 !important;
                     margin-bottom: 4px !important;
                 }
-
                 &_tit {
                     width: 100px;
                     min-height: 29px;
@@ -442,7 +432,6 @@ export default {
                     text-overflow: ellipsis;
                     border-bottom: 1px solid #d8d8d8;
                 }
-
                 &_img {
                     position: absolute;
                     top: 10px;
@@ -460,11 +449,9 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     50% {
         transform: translate(-50%, -1%) rotateZ(180deg);
     }
-
     100% {
         transform: translate(-50%, -0%) rotateZ(360deg);
     }
@@ -474,11 +461,9 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     50% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     100% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
@@ -488,11 +473,9 @@ export default {
 .el-select-dropdown__wrap {
     max-height: 200px;
 }
-
 .header_main .dataList_item .el-card__body {
     padding: 0 !important;
 }
-
 .header_main .dataList_item_body_text .el-form-item {
     .el-form-item__label {
         font-size: 12px;

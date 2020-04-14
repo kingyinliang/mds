@@ -8,7 +8,7 @@
                 酱醪领用
             </el-button>
         </el-row>
-        <el-table ref="table1" headerRowClassName="tableHead" :data="SumDate" :rowClassName="RowDelFlag" @row-dblclick="GetLog">
+        <el-table ref="table1" header-row-class-name="tableHead" :data="SumDate" :row-class-name="RowDelFlag" @row-dblclick="GetLog">
             <el-table-column label="原汁信息">
                 <el-table-column label="状态" width="95">
                     <template slot-scope="scope">
@@ -45,12 +45,12 @@
                         {{ scope.row.fumet.material }}
                     </template>
                 </el-table-column>
-                <el-table-column label="入罐数量" width="80" :showOverflowTooltip="true" prop="fumet.inPotAmount" />
-                <el-table-column label="满罐数量" width="80" :showOverflowTooltip="true" prop="fumet.fullPotAmount" />
+                <el-table-column label="入罐数量" width="80" :show-overflow-tooltip="true" prop="fumet.inPotAmount" />
+                <el-table-column label="满罐数量" width="80" :show-overflow-tooltip="true" prop="fumet.fullPotAmount" />
                 <el-table-column label="单位" width="50" prop="fumet.unit" />
-                <el-table-column label="满罐日期" width="90" :showOverflowTooltip="true" prop="fumet.fullPotDate" />
-                <el-table-column label="原汁批次" width="110" :showOverflowTooltip="true" prop="fumet.batch" />
-                <el-table-column label="生产订单" width="110" :showOverflowTooltip="true" prop="fumet.orderNo" />
+                <el-table-column label="满罐日期" width="90" :show-overflow-tooltip="true" prop="fumet.fullPotDate" />
+                <el-table-column label="原汁批次" width="110" :show-overflow-tooltip="true" prop="fumet.batch" />
+                <el-table-column label="生产订单" width="110" :show-overflow-tooltip="true" prop="fumet.orderNo" />
             </el-table-column>
             <el-table-column label="操作" width="80">
                 <template slot-scope="scope">
@@ -70,7 +70,7 @@
                         <i class="reqI">*</i><span>发酵罐号</span>
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.material.childPotNo" filterable placeholder="请选择" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked')" size="small" @visible-change="PotChange($event, scope.row)">
+                        <el-select v-model="scope.row.material.childPotNo" filterable placeholder="请选择" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')" size="small" @visible-change="PotChange($event, scope.row)">
                             <el-option v-for="item in potList" :key="item.holderId" :label="item.holderName" :value="item.holderId" />
                             <el-option v-if="potSelect(scope.row.material)" :key="scope.row.material.childPotNo" :label="scope.row.material.holderName" :value="scope.row.material.childPotNo" :disabled="true" />
                         </el-select>
@@ -97,7 +97,7 @@
                             v-model="scope.row.material.childUsedAmount"
                             size="small"
                             placeholder="手工录入"
-                            :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked')"
+                            :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')"
                             @focus="GetOldAmount(scope.row)"
                             @blur="PostAmount(scope.row)"
                         />
@@ -128,7 +128,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <auditLog :tableData="MaterialAudit" />
+        <audit-log :table-data="MaterialAudit" />
     </div>
 </template>
 
@@ -266,21 +266,23 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
         // 日志
         GetLog(row) {
-            this.$http(`${SQU_API.SUM_LOG_MATERIAL_API}`, 'POST', {
-                orderNo: row.fumet.orderNo
-            }).then(({ data }) => {
-                if (data.code === 0) {
-                    this.MaterialAudit = data.listRecord;
-                } else {
-                    this.$error_SHINHO(data.msg);
-                }
-            });
+            if (row.fumet.orderNo) {
+                this.$http(`${SQU_API.SUM_LOG_MATERIAL_API}`, 'POST', {
+                    orderNo: row.fumet.orderNo
+                }).then(({ data }) => {
+                    if (data.code === 0) {
+                        this.MaterialAudit = data.listRecord;
+                    } else {
+                        this.$errorTost(data.msg);
+                    }
+                });
+            }
         },
         // 修改酱
         updateMaterial(str, resolve, reject, st = false) {
@@ -322,7 +324,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -388,7 +390,6 @@ export default {
                 }
             });
             Object.keys(this.sumAmount2).forEach(key => {
-                console.log(key, this.sumAmount2[key], this.sumAmount1[key]);
                 if (this.sumAmount2[key] - (this.sumAmount1[key] ? this.sumAmount1[key] : 0) > (this.potList.filter(it => it.holderId === key).length ? this.potList.filter(it => it.holderId === key)[0].sumAmount : 0)) {
                     ty = false;
                     this.$warningTost('剩余量不足');
@@ -440,7 +441,8 @@ export default {
                     childFullPotAmount: '',
                     childRecordMan: '',
                     childRemark: '',
-                    childDelFlag: '0'
+                    childDelFlag: '0',
+                    isDropDown: '1'
                 }
             });
         },
@@ -470,6 +472,8 @@ export default {
                 } else {
                     this.$warningTost('此订单最后一条了，不能删除');
                 }
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         RowDelFlag({ row }) {
@@ -494,7 +498,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -517,7 +521,8 @@ export default {
                         childRecordMan: '',
                         childRemark: '',
                         childStatus: '',
-                        childDelFlag: '0'
+                        childDelFlag: '0',
+                        isDropDown: '1'
                     };
                     this.SumDate.push({
                         fumet: item,
@@ -554,7 +559,8 @@ export default {
                             childRecordMan: '',
                             childRemark: '',
                             childStatus: '',
-                            childDelFlag: '0'
+                            childDelFlag: '0',
+                            isDropDown: '1'
                         };
                         this.SumDate.push({
                             fumet: item,

@@ -3,7 +3,7 @@
         <div class="main">
             <el-card>
                 <el-row>
-                    <el-form :inline="true" :model="dataForm" size="small" labelWidth="68px">
+                    <el-form :inline="true" :model="dataForm" size="small" label-width="68px">
                         <el-form-item>
                             <el-input v-model="dataForm.workNum" placeholder="用户名" class="input-with-select">
                                 <el-select slot="prepend" v-model="dataForm.isPermis" placeholder="请选择" style="width: 90px;">
@@ -23,14 +23,14 @@
                     </el-form>
                 </el-row>
                 <el-row>
-                    <el-table ref="table1" class="orderTable" border headerRowClassName="tableHead" :data="UserList" tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table ref="table1" class="orderTable" border header-row-class-name="tableHead" :data="UserList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                         <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
-                        <el-table-column label="用户名" width="200" :showOverflowTooltip="true">
+                        <el-table-column label="用户名" width="200" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 {{ `${scope.row.realName}（${scope.row.workNum}）` }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="角色名称" :showOverflowTooltip="true">
+                        <el-table-column label="角色名称" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 <el-button v-if="isAuth('sys:user:userManagementList')" style="padding: 0;" type="text" @click="updateRole(scope.row)">
                                     <span v-for="(item, index) in scope.row.roleName" :key="index">{{ item.roleName + ' ' }}</span>
@@ -48,18 +48,18 @@
                     </el-table>
                 </el-row>
                 <el-row>
-                    <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
-        <el-dialog :title="`${selctUser.realName}（${selctUser.workNum}）角色选择`" class="ShinHoDialog" :closeOnClickModal="false" :visible.sync="visible" width="740px">
+        <el-dialog :title="`${selctUser.realName}（${selctUser.workNum}）角色选择`" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible" width="740px">
             <div class="uaer-detail">
                 <el-transfer
                     v-model="selctRoleId"
                     filterable
                     :titles="['未分配角色', '已分配角色']"
-                    :filterMethod="filterMethod"
-                    filterPlaceholder="请输入角色名称"
+                    :filter-method="filterMethod"
+                    filter-placeholder="请输入角色名称"
                     :data="RoleList"
                     :props="{
                         key: 'roleId',
@@ -130,7 +130,7 @@ export default {
                 if (data.code === 0) {
                     this.RoleList = data.page.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -148,7 +148,7 @@ export default {
                     });
                     this.GetList();
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -170,9 +170,11 @@ export default {
                         });
                         this.GetList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         dataPro(num) {
@@ -194,7 +196,7 @@ export default {
                     this.UserListArr = data.page;
                     this.dataPro(this.currPage);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

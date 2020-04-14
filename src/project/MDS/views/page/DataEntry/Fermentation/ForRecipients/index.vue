@@ -3,7 +3,7 @@
         <el-card class="searchCard">
             <el-row>
                 <el-col :span="24">
-                    <el-form :model="form" :inline="true" size="small" labelWidth="70px" class="multi_row">
+                    <el-form :model="form" :inline="true" size="small" label-width="70px" class="multi_row">
                         <el-form-item label="生产工厂：">
                             <el-select v-model="form.factory" placeholder="请选择">
                                 <el-option v-for="(item, index) in factory" :key="index" :value="item.deptId" :label="item.deptName" />
@@ -26,10 +26,10 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="申请日期：">
-                            <el-date-picker v-model="form.sqTime" type="date" valueFormat="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 199px;" />
+                            <el-date-picker v-model="form.sqTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 199px;" />
                         </el-form-item>
                         <el-form-item label="生产日期：">
-                            <el-date-picker v-model="form.productDate" type="date" valueFormat="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 199px;" />
+                            <el-date-picker v-model="form.productDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 199px;" />
                         </el-form-item>
                         <el-form-item class="floatr">
                             <el-button v-if="isAuth('fer:openholderg:openHolderList')" type="primary" size="small" style="float: right;" @click="SearchList(true)">
@@ -42,7 +42,7 @@
         </el-card>
         <el-tabs v-model="activeName" type="border-card" style="margin-top: 5px;" @tab-click="tabClick">
             <el-tab-pane name="0" label="未确认">
-                <el-table :data="dataList" border headerRowClassName="tableHead">
+                <el-table :data="dataList" border header-row-class-name="tableHead">
                     <el-table-column label="车间" prop="workShopName" />
                     <el-table-column label="申请编码" prop="applyNo" width="140">
                         <template slot-scope="scope">
@@ -69,10 +69,10 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :currentPage="form.currPage" :pageSizes="[10, 20, 50]" :pageSize="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-tab-pane>
             <el-tab-pane name="1" label="已确认">
-                <el-table :data="dataList" border headerRowClassName="tableHead">
+                <el-table :data="dataList" border header-row-class-name="tableHead">
                     <el-table-column label="车间" prop="workShopName" />
                     <el-table-column label="申请编码" width="140">
                         <template slot-scope="scope">
@@ -90,7 +90,7 @@
                     <el-table-column label="申请时间" prop="created" width="170" />
                     <el-table-column label="生产日期" prop="productDate" />
                 </el-table>
-                <el-pagination :currentPage="form.currPage" :pageSizes="[10, 20, 50]" :pageSize="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -152,7 +152,7 @@ export default {
                     this.factory = data.typeList;
                     this.form.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -173,7 +173,7 @@ export default {
                             }
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -188,7 +188,7 @@ export default {
                 if (data.code === 0) {
                     this.MaterialType = data.productsInfo;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -238,9 +238,11 @@ export default {
                         });
                         this.SearchList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 改变每页条数

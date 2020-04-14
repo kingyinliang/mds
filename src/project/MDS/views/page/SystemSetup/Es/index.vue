@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table ref="queryTable" :rules="rules" :queryFormData="queryFormData" :listInterface="listInterface" :queryAuth="'esCommon:iot'" :column="column" @get-data-success="getDataSuccess" />
+        <query-table ref="queryTable" :rules="rules" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'esCommon:iot'" :column="column" @get-data-success="getDataSuccess" />
     </div>
 </template>
 

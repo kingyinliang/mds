@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <el-form :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="plantList.factory" placeholder="请选择">
                                     <el-option label="请选择" value="" />
@@ -24,7 +24,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="生产日期：">
-                                <el-date-picker v-model="plantList.productDate" type="month" placeholder="选择月份" valueFormat="yyyy-MM" style="width: 199px;" />
+                                <el-date-picker v-model="plantList.productDate" type="month" placeholder="选择月份" value-format="yyyy-MM" style="width: 199px;" />
                             </el-form-item>
                             <el-form-item class="floatr">
                                 <el-button v-if="isAuth('report:form:listAttM')" type="primary" size="small" @click="GetList(true)">
@@ -47,21 +47,21 @@
                 <div class="toggleSearchTop">
                     <i class="el-icon-caret-bottom" />
                 </div>
-                <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column prop="factoryName" label="工厂" :showOverflowTooltip="true" width="90" />
-                    <el-table-column prop="workShopName" label="车间" :showOverflowTooltip="true" width="95" />
-                    <el-table-column prop="deptIdName" label="班组" :showOverflowTooltip="true" width="70" />
-                    <el-table-column prop="kqdlName" label="考勤大类" :showOverflowTooltip="true" width="80" />
-                    <el-table-column prop="kqlxName" label="考勤类型" :showOverflowTooltip="true" width="80" />
-                    <el-table-column prop="userId" label="人员" :showOverflowTooltip="true" />
+                <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+                    <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" width="90" />
+                    <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="95" />
+                    <el-table-column prop="deptIdName" label="班组" :show-overflow-tooltip="true" width="70" />
+                    <el-table-column prop="kqdlName" label="考勤大类" :show-overflow-tooltip="true" width="80" />
+                    <el-table-column prop="kqlxName" label="考勤类型" :show-overflow-tooltip="true" width="80" />
+                    <el-table-column prop="userId" label="人员" :show-overflow-tooltip="true" />
                     <div v-if="dataList.length > 0">
                         <el-table-column v-for="(item, index) in dataList[0].listMonth.length" :key="item" :label="month + '月' + (index + 1).toString() + '日'">
-                            <el-table-column prop="pieceTime" label="计时时数" :showOverflowTooltip="true" width="80">
+                            <el-table-column prop="pieceTime" label="计时时数" :show-overflow-tooltip="true" width="80">
                                 <template slot-scope="scope">
                                     {{ scope.row.listMonth[index].timedTime }}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="timedTime" label="计件时数" :showOverflowTooltip="true" width="80">
+                            <el-table-column prop="timedTime" label="计件时数" :show-overflow-tooltip="true" width="80">
                                 <template slot-scope="scope">
                                     {{ scope.row.listMonth[index].pieceTime }}
                                 </template>
@@ -69,12 +69,12 @@
                         </el-table-column>
                     </div>
                     <el-table-column label="统计">
-                        <el-table-column prop="allTime" label="出勤总时数" :showOverflowTooltip="true" width="95" />
-                        <el-table-column prop="allDay" label="出勤总天数" :showOverflowTooltip="true" width="95" />
+                        <el-table-column prop="allTime" label="出勤总时数" :show-overflow-tooltip="true" width="95" />
+                        <el-table-column prop="allDay" label="出勤总天数" :show-overflow-tooltip="true" width="95" />
                     </el-table-column>
                 </el-table>
                 <el-row>
-                    <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
@@ -128,7 +128,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -143,7 +143,7 @@ export default {
                             this.plantList.workshop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -162,11 +162,11 @@ export default {
                         if (data.code === 0) {
                             this.ARtype = this.ARtype.concat(data.dicList);
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -191,7 +191,7 @@ export default {
                             ? this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1).slice(1)
                             : this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.lodingS = false;
             });

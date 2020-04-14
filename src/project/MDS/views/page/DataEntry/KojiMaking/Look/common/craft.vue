@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-card>
-            <el-form :inline="true" :model="tech" size="small" labelWidth="130px">
+            <el-form :inline="true" :model="tech" size="small" label-width="130px">
                 <el-form-item label="入曲检查：" :required="true">
                     <el-input v-model="tech.inCheck" style="width: 171px;" :disabled="!(isRedact && tech.status !== 'submit' && tech.status !== 'checked')" />
                 </el-form-item>
@@ -18,7 +18,7 @@
                         placeholder="选择日期"
                         size="small"
                         format="yyyy-MM-dd HH:mm"
-                        valueFormat="yyyy-MM-dd HH:mm"
+                        value-format="yyyy-MM-dd HH:mm"
                         style="width: 171px;"
                     />
                 </el-form-item>
@@ -30,7 +30,7 @@
                         placeholder="选择日期"
                         size="small"
                         format="yyyy-MM-dd HH:mm"
-                        valueFormat="yyyy-MM-dd HH:mm"
+                        value-format="yyyy-MM-dd HH:mm"
                         style="width: 171px;"
                     />
                 </el-form-item>
@@ -46,7 +46,7 @@
                 </el-button>
             </div>
             <div class="lookarBox">
-                <look-echarts ref="LookEcharts" :formHeader="formHeader" />
+                <look-echarts ref="LookEcharts" :form-header="formHeader" />
                 <el-row style=" margin-bottom: 10px; line-height: 32px;">
                     <el-col
                         :span="5"
@@ -77,7 +77,7 @@
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table ref="recordTable" class="newTable borderTable" border maxHeight="315" headerRowClassName="tableHead" :data="lookList" :rowClassName="rowDelFlag" tooltipEffect="dark">
+                <el-table ref="recordTable" class="newTable borderTable" border max-height="315" header-row-class-name="tableHead" :data="lookList" :row-class-name="rowDelFlag" tooltip-effect="dark">
                     <el-table-column label="序号" type="index" width="50px" />
                     <el-table-column label="" width="205">
                         <template slot="header">
@@ -92,7 +92,7 @@
                                 placeholder="选择日期"
                                 size="small"
                                 format="yyyy-MM-dd HH:mm"
-                                valueFormat="yyyy-MM-dd HH:mm"
+                                value-format="yyyy-MM-dd HH:mm"
                                 style="width: 175px;"
                             />
                         </template>
@@ -309,7 +309,7 @@
                 </el-button>
             </div>
             <div class="feelarBox">
-                <el-table border headerRowClassName="tableHead" :data="assessList">
+                <el-table border header-row-class-name="tableHead" :data="assessList">
                     <el-table-column prop="feelName" />
                     <el-table-column>
                         <template slot="header">
@@ -468,7 +468,7 @@ export default {
                 if (data.code === 0) {
                     this.userList = data.page.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -578,6 +578,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         rowDelFlag({ row }) {
@@ -597,7 +599,7 @@ export default {
             })
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -619,7 +621,7 @@ export default {
             this.$http(`${KJM_API.DOULOOKZHUSAVE_API}`, 'POST', this.tech)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -635,7 +637,7 @@ export default {
             this.$http(`${KJM_API.DOULOOKKANQUSAVE_API}`, 'POST', this.lookList)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -663,7 +665,7 @@ export default {
             this.$http(`${KJM_API.DOULOOKGANGUANSAVE_API}`, 'POST', this.assessList)
                 .then(({ data }) => {
                     if (!data.code === 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -685,7 +687,7 @@ export default {
                         this.assessList = data.feelList;
                         this.lookList = data.recordList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -706,12 +708,10 @@ export default {
     border-bottom: 1px solid #ccc;
     border-radius: 0;
 }
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     appearance: none;
 }
-
 input[type="number"] {
     appearance: textfield;
 }
@@ -720,26 +720,21 @@ input[type="number"] {
 .rowDel {
     display: none;
 }
-
 .htitle {
     margin: 0 0 10px;
     overflow: hidden;
 }
-
 .audit {
     margin: 0 0 10px;
     line-height: 32px;
-
     i {
         float: left;
         font-size: 22px;
     }
-
     span {
         font-size: 16px;
     }
 }
-
 .reqI {
     color: red;
 }

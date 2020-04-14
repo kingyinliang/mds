@@ -1,5 +1,5 @@
 <template>
-    <mds-card :title="'录入数据单位：MIN'" :name="'exc'" :iconBg="'#f05c4a'">
+    <mds-card :title="'录入数据单位：MIN'" :name="'exc'" :icon-bg="'#f05c4a'">
         <template slot="titleBtn">
             <div style="float: right;">
                 <el-button type="primary" size="small" :disabled="!isRedact" @click="AddExcDate(ExcDate)">
@@ -7,7 +7,7 @@
                 </el-button>
             </div>
         </template>
-        <el-table headerRowClassName="tableHead" class="newTable" :data="ExcDate" :rowClassName="RowDelFlag" border tooltipEffect="dark">
+        <el-table header-row-class-name="tableHead" class="newTable" :data="ExcDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
             <el-table-column type="index" width="55" label="序号" />
             <el-table-column label="白/中/夜班" width="120">
                 <template slot="header">
@@ -31,7 +31,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="异常描述" :showOverflowTooltip="true" width="220">
+            <el-table-column label="异常描述" :show-overflow-tooltip="true" width="220">
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.expInfo" :disabled="!isRedact" size="small" placeholder="手工录入" />
                 </template>
@@ -42,7 +42,7 @@
                     <span>异常开始时间</span>
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.expStartDate" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 195px;" />
+                    <el-date-picker v-model="scope.row.expStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 195px;" />
                 </template>
             </el-table-column>
             <el-table-column width="241" label="异常结束时间">
@@ -51,7 +51,7 @@
                     <span>异常结束时间</span>
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.expEndDate" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 195px;" />
+                    <el-date-picker v-model="scope.row.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 195px;" />
                 </template>
             </el-table-column>
             <el-table-column label="异常时间" width="80">
@@ -118,9 +118,7 @@ export default {
         },
         order: {
             type: Object,
-            default: () => {
-            //    Object
-            }
+            default: function() { return {} }
         }
     },
     data() {
@@ -135,11 +133,10 @@ export default {
     },
     computed: {
         mistiming: function() {
-            const that = this;// eslint-disable-line
-            return function(end, start, row) {
+            return (end, start, row) => {
                 if (end && start && row.delFlag !== '1') {
                     if ((toDate(end) - toDate(start)) / 60000 < 0) {
-                        that.$warningTost('异常结束时间早于异常开始时间，请重新录入');
+                        this.$warningTost('异常结束时间早于异常开始时间，请重新录入');
                         return 'NaN';
                     }
                         return Number(((toDate(end) - toDate(start)) / 60000).toFixed(2));
@@ -240,11 +237,12 @@ export default {
                 }
         },
         // 获取异常数据
+        /* eslint-disable @typescript-eslint/camelcase */
         GetExcDate(id) {
             let postdata;
             if (typeof id === 'string') {
                 postdata = {
-                    order_id: id// eslint-disable-line
+                    order_id: id
                 };
             } else if (typeof id === 'object') {
                 postdata = id;
@@ -257,6 +255,7 @@ export default {
                 }
             });
         },
+        /* eslint-enable @typescript-eslint/camelcase */
         // 异常记录校验
         excrul() {
             let ty = true;
@@ -379,6 +378,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag

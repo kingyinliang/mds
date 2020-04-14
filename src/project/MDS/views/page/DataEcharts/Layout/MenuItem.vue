@@ -99,7 +99,7 @@ export default {
                 if (data.code === 0) {
                     this.container = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         }

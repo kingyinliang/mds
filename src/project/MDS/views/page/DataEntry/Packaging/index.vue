@@ -2,7 +2,7 @@
     <el-col>
         <div class="header_main">
             <el-card class="newCard">
-                <el-form ref="" :model="plantList" size="small" class="sole_row" :inline="true" labelWidth="70px" @keyup.enter.native="GetOrderList()" @submit.native.prevent>
+                <el-form ref="" :model="plantList" size="small" class="sole_row" :inline="true" label-width="70px" @keyup.enter.native="GetOrderList()" @submit.native.prevent>
                     <el-form-item label="生产工厂：">
                         <el-select v-model="plantList.factoryid" placeholder="请选择">
                             <el-option value="">
@@ -16,10 +16,10 @@
                             <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="日期：" labelWidth="45px">
-                        <el-date-picker v-model="plantList.productDate" type="date" placeholder="选择" valueFormat="yyyyMMdd" style="width: 140px;" />
+                    <el-form-item label="日期：" label-width="45px">
+                        <el-date-picker v-model="plantList.productDate" type="date" placeholder="选择" value-format="yyyyMMdd" style="width: 140px;" />
                     </el-form-item>
-                    <el-form-item label="订单：" labelWidth="45px">
+                    <el-form-item label="订单：" label-width="45px">
                         <el-input v-model="plantList.orderNo" type="text" clearable style="width: 140px;" />
                     </el-form-item>
                     <el-form-item class="floatr">
@@ -33,7 +33,7 @@
                 <el-row :gutter="10">
                     <el-col v-for="(item, index) in list" :key="index" :span="12" style="margin-bottom: 10px;">
                         <el-card class="box-card">
-                            <el-form :model="item" size="small" labelPosition="right" labelWidth="85px">
+                            <el-form :model="item" size="small" label-position="right" label-width="85px">
                                 <div class="clearfix pro-line">
                                     <el-form-item label="产线：">
                                         <p>
@@ -56,7 +56,7 @@
                                     <div class="itemForm">
                                         <el-form-item label="订单号：" style="margin-bottom: 10px;">
                                             <el-select v-model="item.orderNo" placeholder="请选择" :change="orderchange(item)">
-                                                <el-option v-for="(subItem, subIndex) in subItem.order_arr" :key="subIndex" :label="subItem" :value="subItem" />
+                                                <el-option v-for="(subItem, subIndex) in item.order_arr" :key="subIndex" :label="subItem" :value="subItem" />
                                             </el-select>
                                         </el-form-item>
                                         <el-form-item label="品项：" style="margin-bottom: 10px;">
@@ -185,7 +185,7 @@ export default {
                         this.plantList.factoryid = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -202,7 +202,7 @@ export default {
                             this.plantList.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -229,7 +229,7 @@ export default {
                         this.productDate = this.plantList.productDate;
                         this.factoryid = this.plantList.factoryid;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -263,7 +263,7 @@ export default {
                         row.realOutput = data.list[0].realOutput;
                         row.plan = data.list[0].plan;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -336,28 +336,23 @@ export default {
     margin-top: 0 !important;
     overflow: hidden;
 }
-
 .box-card {
     .pro-line {
         border-bottom: 1px solid #dcdfe6;
     }
-
     .pro-line p {
         color: red;
         font-size: 16px;
         letter-spacing: 0.1em;
     }
-
     b {
         float: left;
         font-size: 16px;
         line-height: 32px;
     }
-
     .item {
         display: flex;
         margin-top: 20px;
-
         img {
             float: left;
             width: 220px;
@@ -366,10 +361,8 @@ export default {
             border: 1px solid #dcdfe6;
             border-radius: 6px;
         }
-
         .itemForm {
             flex: 1;
-
             p {
                 color: #8a979e;
             }

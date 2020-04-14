@@ -2,7 +2,7 @@
     <div class="header_main">
         <el-card class="searchCard searchCards">
             <el-row>
-                <el-form :model="formHeader" :inline="true" size="small" labelWidth="70px" class="multi_row">
+                <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
                     <el-form-item label="生产工厂：">
                         <el-select v-model="formHeader.factory" placeholder="请选择" class="width150px">
                             <el-option value="">
@@ -20,7 +20,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="生产日期：">
-                        <el-date-picker v-model="formHeader.allocateDate" type="date" placeholder="请选择" style="width: 150px;" format="yyyy-MM-dd" valueFormat="yyyy-MM-dd" />
+                        <el-date-picker v-model="formHeader.allocateDate" type="date" placeholder="请选择" style="width: 150px;" format="yyyy-MM-dd" value-format="yyyy-MM-dd" />
                     </el-form-item>
                     <el-form-item label="调配单号：">
                         <el-input v-model="formHeader.orderNo" style="width: 150px;" />
@@ -59,9 +59,9 @@
                 </div>
             </div>
             <el-card>
-                <el-table :data="dataList" border headerRowClassName="tableHead" @selection-change="handleSelectionChange">
+                <el-table :data="dataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="35" :selectable="CheckBoxInit" />
-                    <el-table-column label="状态" width="90" :showOverflowTooltip="true">
+                    <el-table-column label="状态" width="90" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span
                                 :style="{
@@ -71,9 +71,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="调配单号" prop="orderNo" width="130" />
-                    <el-table-column label="生产车间" prop="workShopName" width="100" :showOverflowTooltip="true" />
-                    <el-table-column label="调配单日期" prop="allocateDate" width="110" :showOverflowTooltip="true" />
-                    <el-table-column label="杀菌物料" width="190" :showOverflowTooltip="true">
+                    <el-table-column label="生产车间" prop="workShopName" width="100" :show-overflow-tooltip="true" />
+                    <el-table-column label="调配单日期" prop="allocateDate" width="110" :show-overflow-tooltip="true" />
+                    <el-table-column label="杀菌物料" width="190" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}{{ scope.row.materialName }}
                         </template>
@@ -99,10 +99,10 @@
                             <i class="reqI">*</i> 调配日期
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.allocateTime" :disabled="!isRedact" type="date" placeholder="请选择" format="yyyy-MM-dd" valueFormat="yyyy-MM-dd" style="width: 150px;" size="small" />
+                            <el-date-picker v-model="scope.row.allocateTime" :disabled="!isRedact" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="调配单备注" prop="remark" width="100" :showOverflowTooltip="true" />
+                    <el-table-column label="调配单备注" prop="remark" width="100" :show-overflow-tooltip="true" />
                     <el-table-column label="创建人员" prop="creator" width="150" />
                     <el-table-column label="创建时间" prop="created" width="170" />
                     <el-table-column label="调配人员" prop="changer" width="150" />
@@ -118,15 +118,15 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :currentPage="pages.currentPage" :pageSizes="[10, 20, 50]" :pageSize="pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pages.currentTotal" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="pages.currentPage" :page-sizes="[10, 20, 50]" :page-size="pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pages.currentTotal" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-card>
         </div>
-        <el-dialog :closeOnClickModal="false" :visible.sync="dialogTableVisible" width="1000px" customClass="dialog__class">
+        <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class="dialog__class">
             <div slot="title">
                 调配列表
             </div>
-            <el-table style="margin-bottom: 20px;" :data="ItemList" border headerRowClassName="tableHead" :rowClassName="RowDelFlag1">
-                <el-table-column label="物料" :showOverflowTooltip="true" width="180">
+            <el-table style="margin-bottom: 20px;" :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag1">
+                <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode }}
                         {{ scope.row.materialName }}
@@ -154,7 +154,7 @@
                         <el-input v-model="scope.row.holderName" size="small" disabled />
                     </template>
                 </el-table-column>
-                <el-table-column label="类别" :showOverflowTooltip="true" width="80">
+                <el-table-column label="类别" :show-overflow-tooltip="true" width="80">
                     <template slot-scope="scope">
                         {{ scope.row.category }}
                     </template>
@@ -175,7 +175,7 @@
                         <el-input v-model="scope.row.batch" maxlength="10" :disabled="SplitStatuss(scope.row)" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" :showOverflowTooltip="true">
+                <el-table-column label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" :disabled="!(lineStatus !== '已提交' && lineStatus !== '审核通过' && isRedact !== false)" size="small" />
                     </template>
@@ -193,16 +193,16 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-table :data="ItemList" border headerRowClassName="tableHead" :rowClassName="RowDelFlag2">
-                <el-table-column label="物料" :showOverflowTooltip="true">
+            <el-table :data="ItemList" border header-row-class-name="tableHead" :row-class-name="RowDelFlag2">
+                <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode }}
                         {{ scope.row.materialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="数量" prop="planAmount" :showOverflowTooltip="true" />
-                <el-table-column label="订单单位" prop="unit" :showOverflowTooltip="true" />
-                <el-table-column label="订单备注" prop="remark" :showOverflowTooltip="true" />
+                <el-table-column label="数量" prop="planAmount" :show-overflow-tooltip="true" />
+                <el-table-column label="订单单位" prop="unit" :show-overflow-tooltip="true" />
+                <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
             </el-table>
             <span slot="footer" class="dialog-footer">
                 <template>
@@ -211,11 +211,11 @@
                 </template>
             </span>
         </el-dialog>
-        <el-dialog :closeOnClickModal="false" :visible.sync="RecordDialogTableVisible" width="550px" customClass="dialog__class">
+        <el-dialog :close-on-click-modal="false" :visible.sync="RecordDialogTableVisible" width="550px" custom-class="dialog__class">
             <div slot="title">
                 记录
             </div>
-            <el-form ref="record" :model="record" size="small" labelWidth="140px" :rules="recordrules" style="width: 471px;">
+            <el-form ref="record" :model="record" size="small" label-width="140px" :rules="recordrules" style="width: 471px;">
                 <el-form-item label="搅罐时间（min）：" prop="stirringTime">
                     <el-input v-model="record.stirringTime" size="small" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'" />
                 </el-form-item>
@@ -224,7 +224,7 @@
                         v-model="record.sampleTime"
                         class="width100"
                         type="datetime"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy-MM-dd HH:mm"
                         placeholder="选择"
                         size="small"
@@ -254,12 +254,12 @@
                                 <el-option value="">
                                     请选择
                                 </el-option>
-                                <el-option v-for="(subItem, subIndex) of nonReasonClassList" :key="subIndex" :value="subItem" :label="item" />
+                                <el-option v-for="(subItem, subIndex) of nonReasonClassList" :key="subIndex" :value="subItem" :label="subItem" />
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col style="width: 170px;">
-                        <el-form-item label="数量：" labelWidth="50px">
+                        <el-form-item label="数量：" label-width="50px">
                             <el-input v-model="item.adjustAmount" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'" />
                         </el-form-item>
                     </el-col>
@@ -275,7 +275,7 @@
                     <el-input v-model="record.afterMet" class="width100" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'" />
                 </el-form-item>
                 <el-form-item label="合格时间：">
-                    <el-date-picker v-model="record.qualTime" type="datetime" class="width100" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'" />
+                    <el-date-picker v-model="record.qualTime" type="datetime" class="width100" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'" />
                 </el-form-item>
                 <el-form-item label="白班操作人：">
                     <el-select v-model="record.dayOperator" filterable class="width100" :disabled="!isRedact || soleRowstatus === '已提交' || soleRowstatus === '审核通过'">
@@ -418,7 +418,7 @@ export default {
                 if (data.code === 0) {
                     this.nonReasonsList = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -430,7 +430,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -447,7 +447,7 @@ export default {
                             this.formHeader.workShop = '';
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -460,7 +460,7 @@ export default {
                 if (data.code === 0) {
                     this.holderList = data.holderList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -476,19 +476,21 @@ export default {
                     if (data.code === 0) {
                         this.thrwHolderList = data.holderList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
         },
         // 查询
+        /* eslint-disable @typescript-eslint/camelcase*/
         SearchList() {
             if (this.formHeader.factory === '') {
                 this.$warningTost('请选择工厂');
                 return false;
             }
             this.ThrowHolder(this.formHeader.workShop);
-            this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSEARCHLIST}`, 'POST', this.formHeader).then(({ data }) => {
+            // this.formHeader.order_no = this.formHeader.orderNoAnother;
+            this.$http(`${STERILIZED_API.JUICEDEPLOYMENTSEARCHLIST}`, 'POST', { ...this.formHeader, order_no: this.formHeader.orderNoAnother }).then(({ data }) => {
                 if (data.code === 0) {
                     this.dataListAll = data.orderInfo;
                     this.dataListAll.map(item => {
@@ -500,10 +502,11 @@ export default {
                     this.pages.currentPage = 1;
                     this.dataList = this.dataListAll.slice((this.pages.currentPage - 1) * this.pages.pageSize, this.pages.currentPage * this.pages.pageSize);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
+        /* eslint-disenable @typescript-eslint/camelcase*/
         ShowDetail(row) {
             this.Tdata = row;
             this.materialName = row.materialName;
@@ -539,7 +542,7 @@ export default {
                         this.CheckMessage();
                     }, 1000);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -630,6 +633,8 @@ export default {
                             type: 'warning'
                         }).then(() => {
                             this.SubmitFunction();
+                        }).catch(() => {
+                            // this.$infoTost('已取消删除');
                         });
                     }
                 });
@@ -642,6 +647,8 @@ export default {
                         type: 'warning'
                     }).then(() => {
                         this.SubmitFunction();
+                    }).catch(() => {
+                        // this.$infoTost('已取消删除');
                     });
                 }
             // if (new Set(batchList).size !== batchList.length) {
@@ -676,9 +683,9 @@ export default {
                         // this.ThrowHolder(this.formHeader.workShop)
                         this.dialogTableVisible = false;
                     } else if (data.mes.length === 0) {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         } else {
-                            this.$error_SHINHO(data.mes.join(','));
+                            this.$errorTost(data.mes.join(','));
                         }
                 });
             } else {
@@ -713,7 +720,7 @@ export default {
                     this.isRedact = false;
                     this.SearchList();
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -747,9 +754,11 @@ export default {
                         this.isRedact = false;
                         this.SearchList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 复选框初始状态
@@ -777,6 +786,8 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
                 // this.ItemList.splice(this.ItemList.indexOf(row), 1)
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         SplitStatus(row) {
@@ -800,7 +811,7 @@ export default {
                 if (data.code === 0) {
                     this.userList = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -876,7 +887,7 @@ export default {
                     }
                     this.RecordDialogTableVisible = true;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -942,7 +953,7 @@ export default {
                             this.RecordDialogTableVisible = false;
                             this.$refs[formName].resetFields();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 } else {
@@ -957,14 +968,12 @@ export default {
 <style lang="scss">
 .dialog__class {
     border-radius: 6px !important;
-
     .el-dialog__header {
         height: 59px;
         color: #fff;
         font-size: 20px;
         background: rgba(24, 144, 255, 1);
         border-radius: 6px 6px 0 0;
-
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }

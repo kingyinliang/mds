@@ -124,10 +124,9 @@ export function dateFormat(date, fmt) {
     };
     let fmtTemp;
     if (/(y+)/.test(fmt)) fmtTemp = fmt.replace(RegExp.$1, String(date.getFullYear()).substr(4 - RegExp.$1.length));
-
     for (const k in o) {
-        if (new RegExp('(' + k + ')').test(fmt)) {
-            fmtTemp = fmt.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(String(o[k]).length));
+        if (new RegExp('(' + k + ')').test(fmtTemp)) {
+            fmtTemp = fmtTemp.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(String(o[k]).length));
         }
     }
     return fmtTemp;

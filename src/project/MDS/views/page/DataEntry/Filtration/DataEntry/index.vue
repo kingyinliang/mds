@@ -3,7 +3,7 @@
         <el-card class="newCard" style="min-height: 480px;">
             <el-row type="flex" style="border-bottom: 1px solid #e9e9e9;">
                 <el-col>
-                    <el-form :model="formHeader" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                    <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                         <el-form-item label="生产工厂：">
                             <el-select v-model="formHeader.factory" class="selectwpx" style="width: 140px;">
                                 <el-option label="请选择" value="" />
@@ -17,9 +17,9 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="生产日期：">
-                            <el-date-picker v-model="formHeader.productDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
+                            <el-date-picker v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                         </el-form-item>
-                        <el-form-item label="订单：" labelWidth="42px">
+                        <el-form-item label="订单：" label-width="42px">
                             <el-input v-model="formHeader.orderNo" type="text" clearable />
                         </el-form-item>
                         <el-form-item class="floatr">
@@ -39,7 +39,7 @@
                         </font>
                     </div>
                     <div class="sole_cont">
-                        <el-form size="small" :inline="true" labelPosition="right" labelWidth="80px">
+                        <el-form size="small" :inline="true" label-position="right" label-width="80px">
                             <div class="itemImg">
                                 <img :src="'data:image/gif;base64,' + item.img" alt="" style="width: 100%; min-height: 181px;">
                             </div>
@@ -63,7 +63,7 @@
                             <div class="normal_bottom">
                                 <el-form-item label="订单号：" class="width50b">
                                     <el-select v-model="item.orderNo" placeholder="请选择" filterable :change="orderchange(item)" style="width: 180px;">
-                                        <el-option v-for="(subItem, sunIndex) in subItem.orderNoList" :key="sunIndex" :label="subItem.orderNo + ' ' + subItem.materialName" :value="subItem.orderNo" />
+                                        <el-option v-for="(subItem, sunIndex) in item.orderNoList" :key="sunIndex" :label="subItem.orderNo + ' ' + subItem.materialName" :value="subItem.orderNo" />
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="计划产量：" class="width50b">
@@ -150,7 +150,7 @@ export default {
                     // this.dataList = orderList(data.list)
                     this.dataList = orderListNew(data.list);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -174,7 +174,7 @@ export default {
                         this.dataList.splice(this.dataList.length, 0, {});
                         this.dataList.splice(this.dataList.length - 1, 1);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -206,45 +206,37 @@ export default {
     min-height: 181px;
     overflow: hidden;
     cursor: pointer;
-
     img {
         transition: all 1s ease-in-out;
     }
 }
-
 .itemImg:hover {
     img {
         transform: scale(1.2);
     }
 }
-
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
-
 .box-card {
     .pro-line {
         border-bottom: 1px solid #dcdfe6;
     }
-
     .pro-line p {
         color: red;
         font-size: 16px;
         letter-spacing: 0.1em;
     }
-
     b {
         float: left;
         font-size: 16px;
         line-height: 32px;
     }
-
     .item {
         display: flex;
         margin-top: 20px;
-
         img {
             float: left;
             width: 220px;
@@ -253,25 +245,20 @@ export default {
             border: 1px solid #dcdfe6;
             border-radius: 6px;
         }
-
         .itemForm {
             flex: 1;
-
             p {
                 color: #8a979e;
             }
         }
-
         .margb20px {
             margin-bottom: 10px;
         }
     }
 }
-
 #normal {
     .sole_cont {
         border: #e9e9e9 1px solid;
-
         .sole_status {
             position: absolute;
             top: 20px;
@@ -281,7 +268,6 @@ export default {
             color: #565656;
             font-size: 14px;
         }
-
         .points {
             display: block;
             float: left;
@@ -291,7 +277,6 @@ export default {
             margin-right: 8px;
             border-radius: 50%;
         }
-
         .title_left {
             display: block;
             height: 60px;
@@ -300,27 +285,22 @@ export default {
             line-height: 60px;
             border-bottom: #e9e9e9 1px solid;
         }
-
         .el-form-item__content {
             width: 61%;
             border-bottom: #ccc solid 1px;
         }
-
         .width50b {
             width: 49%;
             margin: 5px 0;
         }
-
         .normal_bottom {
             padding: 5px 0;
         }
     }
 }
-
 .selectwpx {
     width: 120px;
 }
-
 .hiddenP {
     width: 180px;
     overflow: hidden;

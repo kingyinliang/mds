@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="queryHead">
-            <el-form :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="auto" class="sole_row">
+            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="auto" class="sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="plantList.factoryIDValue" class="w300" placeholder="请选择" @change="changeSearchOptions(plantList.factoryIDValue)">
                         <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
@@ -63,7 +63,7 @@
                                 入罐
                             </el-button>
                         </p>
-                        <el-table :data="item.pulpList" headerRowClassName="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="165">
+                        <el-table :data="item.pulpList" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="165">
                             <el-table-column
                                 prop="batch"
                                 width="auto"
@@ -72,7 +72,7 @@
                                     <i class="iconfont factory-pici" style="margin-right: 5px;" />批次
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="currentQuantity" width="auto" headerAlign="left">
+                            <el-table-column prop="currentQuantity" width="auto" header-align="left">
                                 <template slot="header">
                                     <i class="iconfont factory-shuliang" style=" margin-right: 5px; font-size: 18px;" />数量
                                 </template>
@@ -86,12 +86,12 @@
                 </el-card>
             </el-col>
         </el-row>
-        <el-dialog :closeOnClickModal="false" :visible.sync="isShowMessageBoxCheck" width="400px" customClass="dialog__class" @close="closeInParnDialog()">
+        <el-dialog :close-on-click-modal="false" :visible.sync="isShowMessageBoxCheck" width="400px" custom-class="dialog__class" @close="closeInParnDialog()">
             <div slot="title" class="title">
                 <span>豆粕罐入罐</span>
             </div>
             <div>
-                <el-form ref="inParnForm" :model="inParnForm" labelWidth="100px" size="small">
+                <el-form ref="inParnForm" :model="inParnForm" label-width="100px" size="small">
                     <el-form-item
                         label="领用粮仓："
                         required
@@ -408,7 +408,7 @@ export default {
                     // console.log('this.inParnHolder')
                     // console.log(this.inParnHolder)
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
             // let temp = {
@@ -470,7 +470,7 @@ export default {
                             this.$refs[formName].resetFields();
                             this.getOrderList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 } else {
@@ -568,7 +568,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

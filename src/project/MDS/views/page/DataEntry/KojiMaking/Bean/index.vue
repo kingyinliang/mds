@@ -5,7 +5,7 @@
                 <el-card class="newCard">
                     <el-row type="flex" style=" margin-bottom: 12px; border-bottom: 1px solid #e9e9e9;">
                         <el-col>
-                            <el-form :model="params" size="small" :inline="true" labelPosition="right" labelWidth="42px">
+                            <el-form :model="params" size="small" :inline="true" label-position="right" label-width="42px">
                                 <el-form-item label="工厂：">
                                     <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
                                         <el-option label="请选择" value="" />
@@ -18,10 +18,10 @@
                                         <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="制曲日期：" labelWidth="70px">
-                                    <el-date-picker v-model="params.zqDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
+                                <el-form-item label="制曲日期：" label-width="70px">
+                                    <el-date-picker v-model="params.zqDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                                 </el-form-item>
-                                <el-form-item label="生产状态：" labelWidth="70px" style="display: none;">
+                                <el-form-item label="生产状态：" label-width="70px" style="display: none;">
                                     <el-select v-model="params.productStatus" class="selectwpx" style="width: 140px;">
                                         <el-option label="正常生产" value="normal" />
                                         <el-option label="无生产" value="abnormal" />
@@ -280,7 +280,7 @@
                 </el-row>
                 <el-row v-show="params.productStatus === 'abnormal' && searched" style="margin-top: 20px;">
                     <div style="min-height: 340px;">
-                        <el-table border headerRowClassName="tableHead" :data="datalist">
+                        <el-table border header-row-class-name="tableHead" :data="datalist">
                             <el-table-column label="中/白/夜班" prop="classType" width="100">
                                 <template slot-scope="scope">
                                     <el-select v-model="scope.row.classType" placeholder="请选择" size="small" :disabled="disabled">
@@ -302,7 +302,7 @@
                                     </el-select>
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="userId" label="姓名（工号）" :showOverflowTooltip="true" width="200">
+                            <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true" width="200">
                                 <template slot-scope="scope">
                                     <el-col>
                                         <span v-if="!disabled" style="cursor: pointer;" @click="selectUser(scope.row)">
@@ -324,7 +324,7 @@
                             </el-table-column>
                             <el-table-column label="开始时间" prop="startDate" width="190">
                                 <template slot-scope="scope">
-                                    <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" valueFormat="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="disabled" />
+                                    <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="disabled" />
                                 </template>
                             </el-table-column>
                             <el-table-column label="用餐时间" prop="dinner" width="100">
@@ -334,7 +334,7 @@
                             </el-table-column>
                             <el-table-column label="结束时间" prop="endDate" width="190">
                                 <template slot-scope="scope">
-                                    <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" valueFormat="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="disabled" />
+                                    <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="disabled" />
                                 </template>
                             </el-table-column>
                             <el-table-column label="备注" prop="remark" width="150px">
@@ -355,12 +355,12 @@
                         </el-row>
                     </div>
                     <el-row>
-                        <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                        <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                     </el-row>
                 </el-row>
             </div>
             <temporary-worker ref="temporaryWorker" @changeUser="changeUser" />
-            <loaned-personnel ref="loanedPersonnel" :OrgTree="OrgTree" :arrList="arrList" @changeUser="changeUser" />
+            <loaned-personnel ref="loanedPersonnel" :org-tree="OrgTree" :arr-list="arrList" @changeUser="changeUser" />
             <official-worker ref="officialWorker" @changeUser="changeUser" />
         </el-col>
     </el-row>
@@ -655,7 +655,7 @@ export default class Index extends Vue {
                     .then(({ data }) => {
                         if (data.code === 0) {
                             this.datalist.splice(this.datalist.indexOf(row), 1);
-                            Vue.prototype.$success_SHINHO('删除成功!');
+                            Vue.prototype.$successTost('删除成功!');
                         } else {
                             this.$notify.error({
                                 title: '错误',
@@ -663,6 +663,8 @@ export default class Index extends Vue {
                             });
                         }
                     });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         } else {
             // 新增数据前端删除
@@ -762,7 +764,7 @@ export default class Index extends Vue {
                 .$http(`${WHT_API.CINDEXUPDATEUSER}`, 'POST', this.datalist)
                 .then(({ data }) => {
                     if (data.code === 0) {
-                        Vue.prototype.$success_SHINHO('操作成功');
+                        Vue.prototype.$successTost('操作成功');
                     } else {
                         this.$notify.error({ title: '错误', message: data.msg });
                     }
@@ -773,6 +775,8 @@ export default class Index extends Vue {
                         message: '保存失败，' + err
                     });
                 });
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 
@@ -843,23 +847,19 @@ export default class Index extends Vue {
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(232, 232, 232, 1);
     border-radius: 2px;
-
     .box-item-top {
         height: 178px;
         padding: 10px;
         padding-bottom: 0;
         border-bottom: 1px solid rgba(232, 232, 232, 1);
-
         .box-item-title {
             display: flex;
             flex: 1;
             justify-content: space-between;
             height: 34px;
-
             .box-item-title-name {
                 display: flex;
                 flex: 1;
-
                 :first-child {
                     width: 30px;
                     height: 30px;
@@ -871,7 +871,6 @@ export default class Index extends Vue {
                     background: #ffbf00;
                     border-radius: 15px;
                 }
-
                 :nth-child(2) {
                     margin-top: 4px;
                     margin-left: 5px;
@@ -881,7 +880,6 @@ export default class Index extends Vue {
                     line-height: 22px;
                 }
             }
-
             .box-item-title-state {
                 flex: 1;
                 margin-top: 4px;
@@ -890,7 +888,6 @@ export default class Index extends Vue {
                 font-size: 14px;
                 line-height: 20px;
                 text-align: right;
-
                 &::before {
                     display: inline-block;
                     width: 6px;
@@ -902,37 +899,31 @@ export default class Index extends Vue {
                 }
             }
         }
-
         .box-item-container {
             display: flex;
             flex: 1;
             justify-content: space-between;
             height: 129px;
-
             .box-item-container-left {
                 display: flex;
                 justify-content: center;
                 width: 130px;
                 padding-top: 10px;
-
                 .box-item-container-img {
                     width: 94px;
                     height: 86px;
                     background: url("~@/assets/img/fajiaoguan.png");
                 }
             }
-
             .box-item-container-right {
                 display: flex;
                 flex: 1;
                 flex-direction: column;
                 margin-left: 10px;
-
                 .box-item-container-item {
                     display: flex;
                     flex: 1;
                     justify-content: space-between;
-
                     .name {
                         width: 60px;
                         color: rgba(0, 0, 0, 0.45);
@@ -940,7 +931,6 @@ export default class Index extends Vue {
                         font-size: 12px;
                         line-height: 20px;
                     }
-
                     .detail {
                         flex: 1;
                         overflow: hidden;
@@ -955,7 +945,6 @@ export default class Index extends Vue {
             }
         }
     }
-
     .box-item-bottom {
         display: flex;
         justify-content: space-between;
@@ -963,7 +952,6 @@ export default class Index extends Vue {
         height: 40px;
         background: rgba(247, 249, 250, 1);
         border-radius: 0 0 2px 2px;
-
         .box-item-bottom-item {
             flex: 1;
             color: rgba(0, 0, 0, 0.65);
@@ -971,14 +959,12 @@ export default class Index extends Vue {
             font-size: 12px;
             line-height: 40px;
             text-align: center;
-
             &:hover {
                 color: #fff;
                 background: #1890ff;
                 cursor: pointer;
             }
         }
-
         .box-item-bottom-split {
             width: 1px;
             height: 16px;
@@ -987,34 +973,28 @@ export default class Index extends Vue {
         }
     }
 }
-
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
-
 .box-card {
     .pro-line {
         border-bottom: 1px solid #dcdfe6;
     }
-
     .pro-line p {
         color: red;
         font-size: 16px;
         letter-spacing: 0.1em;
     }
-
     b {
         float: left;
         font-size: 16px;
         line-height: 32px;
     }
-
     .item {
         display: flex;
         margin-top: 20px;
-
         img {
             float: left;
             width: 220px;
@@ -1023,24 +1003,19 @@ export default class Index extends Vue {
             border: 1px solid #dcdfe6;
             border-radius: 6px;
         }
-
         .itemForm {
             flex: 1;
-
             p {
                 color: #8a979e;
             }
         }
-
         .margb20px {
             margin-bottom: 10px;
         }
     }
 }
-
 .el-row {
     margin-bottom: 20px;
-
     &:last-child {
         margin-bottom: 0;
     }

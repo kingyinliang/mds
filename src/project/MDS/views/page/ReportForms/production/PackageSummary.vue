@@ -3,15 +3,15 @@
         <query-table
             ref="queryTable"
             :rules="rules"
-            :queryFormData="queryFormData"
-            getListField="packingYield"
-            :showPage="false"
-            :listInterface="listInterface"
-            :queryAuth="'report:production:packingYield'"
+            :query-form-data="queryFormData"
+            get-list-field="packingYield"
+            :show-page="false"
+            :list-interface="listInterface"
+            :query-auth="'report:production:packingYield'"
             :column="column"
-            :exportExcel="true"
-            :tableData="tableData"
-            :exportOption="exportOption"
+            :export-excel="true"
+            :table-data="tableData"
+            :export-option="exportOption"
             @get-data-success="setTable"
         />
     </div>

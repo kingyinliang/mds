@@ -3,7 +3,7 @@
         <el-card>
             <el-row class="search-card">
                 <el-col>
-                    <el-form :model="plantList" :inline="true" size="small" labelWidth="70px" class="multi_row">
+                    <el-form :model="plantList" :inline="true" size="small" label-width="70px" class="multi_row">
                         <el-form-item label="生产工厂：">
                             <el-select v-model="plantList.factory">
                                 <el-option label="请选择" value="" />
@@ -34,11 +34,11 @@
                         <el-form-item label="制曲日期：" class="dateinput">
                             <el-row style="width: 300px;">
                                 <el-col :span="12">
-                                    <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 130px;" />
+                                    <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 130px;" />
                                     <span>-</span>
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" valueFormat="yyyy-MM-dd" style="width: 130px;" />
+                                    <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 130px;" />
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -55,12 +55,12 @@
             </el-row>
         </el-card>
         <el-card style="margin-top: 5px;">
-            <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;">
-                <el-table-column label="工厂" width="120" prop="factoryName" :showOverflowTooltip="true" />
+            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+                <el-table-column label="工厂" width="120" prop="factoryName" :show-overflow-tooltip="true" />
                 <el-table-column label="车间" prop="workShopName" width="100" />
                 <el-table-column label="制曲日期" prop="inKjmDate" width="100" />
-                <el-table-column label="曲房" prop="houseNoName" width="100" :showOverflowTooltip="true" />
-                <el-table-column label="发酵罐" prop="inPotNoName" width="100" :showOverflowTooltip="true" />
+                <el-table-column label="曲房" prop="houseNoName" width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="发酵罐" prop="inPotNoName" width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="豆粕量" prop="pulpWeight" width="80" />
                 <el-table-column label="豆粕批次" prop="beanBatch" width="110" />
                 <el-table-column label="麦粉量" prop="wheatWeight" width="80" />
@@ -87,7 +87,7 @@
                 </el-table-column>
             </el-table>
             <el-row>
-                <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
     </div>
@@ -144,7 +144,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -159,7 +159,7 @@ export default {
                             this.plantList.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -187,7 +187,7 @@ export default {
                     if (data.code === 0) {
                         this.inPotList = data.page.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -216,7 +216,7 @@ export default {
                     if (data.code === 0) {
                         this.houseList = data.page.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -233,7 +233,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.lodingS = false;
             });
@@ -260,19 +260,15 @@ export default {
 .el-table th > .cell {
     text-align: center;
 }
-
 .width199px {
     width: 199px;
 }
-
 .el-date-editor .el-range-input {
     width: 100px;
 }
-
 .el-range-editor--small .el-range-separator {
     padding-right: 20px;
 }
-
 .search-card {
     .el-button--primary,
     .el-button--primary:focus {
@@ -280,12 +276,10 @@ export default {
         background-color: #fff;
         border-color: #d9d9d9;
     }
-
     .el-button--primary:hover {
         color: #fff;
         background-color: #1890ff;
     }
-
     .el-button--primary:first-child {
         color: #fff;
         background-color: #1890ff;

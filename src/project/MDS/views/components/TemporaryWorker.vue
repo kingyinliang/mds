@@ -1,6 +1,6 @@
 <template>
-    <el-dialog ref="dayLaborer" width="450px" title="新增临时工" :closeOnClickModal="false" :visible.sync="visible">
-        <el-form :model="form" size="small" labelWidth="120px" class="dialogform">
+    <el-dialog ref="dayLaborer" width="450px" title="新增临时工" :close-on-click-modal="false" :visible.sync="visible">
+        <el-form :model="form" size="small" label-width="120px" class="dialogform">
             <el-row>
                 <el-button type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="addDayLaborer(dayLaborerArr)">
                     新增
@@ -38,9 +38,6 @@ export default {
         };
     },
     computed: {},
-    mounted() {
-    //    mounted
-    },
     methods: {
         init(row) {
             this.visible = true;

@@ -1,18 +1,18 @@
 <template>
-    <el-dialog width="850px" title="借调人员" :closeOnClickModal="false" :visible.sync="visible">
+    <el-dialog width="850px" title="借调人员" :close-on-click-modal="false" :visible.sync="visible">
         <el-row>
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
                     <el-row style=" margin-bottom: 10px; color: black; font-size: 16px;">
                         组织架构
                     </el-row>
-                    <el-tree ref="orgtree" :data="orgTree" nodeKey="deptId" :defaultExpandedKeys="arrList" :expandOnClickNode="false" @node-click="setdetail" />
+                    <el-tree ref="orgtree" :data="orgTree" node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
                 </el-card>
             </el-col>
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
                     <el-input v-model="filterText" size="small" placeholder="搜索人员" />
-                    <el-tree ref="userlistTree" :filterNodeMethod="filterNode" nodeKey="userId" :data="userlist" showCheckbox :props="userListTreeProps" :expandOnClickNode="false" @node-click="treeNodeClick" @check-change="userTree" />
+                    <el-tree ref="userlistTree" :filter-node-method="filterNode" node-key="userId" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
                 </el-card>
             </el-col>
             <el-col style="width: 50px; padding: 70px 5px;">
@@ -22,7 +22,7 @@
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
                     <el-input v-model="filterText1" size="small" placeholder="搜索人员" />
-                    <el-tree ref="userlistTree1" :filterNodeMethod="filterNode1" nodeKey="userId" :data="selctId" showCheckbox :props="selctListTreeProps" :expandOnClickNode="false" @node-click="treeNodeClick1" @check-change="userTree1" />
+                    <el-tree ref="userlistTree1" :filter-node-method="filterNode1" node-key="userId" :data="selctId" show-checkbox :props="selctListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick1" @check-change="userTree1" />
                 </el-card>
             </el-col>
         </el-row>
@@ -45,15 +45,11 @@ export default {
     props: {
         orgTree: {
             type: Array,
-            default: () => {
-            //    Array
-            }
+            default: function() { return [[]] }
         },
         arrList: {
             type: Array,
-            default: () => {
-            //    Array
-            }
+            default: function() { return {} }
         }
     },
     data() {
@@ -87,9 +83,6 @@ export default {
         filterText1(val) {
             this.$refs.userlistTree1.filter(val);
         }
-    },
-    mounted() {
-    //    mounted
     },
     methods: {
         init(userId) {

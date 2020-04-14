@@ -1,7 +1,7 @@
 <template>
     <div>
         <mds-card :title="'工时录入'" :name="'user'">
-            <el-table class="newTable" headerRowClassName="tableHead" :data="pwTimeDate" :rowClassName="RowDelFlag" border tooltipEffect="dark">
+            <el-table class="newTable" header-row-class-name="tableHead" :data="pwTimeDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
                 <el-table-column label="生产订单号">
                     <template slot-scope="scope">
                         {{ scope.row.orderNo }}
@@ -44,7 +44,7 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <audit-log :tableData="timeAudit" :name="'audit2'" />
+        <audit-log :table-data="timeAudit" :name="'audit2'" />
     </div>
 </template>
 
@@ -59,8 +59,7 @@ export default {
     },
     props: {
         isRedact: {
-            type: Object,
-            default: function() { return {} }
+            type: Boolean
         },
         order: {
             type: Object,
@@ -124,7 +123,7 @@ export default {
                                 ];
                             }
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     })
                     .finally(() => {
@@ -162,7 +161,7 @@ export default {
                         if (resolve) {
                             reject(data.msg);
                         }
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch();
@@ -177,6 +176,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag

@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table ref="queryTable" :rules="rules" :queryFormData="queryFormData" :listInterface="listInterface" :queryAuth="'juice:occupy:report'" :column="column" :exportExcel="true" :exportOption="exportOption" />
+        <query-table ref="queryTable" :rules="rules" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'juice:occupy:report'" :column="column" :export-excel="true" :export-option="exportOption" />
     </div>
 </template>
 

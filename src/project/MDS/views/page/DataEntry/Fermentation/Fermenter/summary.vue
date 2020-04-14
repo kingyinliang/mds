@@ -5,11 +5,11 @@
                 <span slot="label" class="spanview">发酵一览表</span>
                 <div class="titleLeft">
                     (单位:罐)
-                    <el-button v-if="isAuth('report:production:fermentationExport')" type="primary" size="small" style="float: right;" @click="FormExportExcel(true)">
+                    <el-button v-if="isAuth('report:production:fermentationExport')" type="primary" size="small" style="float: right;" @click="ExportExcelA(true)">
                         导出
                     </el-button>
                 </div>
-                <el-table :data="dataList2" border headerRowClassName="tableHead" style="margin-top: 10px;">
+                <el-table :data="dataList2" border header-row-class-name="tableHead" style="margin-top: 10px;">
                     <el-table-column label=" " prop="type" />
                     <el-table-column label="<30" prop="ltThirty" />
                     <el-table-column label="30≤N<60" prop="ltSixty" />
@@ -29,31 +29,31 @@
                         导出
                     </el-button>
                 </div>
-                <el-table :data="headerInfo" border headerRowClassName="tableHead" style="margin-top: 10px;">
-                    <el-table-column label="区域" showOverflowTooltip prop="holderArea" />
-                    <el-table-column label="空罐" showOverflowTooltip prop="empty" />
-                    <el-table-column label="投料中" showOverflowTooltip prop="feeding" />
-                    <el-table-column label="发酵中" showOverflowTooltip prop="fermentation" />
-                    <el-table-column label="领用中" showOverflowTooltip prop="collarUse" />
-                    <el-table-column label="其他占用罐" showOverflowTooltip prop="other" />
-                    <el-table-column label="味极鲜罐数" showOverflowTooltip prop="weijixian" />
-                    <el-table-column label="六月鲜罐数" showOverflowTooltip prop="liuyuexian" />
-                    <el-table-column label="TB罐数" showOverflowTooltip prop="tb" />
-                    <el-table-column label="JYTB罐数" showOverflowTooltip prop="jytb" />
-                    <el-table-column label="JY罐数" showOverflowTooltip prop="jy" />
-                    <el-table-column label="发酵一总罐数" showOverflowTooltip prop="sum" width="110" />
+                <el-table :data="headerInfo" border header-row-class-name="tableHead" style="margin-top: 10px;">
+                    <el-table-column label="区域" show-overflow-tooltip prop="holderArea" />
+                    <el-table-column label="空罐" show-overflow-tooltip prop="empty" />
+                    <el-table-column label="投料中" show-overflow-tooltip prop="feeding" />
+                    <el-table-column label="发酵中" show-overflow-tooltip prop="fermentation" />
+                    <el-table-column label="领用中" show-overflow-tooltip prop="collarUse" />
+                    <el-table-column label="其他占用罐" show-overflow-tooltip prop="other" />
+                    <el-table-column label="味极鲜罐数" show-overflow-tooltip prop="weijixian" />
+                    <el-table-column label="六月鲜罐数" show-overflow-tooltip prop="liuyuexian" />
+                    <el-table-column label="TB罐数" show-overflow-tooltip prop="tb" />
+                    <el-table-column label="JYTB罐数" show-overflow-tooltip prop="jytb" />
+                    <el-table-column label="JY罐数" show-overflow-tooltip prop="jy" />
+                    <el-table-column label="发酵一总罐数" show-overflow-tooltip prop="sum" width="110" />
                 </el-table>
                 <div class="titleLeft" style="margin-top: 15px;">
                     <i class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />发酵总库存列表
                 </div>
-                <el-table :data="dataList" border headerRowClassName="tableHead" style="margin-top: 10px;">
-                    <el-table-column label="罐号" showOverflowTooltip prop="holderNo" width="50" />
-                    <el-table-column label="状态" showOverflowTooltip prop="holderStatus" width="70" />
-                    <el-table-column label="投料数(M³)" showOverflowTooltip prop="realInAmount" width="75" />
-                    <el-table-column label="入库数(M³)" showOverflowTooltip prop="ferAmount" width="75" />
-                    <el-table-column label="库存数(M³)" showOverflowTooltip prop="stockAmount" width="75" />
-                    <el-table-column label="类别" prop="halfType" showOverflowTooltip width="70" />
-                    <el-table-column label="" showOverflowTooltip prop="feedingDate" width="100">
+                <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
+                    <el-table-column label="罐号" show-overflow-tooltip prop="holderNo" width="50" />
+                    <el-table-column label="状态" show-overflow-tooltip prop="holderStatus" width="70" />
+                    <el-table-column label="投料数(M³)" show-overflow-tooltip prop="realInAmount" width="75" />
+                    <el-table-column label="入库数(M³)" show-overflow-tooltip prop="ferAmount" width="75" />
+                    <el-table-column label="库存数(M³)" show-overflow-tooltip prop="stockAmount" width="75" />
+                    <el-table-column label="类别" prop="halfType" show-overflow-tooltip width="70" />
+                    <el-table-column label="" show-overflow-tooltip prop="feedingDate" width="100">
                         <template slot="header">
                             投料开始<br>时间
                         </template>
@@ -61,7 +61,7 @@
                             {{ scope.row.feedingDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="" showOverflowTooltip prop="fermentDate" width="100">
+                    <el-table-column label="" show-overflow-tooltip prop="fermentDate" width="100">
                         <template slot="header">
                             发酵开始<br>时间
                         </template>
@@ -69,7 +69,7 @@
                             {{ scope.row.fermentDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="发酵结束时间" showOverflowTooltip prop="fermentEndDate" width="100">
+                    <el-table-column label="发酵结束时间" show-overflow-tooltip prop="fermentEndDate" width="100">
                         <template slot="header">
                             发酵结束<br>时间
                         </template>
@@ -77,15 +77,23 @@
                             {{ scope.row.fermentEndDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="发酵期" showOverflowTooltip prop="fermentTime" width="60" />
-                    <el-table-column label="发酵时间" showOverflowTooltip prop="fermentDays" width="50" />
-                    <el-table-column label="压榨时间" showOverflowTooltip prop="pulpDate" width="100" />
-                    <el-table-column label="领用酱醪数(M³)" showOverflowTooltip prop="useNums" width="80" />
-                    <el-table-column label="出品数" showOverflowTooltip prop="outAmount" width="70" />
-                    <el-table-column label="出品率" showOverflowTooltip prop="yield" width="80" />
-                    <el-table-column label="发酵罐容量(M³)" showOverflowTooltip prop="holderHold" />
+                    <el-table-column label="发酵期" show-overflow-tooltip prop="fermentTime" width="60" />
+                    <el-table-column label="发酵时间" show-overflow-tooltip prop="fermentDays" width="50" />
+                    <el-table-column label="压榨时间" show-overflow-tooltip prop="pulpDate" width="100" />
+                    <el-table-column label="领用酱醪数(M³)" show-overflow-tooltip prop="useNums" width="80" />
+                    <el-table-column label="出品数" show-overflow-tooltip prop="outAmount" width="70" />
+                    <el-table-column label="出品率" show-overflow-tooltip prop="yield" width="80" />
+                    <el-table-column label="发酵罐容量(M³)" show-overflow-tooltip prop="holderHold" />
                 </el-table>
-                <el-pagination :currentPage="currentPage" :pageSizes="[10, 15, 30, 35]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination
+                    :current-page="currentPage"
+                    :page-sizes="[10, 15, 30, 35]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                />
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -129,7 +137,7 @@ export default {
                     this.total = data.returnMap.info.length;
                     this.changeList();
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -155,7 +163,7 @@ export default {
                 if (data.code === 0) {
                     this.dataList2 = data.fermentationStatus;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

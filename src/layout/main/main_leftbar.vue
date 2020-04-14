@@ -1,7 +1,7 @@
 <template>
     <aside class="site-sidebar" :class="'site-sidebar--' + sidebarLayoutSkin" @mouseenter="showMenu" @mouseleave="closeMenu">
         <div class="site-sidebar__inner">
-            <el-menu :defaultActive="menuActiveName || 'home'" :collapse="sidebarFold" :collapseTransition="false" class="site-sidebar__menu">
+            <el-menu :default-active="menuActiveName || 'home'" :collapse="sidebarFold" :collapse-transition="false" class="site-sidebar__menu">
                 <el-menu-item
                     index="home"
                     @click="menuActiveName = 'home';$router.push({ path: 'home' });"
@@ -10,7 +10,7 @@
                     <span slot="title">首页</span>
                 </el-menu-item>
                 <template v-for="menu in menuList">
-                    <sub-menu v-if="menu.type != '4'" :key="menu.id" :menu="menu" :dynamicMenuRoutes="dynamicMenuRoutes" />
+                    <sub-menu v-if="menu.type != '4'" :key="menu.id" :menu="menu" :dynamic-menu-routes="dynamicMenuRoutes" />
                 </template>
             </el-menu>
         </div>

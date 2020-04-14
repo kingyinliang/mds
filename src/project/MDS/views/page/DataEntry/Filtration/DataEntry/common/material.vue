@@ -11,20 +11,20 @@
                 </el-button>
             </div>
             <div style="flex: 1;">
-                <el-table headerRowClassName="tableHead" :data="dataList" border tooltipEffect="dark" :rowClassName="rowDelFlag" @row-dblclick="updateRow">
-                    <el-table-column type="index" width="50" label="序号" :showOverflowTooltip="true" />
-                    <el-table-column label="物料" :showOverflowTooltip="true">
+                <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="updateRow">
+                    <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" />
+                    <el-table-column label="物料" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
                             {{ scope.row.materialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="半成品罐号" width="120" prop="holderName" :showOverflowTooltip="true" />
-                    <el-table-column label="物料批次" width="110" prop="batch" :showOverflowTooltip="true" />
-                    <el-table-column label="领用数" width="100" prop="receiveAmount" :showOverflowTooltip="true" />
-                    <el-table-column label="单位" width="50" prop="unit" :showOverflowTooltip="true" />
-                    <el-table-column label="操作时间" width="160" prop="changed" :showOverflowTooltip="true" />
-                    <el-table-column label="操作人" width="150" prop="changer" :showOverflowTooltip="true" />
+                    <el-table-column label="半成品罐号" width="120" prop="holderName" :show-overflow-tooltip="true" />
+                    <el-table-column label="物料批次" width="110" prop="batch" :show-overflow-tooltip="true" />
+                    <el-table-column label="领用数" width="100" prop="receiveAmount" :show-overflow-tooltip="true" />
+                    <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true" />
+                    <el-table-column label="操作时间" width="160" prop="changed" :show-overflow-tooltip="true" />
+                    <el-table-column label="操作人" width="150" prop="changer" :show-overflow-tooltip="true" />
                     <el-table-column prop="orderStatus" width="70">
                         <template slot-scope="scope">
                             <el-button class="delBtn" type="text" :disabled="!isRedact || scope.row.status === 'checked' || scope.row.status === 'submit'" icon="el-icon-delete" size="mini" @click="DelRow(scope.row)">
@@ -36,13 +36,13 @@
             </div>
         </div>
         <el-card style="margin-top: 25px;">
-            <audit-log :tableData="readAudit" />
+            <audit-log :table-data="readAudit" />
         </el-card>
-        <el-dialog :visible.sync="dialogVisible" :closeOnClickModal="false" width="450px" customClass="dialog__class" @keyup.enter.native="SaveDialog('receive')">
+        <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class="dialog__class" @keyup.enter.native="SaveDialog('receive')">
             <div slot="title">
                 领用
             </div>
-            <el-form ref="receive" :model="receive" size="small" labelWidth="160px" :rules="receiveRules">
+            <el-form ref="receive" :model="receive" size="small" label-width="160px" :rules="receiveRules">
                 <el-form-item label="BOM物料：">
                     {{ BomMaterialCode + ' ' + BomMaterialName }}
                 </el-form-item>
@@ -143,7 +143,7 @@ export default {
                         this.readAudit = data.verify;
                         this.materialStatus = GetStatus(data.list);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .finally(() => {
@@ -157,7 +157,7 @@ export default {
                     this.BomMaterialCode = data.bomMaterial.MATNR;
                     this.BomMaterialName = data.bomMaterial.MATERIAL_NAME;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -285,7 +285,7 @@ export default {
             this.$http(url, 'POST', this.dataList)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -304,6 +304,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = 1;
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         rowDelFlag({ row }) {
@@ -321,10 +323,8 @@ export default {
 .rowDel {
     display: none;
 }
-
 .inStorage_card {
     display: flex;
-
     .button {
         width: 100%;
         margin-top: 10px;
@@ -333,7 +333,6 @@ export default {
         background: #f7f9fa;
         border: none;
     }
-
     &_left {
         width: 158px;
         margin-right: 5px;
@@ -342,12 +341,10 @@ export default {
         border: 1px solid rgba(0, 0, 0, 0.09);
         border-radius: 6px;
         box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
-
         p {
             padding: 10px;
             font-size: 14px;
         }
-
         &_btn {
             width: 100%;
             margin-top: 10px;

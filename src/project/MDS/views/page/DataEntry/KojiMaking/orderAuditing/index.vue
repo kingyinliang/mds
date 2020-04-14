@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col :span="20">
-                        <el-form :inline="true" size="small" labelWidth="70px">
+                        <el-form :inline="true" size="small" label-width="70px">
                             <el-form-item label="生产车间：">
                                 <p class="input_bommom">
                                     {{ formHeader.workShopName }}
@@ -55,50 +55,18 @@
                     <el-col :span="4">
                         <div style="float: right; font-size: 14px; line-height: 31px;">
                             <div style="float: left;">
-                                <span
-                                    class="point"
-                                    :style="{
-                                        background: formHeader.orderStatus === 'noPass' ? 'red' : formHeader.orderStatus === 'saved' ? '#1890f' : formHeader.orderStatus === 'submit' ? '#1890ff' : formHeader.orderStatus === '已拆分' ? '#f5f7fa' : 'rgb(103, 194, 58)',
-                                    }"
-                                />订单状态：
+                                <span class="point" :style="{'background': formHeader.orderStatus === 'noPass'? 'red' : formHeader.orderStatus === 'saved'? '#1890f' : formHeader.orderStatus === 'submit' ? '#1890ff' : formHeader.orderStatus === '已拆分' ? '#f5f7fa' : 'rgb(103, 194, 58)'}" />订单状态：
                             </div>
-                            <span
-                                :style="{
-                                    color: formHeader.orderStatus === 'noPass' ? 'red' : '',
-                                }"
-                            >{{
-                                formHeader.orderStatus === 'noPass'
-                                    ? '审核不通过'
-                                    : formHeader.orderStatus === 'saved'
-                                        ? '已保存'
-                                        : formHeader.orderStatus === 'submit'
-                                            ? '已提交'
-                                            : formHeader.orderStatus === 'checked'
-                                                ? '通过'
-                                                : formHeader.orderStatus === '已同步'
-                                                    ? '已同步'
-                                                    : formHeader.orderStatus === '已拆分'
-                                                        ? '未录入'
-                                                        : formHeader.orderStatus === 'toBeAudited'
-                                                            ? '待审核'
-                                                            : formHeader.orderStatus
-                            }}</span>
+                            <span :style="{'color': formHeader.orderStatus === 'noPass'? 'red' : '' }">{{ formHeader.orderStatus === 'noPass'? '审核不通过' : formHeader.orderStatus === 'saved' ? '已保存' : formHeader.orderStatus === 'submit' ? '已提交' : formHeader.orderStatus === 'checked' ? '通过':formHeader.orderStatus === '已同步' ? '已同步' : formHeader.orderStatus === '已拆分' ? '未录入' : formHeader.orderStatus === 'toBeAudited' ? '待审核' : formHeader.orderStatus }}</span>
                         </div>
                     </el-col>
                 </el-row>
                 <el-row style="text-align: right;" class="button_three_goup">
                     <template style="float: right; margin-left: 10px;">
-                        <el-button
-                            type="primary"
-                            size="small"
-                            @click="
-                                $router.push({
-                                    path: '/DataEntry-KojiMaking-orderManage-index',
-                                })"
-                        >
+                        <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-orderManage-index'})">
                             返回
                         </el-button>
-                        <el-button v-if="formHeader.orderStatus !== 'submit' && formHeader.orderStatus !== 'checked' && isAuth('sys:midTimeSheet:udpate')" type="primary" size="small" @click="submitForm">
+                        <el-button :disabled="!(formHeader.orderStatus === 'toBeAudited' || formHeader.orderStatus === 'noPass') && isAuth('sys:midTimeSheet:udpate')" type="primary" size="small" @click="submitForm">
                             提交
                         </el-button>
                     </template>
@@ -116,19 +84,15 @@
                 <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card" style=" overflow: hidden; border-radius: 15px;" @tab-click="tabClick">
                     <el-tab-pane name="1">
                         <span slot="label" class="spanview">
-                            <el-tooltip class="item" effect="dark" :content="readyState === 'noPass' ? '不通过' : readyState === 'saved' ? '已保存' : readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过' : readyState === 'toBeAudited' ? '待审核' : '未录入'" placement="top-start">
-                                <el-button
-                                    :style="{
-                                        color: readyState === 'noPass' ? 'red' : '',
-                                    }"
-                                >报工工时</el-button>
+                            <el-tooltip class="item" effect="dark" :content="readyState === 'noPass'? '不通过':readyState === 'saved'? '已保存':readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过': readyState === 'toBeAudited' ? '待审核' : '未录入'" placement="top-start">
+                                <el-button :style="{'color': readyState === 'noPass'? 'red' : ''}">报工工时</el-button>
                             </el-tooltip>
                         </span>
                         <el-row>
-                            <el-button v-if="formHeader.orderStatus !== 'submit' && formHeader.orderStatus !== 'checked' && isAuth('sys:midTimeSheet:udpate')" type="primary" style="float: right;" size="small" @click="GetTime">
+                            <el-button v-if="formHeader.orderStatus !== 'submit' && formHeader.orderStatus !== 'checked'&& isAuth('sys:midTimeSheet:udpate')" type="primary" style="float: right;" size="small" @click="GetTime">
                                 获取工时
                             </el-button>
-                            <el-table headerRowClassName="tableHead" :data="workHourList" border tooltipEffect="dark">
+                            <el-table header-row-class-name="tableHead" :data="workHourList" border tooltip-effect="dark">
                                 <el-table-column type="index" width="55" label="序号" />
                                 <el-table-column label="工序" width="150">
                                     <template slot-scope="scope">
@@ -140,7 +104,10 @@
                                         {{ scope.row.houseName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="准备工时" width="100">
+                                <el-table-column
+                                    label="准备工时"
+                                    width="100"
+                                >
                                     <template slot-scope="scope">
                                         {{ scope.row.confActivity1 }}
                                     </template>
@@ -175,7 +142,11 @@
                                         {{ scope.row.remark }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column fixed="right" label="操作" width="145">
+                                <el-table-column
+                                    fixed="right"
+                                    label="操作"
+                                    width="145"
+                                >
                                     <template slot-scope="scope">
                                         <el-button v-if="scope.row.disabled && isAuth('sys:midTimeSheet:udpate')" style="float: left;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" @click="enbaleEdit(scope.row)">
                                             编辑
@@ -183,14 +154,7 @@
                                         <el-button v-if="!scope.row.disabled && isAuth('sys:midTimeSheet:udpate')" style="float: left;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" @click="saveWorkHour(scope.row)">
                                             保存
                                         </el-button>
-                                        <el-button
-                                            v-if="isAuth('sys:midTimeSheet:udpate')"
-                                            style="float: right;"
-                                            type="primary"
-                                            size="small"
-                                            :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')"
-                                            @click="goBack('报工工时', scope.row)"
-                                        >
+                                        <el-button v-if="isAuth('sys:midTimeSheet:udpate')" style="float: right;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" @click="goBack('报工工时', scope.row)">
                                             退回
                                         </el-button>
                                     </template>
@@ -199,29 +163,21 @@
                         </el-row>
                         <el-row>
                             <el-col :span="24">
-                                <auditLog :tableData="workHourAuditList" />
+                                <auditLog :table-data="workHourAuditList" />
                             </el-col>
                         </el-row>
                     </el-tab-pane>
                     <el-tab-pane name="2">
                         <span slot="label" class="spanview">
-                            <el-tooltip
-                                class="item"
-                                effect="dark"
-                                :content="inStorageState === 'noPass' ? '不通过' : inStorageState === 'saved' ? '已保存' : inStorageState === 'submit' ? '已提交' : inStorageState === 'checked' ? '通过' : inStorageState === 'toBeAudited' ? '待审核' : '未录入'"
-                                placement="top-start"
-                            >
-                                <el-button
-                                    :style="{
-                                        color: inStorageState === 'noPass' ? 'red' : '',
-                                    }"
-                                >生产入库</el-button>
+                            <el-tooltip class="item" effect="dark" :content="inStorageState === 'noPass'? '不通过':inStorageState === 'saved'? '已保存':inStorageState === 'submit' ? '已提交' : inStorageState === 'checked'? '通过':inStorageState === 'toBeAudited'?'待审核':'未录入'" placement="top-start">
+                                <el-button :style="{'color': inStorageState === 'noPass'? 'red' : ''}">生产入库</el-button>
                             </el-tooltip>
                         </span>
                         <el-row>
-                            <el-table headerRowClassName="tableHead" :data="inStockList" border tooltipEffect="dark">
+                            <el-table header-row-class-name="tableHead" :data="inStockList" border tooltip-effect="dark">
                                 <el-table-column type="index" width="55" label="序号" />
-                                <el-table-column label="曲房" width="100">
+                                <el-table-column label="制曲日期" width="100" prop="inKjmDate" />
+                                <el-table-column label="曲房" width="100" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.houseName }}
                                     </template>
@@ -231,7 +187,10 @@
                                         {{ scope.row.pulpWeight }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="麦粉量(KG)" width="100">
+                                <el-table-column
+                                    label="麦粉量(KG)"
+                                    width="100"
+                                >
                                     <template slot-scope="scope">
                                         {{ scope.row.wheatWeight }}
                                     </template>
@@ -271,16 +230,13 @@
                                         {{ scope.row.changed }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column fixed="right" label="操作" width="80">
+                                <el-table-column
+                                    fixed="right"
+                                    label="操作"
+                                    width="80"
+                                >
                                     <template slot-scope="scope">
-                                        <el-button
-                                            v-if="isAuth('sys:midTimeSheet:udpate')"
-                                            style="float: right;"
-                                            type="primary"
-                                            size="small"
-                                            :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')"
-                                            @click="goBack('生产入库', scope.row)"
-                                        >
+                                        <el-button v-if="isAuth('sys:midTimeSheet:udpate')" style="float: right;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" @click="goBack('生产入库', scope.row)">
                                             退回
                                         </el-button>
                                     </template>
@@ -290,46 +246,47 @@
                         <el-row style="margin-top: 20px;">
                             <el-col>
                                 <div>
-                                    <span>入库数合计：</span>{{ totalInstock }} L <span>&nbsp;&nbsp;实际入库数：</span><el-input v-model.number="realInAmount" size="small" type="number" style="display: inline-block; width: 150px;" :disabled="!isEdit" />
-                                    L
+                                    <span>入库数合计：</span>{{ totalInstock }} L
+                                    <span>&nbsp;&nbsp;实际入库数：</span><el-input v-model.number="realInAmount" size="small" type="number" style="display: inline-block; width: 150px;" :disabled="!isEdit" /> L
                                 </div>
                             </el-col>
                         </el-row>
+                        <!-- <el-row style="margin-top:20px;">
+              <el-col>
+                <span>实际入库数：</span><el-input size="small" type="number" v-model.number='realInAmount' style="display:inline-block; width:150px;"></el-input> L
+              </el-col>
+            </el-row> -->
                         <el-row>
                             <el-col :span="24">
-                                <auditLog :tableData="inStockAuditList" />
+                                <auditLog :table-data="inStockAuditList" />
                             </el-col>
                         </el-row>
                     </el-tab-pane>
                     <el-tab-pane name="3">
                         <span slot="label" class="spanview">
-                            <el-tooltip
-                                class="item"
-                                effect="dark"
-                                :content="applyMaterielState === 'noPass' ? '不通过' : applyMaterielState === 'saved' ? '已保存' : applyMaterielState === 'submit' ? '已提交' : applyMaterielState === 'checked' ? '通过' : applyMaterielState === 'toBeAudited' ? '待审核' : '未录入'"
-                                placement="top-start"
-                            >
-                                <el-button
-                                    :style="{
-                                        color: applyMaterielState === 'noPass' ? 'red' : '',
-                                    }"
-                                >物料领用</el-button>
+                            <el-tooltip class="item" effect="dark" :content="applyMaterielState === 'noPass'? '不通过':applyMaterielState === 'saved'? '已保存':applyMaterielState === 'submit' ? '已提交' : applyMaterielState === 'checked'? '通过':applyMaterielState === 'toBeAudited'? '待审核' : '未录入'" placement="top-start">
+                                <el-button :style="{'color': applyMaterielState === 'noPass'? 'red' : ''}">物料领用</el-button>
                             </el-tooltip>
                         </span>
                         <el-row>
-                            <el-table headerRowClassName="tableHead" :data="applyMaterieList" border tooltipEffect="dark">
+                            <el-table header-row-class-name="tableHead" :data="applyMaterieList" border tooltip-effect="dark">
                                 <el-table-column type="index" width="55" label="序号" />
-                                <el-table-column label="曲房" width="140">
+                                <el-table-column label="制曲日期" width="100" prop="inKjmDate" />
+                                <el-table-column label="曲房" width="100" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.houseName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="物料" showOverflowTooltip>
+                                <el-table-column label="物料" show-overflow-tooltip width="150">
                                     <template slot-scope="scope">
                                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="领用容器" width="160">
+                                <el-table-column
+                                    label="领用容器"
+                                    width="150"
+                                    :show-overflow-tooltip="true"
+                                >
                                     <template slot-scope="scope">
                                         {{ scope.row.holderName }}
                                     </template>
@@ -362,25 +319,11 @@
                                 <el-table-column fixed="right" label="操作" width="80">
                                     <template slot-scope="scope">
                                         <i v-if="scope.row.materialCode === 'M040000001'">
-                                            <el-button
-                                                v-if="scope.row.disabled"
-                                                style="float: right;"
-                                                type="primary"
-                                                size="small"
-                                                :disabled="!(scope.row.materialCode === 'M040000001' && (scope.row.status === 'saved' || scope.row.status === 'noPass'))"
-                                                @click="materialEnbaleEdit(scope.row)"
-                                            >编辑</el-button>
+                                            <el-button v-if="scope.row.disabled" style="float: right;" type="primary" size="small" :disabled="!(scope.row.materialCode === 'M040000001' && (scope.row.status === 'saved' || scope.row.status === 'noPass'))" @click="materialEnbaleEdit(scope.row)">编辑</el-button>
                                             <el-button v-if="!scope.row.disabled" style="float: right;" type="primary" size="small" @click="materialSaveWorkHour(scope.row)">保存</el-button>
                                         </i>
                                         <i v-else>
-                                            <el-button
-                                                v-if="isAuth('sys:midTimeSheet:udpate')"
-                                                style="float: right;"
-                                                type="primary"
-                                                size="small"
-                                                :disabled="!(scope.row.isVerBack === '0' && (scope.row.status === 'saved' || scope.row.status === 'noPass'))"
-                                                @click="goBack('物料领用', scope.row)"
-                                            >退回</el-button>
+                                            <el-button v-if="isAuth('sys:midTimeSheet:udpate')" style="float: right;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" @click="goBack('物料领用', scope.row)">退回</el-button>
                                         </i>
                                     </template>
                                 </el-table-column>
@@ -388,7 +331,7 @@
                         </el-row>
                         <el-row>
                             <el-col :span="24">
-                                <auditLog :tableData="applyMaterieAuditList" />
+                                <auditLog :table-data="applyMaterieAuditList" />
                             </el-col>
                         </el-row>
                     </el-tab-pane>
@@ -396,7 +339,7 @@
                         <span slot="label" class="spanview">
                             <el-button>文本记录</el-button>
                         </span>
-                        <text-record ref="textrecord" isRedact="true" />
+                        <text-record ref="textrecord" is-redact="true" />
                     </el-tab-pane>
                 </el-tabs>
             </div>
@@ -802,10 +745,10 @@ export default class Index extends Vue {
             .$http(`${KJM_API.KJMAKING_MATERIAL_SAVE_API}`, 'POST', row)
             .then(res => {
                 if (res.data.code === 0) {
-                    Vue.prototype.$success_SHINHO('保存成功');
+                    Vue.prototype.$successTost('保存成功');
                     this.getList();
                 } else {
-                    Vue.prototype.$error_SHINHO(res.data.msg);
+                    Vue.prototype.$errorTost(res.data.msg);
                 }
             })
             .catch(err => {
@@ -823,7 +766,7 @@ export default class Index extends Vue {
                 return;
             }
             if (this.realInAmount === 0 || !this.realInAmount) {
-                Vue.prototype.$error_SHINHO('请确认实际入库数');
+                Vue.prototype.$errorTost('请确认实际入库数');
                 return false;
             }
                 Promise.all([this.timeSubmit(), this.storageSubmit(), this.materialSubmit()]).then(() => {
@@ -837,6 +780,8 @@ export default class Index extends Vue {
                     });
                 });
 
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 
@@ -1014,7 +959,6 @@ export default class Index extends Vue {
     text-overflow: ellipsis;
     border-bottom: solid 1px #d8d8d8;
 }
-
 .el-form-item--mini.el-form-item,
 .el-form-item--small.el-form-item {
     margin-bottom: 8px;

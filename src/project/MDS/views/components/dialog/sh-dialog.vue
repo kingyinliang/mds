@@ -14,9 +14,6 @@ export default {
         return {};
     },
     computed: {},
-    mounted() {
-    //    mounted
-    },
     methods: {}
 };
 </script>
@@ -32,12 +29,10 @@ export default {
     margin: 0;
     overflow: auto;
     background-color: rgba(255, 255, 255, 0.6);
-
     &_content {
         margin: 0 auto 50px;
-        border-radius: 6px 6px 6px 6px;
+        border-radius: 6px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-
         &_title {
             padding: 20px;
             background: #1890ff;

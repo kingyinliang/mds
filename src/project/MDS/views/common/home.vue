@@ -14,7 +14,7 @@ export default {
     },
     computed: {},
     mounted() {
-        console.log(this.version);
+        console.log('当前版平台本: ' + this.version);
     },
     methods: {}
 };

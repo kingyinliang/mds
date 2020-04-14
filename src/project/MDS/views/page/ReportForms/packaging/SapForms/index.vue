@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table ref="queryTable" :queryFormData="queryFormData" :listInterface="listInterface" :queryAuth="'report:form:listMaterial'" :column="column" :exportExcel="true" :exportOption="exportOption" />
+        <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:form:listMaterial'" :column="column" :export-excel="true" :export-option="exportOption" />
     </div>
 </template>
 
@@ -91,6 +91,25 @@ export default {
                 auth: 'report:form:exportMaterial',
                 text: '物料领用报表数据导出'
             },
+
+
+        // prop: 'productUseNumP',
+        // label: '生产使用',
+        // width: '80',
+        // formatter: (row) => {
+        //     return row.productUseNumP ? row.productUseNumP : row.productUseNumS;
+        // },
+        // showOverFlowTooltip: true
+        // chind: {
+            // prop: 'productUseNumP',
+            // label: '生产使用',
+            // width: '80',
+            // formatter: (row) => {
+            //     return row.productUseNumP ? row.productUseNumP : row.productUseNumS;
+            // },
+            // showOverFlowTooltip: true
+        // }
+
             column: [
                 {
                     prop: 'productDate',

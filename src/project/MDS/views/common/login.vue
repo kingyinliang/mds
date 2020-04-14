@@ -10,7 +10,7 @@
             </el-col>
             <el-col :span="8">
                 <img src="@/assets/img/MDSlogo.png" alt="" class="login_icon">
-                <el-form ref="ruleForm2" :model="ruleForm2" statusIcon :rules="rules2" labelWidth="100px" class="loginForm_ui2" @keyup.enter.native="submitForm('ruleForm2')">
+                <el-form ref="ruleForm2" :model="ruleForm2" status-icon :rules="rules2" label-width="100px" class="loginForm_ui2" @keyup.enter.native="submitForm('ruleForm2')">
                     <p class="login_title1">
                         欢迎使用
                     </p>
@@ -18,12 +18,12 @@
                         MDS制造管理系统
                     </p>
                     <el-form-item prop="user">
-                        <el-input v-model="ruleForm2.user" autoComplete="off" placeholder="账户/工号">
+                        <el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号">
                             <i slot="prefix" class="iconfont factory-zhanghaodenglu" />
                         </el-input>
                     </el-form-item>
                     <el-form-item prop="pass">
-                        <el-input v-model="ruleForm2.pass" type="password" autoComplete="off" placeholder="密码">
+                        <el-input v-model="ruleForm2.pass" type="password" auto-complete="off" placeholder="密码">
                             <i slot="prefix" class="iconfont factory-mima" />
                         </el-input>
                         <el-button type="text" class="reset" @click="resetForm('ruleForm2')">
@@ -38,9 +38,9 @@
                 </el-form>
             </el-col>
         </el-row>
-        <el-dialog :closeOnClickModal="false" width="500px" title="修改密码" :visible.sync="visible">
+        <el-dialog :close-on-click-modal="false" width="500px" title="修改密码" :visible.sync="visible">
             <div>
-                <el-form ref="dataForm" :model="dataForm" :rules="dataRule" labelWidth="100px" @keyup.enter.native="dataFormSubmit()">
+                <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="100px" @keyup.enter.native="dataFormSubmit()">
                     <el-form-item label="原密码：" prop="password">
                         <el-input v-model="dataForm.password" placeholder="请输入原始密码" minlength="8" maxlength="12" type="password" />
                     </el-form-item>
@@ -212,7 +212,7 @@ export default {
                 if (valid) {
                     this.$http(`${MAIN_API.UPPASS_API}`, 'POST', this.dataForm).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('操作成功');
+                            this.$successTost('操作成功');
                             this.visible = false;
                             this.$router.push({ path: '/home' });
                         } else {
@@ -273,11 +273,9 @@ export default {
     transform: rotateY(35deg);
     transform-style: preserve-3d;
 }
-
 video {
     object-fit: fill;
 }
-
 .loginForm {
     position: fixed;
     top: 200px;
@@ -285,23 +283,18 @@ video {
     z-index: 999;
     width: 320px;
     height: 254px;
-
     label {
         color: white !important;
     }
-
     input {
         background: #fff !important;
     }
-
     .el-form-item__content {
         margin-left: 0 !important;
     }
-
     .el-input__prefix {
         margin-left: 6px;
     }
-
     .reset {
         position: absolute;
         right: 0;
@@ -312,7 +305,6 @@ video {
         font-size: 12px;
     }
 }
-
 .loginFormBg {
     position: fixed;
     top: 165px;
@@ -323,23 +315,19 @@ video {
     border-radius: 10px;
     box-shadow: 0 5px 19px 1px rgba(214, 221, 237, 0.45);
 }
-
 .login_box {
     width: 100%;
     height: 100%;
-
     .el-col {
         height: 100%;
         overflow: hidden;
     }
-
     .login_icon {
         width: 300px;
         margin-top: 20px;
         margin-bottom: 84px;
         margin-left: 20px;
     }
-
     .canvas_box {
         display: flex;
         flex-direction: row;
@@ -347,10 +335,8 @@ video {
         width: 100%;
         height: 100%;
         background: linear-gradient(135deg, #070f6e 0%, #141bb7 51%, #1582ff 100%);
-
         &_main {
             width: 100%;
-
             canvas {
                 width: 100%;
                 height: 100%;
@@ -358,49 +344,39 @@ video {
         }
     }
 }
-
 .loginForm_ui2 {
     width: 300px;
     margin: auto;
     padding-top: 20px;
-
     p {
         color: #333;
     }
-
     .login_title1 {
         margin-bottom: 10px;
         font-size: 22px;
         line-height: 26px;
     }
-
     .login_title2 {
         margin-bottom: 15px;
         font-size: 28px;
         line-height: 40px;
     }
-
     .loginBtn {
         width: 100%;
         margin-top: 20px;
     }
-
     label {
         color: white !important;
     }
-
     input {
         background: #fff !important;
     }
-
     .el-form-item__content {
         margin-left: 0 !important;
     }
-
     .el-input__prefix {
         margin-left: 6px;
     }
-
     .reset {
         position: absolute;
         right: 0;
@@ -416,17 +392,14 @@ video {
     .loginForm_ui2 {
         width: 360px;
         padding-top: 60px;
-
         .login_title1 {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 26px;
         }
-
         .login_title2 {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 32px;
         }
-
         .loginBtn {
             margin-top: 40px;
         }

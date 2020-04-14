@@ -2,7 +2,7 @@ function imgLoad(arr) {
     const promiseArr = [];
     arr.forEach(item => {
         promiseArr.push(
-            new Promise((resolve) => {
+            new Promise(resolve => {
                 const img = new Image();
                 img.src = item;
                 img.onload = () => {
@@ -26,7 +26,7 @@ export class LoginAnimation {
     init() {
         let windmillNum = 1;
         let carNum = 1;
-        const imgArr = ['../static/img/loginBg.png', '../static/img/windmill.png', '../static/img/car.png', '../static/img/door.png'];
+        const imgArr = ['./static/img/loginBg.png', './static/img/windmill.png', './static/img/car.png', './static/img/door.png'];
         imgLoad(imgArr).then(data => {
             const bg = data[0];
             const windmill = data[1];

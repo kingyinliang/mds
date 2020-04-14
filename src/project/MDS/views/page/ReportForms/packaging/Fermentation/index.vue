@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <el-card class="searchCard  newCard ferCard">
-            <el-form :inline="true" :model="formHeader" size="small" labelWidth="75px" class="marbottom">
+            <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="marbottom">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" class="width140px">
                         <el-option value="">
@@ -19,7 +19,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="发酵罐号：">
-                    <el-select v-model="formHeader.potNo" placeholder="请选择" multiple filterable allowCreate defaultFirstOp style="width: 140px;" @change="ChangeSearch()">
+                    <el-select v-model="formHeader.potNo" placeholder="请选择" multiple filterable allow-create default-first-op style="width: 140px;" @change="ChangeSearch()">
                         <el-option v-for="(sole, index) in guanList" :key="index" :value="sole.holderNo" :label="sole.holderName" />
                     </el-select>
                 </el-form-item>
@@ -36,9 +36,9 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="发酵日期：">
-                    <el-date-picker v-model="formHeader.commitDateOne" type="date" valueFormat="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;" />
+                    <el-date-picker v-model="formHeader.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;" />
                     -
-                    <el-date-picker v-model="formHeader.commitDateTwo" type="date" valueFormat="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;" />
+                    <el-date-picker v-model="formHeader.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 140px;" />
                 </el-form-item>
                 <el-form-item style="float: right;">
                     <el-button v-if="isAuth('juice:pot:List')" type="primary" size="small" style="float: right;" @click="GetDataList(true)">
@@ -48,27 +48,27 @@
             </el-form>
         </el-card>
         <el-card class="secondcard">
-            <el-table :data="dataList" border headerRowClassName="tableHead" style="margin-top: 10px;">
-                <el-table-column label="发酵罐编号" showOverflowTooltip prop="productDate" width="110" />
-                <el-table-column label="状态" showOverflowTooltip prop="factoryName" />
-                <el-table-column label="发酵罐容量(M³)" showOverflowTooltip prop="workShopName" />
-                <el-table-column label="投料数量(M³)" showOverflowTooltip prop="productLineName" width="120" />
-                <el-table-column label="入库数量(M³)" showOverflowTooltip prop="orderNo" width="120" />
-                <el-table-column label="库存数量(M³)" showOverflowTooltip prop="material" />
-                <el-table-column label="类别" showOverflowTooltip prop="batch" width="110" />
-                <el-table-column label="投料时间" showOverflowTooltip prop="countOutPut" />
-                <el-table-column label="发酵开始时间" showOverflowTooltip prop="countOutPutUnit" width="50" />
-                <el-table-column label="发酵结束时间" showOverflowTooltip prop="mainBatch" width="110" />
-                <el-table-column label="发酵期" showOverflowTooltip prop="attachBatch" width="110" />
-                <el-table-column label="发酵时间" showOverflowTooltip prop="remark" />
-                <el-table-column label="压榨时间" showOverflowTooltip prop="remark" />
-                <el-table-column label="用酱醪数(M³)" showOverflowTooltip prop="remark" />
-                <el-table-column label="出品数" showOverflowTooltip prop="remark" />
-                <el-table-column label="库存量(M³)" showOverflowTooltip prop="remark" />
-                <el-table-column label="出品率" showOverflowTooltip prop="remark" />
+            <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
+                <el-table-column label="发酵罐编号" show-overflow-tooltip prop="productDate" width="110" />
+                <el-table-column label="状态" show-overflow-tooltip prop="factoryName" />
+                <el-table-column label="发酵罐容量(M³)" show-overflow-tooltip prop="workShopName" />
+                <el-table-column label="投料数量(M³)" show-overflow-tooltip prop="productLineName" width="120" />
+                <el-table-column label="入库数量(M³)" show-overflow-tooltip prop="orderNo" width="120" />
+                <el-table-column label="库存数量(M³)" show-overflow-tooltip prop="material" />
+                <el-table-column label="类别" show-overflow-tooltip prop="batch" width="110" />
+                <el-table-column label="投料时间" show-overflow-tooltip prop="countOutPut" />
+                <el-table-column label="发酵开始时间" show-overflow-tooltip prop="countOutPutUnit" width="50" />
+                <el-table-column label="发酵结束时间" show-overflow-tooltip prop="mainBatch" width="110" />
+                <el-table-column label="发酵期" show-overflow-tooltip prop="attachBatch" width="110" />
+                <el-table-column label="发酵时间" show-overflow-tooltip prop="remark" />
+                <el-table-column label="压榨时间" show-overflow-tooltip prop="remark" />
+                <el-table-column label="用酱醪数(M³)" show-overflow-tooltip prop="remark" />
+                <el-table-column label="出品数" show-overflow-tooltip prop="remark" />
+                <el-table-column label="库存量(M³)" show-overflow-tooltip prop="remark" />
+                <el-table-column label="出品率" show-overflow-tooltip prop="remark" />
             </el-table>
             <el-row>
-                <el-pagination :currentPage="formHeader.currPage" :pageSizes="[10, 20, 50]" :pageSize="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 50]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
     </div>
@@ -113,7 +113,7 @@ export default {
                         this.formHeader.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -128,7 +128,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -141,7 +141,7 @@ export default {
                     if (data.code === 0) {
                         this.productlineList = data.childList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -157,7 +157,7 @@ export default {
                     this.formHeader.pageSize = data.page.pageSize;
                     this.formHeader.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

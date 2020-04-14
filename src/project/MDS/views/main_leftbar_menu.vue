@@ -1,5 +1,5 @@
 <template>
-    <el-submenu v-if="!getChildren" :index="menu.menuId + ''" :popperClass="'site-sidebar--' + sidebarLayoutSkin + '-popper'">
+    <el-submenu v-if="!getChildren" :index="menu.menuId + ''" :popper-class="'site-sidebar--' + sidebarLayoutSkin + '-popper'">
         <template slot="title">
             <div @click="gotoRouteHandle(menu)">
                 <i :class="menu.icon || ''" class="site-sidebar__menu-icon iconfont" />
@@ -7,7 +7,7 @@
             </div>
         </template>
         <template v-for="item in menu.list">
-            <sub-menu v-if="item.type != '3' && item.type != '2' && item.type != '4'" :key="item.menuId" :menu="item" :dynamicMenuRoutes="dynamicMenuRoutes" />
+            <sub-menu v-if="item.type != '3' && item.type != '2' && item.type != '4'" :key="item.menuId" :menu="item" :dynamic-menu-routes="dynamicMenuRoutes" />
         </template>
     </el-submenu>
     <el-menu-item v-else :index="menu.menuId + ''" @click="gotoRouteHandle(menu)">
@@ -60,7 +60,7 @@ export default {
         // 通过menuId与动态(菜单)路由进行匹配跳转至指定路由
         gotoRouteHandle(menu) {
             const route = this.dynamicMenuRoutes.filter(item => item.meta.menuId === menu.menuId);
-            if (route.length >= 1) {
+            if (route.length >= 1 && this.$router.history.current.name !== route[0].path) {
                 this.$router.push({ path: route[0].path });
             }
         }

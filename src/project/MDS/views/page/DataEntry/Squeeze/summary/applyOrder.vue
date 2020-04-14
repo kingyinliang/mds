@@ -8,7 +8,7 @@
                 申请订单
             </el-button>
         </el-row>
-        <el-table ref="table1" :data="fumet" headerRowClassName="tableHead" border tooltipEffect="dark" @row-dblclick="GetLog" @selection-change="handleSelectionChange">
+        <el-table ref="table1" :data="fumet" header-row-class-name="tableHead" border tooltip-effect="dark" @row-dblclick="GetLog" @selection-change="handleSelectionChange">
             <el-table-column type="selection" :selectable="checkboxApply" width="34" />
             <el-table-column label="状态" width="95">
                 <template slot-scope="scope">
@@ -71,7 +71,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <auditLog :tableData="orderAudit" />
+        <audit-log :table-data="orderAudit" />
     </div>
 </template>
 
@@ -157,7 +157,7 @@ export default {
                 if (data.code === 0) {
                     this.orderAudit = data.listRecord;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -186,7 +186,7 @@ export default {
                     });
                     this.$emit('GetList');
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -214,7 +214,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

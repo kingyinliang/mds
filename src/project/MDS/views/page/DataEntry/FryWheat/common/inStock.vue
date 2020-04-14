@@ -23,18 +23,18 @@
                 </el-col>
             </el-row>
             <!--table-->
-            <el-table class="newTable" headerRowClassName="tableHead" :data="wheatDataList" border tooltipEffect="dark" :rowClassName="rowDelFlag" @row-dblclick="modifyOldRecord">
+            <el-table class="newTable" header-row-class-name="tableHead" :data="wheatDataList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="modifyOldRecord">
                 <el-table-column label="日期" width="110">
                     <template slot-scope="scope">
                         {{ scope.row.inPortDate | formatDate }}
                     </template>
                 </el-table-column>
-                <el-table-column label="麦粉计量仓" :showOverflowTooltip="true" width="120">
+                <el-table-column label="麦粉计量仓" :show-overflow-tooltip="true" width="120">
                     <template slot-scope="scope">
                         {{ scope.row.flourDeviceName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="粮仓" showOverflowTooltip>
+                <el-table-column label="粮仓" show-overflow-tooltip>
                     <template slot-scope="scope">
                         {{ scope.row.wheatDeviceName }}
                     </template>
@@ -64,12 +64,12 @@
                         <span>{{ scope.row.inPortBatch }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作人员" width="100" showOverflowTooltip>
+                <el-table-column label="操作人员" width="100" show-overflow-tooltip>
                     <template slot-scope="scope">
                         <span>{{ scope.row.changer }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作时间" width="160" showOverflowTooltip>
+                <el-table-column label="操作时间" width="160" show-overflow-tooltip>
                     <template slot-scope="scope">
                         <span>{{ scope.row.changed }}</span>
                     </template>
@@ -87,27 +87,27 @@
             </div>
         </mds-card>
         <!--审批-->
-        <auditLog :tableData="readAudit" />
-        <el-dialog :title="stockForm.flourDeviceName" :closeOnClickModal="false" :visible.sync="dialogFormVisible" width="450px">
+        <audit-log :table-data="readAudit" />
+        <el-dialog :title="stockForm.flourDeviceName" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="450px">
             <el-form ref="stockForm" :model="stockForm" :rules="dataRule" size="small">
-                <el-form-item label="粮仓：" :labelWidth="formLabelWidth" required prop="wheatDeviceId">
-                    <el-select v-model="stockForm.wheatDeviceId" valueKey="wheatDeviceId" placeholder="请选择粮仓" style="width: 220px;" :disabled="!isRedact" @change="changeWheatContainer">
+                <el-form-item label="粮仓：" :label-width="formLabelWidth" required prop="wheatDeviceId">
+                    <el-select v-model="stockForm.wheatDeviceId" value-key="wheatDeviceId" placeholder="请选择粮仓" style="width: 220px;" :disabled="!isRedact" @change="changeWheatContainer">
                         <el-option v-for="(item, index) in wheatContainerList" :key="index" :label="item.holderName" :value="item.holderId" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="起始(KG)：" :labelWidth="formLabelWidth" required prop="startWeight">
-                    <el-input v-model.number="stockForm.startWeight" type="number" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width: 220px;" :disabled="!isRedact" />
+                <el-form-item label="起始(KG)：" :label-width="formLabelWidth" required prop="startWeight">
+                    <el-input v-model.number="stockForm.startWeight" type="number" on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width: 220px;" :disabled="!isRedact" />
                 </el-form-item>
-                <el-form-item label="结束(KG)：" :labelWidth="formLabelWidth" required prop="endWeight">
-                    <el-input v-model.number="stockForm.endWeight" type="number" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width: 220px;" :disabled="!isRedact" />
+                <el-form-item label="结束(KG)：" :label-width="formLabelWidth" required prop="endWeight">
+                    <el-input v-model.number="stockForm.endWeight" type="number" on-keypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width: 220px;" :disabled="!isRedact" />
                 </el-form-item>
-                <el-form-item label="入库批次：" :labelWidth="formLabelWidth" required prop="inPortBatch">
+                <el-form-item label="入库批次：" :label-width="formLabelWidth" required prop="inPortBatch">
                     <el-input v-model="stockForm.inPortBatch" maxlength="10" style="width: 220px;" :disabled="!isRedact" />
                 </el-form-item>
-                <el-form-item label="操作时间：" :labelWidth="formLabelWidth">
+                <el-form-item label="操作时间：" :label-width="formLabelWidth">
                     <label>{{ stockForm.changed }}</label>
                 </el-form-item>
-                <el-form-item label="操作人：" :labelWidth="formLabelWidth">
+                <el-form-item label="操作人：" :label-width="formLabelWidth">
                     <label>{{ stockForm.changer }}</label>
                 </el-form-item>
             </el-form>
@@ -249,7 +249,7 @@ export default {
                     if (data.code === 0) {
                         this.flourContainerList = data.page.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -277,7 +277,7 @@ export default {
                     if (data.code === 0) {
                         this.wheatContainerList = data.page.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -324,7 +324,7 @@ export default {
                             inState = 'checked';
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -414,7 +414,7 @@ export default {
                 this.$http(WHT_API.INSTORAGESAVE_API, 'POST', this.wheatDataList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -438,7 +438,7 @@ export default {
                 this.$http(`${WHT_API.INSTORAGESUBMIT_API}`, 'POST', this.wheatDataList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -470,6 +470,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // RowDelFlag
@@ -503,7 +505,6 @@ export default {
     border: 1px solid rgba(171, 171, 171, 0.5);
     border-radius: 8px;
     box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.1);
-
     .stock-title {
         overflow: hidden;
         font-size: 12px;
@@ -511,16 +512,13 @@ export default {
         white-space: nowrap;
         text-overflow: ellipsis;
     }
-
     .stock-container {
         margin-top: 20px;
-
         .stock-img {
             float: left;
             width: 82px;
             margin-left: 10px;
         }
-
         .stock-button {
             float: right;
             width: 65px;
@@ -532,20 +530,16 @@ export default {
             text-align: center;
             border-radius: 4px;
         }
-
         .enabled {
             background: #487bff;
-
             &:hover {
                 color: #fff;
                 background: #1890ff;
                 cursor: pointer;
             }
         }
-
         .disabled {
             background: #a0cfff;
-
             &:hover {
                 cursor: not-allowed;
             }

@@ -1,8 +1,8 @@
 <template>
     <div>
-        <el-table ref="table1" :rowClassName="tableRowClassName" headerRowClassName="tableHead" :data="listbomP" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+        <el-table ref="table1" :row-class-name="tableRowClassName" header-row-class-name="tableHead" :data="listbomP" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
             <el-table-column type="index" width="50" label="序号" />
-            <el-table-column width="240" :showOverflowTooltip="true" label="物料">
+            <el-table-column width="240" :show-overflow-tooltip="true" label="物料">
                 <template slot-scope="scope">
                     {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                 </template>
@@ -42,7 +42,7 @@
                     <el-input v-else v-model="scope.row.factory" size="small" placeholder="手工录入" disabled />
                 </template>
             </el-table-column>
-            <el-table-column label="批次" :showOverflowTooltip="true" width="90">
+            <el-table-column label="批次" :show-overflow-tooltip="true" width="90">
                 <template slot-scope="scope">
                     <span>{{ scope.row.batch }}</span>
                 </template>
@@ -54,7 +54,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-table v-if="order.properties !== '二合一&礼盒产线'" ref="table1" headerRowClassName="tableHead" :data="listbomS" :rowClassName="RowDelFlag" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+        <el-table v-if="order.properties !== '二合一&礼盒产线'" ref="table1" header-row-class-name="tableHead" :data="listbomS" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
             <el-table-column type="index" width="50" label="序号" />
             <el-table-column width="120" label="物料（半成品）">
                 <template slot-scope="scope">
@@ -97,11 +97,11 @@
                             v-model="scope.row.filterDate"
                             size="small"
                             type="datetime"
-                            valueFormat="yyyy-MM-dd HH:mm:ss"
+                            value-format="yyyy-MM-dd HH:mm:ss"
                             format="yyyy.MM.dd HH:mm"
                             placeholder="选择"
                         />
-                        <el-date-picker v-else v-model="scope.row.filterDate" size="small" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" disabled />
+                        <el-date-picker v-else v-model="scope.row.filterDate" size="small" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" disabled />
                     </div>
                 </template>
             </el-table-column>
@@ -151,11 +151,11 @@
                         v-model="scope.row.changePotDate"
                         type="datetime"
                         size="small"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                     />
-                    <el-date-picker v-else v-model="scope.row.changePotDate" type="datetime" size="small" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" disabled />
+                    <el-date-picker v-else v-model="scope.row.changePotDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" disabled />
                 </template>
             </el-table-column>
             <el-table-column width="250" label="用完时间">
@@ -165,11 +165,11 @@
                         v-model="scope.row.usePotDate"
                         type="datetime"
                         size="small"
-                        valueFormat="yyyy-MM-dd HH:mm:ss"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         format="yyyy.MM.dd HH:mm"
                         placeholder="选择"
                     />
-                    <el-date-picker v-else v-model="scope.row.usePotDate" type="datetime" size="small" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" disabled />
+                    <el-date-picker v-else v-model="scope.row.usePotDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" disabled />
                 </template>
             </el-table-column>
             <el-table-column label="备注">
@@ -194,7 +194,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <auditLog :tableData="SapAudit" />
+        <audit-log :table-data="SapAudit" />
     </div>
 </template>
 
@@ -326,7 +326,7 @@ export default {
                         }
                         this.$emit('GetlistbomStatus', this.Sapstatus);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -382,11 +382,11 @@ export default {
         subSap(resolve) {
             this.$http(`${PACKAGING_API.PKGSAVEFORMP_API}`, 'POST', this.listbomP).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.$http(`${PACKAGING_API.PKGSAVEFORMS_API}`, 'POST', this.listbomS).then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -519,19 +519,19 @@ export default {
                     }
                 }
             });
-            for (const items of this.repertory) {
-                let amount = 0;
-                if (this.repertoryS.find(sos => sos.holderId === items.holderId)) {
-                    amount = this.repertoryS.find(sos => sos.holderId === items.holderId).total + this.semiHolder.find(so => so.holderId === items.holderId).amount;
-                } else {
-                    amount = this.semiHolder.find(so => so.holderId === items.holderId).amount;
-                }
-                if (items.total > amount) {
-                    ty = false;
-                    this.$warningTost(this.semiHolder.find(so => so.holderId === items.holderId).holderName + '罐生产使用量超过库存，请重新调整');
-                    return false;
-                }
-            }
+            // for (const items of this.repertory) {
+            //     let amount = 0;
+            //     if (this.repertoryS.find(sos => sos.holderId === items.holderId)) {
+            //         amount = this.repertoryS.find(sos => sos.holderId === items.holderId).total + this.semiHolder.find(so => so.holderId === items.holderId).amount;
+            //     } else {
+            //         amount = this.semiHolder.find(so => so.holderId === items.holderId).amount;
+            //     }
+            //     if (items.total > amount) {
+            //         ty = false;
+            //         this.$warningTost(this.semiHolder.find(so => so.holderId === items.holderId).holderName + '罐生产使用量超过库存，请重新调整');
+            //         return false;
+            //     }
+            // }
             return ty;
         },
         /* eslint-disable @typescript-eslint/camelcase */
@@ -619,7 +619,7 @@ export default {
                 if (data.code === 0) {
                     this.semiHolder = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -644,6 +644,8 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
                 // num++; 似乎没用到的变数
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 新增物料半成品

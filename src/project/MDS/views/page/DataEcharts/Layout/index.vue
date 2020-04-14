@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-menu :defaultActive="menuActiveName" class="DataEchartsMenu">
+        <el-menu :default-active="menuActiveName" class="DataEchartsMenu">
             <el-menu-item
                 index="1"
                 @click="
@@ -108,20 +108,16 @@ export default {
     background-color: rgba(255, 255, 255, 0) !important;
     border-right: none !important;
     -ms-overflow-style: none;
-
     &::-webkit-scrollbar {
         width: 0 !important;
     }
-
     .el-menu {
         background-color: rgba(255, 255, 255, 0);
     }
-
     .el-menu-item *,
     .el-submenu__title * {
         vertical-align: inherit;
     }
-
     .el-menu-item,
     .el-submenu__title {
         height: 40px !important;
@@ -134,12 +130,10 @@ export default {
         border-left: none;
         border-radius: 0 20px 20px 0;
     }
-
     .el-submenu .el-menu-item {
         width: 85px;
         min-width: 0 !important;
     }
-
     .el-submenu__title:hover,
     .el-submenu.is-active .el-submenu__title,
     .el-menu-item.is-active,
@@ -149,13 +143,11 @@ export default {
         border: 2px solid #fff;
         border-left: none;
     }
-
     li {
         margin-top: 10px;
         margin-bottom: 10px;
     }
 }
-
 .DataEchartsContent {
     width: 100%;
 
@@ -169,7 +161,6 @@ export default {
     background: url("~@/assets/img/echartsBgs.png") no-repeat;
     background-size: 100% 100%;
     -ms-overflow-style: none;
-
     &::-webkit-scrollbar {
         width: 0 !important;
     }

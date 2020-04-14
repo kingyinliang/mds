@@ -1,8 +1,8 @@
 <template>
-    <el-dialog title="人员管理" :closeOnClickModal="false" :visible.sync="visible">
+    <el-dialog title="人员管理" :close-on-click-modal="false" :visible.sync="visible">
         <div>
             <el-row>
-                <el-transfer v-model="selctId" filterable :titles="['未分配人员', '已分配人员']" :filterMethod="filterMethod" filterPlaceholder="请输入用户名称" :data="userlist" />
+                <el-transfer v-model="selctId" filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" :data="userlist" />
             </el-row>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -44,7 +44,7 @@ export default {
                     this.userlist = transfer(data.list).res;
                     this.selctId = transfer(data.list).selcedid;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.visible = true;
             });
@@ -57,12 +57,12 @@ export default {
                     userId: this.selctId
                 }).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$success_SHINHO('操作成功');
+                        this.$successTost('操作成功');
                         this.type = true;
                         this.visible = false;
                         this.$emit('refreshDataList');
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {

@@ -1,8 +1,8 @@
 <template>
-    <el-dialog title="人员分配" :closeOnClickModal="false" :visible.sync="visible">
+    <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
         <el-row>
             <el-col style="width: 500px;">
-                <el-transfer v-model="selctId" filterable :titles="['未分配人员', '已分配人员']" :filterMethod="filterMethod" filterPlaceholder="请输入用户名称" :data="userlist" />
+                <el-transfer v-model="selctId" filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" :data="userlist" />
             </el-col>
         </el-row>
         <div slot="footer" class="dialog-footer">
@@ -33,14 +33,12 @@ export default {
         };
     },
     computed: {},
-    mounted() {
-    //    mounted
-    },
     methods: {
         // 根据部门id查人
+        /* eslint-disable @typescript-eslint/camelcase*/
         init(id, userId) {
             this.visible = true;
-            this.$http(`${SYSTEMSETUP_API.USERALL_API}`, 'POST', id ? { dept_id: id } : {}).then(({ data }) => {// eslint-disable-line
+            this.$http(`${SYSTEMSETUP_API.USERALL_API}`, 'POST', id ? { dept_id: id } : {}).then(({ data }) => {
                 if (data.code === 0) {
                     this.userlist = setUserList(data.listUser);
                     this.selctId = userId;
@@ -50,6 +48,7 @@ export default {
                 }
             });
         },
+        /* eslint-enable @typescript-eslint/camelcase*/
         // 确定人员
         updatauser() {
             this.visible = false;

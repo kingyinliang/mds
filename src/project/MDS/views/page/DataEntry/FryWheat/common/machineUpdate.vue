@@ -1,17 +1,17 @@
 <template>
-    <el-dialog :title="machineTimeData.deviceName" width="400px" customClass="dialog__class" :closeOnClickModal="false" :visible.sync="visible">
+    <el-dialog :title="machineTimeData.deviceName" width="400px" custom-class="dialog__class" :close-on-click-modal="false" :visible.sync="visible">
         <div slot="title">
             {{ machineTimeData.deviceName }}
         </div>
-        <el-form :model="machineTimeData" size="small" labelWidth="125px">
+        <el-form :model="machineTimeData" size="small" label-width="125px">
             <el-form-item v-if="machineTimeData.openTime" label="开始时间：">
-                <el-date-picker v-model="machineTimeData.openTime" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" />
+                <el-date-picker v-model="machineTimeData.openTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" />
             </el-form-item>
             <el-form-item v-if="machineTimeData.openTime" label="开始人：">
                 <span>{{ machineTimeData.openMan }}</span>
             </el-form-item>
             <el-form-item v-if="machineTimeData.closeTime" label="结束时间：">
-                <el-date-picker v-model="machineTimeData.closeTime" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" />
+                <el-date-picker v-model="machineTimeData.closeTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" />
             </el-form-item>
             <el-form-item v-if="machineTimeData.closeTime" label="结束人：">
                 <span>{{ machineTimeData.closeMan }}</span>

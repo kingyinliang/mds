@@ -10,7 +10,7 @@
             </el-col>
             <el-col :span="8">
                 <img src="@/assets/img/MDSlogo.png" alt="" class="login_icon">
-                <el-form ref="ruleForm2" :model="ruleForm2" statusIcon :rules="rules2" labelWidth="100px" class="loginForm_ui2" @keyup.enter.native="submitForm('ruleForm2')">
+                <el-form ref="ruleForm2" :model="ruleForm2" status-icon :rules="rules2" label-width="100px" class="loginForm_ui2" @keyup.enter.native="submitForm('ruleForm2')">
                     <p class="login_title1">
                         欢迎使用
                     </p>
@@ -18,12 +18,12 @@
                         MDS制造管理系统
                     </p>
                     <el-form-item prop="user">
-                        <el-input v-model="ruleForm2.user" autoComplete="off" placeholder="账户/工号">
+                        <el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号">
                             <i slot="prefix" class="iconfont factory-zhanghaodenglu" />
                         </el-input>
                     </el-form-item>
                     <el-form-item prop="pass">
-                        <el-input v-model="ruleForm2.pass" type="password" autoComplete="off" placeholder="密码">
+                        <el-input v-model="ruleForm2.pass" type="password" auto-complete="off" placeholder="密码">
                             <i slot="prefix" class="iconfont factory-mima" />
                         </el-input>
                         <el-button type="text" class="reset" @click="resetForm('ruleForm2')">
@@ -39,9 +39,9 @@
             </el-col>
         </el-row>
         <!--修改密码-->
-        <el-dialog :closeOnClickModal="false" width="500px" title="修改密码" :visible.sync="visible">
+        <el-dialog :close-on-click-modal="false" width="500px" title="修改密码" :visible.sync="visible">
             <div>
-                <el-form ref="dataForm" :model="dataForm" :rules="dataRule" labelWidth="100px" @keyup.enter.native="dataFormSubmit()">
+                <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="100px" @keyup.enter.native="dataFormSubmit()">
                     <el-form-item label="原密码：" prop="password">
                         <el-input v-model="dataForm.password" placeholder="请输入原始密码" minlength="8" maxlength="12" type="password" />
                     </el-form-item>
@@ -58,7 +58,7 @@
             </span>
         </el-dialog>
         <!--选择工厂-->
-        <el-dialog :showClose="false" :visible.sync="factoryVisible" class="selectFa">
+        <el-dialog :show-close="false" :visible.sync="factoryVisible" class="selectFa">
             <div class="factoryBox">
                 <div v-for="(item, index) in factory" :key="index" class="factoryItem" @click="goFa(item)">
                     <div class="itemBox">

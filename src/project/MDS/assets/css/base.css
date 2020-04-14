@@ -76,11 +76,9 @@ img {
 :focus {
     outline: 0;
 }
-
 a {
     cursor: pointer;
 }
-
 a,
 a:link,
 a:visited,
@@ -98,19 +96,15 @@ a:active {
     visibility: hidden;
     content: "";
 }
-
 .el-submenu .el-menu-item {
     min-width: 170px !important;
 }
-
 .clearfix {
     zoom: 1; /* IE/7/6 */
 }
-
 .el-table {
     border-radius: 6px 6px 0 0;
 }
-
 .tableHead,
 .tableHead th {
     color: black;
@@ -118,15 +112,12 @@ a:active {
     text-align: center;
     background-color: #f9f9f9 !important;
 }
-
 .site-sidebar__menu-icon {
     font-size: 20px !important;
 }
-
 .is-opened .el-submenu__title {
     background-color: #000c17 !important;
 }
-
 .reqI {
     color: red;
 }
@@ -134,45 +125,35 @@ a:active {
 .rowDel {
     display: none;
 }
-
 .el-table td,
 .el-table th {
     padding: 6px 0 !important;
 }
-
 .el-tag--small {
     height: 22px !important;
     line-height: 20px !important;
 }
-
 .secondcard {
     margin-top: 5px;
 }
-
 .floatr {
     float: right;
 }
-
 .width140px {
     width: 140px;
 }
-
 .width150px {
     width: 150px;
 }
-
 .width180px {
     width: 180px;
 }
-
 .width220px {
     width: 220px;
 }
-
 .width100 {
     width: 100% !important;
 }
-
 .points {
     float: left;
     width: 5px;

@@ -2,7 +2,7 @@
     <main class="site-content" :class="{ 'site-content--tabs': $route.meta.isTab }">
         <!-- 主入口标签页 s -->
         <el-tabs v-if="$route.meta.isTab" v-model="mainTabsActiveName" :closable="true" @tab-click="selectedTabHandle" @tab-remove="removeTabHandle">
-            <el-dropdown class="site-tabs__tools" :showTimeout="0">
+            <el-dropdown class="site-tabs__tools" :show-timeout="0">
                 <i class="el-icon-arrow-down el-icon--right" />
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item @click.native="tabsCloseCurrentHandle">
@@ -21,7 +21,7 @@
             </el-dropdown>
             <el-tab-pane v-for="item in mainTabs" :key="item.name" :label="item.title" :name="item.name">
                 <iframe v-if="item.type === 'iframe'" :src="item.iframeUrl" width="100%" height="100%" title="" />
-                <transition v-else name="custom-classes-transition" enterActiveClass="animated rollin" leaveActiveClass="animated rollOut">
+                <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
                     <keep-alive>
                         <router-view v-if="item.name === mainTabsActiveName" />
                     </keep-alive>
@@ -29,7 +29,7 @@
             </el-tab-pane>
         </el-tabs>
         <!-- 主入口标签页 e -->
-        <transition v-else name="custom-classes-transition" enterActiveClass="animated rollin" leaveActiveClass="animated rollOut">
+        <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
             <keep-alive>
                 <div :body-style="siteContentViewHeight">
                     <router-view />
@@ -92,7 +92,7 @@ export default {
         // tabs, 选中tab
         selectedTabHandle(tab) {
             const finalTab = this.mainTabs.filter(item => item.name === tab.name);
-            if (finalTab.length >= 1) {
+            if (finalTab.length >= 1 && this.$router.history.current.name !== finalTab[0].name) {
                 this.$router.push({ name: finalTab[0].name });
             }
         },
@@ -126,6 +126,8 @@ export default {
                             this.$router.push({ name: tabName });
                         });
                     }
+                }).catch(() => {
+                // this.$infoTost('已取消删除');
                 });
             } else {
                 this.mainTabs = this.mainTabs.filter(item => item.name !== tabName);
@@ -174,28 +176,28 @@ export default {
 </script>
 <style lang="scss" scoped>
 .footer {
+    text-align: center;
+    width: 100%;
     position: absolute;
     bottom: 55px;
-    width: 100%;
     color: rgba(0, 0, 0, 0.45);
-    font-size: 12px;
     line-height: 20px;
-    text-align: center;
+    font-size: 12px;
     a {
-        margin: 0 10px;
-        color: rgba(0, 0, 0, 0.45);
         font-size: 14px;
+        color: rgba(0, 0, 0, 0.45);
+        margin: 0 10px;
     }
 }
 
 @keyframes rollin {
     0% {
-        transform: translate3d(-100%, 0, 0) rotate(-0deg);
         opacity: 0;
+        transform: translate3d(-100%, 0, 0) rotate(-0deg);
     }
     to {
-        transform: none;
         opacity: 1;
+        transform: none;
     }
 }
 

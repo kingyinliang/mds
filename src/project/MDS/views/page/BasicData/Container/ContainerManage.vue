@@ -5,7 +5,7 @@
                 <h3>容器管理列表</h3>
                 <el-row type="flex">
                     <el-col class="header_main" style="margin-bottom: 10px;">
-                        <el-form :inline="true" :model="form" size="small" labelWidth="70px" class="multi_row" @keyup.enter.native="qurery()" @submit.native.prevent>
+                        <el-form :inline="true" :model="form" size="small" label-width="70px" class="multi_row" @keyup.enter.native="qurery()" @submit.native.prevent>
                             <el-form-item label="归属工厂：">
                                 <el-select v-model="form.factory" placeholder="请选择">
                                     <el-option label="" value="">
@@ -51,18 +51,80 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-table ref="table1" headerRowClassName="tableHead" :data="list" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="34" />
-                        <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
-                        <el-table-column prop="typeName" label="容器类型" :showOverflowTooltip="true" width="100" />
-                        <el-table-column prop="holderNo" label="容器号" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="holderName" :showOverflowTooltip="true" label="容器描述" />
-                        <el-table-column prop="holderHold" label="容器量" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="holderPatch" label="批数" :showOverflowTooltip="true" width="80" />
-                        <el-table-column prop="holderArea" label="物理区域" :showOverflowTooltip="true" width="120" />
-                        <el-table-column prop="factoryName" label="归属工厂" :showOverflowTooltip="true" width="92" />
-                        <el-table-column prop="deptName" label="归属车间" :showOverflowTooltip="true" width="92" />
-                        <el-table-column fixed="right" label="操作" headerAlign="left" align="left" width="65">
+                    <el-table
+                        ref="table1"
+                        header-row-class-name="tableHead"
+                        :data="list"
+                        border
+                        tooltip-effect="dark"
+                        style="width: 100%; margin-bottom: 20px;"
+                        @selection-change="handleSelectionChange"
+                    >
+                        <el-table-column
+                            type="selection"
+                            width="45"
+                        />
+                        <el-table-column
+                            type="index"
+                            :index="indexMethod"
+                            label="序号"
+                            width="55"
+                        />
+                        <el-table-column
+                            prop="typeName"
+                            label="容器类型"
+                            :show-overflow-tooltip="true"
+                            width="100"
+                        />
+                        <el-table-column
+                            prop="holderNo"
+                            label="容器号"
+                            :show-overflow-tooltip="true"
+                            width="80"
+                        />
+                        <el-table-column
+                            prop="holderName"
+                            :show-overflow-tooltip="true"
+                            label="容器描述"
+                        />
+                        <el-table-column
+                            prop="holderHold"
+                            label="容器量"
+                            :show-overflow-tooltip="true"
+                            width="80"
+                        />
+                        <el-table-column
+                            prop="holderPatch"
+                            label="批数"
+                            :show-overflow-tooltip="true"
+                            width="80"
+                        />
+                        <el-table-column label="状态" prop="holderStatusName" width="120" />
+                        <el-table-column
+                            prop="holderArea"
+                            label="物理区域"
+                            :show-overflow-tooltip="true"
+                            width="120"
+                        />
+                        <el-table-column
+                            prop="factoryName"
+                            label="归属工厂"
+                            :show-overflow-tooltip="true"
+                            width="120"
+                        />
+                        <el-table-column
+                            prop="deptName"
+                            label="归属车间"
+                            :show-overflow-tooltip="true"
+                            width="92"
+                        />
+                        <el-table-column
+                            fixed="right"
+                            label="操作"
+                            header-align="left"
+                            align="left"
+                            width="65"
+                        >
                             <template slot-scope="scope">
                                 <el-button v-if="isAuth('sys:holder:delete') && isAuth('sys:holder:findById')" style="padding: 0;" type="text" @click="addOrupdate(scope.row.holderId)">
                                     编辑
@@ -72,7 +134,15 @@
                     </el-table>
                 </el-row>
                 <el-row>
-                    <el-pagination :currentPage="form.currPage" :pageSizes="[10, 20, 50]" :pageSize="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination
+                        :current-page="form.currPage"
+                        :page-sizes="[10, 20, 50]"
+                        :page-size="form.pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="form.totalCount"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                    />
                 </el-row>
             </el-card>
         </div>
@@ -140,7 +210,7 @@ export default {
                     this.form.pageSize = data.page.pageSize;
                     this.form.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.visible = false;
             });
@@ -151,7 +221,7 @@ export default {
                 if (data.code === 0) {
                     this.dictList = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -172,7 +242,7 @@ export default {
                     if (data.code === 0) {
                         this.workshop = data.typeList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -211,11 +281,11 @@ export default {
                     .then(() => {
                         this.$http(`${BASICDATA_API.CONTAINERDEL_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$success_SHINHO('删除成功!');
+                                this.$successTost('删除成功!');
                                 this.multipleSelection = [];
                                 this.GetContainerList();
                             } else {
-                                this.$error_SHINHO(data.msg);
+                                this.$errorTost(data.msg);
                             }
                         });
                     })
@@ -246,7 +316,6 @@ export default {
         line-height: 38px;
     }
 }
-
 .topforms1 {
     input {
         width: 140px !important;

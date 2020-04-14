@@ -4,7 +4,7 @@
             <el-card class="searchCard newCard" style="margin: 0;">
                 <el-row type="flex">
                     <el-col>
-                        <form-header ref="formheader" :formHeader="formHeader" :isRedact="isRedact" :pro="true" />
+                        <form-header ref="formheader" :form-header="formHeader" :is-redact="isRedact" :pro="true" />
                     </el-col>
                     <el-col :span="8" style="font-size: 14px; line-height: 32px;">
                         <div style=" float: right; overflow: hidden; text-align: left;">
@@ -70,7 +70,7 @@
                                 >准备时间</el-button>
                             </el-tooltip>
                         </span>
-                        <ready-times ref="readytimes" :isRedact="isRedact" :order="formHeader" @GetReadyStatus="GetReadyStatus" />
+                        <ready-times ref="readytimes" :is-redact="isRedact" :order="formHeader" @GetReadyStatus="GetReadyStatus" />
                     </el-tab-pane>
                     <el-tab-pane name="2">
                         <span slot="label" class="spanview">
@@ -82,13 +82,13 @@
                                 >人员</el-button>
                             </el-tooltip>
                         </span>
-                        <worker ref="workerref" :isRedact="isRedact" :order="formHeader" />
+                        <worker ref="workerref" :is-redact="isRedact" :order="formHeader" />
                     </el-tab-pane>
                     <el-tab-pane name="3">
                         <span slot="label" class="spanview">
                             <el-button>异常记录</el-button>
                         </span>
-                        <exc-record ref="excrecord" :isRedact="isRedact" :order="formHeader" />
+                        <exc-record ref="excrecord" :is-redact="isRedact" :order="formHeader" />
                     </el-tab-pane>
                     <el-tab-pane name="4">
                         <span slot="label" class="spanview">
@@ -100,7 +100,7 @@
                                 >生产入库</el-button>
                             </el-tooltip>
                         </span>
-                        <in-storage ref="instorage" :isRedact="isRedact" :order="formHeader" :ratio="ratio" @GetinstorageState="GetinstorageState" />
+                        <in-storage ref="instorage" :is-redact="isRedact" :order="formHeader" :ratio="ratio" @GetinstorageState="GetinstorageState" />
                     </el-tab-pane>
                     <el-tab-pane name="5">
                         <span slot="label" class="spanview">
@@ -112,24 +112,24 @@
                                 >物料领用</el-button>
                             </el-tooltip>
                         </span>
-                        <list-bom ref="listbom" :isRedact="isRedact" :order="formHeader" @GetlistbomStatus="GetlistbomStatus" />
+                        <list-bom ref="listbom" :is-redact="isRedact" :order="formHeader" @GetlistbomStatus="GetlistbomStatus" />
                     </el-tab-pane>
                     <el-tab-pane v-if="formHeader.properties !== '二合一&礼盒产线'" name="6">
                         <span slot="label" class="spanview">
                             <el-button>待杀菌数量</el-button>
                         </span>
-                        <germs ref="germs" :isRedact="isRedact" />
+                        <germs ref="germs" :is-redact="isRedact" />
                     </el-tab-pane>
                     <el-tab-pane name="7">
                         <span slot="label" class="spanview">
                             <el-button>文本记录</el-button>
                         </span>
-                        <text-record ref="textrecord" :isRedact="isRedact" />
+                        <text-record ref="textrecord" :is-redact="isRedact" />
                     </el-tab-pane>
                 </el-tabs>
             </el-card>
         </div>
-        <el-dialog width="400px" title="分批提交" :closeOnClickModal="false" :visible.sync="visible">
+        <el-dialog width="400px" title="分批提交" :close-on-click-modal="false" :visible.sync="visible">
             <p style="margin-bottom: 20px; font-size: 18px;">
                 本次提交是否提交全部数据
             </p>
@@ -260,7 +260,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -371,7 +371,7 @@ export default {
                         type: 'success'
                     });
                 }).catch(() => {
-                    this.$error_SHINHO('网络请求失败，请刷新重试');
+                    this.$errorTost('网络请求失败，请刷新重试');
                     this.isRedact = false;
                     this.visible = false;
                 });
@@ -468,13 +468,13 @@ export default {
                                 });
                             })
                             .catch(() => {
-                                this.$error_SHINHO('网络请求失败，请刷新重试');
+                                this.$errorTost('网络请求失败，请刷新重试');
                                 this.isRedact = false;
                                 this.visible = false;
                             });
                     })
                     .catch(() => {
-                        this.$error_SHINHO('网络请求失败，请刷新重试');
+                        this.$errorTost('网络请求失败，请刷新重试');
                         this.isRedact = false;
                         this.visible = false;
                     });
@@ -500,7 +500,7 @@ export default {
                         this.visible = false;
                     })
                     .catch(() => {
-                        this.$error_SHINHO('网络请求失败，请刷新重试');
+                        this.$errorTost('网络请求失败，请刷新重试');
                         this.isRedact = false;
                         this.visible = false;
                     });
@@ -531,7 +531,7 @@ export default {
             ];
             this.$http(`${PACKAGING_API.PKGSAVEFORM_API}`, 'POST', paras).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 if (resolve) {
                     resolve('resolve');

@@ -39,7 +39,7 @@ export default {
     methods: {
         childStyles(row) {
             return {
-                'padding-left': (row[this.levelKey] > 1 ? row[this.levelKey] * 7 : 0) + 'px'
+                'padding-left': (row[this.levelKey] > 1 ? row[this.levelKey] * 10 : 0) + 'px'
             };
         },
         iconClasses(row) {

@@ -1,8 +1,8 @@
 <template>
     <div>
-        <el-dialog :title="userId ? '修改人员信息' : '新增人员'" :closeOnClickModal="false" :visible.sync="visible">
+        <el-dialog :title="userId ? '修改人员信息' : '新增人员'" :close-on-click-modal="false" :visible.sync="visible">
             <div>
-                <el-form ref="dataForm" :model="dataForm" statusIcon :rules="dataRule" size="small" labelWidth="100px" @keyup.enter.native="dataFormSubmit()">
+                <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" size="small" label-width="100px" @keyup.enter.native="dataFormSubmit()">
                     <el-form-item label="所属部门：">
                         <span v-if="userId" style="margin-right: 10px;">{{ dataForm.deptName }}</span>
                         <span v-if="!userId" style="margin-right: 10px;">{{ deptName }}</span>
@@ -17,7 +17,7 @@
                         <el-input v-model="dataForm.workNumTemp" placeholder="手动输入" />
                     </el-form-item>
                     <el-form-item label="人员姓名：" prop="realName">
-                        <el-input v-model="dataForm.realName" placeholder="手动输入" autoComplete="off" />
+                        <el-input v-model="dataForm.realName" placeholder="手动输入" auto-complete="off" />
                     </el-form-item>
                     <el-form-item label="职务：">
                         <el-input v-model="dataForm.post" placeholder="手动输入" />
@@ -35,11 +35,11 @@
                 <el-button type="primary" size="small" @click="dataFormSubmit">确定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="选择组织架构" :closeOnClickModal="false" :visible.sync="visible1">
+        <el-dialog title="选择组织架构" :close-on-click-modal="false" :visible.sync="visible1">
             <p style="margin-bottom: 10px;">
                 右击组织架构选择该部门
             </p>
-            <el-tree :data="orgTree" nodeKey="deptId" :expandOnClickNode="false" @node-contextmenu="SetDept" />
+            <el-tree :data="orgTree" node-key="deptId" :expand-on-click-node="false" @node-contextmenu="SetDept" />
         </el-dialog>
     </div>
 </template>
@@ -100,7 +100,7 @@ export default {
                     if (data.code === 0) {
                         this.dataForm = data.user;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -113,7 +113,6 @@ export default {
             this.visible1 = true;
         },
         SetDept(event, data) {
-            console.log(data);
             this.dataForm.deptId = data.deptId;
             this.dataForm.deptName = data.deptName;
             this.visible1 = false;
@@ -129,13 +128,13 @@ export default {
                                 // 修改
                                 this.$http(`${SYSTEMSETUP_API.USERUPDATE_API}`, 'POST', this.dataForm).then(({ data }) => {
                                     if (data.code === 0) {
-                                        this.$success_SHINHO('操作成功');
+                                        this.$successTost('操作成功');
                                         this.type = true;
                                         this.visible = false;
                                         this.$emit('refreshDataList');
                                     } else {
                                         this.type = true;
-                                        this.$error_SHINHO(data.msg);
+                                        this.$errorTost(data.msg);
                                     }
                                 });
                             } else {
@@ -143,13 +142,13 @@ export default {
                                 this.dataForm.deptId = this.deptId;
                                 this.$http(`${SYSTEMSETUP_API.USERADD_API}`, 'POST', this.dataForm).then(({ data }) => {
                                     if (data.code === 0) {
-                                        this.$success_SHINHO('操作成功');
+                                        this.$successTost('操作成功');
                                         this.type = true;
                                         this.visible = false;
                                         this.$emit('refreshDataList');
                                     } else {
                                         this.type = true;
-                                        this.$error_SHINHO(data.msg);
+                                        this.$errorTost(data.msg);
                                     }
                                 });
                             }

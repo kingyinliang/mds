@@ -1,7 +1,7 @@
 <template>
     <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
         <div class="site-navbar__header">
-            <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
+            <h1 class="site-navbar__brand" @click=" $router.history.current.name==='home'?'': $router.push({ name: 'home' })">
                 <a class="site-navbar__brand-lg" href="javascript:;"><img src="@/assets/img/logohead1.png" alt="" style="width: 140px;"></a>
                 <a class="site-navbar__brand-mini" href="javascript:;"><img src="@/assets/img/logoHead2.png" alt="" style="width: 47px;"></a>
             </h1>
@@ -19,7 +19,7 @@
             </el-menu>
             <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
                 <el-menu-item class="site-navbar__avatar" index="3" style="padding: 0 4px;">
-                    <el-dropdown :showTimeout="0" placement="bottom">
+                    <el-dropdown :show-timeout="0" placement="bottom">
                         <span class="el-dropdown-link"><img src="@/assets/img/avatar.png" :alt="userName"><span>{{ realName + '（' + userName + '）' }}</span></span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="updatePassword">
@@ -122,7 +122,9 @@ export default {
                         }
                     });
                 })
-                .catch();
+                .catch(() => {
+                // this.$infoTost('已取消删除');
+                });
         }
     }
 };

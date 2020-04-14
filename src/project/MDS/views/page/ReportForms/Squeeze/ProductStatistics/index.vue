@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="reportForms">
-            <el-form :inline="true" :model="plantList" size="small" labelWidth="70px" class="topform multi_row">
+            <el-form :inline="true" :model="plantList" size="small" label-width="70px" class="topform multi_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="plantList.factory" style="width: 150px;">
                         <el-option label="请选择" value="" />
@@ -21,9 +21,9 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="plantList.commitDateOne" type="date" valueFormat="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
+                    <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
                     -
-                    <el-date-picker v-model="plantList.commitDateTwo" type="date" valueFormat="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
+                    <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 135px;" />
                 </el-form-item>
                 <el-form-item class="floatr">
                     <el-button v-if="isAuth('report:res:proSta')" type="primary" size="small" @click="GetList(true)">
@@ -36,25 +36,25 @@
             </el-form>
         </el-card>
         <el-card style="margin-top: 5px;">
-            <el-table :data="dataList" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;">
-                <el-table-column prop="factoryName" label="工厂" :showOverflowTooltip="true" width="90" />
-                <el-table-column prop="workShopName" label="车间" :showOverflowTooltip="true" width="95" />
-                <el-table-column prop="productDate" label="生产日期" :showOverflowTooltip="true" width="100" />
-                <el-table-column prop="useMaterial" label="领用物料" :showOverflowTooltip="true" width="150" />
-                <el-table-column prop="useAmount" label="领用量" :showOverflowTooltip="true" width="70" />
-                <el-table-column prop="material" label="生产物料" :showOverflowTooltip="true" width="150" />
-                <el-table-column prop="inPotAmount" label="入库量" :showOverflowTooltip="true" width="70" />
-                <el-table-column prop="oneCage" label="1#笼数" :showOverflowTooltip="true" width="70" />
-                <el-table-column prop="twoCage" label="2#笼数" :showOverflowTooltip="true" width="70" />
-                <el-table-column prop="threeCage" label="3#笼数" :showOverflowTooltip="true" width="70" />
-                <el-table-column prop="fourCage" label="4#笼数" :showOverflowTooltip="true" width="70" />
-                <el-table-column prop="boardNum" label="酱渣板数" :showOverflowTooltip="true" width="90" />
-                <el-table-column prop="spiral" label="出油率" :showOverflowTooltip="true" width="70" />
-                <el-table-column prop="fermentationTankName" label="发酵罐" :showOverflowTooltip="true" width="100" />
-                <el-table-column prop="originalTankName" label="原汁罐" :showOverflowTooltip="true" width="100" />
+            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
+                <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" width="90" />
+                <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="95" />
+                <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="100" />
+                <el-table-column prop="useMaterial" label="领用物料" :show-overflow-tooltip="true" width="150" />
+                <el-table-column prop="useAmount" label="领用量" :show-overflow-tooltip="true" width="70" />
+                <el-table-column prop="material" label="生产物料" :show-overflow-tooltip="true" width="150" />
+                <el-table-column prop="inPotAmount" label="入库量" :show-overflow-tooltip="true" width="70" />
+                <el-table-column prop="oneCage" label="1#笼数" :show-overflow-tooltip="true" width="70" />
+                <el-table-column prop="twoCage" label="2#笼数" :show-overflow-tooltip="true" width="70" />
+                <el-table-column prop="threeCage" label="3#笼数" :show-overflow-tooltip="true" width="70" />
+                <el-table-column prop="fourCage" label="4#笼数" :show-overflow-tooltip="true" width="70" />
+                <el-table-column prop="boardNum" label="酱渣板数" :show-overflow-tooltip="true" width="90" />
+                <el-table-column prop="spiral" label="出油率" :show-overflow-tooltip="true" width="70" />
+                <el-table-column prop="fermentationTankName" label="发酵罐" :show-overflow-tooltip="true" width="100" />
+                <el-table-column prop="originalTankName" label="原汁罐" :show-overflow-tooltip="true" width="100" />
             </el-table>
             <el-row>
-                <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
     </div>
@@ -109,7 +109,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -139,7 +139,7 @@ export default {
                     if (data.code === 0) {
                         this.Pot = data.page.list;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }

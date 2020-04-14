@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div class="lefttab" :style="{ width: isCollapse ? 'auto' : '200px' }">
-                <el-menu :collapse="isCollapse" :defaultActive="active" backgroundColor="#545c64" textColor="#fff" activeTextColor="#FFFF00" :router="true">
+                <el-menu :collapse="isCollapse" :default-active="active" background-color="#545c64" text-color="#fff" active-text-color="#FFFF00" :router="true">
                     <template v-for="(item, index) in menuList">
                         <el-submenu :key="index" index="basicdata">
                             <template slot="title">
@@ -120,27 +120,22 @@ export default {
     display: flex;
     width: 100%;
     height: 100%;
-
     .lefttab {
         min-width: 160px;
         max-width: 200px;
         overflow: auto;
         background: #545c64;
     }
-
     .lefttab::-webkit-scrollbar {
         display: none;
     }
-
     .rightmain {
         flex: 1;
         height: 100%;
-
         .headfa {
             position: relative;
             width: 100%;
         }
-
         .head {
             position: absolute;
             width: 100%;
@@ -150,7 +145,6 @@ export default {
             background: white;
             box-shadow: 0 1px 4px 0 rgba(0, 21, 41, 0.12);
         }
-
         #childrenRouter {
             height: 100%;
             padding-top: 50px;

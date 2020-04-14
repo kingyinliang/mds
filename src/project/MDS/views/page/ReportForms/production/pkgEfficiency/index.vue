@@ -2,15 +2,15 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            :queryFormData="queryFormData"
-            :getListField="'packing'"
-            :showPage="false"
-            :listInterface="listInterface"
-            :queryAuth="'report:production:packing'"
-            :spanMethod="spanMethod"
+            :query-form-data="queryFormData"
+            :get-list-field="'packing'"
+            :show-page="false"
+            :list-interface="listInterface"
+            :query-auth="'report:production:packing'"
+            :span-method="spanMethod"
             :column="column"
-            :exportExcel="true"
-            :exportOption="exportOption"
+            :export-excel="true"
+            :export-option="exportOption"
             @get-data-success="getDataSuccess"
         />
     </div>

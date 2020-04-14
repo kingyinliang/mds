@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard ferCard">
-            <el-form :inline="true" :model="formHeader" size="small" labelWidth="75px" class="topform sole_row">
+            <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="topform sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 140px;">
                         <el-option label="请选择" value="" />
@@ -58,7 +58,7 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-pagination :currentPage.sync="formHeader.currPage" :pageSize="42" layout="total, prev, pager, next" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page.sync="formHeader.currPage" :page-size="42" layout="total, prev, pager, next" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
     </div>
@@ -132,7 +132,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -152,12 +152,14 @@ export default {
             }).then(() => {
                 this.$http(`${SQU_API.POT_REPAY_API}`, 'POST', item).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$success_SHINHO('还罐成功');
+                        this.$successTost('还罐成功');
                         this.GetDataList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 获取工厂
@@ -167,7 +169,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -181,7 +183,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -215,7 +217,6 @@ export default {
     .el-card__body {
         padding: 7px;
     }
-
     .cardTit {
         padding-bottom: 10px;
         color: black;
@@ -223,13 +224,11 @@ export default {
         font-size: 16px;
         border-bottom: 1px solid #e9e9e9;
     }
-
     .gotop {
         float: right;
         color: #1890ff;
         font-size: 14px;
         cursor: pointer;
-
         i {
             ::before {
                 color: #1890ff;
@@ -237,29 +236,24 @@ export default {
         }
     }
 }
-
 .topBox {
     width: 1160px;
     margin: auto;
     padding: 25px 25px 10px;
-
     &_boxItem {
         position: relative;
         float: left;
         width: 131px;
         cursor: pointer;
-
         &_bar {
             width: 115px;
             height: 2px;
             margin: 15px 8px 0;
             background: #f2f2f2;
-
             &_box {
                 height: 2px;
             }
         }
-
         &_tit {
             margin-top: 10px;
             color: black;
@@ -267,17 +261,14 @@ export default {
             line-height: 32px;
             text-align: center;
         }
-
         &_detail {
             color: #666;
             font-size: 14px;
             text-align: center;
-
             span {
                 color: black;
             }
         }
-
         &_popover {
             position: absolute;
             top: -60px;
@@ -291,7 +282,6 @@ export default {
             background: white;
             border-radius: 4px;
             box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
-
             .dot {
                 float: left;
                 width: 6px;
@@ -299,7 +289,6 @@ export default {
                 margin: 4px 5px 0 0;
                 border-radius: 50%;
             }
-
             &_ar {
                 position: absolute;
                 bottom: -12px;
@@ -311,7 +300,6 @@ export default {
             }
         }
     }
-
     &_circle {
         float: left;
         width: 32px;
@@ -324,13 +312,10 @@ export default {
         transition: all 0.5s;
     }
 }
-
 .dataList {
     margin-top: 10px;
-
     &_item {
         margin-bottom: 10px;
-
         &_tit {
             padding: 0 10px;
             color: black;
@@ -339,20 +324,17 @@ export default {
             line-height: 45px;
             border-bottom: 1px solid #e8e8e8;
         }
-
         &_a {
             float: right;
             color: #1890ff;
             cursor: pointer;
         }
-
         &_pot {
             display: flex;
             align-items: flex-start;
             justify-content: center;
             padding: 17px 10px 10px;
             overflow: hidden;
-
             &_box1 {
                 position: relative;
                 display: flex;
@@ -362,7 +344,6 @@ export default {
                 height: 197px;
                 overflow: hidden;
             }
-
             &_box {
                 display: flex;
                 flex-wrap: wrap;
@@ -376,7 +357,6 @@ export default {
                 color: white;
                 background: url("~@/assets/img/ferPot.png") no-repeat;
                 background-size: contain;
-
                 &_detail {
                     position: absolute;
                     top: 70px;
@@ -385,7 +365,6 @@ export default {
                     color: black;
                     font-size: 14px;
                 }
-
                 &_item1,
                 &_item2 {
                     display: flex;
@@ -394,14 +373,12 @@ export default {
                     width: 100%;
                     font-size: 14px;
                 }
-
                 &_item2s,
                 &_item1 {
                     position: relative;
                     height: 50px;
                     overflow: hidden;
                     background: #69c0ff;
-
                     &::before,
                     &::after {
                         position: absolute;
@@ -412,24 +389,20 @@ export default {
                         animation: roateTwo 10s linear infinite;
                         content: "";
                     }
-
                     &::before {
                         top: -158px;
                         border-radius: 45%;
                     }
-
                     &::after {
                         top: -152px;
                         border-radius: 47%;
                         opacity: 0.5;
                     }
                 }
-
                 &_item2 {
                     height: 100px;
                     background: #1890ff;
                 }
-
                 &:hover &_item1::before,
                 &:hover &_item1::after,
                 &:hover &_item2s::before,
@@ -437,7 +410,6 @@ export default {
                     animation: roateOne 10s linear infinite;
                 }
             }
-
             &_detail {
                 float: left;
                 max-width: 112px;
@@ -459,11 +431,9 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     50% {
         transform: translate(-50%, -1%) rotateZ(180deg);
     }
-
     100% {
         transform: translate(-50%, -0%) rotateZ(360deg);
     }
@@ -473,11 +443,9 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     50% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     100% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }

@@ -8,18 +8,18 @@
                         曲房状态汇总
                     </p>
                     <div class="tableBox">
-                        <el-table height="100%" class="KojiMakingTable" :data="KojiMakingData" stripe rowClassName="KojiMakingTable_row">
-                            <el-table-column prop="houseNoName" label="曲房" :showOverflowTooltip="true" />
-                            <el-table-column prop="inPotNoName" label="罐号" :showOverflowTooltip="true" />
-                            <el-table-column prop="materialCode" label="产品" :showOverflowTooltip="true">
+                        <el-table height="100%" class="KojiMakingTable" :data="KojiMakingData" stripe row-class-name="KojiMakingTable_row">
+                            <el-table-column prop="houseNoName" label="曲房" :show-overflow-tooltip="true" />
+                            <el-table-column prop="inPotNoName" label="罐号" :show-overflow-tooltip="true" />
+                            <el-table-column prop="materialCode" label="产品" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.materialCode }}
                                     {{ scope.row.materialName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="temp" label="温度(℃)" :showOverflowTooltip="true" />
-                            <el-table-column prop="inEndTime" label="入曲时间" :showOverflowTooltip="true" />
-                            <el-table-column prop="phase" label="阶段" :showOverflowTooltip="true" />
+                            <el-table-column prop="temp" label="温度(℃)" :show-overflow-tooltip="true" />
+                            <el-table-column prop="inEndTime" label="入曲时间" :show-overflow-tooltip="true" />
+                            <el-table-column prop="phase" label="阶段" :show-overflow-tooltip="true" />
                         </el-table>
                     </div>
                 </div>
@@ -109,7 +109,7 @@ export default {
                 if (data.code === 0) {
                     this.KojiMakingData = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -128,7 +128,7 @@ export default {
                     this.Bar1.setOption(this.setBar(data.list));
                     this.Bar2.setOption(this.setBar(data.list));
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -146,7 +146,7 @@ export default {
                 if (data.code === 0) {
                     this.Pie1.setOption(this.setPie(data.list));
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -187,7 +187,6 @@ export default {
         },
         // 轮播
         boxClick(str) {
-            console.log(this.num);
             const ele = this.$('.Container_box_echarts_bg_box_barOrPie').eq(0);
             let left;
             if (str) {
@@ -221,16 +220,13 @@ export default {
     &.el-table::before {
         height: 0 !important;
     }
-
     &.el-table,
     .el-table__expanded-cell {
         background-color: rgba(0, 0, 0, 0);
     }
-
     .el-table__row:hover {
         background-color: inherit;
     }
-
     th {
         text-align: center;
         background: rgba(0, 104, 190, 0.1) !important;
@@ -241,52 +237,43 @@ export default {
     tr,
     &_row:hover {
         background: rgba(0, 0, 0, 0) !important;
-
         td {
             text-align: center;
             background: rgba(0, 181, 246, 0.1) !important;
             border-bottom: none !important;
         }
     }
-
     &_row.el-table__row--striped {
         background: rgba(0, 0, 0, 0) !important;
-
         td {
             text-align: center;
             background: rgba(0, 104, 190, 0.1) !important;
             border-bottom: none !important;
         }
     }
-
     tr:hover {
         background: rgba(0, 0, 0, 0) !important;
-
         td {
             text-align: center;
             background: rgba(0, 181, 246, 0.1) !important;
             border-bottom: none !important;
         }
     }
-
     &_row.el-table__row--striped:hover {
         background: rgba(0, 0, 0, 0) !important;
-
         td {
             text-align: center;
             background: rgba(0, 104, 190, 0.1) !important;
             border-bottom: none !important;
         }
     }
-
     &.el-table--scrollable-y .el-table__body-wrapper {
-        -ms-overflow-style: none;
-        overflow: -moz-scrollbars-none;
-
         &::-webkit-scrollbar {
             width: 0 !important;
         }
 
+        -ms-overflow-style: none;
+        overflow: -moz-scrollbars-none;
         .el-table__body {
             width: 100% !important;
         }
@@ -300,7 +287,6 @@ export default {
     flex-direction: column;
     width: 100%;
     height: 100%;
-
     .Container {
         display: flex;
         flex: 1;
@@ -308,18 +294,15 @@ export default {
         align-items: center;
         justify-content: center;
         padding-left: 120px;
-
         &_box {
             display: flex;
             justify-content: left;
-
             &_table {
                 display: flex;
                 flex-direction: column;
                 height: 100%;
                 background: url("~@/assets/img/echartsWorkShopBg.png") no-repeat;
                 background-size: 100% 100%;
-
                 &_title {
                     margin-bottom: 10px;
                     color: #19f5fe;
@@ -327,33 +310,27 @@ export default {
                     line-height: 48px;
                     text-align: center;
                 }
-
                 .tableBox {
                     flex: 1;
                 }
             }
-
             &_echarts {
                 height: 100%;
                 margin-left: 25px;
                 padding-top: 50px;
-
                 &_bg {
                     width: 100%;
                     height: 100%;
                     background: url("~@/assets/img/echartsWorkShopRightBg.png") no-repeat;
                     background-size: 100% 100%;
-
                     &_title {
                         color: #19f5fe;
                         font-size: 24px;
                         text-align: center;
                     }
-
                     &_box {
                         position: relative;
                         width: 100%;
-
                         &_left,
                         &_right {
                             position: absolute;
@@ -362,21 +339,18 @@ export default {
                             font-size: 45px;
                             cursor: pointer;
                         }
-
                         &_e {
                             position: relative;
                             width: 100%;
                             height: 200px;
                             overflow: hidden;
                         }
-
                         &_barOrPie {
                             position: absolute;
                             left: 0;
                             width: 300%;
                             height: 200px;
                         }
-
                         &_barPie {
                             float: left;
                             width: 33.333333%;
@@ -395,26 +369,20 @@ export default {
             &_box {
                 width: 1153px;
                 height: 500px;
-
                 &_table {
                     width: 655px;
                 }
-
                 &_echarts {
                     width: 427px;
-
                     &_bg {
                         &_title {
                             padding-top: 25px;
                         }
-
                         &_box {
                             padding: 0 80px;
-
                             &_left {
                                 left: 35px;
                             }
-
                             &_right {
                                 right: 35px;
                             }
@@ -430,33 +398,26 @@ export default {
     body {
         min-height: 670px !important;
     }
-
     .pageMain {
         .Container {
             &_box {
                 width: 1353px;
                 height: 580px;
-
                 &_table {
                     width: 755px;
                 }
-
                 &_echarts {
                     width: 503px;
                     margin-left: 40px;
-
                     &_bg {
                         &_title {
                             padding-top: 35px;
                         }
-
                         &_box {
                             padding: 0 90px;
-
                             &_left {
                                 left: 45px;
                             }
-
                             &_right {
                                 right: 45px;
                             }

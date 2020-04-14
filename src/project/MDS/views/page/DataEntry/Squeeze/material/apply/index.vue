@@ -5,7 +5,7 @@
                 <el-card class="newCard">
                     <el-row type="flex">
                         <el-col>
-                            <el-form :model="params" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="sole_row">
+                            <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
                                 <el-form-item label="生产工厂：">
                                     <el-select v-model="params.factoryId" style="width: 150px;" @change="changeOptions('factory')">
                                         <el-option label="请选择" value="" />
@@ -25,7 +25,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="领用日期：">
-                                    <el-date-picker v-model="params.applyDate" type="date" valueFormat="yyyy-MM-dd" style="width: 150px;" />
+                                    <el-date-picker v-model="params.applyDate" type="date" value-format="yyyy-MM-dd" style="width: 150px;" />
                                 </el-form-item>
                                 <el-form-item class="floatr" style="width: 270px; text-align: right;">
                                     <el-button v-if="isAuth('prs:material:list')" type="primary" size="small" @click="getOrderList()">
@@ -71,24 +71,24 @@
                             </div>
                         </el-row>
                         <el-row>
-                            <el-table headerRowClassName="tableHead" :data="dataList" border tooltipEffect="dark" :rowClassName="rowDelFlag" @row-dblclick="modifyRecord">
+                            <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="modifyRecord">
                                 <el-table-column type="index" label="序号" width="55" />
-                                <el-table-column label="布浆线" :showOverflowTooltip="true">
+                                <el-table-column label="布浆线" :show-overflow-tooltip="true">
                                     <template slot-scope="scope" width="120">
                                         {{ scope.row.productLineName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="暂存罐" :showOverflowTooltip="true" width="120">
+                                <el-table-column label="暂存罐" :show-overflow-tooltip="true" width="120">
                                     <template slot-scope="scope">
                                         {{ scope.row.storagePotName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="发酵罐号" :showOverflowTooltip="true" width="120">
+                                <el-table-column label="发酵罐号" :show-overflow-tooltip="true" width="120">
                                     <template slot-scope="scope">
                                         {{ scope.row.fermentPotName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="批次" :showOverflowTooltip="true" width="120">
+                                <el-table-column label="批次" :show-overflow-tooltip="true" width="120">
                                     <template slot-scope="scope">
                                         {{ scope.row.batch }}
                                     </template>
@@ -150,14 +150,14 @@
                     </el-col>
                 </el-row>
             </div>
-            <el-dialog :closeOnClickModal="false" :visible.sync="dialogFormVisible" width="500px" customClass="dialog__class">
+            <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="500px" custom-class="dialog__class">
                 <div slot="title" class="title">
                     <span>{{ startForm.deviceName }}开始</span>
                 </div>
                 <div>
-                    <el-form ref="startForm" :model="startForm" :labelWidth="formLabelWidth" size="small">
+                    <el-form ref="startForm" :model="startForm" :label-width="formLabelWidth" size="small">
                         <el-form-item label="领用发酵罐：" required>
-                            <el-select v-model="startForm.fermentPotNo" valueKey="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('fermentPotStart')">
+                            <el-select v-model="startForm.fermentPotNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('fermentPotStart')">
                                 <el-option v-for="(item, index) in fermentPotList" :key="index" :label="item.holderName" :value="item.holderId" />
                             </el-select>
                         </el-form-item>
@@ -196,12 +196,12 @@
                     </el-button>
                 </div>
             </el-dialog>
-            <el-dialog :closeOnClickModal="false" :visible.sync="dialogFormVisible2" width="500px" customClass="dialog__class">
+            <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible2" width="500px" custom-class="dialog__class">
                 <div slot="title" class="title">
                     <span>{{ endForm.deviceName }}结束</span>
                 </div>
                 <div>
-                    <el-form ref="endForm" :model="endForm" :labelWidth="formLabelWidth" size="small">
+                    <el-form ref="endForm" :model="endForm" :label-width="formLabelWidth" size="small">
                         <el-form-item label="领用发酵罐：" required>
                             {{ endForm.fermentPotName }}
                         </el-form-item>
@@ -240,14 +240,14 @@
                     </el-button>
                 </div>
             </el-dialog>
-            <el-dialog :closeOnClickModal="false" :visible.sync="dialogFormVisible3" width="500px" customClass="dialog__class">
+            <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible3" width="500px" custom-class="dialog__class">
                 <div slot="title" class="title">
                     <span>入罐修改</span>
                 </div>
                 <div>
-                    <el-form ref="modifyForm" :model="modifyForm" :labelWidth="formLabelWidth" size="small">
+                    <el-form ref="modifyForm" :model="modifyForm" :label-width="formLabelWidth" size="small">
                         <el-form-item label="领用发酵罐：" required>
-                            <el-select v-model="modifyForm.fermentPotNo" valueKey="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('fermentPotModify')">
+                            <el-select v-model="modifyForm.fermentPotNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('fermentPotModify')">
                                 <el-option v-for="(item, index) in fermentPotList" :key="index" :label="item.holderName" :value="item.holderId" />
                             </el-select>
                         </el-form-item>
@@ -417,6 +417,8 @@ export default class Index extends Vue {
             type: 'warning'
         }).then(() => {
             row.delFlag = '1';
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 
@@ -882,6 +884,8 @@ export default class Index extends Vue {
                         message: '提交失败' + err
                     });
                 });
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 
@@ -925,19 +929,16 @@ export default class Index extends Vue {
 <style lang="scss">
 .dialog__class {
     border-radius: 6px 6px 0 0 !important;
-
     .el-dialog__header {
         height: 59px;
         color: #fff;
         font-size: 20px;
         background: rgba(24, 144, 255, 1);
         border-radius: 6px 6px 0 0;
-
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }
     }
-
     .reqI {
         color: red;
     }
@@ -945,20 +946,17 @@ export default class Index extends Vue {
 </style>
 <style lang="scss" scoped>
 @import "@/assets/scss/_common.scss";
-
 .pot-box {
     width: 217px;
     height: 250px;
     margin-right: 50px;
     border: 1px solid rgba(232, 232, 232, 1);
     border-radius: 2px;
-
     .pot-box-header {
         height: 40px;
         line-height: 40px;
         background: rgba(235, 235, 235, 1);
         border-radius: 4px 4px 0 0;
-
         .pot-box-title {
             color: rgba(0, 0, 0, 0.65);
             font-weight: 500;
@@ -966,23 +964,19 @@ export default class Index extends Vue {
             font-family: PingFangSC-Medium, sans-serif;
         }
     }
-
     .pot-box-container {
         width: 120px;
         height: 120px;
         margin: auto;
         margin-top: 16px;
     }
-
     .img {
         background: url("~@/assets/img/sq_G1.png");
     }
-
     .pot-box-footer {
         display: flex;
         justify-content: center;
         margin-top: 20px;
-
         .pot-box-button {
             width: 72px;
             height: 24px;
@@ -992,24 +986,20 @@ export default class Index extends Vue {
             border: 1px solid rgba(0, 0, 0, 0.25);
             border-radius: 4px;
             cursor: pointer;
-
             &:hover {
                 background: rgba(24, 144, 255, 1);
             }
         }
-
         .pot-box-button-title {
             color: #000;
             font-weight: 400;
             font-size: 14px;
             font-family: PingFangSC-Regular, sans-serif;
             line-height: 24px;
-
             &:hover {
                 color: #fff;
             }
         }
-
         .pot-box-button-disabled {
             width: 72px;
             height: 24px;
@@ -1021,12 +1011,10 @@ export default class Index extends Vue {
             border: 1px solid rgba(0, 0, 0, 0.25);
             border-radius: 4px;
             cursor: pointer;
-
             &:hover {
                 cursor: not-allowed;
             }
         }
-
         .pot-box-button-title-disabled {
             color: rgba(0, 0, 0, 0.6);
             font-weight: 400;
@@ -1036,16 +1024,13 @@ export default class Index extends Vue {
         }
     }
 }
-
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
-
 .el-row {
     margin-bottom: 20px;
-
     &:last-child {
         margin-bottom: 0;
     }

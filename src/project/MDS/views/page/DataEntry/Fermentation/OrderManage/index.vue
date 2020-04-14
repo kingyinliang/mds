@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <el-form :model="params" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                        <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
                                     <el-option label="请选择" value="" />
@@ -30,9 +30,8 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="订单日期：">
-                                <el-date-picker v-model="params.startDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
-                                -
-                                <el-date-picker v-model="params.endDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
+                                <el-date-picker v-model="params.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
+                                - <el-date-picker v-model="params.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                             </el-form-item>
                             <el-form-item class="floatr">
                                 <el-button v-if="isAuth('fer:order:list')" type="primary" size="small" style="float: right;" @click="getOrderList()">
@@ -65,15 +64,18 @@
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-table headerRowClassName="tableHead" :data="dataList" border tooltipEffect="dark" @selection-change="handleChange">
-                                <el-table-column type="selection" width="55" />
+                            <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleChange">
+                                <el-table-column
+                                    type="selection"
+                                    width="55"
+                                />
                                 <el-table-column type="index" label="序号" width="55" />
-                                <el-table-column label="容器" :showOverflowTooltip="true" width="100">
+                                <el-table-column label="容器" :show-overflow-tooltip="true" width="100">
                                     <template slot-scope="scope">
                                         {{ scope.row.holdName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="物料" :showOverflowTooltip="true" width="140">
+                                <el-table-column label="物料" :show-overflow-tooltip="true" width="140">
                                     <template slot-scope="scope">
                                         {{ scope.row.ferMaterialCode + ' ' + scope.row.ferMaterialName }}
                                     </template>
@@ -98,6 +100,9 @@
                                 <el-table-column label="版本" width="120">
                                     <template slot-scope="scope">
                                         <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px;">
+                                            <el-option value="">
+                                                请选择
+                                            </el-option>
                                             <el-option v-for="(item, index) in versionsList" :key="index" :label="item.value" :value="item.code" />
                                         </el-select>
                                     </template>
@@ -117,7 +122,7 @@
                                         {{ scope.row.kjmOrderNo }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="制曲物料" :showOverflowTooltip="true" width="140">
+                                <el-table-column label="制曲物料" :show-overflow-tooltip="true" width="140">
                                     <template slot-scope="scope">
                                         {{ scope.row.kjmMaterialCode + ' ' + scope.row.kjmMaterialName }}
                                     </template>
@@ -140,7 +145,15 @@
                             </el-table>
                         </el-row>
                         <el-row>
-                            <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                            <el-pagination
+                                :current-page="currPage"
+                                :page-sizes="[10, 20, 50]"
+                                :page-size="pageSize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="totalCount"
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                            />
                         </el-row>
                     </el-tab-pane>
                     <el-tab-pane name="2">
@@ -148,19 +161,19 @@
                             <el-button>已申请</el-button>
                         </span>
                         <el-row>
-                            <el-table headerRowClassName="tableHead" :data="applyedList" border tooltipEffect="dark">
+                            <el-table header-row-class-name="tableHead" :data="applyedList" border tooltip-effect="dark">
                                 <el-table-column type="index" label="序号" width="55" />
                                 <el-table-column label="订单号" width="120">
                                     <template slot-scope="scope">
                                         {{ scope.row.ferOrderNo }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="容器" :showOverflowTooltip="true" width="100">
+                                <el-table-column label="容器" :show-overflow-tooltip="true" width="100">
                                     <template slot-scope="scope">
                                         {{ scope.row.holdName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="物料" :showOverflowTooltip="true" width="140">
+                                <el-table-column label="物料" :show-overflow-tooltip="true" width="140">
                                     <template slot-scope="scope">
                                         {{ scope.row.ferMaterialCode + ' ' + scope.row.ferMaterialName }}
                                     </template>
@@ -204,7 +217,7 @@
                                         {{ scope.row.kjmOrderNo }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="制曲物料" :showOverflowTooltip="true" width="140">
+                                <el-table-column label="制曲物料" :show-overflow-tooltip="true" width="140">
                                     <template slot-scope="scope">
                                         {{ scope.row.kjmMaterialCode + ' ' + scope.row.kjmMaterialName }}
                                     </template>
@@ -237,7 +250,15 @@
                             </el-table>
                         </el-row>
                         <el-row>
-                            <el-pagination :currentPage="applyCurrPage" :pageSizes="[10, 20, 50]" :pageSize="applyPageSize" layout="total, sizes, prev, pager, next, jumper" :total="applyTotalCount" @size-change="handleApplySizeChange" @current-change="handleApplyCurrentChange" />
+                            <el-pagination
+                                :current-page="applyCurrPage"
+                                :page-sizes="[10, 20, 50]"
+                                :page-size="applyPageSize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="applyTotalCount"
+                                @size-change="handleApplySizeChange"
+                                @current-change="handleApplyCurrentChange"
+                            />
                         </el-row>
                     </el-tab-pane>
                 </el-tabs>
@@ -574,6 +595,8 @@ export default class Index extends Vue {
                     });
                 }
             });
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 
@@ -592,6 +615,7 @@ export default class Index extends Vue {
                                 title: '错误',
                                 message: data.asyncRecord.remark
                             });
+                            this.getOrderList();
                         } else if (data.asyncRecord.asyncStatus === '1') {
                             this.lodingS.close();
                             clearInterval(this.ExportTime);

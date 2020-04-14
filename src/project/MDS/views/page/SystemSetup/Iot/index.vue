@@ -2,19 +2,19 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
-            :queryAuth="false"
-            :showOperationColumn="true"
-            :operationColumnWidth="70"
-            :showSelectColumn="true"
-            :listInterface="listInterface"
-            :queryFormData="queryFormData"
+            :query-auth="false"
+            :show-operation-column="true"
+            :operation-column-width="70"
+            :show-select-column="true"
+            :list-interface="listInterface"
+            :query-form-data="queryFormData"
             :column="column"
-            returnColumnType="iotListInfo"
-            :exportOption="exportOption"
+            return-column-type="iotListInfo"
+            :export-option="exportOption"
         >
             <template slot="mds-button-middle">
                 <div style=" float: right; width: 220px;">
-                    <el-upload class="upload-demo" style=" float: left; width: 56px;" :action="uploadApi" :showFileList="false" :headers="myHeaders" :beforeUpload="beforeUp" :onSuccess="importSuccess" :onError="improtError">
+                    <el-upload class="upload-demo" style=" float: left; width: 56px;" :action="uploadApi" :show-file-list="false" :headers="myHeaders" :before-upload="beforeUp" :on-success="importSuccess" :on-error="improtError">
                         <el-button size="small" type="primary">
                             导入
                         </el-button>
@@ -33,11 +33,11 @@
                 </el-button>
             </template>
         </query-table>
-        <el-dialog :visible.sync="DialogTableVisible" :closeOnClickModal="false" width="500px" customClass="dialog__class">
+        <el-dialog :visible.sync="DialogTableVisible" :close-on-click-modal="false" width="500px" custom-class="dialog__class">
             <div slot="title">
                 编辑
             </div>
-            <el-form ref="form" size="small" labelWidth="100px" :model="form">
+            <el-form ref="form" size="small" label-width="100px" :model="form">
                 <el-form-item label="工厂编码：">
                     <el-input v-model="form.factory" />
                 </el-form-item>
@@ -293,7 +293,7 @@ export default {
         saveRow() {
             this.$http(`${SYSTEMSETUP_API.IOTDATAUPDATE_API}`, 'POST', this.form).then(({ data }) => {
                 if (data.code === 0) {
-                    this.$success_SHINHO('保存成功');
+                    this.$successTost('保存成功');
                     this.DialogTableVisible = false;
                     this.$refs.queryTable.GetDataList(true);
                 } else {
@@ -311,12 +311,14 @@ export default {
                 }).then(() => {
                     this.$http(`${SYSTEMSETUP_API.IOTDATADEL_API}`, 'POST', this.$refs.queryTable.multipleSelection).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('删除成功');
+                            this.$successTost('删除成功');
                             this.$refs.queryTable.GetDataList(true);
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
+                }).catch(() => {
+                    // this.$infoTost('已取消删除');
                 });
             } else {
                 this.$warningTost('请选择数据');
@@ -336,7 +338,7 @@ export default {
         },
         importSuccess(response) {
             if (response.code === 0) {
-                this.$success_SHINHO('导入成功');
+                this.$successTost('导入成功');
                 this.$refs.queryTable.GetDataList(true);
             } else {
                 this.loading.close();

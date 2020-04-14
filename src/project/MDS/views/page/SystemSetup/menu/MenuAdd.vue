@@ -1,6 +1,6 @@
 <template>
-    <el-dialog :title="!dataForm.id ? '新增' : '修改'" :closeOnClickModal="false" :visible.sync="visible">
-        <el-form ref="dataForm" :model="dataForm" :rules="dataRule" labelWidth="120px" @keyup.enter.native="dataFormSubmit()">
+    <el-dialog :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" :visible.sync="visible">
+        <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="120px" @keyup.enter.native="dataFormSubmit()">
             <el-form-item label="ID" prop="id">
                 <el-input v-model="dataForm.id" placeholder="请输入id" />
             </el-form-item>
@@ -16,7 +16,7 @@
             </el-form-item>
             <el-form-item label="上级菜单" prop="parentName">
                 <el-popover ref="menuListPopover" placement="bottom-start" trigger="click" style="height: 100%; overflow: auto;">
-                    <el-tree ref="menuListTree" :data="menuList" :props="menuListTreeProps" nodeKey="menuId" :defaultExpandAll="false" :highlightCurrent="true" :expandOnClickNode="false" @current-change="menuListTreeCurrentChangeHandle" />
+                    <el-tree ref="menuListTree" :data="menuList" :props="menuListTreeProps" node-key="menuId" :default-expand-all="false" :highlight-current="true" :expand-on-click-node="false" @current-change="menuListTreeCurrentChangeHandle" />
                 </el-popover>
                 <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input" />
             </el-form-item>
@@ -27,12 +27,12 @@
                 <el-input v-model="dataForm.perms" placeholder="多个用逗号分隔, 如: user:list,user:create" />
             </el-form-item>
             <el-form-item v-if="dataForm.type !== 2" label="排序号" prop="orderNum">
-                <el-input-number v-model="dataForm.orderNum" controlsPosition="right" :min="0" label="排序号" />
+                <el-input-number v-model="dataForm.orderNum" controls-position="right" :min="0" label="排序号" />
             </el-form-item>
             <el-form-item v-if="dataForm.type !== 2" label="菜单图标" prop="icon">
                 <el-row>
                     <el-col :span="22">
-                        <el-popover ref="iconListPopover" placement="bottom-start" trigger="click" popperClass="mod-menu__icon-popover">
+                        <el-popover ref="iconListPopover" placement="bottom-start" trigger="click" popper-class="mod-menu__icon-popover">
                             <div class="mod-menu__icon-list">
                                 <el-button
                                     v-for="(item, index) in iconList"
@@ -213,13 +213,13 @@ export default {
                             icon: this.dataForm.icon
                         }).then(({ data }) => {
                             if (data && data.code === 0) {
-                                this.$success_SHINHO('操作成功');
+                                this.$successTost('操作成功');
                                 this.submitType = true;
                                 this.visible = false;
                                 this.$emit('refreshDataList');
                             } else {
                                 this.submitType = true;
-                                this.$error_SHINHO(data.msg);
+                                this.$errorTost(data.msg);
                             }
                         });
                     } else {
@@ -240,20 +240,16 @@ export default {
             cursor: pointer;
         }
     }
-
     &__icon-popover {
         max-width: 370px;
     }
-
     &__icon-list {
         max-height: 180px;
         margin: -8px 0 0 -8px;
         padding: 0;
-
         > .el-button {
             margin: 8px 0 0 8px;
             padding: 8px;
-
             > span {
                 display: inline-block;
                 width: 18px;
@@ -263,7 +259,6 @@ export default {
             }
         }
     }
-
     .icon-list__tips {
         color: #e6a23c;
         font-size: 18px;
@@ -271,7 +266,6 @@ export default {
         cursor: pointer;
     }
 }
-
 .el-dialog__body {
     padding: 10px 20px;
 }

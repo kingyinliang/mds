@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" labelWidth="125px">
+        <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
             <mds-card :title="'准备工时 (单位:min)'" :name="'ready'">
                 <template slot="titleBtn">
                     <el-form-item label="班次：" style="float: right;">
@@ -16,13 +16,13 @@
                     <el-form-item label="交接班（白班）：">
                         <el-input v-model="readyTimeDate.dayChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
-                    <el-form-item label="班前会：" labelWidth="80px">
+                    <el-form-item label="班前会：" label-width="80px">
                         <el-input v-model="readyTimeDate.dayChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
-                    <el-form-item label="生产前准备：" labelWidth="100px">
+                    <el-form-item label="生产前准备：" label-width="100px">
                         <el-input v-model="readyTimeDate.dayChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
-                    <el-form-item label="生产后清场：" labelWidth="100px">
+                    <el-form-item label="生产后清场：" label-width="100px">
                         <el-input v-model="readyTimeDate.dayChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
                 </el-row>
@@ -30,13 +30,13 @@
                     <el-form-item label="交接班（中班）：">
                         <el-input v-model="readyTimeDate.midChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
-                    <el-form-item label="班前会：" labelWidth="80px">
+                    <el-form-item label="班前会：" label-width="80px">
                         <el-input v-model="readyTimeDate.midChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
-                    <el-form-item label="生产前准备：" labelWidth="100px">
+                    <el-form-item label="生产前准备：" label-width="100px">
                         <el-input v-model="readyTimeDate.midChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
-                    <el-form-item label="生产后清场：" labelWidth="100px">
+                    <el-form-item label="生产后清场：" label-width="100px">
                         <el-input v-model="readyTimeDate.midChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
                 </el-row>
@@ -44,19 +44,19 @@
                     <el-form-item label="交接班（夜班）：">
                         <el-input v-model="readyTimeDate.nightChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
-                    <el-form-item label="班前会：" labelWidth="80px">
+                    <el-form-item label="班前会：" label-width="80px">
                         <el-input v-model="readyTimeDate.nightChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
-                    <el-form-item label="生产前准备：" labelWidth="100px">
+                    <el-form-item label="生产前准备：" label-width="100px">
                         <el-input v-model="readyTimeDate.nightChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
-                    <el-form-item label="生产后清场：" labelWidth="100px">
+                    <el-form-item label="生产后清场：" label-width="100px">
                         <el-input v-model="readyTimeDate.nightChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                     </el-form-item>
                 </el-row>
             </mds-card>
         </el-form>
-        <mds-card :title="'机器工时 (单位:min)'" :name="'machine'" :iconBg="'#ffbf00'">
+        <mds-card :title="'机器工时 (单位:min)'" :name="'machine'" :icon-bg="'#ffbf00'">
             <el-row :gutter="10" class="forColor">
                 <el-col v-for="(item, index) in Machine" :key="index" :span="6" class="colorItem" style="margin-bottom: 15px;">
                     <div class="machineBox_item clearfix colorContainer">
@@ -82,7 +82,7 @@
                     </div>
                 </el-col>
             </el-row>
-            <el-table class="newTable" :data="machineTimeData" headerRowClassName="tableHead" border tooltipEffect="dark" :rowClassName="RowDelFlag" style="margin-bottom: 10px;" @row-dblclick="rowUpdateMachine">
+            <el-table class="newTable" :data="machineTimeData" header-row-class-name="tableHead" border tooltip-effect="dark" :row-class-name="RowDelFlag" style="margin-bottom: 10px;" @row-dblclick="rowUpdateMachine">
                 <el-table-column label="日期" width="120" prop="productDate" />
                 <el-table-column label="炒麦机" width="120" prop="deviceName" />
                 <el-table-column label="开始时间" prop="openTime" />
@@ -98,7 +98,7 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <audit-log :tableData="timeAuditlog" :name="'audit1'" />
+        <audit-log :table-data="timeAuditlog" :name="'audit1'" />
         <machine-time v-if="visible" ref="machinetime" @changeMachineTime="changeMachineTime" />
         <machine-test v-if="visible1" ref="machinetest" />
         <machineUpdate v-if="visible2" ref="machinetimeupdate" @updateRow="updateRow" />
@@ -122,8 +122,7 @@ export default {
     },
     props: {
         isRedact: {
-            type: Object,
-            default: function() { return {} }
+            type: Boolean
         },
         formHeader: {
             type: Object,
@@ -216,7 +215,7 @@ export default {
                         this.machineTimeData = data.listFormMachine;
                         this.timeAuditlog = data.listApproval;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .finally(() => {
@@ -249,7 +248,7 @@ export default {
             this.$http(`${WHT_API.READYTIMEUPDATE_API}`, 'POST', this.readyTimeDate)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -277,7 +276,7 @@ export default {
             });
             this.$http(`${WHT_API.MACHINETIMEUPDATE_API}`, 'POST', this.machineTimeData).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 if (resolve) {
                     resolve('resolve');
@@ -376,6 +375,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag
@@ -397,7 +398,7 @@ export default {
                 if (data.code === 0) {
                     this.Machine = data.list.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -468,45 +469,36 @@ export default {
         .el-form-item__label {
             font-size: $base-sise;
         }
-
         .el-form-item {
             margin-bottom: 10px;
         }
     }
-
     .readyBox {
         .el-form-item {
             margin-bottom: 10px !important;
         }
-
         input {
             width: 153px;
         }
     }
-
     .readyshiftBtn {
         margin-left: 15px;
         padding: 0;
         line-height: 32px;
     }
-
     .machineBox {
         color: white;
-
         &_item {
             padding: 10px;
             border-radius: 8px;
             box-shadow: 2px 2px 4px 0 rgba(232, 232, 232, 1);
-
             &_title {
                 margin-bottom: 5px;
                 font-size: $base-sise + 2;
-
                 i {
                     margin-right: 5px;
                 }
             }
-
             &_text {
                 margin-bottom: 5px;
                 padding-left: 20px;
@@ -514,7 +506,6 @@ export default {
                 line-height: 22px;
             }
         }
-
         .machineBtn {
             width: 65px;
             height: 32px;
@@ -522,7 +513,6 @@ export default {
             font-size: $base-sise;
             line-height: 32px;
         }
-
         .machineBtn:first-child {
             color: white;
             background-color: #487bff;

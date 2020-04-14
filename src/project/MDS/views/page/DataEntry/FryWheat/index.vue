@@ -2,21 +2,20 @@
     <el-col>
         <div class="header_main">
             <el-card class="searchCard queryHead">
-                <el-form :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                     <el-form-item label="生产工厂：">
-                        <el-select v-model="plantList.factoryid" class="selectwpx" style="width: 140px;">
-                            <el-option label="请选择" value="" />
-                            <el-option v-for="sole in factory" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                        <el-select v-model="plantList.factoryIDValue" class="selectwpx" style="width: 140px;" :disabled="factoryList.length===0" @change="changeFactoryOptions(plantList.factoryIDValue)">
+                            <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="生产车间：">
-                        <el-select v-model="plantList.workshopid" class="selectwpx" style="width: 140px;">
+                        <el-select v-model="plantList.workshopIDValue" class="selectwpx" style="width: 140px;" :disabled="plantList.factoryIDValue === '' || workshopList.length === 0" @change="changeWorkshopOptions(plantList.workshopIDValue)">
                             <el-option label="请选择" value="" />
-                            <el-option v-for="sole in workshop" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                            <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="生产日期：">
-                        <el-date-picker v-model="plantList.productDate" type="date" valueFormat="yyyy-MM-dd" style="width: 135px;" />
+                        <el-date-picker v-model="plantList.productDate" type="date" value-format="yyyy-MM-dd" style="width: 135px;" />
                     </el-form-item>
                     <el-form-item label="生产订单：">
                         <el-input v-model="plantList.orderNo" type="text" clearable style="width: 140px;" />
@@ -28,29 +27,29 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item style="float: right;">
-                        <el-button type="primary" size="small" @click="GetOrderList(true)">
+                        <el-button v-if="isBtnDefaultSet" type="primary" size="small" @click="btnGetResultData(true)">
                             查询
                         </el-button>
-                        <template v-if="type === 'abnormal'">
-                            <el-button v-if="isdisabled === true && isAuth('wht:user:updateUser')" type="primary" size="small" @click="isdisabledFn">
+                        <template v-if="processStatus === 'abnormal'">
+                            <el-button v-if="plantList.status ==='abnormal' &&isDisabled === true && isAuth('wht:user:updateUser')" type="primary" size="small" @click="btnEditResultData()">
                                 编辑
                             </el-button>
-                            <el-button v-if="isdisabled === false" type="primary" size="small" @click="disabledFn">
+                            <el-button v-if="isDisabled === false" type="primary" size="small" @click="btnEditReturn">
                                 返回
                             </el-button>
                         </template>
-                        <template v-if="type === 'abnormal' && isdisabled === false">
-                            <el-button type="primary" size="small" @click="AddPeople">
+                        <template v-if="processStatus === 'abnormal' && isDisabled === false">
+                            <el-button type="primary" size="small" @click="btnEditAddPeople">
                                 新增
                             </el-button>
-                            <el-button type="primary" size="small" @click="save">
+                            <el-button type="primary" size="small" @click="btnEditSave">
                                 保存
                             </el-button>
                         </template>
                     </el-form-item>
                 </el-form>
             </el-card>
-            <el-row v-if="type === 'normal'" :gutter="20" class="cardList">
+            <el-row v-if="processStatus === 'normal'" :gutter="20" class="cardList">
                 <el-col v-for="(item, index) in FryWheatList" id="normal" :key="index" :span="12">
                     <el-card class="card-item">
                         <div class="title_left" style=" margin-bottom: 8px; font-weight: 600; font-size: 16px;">
@@ -73,19 +72,19 @@
                             </div>
                         </div>
                         <div class="sole_cont">
-                            <el-form size="small" :inline="true" labelPosition="right" labelWidth="90px">
+                            <el-form size="small" :inline="true" label-position="right" label-width="90px">
                                 <div class="itemImg">
                                     <img :src="'data:image/gif;base64,' + item.img" alt="" style="width: 100%; min-height: 181px;">
                                 </div>
                                 <div class="title_left">
-                                    <el-button v-if="isAuth('wht:order:list') || isAuth('sys:whtPwMaterial:list')" type="primary" size="small" style="float: right; margin-top: 14px; color: white; background-color: #1890ff;" @click="go(item)">
+                                    <el-button v-if="isAuth('wht:order:list') || isAuth('sys:whtPwMaterial:list')" type="primary" size="small" style="float: right; margin-top: 14px; color: white; background-color: #1890ff;" @click="recordData(item)">
                                         数据录入
                                     </el-button>
                                 </div>
                                 <div class="normal_bottom">
                                     <el-form-item label="订单号：" class="width50b">
-                                        <el-select v-model="item.orderNo" placeholder="请选择" :change="orderchange(item)" style="width: 150px;">
-                                            <el-option v-for="(subItem, subIndex) in subItem.order_arr" :key="subIndex" :label="subItem" :value="subItem" />
+                                        <el-select v-model="item.orderNo" placeholder="请选择" :change="orderChange(item)" style="width: 150px;">
+                                            <el-option v-for="(subItem, subIndex) in item.order_arr" :key="subIndex" :label="subItem" :value="subItem" />
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="计划产量：" class="width50b">
@@ -109,35 +108,35 @@
                     </el-card>
                 </el-col>
             </el-row>
-            <el-row v-else-if="type === 'abnormal'">
+            <el-row v-else-if="processStatus === 'abnormal' && isAbnormalDataEditStatus === true">
                 <div style="min-height: 340px;">
-                    <el-table border headerRowClassName="tableHead" :data="datalist">
+                    <el-table border header-row-class-name="tableHead" :data="dataList">
                         <el-table-column label="序号" width="50" prop="id" type="index" />
                         <el-table-column label="中/白/夜班" prop="classType" width="100">
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="isdisabled" size="small">
+                                <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="isDisabled" size="small">
                                     <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
                                 </el-select>
                             </template>
                         </el-table-column>
                         <el-table-column label="班组/工序" width="120">
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.deptId" placeholder="请选择" size="small" :disabled="isdisabled" @change="changeProcType(scope.row)">
+                                <el-select v-model="scope.row.deptId" placeholder="请选择" size="small" :disabled="isDisabled" @change="changeProcType(scope.row)">
                                     <el-option v-for="sole in processesList" :key="sole.deptId" :value="sole.deptId" :label="sole.deptName" />
                                 </el-select>
                             </template>
                         </el-table-column>
                         <el-table-column label="人员属性" prop="userType" width="110">
                             <template slot-scope="scope">
-                                <el-select v-model="scope.row.userType" placeholder="请选择" size="small" :disabled="isdisabled" @change="changeProcType(scope.row)">
+                                <el-select v-model="scope.row.userType" placeholder="请选择" size="small" :disabled="isDisabled" @change="changeProcType(scope.row)">
                                     <el-option v-for="sole in userTypeList" :key="sole.value" :value="sole.value" :label="sole.value" />
                                 </el-select>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="userId" label="姓名（工号）" :showOverflowTooltip="true">
+                        <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 <el-col>
-                                    <span v-if="!isdisabled" style="cursor: pointer;" @click="selectUser(scope.row)">
+                                    <span v-if="!isDisabled" style="cursor: pointer;" @click="selectUser(scope.row)">
                                         <i v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</i>
                                         <span>
                                             <i v-if="scope.row.userType == '临时工'">点击输入临时工</i>
@@ -156,27 +155,27 @@
                         </el-table-column>
                         <el-table-column label="开始时间" prop="startDate">
                             <template slot-scope="scope">
-                                <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" valueFormat="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="isdisabled" />
+                                <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="isDisabled" />
                             </template>
                         </el-table-column>
                         <el-table-column label="用餐时间" prop="dinner" width="80">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.dinner" size="small" :disabled="isdisabled" />
+                                <el-input v-model="scope.row.dinner" size="small" :disabled="isDisabled" />
                             </template>
                         </el-table-column>
                         <el-table-column label="结束时间" prop="endDate">
                             <template slot-scope="scope">
-                                <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" valueFormat="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="isdisabled" />
+                                <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="isDisabled" />
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" prop="remark" width="100px">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.remark" size="small" :disabled="isdisabled" />
+                                <el-input v-model="scope.row.remark" size="small" :disabled="isDisabled" />
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" fixed="right" width="50">
                             <template slot-scope="scope">
-                                <el-button v-if="isAuth('wht:user:delUser')" type="danger" icon="el-icon-delete" circle size="small" :disabled="isdisabled" @click="delUser(scope.row)" />
+                                <el-button v-if="isAuth('wht:user:delUser')" type="danger" icon="el-icon-delete" circle size="small" :disabled="isDisabled" @click="delUser(scope.row)" />
                             </template>
                         </el-table-column>
                     </el-table>
@@ -185,12 +184,12 @@
                     </el-row>
                 </div>
                 <el-row v-if="addRowStatus != 1">
-                    <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-row>
         </div>
         <temporary-worker ref="temporaryWorker" @changeUser="changeUser" />
-        <loaned-personnel ref="loanedPersonnel" :OrgTree="OrgTree" :arrList="arrList" @changeUser="changeUser" />
+        <loaned-personnel ref="loanedPersonnel" :org-tree="orgTree" :arr-list="arrList" @changeUser="changeUser" />
         <official-worker ref="officialWorker" @changeUser="changeUser" />
     </el-col>
 </template>
@@ -212,10 +211,10 @@ export default {
         return {
             FryWheatList: [],
             lodingStatus: false,
-            isdisabled: true,
+            isDisabled: true,
             plantList: {
-                factoryid: '',
-                workshopid: '',
+                factoryIDValue: '',
+                workshopIDValue: '',
                 productDate: '',
                 status: 'normal',
                 currPage: 1,
@@ -224,23 +223,26 @@ export default {
                 orderId: '',
                 orderNo: ''
             },
-            factory: '',
-            workshop: '',
+            factoryList: [],
+            workshopList: [],
             productDate: '',
-            factoryid: '',
-            type: '', // plantList.status
-            datalist: [], // 查询列表
+            factoryID: '',
+            processStatus: '', // plantList.status
+            dataList: [], // 查询列表
             addRowStatus: 0, // 人员新增 1增
             dayTypeList: [{ value: '白班' }, { value: '中班' }, { value: '夜班' }],
             userTypeList: [{ value: '正式' }, { value: '借调' }, { value: '临时工' }],
             processesList: [], // 车间工序list
             row: {},
-            OrgTree: [],
+            orgTree: [],
             arrList: [],
             pwshow: false,
             abnorsave: true,
             totalList: '',
-            productShift: []
+            productShift: [], // 生产班次
+            oriAPIData: [], // 1.装载表单选单架构
+            isBtnDefaultSet: true,
+            isAbnormalDataEditStatus: false
         };
     },
     computed: {
@@ -300,7 +302,7 @@ export default {
                 this.$store.commit('common/updateProductDate', val);
             }
         },
-        FWfactoryName: {
+        fwFactoryName: {
             get() {
                 return this.$store.state.common.FWfactoryName;
             },
@@ -308,7 +310,7 @@ export default {
                 this.$store.commit('common/updateFWfactoryName', val);
             }
         },
-        FWworkShopName: {
+        fwWorkShopName: {
             get() {
                 return this.$store.state.common.FWworkShopName;
             },
@@ -350,8 +352,8 @@ export default {
         },
         countMan: function() {
             let num = 0;
-            if (this.datalist) {
-                this.datalist.forEach(item => {
+            if (this.dataList) {
+                this.dataList.forEach(item => {
                     if (item.userId) {
                         num += item.userId.length;
                     }
@@ -360,41 +362,45 @@ export default {
             return num;
         }
     },
-    watch: {
-        'plantList.factoryid'(n) {
-            this.Getworkshop(n);
-            this.GetProductShift(n);
-        },
-        'plantList.workshopid'(n) {
-            this.GetProcess(n);
-        }
-    },
     mounted() {
         if (this.PkgproductDate === '') {
             this.plantList.productDate = dateFormat(new Date(), 'yyyy-MM-dd');
         } else {
             this.plantList.productDate = this.PkgproductDate;
         }
-        this.GetfactoryList();
+
+        this.getOriDataFromAPI().then(() => {
+            // 初始化搜寻条件
+            this.plantList.factoryIDValue = this.oriAPIData[0].deptId;
+            if (this.oriAPIData[0].workshop.length !== 0) {
+                this.workshopList = this.oriAPIData[0].workshop;
+                this.plantList.workshopIDValue = this.oriAPIData[0].workshop[0].deptId;
+            } else {
+                this.workshopList = [];
+                this.plantList.workshopIDValue = '';
+            }
+        });
+
         if (this.FWfactoryid) {
-            this.Getworkshop(this.FWfactoryid);
+            this.getWorkshopList(this.FWfactoryid);
         }
+
         this.getTree();
     },
     methods: {
         // 获取生产班次
-        GetProductShift() {
+        getProductShift() {
             this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {
                 type: 'product_shift'
             }).then(({ data }) => {
                 if (data.code === 0) {
                     this.productShift = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
-        go(item) {
+        recordData(item) {
             if (!item.productDate) {
                 if (!this.plantList.productDate) {
                     item.productDate = dateFormat(new Date(), 'yyyy-MM-dd');
@@ -402,8 +408,8 @@ export default {
                     item.productDate = this.plantList.productDate;
                 }
             }
-            this.FWworkShop = this.workShop;
-            this.FWfactoryid = this.factoryid;
+            this.FWworkShop = this.workshopList;
+            this.FWfactoryid = this.factoryID;
             if (item.productLineName === '炒麦') {
                 // 存储炒麦的state
                 this.FWproductDate = this.productDate;
@@ -440,112 +446,115 @@ export default {
             }
         },
         // 获取工厂
-        GetfactoryList() {
-            this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, `POST`, {}, false, false, false).then(res => {
-                if (res.data.code === 0) {
-                    this.factory = res.data.typeList;
-                    if (!this.plantList.factoryid) {
-                        this.plantList.factoryid = res.data.typeList[0].deptId;
+        getFactoryList() {
+            return new Promise((resolve, reject) => {
+                this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, `POST`, {}, false, false, false).then(({ data }) => {
+                    if (data.code === 0) {
+                        resolve(data.typeList);
+                    } else {
+                        this.$notify.error({ title: '错误', message: data.msg });
+                        reject(data.msg);
                     }
-                } else {
-                    this.$notify.error({ title: '错误', message: res.data.msg });
-                }
-            });
+                });
+            })
         },
         // 根据工厂获车间
-        Getworkshop(fid) {
-            this.plantList.workshopid = '';
-            if (fid) {
-                this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: fid, deptName: '炒麦' }, false, false, false).then(res => {
-                    if (res.data.code === 0) {
-                        this.workshop = res.data.typeList;
-                        if (!this.plantList.workshopid && res.data.typeList.length) {
-                            this.plantList.workshopid = res.data.typeList[0].deptId;
+        getWorkshopList(fid) {
+            return new Promise((resolve, reject) => {
+                this.plantList.workshopIDValue = '';
+                if (fid) {
+                    this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: fid, deptName: '炒麦' }, false, false, false).then(({ data }) => {
+                        if (data.code === 0) {
+                            resolve(data.typeList);
+                        } else {
+                            this.$notify.error({
+                                title: '错误',
+                                message: data.msg
+                            });
+                            reject(data.msg);
                         }
-                    } else {
-                        this.$notify.error({
-                            title: '错误',
-                            message: res.data.msg
+                    });
+                } else {
+                    this.workshopList = [];
+                }
+            })
+        },
+        // 获取工厂车间
+        getOriDataFromAPI() {
+            return new Promise((resolve) => {
+                this.getProductShift(); // 获取生产班次
+                this.getFactoryList().then(valueFactory => {
+                    this.oriAPIData = [];
+                    this.factoryList = [];
+                    for (let i = 0; i < valueFactory.length; i++) {
+                        const dataTempF = {
+                            deptId: valueFactory[i].deptId,
+                            deptName: valueFactory[i].deptName,
+                            workshop: []
+                        };
+                        this.factoryList.push({
+                            deptId: valueFactory[i].deptId,
+                            deptName: valueFactory[i].deptName
+                        });
+                        this.getWorkshopList(valueFactory[i].deptId).then(valueWorkshop => {
+                            if (valueWorkshop.length !== 0) {
+                                for (let j = 0; j < valueWorkshop.length; j++) {
+                                    const dataTempW = {
+                                        deptId: valueWorkshop[j].deptId,
+                                        deptName: valueWorkshop[j].deptName
+                                    };
+                                    dataTempF.workshop.push(dataTempW);
+                                }
+                            }
+                            this.oriAPIData.push(dataTempF);
+                            resolve();
                         });
                     }
                 });
+            });
+        },
+        // 改变工厂选单数据
+        changeFactoryOptions(flag) {
+            const item = this.oriAPIData.find(ele => ele.deptId === flag);
+            if (item.workshop.length !== 0) {
+                this.workshopList = item.workshop;
             } else {
-                this.workshop = '';
+                this.workshopList = [];
+                this.plantList.workshopIDValue = '';
             }
         },
-        // 根据车间获取工序
-        GetProcess(id) {
+        // 改变车间选单数据  // 根据车间获取工序
+        changeWorkshopOptions(flag) {
             this.processesList = [];
-            // if (id) {
-            //   this.$http(`${BASICDATA_API.FINDORGBYPARENTID_API}`, 'POST', {parentId: id}, false, false, false).then(({data}) => {
-            //     if (data.code === 0) {
-            //       this.processesList = data.childList
-            //     } else {
-            //       this.$notify.error({title: '错误', message: data.msg})
-            //     }
-            //   })
-            // } else {
-            //   this.processesList = []
-            // }
-            if (id) {
-                this.$http(`${BASICDATA_API.FINDTEAM_API}`, 'POST', {
-                    id: id,
-                    factory: this.plantList.factoryid
-                }).then(({ data }) => {
-                    if (data.code === 0) {
-                        this.processesList = data.teamList;
-                    } else {
-                        this.$error_SHINHO(data.msg);
-                    }
-                });
-            } else {
-                this.$http(`${BASICDATA_API.FINDTEAM_API}`, 'POST', {
-                    factory: this.plantList.factoryid
-                }).then(({ data }) => {
-                    if (data.code === 0) {
-                        this.processesList = data.teamList;
-                    } else {
-                        this.$error_SHINHO(data.msg);
-                    }
-                });
-            }
+            this.$http(`${BASICDATA_API.FINDTEAM_API}`, 'POST', {
+                id: flag,
+                factory: this.plantList.factoryIDValue
+            }).then(({ data }) => {
+                if (data.code === 0) {
+                    this.processesList = data.teamList;
+                } else {
+                    this.$errorTost(data.msg);
+                }
+            });
         },
         // 获取组织结构树
         getTree() {
             this.$http(`${BASICDATA_API.ORGSTRUCTURE_API}`, 'GET', {}, false, false, false).then(({ data }) => {
                 if (data.code === 0) {
-                    this.OrgTree = data.deptList;
-                    this.arrList = [this.OrgTree[0].children[0].deptId];
+                    this.orgTree = data.deptList;
+                    this.arrList = [this.orgTree[0].children[0].deptId];
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
-            });
-        },
-        GetorderLists() {
-            this.$http(`${WHT_API.CINDEXORDERLIST_API}`, 'POST', {
-                workShop: this.plantList.workshopid,
-                productDate: this.plantList.productDate,
-                orderNo: this.plantList.orderNo
-            }).then(({ data }) => {
-                if (data.code === 0) {
-                    this.FryWheatList = orderList(data.list);
-                    this.workShop = this.plantList.workshopid;
-                    this.productDate = this.plantList.productDate;
-                    this.factoryid = this.plantList.factoryid;
-                    this.FWproductDate = this.plantList.productDate;
-                } else {
-                    this.$error_SHINHO(data.msg);
-                }
-                this.lodingStatus = false;
             });
         },
         // 查询
-        GetOrderList() {
-            if (this.plantList.factoryid === '') {
+        btnGetResultData() {
+            if (this.plantList.factoryIDValue === '') {
                 this.$warningTost('请选择工厂');
                 return;
             }
-            if (this.plantList.workshopid === '') {
+            if (this.plantList.workshopIDValue === '') {
                 this.$warningTost('请选择车间');
                 return;
             }
@@ -556,54 +565,105 @@ export default {
             this.lodingStatus = true;
             if (this.plantList.status === 'normal') {
                 // 正常生产
-                if (this.plantList.workshopid === 'DA8DB9D19B4043B8A600B52D9FEF93E3') {
+                if (this.plantList.workshopIDValue === 'DA8DB9D19B4043B8A600B52D9FEF93E3') {
                     this.pwshow = true;
                 } else {
                     this.pwshow = false;
                 }
-                const gFWworkShopName = this.workshop.find(item => item.deptId === this.plantList.workshopid)['deptName'];
-                if (gFWworkShopName) {
-                    this.FWworkShopName = gFWworkShopName;
+                const targetWorkshopList = this.workshopList.find(item => item.deptId === this.plantList.workshopIDValue)
+                if (targetWorkshopList && targetWorkshopList['deptName']) {
+                    this.fwWorkShopName = targetWorkshopList['deptName'];
                 }
-                const gFWfactoryName = this.factory.find(item => item.deptId === this.plantList.factoryid)['deptName'];
-                if (gFWfactoryName) {
-                    this.FWfactoryName = gFWfactoryName;
+                const targetFactoryList = this.factoryList.find(item => item.deptId === this.plantList.factoryIDValue)
+                if (targetFactoryList && targetFactoryList['deptName']) {
+                    this.fwFactoryName = targetFactoryList['deptName'];
                 }
-                this.GetorderLists();
+                console.log(this.plantList.workshopIDValue)
+                this.$http(`${WHT_API.CINDEXORDERLIST_API}`, 'POST', {
+                    workShop: this.plantList.workshopIDValue,
+                    productDate: this.plantList.productDate,
+                    orderNo: this.plantList.orderNo
+                }).then(({ data }) => {
+                    if (data.code === 0) {
+                        if (data.list.length !== 0) {
+                            console.log('===normal===')
+                            console.log(data)
+                            this.FryWheatList = orderList(data.list);
+                            // this.workShop = this.plantList.workshopIDValue;
+                            // this.workshopList = this.plantList.workshopIDValue;
+                            this.productDate = this.plantList.productDate;
+                            this.factoryID = this.plantList.factoryIDValue;
+                            this.FWproductDate = this.plantList.productDate;
+                            this.processStatus = this.plantList.status;
+                        } else {
+                            this.$infoTost('该搜寻条件无任何资料！');
+                        }
+                    } else {
+                        this.$errorTost(data.msg);
+                    }
+                    this.lodingStatus = false;
+                });
             } else if (this.plantList.status === 'abnormal') {
                 // 无生产
                 this.addRowStatus = 0;
-                this.isdisabled = true;
+                this.isDisabled = true;
                 this.$http(`${WHT_API.CINDEXLISTUSER}`, 'POST', {
-                    deptId: this.plantList.workshopid,
+                    deptId: this.plantList.workshopIDValue,
                     productDate: this.plantList.productDate
-                }).then(res => {
-                    if (res.data.code === 0) {
-                        if (this.plantList.currPage === 1) {
-                            this.totalList = res.data.infoUser;
-                            this.datalist = res.data.infoUser.slice(0, this.plantList.pageSize);
+                }).then(({ data }) => {
+                    if (data.code === 0) {
+                        console.log('===abnormal===')
+                        console.log(data)
+                        if (data.infoUser.length !== 0) {
+                            if (this.plantList.currPage === 1) {
+                                this.totalList = data.infoUser;
+                                this.dataList = data.infoUser.slice(0, this.plantList.pageSize);
+                            }
+                            // this.dataList = data.infoUser
+                            this.plantList.totalCount = data.infoUser.length;
+                            this.processStatus = this.plantList.status;
+                            this.isAbnormalDataEditStatus = true;
+                        } else {
+                            // this.processStatus = '';
+                            this.dataList = [];
+                            this.isAbnormalDataEditStatus = false;
+                            this.processStatus = this.plantList.status;
+                            console.log('this.processStatus:' + this.processStatus)
+                            this.$infoTost('该搜寻条件无任何资料！');
                         }
-                        // this.datalist = res.data.infoUser
-                        this.plantList.totalCount = res.data.infoUser.length;
+
                     } else {
                         this.$notify.error({
                             title: '错误',
-                            message: res.data.msg
+                            message: data.msg
                         });
                     }
                     this.lodingStatus = false;
                 });
             } else {
                 this.$warningTost('请选择生产状态');
-                return;
+
             }
-            this.type = this.plantList.status;
+        },
+        btnEditResultData() {
+            this.isDisabled = false;
+            this.isBtnDefaultSet = false;
+            this.isAbnormalDataEditStatus = true;
+        },
+        btnEditReturn() {
+            this.isDisabled = true; // 新增保存按钮隐藏
+            this.isBtnDefaultSet = true;
+            if (this.dataList.length !== 0) {
+                this.isAbnormalDataEditStatus = true;
+            } else {
+                this.isAbnormalDataEditStatus = false;
+            }
         },
         // 订单号下拉
-        orderchange(row) {
+        orderChange(row) {
             if (row.orderNo && row.orderNo !== row.orderNo2) {
                 this.$http(`${WHT_API.CINDEXORDERLIST_API}`, 'POST', {
-                    workShop: this.workShop,
+                    workShop: this.workshopList,
                     productDate: this.productDate,
                     orderNo: row.orderNo
                 }).then(({ data }) => {
@@ -618,29 +678,23 @@ export default {
                         row.realOutput = data.list[0].realOutput;
                         row.plan = data.list[0].plan;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
         },
-        isdisabledFn() {
-            this.isdisabled = false;
-        },
-        disabledFn() {
-            this.isdisabled = true;
-        },
         // 新增人员
-        AddPeople() {
-            if (this.plantList.workshopid === '') {
+        btnEditAddPeople() {
+            if (this.plantList.workshopIDValue === '') {
                 this.$warningTost('请选择车间');
                 return;
             }
             // if (this.addRowStatus === 0) {
-            //   this.datalist = []
+            //   this.dataList = []
             // }
             // this.addRowStatus = 1
-            this.isdisabled = false;
-            this.datalist.push({
+            this.isDisabled = false;
+            this.dataList.push({
                 dinner: '60'
             });
         },
@@ -656,15 +710,17 @@ export default {
                         orderId: row.orderId
                     }).then(({ data }) => {
                         if (data.code === 0) {
-                            this.datalist.splice(this.datalist.indexOf(row), 1);
-                            this.$success_SHINHO('删除成功');
+                            this.dataList.splice(this.dataList.indexOf(row), 1);
+                            this.$successTost('删除成功');
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
+                    }).catch(() => {
+                        // this.$infoTost('已取消删除');
                     });
                 });
             } else {
-                this.datalist.splice(this.datalist.indexOf(row), 1);
+                this.dataList.splice(this.dataList.indexOf(row), 1);
             }
         },
         // 选择人员 正式 借调
@@ -694,61 +750,70 @@ export default {
         changeUser(userId) {
             this.row.userId = userId;
             // this.row = JSON.parse(JSON.stringify(this.row))
-            // this.datalist = JSON.parse(JSON.stringify(this.datalist))
+            // this.dataList = JSON.parse(JSON.stringify(this.dataList))
             this.$set(this.row, userId, this.row.userId);
         },
         changeProcType(row) {
             row.userId = [];
         },
-        save() {
-            if (this.isdisabled === false) {
+        btnEditSave() {
+            if (this.isDisabled === false) {
                 this.$confirm('确认保存，是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.datalist.map(item => {
-                        if (typeof item.classType === 'undefined' || typeof item.deptId === 'undefined' || typeof item.userType === 'undefined' || typeof item.userId === 'undefined' || typeof item.startDate === 'undefined' || typeof item.endDate === 'undefined' || typeof item.dinner === 'undefined') {
-                            this.$warningTost('除备注外其他选项必填');
-                            this.abnorsave = false;
-                            return false;
-                        }
-                            this.abnorsave = true;
 
-                        if (typeof item.orderId === 'undefined') {
-                            this.$set(item, 'orderId', '');
-                        }
-                        this.$set(item, 'productDate', this.plantList.productDate);
-                        if (typeof item.dinner === 'number') {
-                            item.dinner = JSON.stringify(item.dinner);
-                        }
-                    });
-                    if (this.abnorsave === true) {
-                        this.lodingStatus = true;
-                        this.$http(`${WHT_API.CINDEXUPDATEUSER}`, 'POST', this.datalist).then(({ data }) => {
-                            if (data.code === 0) {
-                                // this.$notify({title: '成功', message: '操作成功', type: 'success'})
-                                this.$success_SHINHO('保存成功');
-                                this.GetOrderList(true);
-                            } else {
-                                this.$error_SHINHO(data.msg);
+                    if (this.dataList.length !== 0) {
+                        this.dataList.map(item => {
+                            if (typeof item.classType === 'undefined' || typeof item.deptId === 'undefined' || typeof item.userType === 'undefined' || typeof item.userId === 'undefined' || typeof item.startDate === 'undefined' || typeof item.endDate === 'undefined' || typeof item.dinner === 'undefined') {
+                                this.$warningTost('除备注外其他选项必填');
+                                this.abnorsave = false;
+                                return false;
                             }
-                            this.lodingStatus = false;
+                                this.abnorsave = true;
+
+                            if (typeof item.orderId === 'undefined') {
+                                this.$set(item, 'orderId', '');
+                            }
+                            this.$set(item, 'productDate', this.plantList.productDate);
+                            if (typeof item.dinner === 'number') {
+                                item.dinner = JSON.stringify(item.dinner);
+                            }
                         });
+                        if (this.abnorsave === true) {
+                            this.lodingStatus = true;
+                            this.$http(`${WHT_API.CINDEXUPDATEUSER}`, 'POST', this.dataList).then(({ data }) => {
+                                if (data.code === 0) {
+                                    // this.$notify({title: '成功', message: '操作成功', type: 'success'})
+                                    this.$successTost('保存成功');
+                                    this.btnGetResultData(true);
+                                    // 按钮状态
+                                    this.isBtnDefaultSet = true;
+                                } else {
+                                    this.$errorTost(data.msg);
+                                }
+                                this.lodingStatus = false;
+                            });
+                        }
+                    } else {
+                        this.$infoTost('未有更新档案');
                     }
+                }).catch(() => {
+                    // this.$infoTost('已取消删除');
                 });
             }
         },
         // 改变每页条数
         handleSizeChange(val) {
             this.plantList.pageSize = val;
-            this.GetOrderList();
+            this.btnGetResultData();
         },
         // 跳转页数
         handleCurrentChange(val) {
             this.plantList.currPage = val;
             // 0,10   10,20    20,30
-            this.datalist = this.totalList.slice((val - 1) * this.plantList.pageSize, (val - 1) * this.plantList.pageSize + this.plantList.pageSize);
+            this.dataList = this.totalList.slice((val - 1) * this.plantList.pageSize, (val - 1) * this.plantList.pageSize + this.plantList.pageSize);
         }
     }
 };
@@ -763,45 +828,37 @@ export default {
     min-height: 181px;
     overflow: hidden;
     cursor: pointer;
-
     img {
         transition: all 1s ease-in-out;
     }
 }
-
 .itemImg:hover {
     img {
         transform: scale(1.2);
     }
 }
-
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
-
 .box-card {
     .pro-line {
         border-bottom: 1px solid #dcdfe6;
     }
-
     .pro-line p {
         color: red;
         font-size: 16px;
         letter-spacing: 0.1em;
     }
-
     b {
         float: left;
         font-size: 16px;
         line-height: 32px;
     }
-
     .item {
         display: flex;
         margin-top: 20px;
-
         img {
             float: left;
             width: 220px;
@@ -810,25 +867,20 @@ export default {
             border: 1px solid #dcdfe6;
             border-radius: 6px;
         }
-
         .itemForm {
             flex: 1;
-
             p {
                 color: #8a979e;
             }
         }
-
         .margb20px {
             margin-bottom: 10px;
         }
     }
 }
-
 #normal {
     .sole_cont {
         border: #e9e9e9 1px solid;
-
         .sole_status {
             position: absolute;
             top: 20px;
@@ -838,7 +890,6 @@ export default {
             color: #565656;
             font-size: 14px;
         }
-
         .points {
             display: block;
             float: left;
@@ -848,7 +899,6 @@ export default {
             margin-right: 8px;
             border-radius: 50%;
         }
-
         .title_left {
             display: block;
             height: 60px;
@@ -857,23 +907,19 @@ export default {
             line-height: 60px;
             border-bottom: #e9e9e9 1px solid;
         }
-
         .el-form-item__content {
             width: 61%;
             border-bottom: #ccc solid 1px;
         }
-
         .width50b {
             width: 49%;
             margin: 5px 0;
         }
-
         .normal_bottom {
             padding: 5px 0;
         }
     }
 }
-
 .selectwpx {
     width: 120px;
 }

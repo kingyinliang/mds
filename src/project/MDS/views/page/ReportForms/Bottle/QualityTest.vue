@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table ref="queryTable" :rules="rules" :queryFormData="queryFormData" :listInterface="listInterface" :queryAuth="'report:production:bottleQuality'" :column="column" :exportExcel="true" returnColumnType="bottleQuality" :exportOption="exportOption" />
+        <query-table ref="queryTable" :rules="rules" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:production:bottleQuality'" :column="column" :export-excel="true" return-column-type="bottleQuality" :export-option="exportOption" />
     </div>
 </template>
 

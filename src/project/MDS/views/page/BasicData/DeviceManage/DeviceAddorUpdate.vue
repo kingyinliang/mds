@@ -1,7 +1,7 @@
 <template>
-    <el-dialog :title="form.deviceId ? '修改设备信息' : '新增设备'" :closeOnClickModal="false" :visible.sync="visible">
+    <el-dialog :title="form.deviceId ? '修改设备信息' : '新增设备'" :close-on-click-modal="false" :visible.sync="visible">
         <div>
-            <el-form :model="form" size="small" labelWidth="110px" class="devicedialog" @keyup.enter.native="submitForm()">
+            <el-form :model="form" size="small" label-width="110px" class="devicedialog" @keyup.enter.native="submitForm()">
                 <el-form-item label="设备编号：">
                     <el-input v-model="form.deviceNo" placeholder="手工录入" />
                 </el-form-item>
@@ -51,25 +51,25 @@ export default {
                 if (this.id) {
                     this.$http(`${BASICDATA_API.DEVICEUPDATE_API}`, 'POST', this.form).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('操作成功');
+                            this.$successTost('操作成功');
                             this.submitType = true;
                             this.visible = false;
                             this.$emit('refreshDataList');
                         } else {
                             this.submitType = true;
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 } else {
                     this.$http(`${BASICDATA_API.DEVICEADD_API}`, 'POST', this.form).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('操作成功');
+                            this.$successTost('操作成功');
                             this.submitType = true;
                             this.visible = false;
                             this.$emit('refreshDataList');
                         } else {
                             this.submitType = true;
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 }

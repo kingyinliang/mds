@@ -51,7 +51,6 @@ export default {
     },
     methods: {
         testInit(formHeader) {
-            console.log('1');
             clearInterval(this.Iotime);
             this.params = {
                 factory: formHeader.factory,
@@ -81,7 +80,6 @@ export default {
             ReadyanimationLookNone(this.$);
         },
         test() {
-            console.log('3');
             this.$http(`${KJM_API.IOT_LIST}`, 'POST', this.params, false, false, false).then(({ data }) => {
                 if (data.code === 0) {
                     this.DataProcessing(data);

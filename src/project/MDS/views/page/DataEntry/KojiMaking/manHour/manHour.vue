@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col :span="18">
-                        <el-form :inline="true" :model="formHeader" size="small" labelWidth="70px" class="topform multi_row">
+                        <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
                                     <el-option label="请选择" value="" />
@@ -18,7 +18,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="制曲日期：">
-                                <el-date-picker v-model="formHeader.inKjmDate" type="date" valueFormat="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" style="width: 180px;" />
+                                <el-date-picker v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" style="width: 180px;" />
                             </el-form-item>
                             <el-form-item label="生产工序：">
                                 <el-select v-model="formHeader.deptId" placeholder="请选择" style="width: 180px;">
@@ -55,7 +55,7 @@
                         <div style="clear: both;" />
                         <div style="width: 100%; margin-top: 10px; text-align: right;">
                             <template style="float: right; margin-left: 10px;">
-                                <el-button v-if="isAuth('kjm:timeSheet:list')" type="primary" size="small" @click="GetTimeList">
+                                <el-button v-if="isAuth('kjm:timeSheet:list')" type="primary" size="small" @click="getTimeList">
                                     查询
                                 </el-button>
                                 <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('kjm:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
@@ -66,7 +66,7 @@
                                 <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
                                     保存
                                 </el-button>
-                                <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="SubmitForm">
+                                <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="submitForm">
                                     提交
                                 </el-button>
                             </template>
@@ -94,14 +94,14 @@
                             收起<i class="el-icon-caret-top" />
                         </el-button>
                         <div class="yieldBox">
-                            <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" labelWidth="125px">
+                            <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
                                 <el-form-item label="入曲批数：">
                                     <el-input v-model="inKjmBatch" placeholder="手工录入" disabled />
                                 </el-form-item>
                             </el-form>
                         </div>
                     </el-card>
-                    <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" labelWidth="125px">
+                    <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
                         <mds-card style=" position: relative; margin-bottom: 10px;" :title="'准备时间（分钟：min）'" :name="'ready'" class="readyCard">
                             <template slot="titleBtn">
                                 <el-form-item label="班次：" style="float: right; margin-right: 60px; margin-bottom: 10px;">
@@ -118,13 +118,13 @@
                                     <el-form-item label="交接班（白班）：">
                                         <el-input v-model="readyTimeDate.dayChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="班前会：" labelWidth="80px">
+                                    <el-form-item label="班前会：" label-width="80px">
                                         <el-input v-model="readyTimeDate.dayChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产前准备：" labelWidth="100px">
+                                    <el-form-item label="生产前准备：" label-width="100px">
                                         <el-input v-model="readyTimeDate.dayChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产后清场：" labelWidth="100px">
+                                    <el-form-item label="生产后清场：" label-width="100px">
                                         <el-input v-model="readyTimeDate.dayChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
                                 </el-row>
@@ -132,13 +132,13 @@
                                     <el-form-item label="交接班（中班）：">
                                         <el-input v-model="readyTimeDate.midChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="班前会：" labelWidth="80px">
+                                    <el-form-item label="班前会：" label-width="80px">
                                         <el-input v-model="readyTimeDate.midChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产前准备：" labelWidth="100px">
+                                    <el-form-item label="生产前准备：" label-width="100px">
                                         <el-input v-model="readyTimeDate.midChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产后清场：" labelWidth="100px">
+                                    <el-form-item label="生产后清场：" label-width="100px">
                                         <el-input v-model="readyTimeDate.midChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
                                 </el-row>
@@ -146,20 +146,20 @@
                                     <el-form-item label="交接班（夜班）：">
                                         <el-input v-model="readyTimeDate.nightChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="班前会：" labelWidth="80px">
+                                    <el-form-item label="班前会：" label-width="80px">
                                         <el-input v-model="readyTimeDate.nightChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产前准备：" labelWidth="100px">
+                                    <el-form-item label="生产前准备：" label-width="100px">
                                         <el-input v-model="readyTimeDate.nightChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产后清场：" labelWidth="100px">
+                                    <el-form-item label="生产后清场：" label-width="100px">
                                         <el-input v-model="readyTimeDate.nightChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
                                 </el-row>
                             </div>
                         </mds-card>
                     </el-form>
-                    <worker ref="workerref" :isRedact="isRedact" :order="userOrder" />
+                    <worker ref="workerref" :is-redact="isRedact" :order="userOrder" />
                 </el-card>
             </div>
         </div>
@@ -237,22 +237,24 @@ export default {
     computed: {},
     watch: {
         'formHeader.factory'(n) {
-            this.Getdeptbyid(n);
+            if (n !== '') {
+                this.getDeptById(n);
+            }
         },
         'formHeader.workShop'(n) {
             if (n) {
-                this.GetParentline(n);
+                this.getParentLine(n);
             }
         }
     },
     mounted() {
         headanimation(this.$);
         Readyanimation(this.$);
-        this.Getdeptcode();
+        this.getdeptcode();
     },
     methods: {
         // 查询
-        GetTimeList() {
+        getTimeList() {
             if (this.formHeader.factory === '' || this.formHeader.workShop === '' || this.formHeader.inKjmDate === '' || this.formHeader.deptId === '') {
                 this.$warningTost('请填写查询选项');
                 return false;
@@ -294,7 +296,7 @@ export default {
                     }
                     this.inKjmBatch = data.inKjmBatch;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -309,10 +311,10 @@ export default {
                 }
             }
             const headSave = new Promise((resolve, reject) => {
-                this.HeadSave(str, resolve, reject);
+                this.headSave(str, resolve, reject);
             });
             const readySave = new Promise((resolve, reject) => {
-                this.ReadyTimeSave(str, resolve, reject);
+                this.readyTimeSave(str, resolve, reject);
             });
             const userSave = new Promise((resolve, reject) => {
                 this.$refs.workerref.UpdateUser(str, resolve, reject);
@@ -327,7 +329,7 @@ export default {
                         const submitNet = Promise.all([submit]);
                         submitNet.then(
                             () => {
-                                this.GetTimeList();
+                                this.getTimeList();
                                 this.$notify({
                                     title: '成功',
                                     message: '提交成功',
@@ -335,19 +337,19 @@ export default {
                                 });
                             },
                             err => {
-                                this.$error_SHINHO(err);
+                                this.$errorTost(err);
                             }
                         );
                     },
                     err => {
-                        this.$error_SHINHO(err);
+                        this.$errorTost(err);
                     }
                 );
             } else if (str === 'saved') {
                 const saveNet = Promise.all([headSave, readySave, userSave]);
                 saveNet.then(
                     () => {
-                        this.GetTimeList();
+                        this.getTimeList();
                         this.$notify({
                             title: '成功',
                             message: '保存成功',
@@ -355,18 +357,20 @@ export default {
                         });
                     },
                     err => {
-                        this.$error_SHINHO(err);
+                        this.$errorTost(err);
                     }
                 );
             }
         },
-        SubmitForm() {
+        submitForm() {
             this.$confirm('确认提交该订单, 是否继续?', '提交订单', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 提交
@@ -377,7 +381,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                     if (reject) {
                         reject('提交' + data.msg);
                     }
@@ -385,21 +389,20 @@ export default {
             });
         },
         // 表头保存
-        HeadSave(str, resolve, reject) {
+        headSave(str, resolve, reject) {
             if (this.uid) {
                 this.headList.id = this.uid;
                 this.headList.addOrupdate = '0';
             }
             this.headList.status = str;
             this.headList.inKjmBatch = String(this.inKjmBatch);
-            console.log(this.headList);
             this.$http(`${KJM_API.OUTTIMEHEADSAVE_API}`, 'POST', this.headList).then(({ data }) => {
                 if (data.code === 0) {
                     if (resolve) {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                     if (reject) {
                         reject('表头保存' + data.msg);
                     }
@@ -407,7 +410,7 @@ export default {
             });
         },
         // 准备时间保存
-        ReadyTimeSave(str, resolve, reject) {
+        readyTimeSave(str, resolve, reject) {
             if (this.uid) {
                 this.readyTimeDate.orderId = this.uid;
             } else {
@@ -432,7 +435,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                     if (reject) {
                         reject('准备时间保存' + data.msg);
                     }
@@ -493,33 +496,35 @@ export default {
             return ty;
         },
         // 获取工厂
-        Getdeptcode() {
+        getdeptcode() {
             this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false).then(({ data }) => {
                 if (data.code === 0) {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
         // 获取车间
-        Getdeptbyid(id) {
+        getDeptById(id) {
             this.formHeader.workShop = '';
             this.formHeader.deptId = '';
             if (id) {
                 this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: id, deptName: '制曲' }, false, false, false).then(({ data }) => {
                     if (data.code === 0) {
                         this.workshop = data.typeList;
-                        this.formHeader.workShop = data.typeList[0].deptId;
+                        if (data.typeList.length !== 0) {
+                            this.formHeader.workShop = data.typeList[0].deptId;
+                        }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
         },
         // 获取产线
-        GetParentline(id) {
+        getParentLine(id) {
             this.formHeader.deptId = '';
             if (id) {
                 this.$http(`${BASICDATA_API.FINDORGBYPARENTID1_API}`, 'POST', { parentId: id }, false, false, false).then(({ data }) => {
@@ -527,7 +532,7 @@ export default {
                         this.deptId = data.childList;
                         this.formHeader.deptId = data.childList[0].deptId;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -551,7 +556,6 @@ export default {
         padding: 12px !important;
     }
 }
-
 .readyCard {
     input {
         width: 147px !important;

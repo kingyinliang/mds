@@ -3,7 +3,7 @@
         <el-card class="searchCard">
             <el-row>
                 <el-col :span="24">
-                    <el-form :inline="true" labelWidth="96px" size="small" class="multi_row">
+                    <el-form :inline="true" label-width="96px" size="small" class="multi_row">
                         <el-form-item
                             label="生产工厂："
                         >
@@ -137,34 +137,34 @@
             </el-row>
             <el-row>
                 <el-col>
-                    <el-table ref="multipleTable" :data="newDataList" border headerRowClassName="tableHead" @selection-change="handleSelectionChange">
+                    <el-table ref="multipleTable" :data="newDataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" :selectable="CheckBoxInit" width="35" fixed="left" />
                         <el-table-column label="状态" width="65">
                             <template slot-scope="scope">
                                 {{ scope.row.guan === '已开罐' ? '已开罐' : '未开罐' }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="车间" prop="workShopName" showOverflowTooltip width="120" />
-                        <el-table-column label="罐号" prop="holderNo" showOverflowTooltip width="70" />
-                        <el-table-column label="订单类型" prop="orderType" showOverflowTooltip width="120">
+                        <el-table-column label="车间" prop="workShopName" show-overflow-tooltip width="120" />
+                        <el-table-column label="罐号" prop="holderNo" show-overflow-tooltip width="70" />
+                        <el-table-column label="订单类型" prop="orderType" show-overflow-tooltip width="120">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.orderType" :disabled="scope.row.guan === '已开罐'" size="small" placeholder="请选择" style="width: 100px;">
                                     <el-option v-for="(item, index) in OrderType" :key="index" :label="item.value" :value="item.code" />
                                 </el-select>
                             </template>
                         </el-table-column>
-                        <el-table-column label="物料" width="180" :showOverflowTooltip="true">
+                        <el-table-column label="物料" width="180" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode }}{{ scope.row.materialName }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="酱醪类别" prop="halfName" showOverflowTooltip />
+                        <el-table-column label="酱醪类别" prop="halfName" show-overflow-tooltip />
                         <el-table-column label="发酵天数/天" prop="matureDays" width="100" />
                         <el-table-column label="酱醪状态" prop="state" />
                         <el-table-column label="数量" prop="inAmount" width="100" />
-                        <el-table-column label="HD数量" prop="hdAmount" width="100" showOverflowTooltip />
+                        <el-table-column label="HD数量" prop="hdAmount" width="100" show-overflow-tooltip />
                         <el-table-column label="单位" prop="inUnit" width="60" />
-                        <el-table-column label="入库日期" prop="created" showOverflowTooltip width="100" />
+                        <el-table-column label="入库日期" prop="created" show-overflow-tooltip width="100" />
                         <el-table-column label="批次" prop="batch" width="110" />
                         <el-table-column label="实验备注" prop="syRemark" />
                         <el-table-column label="备注" prop="remark">
@@ -175,7 +175,7 @@
                     </el-table>
                 </el-col>
             </el-row>
-            <el-pagination :currentPage="searchform.currentPage" :pageSizes="[10, 20, 50]" :pageSize="searchform.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="searchform.currentTotal" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            <el-pagination :current-page="searchform.currentPage" :page-sizes="[10, 20, 50]" :page-size="searchform.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="searchform.currentTotal" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             <el-row style="margin-top: 15px;">
                 <el-col>可用数量：{{ total }} 个，已选择：{{ already }} 个</el-col>
             </el-row>
@@ -240,7 +240,7 @@ export default {
                     this.GetOrderType(this.formHeader.FACTORYID);
                     this.GetList();
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -314,7 +314,7 @@ export default {
                     if (data.code === 0) {
                         this.OrderType = data.dicList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -336,7 +336,7 @@ export default {
                     //   })
                     // })
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
             this.$http(`${FERMENTATION_API.FORRECIPIENTSDETAILIST_API}`, 'POST', {
@@ -404,7 +404,6 @@ export default {
                         item.inStoreDate = item.created;
                         item.isNum = this.formHeader.AMOUNT;
                     });
-                    // console.log(this.multipleSelection)
                     this.$http(`${FERMENTATION_API.FORRECIPIENTSDETAILOPEN_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                         if (data.code === 0) {
                             this.searchform = {
@@ -418,9 +417,11 @@ export default {
                             });
                             this.Getdetail();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
+                }).catch(() => {
+                    // this.$infoTost('已取消删除');
                 });
 
         },

@@ -1,7 +1,7 @@
 <template>
-    <el-dialog title="新增库位" :closeOnClickModal="false" :visible.sync="visible" class="locationdialog1">
+    <el-dialog title="新增库位" :close-on-click-modal="false" :visible.sync="visible" class="locationdialog1">
         <div style="width: 400px; margin: auto;">
-            <el-form ref="addLo" :model="formatDate" :rules="dataRule" size="small" labelWidth="110px" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
+            <el-form ref="addLo" :model="formatDate" :rules="dataRule" size="small" label-width="110px" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
                 <el-form-item label="工厂：" prop="factory">
                     <el-select v-model="formatDate.factory" @change="ChangeFactory">
                         <el-option label="" value="">
@@ -128,7 +128,7 @@ export default {
                 if (data.code === 0) {
                     this.factory = data.typeList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -140,7 +140,7 @@ export default {
                     if (data.code === 0) {
                         this.workshop = data.typeList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -151,7 +151,7 @@ export default {
                 if (data.code === 0) {
                     this.sapList = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -175,11 +175,11 @@ export default {
                             if (data.code === 0) {
                                 this.submitType = true;
                                 this.visible = false;
-                                this.$success_SHINHO('操作成功');
+                                this.$successTost('操作成功');
                                 this.$emit('refreshDataList');
                             } else {
                                 this.submitType = true;
-                                this.$error_SHINHO(data.msg);
+                                this.$errorTost(data.msg);
                             }
                         });
                     } else {
@@ -209,7 +209,6 @@ export default {
     input {
         width: 100% !important;
     }
-
     .el-dialog {
         min-width: 450px;
     }

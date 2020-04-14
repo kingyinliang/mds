@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <mds-card :title="'组织架构'" :name="'org'" :packUp="false" style="background: #fff;">
+        <mds-card :title="'组织架构'" :name="'org'" :pack-up="false" style="background: #fff;">
             <el-row :gutter="20">
                 <el-col :span="8">
                     <div class="org-card">
@@ -13,7 +13,7 @@
                             </el-input>
                         </div>
                         <div class="tree-main SelfScrollbar">
-                            <el-tree ref="tree" :data="OrgTree" nodeKey="deptId" :expandOnClickNode="false" :defaultExpandedKeys="arrList" :filterNodeMethod="filterNode" @node-click="setdetail" @node-contextmenu="showMenu" />
+                            <el-tree ref="tree" :data="OrgTree" node-key="deptId" :expand-on-click-node="false" :default-expanded-keys="arrList" :filter-node-method="filterNode" @node-click="setdetail" @node-contextmenu="showMenu" />
                         </div>
                     </div>
                 </el-col>
@@ -24,18 +24,18 @@
                         </div>
                         <div class="detail-main">
                             <div class="detail-main-form">
-                                <el-form :model="OrgDetail" size="small" :inline="true" labelWidth="90px" class="org-detail-form">
+                                <el-form :model="OrgDetail" size="small" :inline="true" label-width="90px" class="org-detail-form">
                                     <el-form-item label="部门编码：">
-                                        <el-input v-model="OrgDetail.deptCode" :disabled="true" autoComplete="off" style="width: 250px;" />
+                                        <el-input v-model="OrgDetail.deptCode" :disabled="true" auto-complete="off" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item label="部门名称：">
-                                        <el-input v-model="OrgDetail.deptName" :disabled="true" autoComplete="off" style="width: 250px;" />
+                                        <el-input v-model="OrgDetail.deptName" :disabled="true" auto-complete="off" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item label="上级部门：">
-                                        <el-input v-model="OrgDetail.parentName" :disabled="true" autoComplete="off" style="width: 250px;" />
+                                        <el-input v-model="OrgDetail.parentName" :disabled="true" auto-complete="off" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item label="生产调度员：">
-                                        <el-input v-model="OrgDetail.dispatchMan" :disabled="isRedact" autoComplete="off" style="width: 250px;" />
+                                        <el-input v-model="OrgDetail.dispatchMan" :disabled="isRedact" auto-complete="off" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item label="部门类型：">
                                         <el-select v-model="OrgDetail.deptType" :disabled="isRedact" style="width: 250px;">
@@ -49,10 +49,10 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="成本中心：">
-                                        <el-input v-model="OrgDetail.costCenter" autoComplete="off" :disabled="isRedact" style="width: 250px;" />
+                                        <el-input v-model="OrgDetail.costCenter" auto-complete="off" :disabled="isRedact" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="产线图片：" :class="{'limit-upload': fileList.length}">
-                                        <el-upload class="org-img-upload" listType="picture-card" :action="FILE_API" :limit="1" :httpRequest="httpRequest" :fileList="fileList" :onSuccess="addfile" :onRemove="removeFile" :onPreview="handlePictureCardPreview">
+                                        <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
                                             <i class="el-icon-plus" />
                                         </el-upload>
                                     </el-form-item>
@@ -86,13 +86,13 @@
         <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="" style="margin-bottom: 20px;">
         </el-dialog>
-        <el-dialog id="adddepform" width="400px" :closeOnClickModal="false" :visible.sync="dialogFormVisible1" :title="sibling ? '新增同级' : '新增下级'">
-            <el-form :model="addDep" size="small" labelPosition="left" labelWidth="100px">
+        <el-dialog id="adddepform" width="400px" :close-on-click-modal="false" :visible.sync="dialogFormVisible1" :title="sibling ? '新增同级' : '新增下级'">
+            <el-form :model="addDep" size="small" label-position="left" label-width="100px">
                 <el-form-item label="部门编号：">
-                    <el-input v-model="addDep.deptCode" autoComplete="off" />
+                    <el-input v-model="addDep.deptCode" auto-complete="off" />
                 </el-form-item>
                 <el-form-item label="部门名称：">
-                    <el-input v-model="addDep.deptName" autoComplete="off" />
+                    <el-input v-model="addDep.deptName" auto-complete="off" />
                 </el-form-item>
                 <el-form-item label="上级部门：">
                     <span v-if="sibling">{{ addDep.parentName }}</span>
@@ -113,20 +113,20 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item v-if="addDep.deptType == 'proLine'" label="成本中心：">
-                    <el-input v-model="addDep.costCenter" autoComplete="off" />
+                    <el-input v-model="addDep.costCenter" auto-complete="off" />
                 </el-form-item>
                 <el-form-item v-if="addDep.deptType == 'proLine'" label="产线图片：">
-                    <el-upload :action="FILE_API" :limit="1" :httpRequest="httpRequest" listType="picture" :onSuccess="DeptAddfile">
+                    <el-upload :action="FILE_API" :limit="1" :http-request="httpRequest" list-type="picture" :on-success="DeptAddfile">
                         <el-button size="small" type="primary">
                             选取文件
                         </el-button>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="联系人：">
-                    <el-input v-model="addDep.lxr" autoComplete="off" />
+                    <el-input v-model="addDep.lxr" auto-complete="off" />
                 </el-form-item>
                 <el-form-item label="电话：">
-                    <el-input v-model="addDep.phone" autoComplete="off" />
+                    <el-input v-model="addDep.phone" auto-complete="off" />
                 </el-form-item>
                 <el-form-item label="备注：">
                     <el-input v-model="addDep.remark" type="textarea" />

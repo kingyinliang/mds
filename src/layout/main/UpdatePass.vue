@@ -1,7 +1,7 @@
 <template>
-    <el-dialog width="500px" title="修改密码" :closeOnClickModal="false" :visible.sync="visible">
+    <el-dialog width="500px" title="修改密码" :close-on-click-modal="false" :visible.sync="visible">
         <div>
-            <el-form ref="dataForm" :model="dataForm" :rules="dataRule" labelWidth="120px" @keyup.enter.native="dataFormSubmit()">
+            <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="120px" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="原密码：" prop="password">
                     <el-input v-model="dataForm.password" placeholder="请输入原始密码" minlength="8" maxlength="12" type="password" />
                 </el-form-item>

@@ -5,7 +5,7 @@
                 <el-card class="newCard">
                     <el-row type="flex">
                         <el-col>
-                            <el-form :model="params" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                            <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                                 <el-form-item label="生产工厂：">
                                     <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
                                         <el-option label="请选择" value="" />
@@ -31,9 +31,9 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="生产日期：">
-                                    <el-date-picker v-model="params.startDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
+                                    <el-date-picker v-model="params.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                                     -
-                                    <el-date-picker v-model="params.endDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
+                                    <el-date-picker v-model="params.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                                 </el-form-item>
                                 <el-form-item class="floatr">
                                     <el-button v-if="isQueryAuth()" type="primary" size="small" @click="getCompleteData()">
@@ -49,18 +49,18 @@
                 </el-card>
                 <el-row v-show="searched" style="margin-top: 5px;">
                     <div style="min-height: 320px;">
-                        <el-table border headerRowClassName="tableHead" :data="dataList">
-                            <el-table-column label="工厂" width="180" :showOverflowTooltip="true">
+                        <el-table border header-row-class-name="tableHead" :data="dataList">
+                            <el-table-column label="工厂" width="180" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.factoryName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="车间" :showOverflowTooltip="true" width="130">
+                            <el-table-column label="车间" :show-overflow-tooltip="true" width="130">
                                 <template slot-scope="scope">
                                     {{ scope.row.workShopName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="布浆线" :showOverflowTooltip="true" width="130">
+                            <el-table-column label="布浆线" :show-overflow-tooltip="true" width="130">
                                 <template slot-scope="scope">
                                     {{ scope.row.productLineName }}
                                 </template>
@@ -70,7 +70,7 @@
                                     {{ scope.row.created.substring(0, 10) }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="发酵罐" width="100" :showOverflowTooltip="true">
+                            <el-table-column label="发酵罐" width="100" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.fermentPotName }}
                                 </template>
@@ -104,7 +104,7 @@
                         <el-row style=" margin-top: 10px; font-size: 14px; line-height: 30px;" />
                     </div>
                     <el-row>
-                        <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                        <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                     </el-row>
                 </el-row>
             </div>
@@ -361,23 +361,19 @@ export default class Index extends Vue {
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(232, 232, 232, 1);
     border-radius: 2px;
-
     .box-item-top {
         height: 178px;
         padding: 10px;
         padding-bottom: 0;
         border-bottom: 1px solid rgba(232, 232, 232, 1);
-
         .box-item-title {
             display: flex;
             flex: 1;
             justify-content: space-between;
             height: 34px;
-
             .box-item-title-name {
                 display: flex;
                 flex: 1;
-
                 :first-child {
                     width: 30px;
                     height: 30px;
@@ -389,7 +385,6 @@ export default class Index extends Vue {
                     background: #ffbf00;
                     border-radius: 15px;
                 }
-
                 :nth-child(2) {
                     margin-top: 4px;
                     margin-left: 5px;
@@ -399,7 +394,6 @@ export default class Index extends Vue {
                     line-height: 22px;
                 }
             }
-
             .box-item-title-state {
                 flex: 1;
                 margin-top: 4px;
@@ -408,7 +402,6 @@ export default class Index extends Vue {
                 font-size: 14px;
                 line-height: 20px;
                 text-align: right;
-
                 &::before {
                     display: inline-block;
                     width: 6px;
@@ -419,7 +412,6 @@ export default class Index extends Vue {
                     content: "";
                 }
             }
-
             .box-item-title-state-nopass {
                 flex: 1;
                 margin-top: 4px;
@@ -428,7 +420,6 @@ export default class Index extends Vue {
                 font-size: 14px;
                 line-height: 20px;
                 text-align: right;
-
                 &::before {
                     display: inline-block;
                     width: 6px;
@@ -440,37 +431,31 @@ export default class Index extends Vue {
                 }
             }
         }
-
         .box-item-container {
             display: flex;
             flex: 1;
             justify-content: space-between;
             height: 129px;
-
             .box-item-container-left {
                 display: flex;
                 justify-content: center;
                 width: 130px;
                 padding-top: 10px;
-
                 .box-item-container-img {
                     width: 94px;
                     height: 86px;
                     background: url("~@/assets/img/fajiaoguan.png");
                 }
             }
-
             .box-item-container-right {
                 display: flex;
                 flex: 1;
                 flex-direction: column;
                 margin-left: 10px;
-
                 .box-item-container-item {
                     display: flex;
                     flex: 1;
                     justify-content: space-between;
-
                     .name {
                         width: 60px;
                         color: rgba(0, 0, 0, 0.45);
@@ -478,7 +463,6 @@ export default class Index extends Vue {
                         font-size: 12px;
                         line-height: 20px;
                     }
-
                     .detail {
                         flex: 1;
                         overflow: hidden;
@@ -493,7 +477,6 @@ export default class Index extends Vue {
             }
         }
     }
-
     .box-item-bottom {
         display: flex;
         justify-content: space-between;
@@ -501,7 +484,6 @@ export default class Index extends Vue {
         height: 40px;
         background: rgba(247, 249, 250, 1);
         border-radius: 0 0 2px 2px;
-
         .box-item-bottom-item {
             flex: 1;
             color: rgba(0, 0, 0, 0.65);
@@ -509,14 +491,12 @@ export default class Index extends Vue {
             font-size: 12px;
             line-height: 40px;
             text-align: center;
-
             &:hover {
                 color: #fff;
                 background: #1890ff;
                 cursor: pointer;
             }
         }
-
         .box-item-bottom-split {
             width: 1px;
             height: 16px;
@@ -525,34 +505,28 @@ export default class Index extends Vue {
         }
     }
 }
-
 .rowButton {
     button {
         margin: 0 3px !important;
     }
 }
-
 .box-card {
     .pro-line {
         border-bottom: 1px solid #dcdfe6;
     }
-
     .pro-line p {
         color: red;
         font-size: 16px;
         letter-spacing: 0.1em;
     }
-
     b {
         float: left;
         font-size: 16px;
         line-height: 32px;
     }
-
     .item {
         display: flex;
         margin-top: 20px;
-
         img {
             float: left;
             width: 220px;
@@ -561,24 +535,19 @@ export default class Index extends Vue {
             border: 1px solid #dcdfe6;
             border-radius: 6px;
         }
-
         .itemForm {
             flex: 1;
-
             p {
                 color: #8a979e;
             }
         }
-
         .margb20px {
             margin-bottom: 10px;
         }
     }
 }
-
 .el-row {
     margin-bottom: 20px;
-
     &:last-child {
         margin-bottom: 0;
     }

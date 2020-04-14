@@ -4,9 +4,9 @@
             <el-card>
                 <el-row class="clearfix">
                     <div style="float: right;">
-                        <el-form :inline="true" :model="capacity" size="small" labelWidth="68px" class="topforms2" @keyup.enter.native="GetList()">
+                        <el-form :inline="true" :model="capacity" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetList()">
                             <el-form-item>
-                                <el-input v-model="capacity.capacity" placeholder="物料" suffixIcon="el-icon-search" />
+                                <el-input v-model="capacity.capacity" placeholder="物料" suffix-icon="el-icon-search" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button v-if="isAuth('sys:capacity:listCapa')" type="primary" size="small" @click="GetList(false, true)">
@@ -22,7 +22,7 @@
                             <div slot="header" class="clearfix">
                                 <span>组织架构</span>
                             </div>
-                            <el-tree :data="OrgTree" nodeKey="deptId" :defaultExpandedKeys="arrList" :expandOnClickNode="false" @node-click="GetList" />
+                            <el-tree :data="OrgTree" node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="GetList" />
                         </el-card>
                     </el-col>
                     <el-col v-if="isAuth('sys:capacity:listCapa')" :span="16">
@@ -38,31 +38,31 @@
                                     增加
                                 </el-button>
                             </div>
-                            <el-table ref="table1" :data="CapacityList" headerRowClassName="tableHead" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                            <el-table ref="table1" :data="CapacityList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                                 <el-table-column type="selection" width="34" fixed="left" />
                                 <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
-                                <el-table-column prop="workNum" :showOverflowTooltip="true" label="物料">
+                                <el-table-column prop="workNum" :show-overflow-tooltip="true" label="物料">
                                     <template slot-scope="scope">
                                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="basicCapacity" label="标准产能" :showOverflowTooltip="true" width="87" />
-                                <el-table-column prop="designCapacity" label="设计产能" :showOverflowTooltip="true" width="87" />
-                                <el-table-column prop="effecCapacity" label="有效产能" :showOverflowTooltip="true" width="87" />
-                                <el-table-column prop="basicCapacityUnitName" label="单位" width="50" :showOverflowTooltip="true" />
-                                <el-table-column prop="standardOfMan" label="标配人力" width="80" :showOverflowTooltip="true" />
-                                <el-table-column prop="effecStartDate" label="有效开始日期" width="110" :showOverflowTooltip="true">
+                                <el-table-column prop="basicCapacity" label="标准产能" :show-overflow-tooltip="true" width="87" />
+                                <el-table-column prop="designCapacity" label="设计产能" :show-overflow-tooltip="true" width="87" />
+                                <el-table-column prop="effecCapacity" label="有效产能" :show-overflow-tooltip="true" width="87" />
+                                <el-table-column prop="basicCapacityUnitName" label="单位" width="50" :show-overflow-tooltip="true" />
+                                <el-table-column prop="standardOfMan" label="标配人力" width="80" :show-overflow-tooltip="true" />
+                                <el-table-column prop="effecStartDate" label="有效开始日期" width="110" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.effecStartDate }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="effecEndDate" label="有效结束日期" width="110" :showOverflowTooltip="true">
+                                <el-table-column prop="effecEndDate" label="有效结束日期" width="110" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.effecEndDate }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="changer" label="操作人" width="87" :showOverflowTooltip="true" />
-                                <el-table-column prop="changed" label="操作时间" width="120" :showOverflowTooltip="true" />
+                                <el-table-column prop="changer" label="操作人" width="87" :show-overflow-tooltip="true" />
+                                <el-table-column prop="changed" label="操作时间" width="120" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" width="50">
                                     <template slot-scope="scope">
                                         <el-button v-if="isAuth('sys:capacity:saveOrUpdateCapa')" style="padding: 0;" type="text" @click="addOrupdate(scope.row)">
@@ -72,14 +72,14 @@
                                 </el-table-column>
                             </el-table>
                             <el-row>
-                                <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                             </el-row>
                         </el-card>
                     </el-col>
                 </el-row>
             </el-card>
         </div>
-        <capacity-add-or-update v-if="visible" ref="capaaddupdate" :SerchSapList="SerchSapList" @refreshDataList="GetList" />
+        <capacity-add-or-update v-if="visible" ref="capaaddupdate" :serch-sap-list="SerchSapList" @refreshDataList="GetList" />
     </el-col>
 </template>
 
@@ -116,7 +116,7 @@ export default {
             if (data.code === 0) {
                 this.SerchSapList = data.list;
             } else {
-                this.$error_SHINHO(data.msg);
+                this.$errorTost(data.msg);
             }
         });
     },
@@ -128,7 +128,7 @@ export default {
                     this.OrgTree = data.deptList;
                     this.arrList = [this.OrgTree[0].children[0].deptId];
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -154,7 +154,7 @@ export default {
                     this.pageSize = data.page.pageSize;
                     this.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.visible = false;
                 this.loginstatus = false;
@@ -191,11 +191,11 @@ export default {
                     .then(() => {
                         this.$http(`${BASICDATA_API.CAPADEL_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$success_SHINHO('删除成功!');
+                                this.$successTost('删除成功!');
                                 this.multipleSelection = [];
                                 this.GetList();
                             } else {
-                                this.$error_SHINHO(data.msg);
+                                this.$errorTost(data.msg);
                             }
                         });
                     })

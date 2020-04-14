@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard  newCard">
-            <el-form :inline="true" :model="formHeader" size="small" labelWidth="70px" class="sole_row">
+            <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 160px;">
                         <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
@@ -27,10 +27,10 @@
             </el-form>
         </el-card>
         <el-card style="margin-top: 5px;">
-            <el-table ref="table1" headerRowClassName="tableHead" :data="DataList" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+            <el-table ref="table1" header-row-class-name="tableHead" :data="DataList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="34" />
-                <el-table-column label="工厂" prop="factoryName" width="140" :showOverflowTooltip="true" />
-                <el-table-column label="发酵物料" :showOverflowTooltip="true">
+                <el-table-column label="工厂" prop="factoryName" width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="发酵物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                     </template>
@@ -40,8 +40,8 @@
                 <el-table-column label="报工成熟天数" prop="matureDays" width="115" />
                 <el-table-column label="发酵成熟天数" prop="fermentationMatureDays" width="115" />
                 <el-table-column label="发酵超期天数" prop="outDays" width="115" />
-                <el-table-column label="操作人员" prop="changer" width="120" :showOverflowTooltip="true" />
-                <el-table-column label="操作时间" prop="changed" width="140" :showOverflowTooltip="true" />
+                <el-table-column label="操作人员" prop="changer" width="120" :show-overflow-tooltip="true" />
+                <el-table-column label="操作时间" prop="changed" width="140" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" width="50" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="isAuth('fer:sort:update')" style="padding: 0;" type="text" size="small" @click="addOrupdate(scope.row)">
@@ -51,7 +51,7 @@
                 </el-table-column>
             </el-table>
             <el-row>
-                <el-pagination :currentPage="formHeader.currPage" :pageSizes="[10, 20, 50]" :pageSize="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 50]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
         <category-addor-update v-if="visible" ref="addOrupdate" :factory="factory" @refreshDataList="GetDataList" />
@@ -106,7 +106,7 @@ export default {
                     this.formHeader.pageSize = data.ferList.pageSize;
                     this.formHeader.totalCount = data.ferList.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -126,11 +126,11 @@ export default {
                         });
                         this.$http(`${BASICDATA_API.CATEGORY_DELETE}`, 'POST', this.multipleSelection).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$success_SHINHO('删除成功!');
+                                this.$successTost('删除成功!');
                                 this.multipleSelection = [];
                                 this.GetDataList();
                             } else {
-                                this.$error_SHINHO(data.msg);
+                                this.$errorTost(data.msg);
                             }
                         });
                     })
@@ -144,7 +144,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -155,7 +155,7 @@ export default {
                 if (data.code === 0) {
                     this.material = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

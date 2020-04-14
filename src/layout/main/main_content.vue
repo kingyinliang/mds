@@ -2,7 +2,7 @@
     <main class="site-content" :class="{ 'site-content--tabs': $route.meta.isTab }">
         <!-- 主入口标签页 s -->
         <el-tabs v-if="$route.meta.isTab" v-model="mainTabsActiveName" :closable="true" @tab-click="selectedTabHandle" @tab-remove="removeTabHandle">
-            <el-dropdown class="site-tabs__tools" :showTimeout="0">
+            <el-dropdown class="site-tabs__tools" :show-timeout="0">
                 <i class="el-icon-arrow-down el-icon--right" />
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item @click.native="tabsCloseCurrentHandle">
@@ -21,7 +21,7 @@
             </el-dropdown>
             <el-tab-pane v-for="item in mainTabs" :key="item.name" :label="item.title" :name="item.name">
                 <iframe v-if="item.type === 'iframe'" :src="item.iframeUrl" width="100%" height="100%" title="" />
-                <transition v-else name="custom-classes-transition" enterActiveClass="animated rollin" leaveActiveClass="animated rollOut">
+                <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
                     <keep-alive>
                         <router-view v-if="item.name === mainTabsActiveName" />
                     </keep-alive>
@@ -29,7 +29,7 @@
             </el-tab-pane>
         </el-tabs>
         <!-- 主入口标签页 e -->
-        <transition v-else name="custom-classes-transition" enterActiveClass="animated rollin" leaveActiveClass="animated rollOut">
+        <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
             <keep-alive>
                 <div :body-style="siteContentViewHeight">
                     <router-view />

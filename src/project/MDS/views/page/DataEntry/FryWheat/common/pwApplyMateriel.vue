@@ -12,9 +12,9 @@
                         申请订单
                     </el-button>
                 </div>
-                <el-form ref="form" labelWidth="100px" size="small" style="float: right; margin-right: 5px; margin-bottom: 10px;">
+                <el-form ref="form" label-width="100px" size="small" style="float: right; margin-right: 5px; margin-bottom: 10px;">
                     <el-form-item label="生产调度员：" style="margin-bottom: 0;">
-                        <el-select v-model="dispatcherCode" size="small" valueKey="dispatcherCode" placeholder="请选择生产调度员" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'">
+                        <el-select v-model="dispatcherCode" size="small" value-key="dispatcherCode" placeholder="请选择生产调度员" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'">
                             <el-option v-for="(item, index) in dictListObj['PW_FEVOR']" :key="index" :label="item.code" :value="item.code" />
                         </el-select>
                     </el-form-item>
@@ -22,12 +22,12 @@
             </template>
             <el-row>
                 <el-col :span="24">
-                    <el-table ref="table1" class="newTable" headerRowClassName="tableHead" :data="materielDataList" :rowClassName="rowDelFlag" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="materielDataList" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                         <el-table-column label="生产物料" width="220">
                             <template slot-scope="scope">
                                 <div class="required">
                                     <i class="reqI">*</i>
-                                    <el-select v-model="scope.row.productCode" valueKey="productCode" placeholder="请选择生产物料" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeProduct(scope.row)">
+                                    <el-select v-model="scope.row.productCode" value-key="productCode" placeholder="请选择生产物料" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeProduct(scope.row)">
                                         <el-option v-for="(item, index) in dictListObj['CM_material_prd']" :key="index" :label="item.code + ' ' + item.value" :value="item.code" />
                                     </el-select>
                                 </div>
@@ -50,7 +50,7 @@
                             <template slot-scope="scope">
                                 <div class="required">
                                     <i class="reqI">*</i>
-                                    <el-select v-model="scope.row.issueCode" valueKey="issueCode" placeholder="请选择发料料号" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeIssue(scope.row)">
+                                    <el-select v-model="scope.row.issueCode" value-key="issueCode" placeholder="请选择发料料号" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeIssue(scope.row)">
                                         <el-option v-for="(item, index) in dictListObj['CM_material']" :key="index" :label="item.code + ' ' + item.value" :value="item.code" />
                                     </el-select>
                                 </div>
@@ -133,7 +133,7 @@
         <!--审批-->
         <el-row>
             <el-col :span="24">
-                <auditLog :tableData="readAudit" :name="'audit1'" />
+                <audit-log :table-data="readAudit" :name="'audit1'" />
             </el-col>
         </el-row>
     </div>
@@ -202,12 +202,27 @@ export default {
         // this.getMaterielDataList()
     },
     methods: {
+        // 保存、提交 物料订单号校验
+        saveAndSubmitRule() {
+            if (this.materielDataList.length === 0) {
+                this.$warningTost('请先新增订单');
+                return false;
+            }
+            for (const item of this.materielDataList) {
+                if (!item.orderNo || item.orderNo === '') {
+                    this.$warningTost('生产订单号不能为空');
+                    return false;
+                }
+            }
+            return true;
+        },
         // 申请订单
         saveOrderMateriel() {
             if (this.materielDataList.length === 0) {
                 this.$warningTost('请先新增订单');
                 return false;
             }
+            this.BatchTotal = [];
             for (const sole of this.materielDataList) {
                 if (typeof this.BatchTotal.find(item => item === sole.issueBatch) === 'undefined') {
                     this.BatchTotal.push(sole.issueBatch);
@@ -263,6 +278,7 @@ export default {
         // 保存/提交
         saveMateriel(resolve) {
             if (this.materielDataList.length > 0) {
+                this.BatchTotal = [];
                 for (const sole of this.materielDataList) {
                     if (typeof this.BatchTotal.find(item => item === sole.issueBatch) === 'undefined') {
                         this.BatchTotal.push(sole.issueBatch);
@@ -270,7 +286,10 @@ export default {
                 }
                 let abc = 0;
                 this.BatchTotal.map(itemc => {
-                    const shengyu = this.CangList.find(itema => itema.batch === itemc).currentQuantity;
+                    let shengyu = 0;
+                    if (this.CangList.length !== 0) {
+                        shengyu = this.CangList.find(itema => itema.batch === itemc).currentQuantity;
+                    }
                     let total = 0;
                     this.materielDataList.map(items => {
                         if (itemc === items.issueBatch) {
@@ -299,7 +318,7 @@ export default {
                     this.$http(WHT_API.MATERIELSAVE_API, 'POST', this.materielDataList)
                         .then(({ data }) => {
                             if (data.code !== 0) {
-                                this.$error_SHINHO(data.msg);
+                                this.$errorTost(data.msg);
                             }
                             if (resolve) {
                                 resolve('resolve');
@@ -323,7 +342,7 @@ export default {
                 this.$http(WHT_API.MATERIELSUBMIT_API, 'POST', this.materielDataList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -399,7 +418,7 @@ export default {
                             this.dispatcherCode = this.dictListObj['PW_FEVOR'][0].code;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -407,10 +426,6 @@ export default {
                 });
         },
         getMaterielDataList(orderId) {
-            // if (typeof this.order === 'undefined' || typeof this.order.orderId === 'undefined') {
-            //   return
-            // }
-            // console.log('为什么拿不到orderId', this.order.orderId)
             this.materielDataList = [];
             this.readAudit = [];
             let inState = '';
@@ -451,7 +466,7 @@ export default {
                         }
                         // this.$emit('setAppyMaterielState', inState)
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .catch(error => {
@@ -517,6 +532,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag

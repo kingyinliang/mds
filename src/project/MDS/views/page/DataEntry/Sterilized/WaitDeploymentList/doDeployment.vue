@@ -2,7 +2,7 @@
     <div>
         <div class="header_main">
             <el-card class="searchCard">
-                <el-form :model="formHeader" :inline="true" size="small" labelWidth="75px">
+                <el-form :model="formHeader" :inline="true" size="small" label-width="75px">
                     <el-row>
                         <el-col :span="21">
                             <el-form-item label="生产工厂：">
@@ -38,9 +38,7 @@
                                 </p>
                             </el-form-item>
                             <el-form-item :label="typeString + '日期：'">
-                                <p class="input_bottom">
-                                    &nbsp;{{ formHeaders.ALLOCATE_DATE }}
-                                </p>
+                                <el-date-picker v-model="formHeaders.ALLOCATE_DATE" type="date" :disabled="!isRedact" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 145px;" />
                             </el-form-item>
                             <el-form-item label="杀菌物料：">
                                 <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + `${formHeader.materialName}`" placement="top-start">
@@ -108,10 +106,10 @@
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="orderList" border headerRowClassName="tableHead" style="margin-top: 10px;">
+                <el-table :data="orderList" border header-row-class-name="tableHead" style="margin-top: 10px;">
                     <el-table-column label="序号" type="index" width="50" />
                     <el-table-column label="订单号" prop="orderNo" />
-                    <el-table-column label="物料" :showOverflowTooltip="true" width="180">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}{{ scope.row.materialName }}
                         </template>
@@ -120,7 +118,7 @@
                     <el-table-column label="订单单位" prop="outputUnit" width="80" />
                     <el-table-column label="订单开始日期" prop="productDate" />
                     <el-table-column label="生产调度员" prop="dispatchMan" />
-                    <el-table-column label="订单备注" prop="remark" :showOverflowTooltip="true" />
+                    <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
                     <el-table-column label="操作" width="70">
                         <template slot-scope="scope">
                             <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="DelOrderNo(scope.row)">
@@ -131,14 +129,14 @@
                 </el-table>
             </el-card>
         </div>
-        <el-dialog :closeOnClickModal="false" :visible.sync="dialogTableVisible" width="1000px" customClass="dialog__class">
+        <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class="dialog__class">
             <div slot="title">
                 订单分配
             </div>
-            <el-table ref="multipleTable" :data="orderPropList" :rowKey="getRowKeys" border headerRowClassName="tableHead" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="35" :reserveSelection="true" prop="orderNo" />
+            <el-table ref="multipleTable" :data="orderPropList" :row-key="getRowKeys" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="35" :reserve-selection="true" prop="orderNo" />
                 <el-table-column label="订单号" prop="orderNo" width="120" />
-                <el-table-column label="物料" :showOverflowTooltip="true" width="180">
+                <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode }}
                         {{ scope.row.materialName }}
@@ -148,11 +146,11 @@
                 <el-table-column label="订单单位" prop="outputUnit" width="80" />
                 <el-table-column label="订单开始日期" prop="productDate" width="120" />
                 <el-table-column label="生产调度员" prop="dispatchMan" width="120" />
-                <el-table-column label="订单备注" prop="remark" :showOverflowTooltip="true" />
+                <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
             </el-table>
             <el-row style="position: relative;">
                 <el-col :span="20" style="text-align: center;">
-                    <el-pagination style="float: left; width: 960px; text-align: center;" background layout="prev, pager, next" :currentPage.sync="pagesForm.currPage" :pageSize="pagesForm.pageSize" :total="pagesForm.totalCount" />
+                    <el-pagination style="float: left; width: 960px; text-align: center;" background layout="prev, pager, next" :current-page.sync="pagesForm.currPage" :page-size="pagesForm.pageSize" :total="pagesForm.totalCount" />
                 </el-col>
                 <el-col :span="4" style="float: right; margin-top: 13px; text-align: right;">
                     <el-button size="small" @click="dialogTableVisible = false">
@@ -265,7 +263,7 @@ export default {
                     });
                     // this.GetorderNo(this.orderArray)
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -285,7 +283,7 @@ export default {
                     this.orderList = data.orderInfo.list;
                     this.revocation = data.revocation;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -304,7 +302,7 @@ export default {
                     this.pagesForm.totalCount = this.orderPropAllList.length;
                     this.dialogTableVisible = true;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -385,7 +383,8 @@ export default {
                     unit: this.orderList[0].outputUnit,
                     remark: this.remark,
                     id: this.allocateId,
-                    type: this.$store.state.common.Sterilized.type
+                    type: this.$store.state.common.Sterilized.type,
+                    allocateDate: this.formHeaders.ALLOCATE_DATE
                 };
                 this.$http(`${STERILIZED_API.DODEPLOYMENTHEADERSAVE}`, 'POST', params).then(({ data }) => {
                     if (data.code === 0) {
@@ -409,11 +408,11 @@ export default {
                                     orderNo: this.allocateId
                                 };
                             } else {
-                                this.$error_SHINHO(data.msg);
+                                this.$errorTost(data.msg);
                             }
                         });
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -470,15 +469,15 @@ export default {
                                                 orderNo: this.allocateId
                                             };
                                         } else {
-                                            this.$error_SHINHO(data.msg);
+                                            this.$errorTost(data.msg);
                                         }
                                     });
                                 } else {
-                                    this.$error_SHINHO(data.msg);
+                                    this.$errorTost(data.msg);
                                 }
                             });
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 } else {
@@ -502,14 +501,16 @@ export default {
                                     this.isRedact = false;
                                     this.GetInfoList(this.allocateId);
                                 } else {
-                                    this.$error_SHINHO(data.msg);
+                                    this.$errorTost(data.msg);
                                 }
                             });
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 }
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         /* eslint-enable no-shadow */
@@ -541,17 +542,14 @@ export default {
     text-overflow: ellipsis;
     border-bottom: 1px solid rgba(216, 216, 216, 1);
 }
-
 .dialog__class {
     border-radius: 6px !important;
-
     .el-dialog__header {
         height: 59px;
         color: #fff;
         font-size: 20px;
         background: rgba(24, 144, 255, 1);
         border-radius: 6px 6px 0 0;
-
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
         }

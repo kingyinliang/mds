@@ -1,7 +1,7 @@
 <template>
-    <el-dialog title="功能分配" :closeOnClickModal="false" :visible.sync="visible">
+    <el-dialog title="功能分配" :close-on-click-modal="false" :visible.sync="visible">
         <div style="height: 300px; overflow: auto;">
-            <el-tree ref="menuListTree" :data="menuList" :props="menuListTreeProps" nodeKey="menuId" :defaultExpandAll="true" :expandOnClickNode="false" showCheckbox />
+            <el-tree ref="menuListTree" :data="menuList" :props="menuListTreeProps" node-key="menuId" :default-expand-all="true" :expand-on-click-node="false" show-checkbox />
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="visible = false">取消</el-button>
@@ -49,7 +49,7 @@ export default {
                         if (data.code === 0) {
                             this.$refs.menuListTree.setCheckedKeys(data.list);
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 });
@@ -63,12 +63,12 @@ export default {
                     menuId: [[].concat(this.$refs.menuListTree.getCheckedKeys()), [].concat(this.$refs.menuListTree.getHalfCheckedKeys())]
                 }).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$success_SHINHO('操作成功');
+                        this.$successTost('操作成功');
                         this.type = true;
                         this.visible = false;
                         this.$emit('refreshDataList');
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }

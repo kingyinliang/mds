@@ -1,10 +1,10 @@
 <template>
     <el-row>
         <div class="header_main">
-            <el-card class="searchCard" elementLoadingText="加载中">
+            <el-card class="searchCard" element-loading-text="加载中">
                 <el-row>
                     <el-col>
-                        <el-form :model="plantList" :inline="true" size="small" labelWidth="70px" class="multi_row">
+                        <el-form :model="plantList" :inline="true" size="small" label-width="70px" class="multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="plantList.factory" placeholder="请选择">
                                     <el-option label="请选择" value="" />
@@ -24,9 +24,9 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="生产日期：">
-                                <el-date-picker v-model="plantList.startTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" valueFormat="yyyy-MM-dd" style="width: 199px;" />
+                                <el-date-picker v-model="plantList.startTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 199px;" />
                                 -
-                                <el-date-picker v-model="plantList.endTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" valueFormat="yyyy-MM-dd" style="width: 199px;" />
+                                <el-date-picker v-model="plantList.endTime" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 199px;" />
                             </el-form-item>
                             <el-form-item class="floatr">
                                 <el-button v-if="isAuth('report:formPress:oilYieldList')" type="primary" size="small" @click="GetList(true)">
@@ -49,16 +49,16 @@
                 <div class="toggleSearchTop">
                     <i class="el-icon-caret-bottom" />
                 </div>
-                <el-table border :data="pressList" headerRowClassName="tableHead">
-                    <el-table-column label="工厂" prop="factoryName" :showOverflowTooltip="true" width="230" />
-                    <el-table-column label="车间" prop="workShop" :showOverflowTooltip="true" />
-                    <el-table-column label="生产日期" prop="productDate" :showOverflowTooltip="true" />
-                    <el-table-column label="出品率" prop="yield" :showOverflowTooltip="true" />
-                    <el-table-column label="发酵罐" prop="holderName" :showOverflowTooltip="true" />
-                    <el-table-column label="领用酱醪量" prop="childUsedAmount" :showOverflowTooltip="true" />
-                    <el-table-column label="原汁产量" prop="inPotAmount" :showOverflowTooltip="true" />
+                <el-table border :data="pressList" header-row-class-name="tableHead">
+                    <el-table-column label="工厂" prop="factoryName" :show-overflow-tooltip="true" width="230" />
+                    <el-table-column label="车间" prop="workShop" :show-overflow-tooltip="true" />
+                    <el-table-column label="生产日期" prop="productDate" :show-overflow-tooltip="true" />
+                    <el-table-column label="出品率" prop="yield" :show-overflow-tooltip="true" />
+                    <el-table-column label="发酵罐" prop="holderName" :show-overflow-tooltip="true" />
+                    <el-table-column label="领用酱醪量" prop="childUsedAmount" :show-overflow-tooltip="true" />
+                    <el-table-column label="原汁产量" prop="inPotAmount" :show-overflow-tooltip="true" />
                 </el-table>
-                <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="100" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-card>
         </div>
     </el-row>
@@ -110,7 +110,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -129,7 +129,7 @@ export default {
                             this.plantList.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -146,7 +146,7 @@ export default {
                 if (data.code === 0) {
                     this.potList = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -159,7 +159,7 @@ export default {
                     this.pressList = data.page.list;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

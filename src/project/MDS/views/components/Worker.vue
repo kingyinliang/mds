@@ -8,7 +8,7 @@
                     </el-button>
                 </div>
             </template>
-            <el-table headerRowClassName="tableHead" class="newTable" :data="WorkerDate" border tooltipEffect="dark">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="WorkerDate" border tooltip-effect="dark">
                 <el-table-column type="index" width="55" label="序号" />
                 <el-table-column label="白/中/夜班" width="100">
                     <template slot-scope="scope">
@@ -37,7 +37,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="人员选择" :showOverflowTooltip="true" width="300">
+                <el-table-column label="人员选择" :show-overflow-tooltip="true" width="300">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>人员选择</span>
@@ -60,7 +60,7 @@
                 </el-table-column>
                 <el-table-column width="241" label="开始时间">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="用餐时间" width="100">
@@ -70,7 +70,7 @@
                 </el-table-column>
                 <el-table-column width="241" label="结束时间">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="工作时长" width="100">
@@ -96,7 +96,7 @@
             </p>
         </mds-card>
         <mds-card v-if="att" :title="'产量考勤分配'" :name="'user'">
-            <el-table headerRowClassName="tableHead" :rowClassName="RowDelFlag" :data="attendance" border tooltipEffect="dark">
+            <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="attendance" border tooltip-effect="dark">
                 <el-table-column label="班组" width="60">
                     <template slot-scope="scope">
                         {{ scope.row.itemName }}
@@ -153,9 +153,9 @@
                 </el-table-column>
             </el-table>
         </mds-card>
-        <audit-log :tableData="UserAudit" />
+        <audit-log :table-data="UserAudit" />
         <official-worker v-if="officialWorkerStatus" ref="officialWorker" @changeUser="changeUser" />
-        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :OrgTree="OrgTree" :arrList="arrList" @changeUser="changeUser" />
+        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :org-tree="OrgTree" :arr-list="arrList" @changeUser="changeUser" />
         <temporary-worker v-if="temporaryWorkerStatus" ref="temporaryWorker" @changeUser="changeUser" />
     </div>
 </template>
@@ -182,18 +182,14 @@ export default {
         },
         order: {
             type: Object,
-            default: () => {
-            //    Object
-            }
+            default: function() { return {} }
         },
         att: {
             type: Boolean
         },
         attendance: {
             type: Object,
-            default: () => {
-            //    Object
-            }
+            default: function() { return {} }
         }
     },
     data() {
@@ -244,12 +240,13 @@ export default {
             this.WorkerDate = list;
             this.UserAudit = list2;
         },
+        /* eslint-disable @typescript-eslint/camelcase*/
         GetUserList(id) {
             this.$http(
                 `${PACKAGING_API.PKGUSERLIST_API}`,
                 'POST',
                 {
-                    order_id: id// eslint-disable-line
+                    order_id: id
                 },
                 false,
                 false,
@@ -263,6 +260,7 @@ export default {
                 }
             });
         },
+        /* eslint-enable @typescript-eslint/camelcase*/
         // 返回人员列表
         GetUser() {
             return this.WorkerDate;
@@ -363,9 +361,6 @@ export default {
 
         },
         // 人员保存
-        TimeUserSave() {
-        //    TimeUserSave
-        },
         UpdateUser(str, resolve) {
             if (this.WorkerDate.length > 0) {
                 this.WorkerDate.forEach(item => {
@@ -619,6 +614,8 @@ export default {
                 if (this.att) {
                     this.SetAtt(row.deptId);
                 }
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 人员删除
@@ -629,6 +626,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 新增人员

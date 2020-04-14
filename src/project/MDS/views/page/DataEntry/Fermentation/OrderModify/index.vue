@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <el-form :model="form" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row">
+                        <el-form :model="form" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="form.factory" placeholder="请选择" class="width160px">
                                     <el-option value="">
@@ -31,9 +31,9 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="订单日期：">
-                                <el-date-picker v-model="form.startDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
+                                <el-date-picker v-model="form.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                                 -
-                                <el-date-picker v-model="form.endDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
+                                <el-date-picker v-model="form.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                             </el-form-item>
                             <el-form-item class="floatr">
                                 <el-button v-if="isAuth('fer:judge:isSapList')" type="primary" size="small" @click="GetList(true)">
@@ -66,15 +66,15 @@
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-table ref="multipleTables" headerRowClassName="tableHead" :data="dataList" border tooltipEffect="dark" @selection-change="handleSelectionChange">
+                            <el-table ref="multipleTables" header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleSelectionChange">
                                 <el-table-column type="selection" width="40" />
                                 <el-table-column label="罐号" width="55" prop="holderNo" />
-                                <el-table-column label="订单号" :showOverflowTooltip="true">
+                                <el-table-column label="订单号" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.orderNo }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="开始日期" :showOverflowTooltip="true">
+                                <el-table-column label="开始日期" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.startDate }}
                                     </template>
@@ -109,17 +109,17 @@
                                         {{ scope.row.endDate }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="接口返回" width="100px" :showOverflowTooltip="true">
+                                <el-table-column label="接口返回" width="100px" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.sapContent }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="判定时间" width="100px" :showOverflowTooltip="true">
+                                <el-table-column label="判定时间" width="100px" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.changed }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="判定人" width="100px" :showOverflowTooltip="true">
+                                <el-table-column label="判定人" width="100px" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.changer }}
                                     </template>
@@ -129,14 +129,14 @@
                     </el-tab-pane>
                     <el-tab-pane name="1" label="已修改">
                         <el-row>
-                            <el-table headerRowClassName="tableHead" :data="dataList" border tooltipEffect="dark">
+                            <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark">
                                 <el-table-column label="罐号" width="55" prop="holderNo" />
-                                <el-table-column label="订单号" :showOverflowTooltip="true">
+                                <el-table-column label="订单号" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.orderNo }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="开始日期" :showOverflowTooltip="true">
+                                <el-table-column label="开始日期" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.startDate }}
                                     </template>
@@ -171,17 +171,17 @@
                                         {{ scope.row.endDate }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="接口返回" width="100px" :showOverflowTooltip="true">
+                                <el-table-column label="接口返回" width="100px" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.sapContent }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="判定时间" width="100px" :showOverflowTooltip="true">
+                                <el-table-column label="判定时间" width="100px" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.changed }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="判定人" width="100px" :showOverflowTooltip="true">
+                                <el-table-column label="判定人" width="100px" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.changer }}
                                     </template>
@@ -189,7 +189,7 @@
                             </el-table>
                         </el-row>
                     </el-tab-pane>
-                    <el-pagination :currentPage="form.currPage" :pageSizes="[10, 20, 50]" :pageSize="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-tabs>
             </div>
         </div>
@@ -257,7 +257,7 @@ export default {
                         this.form.factory = this.factory[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -273,7 +273,7 @@ export default {
                             this.form.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -301,7 +301,7 @@ export default {
                     if (data.code === 0) {
                         this.potList = data.holderList;
                     } else {
-                        this.error_SHINHO(data.msg);
+                        this.errorTost(data.msg);
                     }
                 });
             }
@@ -314,7 +314,7 @@ export default {
                     if (data.code === 0) {
                         this.materialList = data.materialList;
                     } else {
-                        this.error_SHINHO(data.msg);
+                        this.errorTost(data.msg);
                     }
                 });
             }
@@ -331,7 +331,7 @@ export default {
                     this.form.pageSize = data.isSapList.pageSize;
                     this.form.totalCount = data.isSapList.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -350,13 +350,13 @@ export default {
             this.$http(`${FERMENTATION_API.ORDER_MODIFY_CHANGE_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                 if (data.code === 0) {
                     if (data.dataType.error > 0) {
-                        this.$error_SHINHO(data.dataType.error + '个失败，' + data.dataType.succ + '个成功');
+                        this.$errorTost(data.dataType.error + '个失败，' + data.dataType.succ + '个成功');
                     } else {
-                        this.$success_SHINHO('修改成功');
+                        this.$successTost('修改成功');
                     }
                     this.GetList(true);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },

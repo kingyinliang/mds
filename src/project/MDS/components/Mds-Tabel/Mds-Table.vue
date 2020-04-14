@@ -1,9 +1,9 @@
 <template>
-    <el-table :data="tableData" border tooltipEffect="dark" headerRowClassName="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+    <el-table :data="tableData" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
         <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
         <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
         <template v-for="item in column">
-            <el-table-column v-if="!item.hide" :key="item.prop" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :showOverflowTooltip="true">
+            <el-table-column v-if="!item.hide" :key="item.prop" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                 <template v-for="chind in item.child">
                     <el-table-column v-if="item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" />
                 </template>

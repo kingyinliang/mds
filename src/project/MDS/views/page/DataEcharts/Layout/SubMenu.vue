@@ -7,7 +7,7 @@
                     <span>{{ deptId.deptName.replace(/车间/g, '') }}</span>
                 </div>
             </template>
-            <menu-item :deptId="deptId.deptId" :page="page.list[0]" />
+            <menu-item :dept-id="deptId.deptId" :page="page.list[0]" />
         </el-submenu>
     </div>
 </template>
@@ -90,7 +90,7 @@ export default {
                         this.getWorkshop(item.deptId);
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -110,7 +110,7 @@ export default {
                     if (data.code === 0) {
                         this.workshop = this.workshop.concat(data.typeList);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }

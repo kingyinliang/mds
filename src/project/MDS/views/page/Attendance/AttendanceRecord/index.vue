@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col :span="24">
-                        <el-form :model="plantList" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="multi_row" @keyup.enter.native="GetList(true)" @submit.native.prevent>
+                        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row" @keyup.enter.native="GetList(true)" @submit.native.prevent>
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="plantList.factory" placeholder="请选择">
                                     <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
@@ -38,7 +38,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="日期：">
-                                <el-date-picker v-model="plantList.setDate" type="date" placeholder="选择" valueFormat="yyyy-MM-dd" style="width: 200px;" />
+                                <el-date-picker v-model="plantList.setDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 200px;" />
                             </el-form-item>
                             <el-form-item class="floatr">
                                 <el-button v-if="isAuth('sys:att:listAtt')" type="primary" size="small" @click="GetList(true)">
@@ -71,22 +71,22 @@
                     <i class="el-icon-caret-bottom" />
                 </div>
                 <el-row v-if="clearStatus">
-                    <el-table ref="table1" headerRowClassName="tableHead" :data="datalist" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                    <el-table ref="table1" header-row-class-name="tableHead" :data="datalist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" :selectable="checkboxT" width="34" />
-                        <el-table-column label="状态" :showOverflowTooltip="true" width="100">
+                        <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'saved' ? '已保存' : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'checked' ? '审核通过' : scope.row.status === 'noPass' ? '审核不通过' : '' }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="reqno" label="订单号" :showOverflowTooltip="true" width="120" />
-                        <el-table-column prop="workShopName" label="车间" :showOverflowTooltip="true" width="120" />
-                        <el-table-column prop="kqrq" label="考勤日期" :showOverflowTooltip="true" width="120">
+                        <el-table-column prop="reqno" label="订单号" :show-overflow-tooltip="true" width="120" />
+                        <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="120" />
+                        <el-table-column prop="kqrq" label="考勤日期" :show-overflow-tooltip="true" width="120">
                             <template slot-scope="scope">
-                                <el-date-picker v-if="scope.row.redactStatus" v-model="scope.row.kqrq" size="small" type="datetime" valueFormat="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" />
+                                <el-date-picker v-if="scope.row.redactStatus" v-model="scope.row.kqrq" size="small" type="datetime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" />
                                 <span v-else>{{ scope.row.kqrq }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="考勤大类" :showOverflowTooltip="true" width="100">
+                        <el-table-column label="考勤大类" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 <el-select v-if="scope.row.redactStatus" v-model="scope.row.kqdl" placeholder="请选择" size="small" @change="GetARpro(scope.row)">
                                     <el-option v-for="(iteam, index) in ARtype" :key="index" :label="iteam.value" :value="iteam.code" />
@@ -94,7 +94,7 @@
                                 <span v-else>{{ scope.row.kqdlName }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="考勤类型" :showOverflowTooltip="true" width="100">
+                        <el-table-column label="考勤类型" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 <el-select v-if="scope.row.redactStatus" v-model="scope.row.kqlx" placeholder="请选择" size="small" @change="Setcode(scope.row)">
                                     <el-option v-for="(iteam, index) in scope.row.ARpro" :key="index" :label="iteam.value" :value="iteam.code" />
@@ -102,7 +102,7 @@
                                 <span v-else>{{ scope.row.kqlxName }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="产线/工序" :showOverflowTooltip="true" width="100">
+                        <el-table-column label="产线/工序" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 <el-col v-if="scope.row.redactStatus">
                                     <el-select v-if="scope.row.productLineSt" v-model="scope.row.productLine" placeholder="请选择" size="small">
@@ -115,7 +115,7 @@
                                 <span v-else>{{ scope.row.productLineName }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="deptIdName" label="班组" :showOverflowTooltip="true" width="100">
+                        <el-table-column prop="deptIdName" label="班组" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 <el-select v-if="scope.row.redactStatus" v-model="scope.row.deptId" placeholder="请选择" size="small">
                                     <el-option v-for="(iteam, index) in scope.row.Team" :key="index" :label="iteam.deptName" :value="iteam.deptId" />
@@ -123,7 +123,7 @@
                                 <span v-else>{{ scope.row.deptIdName }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="userType" label="人员属性" :showOverflowTooltip="true" width="100">
+                        <el-table-column prop="userType" label="人员属性" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 <el-select v-if="scope.row.redactStatus" v-model="scope.row.userType" placeholder="请选择" size="small">
                                     <el-option label="正式" value="正式" />
@@ -133,7 +133,7 @@
                                 <span v-else>{{ scope.row.userType }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="userId" label="姓名（工号）" :showOverflowTooltip="true" width="120">
+                        <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true" width="120">
                             <template slot-scope="scope">
                                 <el-col v-if="scope.row.redactStatus">
                                     <span v-if="scope.row.userType !== '临时工'" style="cursor: pointer;" @click="selectUser(scope.row)">
@@ -148,7 +148,7 @@
                                 <span v-else>{{ scope.row.userId }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="白/中/夜班" :showOverflowTooltip="true" width="120">
+                        <el-table-column label="白/中/夜班" :show-overflow-tooltip="true" width="120">
                             <template slot-scope="scope">
                                 <el-select v-if="scope.row.redactStatus" v-model="scope.row.classType" placeholder="请选择" size="small">
                                     <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
@@ -156,37 +156,37 @@
                                 <span v-else>{{ scope.row.classTypeName }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="工作内容" :showOverflowTooltip="true" width="120">
+                        <el-table-column label="工作内容" :show-overflow-tooltip="true" width="120">
                             <template slot-scope="scope">
                                 <el-input v-if="scope.row.redactStatus" v-model="scope.row.content" size="small" placeholder="手工录入" />
                                 <span v-else>{{ scope.row.content }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="pieceTime" label="计件时数（小时）" :showOverflowTooltip="true" width="100">
+                        <el-table-column prop="pieceTime" label="计件时数（小时）" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 <el-input v-if="scope.row.redactStatus" v-model="scope.row.pieceTime" size="small" placeholder="手工录入" />
                                 <span v-else>{{ scope.row.pieceTime }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="计时时数（小时）" :showOverflowTooltip="true" width="100">
+                        <el-table-column label="计时时数（小时）" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 <el-input v-if="scope.row.redactStatus" v-model="scope.row.timedTime" size="small" placeholder="手工录入" />
                                 <span v-else>{{ scope.row.timedTime }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="出勤时数（小时）" :showOverflowTooltip="true" width="100">
+                        <el-table-column label="出勤时数（小时）" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 {{ (scope.row.workTime = scope.row.timedTime + scope.row.pieceTime) }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="orderNo" label="审批意见" :showOverflowTooltip="true" width="120">
+                        <el-table-column prop="orderNo" label="审批意见" :show-overflow-tooltip="true" width="120">
                             <template slot-scope="scope">
                                 <el-button type="primary" size="small" @click="auditLog(scope.row.id)">
                                     审核日志
                                 </el-button>
                             </template>
                         </el-table-column>
-                        <el-table-column label="备注" :showOverflowTooltip="true" width="120">
+                        <el-table-column label="备注" :show-overflow-tooltip="true" width="120">
                             <template slot-scope="scope">
                                 <el-input v-if="scope.row.redactStatus" v-model="scope.row.remark" size="small" placeholder="手工录入" />
                                 <span v-else>{{ scope.row.remark }}</span>
@@ -203,29 +203,29 @@
                         </el-table-column>
                     </el-table>
                 </el-row>
-                <el-table v-if="!clearStatus" ref="table1" headerRowClassName="tableHead" :data="datalist" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column label="车间" :showOverflowTooltip="true" width="120">
+                <el-table v-if="!clearStatus" ref="table1" header-row-class-name="tableHead" :data="datalist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table-column label="车间" :show-overflow-tooltip="true" width="120">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.workShop" placeholder="请选择" size="small" disabled>
                                 <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="考勤大类" :showOverflowTooltip="true" width="100">
+                    <el-table-column label="考勤大类" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.kqdl" placeholder="请选择" size="small" @change="GetARpro(scope.row)">
                                 <el-option v-for="(iteam, index) in ARtype" :key="index" :label="iteam.value" :value="iteam.code" />
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="考勤类型" :showOverflowTooltip="true" width="100">
+                    <el-table-column label="考勤类型" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.kqlx" placeholder="请选择" size="small" @change="Setcode(scope.row)">
                                 <el-option v-for="(iteam, index) in scope.row.ARpro" :key="index" :label="iteam.value" :value="iteam.code" />
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="产线/工序" :showOverflowTooltip="true" width="100">
+                    <el-table-column label="产线/工序" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <el-select v-if="scope.row.productLineSt" v-model="scope.row.productLine" placeholder="请选择" size="small">
                                 <el-option v-for="(item, index) in scope.row.productlineList" :key="index" :label="item.deptName" :value="item.deptId" />
@@ -235,14 +235,14 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="deptId" label="班组" :showOverflowTooltip="true" width="100">
+                    <el-table-column prop="deptId" label="班组" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.deptId" placeholder="请选择" size="small">
                                 <el-option v-for="(iteam, index) in scope.row.Team" :key="index" :label="iteam.deptName" :value="iteam.deptId" />
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="人员属性" :showOverflowTooltip="true" width="100">
+                    <el-table-column label="人员属性" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.userType" placeholder="请选择" size="small">
                                 <el-option label="正式" value="正式" />
@@ -251,7 +251,7 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="姓名（工号）" :showOverflowTooltip="true" width="120">
+                    <el-table-column label="姓名（工号）" :show-overflow-tooltip="true" width="120">
                         <template slot-scope="scope">
                             <span v-if="scope.row.userType !== '临时工'" style="cursor: pointer;" @click="selectUser(scope.row)">
                                 <i v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</i>
@@ -263,35 +263,35 @@
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="orderNo" label="白/中/夜班" :showOverflowTooltip="true" width="100">
+                    <el-table-column prop="orderNo" label="白/中/夜班" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.classType" placeholder="请选择" size="small">
                                 <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="工作内容" :showOverflowTooltip="true" width="120">
+                    <el-table-column label="工作内容" :show-overflow-tooltip="true" width="120">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.content" size="small" placeholder="手工录入" />
                         </template>
                     </el-table-column>
-                    <el-table-column prop="orderNo" label="计件时数（小时）" :showOverflowTooltip="true" width="100">
+                    <el-table-column prop="orderNo" label="计件时数（小时）" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <el-input v-if="scope.row.pieceTimeSt" v-model="scope.row.pieceTime" size="small" placeholder="手工录入" />
                             <el-input v-else v-model="scope.row.pieceTime" size="small" placeholder="手工录入" disabled />
                         </template>
                     </el-table-column>
-                    <el-table-column label="计时时数（小时）" :showOverflowTooltip="true" width="100">
+                    <el-table-column label="计时时数（小时）" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.timedTime" size="small" placeholder="手工录入" />
                         </template>
                     </el-table-column>
-                    <el-table-column prop="orderNo" label="出勤时数（小时）" :showOverflowTooltip="true" width="100">
+                    <el-table-column prop="orderNo" label="出勤时数（小时）" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             {{ (scope.row.workTime = scope.row.timedTime * 1 + scope.row.pieceTime * 1 + '') }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="备注" :showOverflowTooltip="true" width="120">
+                    <el-table-column label="备注" :show-overflow-tooltip="true" width="120">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.remark" size="small" placeholder="手工录入" />
                         </template>
@@ -303,14 +303,14 @@
                     </el-table-column>
                 </el-table>
                 <el-row v-if="clearStatus">
-                    <el-pagination :currentPage="plantList.currPage" :pageSizes="[10, 20, 50]" :pageSize="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
-        <el-dialog title="人员分配" :closeOnClickModal="false" :visible.sync="visible">
+        <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
             <el-row>
                 <el-col style="width: 500px;">
-                    <el-transfer v-model="selctId" filterable :titles="['未分配人员', '已分配人员']" :filterMethod="filterMethod" filterPlaceholder="请输入用户名称" :data="userlist" />
+                    <el-transfer v-model="selctId" filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" :data="userlist" />
                 </el-col>
             </el-row>
             <span slot="footer" class="dialog-footer">
@@ -318,8 +318,8 @@
                 <el-button type="primary" @click="updatauser(row)">确定</el-button>
             </span>
         </el-dialog>
-        <el-dialog ref="dayLaborer" width="450px" title="新增临时工" :closeOnClickModal="false" :visible.sync="visible1">
-            <el-form :model="form" size="small" labelWidth="120px" class="dialogform">
+        <el-dialog ref="dayLaborer" width="450px" title="新增临时工" :close-on-click-modal="false" :visible.sync="visible1">
+            <el-form :model="form" size="small" label-width="120px" class="dialogform">
                 <el-row>
                     <el-button v-if="!clearStatus" type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="addDayLaborer(selctId2)">
                         新增
@@ -339,20 +339,20 @@
                 <el-button type="primary" @click="close(row)">确定</el-button>
             </span>
         </el-dialog>
-        <el-dialog width="850px" title="借调人员" :closeOnClickModal="false" :visible.sync="visible2">
+        <el-dialog width="850px" title="借调人员" :close-on-click-modal="false" :visible.sync="visible2">
             <el-row>
                 <el-col style="width: 250px;">
                     <el-card style="height: 303px; overflow-y: scroll;">
                         <h3 style=" margin-bottom: 10px; color: black; font-size: 16px;">
                             组织架构
                         </h3>
-                        <el-tree ref="tree2" :data="OrgTree" nodeKey="deptId" :defaultExpandedKeys="arrList" :expandOnClickNode="false" @node-click="setdetail" />
+                        <el-tree ref="tree2" :data="OrgTree" node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
                     </el-card>
                 </el-col>
                 <el-col style="width: 250px;">
                     <el-card style="height: 303px; overflow-y: scroll;">
                         <el-input v-model="filterText" size="small" placeholder="搜索人员" />
-                        <el-tree ref="userlistTree" :filterNodeMethod="filterNode" nodeKey="userId" :data="userlist" showCheckbox :props="userListTreeProps" :expandOnClickNode="false" @node-click="treeNodeClick" @check-change="userTree" />
+                        <el-tree ref="userlistTree" :filter-node-method="filterNode" node-key="userId" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
                     </el-card>
                 </el-col>
                 <el-col style="width: 50px; padding: 70px 5px;">
@@ -364,7 +364,7 @@
                 <el-col style="width: 250px;">
                     <el-card style="height: 303px; overflow-y: scroll;">
                         <el-input v-model="filterText1" size="small" placeholder="搜索人员" />
-                        <el-tree ref="userlistTree1" :filterNodeMethod="filterNode1" :data="selctId" showCheckbox :props="selctListTreeProps" :expandOnClickNode="false" @check-change="userTree1" />
+                        <el-tree ref="userlistTree1" :filter-node-method="filterNode1" :data="selctId" show-checkbox :props="selctListTreeProps" :expand-on-click-node="false" @check-change="userTree1" />
                     </el-card>
                 </el-col>
             </el-row>
@@ -373,8 +373,8 @@
                 <el-button type="primary" @click="saveduser(row)">确定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="审核日志" :closeOnClickModal="false" :visible.sync="visible3">
-            <el-table :data="auditLogList" headerRowClassName="tableHead" border tooltipEffect="dark">
+        <el-dialog title="审核日志" :close-on-click-modal="false" :visible.sync="visible3">
+            <el-table :data="auditLogList" header-row-class-name="tableHead" border tooltip-effect="dark">
                 <el-table-column prop="changer" label="审核人" />
                 <el-table-column prop="memo" label="审核意见" />
                 <el-table-column prop="changed" label="审核时间" />
@@ -488,7 +488,7 @@ export default {
                 if (data.code === 0) {
                     this.productShift = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -509,7 +509,7 @@ export default {
                     this.datalist.splice(this.datalist.length, 0, {});
                     this.datalist.splice(this.datalist.length - 1, 1);
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 if (callback) {
                     return callback(null, 'one');
@@ -524,7 +524,7 @@ export default {
                 if (data.code === 0) {
                     this.ARtype = data.dicList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -537,7 +537,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -555,7 +555,7 @@ export default {
                             this.plantList.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -572,7 +572,7 @@ export default {
                     if (data.code === 0) {
                         this.productline = data.childList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -588,7 +588,7 @@ export default {
                     this.OrgTree = data.deptList;
                     this.arrList = [this.OrgTree[0].children[0].deptId];
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -600,7 +600,7 @@ export default {
                 if (data.code === 0) {
                     this.auditLogList = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -702,11 +702,11 @@ export default {
                                     }
                                 );
                             } else {
-                                this.$error_SHINHO(data.msg);
+                                this.$errorTost(data.msg);
                             }
                         });
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -724,13 +724,15 @@ export default {
                 }).then(() => {
                     this.$http(`${AR_API.ARDELAPI}`, 'POST', this.multipleSelection).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('删除成功!');
+                            this.$successTost('删除成功!');
                             this.multipleSelection = [];
                             this.GetList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
+                }).catch(() => {
+                // this.$infoTost('已取消删除');
                 });
             }
         },
@@ -755,7 +757,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.lodingS = false;
             });
@@ -814,7 +816,7 @@ export default {
                     }
                     this.visible = true;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -850,7 +852,7 @@ export default {
                     this.userlist = data.page.list;
                     this.tree1Status = false;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -950,7 +952,7 @@ export default {
                         this.tableLoding = false;
                         this.GetList(true);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     this.lodingS = false;
                 });
@@ -1032,13 +1034,15 @@ export default {
                             });
                             this.GetList(true);
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                         this.lodingS = false;
                     });
                 } else {
                     this.subAutio(st);
                 }
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         disData(st) {
@@ -1077,7 +1081,7 @@ export default {
                         });
                         this.GetList(true);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     this.lodingS = false;
                 });
@@ -1116,11 +1120,9 @@ export default {
 .searchCard {
     margin-bottom: 0;
 }
-
 .searchCard,
 .tableCard {
     position: relative;
-
     .toggleSearchTop {
         position: absolute;
         top: 0;
@@ -1130,7 +1132,6 @@ export default {
         text-align: center;
         cursor: pointer;
     }
-
     .toggleSearchBottom {
         position: absolute;
         bottom: 0;
@@ -1139,7 +1140,6 @@ export default {
         text-align: center;
         cursor: pointer;
     }
-
     .el-icon-caret-top::before,
     .el-icon-caret-bottom::before {
         color: #dcdfe6;

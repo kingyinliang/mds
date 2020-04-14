@@ -5,9 +5,10 @@ import { MAIN_API } from '@/api/api';
 import { isURL } from '@/net/validate';
 
 Vue.use(Router);
-
-const importTarget = process.env.NODE_ENV !== 'local' ? require('./import-production') : require('./import-development')
-
+/* eslint-disable @typescript-eslint/no-var-requires */
+const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('@/views/' + file + '.vue') : file => require('@/views/' + file + '.vue').default;
+/* eslint-enable @typescript-eslint/no-var-requires */
+// const importTarget = import('./import-' + process.env.NODE_ENV);
 // 全局路由(无需嵌套上左右整体布局)
 const globalRoutes = [
     {
@@ -62,7 +63,7 @@ const mainRoutes = {
         // console.log(menuList)
         // if (to.meta.title) document.title = to.meta.title
         if (!token || !/\S/.test(token)) {
-            return next({ path: 'login' });
+            window.location.href = `${process.env.VUE_APP_HOST}`;
         }
         next();
     }
@@ -75,7 +76,7 @@ const DataEchartsRoutes = {
     beforeEnter(to, from, next) {
         const token = Vue.cookie.get('token');
         if (!token || !/\S/.test(token)) {
-            return next({ path: 'login' });
+            window.location.href = `${process.env.VUE_APP_HOST}`;
         }
         next();
     }
@@ -219,12 +220,12 @@ router.beforeEach((to, from, next) => {
     }
     httpProxy(`${MAIN_API.NAV_API}`, 'GET', {})
         .then(({ data }) => {
-            console.log(data);
             if (data && data.code === 0) {
                 fnAddDynamicMenuRoutes(data.menuList);
                 router.options.isAddDynamicMenuRoutes = true;
                 sessionStorage.setItem('menuList', JSON.stringify(data.menuList || '[]'));
                 sessionStorage.setItem('permissions', JSON.stringify(data.permissions || '[]'));
+
                 return next({ ...to, replace: true });
             }
             sessionStorage.setItem('menuList', '[]');

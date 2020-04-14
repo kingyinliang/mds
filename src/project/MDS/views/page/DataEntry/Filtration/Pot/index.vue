@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard">
-            <el-form :inline="true" size="small" :model="formHeader" labelWidth="70px" class="topform marbottom sole_row">
+            <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform marbottom sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
                         <el-option label="请选择" value="" />
@@ -89,8 +89,8 @@
                 </el-col>
             </el-row>
         </el-card>
-        <el-dialog width="400px" title="JBS出库" class="ShinHoDialog" :closeOnClickModal="false" :visible.sync="JBSVisible">
-            <el-form ref="JBSdataForm" :model="JBSdataForm" :rules="JBSdataRule" labelWidth="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="JBS()" @submit.native.prevent>
+        <el-dialog width="400px" title="JBS出库" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="JBSVisible">
+            <el-form ref="JBSdataForm" :model="JBSdataForm" :rules="JBSdataRule" label-width="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="JBS()" @submit.native.prevent>
                 <el-form-item label="领用罐号：" prop="receiveHolderId">
                     <p>{{ JBSdataForm.holderName }}</p>
                 </el-form-item>
@@ -122,7 +122,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="满罐日期：">
-                    <el-date-picker v-model="JBSdataForm.fullDate" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width: 190px;" />
+                    <el-date-picker v-model="JBSdataForm.fullDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width: 190px;" />
                 </el-form-item>
                 <el-form-item label="操作时间：">
                     <p>{{ JBSdataForm.changed }}</p>
@@ -138,8 +138,8 @@
                 <el-button type="primary" size="small" @click="JBS()">确定</el-button>
             </span>
         </el-dialog>
-        <el-dialog width="400px" title="转储" class="ShinHoDialog" :closeOnClickModal="false" :visible.sync="TurnSaveVisible">
-            <el-form ref="TurnSavedataForm" :model="TurnSavedataForm" :rules="TurnSavedataRule" labelWidth="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="TurnSave()" @submit.native.prevent>
+        <el-dialog width="400px" title="转储" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="TurnSaveVisible">
+            <el-form ref="TurnSavedataForm" :model="TurnSavedataForm" :rules="TurnSavedataRule" label-width="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="TurnSave()" @submit.native.prevent>
                 <el-form-item label="领用罐号：" prop="receiveHolderId">
                     <p>{{ TurnSavedataForm.holderName }}</p>
                 </el-form-item>
@@ -172,7 +172,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="满罐日期：">
-                    <el-date-picker v-model="TurnSavedataForm.fullDate" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width: 190px;" />
+                    <el-date-picker v-model="TurnSavedataForm.fullDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width: 190px;" />
                 </el-form-item>
                 <el-form-item label="操作时间：">
                     <p>{{ TurnSavedataForm.changed }}</p>
@@ -328,7 +328,7 @@ export default {
                     this.fastS = true;
                     this.dataList = data.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -368,9 +368,11 @@ export default {
                         });
                         this.GetDataList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // JBS弹窗
@@ -445,7 +447,7 @@ export default {
                             });
                             this.GetDataList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 }
@@ -471,7 +473,7 @@ export default {
                             });
                             this.GetDataList();
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorTost(data.msg);
                         }
                     });
                 }
@@ -532,7 +534,6 @@ export default {
     .el-card__body {
         padding: 7px;
     }
-
     .cardTit {
         padding-bottom: 10px;
         color: black;
@@ -540,13 +541,11 @@ export default {
         font-size: 16px;
         border-bottom: 1px solid #e9e9e9;
     }
-
     .gotop {
         float: right;
         color: #1890ff;
         font-size: 14px;
         cursor: pointer;
-
         i {
             &::before {
                 color: #1890ff;
@@ -554,13 +553,10 @@ export default {
         }
     }
 }
-
 .dataList {
     margin-top: 10px;
-
     &_item {
         margin-bottom: 10px;
-
         &_tit {
             padding: 0 10px;
             color: black;
@@ -569,20 +565,17 @@ export default {
             line-height: 45px;
             border-bottom: 1px solid #e8e8e8;
         }
-
         &_a {
             float: right;
             color: #1890ff;
             cursor: pointer;
         }
-
         &_pot {
             display: flex;
             align-items: flex-start;
             justify-content: center;
             padding: 17px 10px 10px;
             overflow: hidden;
-
             &_box1 {
                 position: relative;
                 display: flex;
@@ -592,7 +585,6 @@ export default {
                 height: 197px;
                 overflow: hidden;
             }
-
             &_box {
                 display: flex;
                 flex-wrap: wrap;
@@ -606,7 +598,6 @@ export default {
                 color: white;
                 background: url("~@/assets/img/ferPot.png") no-repeat;
                 background-size: contain;
-
                 &_detail {
                     position: absolute;
                     top: 70px;
@@ -615,7 +606,6 @@ export default {
                     color: black;
                     font-size: 14px;
                 }
-
                 &_item2,
                 &_item1 {
                     position: absolute;
@@ -628,7 +618,6 @@ export default {
                     overflow: hidden;
                     font-size: 14px;
                     background: #69c0ff;
-
                     &::before,
                     &::after {
                         position: absolute;
@@ -639,24 +628,20 @@ export default {
                         animation: roateTwo 10s linear infinite;
                         content: "";
                     }
-
                     &::before {
                         top: -158px;
                         border-radius: 45%;
                     }
-
                     &::after {
                         top: -152px;
                         border-radius: 47%;
                         opacity: 0.5;
                     }
                 }
-
                 &_item2 {
                     height: 100px;
                     background: #1890ff;
                 }
-
                 &:hover &_item1::before,
                 &:hover &_item1::after,
                 &:hover &_item2::before,
@@ -664,7 +649,6 @@ export default {
                     animation: roateOne 10s linear infinite;
                 }
             }
-
             &_detail {
                 float: left;
                 max-width: 112px;
@@ -686,11 +670,9 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     50% {
         transform: translate(-50%, -1%) rotateZ(180deg);
     }
-
     100% {
         transform: translate(-50%, -0%) rotateZ(360deg);
     }
@@ -700,11 +682,9 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     50% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     100% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }

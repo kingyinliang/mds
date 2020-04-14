@@ -27,9 +27,9 @@
                     </div>
                 </el-col>
             </el-row>
-            <el-table :data="techList" :rowClassName="rowDelFlag" border headerRowClassName="tableHead" style="margin-top: 10px;" @row-dblclick="EditTechInfo">
+            <el-table :data="techList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;" @row-dblclick="EditTechInfo">
                 <el-table-column type="index" label="序号" width="50" />
-                <el-table-column label="过滤机号" showOverflowTooltip width="120" prop="deviceName" />
+                <el-table-column label="过滤机号" show-overflow-tooltip width="120" prop="deviceName" />
                 <el-table-column label="过滤前温度(°C)" prop="filterBefTem" />
                 <el-table-column label="过滤前压力(Mpa)" prop="filterBefPre" />
                 <el-table-column label="过滤后压力(Mpa)" prop="filterEndPre" />
@@ -37,9 +37,9 @@
                 <el-table-column label="回压数量(方)" prop="backPreNum" />
                 <el-table-column label="助滤剂预涂量(kg) " prop="filterAidBef" />
                 <el-table-column label="助滤剂添加量(kg)" prop="filterAidAdd" />
-                <el-table-column label="备注" showOverflowTooltip width="120" prop="remark" />
-                <el-table-column label="操作时间" showOverflowTooltip width="150" prop="changed" />
-                <el-table-column label="操作人" showOverflowTooltip width="100" prop="changer" />
+                <el-table-column label="备注" show-overflow-tooltip width="120" prop="remark" />
+                <el-table-column label="操作时间" show-overflow-tooltip width="150" prop="changed" />
+                <el-table-column label="操作人" show-overflow-tooltip width="100" prop="changer" />
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!isRedact || soleStatus" size="mini" @click="DelRow(scope.row)">
@@ -53,10 +53,10 @@
             <div class="audit">
                 <i class="iconfont factory-shouqicaidan" /><span>辅料领用</span>
             </div>
-            <el-table :data="supMaterialList" border headerRowClassName="tableHead" style="margin-top: 10px;">
+            <el-table :data="supMaterialList" border header-row-class-name="tableHead" style="margin-top: 10px;">
                 <el-table-column type="index" label="序号" width="50" />
-                <el-table-column label="过滤机号" showOverflowTooltip width="120" prop="deviceName" />
-                <el-table-column label="物料" showOverflowTooltip width="200">
+                <el-table-column label="过滤机号" show-overflow-tooltip width="120" prop="deviceName" />
+                <el-table-column label="物料" show-overflow-tooltip width="200">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.materialCode" :disabled="!isRedact || soleStatus" size="small">
                             <el-option v-for="(item, index) in filterAidMaterialList" :key="index" :label="item.CODE + ' ' + item.VALUE" :value="item.CODE" />
@@ -97,14 +97,14 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="助滤剂厂家" showOverflowTooltip width="140">
+                <el-table-column label="助滤剂厂家" show-overflow-tooltip width="140">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.filterAidVender" :disabled="!isRedact || soleStatus" size="small">
                             <el-option v-for="(item, index) in filterAidVenderList" :key="index" :label="item.VALUE" :value="item.VALUE" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" showOverflowTooltip width="120" prop="remark" />
+                <el-table-column label="备注" show-overflow-tooltip width="120" prop="remark" />
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.isSplit === '1'" class="delBtn" type="text" icon="el-icon-delete" size="mini" circle :disabled="!isRedact || soleStatus" @click="DelMaterial(scope.row)">
@@ -114,11 +114,11 @@
                 </el-table-column>
             </el-table>
         </el-card>
-        <el-dialog :visible.sync="dialogVisible" :closeOnClickModal="false" width="450px" customClass="dialog__class">
+        <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class="dialog__class">
             <div slot="title">
                 {{ techInfo.deviceName }}
             </div>
-            <el-form ref="techInfo" :model="techInfo" size="small" labelWidth="160px" @keyup.enter.native="SaveDialog('techInfo')">
+            <el-form ref="techInfo" :model="techInfo" size="small" label-width="160px" @keyup.enter.native="SaveDialog('techInfo')">
                 <el-form-item label="过滤前温度(℃)：">
                     <el-input v-model="techInfo.filterBefTem" style="width: 220px;" />
                 </el-form-item>
@@ -223,7 +223,7 @@ export default {
                             }
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .finally(() => {
@@ -236,7 +236,7 @@ export default {
                     this.filterAidModelList = data.materialInfo.materialType;
                     this.filterAidVenderList = data.materialInfo.materialSupplier;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -381,6 +381,8 @@ export default {
                     this.$warningTost('最后一条禁止删除');
                     return false;
 
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         SaveTech(str, resolve, reject) {
@@ -398,7 +400,7 @@ export default {
             this.$http(`${FILTRATION_API.FILTER_CRAFT_TECHSAVE}`, 'POST', this.techList)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -417,7 +419,7 @@ export default {
             this.$http(`${FILTRATION_API.FILTER_CRAFT_MATERIALSAVE}`, 'POST', [{ orderId: this.orderId, materialInfo: this.supMaterialList }])
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -437,7 +439,7 @@ export default {
             this.$http(`${AUDIT_API.AUDIT_AID_SUBMIT}`, 'POST', [{ orderId: this.orderId, materialInfo: this.supMaterialList }])
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -457,6 +459,9 @@ export default {
             }).then(() => {
                 row.delFlag = 1;
                 this.SupMaterDel(row);
+                this.$infoTost('删除成功');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         rowDelFlag({ row }) {
@@ -596,7 +601,7 @@ export default {
             this.$http(`${FILTRATION_API.FILTER_CRAFT_MATERIASUBMIT}`, 'POST', this.techList)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -616,7 +621,6 @@ export default {
 .rowDel {
     display: none;
 }
-
 .grid-content {
     display: flex;
     flex-direction: column;
@@ -624,7 +628,6 @@ export default {
     margin-bottom: 15px;
     border: 1px solid rgba(233, 233, 233, 1);
     border-radius: 2px;
-
     .title {
         margin-top: 20px;
         color: rgba(0, 0, 0, 0.85);
@@ -632,7 +635,6 @@ export default {
         font-size: 14px;
         line-height: 24px;
     }
-
     .content {
         margin-top: 7px;
         color: rgba(153, 153, 153, 1);
@@ -640,11 +642,9 @@ export default {
         font-size: 12px;
         line-height: 22px;
     }
-
     .footer {
         background: rgba(247, 249, 250, 1);
         border-top: 1px solid rgba(233, 233, 233, 1);
-
         .button {
             width: 100%;
             margin: 10px 0;
@@ -656,15 +656,12 @@ export default {
         }
     }
 }
-
 .audit {
     line-height: 40px;
-
     i {
         float: left;
         font-size: 22px;
     }
-
     span {
         margin-left: 12px;
         font-weight: 600;

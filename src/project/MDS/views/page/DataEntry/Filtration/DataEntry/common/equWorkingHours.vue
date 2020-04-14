@@ -39,9 +39,9 @@
             </el-row>
             <el-table
                 :data="dataList"
-                :rowClassName="rowDelFlag"
+                :row-class-name="rowDelFlag"
                 border
-                headerRowClassName="tableHead"
+                header-row-class-name="tableHead"
                 style="margin-top: 10px;"
                 @row-dblclick="EditInfo"
             >
@@ -49,12 +49,12 @@
                 <el-table-column type="index" label="序号" width="50" />
                 <el-table-column label="过滤机号" prop="deviceName" width="120" />
                 <el-table-column label="工作内容" prop="content" />
-                <el-table-column label="开始时间" prop="startTime" width="150" showOverflowTooltip />
-                <el-table-column label="结束时间" prop="endTime" width="150" showOverflowTooltip />
+                <el-table-column label="开始时间" prop="startTime" width="150" show-overflow-tooltip />
+                <el-table-column label="结束时间" prop="endTime" width="150" show-overflow-tooltip />
                 <el-table-column label="时长(H)" prop="timeLength" />
                 <el-table-column label="备注" prop="remark" />
-                <el-table-column label="操作时间" prop="changed" width="150" showOverflowTooltip />
-                <el-table-column label="操作人" prop="changer" width="150" showOverflowTooltip />
+                <el-table-column label="操作时间" prop="changed" width="150" show-overflow-tooltip />
+                <el-table-column label="操作人" prop="changer" width="150" show-overflow-tooltip />
                 <el-table-column width="50" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || scope.row.status === 'checked' || scope.row.status === 'submit'" @click="DelRow(scope.row)">
@@ -65,21 +65,21 @@
             </el-table>
         </el-card>
         <el-card>
-            <audit-log :tableData="recordList" />
+            <audit-log :table-data="recordList" />
         </el-card>
-        <el-dialog :visible.sync="dialogVisible" width="400px" :closeOnClickModal="false" customClass="dialog__class" @keyup.enter.native="SaveDialog('workInfo')">
+        <el-dialog :visible.sync="dialogVisible" width="400px" :close-on-click-modal="false" custom-class="dialog__class" @keyup.enter.native="SaveDialog('workInfo')">
             <div slot="title">
                 {{ workInfo.deviceName }}
             </div>
-            <el-form ref="workInfo" :model="workInfo" size="small" labelWidth="110px" :rules="workInforules">
+            <el-form ref="workInfo" :model="workInfo" size="small" label-width="110px" :rules="workInforules">
                 <el-form-item label="工作内容：">
                     {{ workInfo.content }}
                 </el-form-item>
                 <el-form-item label="开始时间：" prop="startTime">
-                    <el-date-picker v-model="workInfo.startTime" type="datetime" placeholder="选择时间" format="yyyy-MM-dd HH:mm" valueFormat="yyyy-MM-dd HH:mm" />
+                    <el-date-picker v-model="workInfo.startTime" type="datetime" placeholder="选择时间" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" />
                 </el-form-item>
                 <el-form-item label="结束时间：" prop="endTime">
-                    <el-date-picker v-model="workInfo.endTime" type="datetime" placeholder="选择时间" format="yyyy-MM-dd HH:mm" valueFormat="yyyy-MM-dd HH:mm" />
+                    <el-date-picker v-model="workInfo.endTime" type="datetime" placeholder="选择时间" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" />
                 </el-form-item>
                 <el-form-item label="备注：">
                     <el-input v-model="workInfo.remark" style="width: 220px;" />
@@ -150,7 +150,7 @@ export default {
                         this.equStatus = GetStatus(data.listInfo.machineList);
                         this.recordList = data.listInfo.record;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 })
                 .finally(() => {
@@ -230,6 +230,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = 1;
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         rowDelFlag({ row }) {
@@ -243,7 +245,7 @@ export default {
             this.$http(`${FILTRATION_API.FILTER_EQUWORKINGHOURS_SAVE}`, 'POST', this.dataList)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -259,7 +261,7 @@ export default {
             this.$http(`${FILTRATION_API.FILTER_EQUWORKINGHOURS_SUBMITONE}`, 'POST', { orderId: this.orderId })
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -279,7 +281,6 @@ export default {
 .rowDel {
     display: none;
 }
-
 .grid-content {
     display: flex;
     flex-direction: column;
@@ -287,7 +288,6 @@ export default {
     margin-bottom: 15px;
     border: 1px solid rgba(233, 233, 233, 1);
     border-radius: 2px;
-
     .title {
         margin-top: 20px;
         color: rgba(0, 0, 0, 0.85);
@@ -295,7 +295,6 @@ export default {
         font-size: 14px;
         line-height: 24px;
     }
-
     .content {
         margin-top: 7px;
         color: rgba(153, 153, 153, 1);
@@ -303,11 +302,9 @@ export default {
         font-size: 12px;
         line-height: 22px;
     }
-
     .footer {
         background: rgba(247, 249, 250, 1);
         border-top: 1px solid rgba(233, 233, 233, 1);
-
         .button {
             width: 100%;
             margin: 10px 0;

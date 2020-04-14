@@ -6,7 +6,7 @@ export default function(Vue) {
 /**
  * QueryTable
  * @property 表单表格组件
- * @param {array} queryFormData 查询表单
+ * @param {Array} queryFormData 查询表单
  *   type 单表单组件类型 select下拉 input输入框 date-interval日期范围
  *   label 单表单名称
  *   prop 单表单字段名
@@ -30,4 +30,5 @@ export default function(Vue) {
  * @param {Fn} selectableFn 表格复选框选中逻辑
  * @param slot mds-button 查询按钮类
  * @param slot operation_column 表格内操作
+ * @param {Object} rules 验证规则
  */

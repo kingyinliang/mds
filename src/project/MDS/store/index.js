@@ -7,13 +7,13 @@ import echarts from './modules/echarts';
 
 Vue.use(Vuex);
 const vuexLocal = new VuexPersistence({
-  storage: window.sessionStorage
+    storage: window.sessionStorage
 });
 export default new Vuex.Store({
-  modules: {
-    common,
-    user,
-    echarts
-  },
-  plugins: [vuexLocal.plugin]
+    modules: {
+        common,
+        user,
+        echarts
+    },
+    plugins: [vuexLocal.plugin]
 });

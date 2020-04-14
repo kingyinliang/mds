@@ -5,7 +5,7 @@
                 <el-card class="newCard">
                     <el-row type="flex">
                         <el-col>
-                            <el-form :model="params" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="sole_row">
+                            <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
                                 <el-form-item label="生产工厂：">
                                     <el-select v-model="params.factoryId" style="width: 150px;" @change="changeOptions('factory')">
                                         <el-option label="请选择" value="" />
@@ -19,7 +19,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="入罐日期：">
-                                    <el-date-picker v-model="params.applyDate" type="date" valueFormat="yyyy-MM-dd" style="width: 150px;" />
+                                    <el-date-picker v-model="params.applyDate" type="date" value-format="yyyy-MM-dd" style="width: 150px;" />
                                 </el-form-item>
                                 <el-form-item class="floatr">
                                     <el-button v-if="isAuth('prs:inStorage:list')" type="primary" size="small" @click="getOrderList()">
@@ -69,7 +69,7 @@
                     </el-col>
                     <el-col :span="19">
                         <el-row style="margin-top: 20px;">
-                            <el-table ref="table" headerRowClassName="tableHead" :rowClassName="rowDelFlag" :data="dataList" border tooltipEffect="dark" @row-dblclick="modifyRecord">
+                            <el-table ref="table" header-row-class-name="tableHead" :row-class-name="rowDelFlag" :data="dataList" border tooltip-effect="dark" @row-dblclick="modifyRecord">
                                 <el-table-column label="状态" width="95">
                                     <template slot-scope="scope">
                                         <span
@@ -84,12 +84,12 @@
                                         {{ scope.row.inDate }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="原汁罐号" :showOverflowTooltip="true" width="120">
+                                <el-table-column label="原汁罐号" :show-overflow-tooltip="true" width="120">
                                     <template slot-scope="scope">
                                         {{ scope.row.potName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="物料" :showOverflowTooltip="true" width="120">
+                                <el-table-column label="物料" :show-overflow-tooltip="true" width="120">
                                     <template slot-scope="scope">
                                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                     </template>
@@ -144,7 +144,7 @@
                                         {{ scope.row.changer }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="备注" :showOverflowTooltip="true">
+                                <el-table-column label="备注" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.remark }}
                                     </template>
@@ -161,14 +161,14 @@
                     </el-col>
                 </el-row>
             </div>
-            <el-dialog :closeOnClickModal="false" :visible.sync="dialogFormVisible" width="500px" customClass="dialog__class">
+            <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="500px" custom-class="dialog__class">
                 <div slot="title" class="title">
                     <span>入罐开始</span>
                 </div>
                 <div>
-                    <el-form ref="startForm" :model="startForm" :labelWidth="formLabelWidth" size="small">
+                    <el-form ref="startForm" :model="startForm" :label-width="formLabelWidth" size="small">
                         <el-form-item label="原汁罐号：" required>
-                            <el-select v-model="startForm.potNo" valueKey="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('pot')">
+                            <el-select v-model="startForm.potNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('pot')">
                                 <el-option v-for="(item, index) in potList" :key="index" :label="item.holderName" :value="item.holderId" />
                             </el-select>
                         </el-form-item>
@@ -210,12 +210,12 @@
                     </el-button>
                 </div>
             </el-dialog>
-            <el-dialog :closeOnClickModal="false" :visible.sync="dialogFormVisible2" width="500px" customClass="dialog__class">
+            <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible2" width="500px" custom-class="dialog__class">
                 <div slot="title" class="title">
                     <span>入罐结束</span>
                 </div>
                 <div>
-                    <el-form ref="endForm" :model="endForm" :labelWidth="formLabelWidth" size="small">
+                    <el-form ref="endForm" :model="endForm" :label-width="formLabelWidth" size="small">
                         <el-form-item label="原汁罐号：" required>
                             {{ endForm.potName }}
                         </el-form-item>
@@ -238,7 +238,7 @@
                             <el-input v-model.number="endForm.fullPotAmount" type="number" disabled style="width: 220px;" />
                         </el-form-item>
                         <el-form-item label="满罐日期：">
-                            <el-date-picker v-model="endForm.fulPotDate" type="date" valueFormat="yyyy-MM-dd" style="width: 220px;" />
+                            <el-date-picker v-model="endForm.fulPotDate" type="date" value-format="yyyy-MM-dd" style="width: 220px;" />
                         </el-form-item>
                         <el-form-item label="备注：">
                             <el-input v-model.trim="endForm.remark" style="width: 220px;" />
@@ -260,14 +260,14 @@
                     </el-button>
                 </div>
             </el-dialog>
-            <el-dialog :closeOnClickModal="false" :visible.sync="dialogFormVisible3" width="500px" customClass="dialog__class">
+            <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible3" width="500px" custom-class="dialog__class">
                 <div slot="title" class="title">
                     <span>入罐修改</span>
                 </div>
                 <div>
-                    <el-form ref="modifyForm" :model="modifyForm" :labelWidth="formLabelWidth" size="small">
+                    <el-form ref="modifyForm" :model="modifyForm" :label-width="formLabelWidth" size="small">
                         <el-form-item label="原汁罐号：" required>
-                            <el-select v-model="modifyForm.potNo" valueKey="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('potModify')">
+                            <el-select v-model="modifyForm.potNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('potModify')">
                                 <el-option v-for="(item, index) in potList" :key="index" :label="item.holderName" :value="item.holderId" />
                             </el-select>
                         </el-form-item>
@@ -302,7 +302,7 @@
                             <el-input v-model.number="modifyForm.fullPotAmount" type="number" style="width: 220px;" />
                         </el-form-item>
                         <el-form-item label="满罐日期：">
-                            <el-date-picker v-model="modifyForm.fulPotDate" type="date" valueFormat="yyyy-MM-dd" style="width: 220px;" />
+                            <el-date-picker v-model="modifyForm.fulPotDate" type="date" value-format="yyyy-MM-dd" style="width: 220px;" />
                         </el-form-item>
                         <el-form-item label="备注：">
                             <el-input v-model.trim="modifyForm.remark" style="width: 220px;" />
@@ -428,6 +428,8 @@ export default class Index extends Vue {
             type: 'warning'
         }).then(() => {
             row.delFlag = '1';
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 
@@ -745,7 +747,6 @@ export default class Index extends Vue {
             item.batch ? (this.startForm.batchSt = true) : (this.startForm.batchSt = false);
         } else if (flag === 'potModify') {
             this.ci = Number(this.ci) + Number(1);
-            console.log(this.ci);
             const item: any = this.potList.find(ele => ele['holderId'] === this.modifyForm.potNo);// eslint-disable-line
             if (item && item.batch === '') {
                 if (this.teststr !== this.modifyForm.potNo) {
@@ -1012,8 +1013,7 @@ export default class Index extends Vue {
                 this.getOrderList();
             })
             .catch((result: { code: number; msg: string }) => {
-                console.log(result);
-                Vue.prototype.$error_SHINHO(result.msg);
+                Vue.prototype.$errorTost(result.msg);
             });
     }
 
@@ -1080,8 +1080,10 @@ export default class Index extends Vue {
                     this.getOrderList();
                 })
                 .catch((result: { code: number; msg: string }) => {
-                    Vue.prototype.$error_SHINHO(result.msg);
+                    Vue.prototype.$errorTost(result.msg);
                 });
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 

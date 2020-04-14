@@ -1,15 +1,15 @@
 <template>
-    <el-dialog :visible.sync="visible" width="850px" customClass="dialog__class" :closeOnClickModal="false">
+    <el-dialog :visible.sync="visible" width="850px" custom-class="dialog__class" :close-on-click-modal="false">
         <div slot="title">
             {{ machineName }}检测
         </div>
         <el-button type="primary" size="small" style="float: right; margin-bottom: 15px;" @click="AddMachineTest">
             新增
         </el-button>
-        <el-table class="newTable" :data="machineTest" headerRowClassName="tableHead" :rowClassName="RowDelFlag" border tooltipEffect="dark">
+        <el-table class="newTable" :data="machineTest" header-row-class-name="tableHead" :row-class-name="RowDelFlag" border tooltip-effect="dark">
             <el-table-column label="检测时间" width="160">
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.checkTime" type="datetime" valueFormat="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" />
+                    <el-date-picker v-model="scope.row.checkTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" />
                 </template>
             </el-table-column>
             <el-table-column width="120">
@@ -91,7 +91,7 @@ export default {
                 if (data.code === 0) {
                     this.machineTest = data.record;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -118,6 +118,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 row.delFlag = '1';
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag
@@ -153,7 +155,7 @@ export default {
                     });
                     this.visible = false;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         }

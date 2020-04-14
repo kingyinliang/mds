@@ -2,37 +2,37 @@
     <el-col>
         <data-entry
             ref="dataEntry"
-            :redactAuth="'wht:order:update'"
-            :saveAuth="'wht:order:update'"
-            :submitAuth="'sys:whtInStorage:submit'"
-            :orderStatus="orderStatus"
-            :submitRules="submitRules"
-            :savedRules="savedRules"
-            :savedDatas="savedDatas"
-            :submitDatas="submitDatas"
-            :headerBase="headerBase"
-            :formHeader="formHeader"
+            :redact-auth="'wht:order:update'"
+            :save-auth="'wht:order:update'"
+            :submit-auth="'sys:whtInStorage:submit'"
+            :order-status="orderStatus"
+            :submit-rules="submitRules"
+            :saved-rules="savedRules"
+            :saved-datas="savedDatas"
+            :submit-datas="submitDatas"
+            :header-base="headerBase"
+            :form-header="formHeader"
             :tabs="tabs"
             @success="GetOrderList"
             @updateProductDate="updateProductDate"
         >
             <template slot="1" slot-scope="data">
-                <ready-time ref="readytime" :isRedact="data.isRedact" :formHeader="formHeader" @SetReadyStatus="SetReadyStatus" />
+                <ready-time ref="readytime" :is-redact="data.isRedact" :form-header="formHeader" @SetReadyStatus="SetReadyStatus" />
             </template>
             <template slot="2" slot-scope="data">
-                <worker ref="workerref" :isRedact="data.isRedact" :order="formHeader" />
+                <worker ref="workerref" :is-redact="data.isRedact" :order="formHeader" />
             </template>
             <template slot="3" slot-scope="data">
-                <exc-record ref="excrecord" :isRedact="data.isRedact" :order="formHeader" />
+                <exc-record ref="excrecord" :is-redact="data.isRedact" :order="formHeader" />
             </template>
             <template slot="4" slot-scope="data">
-                <in-stock ref="instock" :isRedact="data.isRedact" :order="formHeader" :inStorageState="inStorageState" @setInStorageState="setInStorageState" />
+                <in-stock ref="instock" :is-redact="data.isRedact" :order="formHeader" :in-storage-state="inStorageState" @setInStorageState="setInStorageState" />
             </template>
             <template slot="5" slot-scope="data">
-                <apply-materiel ref="applymateriel" :isRedact="data.isRedact" :order="formHeader" :applyMaterielState="applyMaterielState" @setApplyMaterielState="setApplyMaterielState" />
+                <apply-materiel ref="applymateriel" :is-redact="data.isRedact" :order="formHeader" :apply-materiel-state="applyMaterielState" @setApplyMaterielState="setApplyMaterielState" />
             </template>
             <template slot="6" slot-scope="data">
-                <text-record ref="textrecord" :isRedact="data.isRedact" />
+                <text-record ref="textrecord" :is-redact="data.isRedact" />
             </template>
         </data-entry>
     </el-col>
@@ -345,6 +345,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -440,7 +442,7 @@ export default {
             ];
             this.$http(`${WHT_API.MATERIELTIMESUBMIT_API}`, 'POST', paras).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 if (resolve) {
                     resolve('resolve');

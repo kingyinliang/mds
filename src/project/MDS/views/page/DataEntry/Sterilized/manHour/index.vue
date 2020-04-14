@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col :span="18">
-                        <el-form :inline="true" :model="formHeader" size="small" labelWidth="70px" class="topform multi_row">
+                        <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform multi_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
                                     <el-option label="请选择" value="" />
@@ -18,7 +18,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="生产日期：">
-                                <el-date-picker v-model="formHeader.inKjmDate" type="date" valueFormat="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" style="width: 180px;" />
+                                <el-date-picker v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" style="width: 180px;" />
                             </el-form-item>
                             <el-form-item label="生产工序：">
                                 <el-select v-model="formHeader.deptId" placeholder="请选择" style="width: 180px;" @change="setDeptName">
@@ -86,7 +86,7 @@
             </div>
             <div v-show="searchCard">
                 <el-card class="box-cards NewDaatTtabs">
-                    <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" labelWidth="125px">
+                    <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
                         <mds-card style=" position: relative; margin-bottom: 10px;" :title="'准备时间（分钟：min）'" :name="'ready'" class="readyCard">
                             <template slot="titleBtn">
                                 <el-form-item label="班次：" style="float: right; margin-bottom: 10px;">
@@ -103,13 +103,13 @@
                                     <el-form-item label="交接班（白班）：">
                                         <el-input v-model="readyTimeDate.dayChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="班前会：" labelWidth="80px">
+                                    <el-form-item label="班前会：" label-width="80px">
                                         <el-input v-model="readyTimeDate.dayChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产前准备：" labelWidth="100px">
+                                    <el-form-item label="生产前准备：" label-width="100px">
                                         <el-input v-model="readyTimeDate.dayChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产后清场：" labelWidth="100px">
+                                    <el-form-item label="生产后清场：" label-width="100px">
                                         <el-input v-model="readyTimeDate.dayChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
                                 </el-row>
@@ -117,13 +117,13 @@
                                     <el-form-item label="交接班（中班）：">
                                         <el-input v-model="readyTimeDate.midChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="班前会：" labelWidth="80px">
+                                    <el-form-item label="班前会：" label-width="80px">
                                         <el-input v-model="readyTimeDate.midChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产前准备：" labelWidth="100px">
+                                    <el-form-item label="生产前准备：" label-width="100px">
                                         <el-input v-model="readyTimeDate.midChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产后清场：" labelWidth="100px">
+                                    <el-form-item label="生产后清场：" label-width="100px">
                                         <el-input v-model="readyTimeDate.midChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
                                 </el-row>
@@ -131,13 +131,13 @@
                                     <el-form-item label="交接班（夜班）：">
                                         <el-input v-model="readyTimeDate.nightChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="班前会：" labelWidth="80px">
+                                    <el-form-item label="班前会：" label-width="80px">
                                         <el-input v-model="readyTimeDate.nightChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产前准备：" labelWidth="100px">
+                                    <el-form-item label="生产前准备：" label-width="100px">
                                         <el-input v-model="readyTimeDate.nightChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
-                                    <el-form-item label="生产后清场：" labelWidth="100px">
+                                    <el-form-item label="生产后清场：" label-width="100px">
                                         <el-input v-model="readyTimeDate.nightChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
                                     </el-form-item>
                                 </el-row>
@@ -145,7 +145,7 @@
                         </mds-card>
                     </el-form>
                     <el-card style="margin-bottom: 10px;">
-                        <worker ref="workerref" :isRedact="isRedact" :order="userOrder" />
+                        <worker ref="workerref" :is-redact="isRedact" :order="userOrder" />
                     </el-card>
                 </el-card>
             </div>
@@ -290,7 +290,7 @@ export default {
                         this.$refs.workerref.GetProductShift(this.formHeader.factory);
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -323,12 +323,12 @@ export default {
                                 });
                             },
                             err => {
-                                this.$error_SHINHO(err);
+                                this.$errorTost(err);
                             }
                         );
                     },
                     err => {
-                        this.$error_SHINHO(err);
+                        this.$errorTost(err);
                     }
                 );
             } else if (str === 'saved') {
@@ -343,7 +343,7 @@ export default {
                         });
                     },
                     err => {
-                        this.$error_SHINHO(err);
+                        this.$errorTost(err);
                     }
                 );
             }
@@ -361,6 +361,8 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.savedOrSubmitForm('submit');
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 提交
@@ -372,7 +374,7 @@ export default {
                             resolve('resolve');
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                         if (reject) {
                             reject('提交' + data.msg);
                         }
@@ -389,14 +391,13 @@ export default {
                 this.headList.addOrupdate = '0';
             }
             this.headList.status = str;
-            console.log(this.headList);
             this.$http(`${STERILIZED_API.STE_HOUR_UPDATE_API}`, 'POST', this.headList).then(({ data }) => {
                 if (data.code === 0) {
                     if (resolve) {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                     if (reject) {
                         reject('表头保存' + data.msg);
                     }
@@ -429,7 +430,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                     if (reject) {
                         reject('准备时间保存' + data.msg);
                     }
@@ -496,7 +497,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -512,7 +513,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -528,7 +529,7 @@ export default {
                             this.formHeader.deptId = data.childList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -552,7 +553,6 @@ export default {
         padding: 12px !important;
     }
 }
-
 .readyCard {
     input {
         width: 147px !important;

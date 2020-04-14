@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCards newCard">
-            <el-form :model="formHeader" :inline="true" size="small" labelWidth="70px" class="multi_row">
+            <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
                 <el-form-item label="生产车间：">
                     <p class="bottom">
                         {{ formHeader.workShopName }}
@@ -79,12 +79,12 @@
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="productList" :rowClassName="rowDelFlag" border headerRowClassName="tableHead" style="margin-top: 10px;">
+                <el-table :data="productList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
                     <el-table-column type="index" label="序号" width="50" fixed="left" />
-                    <el-table-column label="产品参数" fixed="left" showOverflowTooltip width="85" prop="parameter" />
+                    <el-table-column label="产品参数" fixed="left" show-overflow-tooltip width="85" prop="parameter" />
                     <el-table-column label="时间" width="200">
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.time" type="datetime" valueFormat="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />
+                            <el-date-picker v-model="scope.row.time" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />
                         </template>
                     </el-table-column>
                     <el-table-column label="1#" width="100">
@@ -122,27 +122,27 @@
                             <el-input v-model="scope.row.sevenWell" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="8#" showOverflowTooltip width="100">
+                    <el-table-column label="8#" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.eightWell" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="9#" showOverflowTooltip width="100">
+                    <el-table-column label="9#" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.nineWell" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="10#" showOverflowTooltip width="100">
+                    <el-table-column label="10#" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.tenWell" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="11#" showOverflowTooltip width="100">
+                    <el-table-column label="11#" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.elevenWell" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="12#" showOverflowTooltip width="100">
+                    <el-table-column label="12#" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.twelveWell" :disabled="!isRedact" size="small" />
                         </template>
@@ -155,7 +155,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :currentPage="pages.currPage" :pageSize="pages.pageSize" layout="prev, pager, next, jumper" :total="pages.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="pages.currPage" :page-size="pages.pageSize" layout="prev, pager, next, jumper" :total="pages.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-tab-pane>
             <el-tab-pane name="2" label="设备数据">
                 <el-row>
@@ -165,11 +165,11 @@
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="equipmentList" :rowClassName="rowDelFlag" border headerRowClassName="tableHead" style="margin-top: 10px;">
+                <el-table :data="equipmentList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
                     <el-table-column type="index" label="序号" width="50" />
                     <el-table-column label="时间">
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.date" type="datetime" :disabled="!isRedact" valueFormat="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />
+                            <el-date-picker v-model="scope.row.date" type="datetime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />
                         </template>
                     </el-table-column>
                     <el-table-column label="电压V">
@@ -219,11 +219,11 @@
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="warmingList" :rowClassName="rowDelFlag" border headerRowClassName="tableHead" style="margin-top: 10px;">
+                <el-table :data="warmingList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
                     <el-table-column type="index" label="序号" width="50" />
                     <el-table-column label="时间" width="200">
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.date" type="datetime" :disabled="!isRedact" valueFormat="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />
+                            <el-date-picker v-model="scope.row.date" type="datetime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />
                         </template>
                     </el-table-column>
                     <el-table-column label="前1" width="100">
@@ -266,42 +266,42 @@
                             <el-input v-model="scope.row.beforeEight" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后1" showOverflowTooltip width="100">
+                    <el-table-column label="后1" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterOne" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后2" showOverflowTooltip width="100">
+                    <el-table-column label="后2" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterTwo" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后3" showOverflowTooltip :disabled="!isRedact" width="100">
+                    <el-table-column label="后3" show-overflow-tooltip :disabled="!isRedact" width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterThree" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后4" showOverflowTooltip width="100">
+                    <el-table-column label="后4" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterFour" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后5" showOverflowTooltip width="100">
+                    <el-table-column label="后5" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterFive" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后6" showOverflowTooltip width="100">
+                    <el-table-column label="后6" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterSix" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后7" showOverflowTooltip width="100">
+                    <el-table-column label="后7" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterSeven" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后8" showOverflowTooltip width="100">
+                    <el-table-column label="后8" show-overflow-tooltip width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterEight" :disabled="!isRedact" size="small" />
                         </template>
@@ -360,7 +360,7 @@ export default {
                     this.GetEquipmentList();
                     this.GetWarmingList();
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -375,7 +375,7 @@ export default {
                     this.productList = data.techProductParameterList.list;
                     this.pages.totalCount = data.techProductParameterList.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -386,7 +386,7 @@ export default {
                 if (data.code === 0) {
                     this.equipmentList = data.techMachineList.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -397,7 +397,7 @@ export default {
                 if (data.code === 0) {
                     this.warmingList = data.techTempParameterList.list;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -522,6 +522,8 @@ export default {
                     } else {
                         row.delFlag = '1';
                     }
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         //  RowDelFlag

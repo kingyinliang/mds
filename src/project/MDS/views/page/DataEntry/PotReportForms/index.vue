@@ -9,11 +9,11 @@
                         导出
                     </el-button>
                 </div>
-                <el-table :data="tableData1" headerRowClassName="tableHead" border tooltipEffect="dark">
-                    <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :showOverflowTooltip="true" />
+                <el-table :data="tableData1" header-row-class-name="tableHead" border tooltip-effect="dark">
+                    <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
                 </el-table>
                 <el-row>
-                    <el-pagination :currentPage="queryForm1.currPage" :pageSizes="[10, 20, 50]" :pageSize="queryForm1.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="queryForm1.totalCount" @size-change="handleSizeChange1" @current-change="handleCurrentChange1" />
+                    <el-pagination :current-page="queryForm1.currPage" :page-sizes="[10, 20, 50]" :page-size="queryForm1.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="queryForm1.totalCount" @size-change="handleSizeChange1" @current-change="handleCurrentChange1" />
                 </el-row>
             </el-tab-pane>
             <el-tab-pane name="2">
@@ -24,11 +24,11 @@
                         导出
                     </el-button>
                 </div>
-                <el-table :data="tableData2" headerRowClassName="tableHead" border tooltipEffect="dark">
-                    <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :showOverflowTooltip="true" />
+                <el-table :data="tableData2" header-row-class-name="tableHead" border tooltip-effect="dark">
+                    <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
                 </el-table>
                 <el-row>
-                    <el-pagination :currentPage="queryForm2.currPage" :pageSizes="[10, 20, 50]" :pageSize="queryForm2.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="queryForm2.totalCount" @size-change="handleSizeChange2" @current-change="handleCurrentChange2" />
+                    <el-pagination :current-page="queryForm2.currPage" :page-sizes="[10, 20, 50]" :page-size="queryForm2.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="queryForm2.totalCount" @size-change="handleSizeChange2" @current-change="handleCurrentChange2" />
                 </el-row>
             </el-tab-pane>
             <el-tab-pane name="3">
@@ -39,11 +39,11 @@
                         导出
                     </el-button>
                 </div>
-                <el-table :data="tableData3Top" headerRowClassName="tableHead" border tooltipEffect="dark" style="margin-bottom: 10px;">
-                    <el-table-column v-for="(item, index) in column1" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :showOverflowTooltip="true" />
+                <el-table :data="tableData3Top" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-bottom: 10px;">
+                    <el-table-column v-for="(item, index) in column1" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
                 </el-table>
-                <el-table :data="tableData3Bottom" headerRowClassName="tableHead" border tooltipEffect="dark">
-                    <el-table-column v-for="(item, index) in column2" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :showOverflowTooltip="true" />
+                <el-table :data="tableData3Bottom" header-row-class-name="tableHead" border tooltip-effect="dark">
+                    <el-table-column v-for="(item, index) in column2" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
                 </el-table>
             </el-tab-pane>
             <el-tab-pane name="4">
@@ -54,8 +54,8 @@
                         导出
                     </el-button>
                 </div>
-                <el-table :data="tableData4" headerRowClassName="tableHead" border tooltipEffect="dark">
-                    <el-table-column v-for="(item, index) in column3" :key="index" :class="{ bg: item.classSt }" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :showOverflowTooltip="true" />
+                <el-table :data="tableData4" header-row-class-name="tableHead" border tooltip-effect="dark">
+                    <el-table-column v-for="(item, index) in column3" :key="index" :class="{ bg: item.classSt }" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
                 </el-table>
             </el-tab-pane>
         </el-tabs>
@@ -321,7 +321,7 @@ export default {
                         this.tableData1 = data.returnMap.steHolder.slice((this.queryForm1.currPage - 1) * this.queryForm1.pageSize, (this.queryForm1.currPage - 1) * this.queryForm1.pageSize + this.queryForm1.pageSize);
                         this.tableData2 = data.returnMap.filterHolder.slice((this.queryForm2.currPage - 1) * this.queryForm2.pageSize, (this.queryForm2.currPage - 1) * this.queryForm2.pageSize + this.queryForm2.pageSize);
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -332,7 +332,7 @@ export default {
                         this.tableData3Bottom = data.steStork.steHolder.steHsStork;
                         this.tableData4 = data.steStork.filterHolder;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }

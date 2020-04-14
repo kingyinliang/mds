@@ -4,15 +4,15 @@
             <el-card>
                 <div class="clearfix">
                     <el-row style="float: right;">
-                        <el-form :inline="true" :model="form" size="small" labelWidth="68px" class="topforms2" @keyup.enter.native="GetLocationList(true)" @submit.native.prevent>
+                        <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="getLocationList(true)" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="form.deptName" placeholder="车间" suffixIcon="el-icon-search" />
+                                <el-input v-model="form.deptName" placeholder="车间" suffix-icon="el-icon-search" />
                             </el-form-item>
                             <el-form-item>
-                                <el-button v-if="isAuth('sys:sto:list')" type="primary" size="small" @click="GetLocationList(true)">
+                                <el-button v-if="isAuth('sys:sto:list')" type="primary" size="small" @click="getLocationList(true)">
                                     查询
                                 </el-button>
-                                <el-button v-if="isAuth('sys:sto:list')" type="primary" size="small" @click="visible1 = true">
+                                <el-button v-if="isAuth('sys:sto:list')" type="primary" size="small" @click="visibleHightLevelQuery = true">
                                     高级查询
                                 </el-button>
                                 <el-button v-if="isAuth('sys:sto:save')" type="primary" size="small" @click="addLocation()">
@@ -26,17 +26,17 @@
                     </el-row>
                 </div>
                 <el-row>
-                    <el-table ref="table1" headerRowClassName="tableHead" :data="list" border tooltipEffect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange" @row-dblclick="EditRow">
+                    <el-table ref="table1" header-row-class-name="tableHead" :data="list" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange" @row-dblclick="EditRow">
                         <el-table-column type="selection" width="34" />
                         <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
-                        <el-table-column prop="factoryName" width="120" :showOverflowTooltip="true" label="工厂" />
-                        <el-table-column prop="deptName" width="120" :showOverflowTooltip="true" label="车间" />
-                        <el-table-column :showOverflowTooltip="true" label="物料类型">
+                        <el-table-column prop="factoryName" width="120" :show-overflow-tooltip="true" label="工厂" />
+                        <el-table-column prop="deptName" width="120" :show-overflow-tooltip="true" label="车间" />
+                        <el-table-column :show-overflow-tooltip="true" label="物料类型">
                             <template slot-scope="scope">
                                 {{ scope.row.materialTypeCode + ' ' + scope.row.materialTypeName }}
                             </template>
                         </el-table-column>
-                        <el-table-column :showOverflowTooltip="true" label="物料编码">
+                        <el-table-column :show-overflow-tooltip="true" label="物料编码">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                             </template>
@@ -58,12 +58,12 @@
                     </el-table>
                 </el-row>
                 <el-row>
-                    <el-pagination :currentPage="currPage" :pageSizes="[10, 20, 50]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
-        <el-dialog title="高级查询" :closeOnClickModal="false" :visible.sync="visible1">
-            <el-form :model="form" size="small" labelWidth="110px" class="locationdialog">
+        <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="visibleHightLevelQuery">
+            <el-form :model="form" size="small" label-width="110px" class="locationdialog">
                 <el-form-item label="工厂：">
                     <el-select v-model="form.factory" placeholder="请选择">
                         <el-option label="" value="">
@@ -93,11 +93,11 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="visible1 = false">取消</el-button>
-                <el-button type="primary" @click="GetLocationList(true)">确定</el-button>
+                <el-button @click="visibleHightLevelQuery = false">取消</el-button>
+                <el-button type="primary" @click="getLocationList(true)">确定</el-button>
             </span>
         </el-dialog>
-        <location-add v-if="visible" ref="locationAdd" @refreshDataList="GetLocationList()" />
+        <location-add v-if="visible" ref="locationAdd" @refreshDataList="getLocationList()" />
     </el-col>
 </template>
 
@@ -111,9 +111,11 @@ export default {
     },
     data() {
         return {
-            visible1: false,
+            visibleHightLevelQuery: false,
             visible: false,
             form: {
+                factory: '',
+                factoryName: '',
                 deptName: '',
                 deptId: '',
                 materialTypeCode: '',
@@ -128,7 +130,8 @@ export default {
             SerchSapList: [],
             currPage: 1,
             pageSize: 10,
-            totalCount: 0
+            totalCount: 0,
+            isdisabled: false
         };
     },
     computed: {},
@@ -139,7 +142,7 @@ export default {
     },
     mounted() {
         this.Getdeptcode();
-        this.GetLocationList();
+        this.getLocationList();
         // this.$http(`${BASICDATA_API.FINDORG_API}?code=workshop`, 'POST').then(({data}) => {
         //   if (data.code === 0) {
         //     this.workshop = data.typeList
@@ -153,7 +156,7 @@ export default {
             if (data.code === 0) {
                 this.sapList = data.dicList;
             } else {
-                this.$error_SHINHO(data.msg);
+                this.$errorTost(data.msg);
             }
         });
         // this.$http(`${BASICDATA_API.SERCHSAPLIST_API}`, 'POST', {params: ''}).then(({data}) => {
@@ -171,7 +174,7 @@ export default {
                 if (data.code === 0) {
                     this.factory = data.typeList;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -183,7 +186,7 @@ export default {
                     if (data.code === 0) {
                         this.workshop = data.typeList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             } else {
@@ -195,12 +198,16 @@ export default {
             return index + 1 + (Number(this.currPage) - 1) * (Number(this.pageSize));
         },
         // 获取库位列表
-        GetLocationList(st) {
+        getLocationList(st) {
+            // 清空资料
             if (st) {
                 this.currPage = 1;
             }
             this.$http(`${BASICDATA_API.LOCATIONLIST_API}`, 'POST', {
+                factory: this.form.factory,
+                // factoryName: this.list.find(element => this.factoryId === element.factory).factoryName,
                 deptId: this.form.deptId,
+                // deptName: this.list.find(element => this.deptId === element.deptId).deptName,
                 deptName: this.form.deptName,
                 materialTypeCode: this.form.materialTypeCode,
                 storageLocation: this.form.storageLocation,
@@ -208,15 +215,16 @@ export default {
                 pageSize: this.pageSize
             }).then(({ data }) => {
                 this.visible = false;
-                this.visible1 = false;
+                this.visibleHightLevelQuery = false;
                 if (data.code === 0) {
+                    this.list = [];
                     this.multipleSelection = [];
                     this.list = data.page.list;
                     this.currPage = data.page.currPage;
                     this.pageSize = data.page.pageSize;
                     this.totalCount = data.page.totalCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
                 this.visible = false;
             });
@@ -230,13 +238,15 @@ export default {
             }).then(() => {
                 this.$http(`${BASICDATA_API.LOCATIONDEL_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$success_SHINHO('删除成功!');
+                        this.$successTost('删除成功!');
                         this.multipleSelection = [];
-                        this.GetLocationList();
+                        this.getLocationList();
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
         },
         // 新增库位
@@ -263,12 +273,12 @@ export default {
         // 改变每页条数
         handleSizeChange(val) {
             this.pageSize = val;
-            this.GetLocationList();
+            this.getLocationList();
         },
         // 跳转页数
         handleCurrentChange(val) {
             this.currPage = val;
-            this.GetLocationList();
+            this.getLocationList();
         }
     }
 };

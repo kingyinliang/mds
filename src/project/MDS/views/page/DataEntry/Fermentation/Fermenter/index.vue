@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard ferCard">
-            <el-form :inline="true" :model="formHeader" size="small" labelWidth="75px" class="topform sole_row">
+            <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="topform sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 140px;">
                         <el-option label="请选择" value="" />
@@ -14,18 +14,18 @@
                         <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="罐号：" labelWidth="50px">
-                    <el-select v-model="formHeader.holderNo" placeholder="请选择" multiple filterable allowCreate defaultFirstOp style="width: 140px;">
+                <el-form-item label="罐号：" label-width="50px">
+                    <el-select v-model="formHeader.holderNo" placeholder="请选择" multiple filterable allow-create default-first-op style="width: 140px;">
                         <el-option v-for="(sole, index) in guanList" :key="index" :value="sole.holderNo" :label="sole.holderName" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="类别：" labelWidth="50px">
+                <el-form-item label="类别：" label-width="50px">
                     <el-select v-model="formHeader.halfType" placeholder="请选择" style="width: 140px;">
                         <el-option label="请选择" value="" />
                         <el-option v-for="(item, index) in halfList" :key="index" :label="item.value" :value="item.value" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="状态：" labelWidth="50px">
+                <el-form-item label="状态：" label-width="50px">
                     <el-select v-model="formHeader.holderStatus" placeholder="请选择" style="width: 140px;">
                         <el-option label="请选择" value="" />
                         <template v-for="(item, index) in holderStatusList">
@@ -173,12 +173,12 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-pagination :currentPage="formHeader.currPage" :pageSizes="[40, 60, 80]" :pageSize="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="formHeader.currPage" :page-sizes="[40, 60, 80]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </el-card>
-        <el-dialog width="450px" class="ShinHoDialog" :title="dialogData.holderName + '清洗'" :closeOnClickModal="false" :visible.sync="visible">
+        <el-dialog width="450px" class="ShinHoDialog" :title="dialogData.holderName + '清洗'" :close-on-click-modal="false" :visible.sync="visible">
             <div style="display: flex;">
-                <el-form labelWidth="100px" class="topform marbottom" style="margin: auto;">
+                <el-form label-width="100px" class="topform marbottom" style="margin: auto;">
                     <el-form-item label="罐号：">
                         <p>{{ dialogData.holderNo }}</p>
                     </el-form-item>
@@ -511,7 +511,7 @@ export default {
                     this.topBox[8].num = data.overView.useCount;
                     this.topBox[9].wdm = data.overView.emptyCount;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -522,7 +522,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -536,7 +536,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -548,7 +548,7 @@ export default {
                     if (data.code === 0) {
                         this.RDorder = data.dicList[0].code;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -576,7 +576,7 @@ export default {
                     if (data.code === 0) {
                         this.halfList = data.halfList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -588,7 +588,7 @@ export default {
                     if (data.code === 0) {
                         this.holderStatusList = data.statusList;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorTost(data.msg);
                     }
                 });
             }
@@ -667,7 +667,7 @@ export default {
                     this.dialogData.holderStatus = '0';
                     this.visible = false;
                 } else {
-                    this.$error_SHINHO(data.msg);
+                    this.$errorTost(data.msg);
                 }
             });
         },
@@ -690,20 +690,17 @@ export default {
     .el-card__body {
         padding: 7px;
     }
-
     .cardTit {
         padding-bottom: 10px;
         color: black;
         font-weight: 400;
         font-size: 16px;
     }
-
     .gotop {
         float: right;
         color: #1890ff;
         font-size: 14px;
         cursor: pointer;
-
         i {
             ::before {
                 color: #1890ff;
@@ -711,30 +708,25 @@ export default {
         }
     }
 }
-
 .topBox {
     width: 1260px;
     margin: auto;
     padding: 10px 0;
-
     &_boxItem {
         position: relative;
         // width: 102px;
         float: left;
         cursor: pointer;
-
         &_bar {
             float: left;
             width: 30px;
             height: 2px;
             margin: 15px 0 0;
             background: #f2f2f2;
-
             &_box {
                 height: 2px;
             }
         }
-
         &_tit {
             height: 32px;
             color: black;
@@ -743,18 +735,15 @@ export default {
             // margin-top: 10px;
             text-align: center;
         }
-
         &_detail {
             color: #666;
             font-size: 14px;
             text-align: center;
-
             span {
                 color: black;
                 font-size: 16px;
             }
         }
-
         &_popover {
             position: absolute;
             top: -60px;
@@ -768,7 +757,6 @@ export default {
             background: white;
             border-radius: 4px;
             box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
-
             .dot {
                 float: left;
                 width: 6px;
@@ -776,7 +764,6 @@ export default {
                 margin: 4px 5px 0 0;
                 border-radius: 50%;
             }
-
             &_ar {
                 position: absolute;
                 bottom: -12px;
@@ -788,7 +775,6 @@ export default {
             }
         }
     }
-
     &_circle {
         float: left;
         width: 32px;
@@ -802,13 +788,10 @@ export default {
         transition: all 0.5s;
     }
 }
-
 .dataList {
     margin-top: 10px;
-
     &_item {
         margin-bottom: 10px;
-
         &_tit {
             padding: 0 10px;
             color: black;
@@ -817,20 +800,17 @@ export default {
             line-height: 45px;
             border-bottom: 1px solid #e8e8e8;
         }
-
         &_a {
             float: right;
             color: #1890ff;
             cursor: pointer;
         }
-
         &_pot {
             display: flex;
             align-items: flex-start;
             justify-content: center;
             padding: 17px 10px 10px;
             overflow: hidden;
-
             &_box1 {
                 position: relative;
                 display: flex;
@@ -840,7 +820,6 @@ export default {
                 height: 197px;
                 overflow: hidden;
             }
-
             &_box {
                 display: flex;
                 flex-wrap: wrap;
@@ -854,7 +833,6 @@ export default {
                 color: white;
                 background: url("~@/assets/img/ferPot.png") no-repeat;
                 background-size: contain;
-
                 &_detail {
                     position: absolute;
                     top: 70px;
@@ -863,7 +841,6 @@ export default {
                     color: black;
                     font-size: 14px;
                 }
-
                 &_item1,
                 &_item2 {
                     display: flex;
@@ -872,14 +849,12 @@ export default {
                     width: 100%;
                     font-size: 14px;
                 }
-
                 &_item2s,
                 &_item1 {
                     position: relative;
                     height: 50px;
                     overflow: hidden;
                     background: #69c0ff;
-
                     &::before,
                     &::after {
                         position: absolute;
@@ -890,24 +865,20 @@ export default {
                         animation: roateTwo 10s linear infinite;
                         content: "";
                     }
-
                     &::before {
                         top: -158px;
                         border-radius: 45%;
                     }
-
                     &::after {
                         top: -152px;
                         border-radius: 47%;
                         opacity: 0.5;
                     }
                 }
-
                 &_item2 {
                     height: 100px;
                     background: #1890ff;
                 }
-
                 &:hover &_item1::before,
                 &:hover &_item1::after,
                 &:hover &_item2s::before,
@@ -915,7 +886,6 @@ export default {
                     animation: roateOne 10s linear infinite;
                 }
             }
-
             &_detail {
                 float: left;
                 max-width: 112px;
@@ -937,11 +907,9 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     50% {
         transform: translate(-50%, -1%) rotateZ(180deg);
     }
-
     100% {
         transform: translate(-50%, -0%) rotateZ(360deg);
     }
@@ -951,11 +919,9 @@ export default {
     0% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     50% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }
-
     100% {
         transform: translate(-50%, -0%) rotateZ(0deg);
     }

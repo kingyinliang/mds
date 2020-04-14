@@ -4,7 +4,7 @@
             <el-card class="searchCard">
                 <el-row type="flex">
                     <el-col>
-                        <el-form :model="params" size="small" :inline="true" labelPosition="right" labelWidth="70px" class="sole_row">
+                        <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
                             <el-form-item label="生产工厂：">
                                 <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
                                     <el-option label="请选择" value="" />
@@ -18,7 +18,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="订单日期：">
-                                <el-date-picker v-model="params.orderDate" type="date" valueFormat="yyyy-MM-dd" style="width: 140px;" />
+                                <el-date-picker v-model="params.orderDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                             </el-form-item>
                         </el-form>
                     </el-col>
@@ -50,14 +50,14 @@
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-table headerRowClassName="tableHead" :data="dataList" border tooltipEffect="dark" @row-dblclick="showDetail">
+                        <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @row-dblclick="showDetail">
                             <el-table-column type="index" label="序号" width="55" />
-                            <el-table-column label="车间" :showOverflowTooltip="true" width="120">
+                            <el-table-column label="车间" :show-overflow-tooltip="true" width="120">
                                 <template slot-scope="scope">
                                     {{ scope.row.workShopName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="申请编码" :showOverflowTooltip="true" width="140">
+                            <el-table-column label="申请编码" :show-overflow-tooltip="true" width="140">
                                 <template slot-scope="scope">
                                     {{ scope.row.applyNo }}
                                 </template>
@@ -67,12 +67,12 @@
                                     {{ scope.row.confirmFlag === '1' ? '已确认' : scope.row.status === 'saved' ? '已保存' : scope.row.status === 'submit' ? '已提交' : '' }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="物料" :showOverflowTooltip="true" width="180">
+                            <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                                 <template slot-scope="scope">
                                     {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="半成品类别" :showOverflowTooltip="true" width="100">
+                            <el-table-column label="半成品类别" :show-overflow-tooltip="true" width="100">
                                 <template slot-scope="scope">
                                     {{ scope.row.halfName }}
                                 </template>
@@ -110,7 +110,7 @@
                         </el-table>
                     </el-row>
                     <el-row>
-                        <el-pagination :currentPage="currPage" :pageSizes="[5, 10, 20]" :pageSize="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                        <el-pagination :current-page="currPage" :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                     </el-row>
                 </el-card>
             </div>
@@ -124,29 +124,29 @@
                         </div>
                     </el-row>
                     <el-row>
-                        <el-table headerRowClassName="tableHead" :data="detailList" border tooltipEffect="dark">
+                        <el-table header-row-class-name="tableHead" :data="detailList" border tooltip-effect="dark">
                             <el-table-column type="index" label="序号" width="55" />
                             <el-table-column label="申请编码" width="140">
                                 <template slot-scope="scope">
                                     {{ scope.row.applyNo }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="罐号" :showOverflowTooltip="true" width="130">
+                            <el-table-column label="罐号" :show-overflow-tooltip="true" width="130">
                                 <template slot-scope="scope">
                                     {{ scope.row.holderName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="订单类型" :showOverflowTooltip="true" width="120">
+                            <el-table-column label="订单类型" :show-overflow-tooltip="true" width="120">
                                 <template slot-scope="scope">
                                     {{ scope.row.orderTypeName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="发酵天数/天" :showOverflowTooltip="true" width="100">
+                            <el-table-column label="发酵天数/天" :show-overflow-tooltip="true" width="100">
                                 <template slot-scope="scope">
                                     {{ scope.row.ferDays }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="半成品类别" :showOverflowTooltip="true" width="130">
+                            <el-table-column label="半成品类别" :show-overflow-tooltip="true" width="130">
                                 <template slot-scope="scope">
                                     {{ scope.row.halfType }}
                                 </template>
@@ -161,7 +161,7 @@
                                     {{ scope.row.batch }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="备注" :showOverflowTooltip="true" width="140">
+                            <el-table-column label="备注" :show-overflow-tooltip="true" width="140">
                                 <template slot-scope="scope">
                                     {{ scope.row.remark }}
                                 </template>
@@ -171,7 +171,7 @@
                                     {{ scope.row.changer }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="确认时间" :showOverflowTooltip="true">
+                            <el-table-column label="确认时间" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.changed }}
                                 </template>
@@ -260,6 +260,8 @@ export default class Index extends Vue {
                     this.$notify.error({ title: '错误', message: data.msg });
                 }
             });
+        }).catch(() => {
+            // this.$infoTost('已取消删除');
         });
     }
 
