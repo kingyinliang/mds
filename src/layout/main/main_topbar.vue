@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { MAIN_API } from '@/api/api';
+import { COMMON_API } from 'common/api/api';
 
 export default {
     name: 'MainTopbar',
@@ -114,11 +114,11 @@ export default {
                 type: 'warning'
             })
                 .then(() => {
-                    this.$http(`${MAIN_API.LOGOUT_API}`, 'POST', {}).then(({ data }) => {
-                        if (data && data.code === 0) {
+                    COMMON_API.LOGOUT_API({}).then(({ data }) => {
+                        if (data && data.code === 200) {
                             this.$cookie.delete('token');
                             this.$router.options.isAddDynamicMenuRoutes = false;
-                            this.$router.push({ path: '/login' });
+                            window.location.href = `${process.env.VUE_APP_HOST}`;
                         }
                     });
                 })

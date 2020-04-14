@@ -96,13 +96,6 @@ export default (url: string, method: any = HTTP_METHOD.GET, data = {}, ContentTy
     };
     if (ContentType) {
         options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-        // options.transformRequest = [function (data) {
-        //   let ret = ''
-        //   for (let it in data) {
-        //     ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-        //   }
-        //   return ret
-        // }]
     }
     Vue.prototype.lodingState = londingstatus;
     if (method !== HTTP_METHOD.GET) {

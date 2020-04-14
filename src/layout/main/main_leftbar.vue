@@ -10,7 +10,7 @@
                     <span slot="title">首页</span>
                 </el-menu-item>
                 <template v-for="menu in menuList">
-                    <sub-menu v-if="menu.type != '4'" :key="menu.menuId" :menu="menu" :dynamicMenuRoutes="dynamicMenuRoutes" />
+                    <sub-menu v-if="menu.type != '4'" :key="menu.id" :menu="menu" :dynamicMenuRoutes="dynamicMenuRoutes" />
                 </template>
             </el-menu>
         </div>
@@ -23,7 +23,7 @@ export default {
     name: 'MainLeftbar',
     components: {
         SubMenu: resolve => {
-            require(['@/views/main_leftbar_menu'], resolve);
+            require(['./main_leftbar_menu'], resolve);
         }
     },
     data() {

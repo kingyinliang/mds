@@ -1,4 +1,7 @@
-// const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('' + file + '.vue') : file => require('' + file + '.vue').default
+import { RouteConfig } from 'vue-router';
+import { VueRouter } from 'vue-router/types/router';
+
+const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
 
 /**
  * 函数节流方法 只加定时器叫防抖
@@ -47,17 +50,104 @@ export function fnCurrentRouteType(route, globalRoutes) {
  * @param {*} routes 递归创建的动态(菜单)路由
  */
 interface MenuList {
-    url: string;
+    menuUrl: string;
     type: string;
-    menuId: string;
-    name: string;
+    id: string;
+    menuName: string;
+    list: MenuList[];
 }
-export function fnAddDynamicMenuRoutes(menuList: MenuList[] = [], routes = []) {
-    const temp = [];
-    for (let i = 0; i < menuList.length; i++) {
-        //    循环
+export class AddRoutes {
+    router: VueRouter
+    mainRoutes: RouteConfig
+    SSRoutes: RouteConfig[]
+
+    constructor(router: VueRouter, mainRoutes: RouteConfig, SSRoutes?: RouteConfig[]) {
+        this.router = router
+        this.mainRoutes = mainRoutes
+        this.SSRoutes = SSRoutes || []
     }
-    if (temp.length >= 1) {
-        fnAddDynamicMenuRoutes(temp, routes);
+
+    fnAddDynamicMenuRoutes(menuList: MenuList[] = [], routes: RouteConfig[] = []) {
+        let temp: MenuList[] = [];
+        for (let i = 0; i < menuList.length; i++) {
+            if (menuList[i].list && menuList[i].list.length >= 1) {
+                temp = temp.concat(menuList[i].list);
+            } else if (menuList[i].menuUrl && /\S/.test(menuList[i].menuUrl)) {
+                menuList[i].menuUrl = menuList[i].menuUrl.replace(/^\//, '');
+                const route: RouteConfig = {
+                    path: menuList[i].menuUrl.replace(/\//g, '-'),
+                    name: menuList[i].menuUrl.replace(/\//g, '-'),
+                    meta: {
+                        menuId: menuList[i].id,
+                        title: menuList[i].menuName,
+                        isDynamic: true,
+                        isTab: true,
+                        iframeUrl: ''
+                    }
+                };
+                // url以http[s]://开头, 通过iframe展示
+                if (/^http[s]?:\/\/.*/.test(menuList[i].menuUrl)) {
+                    route['path'] = `i-${menuList[i].id}`;
+                    route['name'] = `i-${menuList[i].id}`;
+                    route['meta']['iframeUrl'] = menuList[i].menuUrl;
+                } else {
+                    try {
+                        route['component'] = importTarget(`MDS/views/page/${menuList[i].menuUrl}`) || null;
+                    } catch (e) {
+                        //
+                    }
+                }
+                routes.push(route);
+                this.SSRoutes.push(route);
+            }
+        }
+        if (temp.length >= 1) {
+            this.fnAddDynamicMenuRoutes(temp, routes);
+        } else {
+            this.mainRoutes['name'] = 'main-dynamic';
+            this.mainRoutes['children'] = routes;
+            this.router.addRoutes([this.mainRoutes]);
+            sessionStorage.setItem('dynamicMenuRoutes', JSON.stringify(this.SSRoutes || '[]'));
+            console.log('\n');
+            console.log('%c!<-------------------- 动态(菜单)路由 s -------------------->', 'color:blue');
+            console.log(this.mainRoutes.children);
+            console.log('%c!<-------------------- 动态(菜单)路由 e -------------------->', 'color:blue');
+
+        }
     }
+}
+/**
+ * 树形数据转换
+ * @param {*} data
+ * @param {*} id
+ * @param {*} pid
+ */
+export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
+    const res: object[] = [];
+    const temp = {};
+    for (let i = 0; i < data.length; i++) {
+        temp[data[i][id]] = data[i];
+    }
+    for (let k = 0; k < data.length; k++) {
+        if (temp[data[k][pid]] && data[k][id] !== data[k][pid]) {
+            if (!temp[data[k][pid]]['children']) {
+                temp[data[k][pid]]['children'] = [];
+            }
+            if (!temp[data[k][pid]]['_level']) {
+                temp[data[k][pid]]['_level'] = 1;
+            }
+            data[k]['_level'] = temp[data[k][pid]]['_level'] + 1;
+            temp[data[k][pid]]['children'].push(data[k]);
+        } else {
+            res.push(data[k]);
+        }
+    }
+    return res;
+}
+/**
+ * 是否有权限
+ * @param {*} key
+ */
+export function isAuth(key) {
+    return JSON.parse(sessionStorage.getItem('permissions') || '[]').indexOf(key) !== -1 || false;
 }

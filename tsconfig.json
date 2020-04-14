@@ -18,6 +18,9 @@
             "jest"
         ],
         "paths": {
+            "project/*": [
+                "src/project/*"
+            ],
             "@/*": [
                 "src/project/MDS/*"
             ],

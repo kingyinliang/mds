@@ -170,8 +170,10 @@ export default {
     methods: {
         goFa(item) {
             if (item.deptCode === '6010' || item.deptCode === '7100') {
+                sessionStorage.setItem('factory', JSON.stringify(item || ''));
                 window.location.href = '/MDS.html'
             } else {
+                sessionStorage.setItem('factory', JSON.stringify(item || ''));
                 window.location.href = '/DFMDS.html'
             }
         },

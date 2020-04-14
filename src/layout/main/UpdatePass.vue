@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { MAIN_API } from '@/api/api';
+import { COMMON_API } from 'common/api/api';
 export default {
     name: 'UpdatePass',
     components: {},
@@ -83,15 +83,12 @@ export default {
         dataFormSubmit() {
             this.$refs['dataForm'].validate(valid => {
                 if (valid) {
-                    this.$http(`${MAIN_API.UPPASS_API}`, 'POST', this.dataForm).then(({ data }) => {
+                    COMMON_API.UPPASS_API(this.dataForm).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$success_SHINHO('操作成功');
+                            this.$successToast('操作成功');
                             this.visible = false;
                         } else {
-                            this.$notify.error({
-                                title: '错误',
-                                message: data.msg
-                            });
+                            this.$errorToast(data.msg);
                         }
                     });
                 }

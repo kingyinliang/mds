@@ -1,31 +1,48 @@
 import Vue from 'vue'
-import VueRouter, { RouterOptions } from 'vue-router';
-import { fnCurrentRouteType, fnAddDynamicMenuRoutes } from 'utils/utils'
+import VueRouter, { RouteConfig, RouterOptions } from 'vue-router';
+import { fnCurrentRouteType, AddRoutes } from 'utils/utils'
 import { COMMON_API } from 'common/api/api';
+
+const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
 
 Vue.use(VueRouter);
 
 // 全局路由(无需嵌套上左右整体布局)
 const globalRoutes: object[] = [];
-const mainRoutes: object[] = [
-    {
-        path: '/',
-        name: 'index',
-        component: () => import('src/layout/main/main.vue'),
-        children: [
-            {
-                path: '/OrgStructure',
-                name: 'OrgStructure',
-                component: () => import('common/pages/OrgStructure/index.vue'),
-                meta: {
-                    menuId: 1,
-                    title: '组织架构',
-                    isTab: true
-                }
+const mainRoutes: RouteConfig = {
+    path: '/',
+    name: 'index',
+    component: () => import('src/layout/main/main.vue'),
+    children: [
+        { path: '/', redirect: '/home' },
+        {
+            path: '/home',
+            component: importTarget('MDS/views/common/home'),
+            name: 'home',
+            meta: { title: '首页' }
+        },
+        {
+            path: '/menu',
+            name: 'menu',
+            component: () => import('common/pages/Menu/menu.vue'),
+            meta: {
+                menuId: 1,
+                title: '菜单',
+                isTab: true
             }
-        ]
-    }
-];
+        },
+        {
+            path: '/OrgStructure',
+            name: 'OrgStructure',
+            component: () => import('common/pages/OrgStructure/index.vue'),
+            meta: {
+                menuId: 1,
+                title: '组织架构',
+                isTab: true
+            }
+        }
+    ]
+};
 
 const router = new VueRouter({
     // mode: 'history',
@@ -40,13 +57,19 @@ router.beforeEach((to, from, next) => {
         return next();
     }
     COMMON_API.NAV_API({
-        factory: 'zzz'
+        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
     }).then(({ data }) => {
-        console.log(data);
-        fnAddDynamicMenuRoutes(data.menuList);
-        router['options'].isAddDynamicMenuRoutes = true;
-        sessionStorage.setItem('menuList', JSON.stringify(data.menuList || '[]'));
-        sessionStorage.setItem('permissions', JSON.stringify(data.permissions || '[]'));
+        if (data && data.code === 200) {
+            const AddRoutesClass = new AddRoutes(router, mainRoutes, [])
+            AddRoutesClass.fnAddDynamicMenuRoutes(data.data.menuList, []);
+            router['options'].isAddDynamicMenuRoutes = true;
+            sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'));
+            sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'))
+            // return next({ ...to, replace: true });
+        }
+        sessionStorage.setItem('menuList', '[]');
+        sessionStorage.setItem('permissions', '[]');
+        return next();
     })
 });
 
