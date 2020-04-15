@@ -3,7 +3,8 @@
         <div class="main">
             <el-card>
                 <el-row>
-                    <el-button v-if="isAuth('sys:menu:save')" type="primary" style="margin-bottom: 22px;" size="small" @click="addOrUpdateHandle()">
+                    <!--<el-button v-if="isAuth('sys:menu:save')" type="primary" style="margin-bottom: 22px;" size="small" @click="addOrUpdateHandle()">-->
+                    <el-button type="primary" style="margin-bottom: 22px;" size="small" @click="addOrUpdateHandle()">
                         新增
                     </el-button>
                 </el-row>
@@ -41,10 +42,12 @@
                         <el-table-column prop="permission" header-align="left" align="left" width="180" :show-overflow-tooltip="true" label="授权标识" />
                         <el-table-column fixed="right" header-align="left" align="left" width="88" label="操作">
                             <template slot-scope="scope">
-                                <el-button v-if="isAuth('sys:menu:update')" style="padding: 0;" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">
+                                <!--<el-button v-if="isAuth('sys:menu:update')" style="padding: 0;" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">-->
+                                <el-button style="padding: 0;" type="text" size="small" @click="addOrUpdateHandle(scope.row)">
                                     修改
                                 </el-button>
-                                <el-button v-if="isAuth('sys:menu:delete')" style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.menuId)">
+                                <!--<el-button v-if="isAuth('sys:menu:delete')" style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.menuId)">-->
+                                <el-button style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.menuId)">
                                     删除
                                 </el-button>
                             </template>
@@ -102,22 +105,19 @@ export default class Menu extends Vue {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
-        })
-            .then(() => {
-                COMMON_API.MENUDEL_API({
-                    id
-                }).then(({ data }) => {
-                    if (data && data.code === 200) {
-                        this.$successToast('操作成功');
-                        this.getDataList();
-                    } else {
-                        this.$warningToast(data.msg);
-                    }
-                });
-            })
-            .catch(() => {
-                //    catch
+        }).then(() => {
+            COMMON_API.MENUDEL_API({
+                id
+            }).then(({ data }) => {
+                if (data && data.code === 200) {
+                    this.$successToast('操作成功');
+                    this.getDataList();
+                }
             });
+        })
+        .catch(() => {
+            //    catch
+        });
     }
 }
 </script>

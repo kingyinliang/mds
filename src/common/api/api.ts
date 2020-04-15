@@ -26,6 +26,14 @@ export const COMMON_API = {
      */
     MENUSELECT_API: params => httpProxy('/sysMenu/selectMenu', 'GET', params),
     /**
+     * @property {string} MENUADD_API 菜单管理新增
+     */
+    MENUADD_API: params => httpProxy('/sysMenu/insert', 'GET', params),
+    /**
+     * @property {string} MENUUPDATE_API 菜单管理修改
+     */
+    MENUUPDATE_API: params => httpProxy('/sysMenu/update', 'GET', params),
+    /**
      * @property {string} MENUDEL_API 菜单管理删除
      */
     MENUDEL_API: params => httpProxy('/sysMenu/remove', 'GET', params)
