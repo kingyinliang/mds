@@ -210,6 +210,7 @@ export default {
                         if (res.data.code === 200) {
                             this.$cookie.set('token', res.data.data.token);
                             sessionStorage.setItem('userId', res.data.data.uid || '');
+                            sessionStorage.setItem('vuex', '');
                             sessionStorage.setItem('userName', res.data.data.userName || '');
                             sessionStorage.setItem('realName', res.data.data.realName || '');
                             if (res.data.data.firstFlag === '1') {
