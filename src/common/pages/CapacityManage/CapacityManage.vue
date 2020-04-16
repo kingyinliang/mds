@@ -3,8 +3,8 @@
         <org-view
             :title="'产能管理'"
             :right-tile="'产能信息'"
-            @treeNodeClick="getData">
-        </org-view>
+            @treeNodeClick="getData"
+        />
     </div>
 </template>
 

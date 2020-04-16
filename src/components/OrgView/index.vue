@@ -22,17 +22,17 @@
                                 :default-expanded-keys="arrList"
                                 :filter-node-method="filterNode"
                                 @node-click="treeNodeClick"
-                                @node-contextmenu="treeNodeContextMenu" />
+                                @node-contextmenu="treeNodeContextMenu"
+                            />
                         </div>
                     </div>
                 </el-col>
                 <el-col :span="16">
                     <div class="org-card">
                         <div class="org-card_title">
-                            {{ rightTile}}
+                            {{ rightTile }}
                         </div>
-                        <div class="detail-main">
-                        </div>
+                        <div class="detail-main" />
                     </div>
                 </el-col>
             </el-row>

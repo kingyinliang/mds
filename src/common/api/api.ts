@@ -56,6 +56,6 @@ export const COMMON_API = {
     /**
      * @property {string} ORGDETAIL_API 组织架构详情
      */
-    ORGDETAIL_API: params => httpProxy('/sysDept/query', 'GET', params),
+    ORGDETAIL_API: params => httpProxy('/sysDept/query', 'GET', params)
 
 };
