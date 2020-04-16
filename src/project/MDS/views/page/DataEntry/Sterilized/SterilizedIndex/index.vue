@@ -61,7 +61,7 @@
                                             <el-option v-for="(item1, index1) in item.steList" :key="index1" :label="item1.orderNo" :value="item1.orderId">
                                                 <div
                                                     :style="{
-                                                        color: item1.orderStatus === 'noPass' ? 'red' : '',
+                                                        color: item1.orderStatus === 'noPass' ? 'red' : item1.exportMaterial !== '' ? '#FFBF00' : '',
                                                     }"
                                                 >
                                                     {{ item1.orderNo }}

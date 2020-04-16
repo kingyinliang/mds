@@ -178,6 +178,7 @@ export const BASICDATA_API = {
      * @property {string} FINDSAP_API 获取全部物料
      */
     FINDSAP_API: HOST + '/sys/sapmaterialitem/productList',
+    FINDSAP_TWO_API: HOST + '/all/dropDown/getPkgMaterial',
     /**
      * @property {string} SAPORDERUPDATE_API 同步订单
      */

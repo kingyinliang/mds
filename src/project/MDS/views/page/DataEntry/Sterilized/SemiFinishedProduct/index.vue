@@ -49,6 +49,7 @@
                         </h3>
                         <div class="dataList_item_pot clearfix" style="position: relative;">
                             <img v-if="item.isRdSign === '1'" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
+                            <img v-if="item.exportMaterial !== ''" src="@/assets/img/CK.png" alt="" style="position: absolute; top: 40px; left: 10px;">
                             <div class="dataList_item_pot_box">
                                 <div class="dataList_item_pot_box1" style=" position: relative; display: flex; flex-wrap: wrap; align-content: flex-end;">
                                     <div v-if="item.holderStatus === '1' || item.holderStatus === '3' || item.holderStatus === '4'" class="dataList_item_pot_box_item1" :style="`height:${item.amount <= 0 ? '0' : item.amount / item.holderHold > 1 ? '100' : (item.amount / item.holderHold) * 100}%`" />
@@ -250,6 +251,10 @@
                     {
                         name: '领用中',
                         value: '3'
+                    },
+                    {
+                        name: '领用完',
+                        value: '4'
                     }
                 ],
                 HolderList: [],
@@ -490,7 +495,7 @@
             },
             JsbProp(row) {
                 // 领用中 满灌 入库中
-                if (row.holderStatus === '1' || row.holderStatus === '2' || row.holderStatus === '3') {
+                if (row.holderStatus === '1' || row.holderStatus === '2' || row.holderStatus === '3' || row.holderStatus === '4') {
                     this.typeList = [];
                     this.GetInHolderType();
                     this.formJsb = {
