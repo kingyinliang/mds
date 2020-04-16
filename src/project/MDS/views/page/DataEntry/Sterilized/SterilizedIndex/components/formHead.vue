@@ -11,13 +11,25 @@
             </p>
         </el-form-item>
         <el-form-item label="订单号：">
-            <p class="el-input">
+            <p
+                :style="{
+                    'font-size': '12px',
+                    color: formHeader.exportMaterial !== '' ? '#FFBF00' : '',
+                }"
+                class="el-input"
+            >
                 {{ formHeader.orderNo || '' }}
             </p>
         </el-form-item>
         <el-form-item label="生产品项：">
             <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top-start">
-                <p class="el-input" style="font-size: 12px;">
+                <p
+                    :style="{
+                        'font-size': '12px',
+                        color: formHeader.exportMaterial !== '' ? '#FFBF00' : '',
+                    }"
+                    class="el-input"
+                >
                     {{ formHeader.materialCode + ' ' + formHeader.materialName }}
                 </p>
             </el-tooltip>

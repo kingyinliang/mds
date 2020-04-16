@@ -27,7 +27,8 @@
                         message: '菜单URL不能为空 ',
                         trigger: 'blur',
                     },
-                ]">
+                ]"
+            >
                 <el-input v-model="dataForm.menuUrl" placeholder="菜单路由" />
             </el-form-item>
             <el-form-item v-if="dataForm.menuType !== 'C'" label="授权标识" prop="perms">

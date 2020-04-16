@@ -1,6 +1,6 @@
-import Vue from 'vue'
+import Vue from 'vue';
 import VueRouter, { RouteConfig, RouterOptions } from 'vue-router';
-import { fnCurrentRouteType, AddRoutes } from 'utils/utils'
+import { fnCurrentRouteType, AddRoutes } from 'utils/utils';
 import { COMMON_API } from 'common/api/api';
 
 const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
@@ -77,17 +77,17 @@ router.beforeEach((to, from, next) => {
         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
     }).then(({ data }) => {
         if (data && data.code === 200) {
-            const AddRoutesClass = new AddRoutes(router, mainRoutes, [])
+            const AddRoutesClass = new AddRoutes(router, mainRoutes, []);
             AddRoutesClass.fnAddDynamicMenuRoutes(data.data.menuList, []);
             router['options'].isAddDynamicMenuRoutes = true;
             sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'));
-            sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'))
-            return next({ ...to, replace: true });
+            sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'));
+            return next(Object.assign(to, { replace: true }));
         }
         sessionStorage.setItem('menuList', '[]');
         sessionStorage.setItem('permissions', '[]');
         return next();
-    })
+    });
 });
 
-export default router
+export default router;

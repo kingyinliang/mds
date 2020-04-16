@@ -366,7 +366,8 @@ export function orderListNew(data) {
             materialCode: item.materialCode,
             countOutput: item.countOutput,
             planOutput: item.planOutput,
-            orderStatus: item.orderStatus
+            orderStatus: item.orderStatus,
+            exportMaterial: item.exportMaterial
         };
         if (findRow === -1) {
             orderArray.push({

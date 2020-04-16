@@ -9,7 +9,7 @@
                         导出
                     </el-button>
                 </div>
-                <el-table :data="tableData1" header-row-class-name="tableHead" border tooltip-effect="dark">
+                <el-table :data="tableData1" :row-class-name="tableRowClassName" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
                 </el-table>
                 <el-row>
@@ -24,7 +24,7 @@
                         导出
                     </el-button>
                 </div>
-                <el-table :data="tableData2" header-row-class-name="tableHead" border tooltip-effect="dark">
+                <el-table :data="tableData2" :row-class-name="tableRowClassName" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
                 </el-table>
                 <el-row>
@@ -39,7 +39,7 @@
                         导出
                     </el-button>
                 </div>
-                <el-table :data="tableData3Top" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-bottom: 10px;">
+                <el-table :data="tableData3Top" :row-class-name="tableRowClassName" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-bottom: 10px;">
                     <el-table-column v-for="(item, index) in column1" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
                 </el-table>
                 <el-table :data="tableData3Bottom" header-row-class-name="tableHead" border tooltip-effect="dark">
@@ -54,7 +54,7 @@
                         导出
                     </el-button>
                 </div>
-                <el-table :data="tableData4" header-row-class-name="tableHead" border tooltip-effect="dark">
+                <el-table :data="tableData4" :row-class-name="tableRowClassName" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column v-for="(item, index) in column3" :key="index" :class="{ bg: item.classSt }" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
                 </el-table>
             </el-tab-pane>
@@ -293,6 +293,12 @@ export default {
         });
     },
     methods: {
+        tableRowClassName({ row }) {
+            if (row.exportMaterial !== '') {
+                return 'cell-orange';
+            }
+            return '';
+        },
         setType() {
             if (this.activeName === '1') {
                 this.$store.state.common.PotReportForms.type = 'steHolder';
@@ -370,5 +376,10 @@ export default {
 <style scoped>
 .bg {
     background: red;
+}
+</style>
+<style>
+.el-table tr.cell-orange {
+    background: #ffbf00;
 }
 </style>

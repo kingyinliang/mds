@@ -44,6 +44,7 @@
                         </h3>
                         <div class="dataList_item_pot clearfix" style="position: relative;">
                             <img v-if="item.isRdSign === '1'" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
+                            <img v-if="item.exportMaterial !== ''" src="@/assets/img/CK.png" alt="" style="position: absolute; top: 40px; left: 10px;">
                             <div class="dataList_item_pot_box">
                                 <div class="dataList_item_pot_box1">
                                     <div class="dataList_item_pot_box_item2" :style="`height:${item.holderStatus === '0' ? 0 : item.amount < 0 ? 0 : ((item.amount * 1) / (item.holderHold * 1)) * 100}%`" />

@@ -63,7 +63,15 @@
                             <div class="normal_bottom">
                                 <el-form-item label="订单号：" class="width50b">
                                     <el-select v-model="item.orderNo" placeholder="请选择" filterable :change="orderchange(item)" style="width: 180px;">
-                                        <el-option v-for="(subItem, sunIndex) in item.orderNoList" :key="sunIndex" :label="subItem.orderNo + ' ' + subItem.materialName" :value="subItem.orderNo" />
+                                        <el-option v-for="(subItem, sunIndex) in item.orderNoList" :key="sunIndex" :label="subItem.orderNo + ' ' + subItem.materialName" :value="subItem.orderNo">
+                                            <div
+                                                :style="{
+                                                    color: subItem.orderStatus === 'noPass' ? 'red' : subItem.exportMaterial !== '' ? '#FFBF00' : '',
+                                                }"
+                                            >
+                                                {{ subItem.orderNo + ' ' + subItem.materialName }}
+                                            </div>
+                                        </el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="计划产量：" class="width50b">
