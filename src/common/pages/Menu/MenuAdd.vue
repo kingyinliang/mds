@@ -30,7 +30,8 @@
                         message: '菜单URL不能为空 ',
                         trigger: 'blur',
                     },
-                ]">
+                ]"
+            >
                 <el-input v-model="dataForm.menuUrl" placeholder="菜单路由" />
             </el-form-item>
             <el-form-item v-if="dataForm.menuType !== 'C'" label="授权标识" prop="perms">
@@ -73,7 +74,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { treeDataTranslate } from '@/net/validate';
-import { SYSTEMSETUP_API } from '@/api/api';
+// import { SYSTEMSETUP_API } from '@/api/api';
 import { COMMON_API } from 'common/api/api';
 
 // const validateUrl = (rule, value, callback) => {
