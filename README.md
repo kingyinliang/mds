@@ -1,47 +1,45 @@
 # factory
 
 ## Project setup
-```
-yarn install
-```
+
+> yarn install 或 npm install
 
 ### Compiles and hot-reloads for development
-新建.env.local环境文件存放全局变量和接口host
+
+根目录下建立 .env.local 文件，存放全局变量和接口 host ，内容如下， xxxx 为本机开发起的 port 号
+
 ```
-yarn serve
+# just a flag
+NODE_ENV = 'local'
+VUE_APP_API_V = '/v1'
+
+# base api
+VUE_APP_HOST = 'http://localhost:xxxx/'
+VUE_APP_BASE_API = 'https://apimarket-dev.shinho.net.cn/df-bff'
+VUE_APP_MDS_API = 'https://apimarket-dev.shinho.net.cn/xhqy-fc'
+
 ```
+
+> yarn serve 或 npm run serve
 
 ### Compiles and minifies for production
-```
-yarn build
-```
 
-### Compiles and minifies for production test
-```
-yarn build:test
-```
+> yarn build:prod 或 npm run build:prod
 
-### Compiles and minifies for production dev
-```
-yarn build:dev
-```
+### Compiles and minifies for test
 
-### Run your unit tests
-```
-yarn test:unit
-```
+> yarn build:test 或 npm run build:prod
 
-### Run your end-to-end tests
-```
-yarn test:e2e
-```
+### Compiles and minifies for dev
 
-### Lints and fixes files
-```
-yarn lint
-```
+> yarn build:dev 或 npm run build:dev
+
+### Compiles and minifies for pre
+
+> yarn build:pre 或 npm run build:pre
 
 ### MDS
+
 ```
 api.js const HOST = process.env.VUE_APP_MDS_API
 router/index.js const _import = process.env.NODE_ENV !== 'local' ? require('./import-production') : require('./import-development')

@@ -4,14 +4,14 @@
             <el-form-item label="ID" prop="id">
                 <el-input v-model="dataForm.id" placeholder="请输入id" />
             </el-form-item>
-            <el-form-item label="类型" prop="type">
+            <el-form-item label="类型" prop="menuType">
                 <el-radio-group v-model="dataForm.menuType">
-                    <el-radio v-for="(subType, index) in dataForm.typeList" :key="index" :label="index">
+                    <el-radio v-for="(subType, index) in dataForm.typeList" :key="index" :label="subType.label" :value="subType.key">
                         {{ subType }}
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item :label="dataForm.typeList[dataForm.menuType] + '名称'" prop="name">
+            <el-form-item :label="dataForm.typeList[dataForm.menuType] + '名称'" prop="menuName">
                 <el-input v-model="dataForm.menuName" :placeholder="dataForm.typeList[dataForm.menuType] + '名称'" />
             </el-form-item>
             <el-form-item label="上级菜单" prop="parentName">
@@ -20,16 +20,27 @@
                 </el-popover>
                 <el-input v-model="dataForm.parentName" v-popover:menuListPopover :readonly="true" placeholder="点击选择上级菜单" class="menu-list__input" />
             </el-form-item>
-            <el-form-item v-if="dataForm.menuType !== 'B'" label="菜单路由" prop="url">
-                <el-input v-model="dataForm.url" placeholder="菜单路由" />
+            <el-form-item
+                v-if="dataForm.menuType !== 'B'"
+                label="菜单路由"
+                :rules="[
+                    {
+                        required: true,
+                        validator: validateUrl,
+                        message: '菜单URL不能为空 ',
+                        trigger: 'blur',
+                    },
+                ]"
+            >
+                <el-input v-model="dataForm.menuUrl" placeholder="菜单路由" />
             </el-form-item>
-            <el-form-item v-if="dataForm.type !== 0" label="授权标识" prop="perms">
-                <el-input v-model="dataForm.perms" placeholder="多个用逗号分隔, 如: user:list,user:create" />
+            <el-form-item v-if="dataForm.menuType !== 'C'" label="授权标识" prop="perms">
+                <el-input v-model="dataForm.permission" placeholder="多个用逗号分隔, 如: user:list,user:create" />
             </el-form-item>
-            <el-form-item v-if="dataForm.type !== 2" label="排序号" prop="orderNum">
-                <el-input-number v-model="dataForm.orderNum" controls-position="right" :min="0" label="排序号" />
+            <el-form-item v-if="dataForm.type !== 'B'" label="排序号">
+                <el-input-number v-model="dataForm.menuOrder" controls-position="right" :min="0" label="排序号" />
             </el-form-item>
-            <el-form-item v-if="dataForm.type !== 2" label="菜单图标" prop="icon">
+            <el-form-item v-if="dataForm.type !== 'B'" label="菜单图标">
                 <el-row>
                     <el-col :span="22">
                         <el-popover ref="iconListPopover" placement="bottom-start" trigger="click" popper-class="mod-menu__icon-popover">
@@ -38,7 +49,7 @@
                                     v-for="(item, index) in iconList"
                                     :key="index"
                                     :class="{
-                                        'is-active': item === dataForm.icon,
+                                        'is-active': item === dataForm.menuIcon,
                                     }"
                                     @click="iconActiveHandle(item)"
                                 >
@@ -63,7 +74,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { treeDataTranslate } from '@/net/validate';
-import { SYSTEMSETUP_API } from '@/api/api';
+// import { SYSTEMSETUP_API } from '@/api/api';
 import { COMMON_API } from 'common/api/api';
 
 // const validateUrl = (rule, value, callback) => {
@@ -79,19 +90,12 @@ import { COMMON_API } from 'common/api/api';
     name: 'AddOrUpdate'
 })
 export default class MenuAdd extends Vue {
-    // const validateUrl = (rule, value, callback) => {
-    //     if (this.dataForm.type === 1 && !/\S/.test(value)) {
-    //         return callback(new Error('菜单URL不能为空'));
-    //     }
-    //         return callback();
-    //
-    // }
     $refs: {
         dataForm: HTMLFormElement;
         menuListTree: HTMLFormElement;
     }
 
-    iconList = [
+    iconList: string[] = [
         'factory-shouye',
         'factory-shezhi',
         'factory-luru',
@@ -119,18 +123,25 @@ export default class MenuAdd extends Vue {
         id: 0,
         menuType: 'C',
         typeList: [{
-            C: '目录',
-            M: '菜单',
-            B: '按钮',
-            P: '三级页面'
+            label: '目录',
+            key: 'C'
+        }, {
+            label: '菜单',
+            key: 'M'
+        }, {
+            label: '按钮',
+            key: 'B'
+        }, {
+            label: '三级页面',
+            key: 'P'
         }],
-        name: '',
+        menuName: '',
         parentId: 0,
         parentName: '',
-        url: '',
-        perms: '',
-        orderNum: 0,
-        icon: '',
+        menuUrl: '',
+        permission: '',
+        menuOrder: 0,
+        menuIcon: '',
         iconList: []
     }
 
@@ -138,11 +149,11 @@ export default class MenuAdd extends Vue {
         id: [
             {
                 required: true,
-                message: '菜单名称不能为空',
+                message: 'id不能为空',
                 trigger: 'blur'
             }
         ],
-        name: [
+        menuName: [
             {
                 required: true,
                 message: '菜单名称不能为空',
@@ -174,39 +185,36 @@ export default class MenuAdd extends Vue {
         return callback();
     }
 
-    init(id) {
-        COMMON_API.MENUSELECT_API({})
-            .then(({ data }) => {
-                this.menuList = treeDataTranslate(data.menuList, 'menuId');
-            })
-            .then(() => {
-                this.visible = true;
-                this.$nextTick(() => {
-                    this.$refs.dataForm.resetFields();
-                    this.dataForm.id = id || 0;
-                });
-            })
-            .then(() => {
-                if (!this.dataForm.id) {
-                    // 新增
-                    this.menuListTreeSetCurrentNode();
-                    this.type = true;
-                } else {
-                    // 修改
-                    this.type = false;
-                    this.$http(`${SYSTEMSETUP_API.MENUINFO_API}/${this.dataForm.id}`, 'GET', {}).then(({ data }) => {
-                        this.dataForm.id = data.menu.menuId;
-                        this.dataForm.menuType = data.menu.type;
-                        this.dataForm.name = data.menu.name;
-                        this.dataForm.parentId = data.menu.parentId;
-                        this.dataForm.url = data.menu.url;
-                        this.dataForm.perms = data.menu.perms;
-                        this.dataForm.orderNum = data.menu.orderNum;
-                        this.dataForm.icon = data.menu.icon;
-                        this.menuListTreeSetCurrentNode();
-                    });
-                }
+    init(item) {
+        COMMON_API.MENUSELECT_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+        }).then(({ data }) => {
+            this.menuList = treeDataTranslate(data.menuList, 'menuId');
+        }).then(() => {
+            this.visible = true;
+            this.$nextTick(() => {
+                this.$refs.dataForm.resetFields();
+                this.dataForm.id = item.menuId || 0;
             });
+        }).then(() => {
+            if (!this.dataForm.id) {
+                // 新增
+                this.menuListTreeSetCurrentNode();
+                this.type = true;
+            } else {
+                // 修改
+                this.type = false;
+                this.dataForm.id = item.menuId;
+                this.dataForm.menuType = item.menuType;
+                this.dataForm.menuName = item.menuName;
+                this.dataForm.parentId = item.parentId;
+                this.dataForm.menuUrl = item.menuUrl;
+                this.dataForm.permission = item.permission;
+                this.dataForm.menuOrder = item.menuOrder;
+                this.dataForm.menuIcon = item.menuIcon;
+                this.menuListTreeSetCurrentNode();
+            }
+        });
     }
 
     // 菜单树选中
@@ -223,7 +231,7 @@ export default class MenuAdd extends Vue {
 
     // 图标选中
     iconActiveHandle(iconName) {
-        this.dataForm.icon = iconName;
+        this.dataForm.menuIcon = iconName;
     }
 
     // 表单提交
@@ -232,15 +240,17 @@ export default class MenuAdd extends Vue {
             this.submitType = false;
             this.$refs['dataForm'].validate(valid => {
                 if (valid) {
-                    this.$http(`${this.type ? SYSTEMSETUP_API.MENUADD_API : SYSTEMSETUP_API.MENUUPDATE_API}`, 'POST', {
+                    let http;
+                    this.type ? http = COMMON_API.MENUADD_API : http = COMMON_API.MENUUPDATE_API;
+                    http({
                         menuId: this.dataForm.id || null,
-                        type: this.dataForm.menuType,
-                        name: this.dataForm.name,
+                        menuType: this.dataForm.menuType,
+                        menuName: this.dataForm.menuName,
                         parentId: this.dataForm.parentId,
-                        url: this.dataForm.url,
-                        perms: this.dataForm.perms,
-                        orderNum: this.dataForm.orderNum,
-                        icon: this.dataForm.icon
+                        menuUrl: this.dataForm.menuUrl,
+                        permission: this.dataForm.permission,
+                        menuOrder: this.dataForm.menuOrder,
+                        menuIcon: this.dataForm.menuIcon
                     }).then(({ data }) => {
                         if (data && data.code === 0) {
                             this.$successToast('操作成功');
