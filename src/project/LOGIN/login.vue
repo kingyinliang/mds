@@ -169,7 +169,7 @@ export default {
     },
     methods: {
         goFa(item) {
-            if (item.deptCode === '6010' || item.deptCode === '7100') {
+            if (item.deptCode === '6010' || item.deptCode === '7100' || item.deptCode === '7101') {
                 sessionStorage.setItem('factory', JSON.stringify(item || ''));
                 window.location.href = '/MDS.html'
             } else {
