@@ -56,6 +56,10 @@ export const COMMON_API = {
     /**
      * @property {string} ORGDETAIL_API 组织架构详情
      */
-    ORGDETAIL_API: params => httpProxy('/sysDept/query', 'GET', params)
+    ORGDETAIL_API: params => httpProxy('/sysDept/query', 'GET', params),
+    /**
+     * @property {string} DICTQUERY_API 数据字典根据类型获取详情
+     */
+    DICTQUERY_API: params => httpProxy('/sysDictItem/dropDown', 'GET', params)
 
 };

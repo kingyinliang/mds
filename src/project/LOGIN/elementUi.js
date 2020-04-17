@@ -12,6 +12,7 @@ import {
     Table,
     TableColumn,
     DatePicker,
+    Switch,
     Input,
     FormItem,
     Dropdown,
@@ -54,6 +55,7 @@ export default () => {
     Vue.use(Table)
     Vue.use(TableColumn)
     Vue.use(DatePicker)
+    Vue.use(Switch)
     Vue.use(Input)
     Vue.use(FormItem)
     Vue.use(Dropdown)
