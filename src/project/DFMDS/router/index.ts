@@ -40,6 +40,26 @@ const mainRoutes: RouteConfig = {
                 title: '组织架构',
                 isTab: true
             }
+        },
+        // {
+        //     path: '/User',
+        //     name: 'User',
+        //     component: () => import('common/pages/User/index.vue'),
+        //     meta: {
+        //         menuId: 1,
+        //         title: '人员管理',
+        //         isTab: true
+        //     }
+        // }
+        {
+            path: '/Role',
+            name: 'Role',
+            component: () => import('common/pages/Role/index.vue'),
+            meta: {
+                menuId: 1,
+                title: '角色管理',
+                isTab: true
+            }
         }
     ]
 };
@@ -65,7 +85,7 @@ router.beforeEach((to, from, next) => {
             router['options'].isAddDynamicMenuRoutes = true;
             sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'));
             sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'));
-            return next(Object.assign(to, { replace: true }));
+            return next({ replace: true });
         }
         sessionStorage.setItem('menuList', '[]');
         sessionStorage.setItem('permissions', '[]');

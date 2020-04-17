@@ -189,6 +189,8 @@ export default class MenuAdd extends Vue {
         COMMON_API.MENUSELECT_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
         }).then(({ data }) => {
+            console.log('2222')
+            console.log(treeDataTranslate(data.menuList, 'menuId'))
             this.menuList = treeDataTranslate(data.menuList, 'menuId');
         }).then(() => {
             this.visible = true;
