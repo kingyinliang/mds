@@ -64,7 +64,7 @@
                 </h3>
             </div>
             <el-table ref="multipleTable" header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleSelectionChange" @row-dblclick="Dblckick">
-                <el-table-column type="selection" :selectable="CheckBoxOrder" width="40" />
+                <el-table-column type="selection" :selectable="CheckBoxOrder" width="40" align="center" />
                 <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" />
                 <el-table-column label="辅料状态" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
@@ -100,7 +100,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="SAP备注" width="80" prop="sapRemake" :show-overflow-tooltip="true" />
-                <el-table-column label="提交人员" width="80" prop="oprDate" :show-overflow-tooltip="true" />
+                <el-table-column label="提交人员" width="120" prop="oprDate" :show-overflow-tooltip="true" />
                 <el-table-column label="提交时间" width="80" prop="oprter" :show-overflow-tooltip="true" />
             </el-table>
             <el-row>
@@ -165,7 +165,7 @@
                         <i class="reqI">*</i><span>物料</span>
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.materialCode" placeholder="请选择" size="mini" style="width: 180px;" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" @change="selectMaterial(scope.row)">
+                        <el-select v-model="scope.row.materialCode" filterable placeholder="请选择" size="mini" style="width: 180px;" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" @change="selectMaterial(scope.row)">
                             <el-option label="请选择" value="" />
                             <el-option v-for="(item, index) in Materails" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
                         </el-select>
@@ -190,13 +190,13 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column width="100" label="批次">
+                <el-table-column width="120" label="批次">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.batch" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini" />
                     </template>
                 </el-table-column>
                 <el-table-column label="领用数量" width="80" prop="receiveAmount" :show-overflow-tooltip="true" />
-                <el-table-column label="备注" width="90">
+                <el-table-column label="备注" width="150">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini" />
                     </template>

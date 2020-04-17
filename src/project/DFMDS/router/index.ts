@@ -32,6 +32,16 @@ const mainRoutes: RouteConfig = {
             }
         },
         {
+            path: '/CapacityManage',
+            name: 'CapacityManage',
+            component: () => import('common/pages/CapacityManage/CapacityManage.vue'),
+            meta: {
+                menuId: 1,
+                title: '产能管理',
+                isTab: true
+            }
+        },
+        {
             path: '/OrgStructure',
             name: 'OrgStructure',
             component: () => import('common/pages/OrgStructure/index.vue'),
@@ -61,7 +71,14 @@ const mainRoutes: RouteConfig = {
                 isTab: true
             }
         }
-    ]
+    ],
+    beforeEnter(to, from, next) {
+        const token = Vue['cookie'].get('token');
+        if (!token || !/\S/.test(token)) {
+            window.location.href = `${process.env.VUE_APP_HOST}`;
+        }
+        next();
+    }
 };
 
 const router = new VueRouter({

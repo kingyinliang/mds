@@ -13,7 +13,7 @@
                             </el-input>
                         </div>
                         <div class="tree-main SelfScrollbar">
-                            <el-tree ref="tree" :data="OrgTree" node-key="deptId" :expand-on-click-node="false" :default-expanded-keys="arrList" :filter-node-method="filterNode" @node-click="setdetail" @node-contextmenu="showMenu" />
+                            <el-tree ref="tree" :data="OrgTree" node-key="id" :props="{ label: 'deptName' }" :expand-on-click-node="false" :default-expanded-keys="arrList" :filter-node-method="filterNode" @node-click="setdetail" @node-contextmenu="showMenu" />
                         </div>
                     </div>
                 </el-col>
@@ -166,7 +166,7 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
-import { BASICDATA_API, SYSTEMSETUP_API, MAIN_API } from '@/api/api';
+import { COMMON_API } from 'common/api/api';
 
 @Component
 export default class OrgStructure extends Vue {
@@ -193,7 +193,7 @@ export default class OrgStructure extends Vue {
     }
 
     mounted() {
-        this.FILE_API = MAIN_API.FILE_API;
+        this.FILE_API = process.env.VUE_APP_HOST;
         this.getTree(true);
         this.getDictList();
         document.addEventListener('click', e => {
@@ -204,15 +204,15 @@ export default class OrgStructure extends Vue {
 
     // 获取组织结构树
     getTree(type = false) {
-        this.$http(`${BASICDATA_API.ORGSTRUCTURE_API}`, 'GET', {}).then(({ data }) => {
-            if (data.code === 0) {
-                this.OrgTree = data.deptList;
-                this.arrList = [this.OrgTree[0]['children'][0]['deptId']];
+        COMMON_API.ORGSTRUCTURE_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+        }).then(({ data }) => {
+            if (data.code === 200) {
+                this.OrgTree = data.data;
+                this.arrList = [this.OrgTree[0]['children'][0]['id']];
                 if (type) {
                     console.log(1)
                 }
-            } else {
-                this.$errorToast(data.msg);
             }
         });
     }
@@ -220,19 +220,19 @@ export default class OrgStructure extends Vue {
     // 展示详情
     setdetail(row: DeptObject) {
         this.menuVisible = false;
-        this.$http(`${BASICDATA_API.ORGDETAIL_API}/${row.deptId}`, 'GET').then(({ data }) => {
-            if (data.code === 0) {
-                this.OrgDetail = data.dept;
-                if (this.OrgDetail.img) {
+        COMMON_API.ORGDETAIL_API({
+            id: row.id
+        }).then(({ data }) => {
+            if (data.code === 200) {
+                this.OrgDetail = data.data;
+                if (this.OrgDetail.imgUrl) {
                     this.fileList = []
                     this.fileList[0] = {};
                     this.fileList[0].name = '';
-                    this.fileList[0].url = 'data:image/gif;base64,' + this.OrgDetail.img;
+                    this.fileList[0].url = 'data:image/gif;base64,' + this.OrgDetail.imgUrl;
                 } else {
                     this.fileList = [];
                 }
-            } else {
-                this.$errorToast(data.msg);
             }
         })
     }
@@ -248,32 +248,32 @@ export default class OrgStructure extends Vue {
 
     // 获取部门类型
     getDictList() {
-        this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {
-            type: 'dept_type'
-        }).then(({ data }) => {
-            if (data.code === 0) {
-                this.dictList = data.dicList;
-            } else {
-                this.$errorToast(data.msg);
-            }
-        });
+        // this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {
+        //     type: 'dept_type'
+        // }).then(({ data }) => {
+        //     if (data.code === 0) {
+        //         this.dictList = data.dicList;
+        //     } else {
+        //         this.$errorToast(data.msg);
+        //     }
+        // });
+        this.dictList = []
     }
 
     // 新增部门
     addOrg() {
+        this.addDep.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
         if (this.sibling) {
             this.addDep.parentId = this.clickTreeNode.parentId;
         } else {
-            this.addDep.parentId = this.clickTreeNode.deptId;
+            this.addDep.parentId = this.clickTreeNode.id;
         }
-        this.$http(`${BASICDATA_API.ADDORG_API}`, 'POST', this.addDep).then(({ data }) => {
-            if (data.code === 0) {
+        COMMON_API.ADDORG_API(this.addDep).then(({ data }) => {
+            if (data.code === 200) {
                 this.$successToast('操作成功');
                 this.getTree();
                 this.addDep = {};
                 this.dialogFormVisible1 = false;
-            } else {
-                this.$errorToast(data.msg);
             }
         });
     }
@@ -285,12 +285,12 @@ export default class OrgStructure extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.$http(`${BASICDATA_API.SAVEORG_API}`, 'POST', this.OrgDetail).then(({ data }) => {
+            COMMON_API.UPDATEORG_API(this.OrgDetail).then(({ data }) => {
                 if (data.code === 0) {
                     this.$successToast('操作成功');
                     this.fileList = [];
                     this.isRedact = true;
-                    this.setdetail({ deptId: this.OrgDetail.deptId });
+                    this.setdetail({ id: this.OrgDetail.id });
                 } else {
                     this.$errorToast(data.msg);
                 }
@@ -305,15 +305,13 @@ export default class OrgStructure extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.$http(`${BASICDATA_API.DELETEORG_API}`, 'GET', {
-                deptId: this.OrgDetail.deptId
+            COMMON_API.DELETEORG_API({
+                id: this.OrgDetail.id
             }).then(({ data }) => {
-                if (data.code === 0) {
+                if (data.code === 200) {
                     this.$successToast('操作成功');
                     this.getTree();
                     this.OrgDetail = {};
-                } else {
-                    this.$errorToast(data.msg);
                 }
             });
         });
@@ -338,11 +336,11 @@ export default class OrgStructure extends Vue {
         this.fileList[0] = {};
         this.fileList[0].name = '';
         this.fileList[0].url = 'data:image/gif;base64,' + res;
-        this.OrgDetail.img = res;
+        this.OrgDetail.imgUrl = res;
     }
 
     DeptAddfile(res) {
-        this.addDep.img = res;
+        this.addDep.imgUrl = res;
     }
 
     // 移出图片
@@ -359,19 +357,20 @@ export default class OrgStructure extends Vue {
     // 搜索
     filterNode(value, data) {
         if (!value) return true;
-        return data.label.indexOf(value) !== -1;
+        return data.deptName.indexOf(value) !== -1;
     }
 }
 
 interface DeptObject {
-    deptId?: string;
+    id?: string;
 }
 interface DetailObject {
-    deptId?: string;
+    id?: string;
+    factory?: string;
     parentId?: string;
     deptName?: string;
     parentName?: string;
-    img? : string;
+    imgUrl? : string;
 }
 interface FileObject {
     name?: string;

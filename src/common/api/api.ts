@@ -28,11 +28,11 @@ export const COMMON_API = {
     /**
      * @property {string} MENUADD_API 菜单管理新增
      */
-    MENUADD_API: params => httpProxy('/sysMenu/insert', 'GET', params),
+    MENUADD_API: params => httpProxy('/sysMenu/insert', 'POST', params),
     /**
      * @property {string} MENUUPDATE_API 菜单管理修改
      */
-    MENUUPDATE_API: params => httpProxy('/sysMenu/update', 'GET', params),
+    MENUUPDATE_API: params => httpProxy('/sysMenu/update', 'POST', params),
     /**
      * @property {string} MENUDEL_API 菜单管理删除
      */
@@ -64,5 +64,25 @@ export const COMMON_API = {
     /**
      * @property {string} ROLE_USER_INSERT_API 系统管理-角色管理-分配人员
      */
-    ROLE_USER_INSERT_API: params => httpProxy('/sysMenu/sysUserRole/insert', 'POST', params)
+    ROLE_USER_INSERT_API: params => httpProxy('/sysMenu/sysUserRole/insert', 'POST', params),
+    /**
+     * @property {string} ORGSTRUCTURE_API 组织架构树形列表
+     */
+    ORGSTRUCTURE_API: params => httpProxy('/sysDept/dropDown', 'GET', params),
+    /**
+     * @property {string} ADDORG_API 组织架构新增
+     */
+    ADDORG_API: params => httpProxy('/sysDept/insert', 'POST', params),
+    /**
+     * @property {string} DELETEORG_API 组织架构删除
+     */
+    DELETEORG_API: params => httpProxy('/sysDept/remove', 'GET', params),
+    /**
+     * @property {string} UPDATEORG_API 组织架构修改
+     */
+    UPDATEORG_API: params => httpProxy('/sysDept/update', 'POST', params),
+    /**
+     * @property {string} ORGDETAIL_API 组织架构详情
+     */
+    ORGDETAIL_API: params => httpProxy('/sysDept/query', 'GET', params)
 };
