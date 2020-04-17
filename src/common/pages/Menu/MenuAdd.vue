@@ -176,36 +176,42 @@ export default class MenuAdd extends Vue {
             this.menuList = treeDataTranslate(data.data);
         }).then(() => {
             this.visible = true;
-            if (!item) {
-                // 新增
-                this.type = true;
-                this.dataForm = {
-                    id: '',
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    menuType: 'C',
-                    menuName: '',
-                    parentId: 0,
-                    parentName: '',
-                    menuUrl: '',
-                    permission: '',
-                    menuOrder: 0,
-                    menuIcon: ''
+            this.$nextTick(() => {
+                this.$refs.dataForm.resetFields();
+            });
+        }).then(() => {
+            this.$nextTick(() => {
+                if (!item) {
+                    // 新增
+                    this.type = true;
+                    this.dataForm = {
+                        id: '',
+                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        menuType: 'C',
+                        menuName: '',
+                        parentId: 0,
+                        parentName: '',
+                        menuUrl: '',
+                        permission: '',
+                        menuOrder: 0,
+                        menuIcon: ''
+                    }
+                } else {
+                    // 修改
+                    this.type = false;
+                    this.dataForm.id = item.id;
+                    this.dataForm.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    this.dataForm.menuType = item.menuType;
+                    this.dataForm.menuName = item.menuName;
+                    this.dataForm.parentId = item.parentId;
+                    this.dataForm.parentId = item.parentId;
+                    this.dataForm.menuUrl = item.menuUrl;
+                    this.dataForm.permission = item.permission;
+                    this.dataForm.menuOrder = item.menuOrder;
+                    this.dataForm.menuIcon = item.menuIcon;
+                    this.menuListTreeSetCurrentNode();
                 }
-                this.menuListTreeSetCurrentNode();
-            } else {
-                // 修改
-                this.type = false;
-                this.dataForm.id = item.id;
-                this.dataForm.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                this.dataForm.menuType = item.menuType;
-                this.dataForm.menuName = item.menuName;
-                this.dataForm.parentId = item.parentId;
-                this.dataForm.menuUrl = item.menuUrl;
-                this.dataForm.permission = item.permission;
-                this.dataForm.menuOrder = item.menuOrder;
-                this.dataForm.menuIcon = item.menuIcon;
-                this.menuListTreeSetCurrentNode();
-            }
+            })
         });
     }
 
@@ -219,7 +225,7 @@ export default class MenuAdd extends Vue {
     // 菜单树设置当前选中节点
     menuListTreeSetCurrentNode() {
         this.$refs.menuListTree.setCurrentKey(this.dataForm.parentId);
-        this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() || {})['name'];
+        this.dataForm.parentName = (this.$refs.menuListTree.getCurrentNode() || {})['menuName'];
     }
 
     // 图标选中
@@ -236,7 +242,7 @@ export default class MenuAdd extends Vue {
                     let http;
                     this.type ? http = COMMON_API.MENUADD_API : http = COMMON_API.MENUUPDATE_API;
                     http(this.dataForm).then(({ data }) => {
-                        if (data && data.code === 0) {
+                        if (data && data.code === 200) {
                             this.$successToast('操作成功');
                             this.submitType = true;
                             this.visible = false;

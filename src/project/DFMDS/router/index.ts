@@ -82,7 +82,7 @@ router.beforeEach((to, from, next) => {
             router['options'].isAddDynamicMenuRoutes = true;
             sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'));
             sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'));
-            return next(Object.assign(to, { replace: true }));
+            return next(Object.assign({}, to, { replace: true }));
         }
         sessionStorage.setItem('menuList', '[]');
         sessionStorage.setItem('permissions', '[]');
