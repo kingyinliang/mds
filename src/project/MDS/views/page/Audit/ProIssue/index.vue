@@ -118,32 +118,32 @@
                         <el-table-column prop="entryUomName" label="单位" width="50" />
                         <el-table-column label="物料批次" :show-overflow-tooltip="true" width="130">
                             <template slot-scope="scope">
-                                <el-input v-if="scope.row.redact" v-model="scope.row.batch" size="small" />
-                                <el-input v-else v-model="scope.row.batch" size="small" disabled />
+                                <el-input v-if="scope.row.redact" v-model="scope.row.batch" size="mini" />
+                                <el-input v-else v-model="scope.row.batch" size="mini" disabled />
                             </template>
                         </el-table-column>
                         <el-table-column prop="potNoName" label="领用罐号" :show-overflow-tooltip="true" width="100" />
                         <el-table-column prop="filterDate" label="过滤日期" :show-overflow-tooltip="true" width="100" />
                         <el-table-column label="出库库位" width="78">
                             <template slot-scope="scope">
-                                <el-input v-if="scope.row.redact" v-model="scope.row.stgeLoc" size="small" />
-                                <el-input v-else v-model="scope.row.stgeLoc" size="small" disabled />
+                                <el-input v-if="scope.row.redact" v-model="scope.row.stgeLoc" size="mini" />
+                                <el-input v-else v-model="scope.row.stgeLoc" size="mini" disabled />
                             </template>
                         </el-table-column>
                         <el-table-column prop="workShopRemark" label="车间备注" :show-overflow-tooltip="true" width="80" />
                         <el-table-column label="移动类型" width="78">
                             <template slot-scope="scope">
-                                <el-input v-if="scope.row.redact" v-model="scope.row.moveType" size="small" />
-                                <el-input v-else v-model="scope.row.moveType" size="small" disabled />
+                                <el-input v-if="scope.row.redact" v-model="scope.row.moveType" size="mini" />
+                                <el-input v-else v-model="scope.row.moveType" size="mini" disabled />
                             </template>
                         </el-table-column>
                         <el-table-column label="移动原因" width="120">
                             <template slot-scope="scope">
-                                <el-select v-if="scope.row.redact" v-model="scope.row.moveReas" placeholder="请选择" size="small">
+                                <el-select v-if="scope.row.redact" v-model="scope.row.moveReas" placeholder="请选择" size="mini">
                                     <el-option label="请选择" value="" />
                                     <el-option v-for="(item, index) in MoveReas" :key="index" :label="item.value" :value="item.code" />
                                 </el-select>
-                                <el-select v-else v-model="scope.row.moveReas" placeholder="请选择" size="small" disabled>
+                                <el-select v-else v-model="scope.row.moveReas" placeholder="请选择" size="mini" disabled>
                                     <el-option label="请选择" value="" />
                                     <el-option v-for="(item, index) in MoveReas" :key="index" :label="item.value" :value="item.code" />
                                 </el-select>
@@ -156,8 +156,8 @@
                         <el-table-column prop="verifyDate" label="审核时间" width="160" />
                         <el-table-column label="备注" width="80">
                             <template slot-scope="scope">
-                                <el-input v-if="scope.row.redact" v-model="scope.row.remark" size="small" />
-                                <el-input v-else v-model="scope.row.remark" size="small" disabled />
+                                <el-input v-if="scope.row.redact" v-model="scope.row.remark" size="mini" />
+                                <el-input v-else v-model="scope.row.remark" size="mini" disabled />
                             </template>
                         </el-table-column>
                         <el-table-column fixed="right" label="操作" width="120">

@@ -179,7 +179,7 @@
 <style lang="scss" scoped>
     .footer {
         position: absolute;
-        bottom: 55px;
+        bottom: 7px;
         width: 100%;
         color: rgba(0, 0, 0, 0.45);
         font-size: 12px;
