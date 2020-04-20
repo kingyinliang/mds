@@ -1,20 +1,20 @@
 <template>
-    <el-dialog title="人员管理" :close-on-click-modal="false" :visible.sync="visible">
+    <el-dialog title="人员管理" :close-on-click-modal="false" :visible.sync="isDaologShow">
         <div>
             <el-row>
-                <el-transfer v-model="selctId" filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" :data="userlist" />
+                <el-transfer v-model="selectedUserID" filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" :data="userlist" />
             </el-row>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="visible = false">取消</el-button>
-            <el-button type="primary" @click="updatauser">确定</el-button>
+            <el-button @click="isDaologShow = false">取消</el-button>
+            <el-button type="primary" @click="updataUserList">确定</el-button>
         </span>
     </el-dialog>
 </template>
 
 <script>
-    import { SYSTEMSETUP_API } from '@/api/api';
-    import { transfer } from '@/net/validate';
+    import { COMMON_API } from 'common/api/api';
+    // import { transfer } from 'utils/validate';
     export default {
         name: 'UserManage',
         components: {},
@@ -23,44 +23,71 @@
                 filterMethod(query, item) {
                     return item.screncon.indexOf(query) > -1;
                 },
-                roleId: '',
+                roleID: '',
                 userlist: [],
-                selctId: [],
+                selectedUserID: [],
                 type: true,
-                visible: false
+                isDaologShow: false
             };
         },
         computed: {},
         methods: {
             init(id) {
-                this.roleId = id;
-                this.$http(`${SYSTEMSETUP_API.ROLEUSER_API}`, 'POST', {
-                    roleId: id
+                this.roleID = id;
+                COMMON_API.USER_DROPDOWN_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    deptId: id
                 }).then(({ data }) => {
-                    if (data.code === 0) {
-                        this.userlist = transfer(data.list).res;
-                        this.selctId = transfer(data.list).selcedid;
+                    if (data.code === 200) {
+                        console.log('list')
+                        console.log(data)
+                        const finalData = this.transfer(data.data)
+                        this.userlist = finalData.res;
+                        this.selectedUserID = finalData.selectedID;
                     } else {
-                        this.$error_SHINHO(data.msg);
+                        this.$errorToast(data.msg);
                     }
-                    this.visible = true;
+                    this.isDaologShow = true;
                 });
             },
-            updatauser() {
+            transfer(data) {
+                const res = [];
+                const selectedID = [];
+                data.forEach(item => {
+                    if (item.selected === 1) {
+                        selectedID.push(item.id);
+                    }
+                    res.push({
+                        label: item.realName,
+                        key: item.id,
+                        screncon: item.realName
+                    });
+                });
+                return {
+                    res: res,
+                    selectedID: selectedID
+                };
+            },
+            updataUserList() {
                 if (this.type) {
                     this.type = false;
-                    this.$http(`${SYSTEMSETUP_API.ROLEUSERUPDATE_API}`, 'POST', {
-                        roleId: this.roleId,
-                        userId: this.selctId
+                    COMMON_API.ROLE_USER_INSERT_API({
+                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        roleId: this.roleID,
+                        userId: this.selectedUserID
                     }).then(({ data }) => {
-                        if (data.code === 0) {
-                            this.$success_SHINHO('操作成功');
+                        console.log('update')
+                        console.log(data)
+                        if (data.code === 200) {
+                            this.$successToast('操作成功');
                             this.type = true;
-                            this.visible = false;
+                            this.isDaologShow = false;
                             this.$emit('refreshDataList');
                         } else {
-                            this.$error_SHINHO(data.msg);
+                            this.$errorToast(data.msg);
                         }
+                    }).catch(() => {
+                         //
                     });
                 } else {
                     this.$notify.error({ title: '错误', message: '请分配人员' });

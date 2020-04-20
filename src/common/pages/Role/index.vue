@@ -11,32 +11,32 @@
                         </el-form>
                     </el-col>
                     <el-col style="width: 200px;">
-                        <el-button v-if="isAuth('sys:role:list')" type="primary" size="small" @click="getRoleList(true)">
+                        <el-button v-if="isAuth('sys:role:list')" type="primary" size="small" @click="getRoleList(true,form.username)">
                             查询
                         </el-button>
-                        <el-button v-if="isAuth('sys:role:save')" type="primary" size="small" @click="roleAddOrUpdate()">
+                        <el-button v-if="isAuth('sys:role:save')" type="primary" size="small" @click="roleAddOrUpdate({style:'add',info:{}})">
                             新增
                         </el-button>
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-table ref="userlist" header-row-class-name="tableHead" :data="role" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column type="selection" width="34" />
-                        <el-table-column type="index" :index="indexMethod" width="55" />
+                    <el-table ref="userlist" header-row-class-name="tableHead" :data="roleList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                        <el-table-column type="selection" width="40" />
+                        <el-table-column type="index" :index="indexMethod" width="50" align="right" />
                         <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
-                        <el-table-column label="操作" width="320">
+                        <el-table-column label="操作" width="">
                             <template slot-scope="scope">
-                                <a v-if="isAuth('sys:role:updateuser')" @click="userManage(scope.row.roleId)">人员管理</a>
-                                <a v-if="isAuth('sys:role:updatemenu')" @click="fnManage(scope.row.roleId)">功能分配</a>
-                                <a v-if="isAuth('sys:role:updatedept')" @click="roleDept(scope.row.roleId)">部门分配</a>
-                                <a v-if="isAuth('sys:role:update')" @click="roleAddOrUpdate(scope.row)">修改角色</a>
-                                <a v-if="isAuth('sys:role:delete')" @click="removes(scope.row.roleId)">删除角色</a>
+                                <a v-if="isAuth('sys:role:updateuser')" style="margin-right: 0.3em;" @click="userManage(scope.row.id)">人员管理</a>|
+                                <a v-if="isAuth('sys:role:updatemenu')" style="margin-right: 0.3em;" @click="fnManage(scope.row.id)">功能分配</a>|
+                                <a v-if="isAuth('sys:role:updatedept')" style="margin-right: 0.3em;" @click="roleDept(scope.row.id)">部门分配</a>|
+                                <a v-if="isAuth('sys:role:update')" style="margin-right: 0.3em;" @click="roleAddOrUpdate({style:'modify',info:scope.row})">修改角色</a>|
+                                <a v-if="isAuth('sys:role:delete')" @click="roleRemove(scope.row.id)">删除角色</a>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="" />
-                        <el-table-column prop="created" label="创建时间" width="160" />
-                        <el-table-column prop="changer" label="修改人" :show-overflow-tooltip="true" width="" />
-                        <el-table-column prop="changed" label="修改时间" width="160" />
+                        <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="150" />
+                        <el-table-column prop="created" label="创建时间" width="100" />
+                        <el-table-column prop="changer" label="修改人" :show-overflow-tooltip="true" width="150" />
+                        <el-table-column prop="changed" label="修改时间" width="100" />
                     </el-table>
                 </el-row>
                 <el-row>
@@ -44,26 +44,27 @@
                 </el-row>
             </el-card>
         </div>
-        <role-add v-if="addOrUpdateVisible1" ref="addOrUpdate" @refreshDataList="getRoleList()" />
+        <function-manage v-if="addOrUpdateVisible1" ref="functionManage" @refreshDataList="getRoleList()" />
         <user-manage v-if="addOrUpdateVisible2" ref="usermanage" @refreshDataList="getRoleList()" />
-        <role-dept v-if="addOrUpdateVisible3" ref="roleDept" @refreshDataList="getRoleList()" />
+        <!-- <role-dept v-if="addOrUpdateVisible3" ref="roleDept" @refreshDataList="getRoleList()" /> -->
         <role-add-or-update v-if="addOrUpdateVisible4" ref="roleaddorupdate" @refreshDataList="getRoleList()" />
+        <!-- <component :is="currentComponent" /> -->
     </el-col>
 </template>
 
 <script>
-    import RoleAdd from './RoleAdd';
+    import FunctionManage from './FunctionManage';
     import UserManage from './UserManage';
-    import RoleDept from './RoleDept';
-    import RoleAddOrUpdate from './AddRole';
-    import { ROLE_QUERY_API, ROLE_REMOVE_API } from 'common/api/api';
+    // import RoleDept from './RoleDept';
+    import RoleAddOrUpdate from './AddAndUpdateRole';
+    import { COMMON_API } from 'common/api/api';
     // import { SYSTEMSETUP_API } from '@/api/api';
     export default {
         name: 'RoleManages',
         components: {
-            RoleAdd,
+            FunctionManage,
             UserManage,
-            RoleDept,
+            // RoleDept,
             RoleAddOrUpdate
         },
         data() {
@@ -80,7 +81,8 @@
                 currPage: 1,
                 pageSize: 10,
                 totalCount: 1,
-                role: []
+                roleList: [],
+                currentComponent: ''
             };
         },
         computed: {},
@@ -96,22 +98,24 @@
                 return index + 1 + (Number(this.currPage) - 1) * Number(this.pageSize);
             },
             // 获取角色列表
-            getRoleList(st) {
+            getRoleList(st, searchWord = '') {
                 if (st) {
                     this.currPage = 1;
                 }
-                this.$http(`${ROLE_QUERY_API}`, 'POST', {
+                COMMON_API.ROLE_QUERY_API({
                     factory: this.factoryID,
                     current: JSON.stringify(this.currPage),
-                    size: JSON.stringify(this.pageSize)
+                    size: JSON.stringify(this.pageSize),
+                    roleName: searchWord
                 }).then(({ data }) => {
-                    console.log('data')
-                    if (data.code === 0) {
-                        this.role = data.records;
-                        this.currPage = data.current;
-                        this.pageSize = data.size;
-                        this.totalCount = data.total;
+                    if (data.code === 200) {
+                        this.form.username = '';
+                        this.roleList = data.data.records;
+                        this.currPage = data.data.current;
+                        this.pageSize = data.data.size;
+                        this.totalCount = data.data.total;
                     } else {
+                        console.log(data.msg)
                         this.$errorToast(data.msg);
                     }
                     this.addOrUpdateVisible1 = false;
@@ -131,7 +135,7 @@
             fnManage(id) {
                 this.addOrUpdateVisible1 = true;
                 this.$nextTick(() => {
-                    this.$refs.addOrUpdate.init(id);
+                    this.$refs.functionManage.init(id);
                 });
             },
             // 部门管理
@@ -141,28 +145,33 @@
                     this.$refs.roleDept.init(id);
                 });
             },
-            // 新增 修改
-            roleAddOrUpdate(id) {
+            // 新增或修改
+            roleAddOrUpdate(styleInfo) {
                 this.addOrUpdateVisible4 = true;
                 this.$nextTick(() => {
-                    this.$refs.roleaddorupdate.init(id);
+                    this.$refs.roleaddorupdate.init({
+                        roleStyle: styleInfo.style,
+                        roleInfo: styleInfo.info
+                    });
                 });
             },
             // 删除角色
-            removes(id) {
+            roleRemove(id) {
                 this.$confirm('确认删除该角色, 是否继续?', '删除角色', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 })
                     .then(() => {
-                        this.$http(`${ROLE_REMOVE_API}`, 'POST', { roleId: id }).then(({ data }) => {
-                            if (data.code === 0) {
-                                this.$success_SHINHO('删除成功!');
+                        COMMON_API.ROLE_REMOVE_API({ id: id }).then(({ data }) => {
+                            if (data.code === 200) {
+                                this.$successToast('删除成功!');
                                 this.getRoleList();
                             } else {
                                 this.$errorToast(data.msg);
                             }
+                        }).catch(() => {
+                            //
                         });
                     })
                     .catch(() => {
@@ -183,4 +192,5 @@
     };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
