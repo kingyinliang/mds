@@ -63,9 +63,9 @@
                 <div v-for="(item, index) in factory" :key="index" class="factoryItem">
                     <div class="itemBox">
                         <div class="item-title">
-                            <span>
+                            <p class="item-title-p">
                                 {{ item.deptName }}
-                            </span>
+                            </p>
                             <!--<el-switch-->
                             <!--v-model="item.value"-->
                             <!--style="float: right;"-->
@@ -276,11 +276,15 @@ export default {
             justify-content: center;
         }
     }
+    .factoryBox {
+        width: 1168px;
+        margin: auto;
+    }
     .factoryItem {
         display: inline-block;
         padding: 5px;
         .itemBox {
-            min-width: 250px;
+            width: 250px;
             padding: 16px;
             background: white;
             border-radius: 8px;
@@ -296,6 +300,13 @@ export default {
                 margin: 0 0 30px 0;
                 font-weight: bold;
                 font-size: 16px;
+                .item-title-p {
+                    width: 250px;
+                    margin: 0;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
             }
         }
     }
