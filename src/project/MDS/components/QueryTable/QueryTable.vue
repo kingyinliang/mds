@@ -211,7 +211,7 @@
             },
             tableHeight: {
                 type: Number,
-                default: 400
+                default: 405
             }
         },
         data() {

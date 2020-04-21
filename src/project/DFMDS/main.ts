@@ -38,7 +38,7 @@ Vue.prototype.$successToast = str => {
     Notification({ title: '成功', message: str, type: 'success' });
 };
 // 提示
-Vue.prototype.$infoTost = str => {
+Vue.prototype.$infoToast = str => {
     Notification({ title: '提示', message: str, type: 'info' });
 };
 

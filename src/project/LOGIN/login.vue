@@ -60,9 +60,23 @@
         <!--选择工厂-->
         <el-dialog :show-close="false" :visible.sync="factoryVisible" class="selectFa">
             <div class="factoryBox">
-                <div v-for="(item, index) in factory" :key="index" class="factoryItem" @click="goFa(item)">
+                <div v-for="(item, index) in factory" :key="index" class="factoryItem">
                     <div class="itemBox">
-                        {{ item.deptName }}
+                        <div class="item-title">
+                            <p class="item-title-p">
+                                {{ item.deptName }}
+                            </p>
+                            <!--<el-switch-->
+                            <!--v-model="item.value"-->
+                            <!--style="float: right;"-->
+                            <!--active-color="#8BC34A"-->
+                            <!--inactive-color="#dcdfe6"-->
+                            <!--@click="setOther(index)"-->
+                            <!--/>-->
+                        </div>
+                        <div @click="goFa(item)">
+                            <img :src="'../static/img/factory'+ index + '.png'" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -177,6 +191,16 @@ export default {
                 window.location.href = '/DFMDS.html'
             }
         },
+        setOther(Num) {
+            console.log(Num)
+            this.factory.forEach((item, index) => {
+                if (Num !== index) {
+                    item.value = false
+                } else {
+                    item.value = !item.value
+                }
+            })
+        },
         play() {
             this.curr++;
             if (this.curr >= this.videoList.length) this.curr = 0;
@@ -252,15 +276,38 @@ export default {
             justify-content: center;
         }
     }
+    .factoryBox {
+        width: 1168px;
+        margin: auto;
+    }
     .factoryItem {
         display: inline-block;
         padding: 5px;
         .itemBox {
-            padding: 6px;
+            width: 250px;
+            padding: 16px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
             cursor: pointer;
+            img {
+                display: block;
+                width: 150px;
+                height: 103px;
+                margin: auto;
+            }
+            .item-title {
+                margin: 0 0 30px 0;
+                font-weight: bold;
+                font-size: 16px;
+                .item-title-p {
+                    width: 250px;
+                    margin: 0;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+            }
         }
     }
 }

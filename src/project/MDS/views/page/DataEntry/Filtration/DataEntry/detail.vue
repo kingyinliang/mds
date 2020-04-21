@@ -194,7 +194,9 @@ export default {
             EquState: '',
             caftStatus: '',
             materialStatus: '',
-            activeName: '1'
+            activeName: '1',
+            equWorkingHolderList: [],
+            materialHolderList: []
         };
     },
     watch: {
@@ -245,6 +247,7 @@ export default {
                     };
                     this.$refs.craft.GetList(params);
                     this.$refs.equworkinghours.GetList(params);
+                    this.$refs.equworkinghours.GetHolderList(params);
                     this.$refs.material.GetList(params);
                     this.$refs.material.GetHolderList(params);
                     this.$refs.excrecord.GetequipmentType(this.formHeader.productLine);
@@ -286,6 +289,14 @@ export default {
             }
             if (!this.$refs.instorage.countOutputNum) {
                 this.$warningTost('入库数未0，不能提交');
+                return false;
+            }
+            const materialHolderList = this.$refs.material.GetmaterialList()
+            const equWorkingHolderList = this.$refs.equworkinghours.GetequWorkingList()
+            const diffArr = [...equWorkingHolderList].filter(x => [...materialHolderList].every(y => (y.holderId !== x.holderId)));
+            const diffArrs = [...materialHolderList].filter(x => [...equWorkingHolderList].every(y => (y.holderId !== x.holderId)));
+            if (diffArr.length !== 0 || diffArrs.length !== 0) {
+                this.$warningTost('设备工时与物料领用罐号须一致');
                 return false;
             }
             this.$confirm('确认提交该订单, 是否继续?', '提交订单', {
@@ -381,6 +392,9 @@ export default {
                 .catch((reason) => {
                     this.$errorTost('网络请求失败，请刷新重试' + reason);
                 });
+        },
+        materilaHoldList(holderList) {
+            this.materialHolderList = holderList
         }
     }
 };

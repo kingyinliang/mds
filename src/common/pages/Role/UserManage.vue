@@ -2,7 +2,7 @@
     <el-dialog title="人员管理" :close-on-click-modal="false" :visible.sync="isDaologShow">
         <div>
             <el-row>
-                <el-transfer v-model="selectedUserID" filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" :data="userlist" />
+                <el-transfer v-model="selectedUserID" filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" :data="userList" />
             </el-row>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -24,9 +24,9 @@
                     return item.screncon.indexOf(query) > -1;
                 },
                 roleID: '',
-                userlist: [],
+                userList: [],
                 selectedUserID: [],
-                type: true,
+                selectedUserIDTemp: [],
                 isDaologShow: false
             };
         },
@@ -34,16 +34,15 @@
         methods: {
             init(id) {
                 this.roleID = id;
-                COMMON_API.USER_DROPDOWN_API({
+                COMMON_API.ROLE_USER_LIST_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    deptId: id
+                    roleId: id
                 }).then(({ data }) => {
                     if (data.code === 200) {
-                        console.log('list')
-                        console.log(data)
                         const finalData = this.transfer(data.data)
-                        this.userlist = finalData.res;
+                        this.userList = finalData.res;
                         this.selectedUserID = finalData.selectedID;
+                        this.selectedUserIDTemp = finalData.selectedID
                     } else {
                         this.$errorToast(data.msg);
                     }
@@ -54,13 +53,13 @@
                 const res = [];
                 const selectedID = [];
                 data.forEach(item => {
-                    if (item.selected === 1) {
-                        selectedID.push(item.id);
+                    if (item.selection === '1') {
+                        selectedID.push(item.userId);
                     }
                     res.push({
-                        label: item.realName,
-                        key: item.id,
-                        screncon: item.realName
+                        label: item.userName,
+                        key: item.userId,
+                        screncon: item.userName
                     });
                 });
                 return {
@@ -69,18 +68,14 @@
                 };
             },
             updataUserList() {
-                if (this.type) {
-                    this.type = false;
+                if (this.selectedUserID !== this.selectedUserIDTemp) {
                     COMMON_API.ROLE_USER_INSERT_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         roleId: this.roleID,
                         userId: this.selectedUserID
                     }).then(({ data }) => {
-                        console.log('update')
-                        console.log(data)
                         if (data.code === 200) {
                             this.$successToast('操作成功');
-                            this.type = true;
                             this.isDaologShow = false;
                             this.$emit('refreshDataList');
                         } else {

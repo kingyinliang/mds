@@ -133,6 +133,15 @@ export default {
         }
     },
     methods: {
+        GetmaterialList() {
+            let returnList
+            if (this.dataList.length === 0) {
+                returnList = [];
+            } else {
+                returnList = this.dataList.filter(item => item.delFlag === '0');
+            }
+            return returnList;
+        },
         GetList(params) {
             this.orderId = params.orderId;
             this.$http(`${FILTRATION_API.FILTER_MATERIAL_LIST}`, 'POST', params)

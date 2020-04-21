@@ -39,20 +39,20 @@
                                     </el-form-item>
                                     <el-form-item label="部门类型：">
                                         <el-select v-model="OrgDetail.deptType" :disabled="isRedact" style="width: 250px;">
-                                            <el-option v-for="(item, index) in dictList" :key="index" :label="item.value" :value="item.code" />
+                                            <el-option v-for="(item, index) in dictList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="产线属性：">
+                                    <el-form-item v-if="OrgDetail.deptType === 'productLine'" label="产线属性：">
                                         <el-select v-model="OrgDetail.properties" placeholder="请选择部门类型" :disabled="isRedact" style="width: 250px;">
                                             <el-option label="普通产线" value="普通产线" />
                                             <el-option label="二合一&礼盒产线" value="二合一&礼盒产线" />
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="成本中心：">
+                                    <el-form-item v-if="OrgDetail.deptType === 'productLine'" label="成本中心：">
                                         <el-input v-model="OrgDetail.costCenter" auto-complete="off" :disabled="isRedact" style="width: 250px;" />
                                     </el-form-item>
-                                    <el-form-item v-if="OrgDetail.deptType === 'proLine'" label="产线图片：" :class="{'limit-upload': fileList.length}">
-                                        <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
+                                    <el-form-item v-if="OrgDetail.deptType === 'productLine'" label="产线图片：" :class="{'limit-upload': fileList.length}">
+                                        <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :disabled="isRedact" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
                                             <i class="el-icon-plus" />
                                         </el-upload>
                                     </el-form-item>
@@ -103,19 +103,19 @@
                 </el-form-item>
                 <el-form-item label="部门类型：">
                     <el-select v-model="addDep.deptType" placeholder="请选择部门类型" style="width: 100%;">
-                        <el-option v-for="(item, index) in dictList" :key="index" :label="item.value" :value="item.code" />
+                        <el-option v-for="(item, index) in dictList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </el-form-item>
-                <el-form-item v-if="addDep.deptType == 'proLine'" label="产线属性：">
+                <el-form-item v-if="addDep.deptType == 'productLine'" label="产线属性：">
                     <el-select v-model="addDep.properties" placeholder="请选择产线属性" style="width: 100%;">
                         <el-option label="普通产线" value="普通产线" />
                         <el-option label="二合一&礼盒产线" value="二合一&礼盒产线" />
                     </el-select>
                 </el-form-item>
-                <el-form-item v-if="addDep.deptType == 'proLine'" label="成本中心：">
+                <el-form-item v-if="addDep.deptType == 'productLine'" label="成本中心：">
                     <el-input v-model="addDep.costCenter" auto-complete="off" />
                 </el-form-item>
-                <el-form-item v-if="addDep.deptType == 'proLine'" label="产线图片：">
+                <el-form-item v-if="addDep.deptType == 'productLine'" label="产线图片：">
                     <el-upload :action="FILE_API" :limit="1" :http-request="httpRequest" list-type="picture" :on-success="DeptAddfile">
                         <el-button size="small" type="primary">
                             选取文件
@@ -248,16 +248,13 @@ export default class OrgStructure extends Vue {
 
     // 获取部门类型
     getDictList() {
-        // this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {
-        //     type: 'dept_type'
-        // }).then(({ data }) => {
-        //     if (data.code === 0) {
-        //         this.dictList = data.dicList;
-        //     } else {
-        //         this.$errorToast(data.msg);
-        //     }
-        // });
-        this.dictList = []
+        COMMON_API.DICTQUERY_API({
+            dictType: 'COMMON_DEPT_TYPE'
+        }).then(({ data }) => {
+            if (data.code === 200) {
+                this.dictList = data.data;
+            }
+        });
     }
 
     // 新增部门
@@ -286,13 +283,11 @@ export default class OrgStructure extends Vue {
             type: 'warning'
         }).then(() => {
             COMMON_API.UPDATEORG_API(this.OrgDetail).then(({ data }) => {
-                if (data.code === 0) {
+                if (data.code === 200) {
                     this.$successToast('操作成功');
                     this.fileList = [];
                     this.isRedact = true;
                     this.setdetail({ id: this.OrgDetail.id });
-                } else {
-                    this.$errorToast(data.msg);
                 }
             });
         });

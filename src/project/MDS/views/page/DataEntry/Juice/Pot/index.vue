@@ -990,7 +990,7 @@
                     this.$notify({ title: '警告', message: '没有权限', type: 'warning' });
                     return false;
                 }
-                if (item.HOLDER_STATUS === '6' || item.HOLDER_STATUS === '9' || item.HOLDER_STATUS === '10') {
+                if (item.HOLDER_STATUS === '6' || item.HOLDER_STATUS === '10') {
                     this.$notify({ title: '警告', message: '该罐当前不允许判定', type: 'warning' });
                     return false;
                 }

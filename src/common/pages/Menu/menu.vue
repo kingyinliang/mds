@@ -47,7 +47,7 @@
                                     修改
                                 </el-button>
                                 <!--<el-button v-if="isAuth('sys:menu:delete')" style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.menuId)">-->
-                                <el-button style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.menuId)">
+                                <el-button style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.id)">
                                     删除
                                 </el-button>
                             </template>

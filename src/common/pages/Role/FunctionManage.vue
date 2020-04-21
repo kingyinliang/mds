@@ -1,17 +1,28 @@
 <template>
     <el-dialog title="功能分配" :close-on-click-modal="false" :visible.sync="isDaologShow">
         <div style="height: 300px; overflow: auto;">
-            <el-tree ref="menuListTree" :data="menuList" :props="menuListTreeProps" node-key="menuId" :default-expand-all="true" :expand-on-click-node="false" show-checkbox />
+            <el-tree
+                ref="menuListTree"
+                :data="menuList"
+                :props="{
+                    label: 'menuName',
+                    children: 'children'
+                }"
+                node-key="id"
+                :default-expand-all="true"
+                :expand-on-click-node="false"
+                show-checkbox
+            />
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="isDaologShow = false">取消</el-button>
-            <el-button type="primary" @click="dataFormSubmit">确定</el-button>
+            <el-button type="primary" @click="submitDataForm">确定</el-button>
         </span>
     </el-dialog>
 </template>
 
 <script>
-// import { treeDataTranslate } from '@/net/validate';
+// import { translateTreeData } from '@/net/validate';
 import { COMMON_API } from 'common/api/api';
 export default {
     name: 'FunctionManage',
@@ -19,12 +30,7 @@ export default {
     data() {
         return {
             isDaologShow: false,
-            menuList: [],
-            menuListTreeProps: {
-                label: 'name',
-                children: 'children'
-            },
-            type: true
+            menuList: []
         };
     },
     computed: {},
@@ -34,40 +40,41 @@ export default {
     methods: {
         // 获取功能
         init(id) {
-            this.roleId = id;
+            this.roleID = id;
             COMMON_API.MENUSELECT_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             })
                 .then(({ data }) => {
                     if (data.code === 200) {
+                        console.log('11111')
                         console.log(data)
-                        this.menuList = this.treeDataTranslate(data.data, 'id');
-                        console.log(this.menuList)
+                        this.menuList = this.translateTreeData(data.data);
                     }
                 })
                 .then(() => {
                     this.isDaologShow = true;
                 })
-                // .then(() => {
-                //     this.$http(`${SYSTEMSETUP_API.LISTMENU_API}`, 'POST', {
-                //         roleId: id
-                //     }).then(({ data }) => {
-                //         if (data.code === 0) {
-                //             this.$refs.menuListTree.setCheckedKeys(data.list);
-                //         } else {
-                //             this.$errorTost(data.msg);
-                //         }
-                //     });
-                // });
+                .then(() => {
+                    COMMON_API.ROLE_MENU_QUERY_API({
+                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        roleId: id
+                    }).then(({ data }) => {
+                        console.log('222222')
+                        console.log(data)
+                        if (data.code === 200) {
+                            this.$refs.menuListTree.setCheckedKeys(data.data);
+                        } else {
+                            this.$errorTost(data.msg);
+                        }
+                    });
+                });
         },
-        treeDataTranslate(data, id = 'id', pid = 'parentId') {
+        translateTreeData(data, id = 'id', pid = 'parentId') {
             const res = [];
             const temp = {};
             for (let i = 0; i < data.length; i++) {
                 temp[data[i][id]] = data[i];
             }
-            console.log('temp')
-            console.log(temp)
             for (let k = 0; k < data.length; k++) {
                 if (temp[data[k][pid]] && data[k][id] !== data[k][pid]) {
                     if (!temp[data[k][pid]]['children']) {
@@ -85,23 +92,21 @@ export default {
             return res;
         },
         // 表单提交
-        dataFormSubmit() {
-            // if (this.type) {
-            //     this.type = false;
-            //     this.$http(`${SYSTEMSETUP_API.ROLEMENUUPDATE_API}`, 'POST', {
-            //         roleId: this.roleId,
-            //         menuId: [[].concat(this.$refs.menuListTree.getCheckedKeys()), [].concat(this.$refs.menuListTree.getHalfCheckedKeys())]
-            //     }).then(({ data }) => {
-            //         if (data.code === 0) {
-            //             this.$successTost('操作成功');
-            //             this.type = true;
-            //             this.isDaologShow = false;
-            //             this.$emit('refreshDataList');
-            //         } else {
-            //             this.$errorTost(data.msg);
-            //         }
-            //     });
-            // }
+        submitDataForm() {
+            console.log(this.$refs.menuListTree.getCheckedKeys())
+            COMMON_API.ROLE_MENU_INSERT_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                roleId: this.roleID,
+                menuId: [].concat(this.$refs.menuListTree.getCheckedKeys())
+            }).then(({ data }) => {
+                if (data.code === 200) {
+                    this.$successTost('操作成功');
+                    this.isDaologShow = false;
+                    this.$emit('refreshDataList');
+                } else {
+                    this.$errorTost(data.msg);
+                }
+            });
         }
     }
 };

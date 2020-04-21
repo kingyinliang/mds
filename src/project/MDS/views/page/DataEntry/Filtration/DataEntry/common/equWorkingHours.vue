@@ -48,14 +48,15 @@
                 >
                 <el-table-column type="index" label="序号" width="50" />
                 <el-table-column label="过滤机号" prop="deviceName" width="120" />
+                <el-table-column label="领用罐号" prop="holderName" width="120" show-overflow-tooltip />
                 <el-table-column label="工作内容" prop="content" />
-                <el-table-column label="开始时间" prop="startTime" width="150" show-overflow-tooltip />
-                <el-table-column label="结束时间" prop="endTime" width="150" show-overflow-tooltip />
+                <el-table-column label="开始时间" prop="startTime" width="140" show-overflow-tooltip />
+                <el-table-column label="结束时间" prop="endTime" width="140" show-overflow-tooltip />
                 <el-table-column label="时长(H)" prop="timeLength" />
                 <el-table-column label="备注" prop="remark" />
                 <el-table-column label="操作时间" prop="changed" width="150" show-overflow-tooltip />
-                <el-table-column label="操作人" prop="changer" width="150" show-overflow-tooltip />
-                <el-table-column width="50" fixed="right">
+                <el-table-column label="操作人" prop="changer" width="145" show-overflow-tooltip />
+                <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || scope.row.status === 'checked' || scope.row.status === 'submit'" @click="DelRow(scope.row)">
                             删除
@@ -71,7 +72,7 @@
             <div slot="title">
                 {{ workInfo.deviceName }}
             </div>
-            <el-form ref="workInfo" :model="workInfo" size="small" label-width="110px" :rules="workInforules">
+            <el-form ref="workInfo" :model="workInfo" size="small" label-width="110px">
                 <el-form-item label="工作内容：">
                     {{ workInfo.content }}
                 </el-form-item>
@@ -80,6 +81,14 @@
                 </el-form-item>
                 <el-form-item label="结束时间：" prop="endTime">
                     <el-date-picker v-model="workInfo.endTime" type="datetime" placeholder="选择时间" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" />
+                </el-form-item>
+                <el-form-item v-if="workInfo.content === '过滤' && workInfo.id === ''" label="领用罐号：">
+                    <el-select v-model="workInfo.holderId" filterable style="width: 220px;">
+                        <el-option v-for="(sole, index) in holderList" :key="index" :value="sole.holderId" :label="sole.holderName" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="workInfo.id" label="领用罐号：">
+                    <el-select v-model="workInfo.holderName" :disabled="true" />
                 </el-form-item>
                 <el-form-item label="备注：">
                     <el-input v-model="workInfo.remark" style="width: 220px;" />
@@ -136,10 +145,20 @@ export default {
                     }
                 ]
             },
-            equStatus: ''
+            equStatus: '',
+            holderList: []
         };
     },
     methods: {
+        GetequWorkingList() {
+            let returnList
+            if (this.dataList.length === 0) {
+                returnList = [];
+            } else {
+                returnList = this.dataList.filter(item => item.delFlag === '0');
+            }
+            return returnList;
+        },
         GetList(params) {
             this.orderId = params.orderId;
             this.$http(`${FILTRATION_API.FILTER_EQUWORKINGHOURS_LIST}`, 'POST', params)
@@ -156,6 +175,15 @@ export default {
                 .finally(() => {
                     this.$emit('setEquState', this.equStatus);
                 });
+        },
+        GetHolderList(params) {
+            this.$http(`${FILTRATION_API.FILTER_MATERIAL_HOLDERLIST}`, 'POST', params).then(({ data }) => {
+                if (data.code === 0) {
+                    this.holderList = data.holderList;
+                } else {
+                    this.$errorTost(data.msg);
+                }
+            });
         },
         Readyrules() {
             let ty = true;
@@ -187,35 +215,52 @@ export default {
                 filterMachineId: item.deviceId,
                 startTime: '',
                 endTime: '',
+                holderId: '',
+                holderName: '',
                 delFlag: '0'
             };
             this.dialogVisible = true;
         },
-        SaveDialog(formName) {
-            this.$refs[formName].validate(valid => {
-                if (valid) {
-                    this.workInfo.timeLength = ((new Date(this.workInfo.endTime) - new Date(this.workInfo.startTime)) / 3600000).toFixed(2);
-                    this.workInfo.changed = dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss');
-                    this.workInfo.changer = this.$store.state.user.realName + `(${this.$store.state.user.name})`;
-                    // this.workInfo.remark = this.workInfo.remark;
-                    let currentRecord = [];
-                    if (Object.prototype.hasOwnProperty.call(this.workInfo, 'uid')) {
-                        // 新增行
-                        currentRecord = this.dataList.filter(data => data.uid === this.workInfo.uid);
-                    } else {
-                        // 原有行
-                        currentRecord = this.dataList.filter(data => data.id === this.workInfo.id);
-                    }
-                    if (currentRecord && currentRecord.length > 0) {
-                        Object.assign(currentRecord[0], this.workInfo);
-                    } else {
-                        this.dataList.push(this.workInfo);
-                    }
-                    this.dialogVisible = false;
-                } else {
-                    return false;
-                }
-            });
+        SaveDialog() {
+            if (!this.workInfo.startTime) {
+                this.$warningTost('请选择开始时间');
+                return false;
+            }
+            if (!this.workInfo.endTime) {
+                this.$warningTost('请选择结束时间');
+                return false;
+            }
+            if (this.workInfo.content === '过滤' && !this.workInfo.holderId) {
+                this.$warningTost('请选择领用罐');
+                return false;
+            }
+            // this.$refs[formName].validate(valid => {
+            //     if (valid) {
+            if (this.workInfo.content === '过滤' && this.workInfo.id === '') {
+                this.workInfo.holderName = this.holderList.find((item) => item.holderId === this.workInfo.holderId).holderName;
+            }
+            this.workInfo.timeLength = ((new Date(this.workInfo.endTime) - new Date(this.workInfo.startTime)) / 3600000).toFixed(2);
+            this.workInfo.changed = dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss');
+            this.workInfo.changer = this.$store.state.user.realName + `(${this.$store.state.user.name})`;
+            // this.workInfo.remark = this.workInfo.remark;
+            let currentRecord = [];
+            if (Object.prototype.hasOwnProperty.call(this.workInfo, 'uid')) {
+                // 新增行
+                currentRecord = this.dataList.filter(data => data.uid === this.workInfo.uid);
+            } else {
+                // 原有行
+                currentRecord = this.dataList.filter(data => data.id === this.workInfo.id);
+            }
+            if (currentRecord && currentRecord.length > 0) {
+                Object.assign(currentRecord[0], this.workInfo);
+            } else {
+                this.dataList.push(this.workInfo);
+            }
+            this.dialogVisible = false;
+                // } else {
+                //     return false;
+                // }
+            // });
         },
         EditInfo(row) {
             if (this.isRedact === true && row.status !== 'checked' && row.status !== 'submit') {

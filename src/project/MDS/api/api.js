@@ -969,7 +969,10 @@ export const REP_API = {
     BOTTLEQUALITY_LIST_API: HOST + '/report/production/bottleQuality', // 查询
     BOTTLEQUALITY_EXPORT_API: HOST + '/report/production/bottleQualityExport', // 导出
     BOTTLEEMRE_LIST_API: HOST + '/report/fromEs/embryoRecord', // 投胚记录查询
-    BOTTLEEMRE_EXPORT_API: HOST + '/report/fromEs/expectEmbryoRecord' // 投胚记录导出
+    BOTTLEEMRE_EXPORT_API: HOST + '/report/fromEs/expectEmbryoRecord', // 投胚记录导出
+    /* ************************** 杀菌过滤车间报表 ************************** */
+    STERILIZATIONFILTRATION_LIST_API: HOST + '/report/res/filterTrace', // 存储时间追溯
+    STERILIZATIONFILTRATION_EXPORT_API: HOST + '/report/res/expectFilterTrace' // 存储时间追溯
 };
 /*
  *炒麦api

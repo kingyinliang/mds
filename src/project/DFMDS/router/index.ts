@@ -51,16 +51,16 @@ const mainRoutes: RouteConfig = {
                 isTab: true
             }
         },
-        // {
-        //     path: '/User',
-        //     name: 'User',
-        //     component: () => import('common/pages/User/index.vue'),
-        //     meta: {
-        //         menuId: 1,
-        //         title: '人员管理',
-        //         isTab: true
-        //     }
-        // }
+        {
+            path: '/User',
+            name: 'User',
+            component: () => import('common/pages/User/index.vue'),
+            meta: {
+                menuId: 1,
+                title: '人员管理',
+                isTab: true
+            }
+        },
         {
             path: '/Role',
             name: 'Role',
@@ -68,6 +68,16 @@ const mainRoutes: RouteConfig = {
             meta: {
                 menuId: 1,
                 title: '角色管理',
+                isTab: true
+            }
+        },
+        {
+            path: '/Container',
+            name: 'Container',
+            component: () => import('common/pages/Container/index.vue'),
+            meta: {
+                menuId: 1,
+                title: '容器管理',
                 isTab: true
             }
         }
@@ -102,7 +112,7 @@ router.beforeEach((to, from, next) => {
             router['options'].isAddDynamicMenuRoutes = true;
             sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'));
             sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'));
-            return next({ replace: true });
+            return next(Object.assign({}, to, { replace: true }));
         }
         sessionStorage.setItem('menuList', '[]');
         sessionStorage.setItem('permissions', '[]');

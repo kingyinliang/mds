@@ -1,6 +1,6 @@
 <template>
     <el-dialog :title="roleStyle==='modify' ? '修改角色信息' : '新增角色'" :close-on-click-modal="false" :visible.sync="isDaologShow">
-        <el-form ref="dataForm" :model="dataForm" label-width="100px" :rules="rules">
+        <el-form ref="dataForm" :model="dataForm" label-width="100px" :rules="checkRules">
             <el-form-item label="角色名称：" prop="roleName">
                 <el-input v-model="dataForm.roleName" placeholder="手动输入" />
             </el-form-item>
@@ -13,7 +13,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
             <el-button @click="resetDataForm('dataForm')">取消</el-button>
-            <el-button type="primary" @click="roleStyle==='add'?addDataFormSubmit('dataForm'):editDataFormSubmit('dataForm')">确定</el-button>
+            <el-button type="primary" @click="roleStyle==='add'?addDataForm('dataForm'):editDataForm('dataForm')">确定</el-button>
         </span>
     </el-dialog>
 </template>
@@ -21,7 +21,7 @@
 <script>
     import { COMMON_API } from 'common/api/api';
     export default {
-        name: 'AddAndUpdateRole',
+        name: 'RoleaddAndUpdate',
         data() {
             return {
                 roleStyle: '',
@@ -32,7 +32,7 @@
                     roleCode: '',
                     roleDescribe: ''
                 },
-                rules: {
+                checkRules: {
                     roleName: [
                         { required: true, message: '角色名称', trigger: 'blur' },
                         { max: 20, message: '长度在 20 个字符内', trigger: 'blur' }
@@ -58,7 +58,7 @@
                 this.isDaologShow = true;
             },
             // 新增提交
-            addDataFormSubmit(formName) {
+            addDataForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
                             COMMON_API.ROLE_INSERT_API({
@@ -84,7 +84,7 @@
                     });
             },
             // 编辑提交
-            editDataFormSubmit(formName) {
+            editDataForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
                             COMMON_API.ROLE_UPDATE_API({
@@ -110,6 +110,7 @@
                         }
                     });
             },
+            // 重置
             resetDataForm(formName) {
                 this.isDaologShow = false
                 this.$refs[formName].resetFields();
