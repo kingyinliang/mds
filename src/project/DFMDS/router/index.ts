@@ -42,6 +42,16 @@ const mainRoutes: RouteConfig = {
             }
         },
         {
+            path: '/DeviceManage',
+            name: 'DeviceManage',
+            component: () => import('common/pages/DeviceManage/DeviceManage.vue'),
+            meta: {
+                menuId: 1,
+                title: '设备管理',
+                isTab: true
+            }
+        },
+        {
             path: '/OrgStructure',
             name: 'OrgStructure',
             component: () => import('common/pages/OrgStructure/index.vue'),

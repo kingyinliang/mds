@@ -9,7 +9,7 @@
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
                     <el-input v-model="materialCode" size="small" placeholder="物料" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
-                    <el-button type="primary" size="small" @click="GetList(false, true)">
+                    <el-button type="primary" size="small" @click="getData(false, true)">
                         查询
                     </el-button>
                     <el-button type="primary" size="small" @click="addOrupdate()">
@@ -19,8 +19,8 @@
                         批量删除
                     </el-button>
                 </div>
-                <el-table ref="table1" :data="CapacityList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="35" fixed="left" />
+                <el-table ref="table1" class="newTable" :data="CapacityList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="39" fixed="left" />
                     <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
                     <el-table-column prop="workNum" :show-overflow-tooltip="true" label="物料">
                         <template slot-scope="scope">
@@ -83,8 +83,19 @@
         pageSize = 10
         visible = false
         CapacityList: object[] = []
-        SerchSapList: object[] = []
+        SerchSapList: object[] = [];
+
         multipleSelection: string[] = []
+
+        mounted() {
+            COMMON_API.ALLMATERIAL_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            }).then(({ data }) => {
+                if (data.code === 200) {
+                    this.SerchSapList = data.data
+                }
+            })
+        }
 
         getData(row = false, first = false) {
             if (row) {
@@ -141,7 +152,10 @@
                     type: 'warning'
                 })
                     .then(() => {
-                        COMMON_API.CAPACITYDEL_API(this.multipleSelection).then(({ data }) => {
+                        COMMON_API.CAPACITYDEL_API({
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                            ids: this.multipleSelection
+                        }).then(({ data }) => {
                             if (data.code === 0) {
                                 this.$successToast('删除成功!');
                                 this.multipleSelection = [];

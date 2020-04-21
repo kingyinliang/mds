@@ -3,7 +3,7 @@
         <div>
             <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="物料：" prop="material">
-                    <el-select v-model="dataForm.material" filterable placeholder="请选择" :disabled="CapacityId">
+                    <el-select v-model="dataForm.material" filterable placeholder="请选择" :disabled="CapacityId !== ''">
                         <el-option v-for="item in serchSapList" :key="item.sapCode + ' ' + item.itemName" :label="item.sapCode + ' ' + item.itemName" :value="item.sapCode + ' ' + item.itemName" />
                     </el-select>
                 </el-form-item>
@@ -18,6 +18,7 @@
                 </el-form-item>
                 <el-form-item label="单位：" prop="basicCapacityUnit">
                     <el-select v-model="dataForm.basicCapacityUnit" filterable placeholder="请选择">
+                        <el-option label="000" value="000" />
                         <el-option v-for="item in Unit" :key="item.code" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </el-form-item>
@@ -146,11 +147,14 @@ export default {
         dataFormSubmit() {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
+                    this.dataForm.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     this.dataForm.materialCode = this.dataForm.material.substring(0, this.dataForm.material.indexOf(' '));
                     this.dataForm.materialName = this.dataForm.material.substring(this.dataForm.material.indexOf(' ') + 1);
-                    COMMON_API.CAPACITYADD_API(this.dataForm).then(({ data }) => {
+                    let http;
+                    this.CapacityId ? http = COMMON_API.CAPACITYUPDATA_API : http = COMMON_API.CAPACITYADD_API;
+                    http(this.dataForm).then(({ data }) => {
                         if (data.code === 200) {
-                            this.$successTost('操作成功');
+                            this.$successToast('操作成功');
                             this.visible = false;
                             this.$emit('refreshDataList');
                         }

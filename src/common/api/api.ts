@@ -196,5 +196,25 @@ export const COMMON_API = {
     /**
      * @property {string} CAPACITYUPDATA_API 产能管理修改
      */
-    CAPACITYUPDATA_API: params => httpProxy('/sysCapacity/update', 'POST', params)
+    CAPACITYUPDATA_API: params => httpProxy('/sysCapacity/update', 'POST', params),
+    /**
+     * @property {string} DEVICELIST_API 设备管理列表
+     */
+    DEVICELIST_API: params => httpProxy('/sysDevice/query', 'POST', params),
+    /**
+     * @property {string} DEVICELIST_API 设备管理新增
+     */
+    DEVICEADD_API: params => httpProxy('/sysDevice/insert', 'POST', params),
+    /**
+     * @property {string} DEVICELIST_API 设备管理修改
+     */
+    DEVICEUPDATA_API: params => httpProxy('/sysDevice/update', 'POST', params),
+    /**
+     * @property {string} DEVICELIST_API 设备管理删除
+     */
+    DEVICEDEL_API: params => httpProxy('/sysDevice/remove', 'POST', params),
+    /**
+     * @property {string} ALLMATERIAL_API 物料管理拿全部物料
+     */
+    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params)
 };
