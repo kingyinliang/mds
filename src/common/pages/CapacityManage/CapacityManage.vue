@@ -64,7 +64,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API } from 'common/api/api';
-    import CapacityAddOrUpdate from './CapacityAddOrUpdate';
+    import CapacityAddOrUpdate from './CapacityAddOrUpdate.vue';
 
     @Component({
         components: {
