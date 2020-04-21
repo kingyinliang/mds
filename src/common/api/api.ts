@@ -60,6 +60,30 @@ export const COMMON_API = {
     /**
      * @property {string} DICTQUERY_API 数据字典根据类型获取详情
      */
-    DICTQUERY_API: params => httpProxy('/sysDictItem/dropDown', 'GET', params)
+    DICTQUERY_API: params => httpProxy('/sysDictItem/dropDown', 'GET', params),
+    /**
+     * @property {string} UPLOADFILE_API 上传文件
+     */
+    UPLOADFILE_API: params => httpProxy('/sysFile/upload', 'GET', params),
+    /**
+     * @property {string} DOWNLOADFILE_API 下载文件
+     */
+    DOWNLOADFILE_API: params => httpProxy('/sysFile/download', 'GET', params),
+    /**
+     * @property {string} CAPACITYLIST_API 产能管理列表
+     */
+    CAPACITYLIST_API: params => httpProxy('/sysCapacity/query', 'POST', params),
+    /**
+     * @property {string} CAPACITYDEL_API 产能管理删除
+     */
+    CAPACITYDEL_API: params => httpProxy('/sysCapacity/delete', 'POST', params),
+    /**
+     * @property {string} CAPACITYADD_API 产能管理新增
+     */
+    CAPACITYADD_API: params => httpProxy('/sysCapacity/insert', 'POST', params),
+    /**
+     * @property {string} CAPACITYUPDATA_API 产能管理修改
+     */
+    CAPACITYUPDATA_API: params => httpProxy('/sysCapacity/update', 'POST', params)
 
 };
