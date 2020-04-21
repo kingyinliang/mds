@@ -46,8 +46,6 @@ export default {
             })
                 .then(({ data }) => {
                     if (data.code === 200) {
-                        console.log('11111')
-                        console.log(data)
                         this.menuList = this.translateTreeData(data.data);
                     }
                 })
@@ -59,8 +57,6 @@ export default {
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         roleId: id
                     }).then(({ data }) => {
-                        console.log('222222')
-                        console.log(data)
                         if (data.code === 200) {
                             this.$refs.menuListTree.setCheckedKeys(data.data);
                         } else {
@@ -93,14 +89,13 @@ export default {
         },
         // 表单提交
         submitDataForm() {
-            console.log(this.$refs.menuListTree.getCheckedKeys())
             COMMON_API.ROLE_MENU_INSERT_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 roleId: this.roleID,
                 menuId: [].concat(this.$refs.menuListTree.getCheckedKeys())
             }).then(({ data }) => {
                 if (data.code === 200) {
-                    this.$successTost('操作成功');
+                    this.$successToast('操作成功');
                     this.isDaologShow = false;
                     this.$emit('refreshDataList');
                 } else {
