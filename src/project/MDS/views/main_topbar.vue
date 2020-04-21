@@ -118,7 +118,7 @@ export default {
                         if (data && data.code === 0) {
                             this.$cookie.delete('token');
                             this.$router.options.isAddDynamicMenuRoutes = false;
-                            this.$router.push({ path: '/login' });
+                            window.location.href = `${process.env.VUE_APP_HOST}`;
                         }
                     });
                 })

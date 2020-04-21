@@ -972,7 +972,10 @@ export const REP_API = {
     BOTTLEEMRE_EXPORT_API: HOST + '/report/fromEs/expectEmbryoRecord', // 投胚记录导出
     /* ************************** 杀菌过滤车间报表 ************************** */
     STERILIZATIONFILTRATION_LIST_API: HOST + '/report/res/filterTrace', // 存储时间追溯
-    STERILIZATIONFILTRATION_EXPORT_API: HOST + '/report/res/expectFilterTrace' // 存储时间追溯
+    STERILIZATIONFILTRATION_EXPORT_API: HOST + '/report/res/expectFilterTrace', // 存储时间追溯
+    /** *************************** 原汁车间 *******************************************/
+    JUICEMOVE_LIST_API: HOST + '/report/res/juiceMove', // 原汁移动报表
+    JUICEMOVE_EXPORT_API: HOST + '/report/res/expectJuiceMove'
 };
 /*
  *炒麦api

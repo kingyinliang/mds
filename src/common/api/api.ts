@@ -85,7 +85,6 @@ export const COMMON_API = {
      * @property {string} USER_ROLE_QUERY_API 系统管理-用户管理-查询
      */
     USER_ROLE_QUERY_API: params => httpProxy('/sysUser/userRole/query', 'POST', params),
-
     /**
      * @property {string} ROLE_REMOVE_API 系统管理-角色管理-删除角色
      */
@@ -126,7 +125,6 @@ export const COMMON_API = {
      * @property {string} ROLE_USER_LIST_API 系统管理-角色管理-获取人员列表
      */
     ROLE_USER_LIST_API: params => httpProxy('/sysUserRole/roleUserList', 'POST', params),
-
     /**
      * @property {string} ORGSTRUCTURE_API 组织架构树形列表
      */
@@ -174,5 +172,29 @@ export const COMMON_API = {
     /**
      * @property {string} HOLDER_UPDATE_API 基础数据-容器管理-修改容器
      */
-    HOLDER_UPDATE_API: params => httpProxy('/sysHolder/update', 'POST', params)
+    HOLDER_UPDATE_API: params => httpProxy('/sysHolder/update', 'POST', params),
+    /**
+     * @property {string} UPLOADFILE_API 上传文件
+     */
+    UPLOADFILE_API: params => httpProxy('/sysFile/upload', 'GET', params),
+    /**
+     * @property {string} DOWNLOADFILE_API 下载文件
+     */
+    DOWNLOADFILE_API: params => httpProxy('/sysFile/download', 'GET', params),
+    /**
+     * @property {string} CAPACITYLIST_API 产能管理列表
+     */
+    CAPACITYLIST_API: params => httpProxy('/sysCapacity/query', 'POST', params),
+    /**
+     * @property {string} CAPACITYDEL_API 产能管理删除
+     */
+    CAPACITYDEL_API: params => httpProxy('/sysCapacity/delete', 'POST', params),
+    /**
+     * @property {string} CAPACITYADD_API 产能管理新增
+     */
+    CAPACITYADD_API: params => httpProxy('/sysCapacity/insert', 'POST', params),
+    /**
+     * @property {string} CAPACITYUPDATA_API 产能管理修改
+     */
+    CAPACITYUPDATA_API: params => httpProxy('/sysCapacity/update', 'POST', params)
 };

@@ -51,7 +51,7 @@
                     <el-select ref="mySelect" v-model="receive.holderName" :disabled="true" />
                 </el-form-item>
                 <el-form-item v-else label="半成品罐号：" prop="holderId">
-                    <el-select ref="mySelect" v-model="receive.holderId" filterable>
+                    <el-select ref="mySelect" v-model="receive.holderId" filterable @change="ChangeHolder($event)">
                         <el-option v-for="(item, index) in holderList" :key="index" :value="item.holderId" :label="item.holderName" />
                     </el-select>
                 </el-form-item>
@@ -120,9 +120,23 @@ export default {
         };
     },
     watch: {
-        'receive.holderId'(n) {
-            if (n && n !== '') {
-                const holderInfo = this.holderList.find(item => item.holderId === n);
+        // 'receive.holderId'(n) {
+        //     if (n && n !== '') {
+        //         const holderInfo = this.holderList.find(item => item.holderId === n);
+        //         this.receive.batch = holderInfo.batch;
+        //         this.receive.materialCode = holderInfo.materialCode;
+        //         this.receive.materialName = holderInfo.materialName;
+        //         this.receive.materialcn = holderInfo.materialCode + holderInfo.materialName;
+        //         this.receive.receiveAmount = holderInfo.amount / 1000;
+        //         this.receive.holderName = holderInfo.holderName;
+        //     }
+        // }
+    },
+    methods: {
+        // 领用罐改变
+        ChangeHolder(val) {
+            if (this.receive.id === '') {
+                const holderInfo = this.holderList.find(item => item.holderId === val);
                 this.receive.batch = holderInfo.batch;
                 this.receive.materialCode = holderInfo.materialCode;
                 this.receive.materialName = holderInfo.materialName;
@@ -130,9 +144,7 @@ export default {
                 this.receive.receiveAmount = holderInfo.amount / 1000;
                 this.receive.holderName = holderInfo.holderName;
             }
-        }
-    },
-    methods: {
+        },
         GetmaterialList() {
             let returnList
             if (this.dataList.length === 0) {

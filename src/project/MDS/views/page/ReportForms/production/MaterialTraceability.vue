@@ -105,13 +105,13 @@ export default {
     },
     GetCheckOver() {
         this.num += 1;
-        if (this.num < 10) {
+        if (this.num < 15) {
             this.$http(`${REP_API.MaterialTraceability_checkOver_API}`, 'POST', this.formHeader, false, false, false).then(({ data }) => {
                 if (data.code === 0) {
                     if (data.msg !== null) {
                         this.dataList = [];
                         this.dataList.push(JSON.parse(data.msg));
-                        this.RegroupData(this.dataList);
+                        this.RegroupData(this.dataList, 1);
                         this.loadings.close();
                         clearInterval(this.orderStatus);
                     }
@@ -127,9 +127,9 @@ export default {
         }
     },
     // 数据重组
-    RegroupData(dataList) {
+    RegroupData(dataList, level) {
         for (let i = 0; i < dataList.length; i++) {
-            dataList[i]['_level'] = dataList[i]['id']
+            dataList[i]['_level'] = level
             let pinjie = '';
             if (dataList[i]['id'] > 1) {
                 if (i === (dataList.length - 1)) {
@@ -141,7 +141,7 @@ export default {
             dataList[i]['materialName'] = pinjie + '  ' + dataList[i]['materialName']
             dataList[i]['children'] = dataList[i]['views']
             if (dataList[i]['hasChildren'] === true) {
-                this.RegroupData(dataList[i]['views'])
+                this.RegroupData(dataList[i]['views'], level + 1)
             }
         }
         // dataList.map(item => {

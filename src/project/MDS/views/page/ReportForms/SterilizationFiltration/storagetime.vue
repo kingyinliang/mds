@@ -40,9 +40,31 @@ export default {
                     }
                 },
                 {
+                    type: 'select',
+                    label: '品项',
+                    prop: 'materialCode',
+                    defaultOptionsFn: () => {
+                        return this.$http(`${BASICDATA_API.FINDSAP_TWO_API}`, 'POST', {}, false, false, false);
+                    },
+                    filterable: true,
+                    clearable: true,
+                    defaultValue: '',
+                    resVal: {
+                        resData: 'list',
+                        label: ['sapCode', 'itemName'],
+                        value: 'sapCode'
+                    }
+                },
+                {
                     type: 'input',
                     label: '订单号',
                     prop: 'orderNo'
+                },
+                {
+                    type: 'date-interval',
+                    label: '生产日期',
+                    prop: 'orderDateStart',
+                    propTwo: 'orderDateEnd'
                 }
             ],
             listInterface: params => {

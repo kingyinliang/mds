@@ -11,12 +11,12 @@ const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('@/
 // const importTarget = import('./import-' + process.env.NODE_ENV);
 // 全局路由(无需嵌套上左右整体布局)
 const globalRoutes = [
-    {
-        path: '/login',
-        component: importTarget('common/login'),
-        name: 'login',
-        meta: { title: '登录' }
-    },
+    // {
+    //     path: '/login',
+    //     component: importTarget('common/login'),
+    //     name: 'login',
+    //     meta: { title: '登录' }
+    // },
     {
         path: '/echarts',
         component: importTarget('common/demo-echarts'),

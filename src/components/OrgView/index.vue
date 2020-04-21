@@ -32,7 +32,9 @@
                         <div class="org-card_title">
                             {{ rightTile }}
                         </div>
-                        <div class="detail-main" />
+                        <div class="detail-main">
+                            <slot name="view" />
+                        </div>
                     </div>
                 </el-col>
             </el-row>
@@ -134,6 +136,9 @@
         .tree-main {
             flex: 1;
             overflow-y: scroll;
+        }
+        .detail-main {
+            padding: 16px 10px 0 10px;
         }
     }
 </style>
