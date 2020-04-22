@@ -32,7 +32,7 @@
                     <el-table-column prop="teamName" label="班组" :show-overflow-tooltip="true" />
                     <el-table-column prop="userId" label="人员" :show-overflow-tooltip="true" width="80" />
                     <template v-if="dataList.length > 0">
-                        <el-table-column v-for="(item, index) in dataList[0].listMonth.length" :key="item" :label="month + '月' + (index + 1).toString() + '日'">
+                        <el-table-column v-for="(item, index) in dataList[0].listMonth.length" :key="item" :label="month + '月' + (index + 1).Toastring() + '日'">
                             <el-table-column label="白班时数" :show-overflow-tooltip="true" width="80">
                                 <template slot-scope="scope">
                                     {{ scope.row.listMonth[index].dayTime }}
@@ -115,7 +115,7 @@ export default {
                             ? this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1).slice(1)
                             : this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.lodingS = false;
             });
@@ -133,7 +133,7 @@ export default {
                     }, 4000);
                 } else {
                     this.lodingS = false;
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
             // let that = this
@@ -173,7 +173,7 @@ export default {
                     } else {
                         this.lodingS = false;
                         clearInterval(this.ExportTime);
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(() => {

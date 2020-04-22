@@ -263,7 +263,7 @@ export default {
                         this.form.factory = this.factory[0].deptId;
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -283,7 +283,7 @@ export default {
                             }
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -296,7 +296,7 @@ export default {
                 if (data.code === 0) {
                     this.holderList = data.data;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -306,7 +306,7 @@ export default {
                 if (data.code === 0) {
                     this.materialList = data.materialList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -316,7 +316,7 @@ export default {
                 if (data.code === 0) {
                     this.materialTypeList = data.ferList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -336,7 +336,7 @@ export default {
                 if (data.code === 0) {
                     this.materialTypeList = data.ferList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -353,7 +353,7 @@ export default {
                     this.$store.state.common.Fermentation.category.ferDays = '';
                     this.$store.state.common.Fermentation.category.halfId = '';
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -407,7 +407,7 @@ export default {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     if (this.beforeHalfId === this.judge.halfId && this.beforeFrozenStatus === this.judge.frozenStatus && this.beforeRemark === this.judge.remark) {
-                        this.$warningTost('没有数据变更，无法保存');
+                        this.$warningToast('没有数据变更，无法保存');
                         return false;
                     } else if (this.beforeHalfId === this.judge.halfId && this.beforeFrozenStatus === this.judge.frozenStatus) {
                         this.judge.isChange = '1';
@@ -415,10 +415,10 @@ export default {
                     this.dialogVisible = false;
                     this.$http(`${FERMENTATION_API.CATEGORYJUDGEMENTTODO_API}`, 'POST', this.judge).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('调整成功');
+                            this.$successToast('调整成功');
                             this.GetList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {

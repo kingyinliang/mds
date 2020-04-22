@@ -395,7 +395,7 @@ export default {
                 if (this.thrwHolderList.filter(item => item.holderId === row.holderId).length > 0) {
                     row.category = this.thrwHolderList.filter(item => item.holderId === row.holderId)[0].type;
                 } else {
-                    // this.$warningTost('BOM物料对应批次所需的原汁罐号不存在')
+                    // this.$warningToast('BOM物料对应批次所需的原汁罐号不存在')
                 }
             }
         },
@@ -409,7 +409,7 @@ export default {
                 }
             }
             if (tys === 1) {
-                this.$warningTost('BOM物料对应批次所需的原汁罐号不存在');
+                this.$warningToast('BOM物料对应批次所需的原汁罐号不存在');
             }
         },
         // 获取不合格原因
@@ -418,7 +418,7 @@ export default {
                 if (data.code === 0) {
                     this.nonReasonsList = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -430,7 +430,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -447,7 +447,7 @@ export default {
                             this.formHeader.workShop = '';
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -460,7 +460,7 @@ export default {
                 if (data.code === 0) {
                     this.holderList = data.holderList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -476,7 +476,7 @@ export default {
                     if (data.code === 0) {
                         this.thrwHolderList = data.holderList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -485,7 +485,7 @@ export default {
         /* eslint-disable @typescript-eslint/camelcase*/
         SearchList() {
             if (this.formHeader.factory === '') {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return false;
             }
             this.ThrowHolder(this.formHeader.workShop);
@@ -502,7 +502,7 @@ export default {
                     this.pages.currentPage = 1;
                     this.dataList = this.dataListAll.slice((this.pages.currentPage - 1) * this.pages.pageSize, this.pages.currentPage * this.pages.pageSize);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -542,7 +542,7 @@ export default {
                         this.CheckMessage();
                     }, 1000);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -575,22 +575,22 @@ export default {
                     batchList.push(item.batch);
                     item.ID = this.ID;
                     if ((!item.receiveAmount || item.receiveAmount === '') && item.delFlag === '0') {
-                        this.$warningTost('请填写实际领料');
+                        this.$warningToast('请填写实际领料');
                         return false;
                     }
                     if ((!item.batch || item.batch === '') && item.delFlag === '0') {
-                        this.$warningTost('请填写批次');
+                        this.$warningToast('请填写批次');
                         return false;
                     }
                     if (item.batch.length !== 10 && item.delFlag === '0') {
-                        this.$warningTost('批次应为10位');
+                        this.$warningToast('批次应为10位');
                         return false;
                     }
                     if (item.materialName === 'Y010' && item.delFlag === '0') {
                         Y010 = accAdd(Y010, item.receiveAmount);
                     }
                     // if (item.materialName.indexOf('原汁') !== -1 && (item.holderId === '' || !item.holderId)) {
-                    //   this.$warningTost('原汁物料需选择罐号')
+                    //   this.$warningToast('原汁物料需选择罐号')
                     //   return false
                     // }
                     if (this.orderTypeSign === '1' && item.holderId && this.thrwHolderList.filter(it => item.holderId === it.holderId)[0].isRdSign !== '1') {
@@ -607,7 +607,7 @@ export default {
             // 实际领用数应小于计划领料
             if (this.ItemList.findIndex(item => item.materialName === 'Y010' && item.delFlag === '0') !== -1) {
                 if (this.ItemList.find(item => item.materialName === 'Y010' && item.delFlag === '0').planAmount !== Y010) {
-                    this.$warningTost('Y010物料实际领料数总和应等于计划领用数');
+                    this.$warningToast('Y010物料实际领料数总和应等于计划领用数');
                     return false;
                 }
             }
@@ -634,7 +634,7 @@ export default {
                         }).then(() => {
                             this.SubmitFunction();
                         }).catch(() => {
-                            // this.$infoTost('已取消删除');
+                            // this.$infoToast('已取消删除');
                         });
                     }
                 });
@@ -648,11 +648,11 @@ export default {
                     }).then(() => {
                         this.SubmitFunction();
                     }).catch(() => {
-                        // this.$infoTost('已取消删除');
+                        // this.$infoToast('已取消删除');
                     });
                 }
             // if (new Set(batchList).size !== batchList.length) {
-            //   this.$warningTost('批次不能重复')
+            //   this.$warningToast('批次不能重复')
             //   return false
             // }
         },
@@ -661,8 +661,8 @@ export default {
                 if (item.materielType === 'BL_LY') {
                     delete this.ItemList[index];
                 } else {
-                    item.receiveAmount = item.receiveAmount.toString();
-                    item.planAmount = item.planAmount.toString();
+                    item.receiveAmount = item.receiveAmount.Toastring();
+                    item.planAmount = item.planAmount.Toastring();
                 }
             });
             this.ItemList = this.ItemList.filter(function(val) {
@@ -683,9 +683,9 @@ export default {
                         // this.ThrowHolder(this.formHeader.workShop)
                         this.dialogTableVisible = false;
                     } else if (data.mes.length === 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         } else {
-                            this.$errorTost(data.mes.join(','));
+                            this.$errorToast(data.mes.join(','));
                         }
                 });
             } else {
@@ -704,7 +704,7 @@ export default {
         // header saved
         SavedForm() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请勾选数据');
+                this.$warningToast('请勾选数据');
                 return false;
             }
             this.multipleSelection.forEach(item => {
@@ -720,7 +720,7 @@ export default {
                     this.isRedact = false;
                     this.SearchList();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -731,16 +731,16 @@ export default {
                 type: 'warning'
             }).then(() => {
                 if (this.multipleSelection.length === 0) {
-                    this.$warningTost('请勾选数据');
+                    this.$warningToast('请勾选数据');
                     return false;
                 }
                 for (const item of this.multipleSelection) {
                     if (item.isUpdate === false) {
-                        this.$warningTost('请先保存调配详情信息（调配单：' + item.orderNo + '）');
+                        this.$warningToast('请先保存调配详情信息（调配单：' + item.orderNo + '）');
                         return false;
                     }
                     if (!item.holderId || !item.allocateTime || item.holderId === '' || item.allocateTime === '') {
-                        this.$warningTost('请填写必填项');
+                        this.$warningToast('请填写必填项');
                         return false;
                     }
                 }
@@ -754,11 +754,11 @@ export default {
                         this.isRedact = false;
                         this.SearchList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 复选框初始状态
@@ -787,7 +787,7 @@ export default {
                 row.delFlag = '1';
                 // this.ItemList.splice(this.ItemList.indexOf(row), 1)
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         SplitStatus(row) {
@@ -811,13 +811,13 @@ export default {
                 if (data.code === 0) {
                     this.userList = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         addReasons() {
             if (this.record.Reason.length === 3) {
-                this.$warningTost('最多三个调整框');
+                this.$warningToast('最多三个调整框');
                 return;
             }
             this.record.Reason.push({ adjustAmount: '', nonReasonClass: '' });
@@ -887,7 +887,7 @@ export default {
                     }
                     this.RecordDialogTableVisible = true;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -953,7 +953,7 @@ export default {
                             this.RecordDialogTableVisible = false;
                             this.$refs[formName].resetFields();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {

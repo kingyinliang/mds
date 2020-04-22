@@ -96,7 +96,7 @@
         name: 'DataEntry',
         filters: {
             itemValue(value, formHeader) {
-                if (Object.prototype.toString.call(value) === '[object Array]') {
+                if (Object.prototype.Toastring.call(value) === '[object Array]') {
                     let str = '';
                     value.forEach(it => {
                         str = str + ' ' + (formHeader[it] || '');
@@ -187,7 +187,7 @@
             },
             // 设置tabs的绑定
             setKey(index) {
-                return (index + 1).toString();
+                return (index + 1).Toastring();
             },
             updateTabs() {
                 this.$refs.tabs.handleTabClick(this.$refs.tabs.panes[parseInt(this.$refs.tabs.currentName, 10) - 1]);
@@ -207,7 +207,7 @@
                     this.savedDatas(str).then(res => {
                         if (res !== false) {
                             this.isRedact = false;
-                            this.$successTost('保存成功');
+                            this.$successToast('保存成功');
                             this.$emit('success');
                         }
                     });
@@ -215,7 +215,7 @@
                     this.submitDatas(str).then(res => {
                         if (res !== false) {
                             this.isRedact = false;
-                            this.$successTost('提交成功');
+                            this.$successToast('提交成功');
                             this.$emit('success');
                         }
                     });
@@ -236,7 +236,7 @@
                 }).then(() => {
                     this.savedData('submit');
                 }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
                 });
             }
         }

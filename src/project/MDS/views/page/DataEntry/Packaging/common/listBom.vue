@@ -326,7 +326,7 @@ export default {
                         }
                         this.$emit('GetlistbomStatus', this.Sapstatus);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -382,11 +382,11 @@ export default {
         subSap(resolve) {
             this.$http(`${PACKAGING_API.PKGSAVEFORMP_API}`, 'POST', this.listbomP).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.$http(`${PACKAGING_API.PKGSAVEFORMS_API}`, 'POST', this.listbomS).then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -416,7 +416,7 @@ export default {
                             //
                         } else {
                             ty = false;
-                            this.$warningTost('物料必填项未填');
+                            this.$warningToast('物料必填项未填');
                             return false;
                         }
                     }
@@ -427,12 +427,12 @@ export default {
                 //       if (itema.potNo && itema.filterDate && itema.productUseNum && itema.batch) {
                 //         if (!itema.useUsage && this.order.factoryCode !== '6010') {
                 //           ty = false
-                //           this.$warningTost('物料半成品必填项未填')
+                //           this.$warningToast('物料半成品必填项未填')
                 //           return false
                 //         }
                 //       } else {
                 //         ty = false
-                //         this.$warningTost('物料半成品必填项未填')
+                //         this.$warningToast('物料半成品必填项未填')
                 //         return false
                 //       }
                 //     }
@@ -447,7 +447,7 @@ export default {
                 if (sole.potNo !== '' && sole.potNo !== null) {
                     if (sole.materialCode !== sole.holderMaterialCode) {
                         ty = false;
-                        this.$warningTost('物料领用中' + sole.holderMaterialCode + '领用物料与BOM物料不一致，请确认！');
+                        this.$warningToast('物料领用中' + sole.holderMaterialCode + '领用物料与BOM物料不一致，请确认！');
                         return false;
                     }
                 }
@@ -478,12 +478,12 @@ export default {
             if (item.potNo && item.filterDate && item.productUseNum && item.batch) {
                 if (!item.useUsage && this.order.factoryCode !== '6010') {
                     ty = false;
-                    this.$warningTost('物料半成品必填项未填');
+                    this.$warningToast('物料半成品必填项未填');
                     return false;
                 }
             } else {
                 ty = false;
-                this.$warningTost('物料半成品必填项未填');
+                this.$warningToast('物料半成品必填项未填');
                 return false;
             }
             let holderId;
@@ -528,7 +528,7 @@ export default {
             //     }
             //     if (items.total > amount) {
             //         ty = false;
-            //         this.$warningTost(this.semiHolder.find(so => so.holderId === items.holderId).holderName + '罐生产使用量超过库存，请重新调整');
+            //         this.$warningToast(this.semiHolder.find(so => so.holderId === items.holderId).holderName + '罐生产使用量超过库存，请重新调整');
             //         return false;
             //     }
             // }
@@ -543,12 +543,12 @@ export default {
                         if (itema.potNo && itema.filterDate && itema.productUseNum && itema.batch) {
                             if (!itema.useUsage && this.order.factoryCode !== '6010') {
                                 ty = false;
-                                this.$warningTost('物料半成品必填项未填');
+                                this.$warningToast('物料半成品必填项未填');
                                 return false;
                             }
                         } else {
                             ty = false;
-                            this.$warningTost('物料半成品必填项未填');
+                            this.$warningToast('物料半成品必填项未填');
                             return false;
                         }
                     }
@@ -602,7 +602,7 @@ export default {
                     // console.log(items.holderId + ' total: ' + items.total + ' amount: ' + amount)
                     if (items.total > amount) {
                         ty = false;
-                        this.$warningTost(this.semiHolder.find(so => so.holderId === items.holderId).holderName + '罐生产使用量超过库存，请重新调整');
+                        this.$warningToast(this.semiHolder.find(so => so.holderId === items.holderId).holderName + '罐生产使用量超过库存，请重新调整');
                         return false;
                     }
                 }
@@ -619,21 +619,21 @@ export default {
                 if (data.code === 0) {
                     this.semiHolder = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         HolderChange(val, row) {
             const semiInfo = this.semiHolder.find(item => item.holderId === val);
             if (this.order.factoryCode !== '6010' && semiInfo.materialCode !== row.materialCode) {
-                this.$warningTost('领用物料与BOM物料不一致，请确认！');
+                this.$warningToast('领用物料与BOM物料不一致，请确认！');
             }
             row.holderMaterialCode = semiInfo.materialCode;
             row.holderMaterialName = semiInfo.materialName;
             row.filterDate = semiInfo.fullDate;
             row.batch = semiInfo.batch;
             row.holderType = semiInfo.holderType;
-            row.surplusAmount = semiInfo.amount.toString();
+            row.surplusAmount = semiInfo.amount.Toastring();
         },
         // 删除半成品
         dellistbomS(row) {
@@ -645,7 +645,7 @@ export default {
                 row.delFlag = '1';
                 // num++; 似乎没用到的变数
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 新增物料半成品

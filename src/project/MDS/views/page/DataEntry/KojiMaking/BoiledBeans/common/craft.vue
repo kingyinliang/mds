@@ -349,60 +349,60 @@
                 let ty = true;
                 if (this.craftfrom.preheatDate === '' || !this.craftfrom.preheatDate) {
                     ty = false;
-                    this.$warningTost('预热开始时间不能为空');
+                    this.$warningToast('预热开始时间不能为空');
                     return false;
                 }
                 if (this.craftfrom.unloadingStartDate === '' || !this.craftfrom.unloadingStartDate) {
                     ty = false;
-                    this.$warningTost('下料开始时间不能为空');
+                    this.$warningToast('下料开始时间不能为空');
                     return false;
                 }
                 if (!this.craftfrom.unloadingEndDate || this.craftfrom.unloadingEndDate === '') {
                     ty = false;
-                    this.$warningTost('下料结束时间不能为空');
+                    this.$warningToast('下料结束时间不能为空');
                     return false;
                 }
                 if (!this.craftfrom.frequenceRunWater || !this.craftfrom.realRate || !this.craftfrom.weightRunWater || !this.craftfrom.speedRunWater || !this.craftfrom.oncePreheatFrequency || !this.craftfrom.secondPreheatFrequency || !this.craftfrom.secondPreheatTemp || !this.craftfrom.unloadingSpeed || this.craftfrom.frequenceRunWater === '' || this.craftfrom.realRate === '' || this.craftfrom.weightRunWater === '' || this.craftfrom.speedRunWater === '' || this.craftfrom.oncePreheatFrequency === '' || this.craftfrom.secondPreheatFrequency === '' || this.craftfrom.secondPreheatTemp === '' || this.craftfrom.unloadingSpeed === '') {
                     ty = false;
-                    this.$warningTost('煮豆润水参数不能为空');
+                    this.$warningToast('煮豆润水参数不能为空');
                     return false;
                 }
                 if (this.lishuiList.length === 0) {
                     ty = false;
-                    this.$warningTost('煮豆润水过程监控数据记录未填');
+                    this.$warningToast('煮豆润水过程监控数据记录未填');
                     return false;
                 }
                 for (const items of this.lishuiList) {
                     if (items.delFlag === '0') {
                         if (!items.guardDate || items.guardDate === '' || !items.runWaterTemp || items.runWaterTemp === '' || !items.preheatTemp || items.preheatTemp === '' || !items.unloadingWeight || items.unloadingWeight === '' || !items.runWaterSpeed || items.runWaterSpeed === '') {
                             ty = false;
-                            this.$warningTost('煮豆润水过程监控数据必填项不能为空');
+                            this.$warningToast('煮豆润水过程监控数据必填项不能为空');
                             return false;
                         }
                     }
                 }
                 if (this.craftfrom.cookingFrequency === '' || this.craftfrom.upFrequency === '' || this.craftfrom.downFrequency === '' || !this.craftfrom.cookingFrequency || !this.craftfrom.upFrequency || !this.craftfrom.downFrequency) {
                     ty = false;
-                    this.$warningTost('连续蒸煮参数不能为空');
+                    this.$warningToast('连续蒸煮参数不能为空');
                     return false;
                 }
                 for (const items of this.zhengzhuList) {
                     if (items.delFlag === '0') {
                         if (!items.guardTime || items.guardTime === '' || !items.cookingMachinePress || items.cookingMachinePress === '' || !items.separateDrum || items.separateDrum === '' || !items.cookingMachineTemp || items.cookingMachineTemp === '' || !items.downCooling || items.downCooling === '') {
                             ty = false;
-                            this.$warningTost('连续蒸煮监控数据必填项不能为空');
+                            this.$warningToast('连续蒸煮监控数据必填项不能为空');
                             return false;
                         }
                     }
                 }
                 if (this.zhengzhuList.length === 0) {
                     ty = false;
-                    this.$warningTost('过程监控数据记录未填');
+                    this.$warningToast('过程监控数据记录未填');
                     return false;
                 }
                 if (this.hunheList.length === 0) {
                     ty = false;
-                    this.$warningTost('混合入曲控制未填');
+                    this.$warningToast('混合入曲控制未填');
                     return false;
                 }
                 this.hunheList.forEach(item => {
@@ -414,7 +414,7 @@
                     }
                 });
                 if (!ty) {
-                    this.$warningTost('混合入曲控制必填项未填');
+                    this.$warningToast('混合入曲控制必填项未填');
                     return false;
                 }
                 return ty;
@@ -426,7 +426,7 @@
                 this.$http(`${KJM_API.DOUGONGYIZHUSAVE_API}`, 'POST', this.craftfrom)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -442,7 +442,7 @@
                 this.$http(`${KJM_API.DOUGONGYIRUISAVE_API}`, 'POST', this.lishuiList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -459,7 +459,7 @@
                 this.$http(`${KJM_API.DOUGONGYIZHENGSAVE_API}`, 'POST', this.zhengzhuList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -476,7 +476,7 @@
                 this.$http(`${KJM_API.DOUGONGYIHUNSAVE_API}`, 'POST', this.hunheList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -563,11 +563,11 @@
                             // this.wheatList = data.wheatList
                             // this.soyList = data.pulpList
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .catch(error => {
-                        this.$errorTost(error);
+                        this.$errorToast(error);
                     })
                     .finally(() => {
                         this.$emit('setApplyCraftState', this.craftfrom.status);
@@ -581,7 +581,7 @@
                 }).then(() => {
                     row.delFlag = '1';
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             rowDelFlag({ row }) {

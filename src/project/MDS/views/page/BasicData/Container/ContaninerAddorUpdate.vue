@@ -151,7 +151,7 @@
                             this.dataForm.holderStatus = data.sysHolder.holderStatus;
                             this.Getdeptcode(data.sysHolder.factory, data.sysHolder.deptId);
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         this.visible = true;
                     });
@@ -187,7 +187,7 @@
                         if (data.code === 0) {
                             this.workshop = data.typeList;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }
@@ -198,7 +198,7 @@
                     if (data.code === 0) {
                         this.dictList = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -210,25 +210,25 @@
                             if (this.conid) {
                                 this.$http(`${BASICDATA_API.CONTAINERUPDATE_API}`, 'POST', this.dataForm).then(({ data }) => {
                                     if (data.code === 0) {
-                                        this.$successTost('操作成功');
+                                        this.$successToast('操作成功');
                                         this.submitType = true;
                                         this.visible = false;
                                         this.$emit('refreshDataList');
                                     } else {
                                         this.submitType = true;
-                                        this.$errorTost(data.msg);
+                                        this.$errorToast(data.msg);
                                     }
                                 });
                             } else {
                                 this.$http(`${BASICDATA_API.CONTAINERADD_API}`, 'POST', this.dataForm).then(({ data }) => {
                                     if (data.code === 0) {
-                                        this.$successTost('操作成功');
+                                        this.$successToast('操作成功');
                                         this.submitType = true;
                                         this.visible = false;
                                         this.$emit('refreshDataList');
                                     } else {
                                         this.submitType = true;
-                                        this.$errorTost(data.msg);
+                                        this.$errorToast(data.msg);
                                     }
                                 });
                             }

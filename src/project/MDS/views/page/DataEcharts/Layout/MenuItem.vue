@@ -99,7 +99,7 @@ export default {
                 if (data.code === 0) {
                     this.container = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         }

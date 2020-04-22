@@ -137,7 +137,7 @@ export default {
                     this.total = data.returnMap.info.length;
                     this.changeList();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -163,7 +163,7 @@ export default {
                 if (data.code === 0) {
                     this.dataList2 = data.fermentationStatus;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

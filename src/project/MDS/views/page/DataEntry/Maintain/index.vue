@@ -186,7 +186,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -199,7 +199,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -218,7 +218,7 @@ export default {
                             this.plantList.workshop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -233,7 +233,7 @@ export default {
                     if (data.code === 0) {
                         this.productline = data.childList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -283,7 +283,7 @@ export default {
             } else {
                 if (row.different !== 0 || row.orgnDifferent) {
                     if (!row.differentInfo) {
-                        this.$warningTost('差异说明必填');
+                        this.$warningToast('差异说明必填');
                         return false;
                     }
                 }
@@ -300,7 +300,7 @@ export default {
                         this.noMaintainList.splice(this.noMaintainList.length, 0, {});
                         this.noMaintainList.splice(this.noMaintainList.length - 1, 1);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -309,7 +309,7 @@ export default {
         save() {
             if (this.MaintainList.length > 0) {
                 if (!this.getverify()) {
-                    this.$warningTost('差异说明必填');
+                    this.$warningToast('差异说明必填');
                     return false;
                 }
                 this.$confirm('确认保存, 是否继续?', '保存', {
@@ -326,26 +326,26 @@ export default {
                             });
                             this.GetMaintainList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                     this.GetMaintainList();
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             } else {
-                this.$warningTost('请勾选后保存');
+                this.$warningToast('请勾选后保存');
             }
         },
         // 提交
         submit() {
             if (this.MaintainList.length > 0) {
                 if (!this.getverify()) {
-                    this.$warningTost('差异说明必填');
+                    this.$warningToast('差异说明必填');
                     return false;
                 }
                 if (!this.getverify1()) {
-                    this.$warningTost('车间入库数与机维组确认数不一致，请重新录入数据！');
+                    this.$warningToast('车间入库数与机维组确认数不一致，请重新录入数据！');
                     return false;
                 }
                 this.$confirm('确认提交, 是否继续?', '提交', {
@@ -362,14 +362,14 @@ export default {
                             });
                             this.GetMaintainList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             } else {
-                this.$warningTost('请勾选后保存');
+                this.$warningToast('请勾选后保存');
             }
         },
         // 改变每页条数

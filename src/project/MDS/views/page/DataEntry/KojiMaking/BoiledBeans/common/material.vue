@@ -773,7 +773,7 @@
                     if (data.code === 0) {
                         this.materialShort = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -782,7 +782,7 @@
                     if (data.code === 0) {
                         this.wheatShort = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -791,7 +791,7 @@
                     if (data.code === 0) {
                         this.soyShort = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -897,11 +897,11 @@
 
                                 // this.percentReadyToShowFromMaiHoldList = true
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
-                        this.$errorTost(res.data.msg);
+                        this.$errorToast(res.data.msg);
                     }
                 });
             },
@@ -940,11 +940,11 @@
                                 this.percentReadyToShowFromDouHoldList = true
 
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
-                        this.$errorTost(res.data.msg);
+                        this.$errorToast(res.data.msg);
                     }
                 });
             },
@@ -955,7 +955,7 @@
                     if (res.data.code === 0) {
                         this.DouCangList = res.data.page.list;
                     } else {
-                        this.$errorTost(res.data.msg);
+                        this.$errorToast(res.data.msg);
                     }
                 });
             },
@@ -1387,7 +1387,7 @@
                             resolve('resolve');
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                         if (resolve) {
                             reject('reject');
                         }
@@ -1415,7 +1415,7 @@
                                 resolve('resolve');
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                             if (resolve) {
                                 reject('reject');
                             }
@@ -1440,7 +1440,7 @@
                                 resolve('resolve');
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                             if (resolve) {
                                 reject('reject');
                             }
@@ -1460,7 +1460,7 @@
                 //   this.$http(`${KJM_API.DOUMATERSUBMITWHEAT_API}`, 'POST', this.wheatList).then(({data}) => {
                 //     if (data.code === 0) {
                 //     } else {
-                //       this.$errorTost(data.msg)
+                //       this.$errorToast(data.msg)
                 //     }
                 //   })
                 // }
@@ -1471,7 +1471,7 @@
                                 resolve('resolve');
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                             if (resolve) {
                                 reject('reject');
                             }
@@ -1496,7 +1496,7 @@
                                 resolve('resolve');
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                             if (resolve) {
                                 reject('reject');
                             }
@@ -1523,7 +1523,7 @@
                 //   this.$http(`${KJM_API.DOUMATERSUBMITSOY_API}`, 'POST', this.soyList).then(({data}) => {
                 //     if (data.code === 0) {
                 //     } else {
-                //       this.$errorTost(data.msg)
+                //       this.$errorToast(data.msg)
                 //     }
                 //   })
                 // }
@@ -1534,7 +1534,7 @@
                                 resolve('resolve');
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                             if (resolve) {
                                 reject('reject');
                             }
@@ -1554,7 +1554,7 @@
                                 resolve('resolve');
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                             if (resolve) {
                                 reject('reject');
                             }
@@ -1625,7 +1625,7 @@
                                 inState = 'checked';
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .catch(error => {
@@ -1697,7 +1697,7 @@
                                 inState = 'checked';
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .catch(error => {
@@ -1755,7 +1755,7 @@
                     if (data.code === 0) {
                         this.PulpCangList = data.holder;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },

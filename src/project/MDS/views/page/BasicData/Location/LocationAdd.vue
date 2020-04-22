@@ -128,7 +128,7 @@ export default {
                 if (data.code === 0) {
                     this.factory = data.typeList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -140,7 +140,7 @@ export default {
                     if (data.code === 0) {
                         this.workshop = data.typeList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -151,14 +151,14 @@ export default {
                 if (data.code === 0) {
                     this.sapList = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         // 保存
         dataFormSubmit() {
             if (this.formatDate.materialCode && this.formatDate.materialCode.length !== 10) {
-                this.$warningTost('物料编码为10位非必填');
+                this.$warningToast('物料编码为10位非必填');
                 return false;
             }
             if (this.submitType) {
@@ -175,11 +175,11 @@ export default {
                             if (data.code === 0) {
                                 this.submitType = true;
                                 this.visible = false;
-                                this.$successTost('操作成功');
+                                this.$successToast('操作成功');
                                 this.$emit('refreshDataList');
                             } else {
                                 this.submitType = true;
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {

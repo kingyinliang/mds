@@ -169,7 +169,7 @@ export function dateFormat(date, fmt) {
  * @param {*} null
  */
 export function getNewDate() {
-    return new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate());
+    return new Date().getFullYear().Toastring() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).Toastring() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().Toastring() : '0' + new Date().getDate());
 }
 
 export function exportFile(url, fileName, vue) {
@@ -520,12 +520,12 @@ export class Stesave {
 export function accAdd(arg1, arg2) {
     let r1, r2, argTemp1, argTemp2;
     try {
-        r1 = arg1.toString().split('.')[1].length;
+        r1 = arg1.Toastring().split('.')[1].length;
     } catch (e) {
         r1 = 0;
     }
     try {
-        r2 = arg2.toString().split('.')[1].length;
+        r2 = arg2.Toastring().split('.')[1].length;
     } catch (e) {
         r2 = 0;
     }
@@ -534,23 +534,23 @@ export function accAdd(arg1, arg2) {
     if (c > 0) {
         const cm = Math.pow(10, c);
         if (r1 > r2) {
-            argTemp1 = Number(arg1.toString().replace('.', ''));
-            argTemp2 = Number(arg2.toString().replace('.', '')) * cm;
+            argTemp1 = Number(arg1.Toastring().replace('.', ''));
+            argTemp2 = Number(arg2.Toastring().replace('.', '')) * cm;
         } else {
-            argTemp1 = Number(arg1.toString().replace('.', '')) * cm;
-            argTemp2 = Number(arg2.toString().replace('.', ''));
+            argTemp1 = Number(arg1.Toastring().replace('.', '')) * cm;
+            argTemp2 = Number(arg2.Toastring().replace('.', ''));
         }
     } else {
-        argTemp1 = Number(arg1.toString().replace('.', ''));
-        argTemp2 = Number(arg2.toString().replace('.', ''));
+        argTemp1 = Number(arg1.Toastring().replace('.', ''));
+        argTemp2 = Number(arg2.Toastring().replace('.', ''));
     }
     return (argTemp1 + argTemp2) / m;
 }
 // 浮点型乘法
 export function accMul(arg1, arg2) {
     let m = 0;
-    const s1 = arg1.toString();
-    const s2 = arg2.toString();
+    const s1 = arg1.Toastring();
+    const s2 = arg2.Toastring();
     try {
         m += s1.split('.')[1].length;
     } catch (e) {
@@ -568,12 +568,12 @@ export function accSub(arg1, arg2) {
     let r1;
     let r2;
     try {
-        r1 = arg1.toString().split('.')[1].length;
+        r1 = arg1.Toastring().split('.')[1].length;
     } catch (e) {
         r1 = 0;
     }
     try {
-        r2 = arg2.toString().split('.')[1].length;
+        r2 = arg2.Toastring().split('.')[1].length;
     } catch (e) {
         r2 = 0;
     }
@@ -586,17 +586,17 @@ export function accDiv(arg1, arg2) {
     let t1 = 0;
     let t2 = 0;
     try {
-        t1 = arg1.toString().split('.')[1].length;
+        t1 = arg1.Toastring().split('.')[1].length;
     } catch (e) {
         //
     }
     try {
-        t2 = arg2.toString().split('.')[1].length;
+        t2 = arg2.Toastring().split('.')[1].length;
     } catch (e) {
         //
     }
-    const r1 = Number(arg1.toString().replace('.', ''));
-    const r2 = Number(arg2.toString().replace('.', ''));
+    const r1 = Number(arg1.Toastring().replace('.', ''));
+    const r2 = Number(arg2.Toastring().replace('.', ''));
     return (r1 / r2) * Math.pow(10, t2 - t1);
 }
 // 深克隆

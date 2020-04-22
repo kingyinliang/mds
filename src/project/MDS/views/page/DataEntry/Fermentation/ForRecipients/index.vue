@@ -152,7 +152,7 @@ export default {
                     this.factory = data.typeList;
                     this.form.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -173,7 +173,7 @@ export default {
                             }
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -188,7 +188,7 @@ export default {
                 if (data.code === 0) {
                     this.MaterialType = data.productsInfo;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -238,11 +238,11 @@ export default {
                         });
                         this.SearchList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 改变每页条数

@@ -179,7 +179,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -199,7 +199,7 @@ export default {
                             this.formHeader.workShop = '';
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -216,7 +216,7 @@ export default {
                 if (data.code === 0) {
                     this.materialList = data.productsInfo;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -241,11 +241,11 @@ export default {
         },
         GetList(st) {
             if (this.formHeader.factory === '') {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return false;
             }
             if (this.formHeader.workShop === '') {
-                this.$warningTost('请选择车间');
+                this.$warningToast('请选择车间');
                 return false;
             }
             if (st) {
@@ -258,28 +258,28 @@ export default {
                     // this.dataList = data.orderInfo.list.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, Number((this.formHeader.currPage - 1) * this.formHeader.pageSize) + Number(this.formHeader.pageSize))
                     this.formHeader.totalCount = data.orderInfo.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         // 调配
         DoDeploy() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请勾选订单');
+                this.$warningToast('请勾选订单');
             } else {
                 const materialCode = this.multipleSelection[0].materialCode;
                 const dispatchMan = this.multipleSelection[0].dispatchMan;
                 for (const item of this.multipleSelection) {
                     if (materialCode !== item.materialCode) {
-                        this.$warningTost('物料冲突，请重新选择订单！');
+                        this.$warningToast('物料冲突，请重新选择订单！');
                         return false;
                     }
                     if (this.multipleSelection.filter(subItem => subItem.orderNo.slice(0, 4) === this.multipleSelection[0].orderNo.slice(0, 4)).length !== this.multipleSelection.length) {
-                        this.$warningTost('请选择相同的订单类型的订单！');
+                        this.$warningToast('请选择相同的订单类型的订单！');
                         return false;
                     }
                     if (dispatchMan !== item.dispatchMan) {
-                        this.$warningTost('调度人员冲突，请重新选择订单！');
+                        this.$warningToast('调度人员冲突，请重新选择订单！');
                         return false;
                     }
                 }

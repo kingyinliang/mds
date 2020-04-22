@@ -255,7 +255,7 @@ export default {
                     this.$refs.excrecord.GetExcDate(this.formHeader.orderId);
                     this.$refs.textrecord.GetText(this.formHeader.orderId);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -288,7 +288,7 @@ export default {
                 return false;
             }
             if (!this.$refs.instorage.countOutputNum) {
-                this.$warningTost('入库数未0，不能提交');
+                this.$warningToast('入库数未0，不能提交');
                 return false;
             }
             const materialHolderList = this.$refs.material.GetmaterialList()
@@ -296,7 +296,7 @@ export default {
             const diffArr = [...equWorkingHolderList].filter(x => [...materialHolderList].every(y => (y.holderId !== x.holderId)));
             const diffArrs = [...materialHolderList].filter(x => [...equWorkingHolderList].every(y => (y.holderId !== x.holderId)));
             if (diffArr.length !== 0 || diffArrs.length !== 0) {
-                this.$warningTost('设备工时与物料领用罐号须一致');
+                this.$warningToast('设备工时与物料领用罐号须一致');
                 return false;
             }
             this.$confirm('确认提交该订单, 是否继续?', '提交订单', {
@@ -310,11 +310,11 @@ export default {
                     if (data.code === 0) {
                         this.savedOrSubmitForm('submit');
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -381,16 +381,16 @@ export default {
                                         this.isRedact = false;
                                     })
                                     .catch(() => {
-                                        this.$errorTost('1网络请求失败，请刷新重试');
+                                        this.$errorToast('1网络请求失败，请刷新重试');
                                     });
                             })
                             .catch(() => {
-                                this.$errorTost('2网络请求失败，请刷新重试');
+                                this.$errorToast('2网络请求失败，请刷新重试');
                             });
                     }
                 })
                 .catch((reason) => {
-                    this.$errorTost('网络请求失败，请刷新重试' + reason);
+                    this.$errorToast('网络请求失败，请刷新重试' + reason);
                 });
         },
         materilaHoldList(holderList) {

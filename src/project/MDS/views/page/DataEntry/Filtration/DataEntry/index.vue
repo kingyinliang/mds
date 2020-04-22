@@ -141,15 +141,15 @@ export default {
     methods: {
         GetOrderList() {
             if (this.formHeader.factory === '') {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return;
             }
             if (this.formHeader.workShop === '') {
-                this.$warningTost('请选择车间');
+                this.$warningToast('请选择车间');
                 return;
             }
             if ((this.formHeader.productDate === '' || !this.formHeader.productDate) && this.formHeader.orderNo === '') {
-                this.$warningTost('生产日期或生产订单请选填一项');
+                this.$warningToast('生产日期或生产订单请选填一项');
                 return false;
             }
             this.formHeader.orderType = '1';
@@ -158,7 +158,7 @@ export default {
                     // this.dataList = orderList(data.list)
                     this.dataList = orderListNew(data.list);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -182,7 +182,7 @@ export default {
                         this.dataList.splice(this.dataList.length, 0, {});
                         this.dataList.splice(this.dataList.length - 1, 1);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -190,7 +190,7 @@ export default {
         // 跳转
         go(item) {
             if (!item.orderNo) {
-                this.$warningTost('请选择订单号');
+                this.$warningToast('请选择订单号');
                 return;
             }
             this.$store.state.common.orderNo = item.orderNo;

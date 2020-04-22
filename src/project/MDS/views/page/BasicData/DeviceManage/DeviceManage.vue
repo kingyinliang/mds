@@ -103,7 +103,7 @@ export default {
                         this.$refs.treeList.setCurrentKey(this.deptId);
                     })
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -130,7 +130,7 @@ export default {
                     this.totalCount = data.list.totalCount;
                     this.currPage = data.list.currPage;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.multipleSelection = [];
             });
@@ -149,7 +149,7 @@ export default {
         // 添加和编辑
         addOrupdate(deptId, id) {
             if (deptId === 0) {
-                this.$warningTost('请选择部门后新增');
+                this.$warningToast('请选择部门后新增');
             } else {
                 this.visible = true;
                 this.$nextTick(() => {
@@ -160,7 +160,7 @@ export default {
         // 删除
         remove() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请选择要删除的设备');
+                this.$warningToast('请选择要删除的设备');
             } else {
                 this.$confirm('确认删除设备, 是否继续?', '删除设备', {
                     confirmButtonText: '确定',
@@ -170,11 +170,11 @@ export default {
                     .then(() => {
                         this.$http(`${BASICDATA_API.DEVICEDEL_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$successTost('删除成功!');
+                                this.$successToast('删除成功!');
                                 this.multipleSelection = [];
                                 this.getList();
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     })

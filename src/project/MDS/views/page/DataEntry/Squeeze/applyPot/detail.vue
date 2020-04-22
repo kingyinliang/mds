@@ -386,22 +386,22 @@ export default class Index extends Vue {
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         }
     }
 
     validate() {
         if (!this.formHeader.factory) {
-            Vue.prototype.$warningTost('请选择工厂');
+            Vue.prototype.$warningToast('请选择工厂');
             return false;
         }
         if (!this.formHeader.workShop) {
-            Vue.prototype.$warningTost('请选择车间');
+            Vue.prototype.$warningToast('请选择车间');
             return false;
         }
         if (!this.formHeader.materialCode) {
-            Vue.prototype.$warningTost('请选择酱醪');
+            Vue.prototype.$warningToast('请选择酱醪');
             return false;
         }
         // if (!this.formHeader.halfType) {
@@ -409,11 +409,11 @@ export default class Index extends Vue {
         //   return false
         // }
         if (!this.formHeader.amount) {
-            Vue.prototype.$warningTost('请填写申请数量');
+            Vue.prototype.$warningToast('请填写申请数量');
             return false;
         }
         if (!this.formHeader.productDate) {
-            Vue.prototype.$warningTost('请选择生产日期');
+            Vue.prototype.$warningToast('请选择生产日期');
             return false;
         }
         return true;

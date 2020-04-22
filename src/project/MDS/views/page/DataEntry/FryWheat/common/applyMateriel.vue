@@ -207,7 +207,7 @@
                             if (data.code !== 0) {
                                 //
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                             if (resolve) {
                                 resolve('resolve');
@@ -235,7 +235,7 @@
                             if (data.code === 0) {
                                 //
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                             if (resolve) {
                                 resolve('resolve');
@@ -251,33 +251,33 @@
             validate() {
                 // if (this.materielDataList === undefined || this.materielDataList.length === 0) {
                 if (typeof this.materielDataList === 'undefined' || this.materielDataList.filter(item => item.delFlag === '0').length === 0) {
-                    this.$warningTost('物料领用未录入数据');
+                    this.$warningToast('物料领用未录入数据');
                     return false;
                 }
                 for (const item of this.materielDataList) {
                     if (item.delFlag === '0') {
                         if (item.materialCode === null || item.materialCode.trim() === '') {
-                            this.$warningTost('物料不能为空');
+                            this.$warningToast('物料不能为空');
                             return false;
                         }
                         if (item.deviceId === null || item.deviceId === '') {
-                            this.$warningTost('粮仓不能为空');
+                            this.$warningToast('粮仓不能为空');
                             return false;
                         }
                         if (item.batch === null || item.batch.trim() === '') {
-                            this.$warningTost('物料批次不能为空');
+                            this.$warningToast('物料批次不能为空');
                             return false;
                         }
                         if (item.batch.trim().length > 10) {
-                            this.$warningTost('物料批次长度不能超过10');
+                            this.$warningToast('物料批次长度不能超过10');
                             return false;
                         }
                         if (item.wheatWeight === '') {
-                            this.$warningTost('小麦领用数不能为空');
+                            this.$warningToast('小麦领用数不能为空');
                             return false;
                         }
                         if (item.wheatWeight <= 0) {
-                            this.$warningTost('小麦领用数必须大于0');
+                            this.$warningToast('小麦领用数必须大于0');
                             return false;
                         }
                     }
@@ -304,7 +304,7 @@
                         if (data.code === 0) {
                             this.wheatContainerList = data.page.list;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .catch(error => {
@@ -320,7 +320,7 @@
                         if (data.code === 0) {
                             this.materialDictList = data.dicList;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .catch(error => {
@@ -376,7 +376,7 @@
                                 inState = 'checked';
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .catch(error => {
@@ -421,7 +421,7 @@
                 }).then(() => {
                     row.delFlag = '1';
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             //  RowDelFlag
@@ -467,7 +467,7 @@
                             });
                         });
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -530,7 +530,7 @@
                         }
                         const abc = this.cang.currentQuantity + this.materielDataListArray.find(items => items.batch === this.cang.batch).quantotal;
                         if (this.cang.wheatWeight + total > abc) {
-                            this.$warningTost('领用数大于该批次剩余量');
+                            this.$warningToast('领用数大于该批次剩余量');
                             return false;
                         }
                         if (currentRecord && currentRecord.length > 0) {

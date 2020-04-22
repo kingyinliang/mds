@@ -65,22 +65,22 @@ export default {
                         this.formHeader.werks = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             })
         },
     // 查询
     GetList() {
         if (!this.formHeader.werks) {
-            this.$warningTost('请选择工厂')
+            this.$warningToast('请选择工厂')
             return false
         }
         if (!this.formHeader.materialCode) {
-            this.$warningTost('请填写物料')
+            this.$warningToast('请填写物料')
             return false
         }
         if (!this.formHeader.batch) {
-            this.$warningTost('请填写批次')
+            this.$warningToast('请填写批次')
             return false
         }
         this.loadings = Loading.service({
@@ -99,7 +99,7 @@ export default {
                 }
             } else {
                 this.loadings.close();
-                this.$errorTost(data.msg);
+                this.$errorToast(data.msg);
             }
         })
     },
@@ -117,13 +117,13 @@ export default {
                     }
                 } else {
                     this.loadings.close();
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             })
         } else {
             this.loadings.close();
             clearInterval(this.orderStatus);
-            this.$errorTost('请求超时');
+            this.$errorToast('请求超时');
         }
     },
     // 数据重组

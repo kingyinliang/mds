@@ -44,7 +44,7 @@
             </div>
         </el-card>
         <el-tabs v-if="tabs.length" v-model="activeName" type="border-card">
-            <el-tab-pane v-for="(tabItem, index) in tabs" :key="index" :name="index.toString()" :label="tabItem.label">
+            <el-tab-pane v-for="(tabItem, index) in tabs" :key="index" :name="index.Toastring()" :label="tabItem.label">
                 <el-table ref="table" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                     <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
                     <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
@@ -323,7 +323,7 @@
                                                     });
                                                 }
                                             } else {
-                                                this.$errorTost(data.msg);
+                                                this.$errorToast(data.msg);
                                             }
                                         });
                                     } else {
@@ -359,13 +359,13 @@
                 if (this.rules.length) {
                     for (const item of this.rules) {
                         if (!this.queryForm[item.prop]) {
-                            this.$warningTost(item.text);
+                            this.$warningToast(item.text);
                             return false;
                         }
                     }
                 }
                 if (!this.isAuth(this.queryAuth) && this.queryAuth !== '') {
-                    this.$warningTost('无查询权限');
+                    this.$warningToast('无查询权限');
                     return false;
                 }
                 if (st) {
@@ -386,7 +386,7 @@
                         }
                         this.$emit('get-data-success', data);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -395,13 +395,13 @@
                 if (this.rules.length) {
                     for (const item of this.rules) {
                         if (!this.queryForm[item.prop]) {
-                            this.$warningTost(item.text);
+                            this.$warningToast(item.text);
                             return false;
                         }
                     }
                 }
                 if (!this.isAuth(this.exportOption.auth) && this.exportOption.auth !== '') {
-                    this.$warningTost('无导出权限');
+                    this.$warningToast('无导出权限');
                     return false;
                 }
                 exportFileForm(`${this.exportOption.exportInterface}`, this.exportOption.text, this);

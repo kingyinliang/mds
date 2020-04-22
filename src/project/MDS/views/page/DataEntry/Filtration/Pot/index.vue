@@ -321,7 +321,7 @@ export default {
         // 查询
         GetDataList() {
             if (!this.formHeader.factory) {
-                this.$warningTost('工厂必填');
+                this.$warningToast('工厂必填');
                 return false;
             }
             this.$http(`${FILTRATION_API.FILTER_POT_LIST_API}`, 'POST', this.formHeader).then(({ data }) => {
@@ -329,7 +329,7 @@ export default {
                     this.fastS = true;
                     this.dataList = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -344,15 +344,15 @@ export default {
         // 清罐
         clearPot(item) {
             if (!this.isAuth('filter:holder:cleanProHolder')) {
-                this.$warningTost('无权限操作');
+                this.$warningToast('无权限操作');
                 return false;
             }
             if (item.holderStatus === '0') {
-                this.$warningTost('该罐暂不可进行清罐操作');
+                this.$warningToast('该罐暂不可进行清罐操作');
                 return false;
             }
             if (item.holderStatus !== '4') {
-                this.$warningTost('未领用完不能清罐');
+                this.$warningToast('未领用完不能清罐');
                 return false;
             }
             this.$confirm('清罐后，账务将清零，请确认实物已空！', '清罐确认', {
@@ -369,11 +369,11 @@ export default {
                         });
                         this.GetDataList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // JBS弹窗
@@ -432,7 +432,7 @@ export default {
         JBS() {
             if (this.JBSdataForm.isFull === '1') {
                 if (!this.JBSdataForm.fullDate) {
-                    this.$warningTost('满罐时间必填');
+                    this.$warningToast('满罐时间必填');
                     return;
                 }
             }
@@ -448,7 +448,7 @@ export default {
                             });
                             this.GetDataList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }
@@ -458,7 +458,7 @@ export default {
         TurnSave() {
             if (this.TurnSavedataForm.isFull === '1') {
                 if (!this.TurnSavedataForm.fullDate) {
-                    this.$warningTost('满罐时间必填');
+                    this.$warningToast('满罐时间必填');
                     return;
                 }
             }
@@ -474,7 +474,7 @@ export default {
                             });
                             this.GetDataList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }

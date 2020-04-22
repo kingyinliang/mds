@@ -39,7 +39,7 @@
                     <el-table-column prop="productSpec" label="瓶规格" :show-overflow-tooltip="true" width="65" />
                     <el-table-column prop="productSpecUnitName" label="单位" :show-overflow-tooltip="true" width="50" />
                     <template v-if="dataList.length > 0">
-                        <el-table-column v-for="(item, index) in dataList[0].listMonth.length" :key="item" :label="month + '月' + (index + 1).toString() + '日'">
+                        <el-table-column v-for="(item, index) in dataList[0].listMonth.length" :key="item" :label="month + '月' + (index + 1).Toastring() + '日'">
                             <el-table-column prop="machineWorking" label="机器工时" :show-overflow-tooltip="true" width="80">
                                 <template slot-scope="scope">
                                     {{ scope.row.listMonth[index].machineWorking }}
@@ -113,7 +113,7 @@ export default {
                             ? this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1).slice(1)
                             : this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.lodingS = false;
             });

@@ -233,7 +233,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -253,7 +253,7 @@ export default {
                             this.formHeader.workShop = '';
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -268,13 +268,13 @@ export default {
                 if (data.code === 0) {
                     this.holderList = data.holderList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         GetList() {
             if (this.formHeader.factory === '') {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return false;
             }
             this.$http(`${STERILIZED_API.JUICEDEPLOYMENTLISTTP}`, 'POST', this.formHeader).then(({ data }) => {
@@ -285,7 +285,7 @@ export default {
                     this.pages.totalCount = this.dataListAll.length;
                     this.orderInfoList = [];
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -318,7 +318,7 @@ export default {
                 if (data.code === 0) {
                     this.orderInfoList = data.allocateInfo.orderInfo;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -337,7 +337,7 @@ export default {
         },
         CreateOrder() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请勾选数据');
+                this.$warningToast('请勾选数据');
                 return false;
             }
             this.$confirm('确认生成调配单吗?', '提示', {
@@ -354,11 +354,11 @@ export default {
                         });
                         this.GetList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         handleClick(tab) {

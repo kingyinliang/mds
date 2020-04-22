@@ -91,7 +91,7 @@ export default {
                 if (data.code === 0) {
                     this.machineTest = data.record;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -119,7 +119,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag
@@ -136,7 +136,7 @@ export default {
             this.machineTest.forEach((item) => {
                 if (!item.cokingRate || !item.expandRate || !item.piecesRate) {
                     ty = false;
-                    this.$warningTost('必填项未填');
+                    this.$warningToast('必填项未填');
                     return false;
                 }
             });
@@ -155,7 +155,7 @@ export default {
                     });
                     this.visible = false;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         }

@@ -491,12 +491,12 @@ export default class Index extends Vue {
                 return false;
             }
         });
-        // if (this.adjustForm.QUANTITY.toString() === '' || this.adjustForm.QUANTITY.toString() === '0') {
-        //   Vue.prototype.$warningTost('请填写调整量')
+        // if (this.adjustForm.QUANTITY.Toastring() === '' || this.adjustForm.QUANTITY.Toastring() === '0') {
+        //   Vue.prototype.$warningToast('请填写调整量')
         //   return false
         // }
-        // if (this.adjustForm.REMARK.toString() === '') {
-        //   Vue.prototype.$warningTost('请填写调整说明')
+        // if (this.adjustForm.REMARK.Toastring() === '') {
+        //   Vue.prototype.$warningToast('请填写调整说明')
         //   return false
         // }
     }

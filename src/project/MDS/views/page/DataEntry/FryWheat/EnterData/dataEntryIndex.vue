@@ -285,7 +285,7 @@ export default {
         formHeaderRul() {
             let ty = true;
             if (!this.formHeader.productDate) {
-                this.$warningTost('表头生产日期必填');
+                this.$warningToast('表头生产日期必填');
                 ty = false;
                 return false;
             }
@@ -308,7 +308,7 @@ export default {
             this.formHeader.germs = null;
             if (str !== 'saved') {
                 this.formHeader.operator = `${this.realName}(${this.userName})`;
-                this.formHeader.operDate = new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1).toString() + '-' + new Date().getDay().toString();
+                this.formHeader.operDate = new Date().getFullYear().Toastring() + '-' + (new Date().getMonth() + 1).Toastring() + '-' + new Date().getDay().Toastring();
             }
             this.$http(`${WHT_API.WHTORDERUPDATE_API}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code !== 0) {
@@ -346,7 +346,7 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -442,7 +442,7 @@ export default {
             ];
             this.$http(`${WHT_API.MATERIELTIMESUBMIT_API}`, 'POST', paras).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 if (resolve) {
                     resolve('resolve');

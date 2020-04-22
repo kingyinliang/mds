@@ -280,7 +280,7 @@ export default {
                         this.showOrgDetail(this.orgTree[0].children[0]);
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -292,7 +292,7 @@ export default {
                 if (data.code === 0) {
                     this.dictList = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -316,7 +316,7 @@ export default {
                         this.fileList = [];
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -338,7 +338,7 @@ export default {
         beforeAvatarUpload(file) {
             const isLt2M = file.size / 1024 / 1024 < 50;
             if (!isLt2M) {
-                this.$warningTost('上传文件大小不能超过 10MB!');
+                this.$warningToast('上传文件大小不能超过 10MB!');
             }
             return isLt2M;
         },
@@ -375,17 +375,17 @@ export default {
                     }).then(() => {
                         this.$http(`${BASICDATA_API.SAVEORG_API}`, 'POST', this.orgDetail).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$successTost('操作成功');
+                                this.$successToast('操作成功');
                                 this.orgDetail = {};
                                 this.fileList = [{}];
                                 this.update = true;
                                 this.showOrgDetail(this.row);
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     }).catch(() => {
-                        // this.$infoTost('已取消删除');
+                        // this.$infoToast('已取消删除');
                     });
                 } else {
                     return false;
@@ -403,15 +403,15 @@ export default {
                     deptId: this.orgDetail.deptId
                 }).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('操作成功');
+                        this.$successToast('操作成功');
                         this.getOrgTree();
                         this.orgDetail = {};
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  新增
@@ -430,12 +430,12 @@ export default {
                 }
                 this.$http(`${BASICDATA_API.ADDORG_API}`, 'POST', this.addDep).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('操作成功');
+                        this.$successToast('操作成功');
                         this.getOrgTree();
                         this.addDep = {}
                         this.dialogFormVisible = false;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {

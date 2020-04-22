@@ -128,7 +128,7 @@
                 if (data.code === 0) {
                     this.SerchSapList = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -139,7 +139,7 @@
                     if (data.code === 0) {
                         this.factory = data.typeList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -163,7 +163,7 @@
                         this.pageSize = data.page.pageSize;
                         this.totalCount = data.page.totalCount;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.visible = false;
                     this.lodingS = false;
@@ -180,7 +180,7 @@
             // 删除
             remove() {
                 if (this.multipleSelection.length === 0) {
-                    this.$warningTost('请选择要删除的规格');
+                    this.$warningToast('请选择要删除的规格');
                 } else {
                     this.$confirm('确认删除规格, 是否继续?', '删除规格', {
                         confirmButtonText: '确定',
@@ -190,13 +190,13 @@
                         .then(() => {
                             this.$http(`${BASICDATA_API.SPECDEL_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                                 if (data.code === 0) {
-                                    this.$successTost('删除成功!');
+                                    this.$successToast('删除成功!');
                                     this.multipleSelection = [];
                                     this.$nextTick(() => {
                                         this.getList();
                                     });
                                 } else {
-                                    this.$errorTost(data.msg);
+                                    this.$errorToast(data.msg);
                                 }
                             });
                         })

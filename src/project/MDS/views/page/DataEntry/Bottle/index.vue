@@ -165,7 +165,7 @@ export default {
                     this.factoryList = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -183,7 +183,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -192,21 +192,21 @@ export default {
         },
         getList() {
             if (this.formHeader.factory === '') {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return false;
             }
             if (this.formHeader.workShop === '') {
-                this.$warningTost('请选择车间');
+                this.$warningToast('请选择车间');
                 return false;
             }
             if ((this.formHeader.productDate === '' || !this.formHeader.productDate) && this.formHeader.orderNo === '') {
-                this.$warningTost('生产日期或生产订单请选填一项');
+                this.$warningToast('生产日期或生产订单请选填一项');
                 return false;
             }
             this.$http(`${BOTTLE_API.BOTTLE_INDEX_LIST}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
                     if (data.indexInfo.length === 0) {
-                        this.$infoTost('该搜寻条件无任何数据');
+                        this.$infoToast('该搜寻条件无任何数据');
                         return false
                     }
                     this.AllList = data.indexInfo;
@@ -233,7 +233,7 @@ export default {
                         }
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

@@ -260,7 +260,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -320,7 +320,7 @@ export default {
             this.formHeader.germs = this.$refs.excrecord.GermsNum;
             if (str !== 'saved') {
                 this.formHeader.operator = `${this.realName}(${this.userName})`;
-                this.formHeader.operDate = new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1).toString() + '-' + new Date().getDay().toString();
+                this.formHeader.operDate = new Date().getFullYear().Toastring() + '-' + (new Date().getMonth() + 1).Toastring() + '-' + new Date().getDay().Toastring();
             }
             this.$http(`${PACKAGING_API.PKGORDERUPDATE_API}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
@@ -371,7 +371,7 @@ export default {
                         type: 'success'
                     });
                 }).catch(() => {
-                    this.$errorTost('网络请求失败，请刷新重试');
+                    this.$errorToast('网络请求失败，请刷新重试');
                     this.isRedact = false;
                     this.visible = false;
                 });
@@ -468,13 +468,13 @@ export default {
                                 });
                             })
                             .catch(() => {
-                                this.$errorTost('网络请求失败，请刷新重试');
+                                this.$errorToast('网络请求失败，请刷新重试');
                                 this.isRedact = false;
                                 this.visible = false;
                             });
                     })
                     .catch(() => {
-                        this.$errorTost('网络请求失败，请刷新重试');
+                        this.$errorToast('网络请求失败，请刷新重试');
                         this.isRedact = false;
                         this.visible = false;
                     });
@@ -500,7 +500,7 @@ export default {
                         this.visible = false;
                     })
                     .catch(() => {
-                        this.$errorTost('网络请求失败，请刷新重试');
+                        this.$errorToast('网络请求失败，请刷新重试');
                         this.isRedact = false;
                         this.visible = false;
                     });
@@ -517,21 +517,21 @@ export default {
             }
             const paras = [
                 this.$refs.readytimes.readyDate,
-                { countMan: this.$refs.workerref.countMan.toString() },
+                { countMan: this.$refs.workerref.countMan.Toastring() },
                 this.$refs.workerref.WorkerDate,
                 this.$refs.excrecord.ExcDate,
                 {
                     orderId: this.formHeader.orderId,
                     outputUnit: this.formHeader.outputUnit,
                     realOutput: String(this.formHeader.realOutput),
-                    countOutput: this.$refs.instorage.countOutputNum.toString(),
+                    countOutput: this.$refs.instorage.countOutputNum.Toastring(),
                     countOutputUnit: this.ratio.basicUnit,
                     productDate: this.formHeader.productDate
                 }
             ];
             this.$http(`${PACKAGING_API.PKGSAVEFORM_API}`, 'POST', paras).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 if (resolve) {
                     resolve('resolve');

@@ -197,7 +197,7 @@
                         this.factory = data.typeList;
                         this.formHeader.factory = data.typeList[0].deptId;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -214,7 +214,7 @@
                                 this.formHeader.workShop = '';
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -237,7 +237,7 @@
                         if (data.code === 0) {
                             this.holderList = data.page.list;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .catch(error => {
@@ -247,11 +247,11 @@
             /*eslint-enable @typescript-eslint/camelcase */
             GetList(st) {
                 if (this.formHeader.factory === '') {
-                    this.$warningTost('请选择工厂');
+                    this.$warningToast('请选择工厂');
                     return false;
                 }
                 if (this.formHeader.workShop === '') {
-                    this.$warningTost('请选择车间');
+                    this.$warningToast('请选择车间');
                     return false;
                 }
                 if (st) {
@@ -263,7 +263,7 @@
                         this.formHeader.totalCount = data.list.totalCount;
                         this.merge(this.dataList);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -291,12 +291,12 @@
             // 保存
             SaveForm() {
                 if (this.multipleSelection.length === 0) {
-                    this.$warningTost('请勾选数据');
+                    this.$warningToast('请勾选数据');
                     return false;
                 }
                 for (const item of this.multipleSelection) {
                     if (!item.productDate) {
-                        this.$warningTost('请填写生产日期');
+                        this.$warningToast('请填写生产日期');
                         return false;
                     }
                 }
@@ -307,11 +307,11 @@
                 });
                 this.$http(`${STERILIZED_API.ORDERALLOTSAVE}`, 'POST', this.multipleSelection).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('保存成功');
+                        this.$successToast('保存成功');
                         this.isRedact = false;
                         this.GetList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

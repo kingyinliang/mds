@@ -405,7 +405,7 @@ export default class Index extends Vue {
         for (const ele of this.inStockList) {
             total += parseFloat(ele.sauceWeight);
         }
-        return parseInt(total.toString(), 10);
+        return parseInt(total.Toastring(), 10);
     }
 
     GetTime() {
@@ -745,10 +745,10 @@ export default class Index extends Vue {
             .$http(`${KJM_API.KJMAKING_MATERIAL_SAVE_API}`, 'POST', row)
             .then(res => {
                 if (res.data.code === 0) {
-                    Vue.prototype.$successTost('保存成功');
+                    Vue.prototype.$successToast('保存成功');
                     this.getList();
                 } else {
-                    Vue.prototype.$errorTost(res.data.msg);
+                    Vue.prototype.$errorToast(res.data.msg);
                 }
             })
             .catch(err => {
@@ -766,7 +766,7 @@ export default class Index extends Vue {
                 return;
             }
             if (this.realInAmount === 0 || !this.realInAmount) {
-                Vue.prototype.$errorTost('请确认实际入库数');
+                Vue.prototype.$errorToast('请确认实际入库数');
                 return false;
             }
                 Promise.all([this.timeSubmit(), this.storageSubmit(), this.materialSubmit()]).then(() => {
@@ -781,13 +781,13 @@ export default class Index extends Vue {
                 });
 
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 
     validateTime() {
         if (!this.workHourList || this.workHourList.length === 0) {
-            Vue.prototype.$warningTost('报工工时无数据，不可提交');
+            Vue.prototype.$warningToast('报工工时无数据，不可提交');
             return false;
         }
         let sum = 0;
@@ -802,12 +802,12 @@ export default class Index extends Vue {
             sum += sole;
         }
         if (sum <= 0) {
-            Vue.prototype.$warningTost('机器工时之和不能小于0');
+            Vue.prototype.$warningToast('机器工时之和不能小于0');
             return false;
         }
         // for (let item of this.inStockList) {
         //   if (this.inStockBatch !== 0 && item.batch !== this.inStockBatch) {
-        //     Vue.prototype.$warningTost('生产入库-入库批次不一致,请确认')
+        //     Vue.prototype.$warningToast('生产入库-入库批次不一致,请确认')
         //     return false
         //   } else {
         //     this.inStockBatch = item.batch
@@ -816,7 +816,7 @@ export default class Index extends Vue {
         // for (let item of this.workHourList) {
         //   if (item.confActivity2 === '' || item.confActivity2 === null) {
         //     iskong = 1
-        //     Vue.prototype.$warningTost('机器工时不能为空')
+        //     Vue.prototype.$warningToast('机器工时不能为空')
         //     return false
         //   }
         //   if (!isNaN(item.confActivity2)) {
@@ -824,7 +824,7 @@ export default class Index extends Vue {
         //   }
         // }
         // if (iskong === 0 && sum <= 0) {
-        //   Vue.prototype.$warningTost('机器工时之和不能小于0')
+        //   Vue.prototype.$warningToast('机器工时之和不能小于0')
         //   return false
         // }
         return true;

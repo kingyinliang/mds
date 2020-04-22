@@ -43,7 +43,7 @@ export default {
                 if (data.code === 0) {
                     this.dataList = data.fermentationStatus;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

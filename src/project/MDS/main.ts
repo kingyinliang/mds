@@ -45,19 +45,19 @@ Vue.prototype.lodingStatus = false; // 加载遮罩
 Vue.prototype.lodingState = false; // 加载遮罩
 Vue.prototype.version = version; // 版本号
 // 警告通知
-Vue.prototype.$warningTost = str => {
+Vue.prototype.$warningToast = str => {
     Notification({ title: '警告', message: str, type: 'warning' });
 };
 // 错误通知
-Vue.prototype.$errorTost = str => {
+Vue.prototype.$errorToast = str => {
     Notification({ title: '错误', message: str, type: 'error', duration: 0 });
 };
 // 成功通知
-Vue.prototype.$successTost = str => {
+Vue.prototype.$successToast = str => {
     Notification({ title: '成功', message: str, type: 'success' });
 };
 // 提示
-Vue.prototype.$infoTost = str => {
+Vue.prototype.$infoToast = str => {
     Notification({ title: '提示', message: str, type: 'info' });
 };
 

@@ -360,7 +360,7 @@ export default {
                     this.GetEquipmentList();
                     this.GetWarmingList();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -375,7 +375,7 @@ export default {
                     this.productList = data.techProductParameterList.list;
                     this.pages.totalCount = data.techProductParameterList.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -386,7 +386,7 @@ export default {
                 if (data.code === 0) {
                     this.equipmentList = data.techMachineList.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -397,7 +397,7 @@ export default {
                 if (data.code === 0) {
                     this.warmingList = data.techTempParameterList.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -523,7 +523,7 @@ export default {
                         row.delFlag = '1';
                     }
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag

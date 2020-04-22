@@ -51,25 +51,25 @@ export default {
                 if (this.id) {
                     this.$http(`${BASICDATA_API.DEVICEUPDATE_API}`, 'POST', this.form).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('操作成功');
+                            this.$successToast('操作成功');
                             this.submitType = true;
                             this.visible = false;
                             this.$emit('refreshDataList');
                         } else {
                             this.submitType = true;
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
                     this.$http(`${BASICDATA_API.DEVICEADD_API}`, 'POST', this.form).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('操作成功');
+                            this.$successToast('操作成功');
                             this.submitType = true;
                             this.visible = false;
                             this.$emit('refreshDataList');
                         } else {
                             this.submitType = true;
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }

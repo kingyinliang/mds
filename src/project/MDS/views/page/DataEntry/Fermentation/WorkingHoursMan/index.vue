@@ -355,11 +355,11 @@
             // 时间控件弹框
             checkedDateCommonFun() {
                 if (this.isRedact === false) {
-                    this.$warningTost('请先点击编辑');
+                    this.$warningToast('请先点击编辑');
                     return false;
                 }
                 if (this.multipleSelection.length === 0) {
-                    this.$warningTost('请先勾选需要批量修改的数据');
+                    this.$warningToast('请先勾选需要批量修改的数据');
                     return false;
                 }
                 this.$refs.DateInput.focus();
@@ -379,7 +379,7 @@
                         this.factory = data.typeList;
                         this.form.factory = data.typeList[0].deptId;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -397,7 +397,7 @@
                                 }
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -410,7 +410,7 @@
                     if (data.code === 0) {
                         this.holderList = data.data;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -433,7 +433,7 @@
                         this.form.totalCount = data.data.totalCount;
                         this.LogList = [];
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -462,7 +462,7 @@
             },
             SaveForm(types) {
                 if (this.multipleSelection.length === 0) {
-                    this.$warningTost('请先勾选数据');
+                    this.$warningToast('请先勾选数据');
                 } else {
                     let url;
                     let msg;
@@ -470,7 +470,7 @@
                         // 非空判断
                         for (const i in this.multipleSelection) {
                             if (this.multipleSelection[i].actAmount === '' || this.multipleSelection[i].prepareTimes === '' || this.multipleSelection[i].machineTimes === '' || this.multipleSelection[i].humanTimes === '' || this.multipleSelection[i].startDate === '' || this.multipleSelection[i].endDate === '' || this.multipleSelection[i].unMatureUse === '' || this.multipleSelection[i].actAmount === null || this.multipleSelection[i].prepareTimes === null || this.multipleSelection[i].machineTimes === null || this.multipleSelection[i].humanTimes === null || this.multipleSelection[i].startDate === null || this.multipleSelection[i].endDate === null || this.multipleSelection[i].unMatureUse === null) {
-                                this.$warningTost('请填写必填项');
+                                this.$warningToast('请填写必填项');
                                 return false;
                             }
                         }
@@ -495,7 +495,7 @@
                             this.form.currPage = 1;
                             this.LogList = [];
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }
@@ -508,7 +508,7 @@
                 }).then(() => {
                     this.SaveForm('submit');
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             handleSelectionChange(val) {
@@ -519,7 +519,7 @@
                     if (data.code === 0) {
                         this.LogList = data.data;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -528,7 +528,7 @@
                     if (data.code === 0) {
                         this.LogList = data.data;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },

@@ -133,7 +133,7 @@ export default {
                         this.MaterialAudit = data.vrList;
                         status = GetStatus(this.MaterialList);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .finally(() => {
@@ -186,12 +186,12 @@ export default {
                 if (item.delFlag !== '1') {
                     if (!(item.batch && item.productUseAmount && item.supplier)) {
                         ty = false;
-                        this.$warningTost('物料领用必填项未填');
+                        this.$warningToast('物料领用必填项未填');
                         return false;
                     }
                     if (item.batch.length !== 10) {
                         ty = false;
-                        this.$warningTost('物料领用批次十位');
+                        this.$warningToast('物料领用批次十位');
                         return false;
                     }
                 }
@@ -238,7 +238,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag

@@ -257,7 +257,7 @@ export default {
                         this.form.factory = this.factory[0].deptId;
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -273,7 +273,7 @@ export default {
                             this.form.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -283,11 +283,11 @@ export default {
         // 导出
         ExportExcel() {
             if (!this.form.factory) {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return false;
             }
             if (!this.form.workShop) {
-                this.$warningTost('请选择车间');
+                this.$warningToast('请选择车间');
                 return false;
             }
             this.plantList = this.form;
@@ -301,7 +301,7 @@ export default {
                     if (data.code === 0) {
                         this.potList = data.holderList;
                     } else {
-                        this.errorTost(data.msg);
+                        this.errorToast(data.msg);
                     }
                 });
             }
@@ -314,7 +314,7 @@ export default {
                     if (data.code === 0) {
                         this.materialList = data.materialList;
                     } else {
-                        this.errorTost(data.msg);
+                        this.errorToast(data.msg);
                     }
                 });
             }
@@ -331,7 +331,7 @@ export default {
                     this.form.pageSize = data.isSapList.pageSize;
                     this.form.totalCount = data.isSapList.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -344,19 +344,19 @@ export default {
         },
         ModifyOrder() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请先勾选数据');
+                this.$warningToast('请先勾选数据');
                 return false;
             }
             this.$http(`${FERMENTATION_API.ORDER_MODIFY_CHANGE_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                 if (data.code === 0) {
                     if (data.dataType.error > 0) {
-                        this.$errorTost(data.dataType.error + '个失败，' + data.dataType.succ + '个成功');
+                        this.$errorToast(data.dataType.error + '个失败，' + data.dataType.succ + '个成功');
                     } else {
-                        this.$successTost('修改成功');
+                        this.$successToast('修改成功');
                     }
                     this.GetList(true);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

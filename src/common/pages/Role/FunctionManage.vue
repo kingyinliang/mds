@@ -60,7 +60,7 @@ export default {
                         if (data.code === 200) {
                             this.$refs.menuListTree.setCheckedKeys(data.data);
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 });
@@ -99,7 +99,7 @@ export default {
                     this.isDaologShow = false;
                     this.$emit('refreshDataList');
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         }

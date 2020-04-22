@@ -164,7 +164,7 @@ export default {
                         this.readAudit = data.verify;
                         this.materialStatus = GetStatus(data.list);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .finally(() => {
@@ -178,7 +178,7 @@ export default {
                     this.BomMaterialCode = data.bomMaterial.MATNR;
                     this.BomMaterialName = data.bomMaterial.MATERIAL_NAME;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -200,7 +200,7 @@ export default {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     if (this.BomMaterialCode !== this.receive.materialCode) {
-                        this.$warningTost('领用物料与bom物料不一致，请确认！');
+                        this.$warningToast('领用物料与bom物料不一致，请确认！');
                         return false;
                     }
                     let currentRecord = [];
@@ -238,7 +238,7 @@ export default {
             });
             if (i === 0) {
                 ty = false;
-                this.$warningTost('请录入物料领用数据');
+                this.$warningToast('请录入物料领用数据');
                 return false;
             }
             return ty;
@@ -278,7 +278,7 @@ export default {
                 });
                 if (accMul(total, 1000) > item.holderAmount) {
                     ty = false;
-                    this.$warningTost(item.holderName + '罐领用数超过库存，请重新调整');
+                    this.$warningToast(item.holderName + '罐领用数超过库存，请重新调整');
                     return false;
                 }
             }
@@ -306,7 +306,7 @@ export default {
             this.$http(url, 'POST', this.dataList)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -326,7 +326,7 @@ export default {
             }).then(() => {
                 row.delFlag = 1;
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         rowDelFlag({ row }) {

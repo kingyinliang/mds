@@ -137,12 +137,12 @@
                                 //
                             } else {
                                 ty = false;
-                                this.$warningTost('原料领用必填项未填');
+                                this.$warningToast('原料领用必填项未填');
                                 return false;
                             }
                             if (item.amount < 0) {
                                 ty = false;
-                                this.$warningTost('原料领用库存量不能为负');
+                                this.$warningToast('原料领用库存量不能为负');
                                 return false;
                             }
                         }
@@ -208,7 +208,7 @@
                         }
                         this.$emit('GetMaterielStatus', this.Materielstatus);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -220,7 +220,7 @@
                             //
                         } else {
                             ty = false;
-                            this.$warningTost('原料领用必填项未填');
+                            this.$warningToast('原料领用必填项未填');
                             return false;
                         }
                     }
@@ -257,7 +257,7 @@
                                         resolve('resolve');
                                     }
                                 } else {
-                                    // this.$errorTost('保存表头' + data.msg);
+                                    // this.$errorToast('保存表头' + data.msg);
                                     reject('保存表头' + data.msg);
                                 }
                             })
@@ -271,7 +271,7 @@
                         //     resolve('resolve');
                         // }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                         if (reject) {
                             reject('原料领用' + data.msg);
                         }
@@ -285,7 +285,7 @@
                     if (data.code === 0) {
                         this.brine = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -303,7 +303,7 @@
                     if (data.code === 0) {
                         this.brineTankNo = data.page.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -340,7 +340,7 @@
                     row.delFlag = '1';
                     // this.checkBatchStock(row)
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             //  RowDelFlag

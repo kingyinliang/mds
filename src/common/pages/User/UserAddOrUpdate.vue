@@ -1,12 +1,12 @@
 <template>
     <div>
-        <el-dialog :title="userID==='' ? '修改人员信息' : '新增人员'" :close-on-click-modal="false" :visible.sync="visible">
+        <el-dialog :title="userID!=='' ? '修改人员信息' : '新增人员'" :close-on-click-modal="false" :visible.sync="visible">
             <div>
                 <el-form ref="dataForm" :model="dataForm" status-icon :rules="checkRules" size="small" label-width="100px" @keyup.enter.native="submitDataform()">
                     <el-form-item label="所属部门：">
-                        <span v-if="userID===''" style="margin-right: 10px;">{{ dataForm.deptName }}</span>
-                        <span v-if="userID!==''" style="margin-right: 10px;">{{ deptName }}</span>
-                        <el-button v-if="userID===''" type="text" size="small" @click="updateOrg">
+                        <span v-if="userID!==''" style="margin-right: 10px;">{{ dataForm.deptName }}</span>
+                        <span v-if="userID==''" style="margin-right: 10px;">{{ deptName }}</span>
+                        <el-button v-if="userID!==''" type="text" size="small" @click="updateOrg">
                             请选择
                         </el-button>
                     </el-form-item>
@@ -18,6 +18,9 @@
                     </el-form-item>
                     <el-form-item label="人员姓名：" prop="realName">
                         <el-input v-model="dataForm.realName" placeholder="手动输入" auto-complete="off" />
+                    </el-form-item>
+                    <el-form-item label="用户名：" prop="userName">
+                        <el-input v-model="dataForm.userName" placeholder="手动输入" auto-complete="off" />
                     </el-form-item>
                     <el-form-item label="职务：">
                         <el-input v-model="dataForm.post" placeholder="手动输入" />
@@ -35,11 +38,11 @@
                 <el-button type="primary" size="small" @click="submitDataform">确定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="选择组织架构" :close-on-click-modal="false" :visible.sync="visible1">
+        <el-dialog title="选择组织架构" :close-on-click-modal="false" :visible.sync="isOrgTreeShow">
             <p style="margin-bottom: 10px;">
                 右击组织架构选择该部门
             </p>
-            <el-tree :data="orgTree" node-key="deptId" :expand-on-click-node="false" @node-contextmenu="setDepartment" />
+            <el-tree :data="orgTree" node-key="id" :expand-on-click-node="false" :props="{label:'deptName',children:'children'}" @node-contextmenu="setDepartment" />
         </el-dialog>
     </div>
 </template>
@@ -51,10 +54,8 @@ export default {
     components: {},
     props: {
         orgTree: {
-            type: Object,
-            default: () => {
-            //    obj
-            }
+            type: Array,
+            default: () => { return [] }
         }
     },
     data() {
@@ -63,9 +64,9 @@ export default {
             deptName: '',
             userID: '',
             visible: false,
-            visible1: false,
+            isOrgTreeShow: false,
             dataForm: {
-                name: '',
+                userName: '',
                 realName: '',
                 workNum: '',
                 workNumTemp: '',
@@ -81,12 +82,21 @@ export default {
                         message: '人员姓名不能为空',
                         trigger: 'blur'
                     }
+                ],
+                userName: [
+                    {
+                        required: true,
+                        message: '用户名不能为空',
+                        trigger: 'blur'
+                    }
                 ]
             }
         };
     },
     computed: {},
     mounted() {
+        console.log('this.orgTree')
+        console.log(this.orgTree)
     //    mounted
     },
     methods: {
@@ -96,13 +106,16 @@ export default {
             this.deptName = deptName;
             if (id) {
                 this.userID = id;
-                COMMON_API.USER_INSERT_API({
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                COMMON_API.USER_BATCH_QUERY_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    ids: [this.userID]
                 }).then(({ data }) => {
-                    if (data.code === 0) {
-                        this.dataForm = data.user;
+                    console.log('2222222')
+                    console.log(data)
+                    if (data.code === 200) {
+                        this.dataForm = data.data[0];
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -112,12 +125,12 @@ export default {
             this.visible = true;
         },
         updateOrg() {
-            this.visible1 = true;
+            this.isOrgTreeShow = true;
         },
         setDepartment(event, data) {
             this.dataForm.deptId = data.deptId;
             this.dataForm.deptName = data.deptName;
-            this.visible1 = false;
+            this.isOrgTreeShow = false;
         },
         // 表单提交
         submitDataform() {
@@ -130,27 +143,37 @@ export default {
                                 // 修改
                                 COMMON_API.USER_UPDATE_API(this.dataForm).then(({ data }) => {
                                     if (data.code === 200) {
-                                        this.$successTost('操作成功');
+                                        this.$successToast('操作成功');
                                         this.type = true;
                                         this.visible = false;
                                         this.$emit('refreshDataList');
                                     } else {
                                         this.type = true;
-                                        this.$errorTost(data.msg);
+                                        this.$errorToast(data.msg);
                                     }
                                 });
                             } else {
                                 // 新增
                                 this.dataForm.deptId = this.deptID;
-                                COMMON_API.USER_INSERT_API(this.dataForm).then(({ data }) => {
+                                COMMON_API.USER_UPDATE_API({
+                                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                    deptId: this.dataForm.deptId,
+                                    userName: this.dataForm.userName,
+                                    realName: this.dataForm.realName,
+                                    workNum: this.dataForm.workNum,
+                                    tempFlag: this.dataForm.workNumTemp,
+                                    post: this.dataForm.post,
+                                    email: this.dataForm.email,
+                                    phone: this.dataForm.mobile
+                                }).then(({ data }) => {
                                     if (data.code === 200) {
-                                        this.$successTost('操作成功');
+                                        this.$successToast('操作成功');
                                         this.type = true;
                                         this.visible = false;
                                         this.$emit('refreshDataList');
                                     } else {
                                         this.type = true;
-                                        this.$errorTost(data.msg);
+                                        this.$errorToast(data.msg);
                                     }
                                 });
                             }

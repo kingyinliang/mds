@@ -216,7 +216,7 @@ export default {
                     if (data.code === 0) {
                         this.orderTypeList = data.dicList[0].prolist;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -233,7 +233,7 @@ export default {
                     this.Audit = [];
                     this.$store.commit('common/updateFermentationM', this.formHeader);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -245,7 +245,7 @@ export default {
                 if (data.code === 0) {
                     this.Audit = data.verList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -258,7 +258,7 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         check() {
@@ -276,7 +276,7 @@ export default {
         savedOrSubmitForm(str) {
             if (str === 'submit') {
                 if (this.check()) {
-                    this.$warningTost('有必填项未填写');
+                    this.$warningToast('有必填项未填写');
                     return false;
                 }
             }
@@ -293,7 +293,7 @@ export default {
                     }
                 });
             } else {
-                this.$warningTost('请选择数据后操作');
+                this.$warningToast('请选择数据后操作');
                 return;
             }
             if (str === 'submit') {
@@ -308,11 +308,11 @@ export default {
                                 });
                                 this.GetDataList();
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -325,7 +325,7 @@ export default {
                         });
                         this.GetDataList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -358,7 +358,7 @@ export default {
                         });
                         this.GetDataList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -387,7 +387,7 @@ export default {
                         this.formHeader.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -401,7 +401,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -459,7 +459,7 @@ export default {
                     if (data.code === 0) {
                         this.material = data.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

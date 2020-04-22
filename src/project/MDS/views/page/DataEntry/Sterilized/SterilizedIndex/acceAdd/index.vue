@@ -297,7 +297,7 @@
                             this.supStatus = false;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -353,7 +353,7 @@
                     }
                     this.visible = true;
                 } else {
-                    this.$warningTost('请选择数据');
+                    this.$warningToast('请选择数据');
                 }
             },
             // 添加完成确认
@@ -381,7 +381,7 @@
                         this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                         this.GetOrderHead(true);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -405,7 +405,7 @@
                     }
                     row.delFlag = '1';
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             //  RowDelFlag
@@ -487,7 +487,7 @@
                 }).then(() => {
                     this.savedOrSubmitForm('submit');
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             savedOrSubmitForm(str) {
@@ -550,18 +550,18 @@
                         } else {
                             if (!item.batch) {
                                 ty = false;
-                                this.$warningTost('批次必填');
+                                this.$warningToast('批次必填');
                                 return false;
                             }
                             if (item.batch.length !== 10) {
                                 ty = false;
-                                this.$warningTost('批次长度限制10位');
+                                this.$warningToast('批次长度限制10位');
                                 return false;
                             }
                         }
                         if (!item.receiveAmount) {
                             ty = false;
-                            this.$warningTost('领用数量必填');
+                            this.$warningToast('领用数量必填');
                             return false;
                         }
                         if (!st) {
@@ -569,12 +569,12 @@
                                 //
                             } else if (item.addStatus !== '已添加') {
                                 ty = false;
-                                this.$warningTost('有未添加完成的物料，无法提交！');
+                                this.$warningToast('有未添加完成的物料，无法提交！');
                                 return false;
                             }
                             // if (item.supStatus !== '已确认') {
                             //   ty = false
-                            //   this.$warningTost('品保未确认')
+                            //   this.$warningToast('品保未确认')
                             //   return false
                             // }
                         }
@@ -593,7 +593,7 @@
                         if (data1 === 'AddSupDate') {
                             if (sum !== Number(item.adjustAmount)) {
                                 ty = false;
-                                this.$warningTost('领用数量不等于需求数量');
+                                this.$warningToast('领用数量不等于需求数量');
                             }
                         } else if (data1 === 'SupDate') {
                             if (item.isSplit === '0') {
@@ -605,7 +605,7 @@
                                     });
                                 if (sum !== addAmount) {
                                     ty = false;
-                                    this.$warningTost('领用数量不等于添加数量');
+                                    this.$warningToast('领用数量不等于添加数量');
                                 }
                             }
                         }
@@ -644,7 +644,7 @@
                             });
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

@@ -151,7 +151,7 @@ export default {
                 factory: '',
                 workShop: '',
                 productDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                pstngDate: new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate()),
+                pstngDate: new Date().getFullYear().Toastring() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).Toastring() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().Toastring() : '0' + new Date().getDate()),
                 headerTxt: '',
                 orderNo: '',
                 currPage: 1,
@@ -206,7 +206,7 @@ export default {
                     this.formHeader.pageSize = data.page.pageSize;
                     this.formHeader.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -230,7 +230,7 @@ export default {
                         this.AuditList.splice(this.AuditList.length, 0, {});
                         this.AuditList.splice(this.AuditList.length - 1, 1);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.GetDataList();
                 });
@@ -239,14 +239,14 @@ export default {
         // 审核拒绝
         repulseAutios() {
             if (this.multipleSelection.length <= 0) {
-                this.$warningTost('请选择订单');
+                this.$warningToast('请选择订单');
             } else {
                 this.visible = true;
             }
         },
         repulseAutio() {
             if (this.Text.length <= 0) {
-                this.$warningTost('请填写不通过原因');
+                this.$warningToast('请填写不通过原因');
             } else {
                 this.$refs.pstngDate.validate(valid => {
                     if (valid) {
@@ -270,11 +270,11 @@ export default {
                                     });
                                     this.GetDataList();
                                 } else {
-                                    this.$errorTost(data.msg);
+                                    this.$errorToast(data.msg);
                                 }
                             });
                         }).catch(() => {
-                            // this.$infoTost('已取消删除');
+                            // this.$infoToast('已取消删除');
                         });
                     }
                 });
@@ -283,7 +283,7 @@ export default {
         // 审核通过
         subAutio() {
             if (this.multipleSelection.length <= 0) {
-                this.$warningTost('请选择订单');
+                this.$warningToast('请选择订单');
             } else {
                 this.$refs.pstngDate.validate(valid => {
                     if (valid) {
@@ -307,12 +307,12 @@ export default {
                                     });
                                     this.GetDataList();
                                 } else {
-                                    this.$errorTost(data.msg);
+                                    this.$errorToast(data.msg);
                                     this.GetDataList();
                                 }
                             });
                         }).catch(() => {
-                            // this.$infoTost('已取消删除');
+                            // this.$infoToast('已取消删除');
                         });
                     }
                 });
@@ -345,11 +345,11 @@ export default {
                             type: 'success'
                         });
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 获取移动原因
@@ -360,7 +360,7 @@ export default {
                 if (data.code === 0) {
                     this.MoveReas = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

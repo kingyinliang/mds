@@ -50,7 +50,7 @@
                                     <el-table-column prop="created" label="创建日期" width="160" />
                                     <el-table-column label="操作" fixed="right" width="65">
                                         <template slot-scope="scope">
-                                            <el-button v-if="isAuth('sys:user:update') && isAuth('sys:user:info')" style="padding: 0;" type="text" @click="addOrUpdateuUser(scope.row.userId)">
+                                            <el-button v-if="isAuth('sys:user:update') && isAuth('sys:user:info')" style="padding: 0;" type="text" @click="addOrUpdateuUser(scope.row.id)">
                                                 编辑
                                             </el-button>
                                         </template>
@@ -167,8 +167,7 @@ export default {
         addOrUpdateuUser(id) {
             if (this.deptID) {
                 this.isDaologShow = true;
-                console.log(this.deptID)
-                console.log(this.deptName)
+                console.log('id')
                 console.log(id)
                 this.$nextTick(() => {
                     this.$refs.addOrUpdateuUser.init(this.deptID, this.deptName, id);
@@ -202,7 +201,7 @@ export default {
                     }).then(() => {
                     //    then
                     }).catch(() => {
-                        // this.$infoTost('已取消删除');
+                        // this.$infoToast('已取消删除');
                     });
                 } else {
                     this.$confirm('此用户无权限，是否删除?', '删除用户', {
@@ -216,11 +215,11 @@ export default {
                                 ids: userID
                             }).then(({ data }) => {
                                 if (data.code === 200) {
-                                    this.$successTost('删除成功!');
+                                    this.$successToast('删除成功!');
                                     this.multipleSelection = [];
                                     this.getResultList();
                                 } else {
-                                    this.$errorTost(data.msg);
+                                    this.$errorToast(data.msg);
                                 }
                             });
                         })

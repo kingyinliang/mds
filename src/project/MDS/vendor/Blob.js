@@ -32,7 +32,7 @@
     var BlobBuilder = view.BlobBuilder || view.WebKitBlobBuilder || view.MozBlobBuilder || (function(view) {
             var
                 get_class = function(object) {
-                    return Object.prototype.toString.call(object).match(/^\[object\s(.*)\]$/)[1];
+                    return Object.prototype.Toastring.call(object).match(/^\[object\s(.*)\]$/)[1];
                 }
                 , FakeBlobBuilder = function BlobBuilder() {
                     this.data = [];
@@ -143,7 +143,7 @@
                 }
                 return new FakeBlob(this.data.join(""), type, "raw");
             };
-            FBB_proto.toString = function() {
+            FBB_proto.Toastring = function() {
                 return "[object BlobBuilder]";
             };
             FB_proto.slice = function(start, end, type) {
@@ -157,7 +157,7 @@
                     , this.encoding
                 );
             };
-            FB_proto.toString = function() {
+            FB_proto.Toastring = function() {
                 return "[object Blob]";
             };
             FB_proto.close = function() {
