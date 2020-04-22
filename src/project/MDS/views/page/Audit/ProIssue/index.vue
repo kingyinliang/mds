@@ -91,8 +91,8 @@
                             <el-input v-model="plantList.headerTxt" placeholder="抬头文本" style="width: 160px;" />
                         </el-form-item>
                     </el-form>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="checkboxT" width="34" />
+                    <el-table ref="table1" header-row-class-name="tableHead" max-height="450" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                        <el-table-column type="selection" :selectable="checkboxT" width="34" fixed="left" />
                         <el-table-column label="审核状态" width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? (scope.row.interfaceReturnStatus === '0' ? '接口失败' : '审核通过') : scope.row.status === 'noPass' ? '审核不通过' : '' }}
@@ -154,7 +154,7 @@
                         <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="150" />
                         <el-table-column prop="verifyMan" :show-overflow-tooltip="true" label="审核人" />
                         <el-table-column prop="verifyDate" label="审核时间" width="160" />
-                        <el-table-column label="备注" width="80">
+                        <el-table-column fixed="right" label="备注" width="80">
                             <template slot-scope="scope">
                                 <el-input v-if="scope.row.redact" v-model="scope.row.remark" size="mini" />
                                 <el-input v-else v-model="scope.row.remark" size="mini" disabled />
@@ -543,7 +543,7 @@
     };
 </script>
 
-<style lang="scss">
+<style lang="scss" scope>
     .searchCard {
         margin-bottom: 0;
     }
@@ -583,6 +583,11 @@
             .el-form-item__content {
                 width: 500px;
             }
+        }
+    }
+    .el-table {
+        .el-table__fixed-right {
+            right: 6px !important;
         }
     }
 </style>

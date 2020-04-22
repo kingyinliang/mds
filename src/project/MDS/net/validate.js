@@ -173,7 +173,7 @@ export function getNewDate() {
 }
 
 export function exportFile(url, fileName, vue) {
-    vue.$http(url, 'POST', vue.plantList, false, true).then(({ data }) => {
+    vue.$http(url, 'POST', vue.plantList, false, false).then(({ data }) => {
         if (data.code === 0) {
             const elink = document.createElement('a');
             elink.download = `${fileName}${getNewDate()}.xls`;
@@ -188,7 +188,7 @@ export function exportFile(url, fileName, vue) {
     });
 }
 export function exportFileForm(url, fileName, vue) {
-    vue.$http(url, 'POST', vue.queryForm, false, true).then(({ data }) => {
+    vue.$http(url, 'POST', vue.queryForm, false, false).then(({ data }) => {
         if (data.code === 0) {
             const elink = document.createElement('a');
             elink.download = `${fileName}${getNewDate()}.xls`;

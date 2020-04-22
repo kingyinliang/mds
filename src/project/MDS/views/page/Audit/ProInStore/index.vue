@@ -521,7 +521,7 @@
     };
 </script>
 
-<style lang="scss">
+<style lang="scss" scope>
     .searchCard {
         margin-bottom: 0;
     }
@@ -561,6 +561,11 @@
             .el-form-item__content {
                 width: 500px;
             }
+        }
+    }
+    .el-table {
+        .el-table__fixed-right {
+            right: 6px !important;
         }
     }
 </style>

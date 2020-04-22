@@ -544,7 +544,7 @@
     };
 </script>
 
-<style lang="scss">
+<style lang="scss" scope>
     .searchCard {
         margin-bottom: 0;
     }
@@ -579,6 +579,11 @@
     .topforms {
         .el-date-editor.el-input {
             width: auto;
+        }
+    }
+    .el-table {
+        .el-table__fixed-right {
+            right: 6px !important;
         }
     }
 </style>

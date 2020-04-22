@@ -581,7 +581,7 @@ export default class Index extends Vue {
                 text: '加载中……',
                 background: 'rgba(255, 255, 255, 0.7)'
             });
-            Vue.prototype.$http(`${FERMENTATION_API.ORDER_APPLY_API}`, `POST`, this.selectedList).then(res => {
+            Vue.prototype.$http(`${FERMENTATION_API.ORDER_APPLY_API}`, `POST`, this.selectedList, false, false, false).then(res => {
                 if (res.data.code === 0) {
                     // this.getOrderList()
                     this.ExportTime = window.setInterval(() => {
@@ -604,7 +604,7 @@ export default class Index extends Vue {
         Vue.prototype
             .$http(`${REP_API.GETREPOUTFORWORKOUTPUT_API}`, 'GET', {
                 asyncType: 'ASYNC_TYPE_FER_APPLY_ORDER'
-            })
+            }, false, false, false)
             .then(({ data }) => {
                 if (data.code === 0) {
                     if (data.asyncRecord) {

@@ -28,7 +28,7 @@
                                 -
                                 <el-date-picker v-model="params.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
                             </el-form-item>
-                            <el-form-item label="订单号：">
+                            <el-form-item label="订单号：" style="height: 32px !important;">
                                 <el-select v-model="params.orderList" class="selectwpx" style="width: 140px;" filterable multiple allow-create @change="changeOptions('order')">
                                     <el-option label="请选择" value="" />
                                     <el-option v-for="sole in orderDataList" :key="sole.orderNo" :label="sole.orderNo" :value="sole.orderNo" />

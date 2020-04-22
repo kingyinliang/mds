@@ -529,7 +529,9 @@ export default {
                         if (typeof item.id === 'undefined') {
                             item.id = '';
                         }
-                        this.changeH(item);
+                        if (!item.category) {
+                            this.changeH(item);
+                        }
                         if (item.receiveAmount === '' || !item.receiveAmount) {
                             item.receiveAmount = item.planAmount;
                         }

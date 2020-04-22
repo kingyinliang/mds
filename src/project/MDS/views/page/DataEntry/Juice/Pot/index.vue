@@ -172,7 +172,7 @@
                         <el-input v-model="formTransfer.receiveAmount" type="number" style="width: 200px;" placeholder="大于0" @mousewheel.native.prevent />
                     </el-form-item>
                     <el-form-item label="打入罐类别：" prop="inHolderType">
-                        <el-select v-model="formTransfer.inHolderType" placeholder="请选择" clearable>
+                        <el-select v-model="formTransfer.inHolderType" placeholder="请选择" clearable style="width: 200px;">
                             <el-option label="请选择" value="" />
                             <el-option v-for="(sole, index) in potTypeList" :key="index" :value="sole.value" :label="sole.name" />
                         </el-select>
@@ -186,7 +186,7 @@
                         </el-radio>
                     </el-form-item>
                     <el-form-item label="打入罐号：" prop="inHolderId">
-                        <el-select v-model="formTransfer.inHolderId">
+                        <el-select v-model="formTransfer.inHolderId" style="width: 200px;">
                             <el-option v-for="(item, index) in thrwHolderList" :key="index" :value="item.HOLDER_ID" :label="item.HOLDER_NAME" />
                         </el-select>
                     </el-form-item>
@@ -200,12 +200,12 @@
                         <el-input v-model="formTransfer.inBatch" maxlength="10" style="width: 200px;" />
                     </el-form-item>
                     <el-form-item label="是否满灌：">
-                        <el-select v-model="formTransfer.isFull" filterable>
+                        <el-select v-model="formTransfer.isFull" filterable style="width: 200px;">
                             <el-option v-for="(item, index) in isFullList" :key="index" :value="item.value" :label="item.name" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="满灌时间：">
-                        <el-date-picker v-model="formTransfer.fullDate" type="date" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd" value-format="yyyy-MM-dd" />
+                        <el-date-picker v-model="formTransfer.fullDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" style="width: 200px;" />
                     </el-form-item>
                 </el-form>
             </div>
