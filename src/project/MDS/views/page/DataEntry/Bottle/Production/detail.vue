@@ -199,7 +199,7 @@ export default {
                         this.$refs.textrecord.GetText(this.formHeader.orderId);
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -212,7 +212,7 @@ export default {
                     this.$refs.workerref.GetTimeUserList(data.listuser, data.vrList);
                     this.Attendance = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -268,7 +268,7 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -362,7 +362,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                     if (reject) {
                         reject('工时提交' + data.msg);
                     }
@@ -378,7 +378,7 @@ export default {
                 if (data.code === 0) {
                     this.productShift = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -391,7 +391,7 @@ export default {
                 if (data.code === 0) {
                     this.Supplier = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         }

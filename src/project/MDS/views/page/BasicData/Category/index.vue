@@ -106,14 +106,14 @@ export default {
                     this.formHeader.pageSize = data.ferList.pageSize;
                     this.formHeader.totalCount = data.ferList.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         // 批量删除
         delList() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请选择要删除的类别');
+                this.$warningToast('请选择要删除的类别');
             } else {
                 this.$confirm('确认删除类别, 是否继续?', '删除类别', {
                     confirmButtonText: '确定',
@@ -126,11 +126,11 @@ export default {
                         });
                         this.$http(`${BASICDATA_API.CATEGORY_DELETE}`, 'POST', this.multipleSelection).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$successTost('删除成功!');
+                                this.$successToast('删除成功!');
                                 this.multipleSelection = [];
                                 this.GetDataList();
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     })
@@ -144,7 +144,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -155,7 +155,7 @@ export default {
                 if (data.code === 0) {
                     this.material = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

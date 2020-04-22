@@ -317,7 +317,7 @@ export default {
                     this.getUsers();
                     this.getList();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -331,7 +331,7 @@ export default {
                 if (data.code === 0) {
                     this.userlist = data.page.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -347,7 +347,7 @@ export default {
                     this.pages.pageSize = data.qualityInspectionList.pageSize;
                     this.pages.totalCount = data.qualityInspectionList.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -436,7 +436,7 @@ export default {
                     this.isRedact = false;
                     this.getHeader();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -452,7 +452,7 @@ export default {
                     is++;
                 }
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         rowDelFlag({ row }) {

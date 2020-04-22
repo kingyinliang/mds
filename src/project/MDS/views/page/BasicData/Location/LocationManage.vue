@@ -156,7 +156,7 @@ export default {
             if (data.code === 0) {
                 this.sapList = data.dicList;
             } else {
-                this.$errorTost(data.msg);
+                this.$errorToast(data.msg);
             }
         });
         // this.$http(`${BASICDATA_API.SERCHSAPLIST_API}`, 'POST', {params: ''}).then(({data}) => {
@@ -174,7 +174,7 @@ export default {
                 if (data.code === 0) {
                     this.factory = data.typeList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -186,7 +186,7 @@ export default {
                     if (data.code === 0) {
                         this.workshop = data.typeList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -224,7 +224,7 @@ export default {
                     this.pageSize = data.page.pageSize;
                     this.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.visible = false;
             });
@@ -238,15 +238,15 @@ export default {
             }).then(() => {
                 this.$http(`${BASICDATA_API.LOCATIONDEL_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('删除成功!');
+                        this.$successToast('删除成功!');
                         this.multipleSelection = [];
                         this.getLocationList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 新增库位

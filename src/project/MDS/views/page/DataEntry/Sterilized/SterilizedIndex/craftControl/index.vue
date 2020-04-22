@@ -272,7 +272,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -310,7 +310,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag
@@ -368,12 +368,12 @@ export default {
                     if (item === '酱油') {
                         if (!this.crafData.sauceTemp) {
                             ty = false;
-                            this.$warningTost('酱油温度必填');
+                            this.$warningToast('酱油温度必填');
                         }
                     } else if (item === '热水') {
                         if (!this.crafData.hotTemp) {
                             ty = false;
-                            this.$warningTost('热水温度必填');
+                            this.$warningToast('热水温度必填');
                         }
                     }
                 });
@@ -381,11 +381,11 @@ export default {
             this.crafData.result.forEach(item => {
                 if (!item.temp) {
                     ty = false;
-                    this.$warningTost('屏显温度必填');
+                    this.$warningToast('屏显温度必填');
                 }
                 if (!item.logTime) {
                     ty = false;
-                    this.$warningTost('记录时间必填');
+                    this.$warningToast('记录时间必填');
                 }
             });
             return ty;
@@ -404,7 +404,7 @@ export default {
                     }).then(() => {
                         this.savedOrSubmitForm('submit');
                     }).catch(() => {
-                        // this.$infoTost('已取消删除');
+                        // this.$infoToast('已取消删除');
                     });
                 }
             });
@@ -513,7 +513,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         }

@@ -104,7 +104,7 @@
                     if (data.code === 0) {
                         this.factory = data.typeList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -118,7 +118,7 @@
                     if (data.code === 0) {
                         this.largeClass = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -128,7 +128,7 @@
                     if (data.code === 0) {
                         this.Unit = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -163,11 +163,11 @@
                             if (data.code === 0) {
                                 this.submitType = true;
                                 this.visible = false;
-                                this.$successTost('操作成功');
+                                this.$successToast('操作成功');
                                 this.$emit('refreshDataList');
                             } else {
                                 this.submitType = true;
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     }

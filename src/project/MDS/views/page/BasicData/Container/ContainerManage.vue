@@ -210,7 +210,7 @@ export default {
                     this.form.pageSize = data.page.pageSize;
                     this.form.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.visible = false;
             });
@@ -221,7 +221,7 @@ export default {
                 if (data.code === 0) {
                     this.dictList = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -242,7 +242,7 @@ export default {
                     if (data.code === 0) {
                         this.workshop = data.typeList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -271,7 +271,7 @@ export default {
         // 删除
         remove() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请选择要删除的容器');
+                this.$warningToast('请选择要删除的容器');
             } else {
                 this.$confirm('确认删除容器, 是否继续?', '删除容器', {
                     confirmButtonText: '确定',
@@ -281,11 +281,11 @@ export default {
                     .then(() => {
                         this.$http(`${BASICDATA_API.CONTAINERDEL_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$successTost('删除成功!');
+                                this.$successToast('删除成功!');
                                 this.multipleSelection = [];
                                 this.GetContainerList();
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     })

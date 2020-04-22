@@ -363,7 +363,7 @@
                         this.factory = data.typeList;
                         this.formHeader.factory = data.typeList[0].deptId;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -378,7 +378,7 @@
                                 this.formHeader.workShop = data.typeList[0].deptId;
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }
@@ -392,18 +392,18 @@
                         if (data.code === 0) {
                             this.HolderList = data.list;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }
             },
             GetList(st) {
                 if (!this.formHeader.factory) {
-                    this.$warningTost('请选择工厂');
+                    this.$warningToast('请选择工厂');
                     return false;
                 }
                 if (!this.formHeader.workShop) {
-                    this.$warningTost('请选择车间');
+                    this.$warningToast('请选择车间');
                     return false;
                 }
                 if (st) {
@@ -415,7 +415,7 @@
                         this.formHeader.totalCount = data.list.totalCount;
                         this.fastS = true;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -441,7 +441,7 @@
                     };
                     this.GnDialogTableVisible = true;
                 } else {
-                    this.$warningTost('当前状态不能搅罐');
+                    this.$warningToast('当前状态不能搅罐');
                 }
             },
             GnSave(formName) {
@@ -449,12 +449,12 @@
                     if (valid) {
                         this.$http(`${STERILIZED_API.SEMIFINISHEDPRODUCTGNSAVE}`, 'POST', this.formGn).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$successTost('保存成功');
+                                this.$successToast('保存成功');
                                 this.GnDialogTableVisible = false;
                                 this.GetList();
                                 this.$refs[formName].resetFields();
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
@@ -468,7 +468,7 @@
                     if (data.code === 0) {
                         this.typeList = data.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -478,7 +478,7 @@
                     if (data.code === 0) {
                         this.thrwHolderList = data.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -489,7 +489,7 @@
                     if (data.code === 0) {
                         this.zhuanHolderList = data.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -515,7 +515,7 @@
                     };
                     this.JsbDialogTableVisible = true;
                 } else {
-                    this.$warningTost('当前状态不能JBS出库');
+                    this.$warningToast('当前状态不能JBS出库');
                 }
             },
             ZcProp(row) {
@@ -539,30 +539,30 @@
                     };
                     this.ZcDialogTableVisible = true;
                 } else {
-                    this.$warningTost('当前状态不能转储');
+                    this.$warningToast('当前状态不能转储');
                 }
             },
             JsbSave(formName) {
                 this.$refs[formName].validate(valid => {
                     if (valid) {
                         if (this.formJsb.receiveAmount * 1000 > this.formJsb.amount) {
-                            this.$warningTost('领用量不能大于库存');
+                            this.$warningToast('领用量不能大于库存');
                             return false;
                         }
                         if (this.formJsb.isFull === '1' && (this.formJsb.fullDate === '' || !this.formJsb.fullDate)) {
-                            this.$warningTost('满灌时请选择满罐时间');
+                            this.$warningToast('满灌时请选择满罐时间');
                             return false;
                         }
                         this.formJsb.factory = this.formHeader.factory;
                         this.formJsb.workShop = this.formHeader.workShop;
                         this.$http(`${STERILIZED_API.SEMIFINISHEDPRODUCTJSBSAVE}`, 'POST', this.formJsb).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$successTost('保存成功');
+                                this.$successToast('保存成功');
                                 this.JsbDialogTableVisible = false;
                                 this.GetList();
                                 this.$refs[formName].resetFields();
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
@@ -574,21 +574,21 @@
                 this.$refs[formName].validate(valid => {
                     if (valid) {
                         if (this.formZc.receiveAmount * 1000 > this.formZc.amount) {
-                            this.$warningTost('领用量不能大于库存');
+                            this.$warningToast('领用量不能大于库存');
                             return false;
                         }
                         if (this.formZc.isFull === '1' && (this.formZc.fullDate === '' || !this.formZc.fullDate)) {
-                            this.$warningTost('满灌时请选择满罐时间');
+                            this.$warningToast('满灌时请选择满罐时间');
                             return false;
                         }
                         this.$http(`${STERILIZED_API.SEMIFINISHEDPRODUCTZCSAVE}`, 'POST', this.formZc).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$successTost('保存成功');
+                                this.$successToast('保存成功');
                                 this.ZcDialogTableVisible = false;
                                 this.GetList();
                                 this.$refs[formName].resetFields();
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
@@ -603,7 +603,7 @@
                         if (data.code === 0) {
                             this.PeopleList = data.list;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }
@@ -611,7 +611,7 @@
             // 清罐
             ClearPot(item) {
                 if (item.holderStatus !== '4') {
-                    this.$warningTost('未领用完不能清罐')
+                    this.$warningToast('未领用完不能清罐')
                     return false
                 }
                 this.$confirm('清罐后，账务将清零，请确认实物已空！', '清罐确认', {
@@ -621,14 +621,14 @@
                 }).then(() => {
                     this.$http(`${STERILIZED_API.SEMIFINISH_CLEAN_HOLDER}`, 'POST', item).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('操作成功');
+                            this.$successToast('操作成功');
                             this.GetList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             }
         }

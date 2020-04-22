@@ -129,7 +129,7 @@
                             }
                         })
                         .catch(() => {
-                            // this.$infoTost('已取消删除');
+                            // this.$infoToast('已取消删除');
                         });
                 } else {
                     this.mainTabs = this.mainTabs.filter(item => item.name !== tabName);

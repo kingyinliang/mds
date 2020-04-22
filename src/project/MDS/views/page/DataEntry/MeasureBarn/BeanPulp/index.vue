@@ -408,7 +408,7 @@ export default {
                     // console.log('this.inParnHolder')
                     // console.log(this.inParnHolder)
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
             // let temp = {
@@ -470,7 +470,7 @@ export default {
                             this.$refs[formName].resetFields();
                             this.getOrderList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -551,7 +551,7 @@ export default {
         getOrderList() {
             this.dataList = [];
             if (!this.plantList.factoryIDValue) {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return;
             }
             this.$http(`${MEASUREBARN_BEAN_API.BEANPULP_POT_LIST}`, 'POST', {
@@ -568,7 +568,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

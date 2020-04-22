@@ -136,7 +136,7 @@ export default {
             return (end, start, row) => {
                 if (end && start && row.delFlag !== '1') {
                     if ((toDate(end) - toDate(start)) / 60000 < 0) {
-                        this.$warningTost('异常结束时间早于异常开始时间，请重新录入');
+                        this.$warningToast('异常结束时间早于异常开始时间，请重新录入');
                         return 'NaN';
                     }
                         return Number(((toDate(end) - toDate(start)) / 60000).toFixed(2));
@@ -264,31 +264,31 @@ export default {
                     if (item.expCode && item.expStartDate && item.expEndDate) {
                         if (Number(item.expContinue) < 0) {
                             ty = false;
-                            this.$warningTost('异常开始时间大于结束时间');
+                            this.$warningToast('异常开始时间大于结束时间');
                             return false;
                         }
                         if (item.expCode === '001' || item.expCode === '002') {
                             if (!item.deviceId) {
                                 ty = false;
-                                this.$warningTost('异常记录设备必填');
+                                this.$warningToast('异常记录设备必填');
                                 return false;
                             }
                         } else if (item.expCode === '003' || item.expCode === '004') {
                             if (!item.materialShort) {
                                 ty = false;
-                                this.$warningTost('异常记录物料分类必填');
+                                this.$warningToast('异常记录物料分类必填');
                                 return false;
                             }
                         } else if (item.expCode === '005') {
                             if (!item.energy) {
                                 ty = false;
-                                this.$warningTost('异常记录能源必填');
+                                this.$warningToast('异常记录能源必填');
                                 return false;
                             }
                         }
                     } else {
                         ty = false;
-                        this.$warningTost('异常记录必填项未填');
+                        this.$warningToast('异常记录必填项未填');
                         return false;
                     }
                 }
@@ -379,7 +379,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag

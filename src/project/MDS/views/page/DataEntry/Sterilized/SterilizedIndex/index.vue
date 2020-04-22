@@ -190,11 +190,11 @@ export default {
     methods: {
         getResultData() {
             if (!this.formHeader.factory || !this.formHeader.workShop) {
-                this.$warningTost('请选择工厂与车间');
+                this.$warningToast('请选择工厂与车间');
                 return;
             }
             if ((this.formHeader.productDate === '' || !this.formHeader.productDate) && this.formHeader.orderNo === '') {
-                this.$warningTost('生产日期或订单请选填一项');
+                this.$warningToast('生产日期或订单请选填一项');
                 return false;
             }
             this.$http(`${STERILIZED_API.STE_HOME_LIST_API}`, 'POST', this.formHeader).then(({ data }) => {
@@ -212,11 +212,11 @@ export default {
                             }
                         });
                     } else {
-                        this.$infoTost('该搜寻条件无任何资料！');
+                        this.$infoToast('该搜寻条件无任何资料！');
                     }
 
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -232,24 +232,24 @@ export default {
                 if (data.code === 0) {
                     this.Materails = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         toRouter(str, item) {
             let url;
             if (!item.orderId) {
-                this.$warningTost('请选择订单');
+                this.$warningToast('请选择订单');
                 return;
             }
             if (str === '1') {
                 // let st = this.Materails.filter(items => items.code === item.materialCode)
                 // if (st.length === 0) {
-                //   this.$warningTost('非特殊物料，不能跳转')
+                //   this.$warningToast('非特殊物料，不能跳转')
                 //   return
                 // }
                 if (!this.isAuth('ste:semiMaterial:list')) {
-                    this.$warningTost('没有分配权限');
+                    this.$warningToast('没有分配权限');
                     return;
                 }
                 this.$http(`${STERILIZED_API.STE_ENTER_MATERIAL_LIST_API}`, 'POST', {
@@ -259,7 +259,7 @@ export default {
                     materialCode: item.materialCode
                 }).then(({ data }) => {
                     if (data.code === 500) {
-                        this.$warningTost(data.msg);
+                        this.$warningToast(data.msg);
                     } else {
                         this.$store.state.common.sterilized.seiOrderId = item.orderId;
                         this.$store.state.common.sterilized.seiFactory = item.factory;
@@ -273,7 +273,7 @@ export default {
                 });
             } else if (str === '2') {
                 if (!this.isAuth('ste:supMaterial:list')) {
-                    this.$warningTost('没有分配权限');
+                    this.$warningToast('没有分配权限');
                     return;
                 }
                 this.$http(`${STERILIZED_API.STE_ENTER_SUP_LIST_API}`, 'POST', {
@@ -284,7 +284,7 @@ export default {
                 }).then(({ data }) => {
                     if (data.code === 0) {
                         if (!data.steSupMaterialBean.resultList.length && !data.steSupMaterialBean.supList.length) {
-                            this.$warningTost('此订单无需辅料添加');
+                            this.$warningToast('此订单无需辅料添加');
                         } else {
                             this.$store.state.common.sterilized.acceOrderId = item.orderId;
                             this.$store.state.common.sterilized.acceFactory = item.factory;
@@ -296,12 +296,12 @@ export default {
                             }, 100);
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else if (str === '3') {
                 if (!this.isAuth('ste:tec:list')) {
-                    this.$warningTost('没有分配权限');
+                    this.$warningToast('没有分配权限');
                     return;
                 }
                 this.$store.state.common.sterilized.craftOrderId = item.orderId;
@@ -312,7 +312,7 @@ export default {
                 }, 100);
             } else if (str === '4') {
                 if (!this.isAuth('ste:inStorage:list')) {
-                    this.$warningTost('没有分配权限');
+                    this.$warningToast('没有分配权限');
                     return;
                 }
                 this.$store.state.common.sterilized.inOrderId = item.orderId;

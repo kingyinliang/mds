@@ -429,7 +429,7 @@ export default class Index extends Vue {
         }).then(() => {
             row.delFlag = '1';
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 
@@ -666,16 +666,16 @@ export default class Index extends Vue {
 
     startValidate() {
         if (this.startForm.potNo === '') {
-            Vue.prototype.$warningTost('原汁罐号不能为空');
+            Vue.prototype.$warningToast('原汁罐号不能为空');
             return false;
         } else if (this.startForm.materialCode === '') {
-            Vue.prototype.$warningTost('物料不能为空');
+            Vue.prototype.$warningToast('物料不能为空');
             return false;
         } else if (this.startForm.batch.length !== 10) {
-            Vue.prototype.$warningTost('批次长度必须为10');
+            Vue.prototype.$warningToast('批次长度必须为10');
             return false;
         } else if (this.startForm.startAmount.toString() === '') {
-            Vue.prototype.$warningTost('起始数不能为空');
+            Vue.prototype.$warningToast('起始数不能为空');
             return false;
         }
         return true;
@@ -683,13 +683,13 @@ export default class Index extends Vue {
 
     endValidate() {
         if (this.endForm.endAmount.toString() === '') {
-            Vue.prototype.$warningTost('结束数不能为空');
+            Vue.prototype.$warningToast('结束数不能为空');
             return false;
         } else if (this.endForm.fullPot === '1' && (this.endForm.fullPotAmount.toString() === '' || this.endForm.fullPotAmount.toString() === '0')) {
-            Vue.prototype.$warningTost('满罐数量不能为空');
+            Vue.prototype.$warningToast('满罐数量不能为空');
             return false;
         } else if (this.endForm.fullPot === '1' && this.endForm.fulPotDate === '') {
-            Vue.prototype.$warningTost('满罐日期不能为空');
+            Vue.prototype.$warningToast('满罐日期不能为空');
             return false;
         }
         return true;
@@ -697,25 +697,25 @@ export default class Index extends Vue {
 
     modifyValidate() {
         if (this.modifyForm.potNo === '') {
-            Vue.prototype.$warningTost('原汁罐号不能为空');
+            Vue.prototype.$warningToast('原汁罐号不能为空');
             return false;
         } else if (this.modifyForm.batch.length !== 10) {
-            Vue.prototype.$warningTost('批次长度必须为10');
+            Vue.prototype.$warningToast('批次长度必须为10');
             return false;
         } else if (this.modifyForm.materialCode === '') {
-            Vue.prototype.$warningTost('物料不能为空');
+            Vue.prototype.$warningToast('物料不能为空');
             return false;
         } else if (this.modifyForm.startAmount.toString() === '') {
-            Vue.prototype.$warningTost('起始数不能为空');
+            Vue.prototype.$warningToast('起始数不能为空');
             return false;
         } else if (this.modifyForm.endAmount.toString() === '') {
-            Vue.prototype.$warningTost('结束数不能为空');
+            Vue.prototype.$warningToast('结束数不能为空');
             return false;
         } else if (this.modifyForm.fullPot === '1' && this.modifyForm.fullPotAmount.toString() === '') {
-            Vue.prototype.$warningTost('满罐数量不能为空');
+            Vue.prototype.$warningToast('满罐数量不能为空');
             return false;
         } else if (this.modifyForm.fullPot === '1' && this.modifyForm.fulPotDate === '') {
-            Vue.prototype.$warningTost('满罐日期不能为空');
+            Vue.prototype.$warningToast('满罐日期不能为空');
             return false;
         }
         return true;
@@ -1013,7 +1013,7 @@ export default class Index extends Vue {
                 this.getOrderList();
             })
             .catch((result: { code: number; msg: string }) => {
-                Vue.prototype.$errorTost(result.msg);
+                Vue.prototype.$errorToast(result.msg);
             });
     }
 
@@ -1080,10 +1080,10 @@ export default class Index extends Vue {
                     this.getOrderList();
                 })
                 .catch((result: { code: number; msg: string }) => {
-                    Vue.prototype.$errorTost(result.msg);
+                    Vue.prototype.$errorToast(result.msg);
                 });
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 

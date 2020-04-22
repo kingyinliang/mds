@@ -172,7 +172,7 @@
                         <el-input v-model="formTransfer.receiveAmount" type="number" style="width: 200px;" placeholder="大于0" @mousewheel.native.prevent />
                     </el-form-item>
                     <el-form-item label="打入罐类别：" prop="inHolderType">
-                        <el-select v-model="formTransfer.inHolderType" placeholder="请选择" clearable>
+                        <el-select v-model="formTransfer.inHolderType" placeholder="请选择" clearable style="width: 200px;">
                             <el-option label="请选择" value="" />
                             <el-option v-for="(sole, index) in potTypeList" :key="index" :value="sole.value" :label="sole.name" />
                         </el-select>
@@ -186,7 +186,7 @@
                         </el-radio>
                     </el-form-item>
                     <el-form-item label="打入罐号：" prop="inHolderId">
-                        <el-select v-model="formTransfer.inHolderId">
+                        <el-select v-model="formTransfer.inHolderId" style="width: 200px;">
                             <el-option v-for="(item, index) in thrwHolderList" :key="index" :value="item.HOLDER_ID" :label="item.HOLDER_NAME" />
                         </el-select>
                     </el-form-item>
@@ -200,12 +200,12 @@
                         <el-input v-model="formTransfer.inBatch" maxlength="10" style="width: 200px;" />
                     </el-form-item>
                     <el-form-item label="是否满灌：">
-                        <el-select v-model="formTransfer.isFull" filterable>
+                        <el-select v-model="formTransfer.isFull" filterable style="width: 200px;">
                             <el-option v-for="(item, index) in isFullList" :key="index" :value="item.value" :label="item.name" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="满灌时间：">
-                        <el-date-picker v-model="formTransfer.fullDate" type="date" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd" value-format="yyyy-MM-dd" />
+                        <el-date-picker v-model="formTransfer.fullDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" style="width: 200px;" />
                     </el-form-item>
                 </el-form>
             </div>
@@ -757,7 +757,7 @@
                         this.factory = data.typeList;
                         this.formHeader.factory = data.typeList[0].deptId;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -766,21 +766,21 @@
                     if (data.code === 0) {
                         this.formBringOutFa = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
                 this.$http(`${JUICE_API.JUICE_BRINGOUTPROP_FA_LIST}`, 'POST', {}, false, false, false).then(({ data }) => {
                     if (data.code === 0) {
                         this.formBringOutFaPot = data.addPotList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
                 this.$http(`${JUICE_API.JUICE_BRINGOUTPROP_TIAO_LIST}`, 'POST', {}, false, false, false).then(({ data }) => {
                     if (data.code === 0) {
                         this.formBringOutTPot = data.allocateHolderList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -794,7 +794,7 @@
                                 this.formHeader.workShop = data.typeList[0].deptId;
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }
@@ -814,7 +814,7 @@
                     if (data.code === 0) {
                         this.typeList = data.maintain;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -824,7 +824,7 @@
                     if (data.code === 0) {
                         this.holderStatusList = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -858,14 +858,14 @@
                         this.topBox[5].num = data.indexList.summaryData.kong;
                         this.topBox[5].content = data.indexList.summaryData.kongMaintain ? data.indexList.summaryData.kongMaintain : 0;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
             // 转储弹框
             TransferProp(item) {
                 if (this.isAuth('juice:pot:List') !== true) {
-                    this.$warningTost('没有权限');
+                    this.$warningToast('没有权限');
                     return false;
                 }
                 if (item.HOLDER_STATUS === '8' || item.HOLDER_STATUS === '9') {
@@ -892,7 +892,7 @@
                             };
                             this.TransferDialogTableVisible = true;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -905,7 +905,7 @@
                     if (data.code === 0) {
                         this.thrwHolderList = data.transferStoragePotList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -913,7 +913,7 @@
                 this.$refs[formName].validate(valid => {
                     if (valid) {
                         if (this.formTransfer.isFull === '1' && (this.formTransfer.fullDate === '' || !this.formTransfer.fullDate)) {
-                            this.$warningTost('满灌时请选择满罐时间');
+                            this.$warningToast('满灌时请选择满罐时间');
                             return false;
                         }
                         this.$http(`${JUICE_API.JUICE_TRANSFER_SAVE}`, 'POST', this.formTransfer).then(({ data }) => {
@@ -923,7 +923,7 @@
                                 this.$refs[formName].resetFields();
                                 this.GetDataList(true);
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
@@ -960,7 +960,7 @@
                             };
                             this.AddDialogTableVisible = true;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -977,7 +977,7 @@
                                 this.$refs[formName].resetFields();
                                 this.GetDataList(true);
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
@@ -1021,7 +1021,7 @@
                         }
                         this.JudgeDialogTableVisible = true;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -1035,7 +1035,7 @@
                                 this.$refs[formName].resetFields();
                                 this.GetDataList(true);
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
@@ -1067,7 +1067,7 @@
                         this.GetDataList(true);
                         this.visible = false;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -1113,7 +1113,7 @@
                                 this.$refs[formName].resetFields();
                                 this.GetDataList(true);
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {

@@ -232,7 +232,7 @@ export default {
                     this.factoryList = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -250,7 +250,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -269,7 +269,7 @@ export default {
                 if (data.code === 0) {
                     this.holderNoList = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -279,7 +279,7 @@ export default {
                 if (data.code === 0) {
                     this.materialList = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -315,13 +315,13 @@ export default {
                     this.pages.total = this.dataListAll.length;
                     this.getPageCurrenList();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         submitInfo() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请勾选调整数据');
+                this.$warningToast('请勾选调整数据');
                 return false;
             }
             let startStatus;
@@ -355,7 +355,7 @@ export default {
                     });
                     this.getList();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

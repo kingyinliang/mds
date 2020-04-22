@@ -223,7 +223,7 @@ export default {
                     this.productionMaterielCode = data.materielList.productionMateriel;
                     this.useMaterielCode = data.materielList.useMateriel;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -245,7 +245,7 @@ export default {
                             remark: row.remark
                         };
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -282,10 +282,10 @@ export default {
                     this.$http(`${!this.addAndupdate ? BASICDATA_API.DEPLOY_MATERIAL_SAVE : BASICDATA_API.DEPLOY_MATERIAL_UPDATE}`, 'POST', this.AddDialogTable).then(({ data }) => {
                         if (data.code === 0) {
                             this.AddDialogTableVisible = false;
-                            this.$successTost('操作成功');
+                            this.$successToast('操作成功');
                             this.$refs.queryTable.GetDataList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }
@@ -300,17 +300,17 @@ export default {
                 }).then(() => {
                     this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_DEL}`, 'POST', this.$refs.queryTable.multipleSelection).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('操作成功');
+                            this.$successToast('操作成功');
                             this.$refs.queryTable.GetDataList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             } else {
-                this.$warningTost('请选择数据');
+                this.$warningToast('请选择数据');
             }
         },
         addUseMateriel() {

@@ -38,7 +38,7 @@ export default {
                     if (data.code === 0) {
                         this.OrgTree = data.deptList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.visible = true;
                 })
@@ -49,7 +49,7 @@ export default {
                         if (data.code === 0) {
                             this.$refs.deptListTree.setCheckedKeys(data.list);
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 });
@@ -63,12 +63,12 @@ export default {
                     deptId: [[].concat(this.$refs.deptListTree.getCheckedKeys()), [].concat(this.$refs.deptListTree.getHalfCheckedKeys())]
                 }).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('操作成功');
+                        this.$successToast('操作成功');
                         this.type = true;
                         this.visible = false;
                         this.$emit('refreshDataList');
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.visible = true;
                 });

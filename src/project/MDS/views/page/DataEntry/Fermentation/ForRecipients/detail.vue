@@ -240,7 +240,7 @@ export default {
                     this.GetOrderType(this.formHeader.FACTORYID);
                     this.GetList();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -314,7 +314,7 @@ export default {
                     if (data.code === 0) {
                         this.OrderType = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -336,7 +336,7 @@ export default {
                     //   })
                     // })
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
             this.$http(`${FERMENTATION_API.FORRECIPIENTSDETAILIST_API}`, 'POST', {
@@ -385,11 +385,11 @@ export default {
                 }
             });
             if (i === 0) {
-                this.$warningTost('请勾选罐号');
+                this.$warningToast('请勾选罐号');
                 return false;
             }
                 if (this.formHeader.AMOUNT < this.multipleSelection.length) {
-                    this.$warningTost('勾选开罐数量不能大于申请数');
+                    this.$warningToast('勾选开罐数量不能大于申请数');
                     return false;
                 }
                 this.$confirm('确认执行开罐操作吗?', '提示', {
@@ -417,11 +417,11 @@ export default {
                             });
                             this.Getdetail();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
 
         },

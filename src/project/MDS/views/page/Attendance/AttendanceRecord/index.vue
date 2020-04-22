@@ -488,7 +488,7 @@ export default {
                 if (data.code === 0) {
                     this.productShift = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -509,7 +509,7 @@ export default {
                     this.datalist.splice(this.datalist.length, 0, {});
                     this.datalist.splice(this.datalist.length - 1, 1);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 if (callback) {
                     return callback(null, 'one');
@@ -524,7 +524,7 @@ export default {
                 if (data.code === 0) {
                     this.ARtype = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -537,7 +537,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -555,7 +555,7 @@ export default {
                             this.plantList.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -572,7 +572,7 @@ export default {
                     if (data.code === 0) {
                         this.productline = data.childList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -588,7 +588,7 @@ export default {
                     this.OrgTree = data.deptList;
                     this.arrList = [this.OrgTree[0].children[0].deptId];
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -600,7 +600,7 @@ export default {
                 if (data.code === 0) {
                     this.auditLogList = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -633,7 +633,7 @@ export default {
         // 新增
         addAR() {
             if (this.plantList.workShop === '') {
-                this.$warningTost('请选择车间后新增');
+                this.$warningToast('请选择车间后新增');
             } else {
                 this.tableLoding = true;
                 if (this.clearStatus) {
@@ -702,11 +702,11 @@ export default {
                                     }
                                 );
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -715,7 +715,7 @@ export default {
         // 删除
         delDate() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请选择要删除的考勤');
+                this.$warningToast('请选择要删除的考勤');
             } else {
                 this.$confirm('确认删除考勤, 是否继续?', '删除', {
                     confirmButtonText: '确定',
@@ -724,15 +724,15 @@ export default {
                 }).then(() => {
                     this.$http(`${AR_API.ARDELAPI}`, 'POST', this.multipleSelection).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('删除成功!');
+                            this.$successToast('删除成功!');
                             this.multipleSelection = [];
                             this.GetList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
                 });
             }
         },
@@ -747,7 +747,7 @@ export default {
                 this.plantList.currPage = 1;
             }
             if (!this.plantList.factory) {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
             }
             this.lodingS = true;
             this.$http(`${AR_API.ARLIST_API}`, 'POST', this.plantList).then(({ data }) => {
@@ -757,7 +757,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.lodingS = false;
             });
@@ -771,10 +771,10 @@ export default {
                 if (row.workShop) {
                     this.GetUserforteam(row.deptId);
                 } else {
-                    this.$warningTost('请选择班组');
+                    this.$warningToast('请选择班组');
                 }
             } else {
-                this.$warningTost('请选择人员属性');
+                this.$warningToast('请选择人员属性');
             }
         },
         // 反写选中人
@@ -816,7 +816,7 @@ export default {
                     }
                     this.visible = true;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -852,7 +852,7 @@ export default {
                     this.userlist = data.page.list;
                     this.tree1Status = false;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -952,7 +952,7 @@ export default {
                         this.tableLoding = false;
                         this.GetList(true);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.lodingS = false;
                 });
@@ -999,7 +999,7 @@ export default {
                 if (item.kqdl && item.kqlx && item.userType && item.userId.length !== 0 && item.classType && (item.timedTime || item.timedTime === 0)) {
                     //
                 } else {
-                    this.$warningTost('考勤必填项未填写');
+                    this.$warningToast('考勤必填项未填写');
                     st = false;
                     return false;
                 }
@@ -1009,7 +1009,7 @@ export default {
         // 保存
         saveAtt(st) {
             if (this.clearStatus && this.multipleSelection.length <= 0) {
-                this.$warningTost('请选择考勤');
+                this.$warningToast('请选择考勤');
                 return false;
             }
             this.$confirm(`确认${st === 'saved' ? '保存' : '提交'}, 是否继续?`, `${st === 'saved' ? '保存' : '提交'}`, {
@@ -1034,7 +1034,7 @@ export default {
                             });
                             this.GetList(true);
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         this.lodingS = false;
                     });
@@ -1042,7 +1042,7 @@ export default {
                     this.subAutio(st);
                 }
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         disData(st) {
@@ -1061,7 +1061,7 @@ export default {
         // updata
         subAutio(st) {
             if (this.multipleSelection.length <= 0) {
-                this.$warningTost('请选择考勤');
+                this.$warningToast('请选择考勤');
             } else {
                 if (st === 'submit') {
                     if (!this.datarul(this.multipleSelection)) {
@@ -1081,7 +1081,7 @@ export default {
                         });
                         this.GetList(true);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.lodingS = false;
                 });

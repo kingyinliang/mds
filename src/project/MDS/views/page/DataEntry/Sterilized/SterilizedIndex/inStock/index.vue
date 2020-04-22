@@ -239,7 +239,7 @@ export default {
                         };
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -299,7 +299,7 @@ export default {
         addIn() {
             if (this.dataForm.isFull === '1') {
                 if (!this.dataForm.fullDate) {
-                    this.$warningTost('满罐时间必填');
+                    this.$warningToast('满罐时间必填');
                     return;
                 }
             }
@@ -363,7 +363,7 @@ export default {
                         this.GetDataList();
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -376,7 +376,7 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -386,7 +386,7 @@ export default {
                     inAmountSum = accAdd(inAmountSum, item.inAmount);
                 }
                 if (inAmountSum <= 0) {
-                    this.$errorTost('杀菌入库入罐数量必须大于0');
+                    this.$errorToast('杀菌入库入罐数量必须大于0');
                     return false;
                 }
             }
@@ -505,7 +505,7 @@ export default {
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 获取订单表头
@@ -533,7 +533,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         }

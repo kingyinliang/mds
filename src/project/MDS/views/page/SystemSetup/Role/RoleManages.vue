@@ -106,7 +106,7 @@ export default {
                     this.pageSize = data.page.pageSize;
                     this.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.addOrUpdateVisible1 = false;
                 this.addOrUpdateVisible2 = false;
@@ -154,10 +154,10 @@ export default {
                         roleId: id
                     }).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('删除成功!');
+                            this.$successToast('删除成功!');
                             this.GetRoleList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 })

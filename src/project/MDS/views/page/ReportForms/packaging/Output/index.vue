@@ -250,7 +250,7 @@ export default {
         if (data.code === 0) {
             this.serchSapList = data.list
         } else {
-            this.$errorTost(data.msg)
+            this.$errorToast(data.msg)
         }
         })
         headanimation(this.$)
@@ -277,7 +277,7 @@ export default {
                     this.plantList.pageSize = Number(JSON.stringify(data.page.pageSize))
                     this.plantList.totalCount = data.page.totalCount
                 } else {
-                    this.$errorTost(data.msg)
+                    this.$errorToast(data.msg)
                 }
                 this.lodingS = false
             })

@@ -194,7 +194,7 @@ export default {
                 const datas = this.$refs.materielref.SumDate.filter(it => it.delFlag !== '1' && it.material.midPrsOrderId === item.id && !it.material.childPotNo);
                 if (datas.length > 0) {
                     ty = false;
-                    this.$warningTost(item.potNoName + '原汁罐没有匹配发酵罐，不能申请订单！');
+                    this.$warningToast(item.potNoName + '原汁罐没有匹配发酵罐，不能申请订单！');
                     return false;
                 }
             });
@@ -203,7 +203,7 @@ export default {
         // 申请订单
         ApplyOrder(paras) {
             if (paras.length === 0) {
-                this.$warningTost('请选择订单');
+                this.$warningToast('请选择订单');
                 return;
             }
             if (!this.dataRul(paras)) {
@@ -222,25 +222,25 @@ export default {
                 });
                 this.$http(`${SQU_API.SUM_APPLYORDER_API}`, 'POST', paras).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('申请成功');
+                        this.$successToast('申请成功');
                         this.GetList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             });
         },
         GetList() {
             if (!this.formHeader.factory) {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return;
             }
             if (!this.formHeader.workShop) {
-                this.$warningTost('请选择车间');
+                this.$warningToast('请选择车间');
                 return;
             }
             if (!this.formHeader.productDate) {
-                this.$warningTost('请选择生产日期');
+                this.$warningToast('请选择生产日期');
                 return;
             }
             this.isRedact = false;
@@ -283,7 +283,7 @@ export default {
                         });
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -337,7 +337,7 @@ export default {
                                 this.GetList();
                             },
                             err => {
-                                this.$errorTost(err);
+                                this.$errorToast(err);
                             }
                         );
                     });
@@ -362,7 +362,7 @@ export default {
                             this.GetList();
                         },
                         err => {
-                            this.$errorTost(err);
+                            this.$errorToast(err);
                         }
                     );
                 });
@@ -386,7 +386,7 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 获取物料下拉
@@ -395,7 +395,7 @@ export default {
                 if (data.code === 0) {
                     this.SerchSapList = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -405,7 +405,7 @@ export default {
                 if (data.code === 0) {
                     this.SerchSapListM = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -416,7 +416,7 @@ export default {
                     if (data.code === 0) {
                         this.orderTypeList = data.dicList[0].prolist;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -430,7 +430,7 @@ export default {
                     if (data.code === 0) {
                         this.VersionList = data.dicList[0].prolist;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -444,7 +444,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -459,7 +459,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

@@ -145,7 +145,7 @@ export default {
                 if (data.code === 0) {
                     this.factory = data.typeList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -162,7 +162,7 @@ export default {
                     this.currPage = data.page.currPage;
                     this.visible = false;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -225,7 +225,7 @@ export default {
                         // this.loading = false
                         this.loadings.close();
                         clearInterval(this.orderTime);
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(() => {

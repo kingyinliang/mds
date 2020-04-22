@@ -193,7 +193,7 @@ export default {
         // 获取列表
         GetLtkList(st) {
             if (!this.plantList.factory) {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return;
             }
             this.deptCode = this.factory.filter(item => item.deptId === this.plantList.factory)[0].deptCode;
@@ -208,7 +208,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.lodingS = false;
             });
@@ -241,7 +241,7 @@ export default {
                                 type: 'success'
                             });
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .catch(() => {
@@ -252,7 +252,7 @@ export default {
                         this.lodingS = false;
                     });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 获取工厂
@@ -264,7 +264,7 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -283,7 +283,7 @@ export default {
                             this.plantList.workshop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -298,7 +298,7 @@ export default {
                     if (data.code === 0) {
                         this.productline = data.childList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -321,14 +321,14 @@ export default {
         // 审核拒绝
         repulseAutios() {
             if (this.multipleSelection.length <= 0) {
-                this.$warningTost('请选择订单');
+                this.$warningToast('请选择订单');
             } else {
                 this.visible = true;
             }
         },
         repulseAutio() {
             if (this.Text.length <= 0) {
-                this.$warningTost('请填写不通过原因');
+                this.$warningToast('请填写不通过原因');
             } else {
                 this.$confirm('确认审核不通过, 是否继续?', '审核不通过', {
                     confirmButtonText: '确定',
@@ -349,18 +349,18 @@ export default {
                             });
                             this.GetLtkList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
             }
         },
         // 审核通过
         subAutio() {
             if (this.multipleSelection.length <= 0) {
-                this.$warningTost('请选择订单');
+                this.$warningToast('请选择订单');
             } else {
                 this.$confirm('确认审核通过, 是否继续?', '审核通过', {
                     confirmButtonText: '确定',
@@ -380,11 +380,11 @@ export default {
                             });
                             this.GetLtkList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             }
         },

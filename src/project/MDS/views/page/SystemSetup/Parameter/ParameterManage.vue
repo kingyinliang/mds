@@ -111,7 +111,7 @@ export default {
                     this.currPage = data.list.currPage;
                     this.pageSize = data.list.pageSize;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -124,14 +124,14 @@ export default {
             }).then(() => {
                 this.$http(`${SYSTEMSETUP_API.PARAMETERDEL_API}`, 'POST', [row.id]).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('删除成功!');
+                        this.$successToast('删除成功!');
                         this.getList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  设置类型详情
@@ -149,7 +149,7 @@ export default {
                 if (data.code === 0) {
                     this.parameter = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

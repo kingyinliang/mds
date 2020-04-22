@@ -100,7 +100,7 @@ export default {
                     this.rightText = data.list[2];
                     this.warningList = data.list[3];
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

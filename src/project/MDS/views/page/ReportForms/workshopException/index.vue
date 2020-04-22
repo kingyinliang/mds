@@ -115,7 +115,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.lodingS = false;
             });
@@ -139,7 +139,7 @@ export default {
                         });
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -159,7 +159,7 @@ export default {
                         });
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

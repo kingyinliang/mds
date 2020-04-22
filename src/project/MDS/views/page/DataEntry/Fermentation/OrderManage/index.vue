@@ -362,7 +362,7 @@ export default class Index extends Vue {
                     if (data.code === 0) {
                         this.versionsList = data.dicList[0].prolist;
                     } else {
-                        Vue.prototype.$warningTost(data.msg);
+                        Vue.prototype.$warningToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -477,7 +477,7 @@ export default class Index extends Vue {
 
     getOrderList() {
         if (this.params.factoryId === '') {
-            Vue.prototype.$warningTost('请选择工厂');
+            Vue.prototype.$warningToast('请选择工厂');
             return;
         }
         if (this.params.workshopId === '') {
@@ -560,12 +560,12 @@ export default class Index extends Vue {
 
     applyOrder() {
         if (!this.selectedList || this.selectedList.length === 0) {
-            Vue.prototype.$warningTost('请选择要申请的订单');
+            Vue.prototype.$warningToast('请选择要申请的订单');
             return;
         }
         // for (let item of this.selectedList) {
         //   if (item.kjmAmount <= 0) {
-        //     Vue.prototype.$warningTost(item.holdName + ' 订单量需大于0')
+        //     Vue.prototype.$warningToast(item.holdName + ' 订单量需大于0')
         //     return false
         //   }
         // }
@@ -581,7 +581,7 @@ export default class Index extends Vue {
                 text: '加载中……',
                 background: 'rgba(255, 255, 255, 0.7)'
             });
-            Vue.prototype.$http(`${FERMENTATION_API.ORDER_APPLY_API}`, `POST`, this.selectedList).then(res => {
+            Vue.prototype.$http(`${FERMENTATION_API.ORDER_APPLY_API}`, `POST`, this.selectedList, false, false, false).then(res => {
                 if (res.data.code === 0) {
                     // this.getOrderList()
                     this.ExportTime = window.setInterval(() => {
@@ -596,7 +596,7 @@ export default class Index extends Vue {
                 }
             });
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 
@@ -604,7 +604,7 @@ export default class Index extends Vue {
         Vue.prototype
             .$http(`${REP_API.GETREPOUTFORWORKOUTPUT_API}`, 'GET', {
                 asyncType: 'ASYNC_TYPE_FER_APPLY_ORDER'
-            })
+            }, false, false, false)
             .then(({ data }) => {
                 if (data.code === 0) {
                     if (data.asyncRecord) {

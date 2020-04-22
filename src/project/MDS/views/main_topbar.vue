@@ -123,7 +123,7 @@ export default {
                     });
                 })
                 .catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
                 });
         }
     }

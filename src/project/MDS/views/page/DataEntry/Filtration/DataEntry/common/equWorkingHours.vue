@@ -169,7 +169,7 @@ export default {
                         this.equStatus = GetStatus(data.listInfo.machineList);
                         this.recordList = data.listInfo.record;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .finally(() => {
@@ -181,7 +181,7 @@ export default {
                 if (data.code === 0) {
                     this.holderList = data.holderList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -195,7 +195,7 @@ export default {
             });
             if (i === 0) {
                 ty = false;
-                this.$warningTost('请录入设备工时数据');
+                this.$warningToast('请录入设备工时数据');
                 return false;
             }
             return ty;
@@ -223,15 +223,15 @@ export default {
         },
         SaveDialog() {
             if (!this.workInfo.startTime) {
-                this.$warningTost('请选择开始时间');
+                this.$warningToast('请选择开始时间');
                 return false;
             }
             if (!this.workInfo.endTime) {
-                this.$warningTost('请选择结束时间');
+                this.$warningToast('请选择结束时间');
                 return false;
             }
             if (this.workInfo.content === '过滤' && !this.workInfo.holderId) {
-                this.$warningTost('请选择领用罐');
+                this.$warningToast('请选择领用罐');
                 return false;
             }
             // this.$refs[formName].validate(valid => {
@@ -276,7 +276,7 @@ export default {
             }).then(() => {
                 row.delFlag = 1;
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         rowDelFlag({ row }) {
@@ -290,7 +290,7 @@ export default {
             this.$http(`${FILTRATION_API.FILTER_EQUWORKINGHOURS_SAVE}`, 'POST', this.dataList)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -306,7 +306,7 @@ export default {
             this.$http(`${FILTRATION_API.FILTER_EQUWORKINGHOURS_SUBMITONE}`, 'POST', { orderId: this.orderId })
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');

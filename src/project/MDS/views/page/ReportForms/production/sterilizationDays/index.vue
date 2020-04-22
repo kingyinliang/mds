@@ -93,18 +93,18 @@ export default {
                         this.plantList.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$warningTost(data.msg);
+                    this.$warningToast(data.msg);
                 }
             });
         },
         // 获取数据
         GetDataList() {
             if (this.plantList.factory === '') {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return false;
             }
             if (!this.plantList.productDate) {
-                this.$warningTost('请选择日期');
+                this.$warningToast('请选择日期');
                 return false;
             }
             this.daySizeList = [];
@@ -118,7 +118,7 @@ export default {
                     this.merge(this.dataList, 1);
                     this.merge(this.dataList2, 2);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

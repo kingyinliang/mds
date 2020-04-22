@@ -91,8 +91,8 @@
                             <el-input v-model="plantList.headerTxt" placeholder="抬头文本" style="width: 160px;" />
                         </el-form-item>
                     </el-form>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="checkboxT" width="34" />
+                    <el-table ref="table1" header-row-class-name="tableHead" max-height="450" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                        <el-table-column type="selection" :selectable="checkboxT" width="34" fixed="left" />
                         <el-table-column label="审核状态" width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? (scope.row.interfaceReturnStatus === '0' ? '接口失败' : '审核通过') : scope.row.status === 'noPass' ? '审核不通过' : '' }}
@@ -154,7 +154,7 @@
                         <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="150" />
                         <el-table-column prop="verifyMan" :show-overflow-tooltip="true" label="审核人" />
                         <el-table-column prop="verifyDate" label="审核时间" width="160" />
-                        <el-table-column label="备注" width="80">
+                        <el-table-column fixed="right" label="备注" width="80">
                             <template slot-scope="scope">
                                 <el-input v-if="scope.row.redact" v-model="scope.row.remark" size="mini" />
                                 <el-input v-else v-model="scope.row.remark" size="mini" disabled />
@@ -267,7 +267,7 @@
                     if (data.code === 0) {
                         this.materialList = data.list;
                     } else {
-                        this.$warningTost(data.msg);
+                        this.$warningToast(data.msg);
                     }
                 });
             },
@@ -278,7 +278,7 @@
                         if (data.code === 0) {
                             this.orderTypeList = data.dicList[0].prolist;
                         } else {
-                            this.$successTost(data.msg);
+                            this.$successToast(data.msg);
                         }
                     })
                     .catch(error => {
@@ -291,7 +291,7 @@
                     this.plantList.currPage = 1;
                 }
                 if (!this.plantList.factory) {
-                    this.$warningTost('请选择工厂');
+                    this.$warningToast('请选择工厂');
                     return;
                 }
                 this.plantList.headerTxt = '';
@@ -304,7 +304,7 @@
                         this.plantList.pageSize = data.page.pageSize;
                         this.plantList.totalCount = data.page.totalCount;
                     } else {
-                        this.$successTost(data.msg);
+                        this.$successToast(data.msg);
                     }
                     this.dataListLoading = false;
                 });
@@ -332,11 +332,11 @@
                             this.GetAuditList();
                             this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                         } else {
-                            this.$successTost(data.msg);
+                            this.$successToast(data.msg);
                         }
                     });
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             // 获取移动原因
@@ -345,7 +345,7 @@
                     if (data.code === 0) {
                         this.MoveReas = data.dicList;
                     } else {
-                        this.$successTost(data.msg);
+                        this.$successToast(data.msg);
                     }
                 });
             },
@@ -356,7 +356,7 @@
                         this.factory = data.typeList;
                         this.plantList.factory = data.typeList[0].deptId;
                     } else {
-                        this.$successTost(data.msg);
+                        this.$successToast(data.msg);
                     }
                 });
             },
@@ -372,7 +372,7 @@
                                 this.plantList.workShop = data.typeList[0].deptId;
                             }
                         } else {
-                            this.$successTost(data.msg);
+                            this.$successToast(data.msg);
                         }
                     });
                 } else {
@@ -387,7 +387,7 @@
                         if (data.code === 0) {
                             this.productline = data.childList;
                         } else {
-                            this.$successTost(data.msg);
+                            this.$successToast(data.msg);
                         }
                     });
                 } else {
@@ -431,7 +431,7 @@
                                 this.AuditList.splice(this.AuditList.length, 0, {});
                                 this.AuditList.splice(this.AuditList.length - 1, 1);
                             } else {
-                                this.$successTost(data.msg);
+                                this.$successToast(data.msg);
                             }
                             this.GetAuditList();
                         })
@@ -444,14 +444,14 @@
             // 审核拒绝
             repulseAutios() {
                 if (this.multipleSelection.length <= 0) {
-                    this.$warningTost('请选择订单');
+                    this.$warningToast('请选择订单');
                 } else {
                     this.visible = true;
                 }
             },
             repulseAutio() {
                 if (this.Text.length <= 0) {
-                    this.$warningTost('请填写不通过原因');
+                    this.$warningToast('请填写不通过原因');
                 } else {
                     this.$refs.pstngDate.validate(valid => {
                         if (valid) {
@@ -474,7 +474,7 @@
                                             this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                                             this.GetAuditList();
                                         } else {
-                                            this.$successTost(data.msg);
+                                            this.$successToast(data.msg);
                                         }
                                     })
                                     .catch(() => {
@@ -482,7 +482,7 @@
                                         this.lodingStatus1 = false;
                                     });
                             }).catch(() => {
-                                // this.$infoTost('已取消删除');
+                                // this.$infoToast('已取消删除');
                             });
                         }
                     });
@@ -491,7 +491,7 @@
             // 审核通过
             subAutio() {
                 if (this.multipleSelection.length <= 0) {
-                    this.$warningTost('请选择订单');
+                    this.$warningToast('请选择订单');
                 } else {
                     this.$refs.pstngDate.validate(valid => {
                         if (valid) {
@@ -514,7 +514,7 @@
                                             this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                                             this.GetAuditList();
                                         } else {
-                                            this.$successTost(data.msg);
+                                            this.$successToast(data.msg);
                                             this.GetAuditList();
                                         }
                                     })
@@ -523,7 +523,7 @@
                                         this.lodingStatus1 = false;
                                     });
                             }).catch(() => {
-                                // this.$infoTost('已取消删除');
+                                // this.$infoToast('已取消删除');
                             });
                         }
                     });
@@ -543,7 +543,7 @@
     };
 </script>
 
-<style lang="scss">
+<style lang="scss" scope>
     .searchCard {
         margin-bottom: 0;
     }
@@ -583,6 +583,11 @@
             .el-form-item__content {
                 width: 500px;
             }
+        }
+    }
+    .el-table {
+        .el-table__fixed-right {
+            right: 6px !important;
         }
     }
 </style>

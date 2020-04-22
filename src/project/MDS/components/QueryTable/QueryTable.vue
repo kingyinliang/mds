@@ -323,7 +323,7 @@
                                                     });
                                                 }
                                             } else {
-                                                this.$errorTost(data.msg);
+                                                this.$errorToast(data.msg);
                                             }
                                         });
                                     } else {
@@ -359,13 +359,13 @@
                 if (this.rules.length) {
                     for (const item of this.rules) {
                         if (!this.queryForm[item.prop]) {
-                            this.$warningTost(item.text);
+                            this.$warningToast(item.text);
                             return false;
                         }
                     }
                 }
                 if (!this.isAuth(this.queryAuth) && this.queryAuth !== '') {
-                    this.$warningTost('无查询权限');
+                    this.$warningToast('无查询权限');
                     return false;
                 }
                 if (st) {
@@ -386,7 +386,7 @@
                         }
                         this.$emit('get-data-success', data);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -395,13 +395,13 @@
                 if (this.rules.length) {
                     for (const item of this.rules) {
                         if (!this.queryForm[item.prop]) {
-                            this.$warningTost(item.text);
+                            this.$warningToast(item.text);
                             return false;
                         }
                     }
                 }
                 if (!this.isAuth(this.exportOption.auth) && this.exportOption.auth !== '') {
-                    this.$warningTost('无导出权限');
+                    this.$warningToast('无导出权限');
                     return false;
                 }
                 exportFileForm(`${this.exportOption.exportInterface}`, this.exportOption.text, this);

@@ -110,7 +110,7 @@
                         // })
                         // return meaterielStock.then((data) => {
                         // if (data === 1) {
-                        //   that.$warningTost('原料领用库存量不能为负')
+                        //   that.$warningToast('原料领用库存量不能为负')
                         //   return false
                         // }
                         return AsyncHook([
@@ -179,7 +179,7 @@
                         // })
                         // return meaterielStock.then((data) => {
                         // if (data === 1) {
-                        //   that.$warningTost('原料领用库存量不能为负')
+                        //   that.$warningToast('原料领用库存量不能为负')
                         //   return false
                         // }
                         return AsyncHook(
@@ -279,7 +279,7 @@
                 if (data.code === 0) {
                     this.headerBase[7].option.list = data.page.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.visible = false;
             });
@@ -329,7 +329,7 @@
                             });
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -373,7 +373,7 @@
                     });
                     meaterielStock.then((data) => {
                         if (data === 1) {
-                            this.$warningTost('原料领用库存量不能为负');
+                            this.$warningToast('原料领用库存量不能为负');
                             return false;
                         }
                         this.CommonFunction(str);
@@ -427,7 +427,7 @@
                                 this.$notify({ title: '成功', message: '提交成功', type: 'success' });
                             },
                             err => {
-                                this.$errorTost(err);
+                                this.$errorToast(err);
                             }
                         );
                     });
@@ -445,7 +445,7 @@
                             this.$notify({ title: '成功', message: '保存成功', type: 'success' });
                         },
                         err => {
-                            this.$errorTost(err);
+                            this.$errorToast(err);
                         }
                     );
                 }
@@ -459,7 +459,7 @@
                 }).then(() => {
                     this.savedOrSubmitForm('submit');
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             // 原料领用状态

@@ -269,7 +269,7 @@
                     if (data.code === 0) {
                         this.sauceClassList = data.dicList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -295,7 +295,7 @@
                     if (data.code === 0) {
                         this.pulpMachineList = data.list.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -311,7 +311,7 @@
                     if (data.code === 0) {
                         this.hovercraftList = data.list.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
                 this.$http(`${BASICDATA_API.DEVICELIST_API}`, 'POST', {
@@ -323,7 +323,7 @@
                     if (data.code === 0) {
                         this.hovercraftAll = data.list.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -447,7 +447,7 @@
                         this.materialList = data.propulp;
                         // this.peopleList = data.propulpMan
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -455,37 +455,37 @@
                 let ty = true;
                 if (this.multipleSelection.length === 0) {
                     ty = false;
-                    this.$warningTost('请勾选提交数据');
+                    this.$warningToast('请勾选提交数据');
                     return false;
                 }
                 for (const items of this.multipleSelection) {
                     if (!items.pulpMachineName || items.pulpMachineName === '' || !items.hovercraftName || items.hovercraftName === '' || !items.pulpStartDate || items.pulpStartDate === '' || !items.pulpEndDate || items.pulpEndDate === '' || !items.pulpAmount || items.pulpAmount === '' || items.selfDrenchTime === '' || items.selfDrenchTime === null || !items.potOne || items.potOne === '' || !items.sauceClass || items.sauceClass === '') {
                         ty = false;
-                        this.$warningTost('物料必填项不能为空');
+                        this.$warningToast('物料必填项不能为空');
                         return false;
                     }
                     if (!items.classes || items.classes === '' || !items.man || items.man === '') {
                         ty = false;
-                        this.$warningTost('请选择白/中/夜班与人员');
+                        this.$warningToast('请选择白/中/夜班与人员');
                         return false;
                     }
                 }
                 // if (this.peopleList.length === 0) {
                 //   ty = false
-                //   this.$warningTost('请填写布浆人员')
+                //   this.$warningToast('请填写布浆人员')
                 //   return false
                 // }
                 // for (let items of this.peopleList) {
                 //   if (!items.classes || items.classes === '' || !items.man || items.man === '') {
                 //     ty = false
-                //     this.$warningTost('人员必填项不能为空')
+                //     this.$warningToast('人员必填项不能为空')
                 //     return false
                 //   }
                 // }
                 for (const item of this.multipleSelection) {
                     if (item.id === '') {
                         ty = false;
-                        this.$warningTost('请先保存再提交');
+                        this.$warningToast('请先保存再提交');
                         return false;
                     }
                 }
@@ -499,7 +499,7 @@
                 this.$http(`${SQU_API.CLOTHFORMHEADER_API}`, 'POST', this.formHeader)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -534,12 +534,12 @@
                                 });
                                 this.$http(`${SQU_API.CLOTHMATERIALSUBMIT_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                                     if (data.code !== 0) {
-                                        this.$errorTost(data.msg);
+                                        this.$errorToast(data.msg);
                                     }
                                 });
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -560,7 +560,7 @@
                 }).then(() => {
                     row.delFlag = '1';
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             rowDelFlag({ row }) {
@@ -587,7 +587,7 @@
                             }
                             this.visible = true;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }

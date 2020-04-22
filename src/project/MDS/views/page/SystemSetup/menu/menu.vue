@@ -169,10 +169,10 @@ export default {
                 .then(() => {
                     this.$http(`${SYSTEMSETUP_API.MENUDEL_API}/${id}`, 'POST', {}).then(({ data }) => {
                         if (data && data.code === 0) {
-                            this.$successTost('操作成功');
+                            this.$successToast('操作成功');
                             this.getDataList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 })
