@@ -286,7 +286,7 @@ export default {
             // this.totalCount = data.list.length
             // this.dataList = this.SumDataList.slice((this.currPage - 1) * this.pageSize, (this.currPage - 1) * this.pageSize + this.pageSize)
             } else {
-            this.$errorTost(data.msg)
+            this.$errorToast(data.msg)
             }
         })
         },
@@ -322,7 +322,7 @@ export default {
         // 保存
         SavedOr(str) {
         if (this.multipleSelection.length === 0) {
-            this.$warningTost('请选择订单')
+            this.$warningToast('请选择订单')
             return
         }
         this.multipleSelection.forEach((item) => {
@@ -343,14 +343,14 @@ export default {
             this.$notify({ title: '成功', message: '操作成功', type: 'success' })
             this.GetDataList()
             } else {
-            this.$errorTost(data.msg)
+            this.$errorToast(data.msg)
             }
         })
         },
         // 推送
         pushData(str) {
         if (this.multipleSelection.length === 0) {
-            this.$warningTost('请选择订单')
+            this.$warningToast('请选择订单')
             return
         }
         if (str === '已确认') {
@@ -361,7 +361,7 @@ export default {
             }).then(() => {
             this.pushOrConfirm(str)
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         } else {
             this.pushOrConfirm(str)
@@ -390,7 +390,7 @@ export default {
             this.GetDataList()
             } else {
             this.GetDataList()
-            this.$errorTost(data.msg)
+            this.$errorToast(data.msg)
             }
         })
         },
@@ -400,30 +400,30 @@ export default {
         this.multipleSelection.forEach((item) => {
             if (!item.steStatus) {
             ty = false
-            this.$warningTost('杀菌状态必填')
+            this.$warningToast('杀菌状态必填')
             return false
             }
             if (item.steStatus === '异常订单') {
             if (!item.steStatusRemake) {
                 ty = false
-                this.$warningTost('订单状态为异常，状态备注必填')
+                this.$warningToast('订单状态为异常，状态备注必填')
                 return false
             }
             }
             item.steSupMaterialBean.supList.forEach((item1) => {
             if (!item1.materialCode) {
                 ty = false
-                this.$warningTost('增补料记录物料必填')
+                this.$warningToast('增补料记录物料必填')
                 return false
             }
             if (!item1.addAmount) {
                 ty = false
-                this.$warningTost('增补料记录添加数量必填')
+                this.$warningToast('增补料记录添加数量必填')
                 return false
             }
             if (!item1.unit) {
                 ty = false
-                this.$warningTost('增补料记录单位必填')
+                this.$warningToast('增补料记录单位必填')
                 return false
             }
             })
@@ -470,7 +470,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1'
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag
@@ -487,7 +487,7 @@ export default {
             if (data.code === 0) {
             this.Materails = data.list
             } else {
-            this.$errorTost(data.msg)
+            this.$errorToast(data.msg)
             }
         })
         },
@@ -497,7 +497,7 @@ export default {
             if (data.code === 0) {
             this.Unit = data.dicList
             } else {
-            this.$errorTost(data.msg)
+            this.$errorToast(data.msg)
             }
         })
         },

@@ -202,7 +202,7 @@ export default {
                     }).then(() => {
                     //    then
                     }).catch(() => {
-                        // this.$infoTost('已取消删除');
+                        // this.$infoToast('已取消删除');
                     });
                 } else {
                     this.$confirm('此用户无权限，是否删除?', '删除用户', {
@@ -216,11 +216,11 @@ export default {
                                 ids: userID
                             }).then(({ data }) => {
                                 if (data.code === 200) {
-                                    this.$successTost('删除成功!');
+                                    this.$successToast('删除成功!');
                                     this.multipleSelection = [];
                                     this.getResultList();
                                 } else {
-                                    this.$errorTost(data.msg);
+                                    this.$errorToast(data.msg);
                                 }
                             });
                         })

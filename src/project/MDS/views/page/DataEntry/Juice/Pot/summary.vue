@@ -181,7 +181,7 @@ export default {
                     this.dataLeftListOrderTotal = data.juiceStockItem.juiceStockItemPot;
                     this.changeLeftDataList();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
             this.$http(`${JUICE_API.JUICE_JUICE_STOCKITEM}`, 'POST', {
@@ -193,7 +193,7 @@ export default {
                     this.dataRightListOrderTotal = data.juiceStockItem.juiceStockItemPot;
                     this.changeRightDataList();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
             this.$http(`${JUICE_API.JUICE_POT_STOCKSUM}`, 'POST', {}).then(({ data }) => {
@@ -206,7 +206,7 @@ export default {
                         }
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

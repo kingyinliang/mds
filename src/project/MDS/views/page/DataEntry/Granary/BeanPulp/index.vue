@@ -233,7 +233,7 @@ export default {
         getOrderList() {
             this.dataList = [];
             if (!this.plantList.factoryIDValue) {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return;
             }
             this.$http(`${GRA_API.BEANPULP_LIST_API}/${this.plantList.factoryIDValue}?deptId=${this.plantList.workshopIDValue}&flag=012`, 'GET', {}).then(({ data }) => {

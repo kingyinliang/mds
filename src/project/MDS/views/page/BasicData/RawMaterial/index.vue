@@ -146,7 +146,7 @@ export default {
                     this.pageSize = data.page.pageSize;
                     this.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -206,7 +206,7 @@ export default {
                     } else {
                         this.loading.close();
                         clearInterval(this.orderTime);
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(() => {

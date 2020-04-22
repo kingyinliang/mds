@@ -208,7 +208,7 @@
                             this.instorageState = GetStatus(this.InStorageDate);
                             this.DataAudit = data.vrlist;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .finally(() => {
@@ -242,7 +242,7 @@
             addIn() {
                 if (this.dataForm.isFull === '1') {
                     if (!this.dataForm.fullDate) {
-                        this.$warningTost('满罐时间必填');
+                        this.$warningToast('满罐时间必填');
                         return;
                     }
                 }
@@ -313,7 +313,7 @@
                             }
                         });
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -410,7 +410,7 @@
                         });
                     }
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             updateRow(row) {

@@ -537,7 +537,7 @@ export default {
                     if (reject) {
                         reject('提交失败');
                     }
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -548,7 +548,7 @@ export default {
             const obj = {};
             if (this.InDate.filter(item => item.delFlag !== '1').length === 0) {
                 ty = false;
-                this.$warningTost('生产入库没有数据');
+                this.$warningToast('生产入库没有数据');
                 return false;
             }
             this.InDate.forEach(item => {
@@ -561,23 +561,23 @@ export default {
                     // }
                     if (!item.output) {
                         ty = false;
-                        this.$warningTost('生产入库产出数不能为空或0');
+                        this.$warningToast('生产入库产出数不能为空或0');
                         return false;
                     }
                     if (!item.classType) {
                         ty = false;
-                        this.$warningTost('生产入库班次不能为空');
+                        this.$warningToast('生产入库班次不能为空');
                         return false;
                     }
                     if (item.batch) {
                         // if (item.batch.length !== 10) {
                         //   ty = false
-                        //   this.$warningTost('生产入库请录入10位批次号')
+                        //   this.$warningToast('生产入库请录入10位批次号')
                         //   return false
                         // }
                     } else {
                         ty = false;
-                        this.$warningTost('生产入库批次项未填');
+                        this.$warningToast('生产入库批次项未填');
                         return false;
                     }
                     if (item.aiShelves !== '' && item.aiShelves !== '0') {
@@ -600,7 +600,7 @@ export default {
                     });
                     if (tmp) {
                         ty = false;
-                        this.$warningTost('机维组未确认，请保存后等待机维组确认后提交');
+                        this.$warningToast('机维组未确认，请保存后等待机维组确认后提交');
                         return false;
                     }
                 });
@@ -638,7 +638,7 @@ export default {
                 if (data.code === 0) {
                     this.productShift = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -667,7 +667,7 @@ export default {
                     this.Instatus = GetStatus(this.InDate);
                     this.$emit('GetinstorageState', this.Instatus);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -685,7 +685,7 @@ export default {
                         type: 'success'
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -778,7 +778,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag

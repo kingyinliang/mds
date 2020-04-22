@@ -396,7 +396,7 @@ export default {
                 if (data.code === 0) {
                     this.productShift = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -425,7 +425,7 @@ export default {
                         });
                     }, 100);
                 } else {
-                    this.$warningTost('请选择订单号');
+                    this.$warningToast('请选择订单号');
                 }
             } else {
                 // 存储脱皮的state
@@ -533,7 +533,7 @@ export default {
                 if (data.code === 0) {
                     this.processesList = data.teamList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -544,22 +544,22 @@ export default {
                     this.orgTree = data.deptList;
                     this.arrList = [this.orgTree[0].children[0].deptId];
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         // 查询
         btnGetResultData() {
             if (this.plantList.factoryIDValue === '') {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return;
             }
             if (this.plantList.workshopIDValue === '') {
-                this.$warningTost('请选择车间');
+                this.$warningToast('请选择车间');
                 return;
             }
             if ((this.plantList.productDate === '' || !this.plantList.productDate) && this.plantList.orderNo === '') {
-                this.$warningTost('生产日期或订单请选填一项');
+                this.$warningToast('生产日期或订单请选填一项');
                 return false;
             }
             this.lodingStatus = true;
@@ -596,10 +596,10 @@ export default {
                             this.FWproductDate = this.plantList.productDate;
                             this.processStatus = this.plantList.status;
                         } else {
-                            this.$infoTost('该搜寻条件无任何资料！');
+                            this.$infoToast('该搜寻条件无任何资料！');
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.lodingStatus = false;
                 });
@@ -629,7 +629,7 @@ export default {
                             this.isAbnormalDataEditStatus = false;
                             this.processStatus = this.plantList.status;
                             console.log('this.processStatus:' + this.processStatus)
-                            this.$infoTost('该搜寻条件无任何资料！');
+                            this.$infoToast('该搜寻条件无任何资料！');
                         }
 
                     } else {
@@ -641,7 +641,7 @@ export default {
                     this.lodingStatus = false;
                 });
             } else {
-                this.$warningTost('请选择生产状态');
+                this.$warningToast('请选择生产状态');
 
             }
         },
@@ -678,7 +678,7 @@ export default {
                         row.realOutput = data.list[0].realOutput;
                         row.plan = data.list[0].plan;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -686,7 +686,7 @@ export default {
         // 新增人员
         btnEditAddPeople() {
             if (this.plantList.workshopIDValue === '') {
-                this.$warningTost('请选择车间');
+                this.$warningToast('请选择车间');
                 return;
             }
             // if (this.addRowStatus === 0) {
@@ -711,12 +711,12 @@ export default {
                     }).then(({ data }) => {
                         if (data.code === 0) {
                             this.dataList.splice(this.dataList.indexOf(row), 1);
-                            this.$successTost('删除成功');
+                            this.$successToast('删除成功');
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     }).catch(() => {
-                        // this.$infoTost('已取消删除');
+                        // this.$infoToast('已取消删除');
                     });
                 });
             } else {
@@ -736,14 +736,14 @@ export default {
                         this.$refs.officialWorker.init(row.deptId, row.userId);
                     });
                 } else {
-                    this.$warningTost('请选择工序');
+                    this.$warningToast('请选择工序');
                 }
             } else if (row.userType === '临时工') {
                 this.$nextTick(() => {
                     this.$refs.temporaryWorker.init(row);
                 });
             } else {
-                this.$warningTost('请选择人员属性');
+                this.$warningToast('请选择人员属性');
             }
         },
         // 员工确认
@@ -767,7 +767,7 @@ export default {
                     if (this.dataList.length !== 0) {
                         this.dataList.map(item => {
                             if (typeof item.classType === 'undefined' || typeof item.deptId === 'undefined' || typeof item.userType === 'undefined' || typeof item.userId === 'undefined' || typeof item.startDate === 'undefined' || typeof item.endDate === 'undefined' || typeof item.dinner === 'undefined') {
-                                this.$warningTost('除备注外其他选项必填');
+                                this.$warningToast('除备注外其他选项必填');
                                 this.abnorsave = false;
                                 return false;
                             }
@@ -786,21 +786,21 @@ export default {
                             this.$http(`${WHT_API.CINDEXUPDATEUSER}`, 'POST', this.dataList).then(({ data }) => {
                                 if (data.code === 0) {
                                     // this.$notify({title: '成功', message: '操作成功', type: 'success'})
-                                    this.$successTost('保存成功');
+                                    this.$successToast('保存成功');
                                     this.btnGetResultData(true);
                                     // 按钮状态
                                     this.isBtnDefaultSet = true;
                                 } else {
-                                    this.$errorTost(data.msg);
+                                    this.$errorToast(data.msg);
                                 }
                                 this.lodingStatus = false;
                             });
                         }
                     } else {
-                        this.$infoTost('未有更新档案');
+                        this.$infoToast('未有更新档案');
                     }
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             }
         },

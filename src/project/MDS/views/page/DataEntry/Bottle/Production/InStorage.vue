@@ -120,7 +120,7 @@ export default {
                         this.InAudit = data.vrList;
                         status = GetStatus(this.InDataList);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .finally(() => {
@@ -161,17 +161,17 @@ export default {
                 if (item.delFlag !== '1') {
                     if (Number(item.production) < 0) {
                         ty = false;
-                        this.$warningTost('生产入库本班生产必须为正整数');
+                        this.$warningToast('生产入库本班生产必须为正整数');
                         return false;
                     }
                     if (!(item.production && item.batch)) {
                         ty = false;
-                        this.$warningTost('生产入库必填项未填');
+                        this.$warningToast('生产入库必填项未填');
                         return false;
                     }
                     if (item.batch.length !== 10) {
                         ty = false;
-                        this.$warningTost('生产入库批次十位');
+                        this.$warningToast('生产入库批次十位');
                         return false;
                     }
                 }
@@ -210,7 +210,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag

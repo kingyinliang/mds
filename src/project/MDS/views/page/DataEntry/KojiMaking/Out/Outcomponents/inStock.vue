@@ -136,7 +136,7 @@ export default {
                         this.ThreeNum = data.list[0];
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -158,7 +158,7 @@ export default {
                         }
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -227,7 +227,7 @@ export default {
                         ];
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -238,33 +238,33 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('生产入库必填项未填');
+                    this.$warningToast('生产入库必填项未填');
                     return false;
                 }
                 if (item.pulpWeight) {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('生产入库豆粕量未填');
+                    this.$warningToast('生产入库豆粕量未填');
                     return false;
                 }
                 if (item.wheatWeight) {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('生产入库麦粉量未填');
+                    this.$warningToast('生产入库麦粉量未填');
                     return false;
                 }
                 if (item.saltWaterWeight) {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('生产入库盐水量未填');
+                    this.$warningToast('生产入库盐水量未填');
                     return false;
                 }
                 if (item.batch.length < 10) {
                     ty = false;
-                    this.$warningTost('生产入库批次必须为10位');
+                    this.$warningToast('生产入库批次必须为10位');
                     return false;
                 }
             });
@@ -294,7 +294,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                     if (reject) {
                         reject('生产入库' + data.msg);
                     }
@@ -324,7 +324,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag

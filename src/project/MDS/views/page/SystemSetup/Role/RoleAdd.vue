@@ -49,7 +49,7 @@ export default {
                         if (data.code === 0) {
                             this.$refs.menuListTree.setCheckedKeys(data.list);
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 });
@@ -63,12 +63,12 @@ export default {
                     menuId: [[].concat(this.$refs.menuListTree.getCheckedKeys()), [].concat(this.$refs.menuListTree.getHalfCheckedKeys())]
                 }).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('操作成功');
+                        this.$successToast('操作成功');
                         this.type = true;
                         this.visible = false;
                         this.$emit('refreshDataList');
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

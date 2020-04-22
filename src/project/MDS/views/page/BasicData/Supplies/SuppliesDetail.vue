@@ -63,7 +63,7 @@ export default {
                     if (data.code === 0) {
                         this.detailDialog = data.sapMaterialItemEntity;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .then(() => {

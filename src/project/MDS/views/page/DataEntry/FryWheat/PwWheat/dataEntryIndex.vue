@@ -125,7 +125,7 @@ export default {
             ],
             beforeLeave: (activeName) => {
                 if (!this.enableOpt && activeName !== '1') {
-                    this.$warningTost('请申请订单之后操作');
+                    this.$warningToast('请申请订单之后操作');
                     return false;
                 }
                 return true;
@@ -244,7 +244,7 @@ export default {
         },
         // beforeLeave (activeName, oldActiveName) {
         //   if (!this.enableOpt && activeName !== '1') {
-        //     this.$errorTost('请申请订单之后操作')
+        //     this.$errorToast('请申请订单之后操作')
         //     return false
         //   }
         //   return true
@@ -304,7 +304,7 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
@@ -379,7 +379,7 @@ export default {
                 }
             ]).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 if (resolve) {
                     resolve('resolve');

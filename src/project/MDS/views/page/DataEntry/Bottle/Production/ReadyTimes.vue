@@ -239,7 +239,7 @@ export default {
                         this.dataList = data.listMachine;
                         this.TimeAudit = data.vrList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .finally(() => {
@@ -329,7 +329,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                     if (resolve) {
                         reject('修改准备时间' + data.msg);
                     }
@@ -355,7 +355,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                     if (reject) {
                         reject('修改设备时间' + data.msg);
                     }
@@ -385,7 +385,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间白班必填项未填写完全');
+                    this.$warningToast('准备时间白班必填项未填写完全');
                     return false;
                 }
             } else if (this.readyTimeDate.classes === '中班') {
@@ -393,7 +393,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间中班必填项未填写完全');
+                    this.$warningToast('准备时间中班必填项未填写完全');
                     return false;
                 }
             } else if (this.readyTimeDate.classes === '夜班') {
@@ -401,7 +401,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间夜班必填项未填写完全');
+                    this.$warningToast('准备时间夜班必填项未填写完全');
                     return false;
                 }
             } else if (this.readyTimeDate.classes === '多班') {
@@ -409,7 +409,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间多班必填项未填写完全');
+                    this.$warningToast('准备时间多班必填项未填写完全');
                     return false;
                 }
             }
@@ -417,12 +417,12 @@ export default {
                 if (item.delFlag !== '1') {
                     if (!(item.classes && item.content && item.startDate)) {
                         ty = false;
-                        this.$warningTost('设备时间必填项未填');
+                        this.$warningToast('设备时间必填项未填');
                         return false;
                     }
                     if (Number(item.dateLength) <= 0) {
                         ty = false;
-                        this.$warningTost('设备时间工时不大于0');
+                        this.$warningToast('设备时间工时不大于0');
                         return false;
                     }
                 }
@@ -437,7 +437,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag

@@ -250,7 +250,7 @@ export default {
         formHeaderRul() {
             let ty = true;
             if (!this.formHeader.cookingNoId || this.formHeader.cookingNoId === '') {
-                this.$warningTost('请选择连续蒸煮号');
+                this.$warningToast('请选择连续蒸煮号');
                 ty = false;
                 return false;
             }
@@ -287,7 +287,7 @@ export default {
                     this.$refs.excrecord.getDataList(this.formHeader.factory);
                     this.$refs.material.partialUpdates(this.formHeader, str);
                 } else {
-                    this.$errorTost(res.data.msg);
+                    this.$errorToast(res.data.msg);
                 }
             });
         },
@@ -330,7 +330,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$errorTost(res.data.msg);
+                    this.$errorToast(res.data.msg);
                 }
             });
         },
@@ -355,7 +355,7 @@ export default {
                     this.holderList = data.page.list;
                     this.headerBase[8].option.list = data.page.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -371,7 +371,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$errorTost('保存表头' + data.msg);
+                    this.$errorToast('保存表头' + data.msg);
                     if (reject) {
                         reject('resolve');
                     }
@@ -387,7 +387,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$errorTost('保存表头' + data.msg);
+                    this.$errorToast('保存表头' + data.msg);
                     if (reject) {
                         reject('resolve');
                     }
@@ -412,12 +412,12 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
             if (!this.cookingNoId || this.cookingNoId === '') {
-                this.$warningTost('请选择连续蒸煮号');
+                this.$warningToast('请选择连续蒸煮号');
                 return false;
             }
             if (str === 'submit') {
@@ -493,7 +493,7 @@ export default {
                             this.isRedact = false;
                         })
                         .catch(() => {
-                            this.$errorTost('网络请求失败，请刷新重试');
+                            this.$errorToast('网络请求失败，请刷新重试');
                         });
                 });
             });

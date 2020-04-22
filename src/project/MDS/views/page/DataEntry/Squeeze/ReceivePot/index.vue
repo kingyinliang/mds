@@ -132,7 +132,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -152,14 +152,14 @@ export default {
             }).then(() => {
                 this.$http(`${SQU_API.POT_REPAY_API}`, 'POST', item).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('还罐成功');
+                        this.$successToast('还罐成功');
                         this.GetDataList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 获取工厂
@@ -169,7 +169,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -183,7 +183,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

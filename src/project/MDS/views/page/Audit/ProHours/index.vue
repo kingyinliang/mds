@@ -240,11 +240,11 @@
             // 获取列表
             getAuditList(st) {
                 if (!this.plantList.factory) {
-                    this.$warningTost('请选择工厂');
+                    this.$warningToast('请选择工厂');
                     return;
                 }
                 if (!this.plantList.workShop) {
-                    this.$warningTost('请选择车间');
+                    this.$warningToast('请选择车间');
                     return;
                 }
                 if (st) {
@@ -254,7 +254,7 @@
                 this.$http(`${AUDIT_API.AUDITHOURSLIST_API}`, 'POST', this.plantList).then(({ data }) => {
                     if (data.code === 0) {
                         if (data.page.list.length === 0) {
-                            this.$infoTost('该搜寻条件下无任何资料');
+                            this.$infoToast('该搜寻条件下无任何资料');
                         } else {
                             this.AuditList = data.page.list;
                             this.plantList.currPage = data.page.currPage;
@@ -263,7 +263,7 @@
                         }
 
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.dataListLoading = false;
                 });
@@ -304,7 +304,7 @@
                                 this.getAuditList();
                                 this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         })
                         .catch(() => {
@@ -312,7 +312,7 @@
                             this.lodingStatus1 = false;
                         });
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             // 获取工厂
@@ -322,7 +322,7 @@
                         this.factory = data.typeList;
                         this.plantList.factory = data.typeList[0].deptId;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -338,7 +338,7 @@
                                 this.plantList.workShop = data.typeList[0].deptId;
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -353,7 +353,7 @@
                         if (data.code === 0) {
                             this.productline = data.childList;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -393,7 +393,7 @@
                                 this.AuditList.splice(this.AuditList.length, 0, {});
                                 this.AuditList.splice(this.AuditList.length - 1, 1);
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                             this.getAuditList();
                         })
@@ -410,15 +410,15 @@
             // 审核拒绝
             repulseAutios() {
                 if (this.plantList.factory === '') {
-                    this.$warningTost('请选择工厂');
+                    this.$warningToast('请选择工厂');
                     return false;
                 }
                 if (this.plantList.workShop === '') {
-                    this.$warningTost('请选择车间');
+                    this.$warningToast('请选择车间');
                     return false;
                 }
                 if (this.multipleSelection.length <= 0) {
-                    this.$warningTost('请选择订单');
+                    this.$warningToast('请选择订单');
                     return false;
                 }
                 if (this.workshop.find(item => item.deptId === this.plantList.workShop).deptName.indexOf('杀菌') === 0 || this.workshop.find(item => item.deptId === this.plantList.workShop).deptName.indexOf('过滤') === 0) {
@@ -438,7 +438,7 @@
             },
             repulseAutio() {
                 if (this.Text.length <= 0) {
-                    this.$warningTost('请填写不通过原因');
+                    this.$warningToast('请填写不通过原因');
                 } else {
                     this.$refs.postgDate.validate(valid => {
                         if (valid) {
@@ -463,7 +463,7 @@
                                             this.getAuditList();
                                             this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                                         } else {
-                                            this.$errorTost(data.msg);
+                                            this.$errorToast(data.msg);
                                         }
                                     })
                                     .catch(() => {
@@ -471,7 +471,7 @@
                                         this.lodingStatus1 = false;
                                     });
                             }).catch(() => {
-                                // this.$infoTost('已取消删除');
+                                // this.$infoToast('已取消删除');
                             });
                         }
                     });
@@ -480,14 +480,14 @@
             // 审核通过
             subAutio() {
                 if (this.multipleSelection.length <= 0) {
-                    this.$warningTost('请选择订单');
+                    this.$warningToast('请选择订单');
                 } else {
                     let st = false;
                     if (this.workshop.find(item => item.deptId === this.plantList.workShop).deptName.indexOf('杀菌') === 0) {
                         this.multipleSelection.forEach(item => {
                             if (Number(item.confActivity2) <= 0) {
                                 st = true;
-                                this.$warningTost('机器工时必须大于0');
+                                this.$warningToast('机器工时必须大于0');
                                 return false;
                             }
                         });
@@ -516,7 +516,7 @@
                                             this.getAuditList();
                                         } else {
                                             this.getAuditList();
-                                            this.$errorTost(data.msg);
+                                            this.$errorToast(data.msg);
                                         }
                                     })
                                     .catch(() => {
@@ -524,7 +524,7 @@
                                         this.lodingStatus1 = false;
                                     });
                             }).catch(() => {
-                                // this.$infoTost('已取消删除');
+                                // this.$infoToast('已取消删除');
                             });
                         }
                     });

@@ -110,7 +110,7 @@ export default {
                     this.OrgTree = data.deptList;
                     this.arrList = [this.OrgTree[0].children[0].deptId];
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -142,7 +142,7 @@ export default {
                     this.pageSize = data.page.pageSize;
                     this.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.visible = false;
             });
@@ -189,7 +189,7 @@ export default {
                     }).then(() => {
                     //    then
                     }).catch(() => {
-                        // this.$infoTost('已取消删除');
+                        // this.$infoToast('已取消删除');
                     });
                 } else {
                     this.$confirm('此用户无权限，是否删除?', '删除用户', {
@@ -200,11 +200,11 @@ export default {
                         .then(() => {
                             this.$http(`${SYSTEMSETUP_API.USERDEL_API}`, 'POST', userId).then(({ data }) => {
                                 if (data.code === 0) {
-                                    this.$successTost('删除成功!');
+                                    this.$successToast('删除成功!');
                                     this.multipleSelection = [];
                                     this.getList();
                                 } else {
-                                    this.$errorTost(data.msg);
+                                    this.$errorToast(data.msg);
                                 }
                             });
                         })

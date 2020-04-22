@@ -123,7 +123,7 @@ export default {
                                 ];
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .finally(() => {
@@ -139,7 +139,7 @@ export default {
                 //
             } else {
                 ty = false;
-                this.$warningTost('工时录入必填项未填');
+                this.$warningToast('工时录入必填项未填');
                 return false;
             }
             return ty;
@@ -161,7 +161,7 @@ export default {
                         if (resolve) {
                             reject(data.msg);
                         }
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch();
@@ -177,7 +177,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag

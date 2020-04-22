@@ -143,7 +143,7 @@
                         this.form.pageSize = data.page.pageSize;
                         this.form.totalCount = data.page.totalCount;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.visible = false;
                 });
@@ -156,7 +156,7 @@
                     if (data.code === 200) {
                         this.dictList = data.data.holderNoList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -177,7 +177,7 @@
                 //         if (data.code === 0) {
                 //             this.workshop = data.typeList;
                 //         } else {
-                //             this.$errorTost(data.msg);
+                //             this.$errorToast(data.msg);
                 //         }
                 //     });
                 // }
@@ -223,7 +223,7 @@
                                     this.multipleSelection = [];
                                     this.getContainerList();
                                 } else {
-                                    this.$errorTost(data.msg);
+                                    this.$errorToast(data.msg);
                                 }
                             });
                         })

@@ -117,7 +117,7 @@ export default {
                     this.pageSize = 10;
                     this.totalCount = data.embryoRecordList.length;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -166,7 +166,7 @@ export default {
                 if (item.delFlag !== '1') {
                     if (!(item.date && item.embryoBatch && item.embryoAmount)) {
                         ty = false;
-                        this.$warningTost('投胚记录必填项未填');
+                        this.$warningToast('投胚记录必填项未填');
                         return false;
                     }
                 }
@@ -201,7 +201,7 @@ export default {
                 row.delFlag = '1';
                 this.totalCount = this.RecordList.filter(item => item.delFlag === '0').length;
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag

@@ -213,13 +213,13 @@ export default {
                             icon: this.dataForm.icon
                         }).then(({ data }) => {
                             if (data && data.code === 0) {
-                                this.$successTost('操作成功');
+                                this.$successToast('操作成功');
                                 this.submitType = true;
                                 this.visible = false;
                                 this.$emit('refreshDataList');
                             } else {
                                 this.submitType = true;
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {

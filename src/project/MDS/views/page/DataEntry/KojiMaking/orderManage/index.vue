@@ -454,7 +454,7 @@ export default class Index extends Vue {
             if (data.code === 0) {
                 this.holderSemList = data.page.list;
             } else {
-                Vue.prototype.$errorTost(data.msg);
+                Vue.prototype.$errorToast(data.msg);
             }
         })
     }
@@ -501,11 +501,11 @@ export default class Index extends Vue {
 
     getOrderList() {
         if (this.params.factoryId === '') {
-            Vue.prototype.$warningTost('请选择工厂');
+            Vue.prototype.$warningToast('请选择工厂');
             return;
         }
         if (this.params.workshopId === '') {
-            Vue.prototype.$warningTost('请选择车间');
+            Vue.prototype.$warningToast('请选择车间');
             return;
         }
         const item = this.workshopList.find(ele => ele['deptId'] === this.params.workshopId);
@@ -571,7 +571,7 @@ export default class Index extends Vue {
         }).then(() => {
             row.delFlag = '1';
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 
@@ -611,29 +611,29 @@ export default class Index extends Vue {
         for (const item of this.splitDetailList) {
             if (item.delFlag === '0') {
                 if (!item.inPotNo || item.inPotNo.length === 0) {
-                    Vue.prototype.$warningTost('入罐号不能为空');
+                    Vue.prototype.$warningToast('入罐号不能为空');
                     return;
                 }
                 if (!item.houseNo || item.houseNo.length === 0) {
-                    Vue.prototype.$warningTost('曲房不能为空');
+                    Vue.prototype.$warningToast('曲房不能为空');
                     return;
                 }
                 if (!item.inKjmDate || item.inKjmDate.length === 0) {
-                    Vue.prototype.$warningTost('制曲日期不能为空');
+                    Vue.prototype.$warningToast('制曲日期不能为空');
                     return;
                 }
                 if (!item.productDate || item.productDate.length === 0) {
-                    Vue.prototype.$warningTost('生产日期不能为空');
+                    Vue.prototype.$warningToast('生产日期不能为空');
                     return;
                 }
                 potSet.add(item.inPotNo);
                 if (potSet.size > 1) {
-                    Vue.prototype.$warningTost('同一订单不能多个入罐号');
+                    Vue.prototype.$warningToast('同一订单不能多个入罐号');
                     return;
                 }
                 const houseKey = item.houseNo + item.inKjmDate;
                 if (houseSet.has(houseKey)) {
-                    Vue.prototype.$warningTost('相同制曲日期下，曲房重复');
+                    Vue.prototype.$warningToast('相同制曲日期下，曲房重复');
                     return;
                 }
                     houseSet.add(houseKey);
@@ -719,17 +719,17 @@ export default class Index extends Vue {
     // 删除订单详情
     delDetail() {
         if (!this.isAuth('sys:kjmOrderHouse:mySaveOrUpdate')) {
-            Vue.prototype.$warningTost('无权限进行删除操作');
+            Vue.prototype.$warningToast('无权限进行删除操作');
             return;
         }
         if (!this.selectedDetailList || this.selectedDetailList.length === 0) {
-            Vue.prototype.$warningTost('请选择删除项');
+            Vue.prototype.$warningToast('请选择删除项');
             return;
         }
         for (const row of this.selectedDetailList) {
             // 提交或者通过的数据不能删除
             if (row.status && (row.status === Status.SUBMIT || row.status === Status.CHECKED)) {
-                Vue.prototype.$warningTost(`${row.status}的数据不可删除`);
+                Vue.prototype.$warningToast(`${row.status}的数据不可删除`);
                 return;
             }
         }
@@ -757,18 +757,18 @@ export default class Index extends Vue {
                     console.log('catch data::', err);
                 });
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 
     // 订单详情修改
     showModifyDetial(row: OrderDetail) {
         if (!this.isAuth('sys:kjmOrderHouse:mySaveOrUpdate')) {
-            Vue.prototype.$warningTost('无权限进行修改操作');
+            Vue.prototype.$warningToast('无权限进行修改操作');
             return;
         }
         if (row.status && (row.status === Status.SUBMIT || row.status === Status.CHECKED)) {
-            Vue.prototype.$warningTost(`${row.status}的数据不可修改`);
+            Vue.prototype.$warningToast(`${row.status}的数据不可修改`);
             return;
         }
         this.detailForm = row.clone();
@@ -777,19 +777,19 @@ export default class Index extends Vue {
 
     modifyDetial() {
         if (!this.detailForm.inPotNo || this.detailForm.inPotNo.length === 0) {
-            Vue.prototype.$warningTost('入罐号不能为空');
+            Vue.prototype.$warningToast('入罐号不能为空');
             return false;
         }
         if (!this.detailForm.houseNo || this.detailForm.houseNo.length === 0) {
-            Vue.prototype.$warningTost('曲房不能为空');
+            Vue.prototype.$warningToast('曲房不能为空');
             return false;
         }
         if (!this.detailForm.inKjmDate || this.detailForm.inKjmDate.length === 0) {
-            Vue.prototype.$warningTost('制曲日期不能为空');
+            Vue.prototype.$warningToast('制曲日期不能为空');
             return false;
         }
         if (!this.detailForm.productDate || this.detailForm.productDate.length === 0) {
-            Vue.prototype.$warningTost('生产日期不能为空');
+            Vue.prototype.$warningToast('生产日期不能为空');
             return false;
         }
         const params: OrderDetail[] = [this.detailForm];

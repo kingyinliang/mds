@@ -157,7 +157,7 @@ export default {
                 if (data.code === 0) {
                     this.orderAudit = data.listRecord;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -169,7 +169,7 @@ export default {
             for (const item of this.fumet) {
                 if (!item.orderNo) {
                     ty = false;
-                    this.$warningTost('订单没有生产订单');
+                    this.$warningToast('订单没有生产订单');
                     return false;
                 }
             }
@@ -186,7 +186,7 @@ export default {
                     });
                     this.$emit('GetList');
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -214,7 +214,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

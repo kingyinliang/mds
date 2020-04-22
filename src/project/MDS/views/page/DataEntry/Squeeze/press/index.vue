@@ -149,7 +149,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -168,7 +168,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -187,7 +187,7 @@ export default {
                         this.productline = data.childList;
                         this.formHeader.productLine = data.childList[0].deptId;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -196,24 +196,24 @@ export default {
         },
         SearchList() {
             if (!this.formHeader.factory || this.formHeader.factory === '') {
-                this.$warningTost('请选择生产工厂');
+                this.$warningToast('请选择生产工厂');
                 return false;
             }
             if (!this.formHeader.workShop || this.formHeader.workShop === '') {
-                this.$warningTost('请选择生产车间');
+                this.$warningToast('请选择生产车间');
                 return false;
             }
             this.formHeader.workShopName = this.workshop.find(item => item.deptId === this.formHeader.workShop).deptName;
             if (!this.formHeader.productLine || this.formHeader.productLine === '') {
-                this.$warningTost('请选择布浆线');
+                this.$warningToast('请选择布浆线');
                 return false;
             }
             if (!this.formHeader.pressure || this.formHeader.pressure === '') {
-                this.$warningTost('请选择工序');
+                this.$warningToast('请选择工序');
                 return false;
             }
             if (!this.formHeader.productDate || this.formHeader.productDate === '') {
-                this.$warningTost('请选择生产日期');
+                this.$warningToast('请选择生产日期');
                 return false;
             }
             this.contentshow = true;
@@ -243,7 +243,7 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 保存
@@ -277,7 +277,7 @@ export default {
                     this.isRedact = false;
                 })
                 .catch(() => {
-                    this.$errorTost('网络请求失败，请刷新重试');
+                    this.$errorToast('网络请求失败，请刷新重试');
                 });
         },
         tabClick(val) {

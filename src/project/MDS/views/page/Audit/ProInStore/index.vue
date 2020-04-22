@@ -269,7 +269,7 @@
                         if (data.code === 0) {
                             this.orderTypeList = data.dicList[0].prolist;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .catch(error => {
@@ -290,7 +290,7 @@
                         this.plantList.pageSize = data.page.pageSize;
                         this.plantList.totalCount = data.page.totalCount;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.dataListLoading = false;
                 });
@@ -319,7 +319,7 @@
                                 this.GetAuditList();
                                 this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         })
                         .catch(() => {
@@ -327,7 +327,7 @@
                             this.dataListLoading = false;
                         });
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             // 获取工厂
@@ -337,7 +337,7 @@
                         this.factory = data.typeList;
                         this.plantList.factory = data.typeList[0].deptId;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -353,7 +353,7 @@
                                 this.plantList.workShop = data.typeList[0].deptId;
                             }
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -368,7 +368,7 @@
                         if (data.code === 0) {
                             this.productline = data.childList;
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -408,7 +408,7 @@
                                 this.AuditList.splice(this.AuditList.length, 0, {});
                                 this.AuditList.splice(this.AuditList.length - 1, 1);
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                             this.GetAuditList();
                         })
@@ -421,14 +421,14 @@
             // 审核拒绝
             repulseAutios() {
                 if (this.multipleSelection.length <= 0) {
-                    this.$warningTost('请选择订单');
+                    this.$warningToast('请选择订单');
                 } else {
                     this.visible = true;
                 }
             },
             repulseAutio() {
                 if (this.Text.length <= 0) {
-                    this.$warningTost('请填写不通过原因');
+                    this.$warningToast('请填写不通过原因');
                 } else {
                     this.$refs.pstngDate.validate(valid => {
                         if (valid) {
@@ -451,7 +451,7 @@
                                             this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                                             this.GetAuditList();
                                         } else {
-                                            this.$errorTost(data.msg);
+                                            this.$errorToast(data.msg);
                                         }
                                     })
                                     .catch(() => {
@@ -459,7 +459,7 @@
                                         this.lodingStatus = false;
                                     });
                             }).catch(() => {
-                                // this.$infoTost('已取消删除');
+                                // this.$infoToast('已取消删除');
                             });
                         }
                     });
@@ -468,7 +468,7 @@
             // 审核通过
             subAutio() {
                 if (this.multipleSelection.length <= 0) {
-                    this.$warningTost('请选择订单');
+                    this.$warningToast('请选择订单');
                 } else {
                     this.$refs.pstngDate.validate(valid => {
                         if (valid) {
@@ -493,7 +493,7 @@
                                             this.GetAuditList();
                                         } else {
                                             this.GetAuditList();
-                                            this.$errorTost(data.msg);
+                                            this.$errorToast(data.msg);
                                         }
                                     })
                                     .catch(() => {
@@ -501,7 +501,7 @@
                                         this.lodingStatus = false;
                                     });
                             }).catch(() => {
-                                // this.$infoTost('已取消删除');
+                                // this.$infoToast('已取消删除');
                             });
                         }
                     });

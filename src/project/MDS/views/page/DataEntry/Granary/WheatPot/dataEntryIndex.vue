@@ -492,11 +492,11 @@ export default class Index extends Vue {
             }
         });
         // if (this.adjustForm.QUANTITY.toString() === '' || this.adjustForm.QUANTITY.toString() === '0') {
-        //   Vue.prototype.$warningTost('请填写调整量')
+        //   Vue.prototype.$warningToast('请填写调整量')
         //   return false
         // }
         // if (this.adjustForm.REMARK.toString() === '') {
-        //   Vue.prototype.$warningTost('请填写调整说明')
+        //   Vue.prototype.$warningToast('请填写调整说明')
         //   return false
         // }
     }

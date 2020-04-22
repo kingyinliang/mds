@@ -44,7 +44,7 @@ export default {
                     this.userlist = transfer(data.list).res;
                     this.selctId = transfer(data.list).selcedid;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.visible = true;
             });
@@ -57,12 +57,12 @@ export default {
                     userId: this.selctId
                 }).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('操作成功');
+                        this.$successToast('操作成功');
                         this.type = true;
                         this.visible = false;
                         this.$emit('refreshDataList');
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {

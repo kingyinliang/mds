@@ -486,7 +486,7 @@ export default {
             if (this.WorkerDate.length === 0) {
                 // if (this.WorkerDate.filter(item => item.delFlag === '0').length === 0) {
                 ty = false;
-                this.$warningTost('人员不能为空');
+                this.$warningToast('人员不能为空');
                 return false;
             }
             this.WorkerDate.forEach(item => {
@@ -494,7 +494,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('人员必填项未填');
+                    this.$warningToast('人员必填项未填');
                     return false;
                 }
             });
@@ -579,10 +579,10 @@ export default {
                         this.$refs.officialWorker.init(row.deptId, row.userId);
                     });
                 } else {
-                    this.$warningTost('请选择工序');
+                    this.$warningToast('请选择工序');
                 }
             } else {
-                this.$warningTost('请选择人员属性');
+                this.$warningToast('请选择人员属性');
             }
         },
         // 临时工
@@ -615,7 +615,7 @@ export default {
                     this.SetAtt(row.deptId);
                 }
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 人员删除
@@ -627,7 +627,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 新增人员

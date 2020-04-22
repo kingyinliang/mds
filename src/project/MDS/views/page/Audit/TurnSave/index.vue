@@ -205,7 +205,7 @@ export default {
                     this.potList = data.materialPotList.pot;
                     this.materialList = data.materialPotList.material;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -230,19 +230,19 @@ export default {
                     this.DataList = data.juiceExamine;
                     this.formHeader.totalCount = data.juiceExamine.length;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         // 没使用到的 function 需确认
         // TurnSave() {
         //     if (this.multipleSelection1.length > 0) {
-        //         this.$warningTost('返工内容无法转储，请点击返工！');
+        //         this.$warningToast('返工内容无法转储，请点击返工！');
         //     }
         // },
         // Rework() {
         //     if (this.multipleSelection.length > 0) {
-        //         this.$warningTost('转储内容无法返工，请点击转储！');
+        //         this.$warningToast('转储内容无法返工，请点击转储！');
         //     }
         // },
         exportExcel() {

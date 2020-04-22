@@ -223,7 +223,7 @@ export default {
                             }
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .finally(() => {
@@ -236,7 +236,7 @@ export default {
                     this.filterAidModelList = data.materialInfo.materialType;
                     this.filterAidVenderList = data.materialInfo.materialSupplier;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -378,11 +378,11 @@ export default {
                     this.supMaterialList.splice(this.supMaterialList.indexOf(row), 1);
                     return false;
                 }
-                    this.$warningTost('最后一条禁止删除');
+                    this.$warningToast('最后一条禁止删除');
                     return false;
 
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         SaveTech(str, resolve, reject) {
@@ -400,7 +400,7 @@ export default {
             this.$http(`${FILTRATION_API.FILTER_CRAFT_TECHSAVE}`, 'POST', this.techList)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -419,7 +419,7 @@ export default {
             this.$http(`${FILTRATION_API.FILTER_CRAFT_MATERIALSAVE}`, 'POST', [{ orderId: this.orderId, materialInfo: this.supMaterialList }])
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -439,7 +439,7 @@ export default {
             this.$http(`${AUDIT_API.AUDIT_AID_SUBMIT}`, 'POST', [{ orderId: this.orderId, materialInfo: this.supMaterialList }])
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -459,9 +459,9 @@ export default {
             }).then(() => {
                 row.delFlag = 1;
                 this.SupMaterDel(row);
-                this.$infoTost('删除成功');
+                this.$infoToast('删除成功');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         rowDelFlag({ row }) {
@@ -522,7 +522,7 @@ export default {
             });
             if (i === 0) {
                 ty = false;
-                this.$warningTost('请录入工艺控制数据');
+                this.$warningToast('请录入工艺控制数据');
                 return false;
             }
             let totalSum = 0;
@@ -545,7 +545,7 @@ export default {
                         item.filterAidAdd === null
                     ) {
                         ty = false;
-                        this.$warningTost('请补全工艺必填项');
+                        this.$warningToast('请补全工艺必填项');
                         return false;
                     }
                     totalSum = accAdd(accAdd(totalSum, item.filterAidBef), item.filterAidAdd);
@@ -553,13 +553,13 @@ export default {
             }
             if (totalSum !== 0 && this.supMaterialList.length === 0) {
                 ty = false;
-                this.$warningTost('辅料领用不能为空');
+                this.$warningToast('辅料领用不能为空');
                 return false;
             }
             for (const item of this.supMaterialList) {
                 if (item.filterAidAmount === '' || !item.filterAidAmount || item.batch === '' || !item.batch) {
                     ty = false;
-                    this.$warningTost('工艺控制中辅料领用必填项不能为空');
+                    this.$warningToast('工艺控制中辅料领用必填项不能为空');
                     return false;
                 }
             }
@@ -591,7 +591,7 @@ export default {
             for (const item of SupMaTotal) {
                 if (item.sum !== techTotal.find(items => items.id === item.id).sum) {
                     ty = false;
-                    this.$warningTost(item.deviceName + ' 剂用量不相等');
+                    this.$warningToast(item.deviceName + ' 剂用量不相等');
                     return false;
                 }
             }
@@ -601,7 +601,7 @@ export default {
             this.$http(`${FILTRATION_API.FILTER_CRAFT_MATERIASUBMIT}`, 'POST', this.techList)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');

@@ -282,7 +282,7 @@ export default {
                     if (data.code === 0) {
                         this.flourContainerList = data.page.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -310,7 +310,7 @@ export default {
                     if (data.code === 0) {
                         this.wheatContainerList = data.page.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -358,7 +358,7 @@ export default {
                         }
                         this.$emit('setInStorageState', inState);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -444,7 +444,7 @@ export default {
                 this.$http(WHT_API.INSTORAGESAVE_API, 'POST', this.wheatDataList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -468,7 +468,7 @@ export default {
                 this.$http(`${WHT_API.INSTORAGESUBMIT_API}`, 'POST', this.wheatDataList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -500,7 +500,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // RowDelFlag

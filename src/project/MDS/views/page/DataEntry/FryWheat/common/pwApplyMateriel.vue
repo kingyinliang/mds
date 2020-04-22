@@ -205,12 +205,12 @@ export default {
         // 保存、提交 物料订单号校验
         saveAndSubmitRule() {
             if (this.materielDataList.length === 0) {
-                this.$warningTost('请先新增订单');
+                this.$warningToast('请先新增订单');
                 return false;
             }
             for (const item of this.materielDataList) {
                 if (!item.orderNo || item.orderNo === '') {
-                    this.$warningTost('生产订单号不能为空');
+                    this.$warningToast('生产订单号不能为空');
                     return false;
                 }
             }
@@ -219,7 +219,7 @@ export default {
         // 申请订单
         saveOrderMateriel() {
             if (this.materielDataList.length === 0) {
-                this.$warningTost('请先新增订单');
+                this.$warningToast('请先新增订单');
                 return false;
             }
             this.BatchTotal = [];
@@ -242,7 +242,7 @@ export default {
                         });
                         if (total > shengyu) {
                             abc = 1;
-                            this.$warningTost(itemc + '批次领取量不能大于剩余量');
+                            this.$warningToast(itemc + '批次领取量不能大于剩余量');
                             return false;
                         }
                     });
@@ -298,7 +298,7 @@ export default {
                     });
                     if (total > shengyu) {
                         abc = 1;
-                        this.$warningTost('批次领取量不能大于剩余量');
+                        this.$warningToast('批次领取量不能大于剩余量');
                         return false;
                     }
                 });
@@ -318,7 +318,7 @@ export default {
                     this.$http(WHT_API.MATERIELSAVE_API, 'POST', this.materielDataList)
                         .then(({ data }) => {
                             if (data.code !== 0) {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                             if (resolve) {
                                 resolve('resolve');
@@ -342,7 +342,7 @@ export default {
                 this.$http(WHT_API.MATERIELSUBMIT_API, 'POST', this.materielDataList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -359,42 +359,42 @@ export default {
             for (const item of this.materielDataList) {
                 if (item.delFlag === '0') {
                     if (item.dispatchMan === null || item.dispatchMan.trim() === '') {
-                        this.$warningTost('生产调度员不能为空');
+                        this.$warningToast('生产调度员不能为空');
                         return false;
                     }
                     if (item.productCode === null || item.productCode.trim() === '') {
-                        this.$warningTost('生产物料不能为空');
+                        this.$warningToast('生产物料不能为空');
                         return false;
                     }
                     if (item.issueCode === null || item.issueCode.trim() === '') {
-                        this.$warningTost('发料料号不能为空');
+                        this.$warningToast('发料料号不能为空');
                         return false;
                     }
                     if (item.productWeight === '') {
-                        this.$warningTost('生产数不能为空');
+                        this.$warningToast('生产数不能为空');
                         return false;
                     }
                     if (item.issueBatch === null || item.issueBatch.trim() === '') {
-                        this.$warningTost('发料批次不能为空');
+                        this.$warningToast('发料批次不能为空');
                         return false;
                     }
                     if (item.issueBatch.trim().length > 10) {
-                        this.$warningTost('发料批次长度不能超过10');
+                        this.$warningToast('发料批次长度不能超过10');
                         return false;
                     }
                     if (item.inStorageWeight === '') {
-                        this.$warningTost('入库数不能为空');
+                        this.$warningToast('入库数不能为空');
                         return false;
                     }
                     if (flag && flag === 'submit') {
                         // 提交的时候验证，申请订单不验证
                         if (item.inStorageBatch === null || item.inStorageBatch.trim() === '') {
-                            this.$warningTost('入库批次不能为空');
+                            this.$warningToast('入库批次不能为空');
                             return false;
                         }
                     }
                     if (item.inStorageBatch && item.inStorageBatch.trim().length > 10) {
-                        this.$warningTost('入库批次长度不能超过10');
+                        this.$warningToast('入库批次长度不能超过10');
                         return false;
                     }
                 }
@@ -418,7 +418,7 @@ export default {
                             this.dispatcherCode = this.dictListObj['PW_FEVOR'][0].code;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -466,7 +466,7 @@ export default {
                         }
                         // this.$emit('setAppyMaterielState', inState)
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -533,7 +533,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag

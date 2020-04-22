@@ -280,7 +280,7 @@ export default {
         getHeaderSearchList() {
             this.$http(`${SYSTEMSETUP_API.IOTHEADSEARCHLIST_API}`, 'POST', {}, false, false, false).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$$warningTost(data.msg);
+                    this.$$warningToast(data.msg);
                 }
             });
         },
@@ -293,11 +293,11 @@ export default {
         saveRow() {
             this.$http(`${SYSTEMSETUP_API.IOTDATAUPDATE_API}`, 'POST', this.form).then(({ data }) => {
                 if (data.code === 0) {
-                    this.$successTost('保存成功');
+                    this.$successToast('保存成功');
                     this.DialogTableVisible = false;
                     this.$refs.queryTable.GetDataList(true);
                 } else {
-                    this.$warningTost(data.msg);
+                    this.$warningToast(data.msg);
                 }
             });
         },
@@ -311,17 +311,17 @@ export default {
                 }).then(() => {
                     this.$http(`${SYSTEMSETUP_API.IOTDATADEL_API}`, 'POST', this.$refs.queryTable.multipleSelection).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('删除成功');
+                            this.$successToast('删除成功');
                             this.$refs.queryTable.GetDataList(true);
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             } else {
-                this.$warningTost('请选择数据');
+                this.$warningToast('请选择数据');
             }
         },
         // 导出
@@ -338,15 +338,15 @@ export default {
         },
         importSuccess(response) {
             if (response.code === 0) {
-                this.$successTost('导入成功');
+                this.$successToast('导入成功');
                 this.$refs.queryTable.GetDataList(true);
             } else {
                 this.loading.close();
-                this.$warningTost('导入失败');
+                this.$warningToast('导入失败');
             }
         },
         improtError() {
-            this.$warningTost('导入失败');
+            this.$warningToast('导入失败');
             this.loading.close();
         }
     }

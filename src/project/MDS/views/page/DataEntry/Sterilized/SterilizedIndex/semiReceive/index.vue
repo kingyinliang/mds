@@ -182,7 +182,7 @@ export default {
                         }
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -215,7 +215,7 @@ export default {
                 if (data.code === 0) {
                     this.PotList = data.halfList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 if (this.formHeader.status !== '') {
                     this.GetDataList();
@@ -236,7 +236,7 @@ export default {
             if (PotSole.holderType !== '016' && PotSole.holderType !== '017' && PotSole.holderType !== '018') {
                 row.isB = 0;
                 if (PotSole.materialCode !== row.materialCode && PotSole.materialCode !== '') {
-                    this.$warningTost('领用物料与BOM物料不一致，请确认！');
+                    this.$warningToast('领用物料与BOM物料不一致，请确认！');
                 }
             } else if (PotSole.holderType === '016' || PotSole.holderType === '017' || PotSole.holderType === '018') {
                 row.isB = 1;
@@ -257,12 +257,12 @@ export default {
                 type: 'warning'
             }).then(() => {
                 if (this.MaterialDate.filter(item => item.delFlag === '0' && item.materialCode === row.materialCode).length === 1) {
-                    this.$warningTost('最后一条了哦，不能再删了');
+                    this.$warningToast('最后一条了哦，不能再删了');
                 } else {
                     row.delFlag = '1';
                 }
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag
@@ -305,13 +305,13 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         savedOrSubmitForm(str) {
             for (const sole of this.MaterialDate) {
                 if (sole.holderType !== '' && sole.materialCode !== sole.holderMaterialCode && sole.holderMaterialCode !== '' && sole.holderMaterialCode !== null) {
-                    this.$warningTost('领用物料与BOM物料不一致，请确认！');
+                    this.$warningToast('领用物料与BOM物料不一致，请确认！');
                     return false;
                 }
             }
@@ -325,20 +325,20 @@ export default {
                     if (item.id) {
                         if (this.PotList.filter(it => item.holderId === it.holderId)[0].type === '1') {
                             if (this.PotList.filter(it => item.holderId === it.holderId)[0].amount < item.receiveAmount) {
-                                this.$warningTost(`${item.holderName}库存不足,请调整`);
+                                this.$warningToast(`${item.holderName}库存不足,请调整`);
                                 return false;
                             }
                         } else if (this.MaterialDate1.filter(it => it.holderId === item.holderId).length) {
                                 if (Number(this.PotList.filter(it => item.holderId === it.holderId)[0].amount) + Number(this.MaterialDate1.filter(it => it.holderId === item.holderId)[0].receiveAmount) < item.receiveAmount) {
-                                    this.$warningTost(`${item.holderName}库存不足,请调整`);
+                                    this.$warningToast(`${item.holderName}库存不足,请调整`);
                                     return false;
                                 }
                             } else if (this.PotList.filter(it => item.holderId === it.holderId)[0].amount < item.receiveAmount) {
-                                    this.$warningTost(`${item.holderName}库存不足,请调整`);
+                                    this.$warningToast(`${item.holderName}库存不足,请调整`);
                                     return false;
                                 }
                     } else if (this.PotList.filter(it => item.holderId === it.holderId)[0].amount < item.receiveAmount) {
-                            this.$warningTost(`${item.holderName}库存不足,请调整`);
+                            this.$warningToast(`${item.holderName}库存不足,请调整`);
                             return false;
                         }
                 }
@@ -403,18 +403,18 @@ export default {
                 if (!item.isT) {
                     if (!item.holderId && /原汁/.test(item.materialName)) {
                         ty = false;
-                        this.$warningTost('罐号未填');
+                        this.$warningToast('罐号未填');
                         return false;
                     }
                 }
                 if (!item.batch) {
                     ty = false;
-                    this.$warningTost('批次未填');
+                    this.$warningToast('批次未填');
                     return false;
                 }
                 if (!item.receiveAmount) {
                     ty = false;
-                    this.$warningTost('实际领料未填');
+                    this.$warningToast('实际领料未填');
                     return false;
                 }
             });
@@ -434,7 +434,7 @@ export default {
                     this.$refs.excrecord.GetequipmentType(this.formHeader.productLine);
                     this.$refs.excrecord.getDataList(this.formHeader.factory);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         }
