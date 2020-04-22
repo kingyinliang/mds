@@ -50,7 +50,7 @@
                                     <el-table-column prop="created" label="创建日期" width="160" />
                                     <el-table-column label="操作" fixed="right" width="65">
                                         <template slot-scope="scope">
-                                            <el-button v-if="isAuth('sys:user:update') && isAuth('sys:user:info')" style="padding: 0;" type="text" @click="addOrUpdateuUser(scope.row.userId)">
+                                            <el-button v-if="isAuth('sys:user:update') && isAuth('sys:user:info')" style="padding: 0;" type="text" @click="addOrUpdateuUser(scope.row.id)">
                                                 编辑
                                             </el-button>
                                         </template>
@@ -100,9 +100,9 @@ export default {
     },
     methods: {
         // #remove
-        isAuth() {
-            return true
-        },
+        // isAuth() {
+        //     return true
+        // },
         // 序号
         indexMethod(index) {
             return index + 1 + (Number(this.currPage) - 1) * (Number(this.pageSize));
@@ -112,7 +112,6 @@ export default {
             COMMON_API.ORGSTRUCTURE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             }).then(({ data }) => {
-                console.log(data)
                 if (data.code === 200) {
                     this.orgTree = data.data;
                     this.arrList = [this.orgTree[0].children[0].id];
@@ -143,7 +142,6 @@ export default {
                 current: JSON.stringify(this.currPage),
                 size: JSON.stringify(this.pageSize)
             }).then(({ data }) => {
-                console.log(data)
                 if (data.code === 200) {
                     this.multipleSelection = [];
                     this.userInfoList = data.data.records;
@@ -167,9 +165,6 @@ export default {
         addOrUpdateuUser(id) {
             if (this.deptID) {
                 this.isDaologShow = true;
-                console.log(this.deptID)
-                console.log(this.deptName)
-                console.log(id)
                 this.$nextTick(() => {
                     this.$refs.addOrUpdateuUser.init(this.deptID, this.deptName, id);
                 });

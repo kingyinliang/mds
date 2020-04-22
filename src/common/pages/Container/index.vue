@@ -133,19 +133,22 @@
             // 获取容器列表
             getContainerList() {
                 COMMON_API.HOLDER_QUERY_API({
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    current: 1,
+                    size: 10
                 }).then(({ data }) => {
-
-                    if (data.code === 200) {
-                        this.multipleSelection = [];
-                        this.list = data.page.list;
-                        this.form.currPage = data.page.currPage;
-                        this.form.pageSize = data.page.pageSize;
-                        this.form.totalCount = data.page.totalCount;
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
-                    this.visible = false;
+                    console.log('获取容器列表')
+                    console.log(data)
+                    // if (data.code === 200) {
+                    //     this.multipleSelection = [];
+                    //     this.list = data.page.list;
+                    //     this.form.currPage = data.page.currPage;
+                    //     this.form.pageSize = data.page.pageSize;
+                    //     this.form.totalCount = data.page.totalCount;
+                    // } else {
+                    //     this.$errorToast(data.msg);
+                    // }
+                    // this.visible = false;
                 });
             },
             // 容器参数下拉

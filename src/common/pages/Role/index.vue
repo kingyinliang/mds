@@ -91,9 +91,9 @@
         },
         methods: {
             // #remove
-            isAuth() {
-                return true
-            },
+            // isAuth() {
+            //     return true
+            // },
             // 序号
             indexMethod(index) {
                 return index + 1 + (Number(this.currPage) - 1) * Number(this.pageSize);

@@ -62,8 +62,7 @@ Vue.prototype.$infoToast = str => {
 };
 
 // 关闭弹窗清除表单
-Vue.prototype.clearForm = function(form: any) {
-    // eslint-disable-line
+Vue.prototype.clearForm = function(form: any) {// eslint-disable-line
     this[form] = {};
 };
 
@@ -101,4 +100,4 @@ new Vue({
     router,
     store,
     render: h => h(App)
-}).$mount('#app');
+}).$mount('#app')
