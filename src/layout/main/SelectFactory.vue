@@ -1,0 +1,105 @@
+<template>
+    <el-dialog :show-close="false" :visible.sync="factoryVisible" class="selectFa">
+        <div class="factoryBox">
+            <div v-for="(item, index) in factory" :key="index" class="factoryItem">
+                <div class="itemBox">
+                    <div class="item-title">
+                        <p class="item-title-p">
+                            {{ item.deptName }}
+                        </p>
+                        <!--<el-switch-->
+                        <!--v-model="item.value"-->
+                        <!--style="float: right;"-->
+                        <!--active-color="#8BC34A"-->
+                        <!--inactive-color="#dcdfe6"-->
+                        <!--@click="setOther(index)"-->
+                        <!--/>-->
+                    </div>
+                    <div @click="goFa(item)" style="cursor: pointer;">
+                        <img :src="'../static/img/factory'+ index + '.png'" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </el-dialog>
+</template>
+
+<script lang="ts">
+    import { Vue, Component } from 'vue-property-decorator';
+
+    @Component({
+        components: {
+        }
+    })
+    export default class SelectFactory extends Vue {
+        factory: object[] = [];
+        factoryVisible = false;
+
+        goFa(item) {
+            sessionStorage.setItem('vuex', '');
+            if (item.deptCode === '6010' || item.deptCode === '7100' || item.deptCode === '7101') {
+                sessionStorage.setItem('factory', JSON.stringify(item || ''));
+                window.location.href = '/MDS.html'
+            } else {
+                sessionStorage.setItem('factory', JSON.stringify(item || ''));
+                window.location.href = '/DFMDS.html'
+            }
+        }
+
+        init() {
+            this.factoryVisible = true;
+            this.factory = JSON.parse(sessionStorage.getItem('userFactory') || '[]')
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+.selectFa {
+
+    ::v-deep .el-dialog {/* stylelint-disable-line */
+        width: 100%;
+        background: none;
+        box-shadow: none;
+        .el-dialog__header {
+            background: none;
+        }
+        .el-dialog__body {
+            display: flex;
+            justify-content: center;
+        }
+    }
+    .factoryBox {
+        width: 1168px;
+        margin: auto;
+    }
+    .factoryItem {
+        display: inline-block;
+        padding: 5px;
+        .itemBox {
+            width: 250px;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
+            img {
+                display: block;
+                width: 150px;
+                height: 103px;
+                margin: auto;
+            }
+            .item-title {
+                margin: 0 0 30px 0;
+                font-weight: bold;
+                font-size: 16px;
+                .item-title-p {
+                    width: 250px;
+                    margin: 0;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+    }
+}
+</style>

@@ -183,6 +183,7 @@ export default {
     },
     methods: {
         goFa(item) {
+            sessionStorage.setItem('vuex', '');
             if (item.deptCode === '6010' || item.deptCode === '7100' || item.deptCode === '7101') {
                 sessionStorage.setItem('factory', JSON.stringify(item || ''));
                 window.location.href = '/MDS.html'
@@ -192,7 +193,6 @@ export default {
             }
         },
         setOther(Num) {
-            console.log(Num)
             this.factory.forEach((item, index) => {
                 if (Num !== index) {
                     item.value = false
@@ -230,18 +230,18 @@ export default {
                     COMMON_API.LOGIN_API({
                         userName: this.ruleForm2.user,
                         password: this.ruleForm2.pass
-                    }).then(res => {
-                        if (res.data.code === 200) {
-                            this.$cookie.set('token', res.data.data.token);
-                            sessionStorage.setItem('userId', res.data.data.uid || '');
-                            sessionStorage.setItem('vuex', '');
-                            sessionStorage.setItem('userName', res.data.data.userName || '');
-                            sessionStorage.setItem('realName', res.data.data.realName || '');
-                            if (res.data.data.firstFlag === '1') {
+                    }).then(({ data }) => {
+                        if (data.code === 200) {
+                            this.$cookie.set('token', data.data.token);
+                            sessionStorage.setItem('userId', data.data.uid || '');
+                            sessionStorage.setItem('userFactory', JSON.stringify(data.data.userFactory || '[]'));
+                            sessionStorage.setItem('userName', data.data.userName || '');
+                            sessionStorage.setItem('realName', data.data.realName || '');
+                            if (data.data.firstFlag === '1') {
                                 this.visible = true;
-                                this.factory = res.data.data.userFactory
+                                this.factory = data.data.userFactory
                             } else {
-                                this.selectFactory(res.data.data)
+                                this.selectFactory(data.data)
                             }
                         }
                     });

@@ -161,6 +161,7 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { COMMON_API } from 'common/api/api';
 import { generateUuid } from 'utils/utils';
+import axios from 'axios';
 
 @Component
 export default class OrgStructure extends Vue {
@@ -324,15 +325,25 @@ export default class OrgStructure extends Vue {
 
     // 上传图片前
     httpRequest(options) {
-        const fileReader = new FileReader();
-        const file = options.file;
-        if (file) {
-            fileReader.readAsDataURL(file);
-        }
-        fileReader.onload = () => {
-            const base64Str = fileReader.result as string;
-            options.onSuccess(base64Str.split(',')[1], file);
-        };
+        console.log(options);
+        // const fileReader = new FileReader();
+        // const file = options.file;
+        // if (file) {
+        //     fileReader.readAsDataURL(file);
+        // }
+        // fileReader.onload = () => {
+        //     const base64Str = fileReader.result as string;
+        //     options.onSuccess(base64Str.split(',')[1], file);
+        // };
+        const form = new FormData();
+        // 文件对象
+        form.append('file', options.file);
+        axios.request({
+            url: this.FILE_API,
+            method: 'POST',
+            data: form
+        })
+        axios.put(this.FILE_API, form)
     }
 
     // 上传图片后

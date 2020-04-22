@@ -147,6 +147,7 @@ export default {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     this.dataForm.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    this.dataForm.materialName = this.serchSapList.filter(item => item.materialCode === this.dataForm.materialCode)[0].materialName;
                     let http;
                     this.CapacityId ? http = COMMON_API.CAPACITYUPDATA_API : http = COMMON_API.CAPACITYADD_API;
                     http(this.dataForm).then(({ data }) => {

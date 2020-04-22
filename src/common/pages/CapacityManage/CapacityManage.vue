@@ -32,14 +32,14 @@
                     <el-table-column prop="effectiveCapacity" label="有效产能" :show-overflow-tooltip="true" width="87" />
                     <el-table-column prop="capacityUnit" label="单位" width="50" :show-overflow-tooltip="true" />
                     <el-table-column prop="standardManpower" label="标配人力" width="80" :show-overflow-tooltip="true" />
-                    <el-table-column prop="effecStartDate" label="有效开始日期" width="110" :show-overflow-tooltip="true">
+                    <el-table-column prop="startDate" label="有效开始日期" width="110" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.effecStartDate }}
+                            {{ scope.row.startDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="effecEndDate" label="有效结束日期" width="110" :show-overflow-tooltip="true">
+                    <el-table-column prop="endDate" label="有效结束日期" width="110" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.effecEndDate }}
+                            {{ scope.row.endDate }}
                         </template>
                     </el-table-column>
                     <el-table-column prop="changer" label="操作人" width="87" :show-overflow-tooltip="true" />
@@ -160,8 +160,6 @@
                                 this.$successToast('删除成功!');
                                 this.multipleSelection = [];
                                 this.getData();
-                            } else {
-                                this.$errorToast(data.msg);
                             }
                         });
                     })
