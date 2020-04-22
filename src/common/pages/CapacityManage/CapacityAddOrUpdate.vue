@@ -3,33 +3,33 @@
         <div>
             <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="物料：" prop="material">
-                    <el-select v-model="dataForm.material" filterable placeholder="请选择" :disabled="CapacityId !== ''">
-                        <el-option v-for="item in serchSapList" :key="item.sapCode + ' ' + item.itemName" :label="item.sapCode + ' ' + item.itemName" :value="item.sapCode + ' ' + item.itemName" />
+                    <el-select v-model="dataForm.materialCode" filterable placeholder="请选择" :disabled="CapacityId !== ''">
+                        <el-option label="000" value="000" />
+                        <el-option v-for="(item, index) in serchSapList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="标准产能：" prop="basicCapacity">
-                    <el-input v-model="dataForm.basicCapacity" placeholder="手动输入" />
+                    <el-input type="number" v-model="dataForm.basicCapacity" placeholder="手动输入" />
                 </el-form-item>
                 <el-form-item label="设计产能：" prop="designCapacity">
                     <el-input v-model="dataForm.designCapacity" placeholder="手动输入" />
                 </el-form-item>
-                <el-form-item label="有效产能：" prop="effecCapacity">
-                    <el-input v-model="dataForm.effecCapacity" placeholder="手动输入" />
+                <el-form-item label="有效产能：" prop="effectiveCapacity">
+                    <el-input v-model="dataForm.effectiveCapacity" placeholder="手动输入" />
                 </el-form-item>
-                <el-form-item label="单位：" prop="basicCapacityUnit">
-                    <el-select v-model="dataForm.basicCapacityUnit" filterable placeholder="请选择">
-                        <el-option label="000" value="000" />
+                <el-form-item label="单位：" prop="capacityUnit">
+                    <el-select v-model="dataForm.capacityUnit" filterable placeholder="请选择">
                         <el-option v-for="item in Unit" :key="item.code" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="标配人力：" prop="standardOfMan">
-                    <el-input v-model="dataForm.standardOfMan" placeholder="手动输入" />
+                <el-form-item label="标配人力：" prop="standardManpower">
+                    <el-input v-model="dataForm.standardManpower" placeholder="手动输入" />
                 </el-form-item>
-                <el-form-item label="有效开始日期：" prop="effecStartDate">
-                    <el-date-picker v-model="dataForm.effecStartDate" type="date" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
+                <el-form-item label="有效开始日期：" prop="startDate">
+                    <el-date-picker v-model="dataForm.startDate" type="date" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
                 </el-form-item>
-                <el-form-item label="有效结束日期：" prop="effecEndDate">
-                    <el-date-picker v-model="dataForm.effecEndDate" type="date" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
+                <el-form-item label="有效结束日期：" prop="endDate">
+                    <el-date-picker v-model="dataForm.endDate" type="date" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
                 </el-form-item>
                 <el-form-item v-if="CapacityId" label="维护人：">
                     <el-input v-model="dataForm.changer" placeholder="手动输入" disabled />
@@ -64,17 +64,17 @@ export default {
             deptId: '',
             visible: false,
             dataForm: {
-                material: '',
-                standardOfMan: '',
+                materialCode: '',
+                standardManpower: '',
                 basicCapacity: 0,
-                basicCapacityUnit: '',
-                effecStartDate: '',
-                effecEndDate: '2019-08-21 00:00:00',
+                capacityUnit: '',
+                startDate: '',
+                endDate: '2019-08-21',
                 changer: '',
                 changed: ''
             },
             dataRule: {
-                material: [{ required: true, message: '物料不能为空', trigger: 'blur' }],
+                materialCode: [{ required: true, message: '物料不能为空', trigger: 'blur' }],
                 basicCapacity: [
                     {
                         required: true,
@@ -82,29 +82,29 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                effecCapacity: [
+                effectiveCapacity: [
                     {
                         required: true,
                         message: '有效产能不能为空',
                         trigger: 'blur'
                     }
                 ],
-                standardOfMan: [
+                standardManpower: [
                     {
                         required: true,
                         message: '标配人力不能为空',
                         trigger: 'blur'
                     }
                 ],
-                basicCapacityUnit: [{ required: true, message: '单位不能为空', trigger: 'blur' }],
-                effecStartDate: [
+                capacityUnit: [{ required: true, message: '单位不能为空', trigger: 'blur' }],
+                startDate: [
                     {
                         required: true,
                         message: '有效开始日期不能为空',
                         trigger: 'blur'
                     }
                 ],
-                effecEndDate: [
+                endDate: [
                     {
                         required: true,
                         message: '有效结束日期不能为空',
@@ -134,11 +134,10 @@ export default {
             if (data) {
                 this.CapacityId = data.id;
                 this.dataForm = JSON.parse(JSON.stringify(data));
-                this.dataForm.material = data.materialCode + ' ' + data.materialName;
             } else {
                 this.CapacityId = '';
                 this.dataForm = {
-                    effecEndDate: '9999-12-31'
+                    endDate: '9999-12-31'
                 };
                 this.dataForm.deptId = deptId;
             }
@@ -148,8 +147,6 @@ export default {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     this.dataForm.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    this.dataForm.materialCode = this.dataForm.material.substring(0, this.dataForm.material.indexOf(' '));
-                    this.dataForm.materialName = this.dataForm.material.substring(this.dataForm.material.indexOf(' ') + 1);
                     let http;
                     this.CapacityId ? http = COMMON_API.CAPACITYUPDATA_API : http = COMMON_API.CAPACITYADD_API;
                     http(this.dataForm).then(({ data }) => {

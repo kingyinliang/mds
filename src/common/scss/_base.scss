@@ -1,4 +1,8 @@
 /* stylelint-disable */
+.el-button--primary {
+    background-color: $main-color;
+    border-color: $main-color;
+}
 .main {
     padding: 5px 10px;
 }

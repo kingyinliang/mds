@@ -8,16 +8,19 @@ const cdn = {
 }
 module.exports = {
     index: {
+        title: '欣和-制造管理系统',
         entry: 'src/project/LOGIN/main.ts',
         template: 'public/index.html',
         filename: 'index.html'
     },
     MDS: {
+        title: '欣和-制造管理系统',
         entry: 'src/project/MDS/main.ts',
         template: 'public/MDS.html',
         filename: 'MDS.html'
     },
     DFMDS: {
+        title: '欣和-制造管理系统',
         entry: 'src/project/DFMDS/main.ts',
         template: 'public/DFMDS.html',
         filename: 'DFMDS.html'

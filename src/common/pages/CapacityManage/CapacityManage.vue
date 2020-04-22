@@ -29,9 +29,9 @@
                     </el-table-column>
                     <el-table-column prop="basicCapacity" label="标准产能" :show-overflow-tooltip="true" width="87" />
                     <el-table-column prop="designCapacity" label="设计产能" :show-overflow-tooltip="true" width="87" />
-                    <el-table-column prop="effecCapacity" label="有效产能" :show-overflow-tooltip="true" width="87" />
-                    <el-table-column prop="basicCapacityUnitName" label="单位" width="50" :show-overflow-tooltip="true" />
-                    <el-table-column prop="standardOfMan" label="标配人力" width="80" :show-overflow-tooltip="true" />
+                    <el-table-column prop="effectiveCapacity" label="有效产能" :show-overflow-tooltip="true" width="87" />
+                    <el-table-column prop="capacityUnit" label="单位" width="50" :show-overflow-tooltip="true" />
+                    <el-table-column prop="standardManpower" label="标配人力" width="80" :show-overflow-tooltip="true" />
                     <el-table-column prop="effecStartDate" label="有效开始日期" width="110" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.effecStartDate }}
