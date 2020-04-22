@@ -621,7 +621,7 @@ export default class Index extends Vue {
             }
         });
         // if (this.adjustForm.quantity.toString() === '') {
-        //   Vue.prototype.$warningTost(MSG.VALIDATE.updatNumNotEmpty)
+        //   Vue.prototype.$warningToast(MSG.VALIDATE.updatNumNotEmpty)
         //   return false
         // }
     }

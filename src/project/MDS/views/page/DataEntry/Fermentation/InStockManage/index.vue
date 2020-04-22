@@ -355,7 +355,7 @@ export default class Index extends Vue {
 
     getOrderList() {
         if (this.params.factoryId === '') {
-            Vue.prototype.$warningTost('请选择工厂');
+            Vue.prototype.$warningToast('请选择工厂');
             return;
         }
         // if (this.params.workshopId === '') {
@@ -450,7 +450,7 @@ export default class Index extends Vue {
 
     remove() {
         if (!this.selectedList.length) {
-            Vue.prototype.$warningTost('请选择订单');
+            Vue.prototype.$warningToast('请选择订单');
             return false;
         }
         this.$confirm('确认删除, 是否继续?', '删除', {
@@ -460,13 +460,13 @@ export default class Index extends Vue {
         }).then(() => {
             for (const item of this.selectedList) {
                 if (!(item['orderType'] === '7120' && (item['status'] === 'noPass' || item['status'] === 'saved'))) {
-                    Vue.prototype.$warningTost('只能删除“审核不通过”、“已保存”的7120订单');
+                    Vue.prototype.$warningToast('只能删除“审核不通过”、“已保存”的7120订单');
                     return false;
                 }
             }
             Vue.prototype.$http(`${FERMENTATION_API.ORDER_IN_STOCK_DEL_API}`, `POST`, this.selectedList).then(res => {
                 if (res.data.code === 0) {
-                    Vue.prototype.$successTost('删除成功');
+                    Vue.prototype.$successToast('删除成功');
                     this.retrieveOrderList();
                 } else {
                     this.$notify.error({
@@ -476,7 +476,7 @@ export default class Index extends Vue {
                 }
             });
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 
@@ -503,27 +503,27 @@ export default class Index extends Vue {
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         }
     }
 
     validate() {
         if (!this.selectedList || this.selectedList.length === 0) {
-            Vue.prototype.$warningTost('请选择要入库的订单');
+            Vue.prototype.$warningToast('请选择要入库的订单');
             return false;
         }
         for (const item of this.selectedList) {
             if (!item['inAmount'] || item['inAmount'] === '') {
-                Vue.prototype.$warningTost('请选择要入库的订单');
+                Vue.prototype.$warningToast('请选择要入库的订单');
                 return false;
             }
             if (item['batch'] === null || item['batch'] === '') {
-                Vue.prototype.$warningTost('批次不能为空');
+                Vue.prototype.$warningToast('批次不能为空');
                 return false;
             }
             if (item['batch']['length'] !== 10) {
-                Vue.prototype.$warningTost('批次长度为10');
+                Vue.prototype.$warningToast('批次长度为10');
                 return false;
             }
         }

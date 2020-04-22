@@ -58,7 +58,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

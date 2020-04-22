@@ -113,7 +113,7 @@ export default {
                             ? this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1).slice(1)
                             : this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.lodingS = false;
             });

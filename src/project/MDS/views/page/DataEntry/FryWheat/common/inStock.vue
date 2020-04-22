@@ -216,13 +216,13 @@ export default {
         validate() {
             // if (this.wheatDataList === undefined || this.wheatDataList.length === 0) {
             if (typeof this.wheatDataList === 'undefined' || this.wheatDataList.filter(item => item.delFlag === '0').length === 0) {
-                this.$warningTost('生产入库未录入数据');
+                this.$warningToast('生产入库未录入数据');
                 return false;
             }
             for (const item of this.wheatDataList) {
                 if (item.delFlag === '0') {
                     if (item.inPortWeight <= 0) {
-                        this.$warningTost('入库数必须大于0');
+                        this.$warningToast('入库数必须大于0');
                         return false;
                     }
                 }
@@ -249,7 +249,7 @@ export default {
                     if (data.code === 0) {
                         this.flourContainerList = data.page.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -277,7 +277,7 @@ export default {
                     if (data.code === 0) {
                         this.wheatContainerList = data.page.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -324,7 +324,7 @@ export default {
                             inState = 'checked';
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -414,7 +414,7 @@ export default {
                 this.$http(WHT_API.INSTORAGESAVE_API, 'POST', this.wheatDataList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -438,7 +438,7 @@ export default {
                 this.$http(`${WHT_API.INSTORAGESUBMIT_API}`, 'POST', this.wheatDataList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -471,7 +471,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // RowDelFlag
@@ -490,7 +490,7 @@ export default {
                 if (data.code === 0) {
                     this.batchList = data.list;
                 } else {
-                    this.$warningTost(data.msg);
+                    this.$warningToast(data.msg);
                 }
             });
         }

@@ -147,7 +147,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -166,7 +166,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -185,7 +185,7 @@ export default {
                         this.productline = data.childList;
                         this.formHeader.productLine = data.childList[0].deptId;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -221,7 +221,7 @@ export default {
                         item.drenchEndDate = item.drenchEndDate ? item.drenchEndDate : dateFormat(new Date(), 'yyyy-MM-dd hh:mm');
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -240,7 +240,7 @@ export default {
                         }
                         this.visible = true;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -254,12 +254,12 @@ export default {
         // 提交
         SubmitForm() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('没有勾选提交数据');
+                this.$warningToast('没有勾选提交数据');
                 return false;
             }
             for (const items of this.multipleSelection) {
                 if (!items.moveOperator || items.moveOperator === '') {
-                    this.$warningTost('请选择挪笼操作人');
+                    this.$warningToast('请选择挪笼操作人');
                     return false;
                 }
             }
@@ -270,7 +270,7 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 保存
@@ -289,7 +289,7 @@ export default {
                         });
                         this.isRedact = false;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -305,7 +305,7 @@ export default {
                         });
                         this.isRedact = false;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

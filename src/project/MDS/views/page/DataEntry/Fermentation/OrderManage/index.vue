@@ -362,7 +362,7 @@ export default class Index extends Vue {
                     if (data.code === 0) {
                         this.versionsList = data.dicList[0].prolist;
                     } else {
-                        Vue.prototype.$warningTost(data.msg);
+                        Vue.prototype.$warningToast(data.msg);
                     }
                 })
                 .catch(error => {
@@ -477,7 +477,7 @@ export default class Index extends Vue {
 
     getOrderList() {
         if (this.params.factoryId === '') {
-            Vue.prototype.$warningTost('请选择工厂');
+            Vue.prototype.$warningToast('请选择工厂');
             return;
         }
         if (this.params.workshopId === '') {
@@ -560,12 +560,12 @@ export default class Index extends Vue {
 
     applyOrder() {
         if (!this.selectedList || this.selectedList.length === 0) {
-            Vue.prototype.$warningTost('请选择要申请的订单');
+            Vue.prototype.$warningToast('请选择要申请的订单');
             return;
         }
         // for (let item of this.selectedList) {
         //   if (item.kjmAmount <= 0) {
-        //     Vue.prototype.$warningTost(item.holdName + ' 订单量需大于0')
+        //     Vue.prototype.$warningToast(item.holdName + ' 订单量需大于0')
         //     return false
         //   }
         // }
@@ -596,7 +596,7 @@ export default class Index extends Vue {
                 }
             });
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 

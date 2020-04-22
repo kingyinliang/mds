@@ -129,7 +129,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -144,7 +144,7 @@ export default {
                     if (data.code === 0) {
                         this.materialList = data.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -152,14 +152,14 @@ export default {
         // 查询
         GetList() {
             if (!this.formHeader.factory) {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return false;
             }
             this.$http(`${BASICDATA_API.STERILIZEMATERIALRATIOLIST}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
                     this.dataList = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -197,7 +197,7 @@ export default {
                             this.$refs[formName].resetFields();
                             this.GetList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -215,7 +215,7 @@ export default {
         },
         DeleteInfo() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请勾选数据');
+                this.$warningToast('请勾选数据');
                 return false;
             }
             this.$confirm('确认要删除数据吗?', '提示', {
@@ -232,11 +232,11 @@ export default {
                         });
                         this.GetList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         }
     }

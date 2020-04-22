@@ -215,7 +215,7 @@ export default {
                         this.machineTimeData = data.listFormMachine;
                         this.timeAuditlog = data.listApproval;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .finally(() => {
@@ -248,7 +248,7 @@ export default {
             this.$http(`${WHT_API.READYTIMEUPDATE_API}`, 'POST', this.readyTimeDate)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');
@@ -276,7 +276,7 @@ export default {
             });
             this.$http(`${WHT_API.MACHINETIMEUPDATE_API}`, 'POST', this.machineTimeData).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 if (resolve) {
                     resolve('resolve');
@@ -306,7 +306,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间白班必填项未填写完全');
+                    this.$warningToast('准备时间白班必填项未填写完全');
                     return false;
                 }
             } else if (this.readyTimeDate.classes === '中班') {
@@ -314,7 +314,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间中班必填项未填写完全');
+                    this.$warningToast('准备时间中班必填项未填写完全');
                     return false;
                 }
             } else if (this.readyTimeDate.classes === '夜班') {
@@ -322,7 +322,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间夜班必填项未填写完全');
+                    this.$warningToast('准备时间夜班必填项未填写完全');
                     return false;
                 }
             } else if (this.readyTimeDate.classes === '多班') {
@@ -330,7 +330,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间多班必填项未填写完全');
+                    this.$warningToast('准备时间多班必填项未填写完全');
                     return false;
                 }
             }
@@ -339,13 +339,13 @@ export default {
                 this.machineTimeData.forEach((item) => {
                     if (!item.closeTime) {
                         ty = false;
-                        this.$warningTost('机器工时没结束，请结束后提交');
+                        this.$warningToast('机器工时没结束，请结束后提交');
                         return false;
                     }
                 });
             } else {
                 ty = false;
-                this.$warningTost('机器工时为空数据');
+                this.$warningToast('机器工时为空数据');
                 return false;
             }
             return ty;
@@ -376,7 +376,7 @@ export default {
             }).then(() => {
                 row.delFlag = '1';
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         //  RowDelFlag
@@ -398,7 +398,7 @@ export default {
                 if (data.code === 0) {
                     this.Machine = data.list.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -409,7 +409,7 @@ export default {
                 if (item.deviceId === me.deviceId && item.openTime && !item.closeTime) {
                     if (st) {
                         tmp = false;
-                        this.$warningTost('请结束后开始');
+                        this.$warningToast('请结束后开始');
                     } else {
                         tmp = true;
                     }
@@ -421,7 +421,7 @@ export default {
                     this.$refs.machinetime.init(me, st);
                 });
             } else if (!st && !tmp) {
-                this.$warningTost('请开始后结束');
+                this.$warningToast('请开始后结束');
             }
         },
         // 检测

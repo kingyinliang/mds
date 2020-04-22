@@ -117,11 +117,11 @@ export default {
                     this.dataForm.materialName = this.material.find(item => item.materialCode === this.dataForm.materialCode).materialName;
                     this.$http(`${this.id ? BASICDATA_API.CATEGORY_UPDATE : BASICDATA_API.CATEGORY_SAVE}`, 'POST', this.dataForm).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('操作成功');
+                            this.$successToast('操作成功');
                             this.visible = false;
                             this.$emit('refreshDataList');
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }
@@ -144,7 +144,7 @@ export default {
                     if (data.code === 0) {
                         this.material = data.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

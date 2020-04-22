@@ -207,7 +207,7 @@
                     this.savedDatas(str).then(res => {
                         if (res !== false) {
                             this.isRedact = false;
-                            this.$successTost('保存成功');
+                            this.$successToast('保存成功');
                             this.$emit('success');
                         }
                     });
@@ -215,7 +215,7 @@
                     this.submitDatas(str).then(res => {
                         if (res !== false) {
                             this.isRedact = false;
-                            this.$successTost('提交成功');
+                            this.$successToast('提交成功');
                             this.$emit('success');
                         }
                     });
@@ -236,7 +236,7 @@
                 }).then(() => {
                     this.savedData('submit');
                 }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
                 });
             }
         }

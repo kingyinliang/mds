@@ -224,7 +224,7 @@ export default {
                     if (data.code === 0) {
                         this.proPressList = data.list.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -245,7 +245,7 @@ export default {
                         this.formInline.destoryNumWest = this.materialList[0].destoryNumWest;
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -285,7 +285,7 @@ export default {
                         }
                         this.visible = true;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -300,29 +300,29 @@ export default {
         // 提交
         submitMaterial(resolve, reject) {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请勾选提交数据');
+                this.$warningToast('请勾选提交数据');
                 return false;
             }
             for (const item of this.multipleSelection) {
                 if (this.formHeader.pressure === 1) {
                     if (!item.prePressNo || item.prePressNo === '' || !item.prePressStart || item.prePressStart === '' || !item.prePressEnd || item.prePressEnd === '') {
-                        this.$warningTost('请填写必填项');
+                        this.$warningToast('请填写必填项');
                         return false;
                     }
                 } else {
                     if (!item.pressNo || item.pressNo === '' || !item.pressStart || item.pressStart === '' || !item.pressEnd || item.pressEnd === '') {
-                        this.$warningTost('请填写必填项');
+                        this.$warningToast('请填写必填项');
                         return false;
                     }
                     if (this.formHeader.workShopName === '压榨二车间') {
                         if (!item.destoryNum || item.destoryNum === '') {
-                            this.$warningTost('请填写必填项');
+                            this.$warningToast('请填写必填项');
                             return false;
                         }
                     }
                     if (this.formHeader.workShopName === '压榨一车间') {
                         if (this.formInline.destoryNumEast === '' || this.formInline.destoryNumEast === null || this.formInline.destoryNumWest === '' || this.formInline.destoryNumWest === null) {
-                            this.$warningTost('请填写碎布数');
+                            this.$warningToast('请填写碎布数');
                             return false;
                         }
                             this.multipleSelection.map(subItem => {
@@ -349,7 +349,7 @@ export default {
                         if (reject) {
                             reject('reject');
                         }
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(() => {
@@ -382,7 +382,7 @@ export default {
             this.$http(`${configurl}`, 'POST', this.materialList)
                 .then(({ data }) => {
                     if (data.code !== 0) {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     if (resolve) {
                         resolve('resolve');

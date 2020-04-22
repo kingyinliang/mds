@@ -130,7 +130,7 @@ export default {
                 if (data.code === 0) {
                     this.RoleList = data.page.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -148,7 +148,7 @@ export default {
                     });
                     this.GetList();
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -170,11 +170,11 @@ export default {
                         });
                         this.GetList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         dataPro(num) {
@@ -196,7 +196,7 @@ export default {
                     this.UserListArr = data.page;
                     this.dataPro(this.currPage);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

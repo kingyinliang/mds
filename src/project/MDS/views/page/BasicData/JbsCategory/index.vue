@@ -149,7 +149,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -160,7 +160,7 @@ export default {
                     if (data.code === 0) {
                         this.materialList = data.materialList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -171,21 +171,21 @@ export default {
                 if (data.code === 0) {
                     this.typeList = data.jbsGetType;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
         // 查询
         GetList() {
             if (!this.formHeader.factory) {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return false;
             }
             this.$http(`${BASICDATA_API.JBS_REPROT_LIST}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
                     this.dataList = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -213,12 +213,12 @@ export default {
                     }
                     this.$http(this.postUrl, 'POST', this.formAdd).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost(msgText);
+                            this.$successToast(msgText);
                             this.dialogVisibleAdd = false;
                             this.$refs[formName].resetFields();
                             this.GetList();
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -236,7 +236,7 @@ export default {
         },
         DeleteInfo() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请勾选数据');
+                this.$warningToast('请勾选数据');
                 return false;
             }
             this.$confirm('确认要删除数据吗?', '提示', {
@@ -246,14 +246,14 @@ export default {
             }).then(() => {
                 this.$http(`${BASICDATA_API.JBS_DATA_DEL}`, 'POST', this.multipleSelection).then(({ data }) => {
                     if (data.code === 0) {
-                        this.$successTost('删除成功');
+                        this.$successToast('删除成功');
                         this.GetList();
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         }
     }

@@ -447,7 +447,7 @@ export default {
         // 总览点击
         topClick(item) {
             if (!this.formHeader.factory) {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return;
             }
             this.formHeader.currPage = 1;
@@ -511,7 +511,7 @@ export default {
                     this.topBox[8].num = data.overView.useCount;
                     this.topBox[9].wdm = data.overView.emptyCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -522,7 +522,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -536,7 +536,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -548,7 +548,7 @@ export default {
                     if (data.code === 0) {
                         this.RDorder = data.dicList[0].code;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -576,7 +576,7 @@ export default {
                     if (data.code === 0) {
                         this.halfList = data.halfList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -588,7 +588,7 @@ export default {
                     if (data.code === 0) {
                         this.holderStatusList = data.statusList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -652,7 +652,7 @@ export default {
                     this.dialogData = row;
                     this.visible = true;
                 } else {
-                    this.$warningTost('该罐不是未清洗状态');
+                    this.$warningToast('该罐不是未清洗状态');
                 }
                 return;
             }
@@ -667,7 +667,7 @@ export default {
                     this.dialogData.holderStatus = '0';
                     this.visible = false;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

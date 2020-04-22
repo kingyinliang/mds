@@ -172,7 +172,7 @@ export default {
                         this.formData.frozenStatus = '0';
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

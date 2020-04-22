@@ -263,7 +263,7 @@ export default {
                     });
                     // this.GetorderNo(this.orderArray)
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -283,7 +283,7 @@ export default {
                     this.orderList = data.orderInfo.list;
                     this.revocation = data.revocation;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -302,7 +302,7 @@ export default {
                     this.pagesForm.totalCount = this.orderPropAllList.length;
                     this.dialogTableVisible = true;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -323,7 +323,7 @@ export default {
         // 新增订单
         SaveOderNo() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请勾选订单');
+                this.$warningToast('请勾选订单');
             } else {
                 let materialCode;
                 let dispatchMan;
@@ -336,11 +336,11 @@ export default {
                 }
                 for (const item of this.multipleSelection) {
                     if (materialCode !== item.materialCode) {
-                        this.$warningTost('物料冲突，请重新选择订单！');
+                        this.$warningToast('物料冲突，请重新选择订单！');
                         return false;
                     }
                     if (dispatchMan !== item.dispatchMan) {
-                        this.$warningTost('调度人员冲突，请重新选择订单！');
+                        this.$warningToast('调度人员冲突，请重新选择订单！');
                         return false;
                     }
                 }
@@ -368,10 +368,10 @@ export default {
         /* eslint-disable no-shadow */
         SaveOrderNo() {
             if (this.orderList.length === 0) {
-                this.$warningTost('请添加订单');
+                this.$warningToast('请添加订单');
             } else {
                 if (this.orderList.filter(item => item.orderNo.slice(0, 4) === this.orderList[0].orderNo.slice(0, 4)).length !== this.orderList.length) {
-                    this.$warningTost('请选择相同的订单类型的订单！');
+                    this.$warningToast('请选择相同的订单类型的订单！');
                     return false;
                 }
                 const params = {
@@ -408,22 +408,22 @@ export default {
                                     orderNo: this.allocateId
                                 };
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
         },
         CreateOrder() {
             if (this.orderList.length === 0) {
-                this.$warningTost('请添加订单');
+                this.$warningToast('请添加订单');
                 return false;
             }
             if (this.orderList.filter(item => item.orderNo.slice(0, 4) === this.orderList[0].orderNo.slice(0, 4)).length !== this.orderList.length) {
-                this.$warningTost('请选择相同的订单类型的订单！');
+                this.$warningToast('请选择相同的订单类型的订单！');
                 return false;
             }
             this.$confirm('确认生成调配单吗?', '提示', {
@@ -469,15 +469,15 @@ export default {
                                                 orderNo: this.allocateId
                                             };
                                         } else {
-                                            this.$errorTost(data.msg);
+                                            this.$errorToast(data.msg);
                                         }
                                     });
                                 } else {
-                                    this.$errorTost(data.msg);
+                                    this.$errorToast(data.msg);
                                 }
                             });
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -501,16 +501,16 @@ export default {
                                     this.isRedact = false;
                                     this.GetInfoList(this.allocateId);
                                 } else {
-                                    this.$errorTost(data.msg);
+                                    this.$errorToast(data.msg);
                                 }
                             });
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         /* eslint-enable no-shadow */
@@ -522,7 +522,7 @@ export default {
                 if (data.code === 0) {
                     this.GetInfoList(this.allocateId);
                 } else {
-                    this.$warningTost(data.msg);
+                    this.$warningToast(data.msg);
                 }
             });
         },

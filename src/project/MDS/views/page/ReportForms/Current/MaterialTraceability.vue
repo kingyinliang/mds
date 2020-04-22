@@ -140,7 +140,7 @@ export default {
                         this.formHeader.factory = data.typeList[0].deptId;
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -157,7 +157,7 @@ export default {
                             this.workShopStr = data.typeList[0];
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -170,7 +170,7 @@ export default {
                     if (data.code === 0) {
                         this.productline = data.childList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -181,7 +181,7 @@ export default {
                 if (data.code === 0) {
                     this.materiaList = data.materielTraceSelectInfo;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -191,13 +191,13 @@ export default {
                 if (data.code === 0) {
                     this.materialList = data.list;
                 } else {
-                    this.$warningTost(data.msg);
+                    this.$warningToast(data.msg);
                 }
             });
         },
         GetList(st) {
             if (this.workShopStr === '' || !this.workShopStr) {
-                this.$warningTost('请选择车间');
+                this.$warningToast('请选择车间');
                 return false;
             }
                 this.formHeader.workShop = this.workShopStr.deptId;
@@ -213,7 +213,7 @@ export default {
                     this.formHeader.pageSize = data.materielTrace.pageSize;
                     this.formHeader.totalCount = data.materielTrace.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

@@ -129,7 +129,7 @@ export default {
                 if (data.code === 0) {
                     this.Unit = data.dicList;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -155,12 +155,12 @@ export default {
                     this.dataForm.materialName = this.dataForm.material.substring(this.dataForm.material.indexOf(' ') + 1);
                     this.$http(`${BASICDATA_API.CAPAADDORUPDATE_API}`, 'POST', this.dataForm).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('操作成功');
+                            this.$successToast('操作成功');
                             this.visible = false;
                             this.$emit('refreshDataList');
                         } else {
                             this.submitType = true;
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }

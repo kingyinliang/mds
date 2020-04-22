@@ -75,7 +75,7 @@ export default {
         ManHourRul() {
             let ty = true;
             if (this.timeDate.length <= 0) {
-                this.$warningTost('工时计算没有数据');
+                this.$warningToast('工时计算没有数据');
                 ty = false;
                 return false;
             }
@@ -98,7 +98,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -110,7 +110,7 @@ export default {
                 if (data.code === 0) {
                     this.TimeAudit = data.listRecord;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -120,7 +120,7 @@ export default {
                 if (data.code === 0) {
                     this.GetTimeList(this.formHeader);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -146,7 +146,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -155,7 +155,7 @@ export default {
             this.timeDate.forEach(item => {
                 if (item.confActivity2 === '0' || !item.confActivity2) {
                     ty = false;
-                    this.$warningTost('机器工时未填写');
+                    this.$warningToast('机器工时未填写');
                     return false;
                 }
             });
@@ -178,11 +178,11 @@ export default {
                         if (data.code === 0) {
                             this.GetTimeList(this.formHeader);
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         }

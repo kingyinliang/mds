@@ -148,7 +148,7 @@ export default {
                         twoWorkShop: data.twoWorkShop
                     };
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -160,7 +160,7 @@ export default {
                     this.NightingaleRose2.setOption(this.NightingaleRoseData(data.twoWorkShop));
                     this.pie.setOption(this.PieData1(data));
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -171,7 +171,7 @@ export default {
                     this.pillar2.setOption(this.PillarData(data.twoWorkShop));
                     this.pie.setOption(this.PieData2(data));
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

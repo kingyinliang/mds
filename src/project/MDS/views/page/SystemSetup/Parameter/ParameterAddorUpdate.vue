@@ -90,13 +90,13 @@ export default {
                 this.$http(`${this.id ? SYSTEMSETUP_API.PARAMETERUPDATE_API : SYSTEMSETUP_API.PARAMETERADD_API}`, 'POST', this.dataForm).then(({ data }) => {
                     if (data.code === 0) {
                         this.dataForm = {};
-                        this.$successTost('操作成功');
+                        this.$successToast('操作成功');
                         this.submitType = true;
                         this.visible = false;
                         this.$emit('refreshDataList');
                     } else {
                         this.submitType = true;
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

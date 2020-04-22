@@ -116,7 +116,7 @@ export default {
             if (data.code === 0) {
                 this.SerchSapList = data.list;
             } else {
-                this.$errorTost(data.msg);
+                this.$errorToast(data.msg);
             }
         });
     },
@@ -128,7 +128,7 @@ export default {
                     this.OrgTree = data.deptList;
                     this.arrList = [this.OrgTree[0].children[0].deptId];
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -154,7 +154,7 @@ export default {
                     this.pageSize = data.page.pageSize;
                     this.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.visible = false;
                 this.loginstatus = false;
@@ -175,13 +175,13 @@ export default {
                     this.$refs.capaaddupdate.init(this.deptId, data);
                 });
             } else {
-                this.$warningTost('请先选择部门');
+                this.$warningToast('请先选择部门');
             }
         },
         // 删除
         remove() {
             if (this.multipleSelection.length === 0) {
-                this.$warningTost('请选择要删除的产能');
+                this.$warningToast('请选择要删除的产能');
             } else {
                 this.$confirm('确认删除该物料产能, 是否继续?', '删除产能', {
                     confirmButtonText: '确定',
@@ -191,11 +191,11 @@ export default {
                     .then(() => {
                         this.$http(`${BASICDATA_API.CAPADEL_API}`, 'POST', this.multipleSelection).then(({ data }) => {
                             if (data.code === 0) {
-                                this.$successTost('删除成功!');
+                                this.$successToast('删除成功!');
                                 this.multipleSelection = [];
                                 this.GetList();
                             } else {
-                                this.$errorTost(data.msg);
+                                this.$errorToast(data.msg);
                             }
                         });
                     })

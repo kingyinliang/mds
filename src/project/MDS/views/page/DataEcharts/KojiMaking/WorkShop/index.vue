@@ -109,7 +109,7 @@ export default {
                 if (data.code === 0) {
                     this.KojiMakingData = data.list;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -128,7 +128,7 @@ export default {
                     this.Bar1.setOption(this.setBar(data.list));
                     this.Bar2.setOption(this.setBar(data.list));
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -146,7 +146,7 @@ export default {
                 if (data.code === 0) {
                     this.Pie1.setOption(this.setPie(data.list));
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

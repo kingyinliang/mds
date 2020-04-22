@@ -90,7 +90,7 @@ export default {
                     this.totalCount = data.page.totalCount;
                     this.currPage = data.page.currPage;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -115,7 +115,7 @@ export default {
                     }, 4000);
                 } else {
                     this.loading.close();
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -145,7 +145,7 @@ export default {
                     } else {
                         this.loading.close();
                         clearInterval(this.sapTime);
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(() => {

@@ -250,7 +250,7 @@ export default {
         // 查询
         GetTimeList() {
             if (this.formHeader.factory === '' || this.formHeader.workShop === '' || this.formHeader.inKjmDate === '' || this.formHeader.deptId === '') {
-                this.$warningTost('请填写查询选项');
+                this.$warningToast('请填写查询选项');
                 return false;
             }
             this.searchCard = false;
@@ -290,7 +290,7 @@ export default {
                         this.$refs.workerref.GetProductShift(this.formHeader.factory);
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -323,12 +323,12 @@ export default {
                                 });
                             },
                             err => {
-                                this.$errorTost(err);
+                                this.$errorToast(err);
                             }
                         );
                     },
                     err => {
-                        this.$errorTost(err);
+                        this.$errorToast(err);
                     }
                 );
             } else if (str === 'saved') {
@@ -343,7 +343,7 @@ export default {
                         });
                     },
                     err => {
-                        this.$errorTost(err);
+                        this.$errorToast(err);
                     }
                 );
             }
@@ -362,7 +362,7 @@ export default {
             }).then(() => {
                 this.savedOrSubmitForm('submit');
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         // 提交
@@ -374,7 +374,7 @@ export default {
                             resolve('resolve');
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                         if (reject) {
                             reject('提交' + data.msg);
                         }
@@ -397,7 +397,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                     if (reject) {
                         reject('表头保存' + data.msg);
                     }
@@ -430,7 +430,7 @@ export default {
                         resolve('resolve');
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                     if (reject) {
                         reject('准备时间保存' + data.msg);
                     }
@@ -460,7 +460,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间白班必填项未填写完全');
+                    this.$warningToast('准备时间白班必填项未填写完全');
                     return false;
                 }
             } else if (this.readyTimeDate.classes === '中班') {
@@ -468,7 +468,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间中班必填项未填写完全');
+                    this.$warningToast('准备时间中班必填项未填写完全');
                     return false;
                 }
             } else if (this.readyTimeDate.classes === '夜班') {
@@ -476,7 +476,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间夜班必填项未填写完全');
+                    this.$warningToast('准备时间夜班必填项未填写完全');
                     return false;
                 }
             } else if (this.readyTimeDate.classes === '多班') {
@@ -484,7 +484,7 @@ export default {
                     //
                 } else {
                     ty = false;
-                    this.$warningTost('准备时间多班必填项未填写完全');
+                    this.$warningToast('准备时间多班必填项未填写完全');
                     return false;
                 }
             }
@@ -497,7 +497,7 @@ export default {
                     this.factory = data.typeList;
                     this.formHeader.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -513,7 +513,7 @@ export default {
                             this.formHeader.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -529,7 +529,7 @@ export default {
                             this.formHeader.deptId = data.childList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

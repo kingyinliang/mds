@@ -212,7 +212,7 @@ export default {
                 if (valid) {
                     this.$http(`${MAIN_API.UPPASS_API}`, 'POST', this.dataForm).then(({ data }) => {
                         if (data.code === 0) {
-                            this.$successTost('操作成功');
+                            this.$successToast('操作成功');
                             this.visible = false;
                             this.$router.push({ path: '/home' });
                         } else {

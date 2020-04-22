@@ -180,11 +180,11 @@ export default {
                         if (data.code === 0) {
                             this.ARtype = this.ARtype.concat(data.dicList);
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -202,7 +202,7 @@ export default {
                     this.plantList.pageSize = data.page.pageSize;
                     this.plantList.totalCount = data.page.totalCount;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.dataListLoading = false;
             });
@@ -214,7 +214,7 @@ export default {
                     this.factory = data.typeList;
                     this.plantList.factory = data.typeList[0].deptId;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -232,7 +232,7 @@ export default {
                             this.plantList.workShop = data.typeList[0].deptId;
                         }
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -249,7 +249,7 @@ export default {
                     if (data.code === 0) {
                         this.productline = data.childList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -293,7 +293,7 @@ export default {
                         this.AuditList.splice(this.AuditList.length, 0, {});
                         this.AuditList.splice(this.AuditList.length - 1, 1);
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.GetAuditList();
                 });
@@ -306,14 +306,14 @@ export default {
         // 审核拒绝
         repulseAutios() {
             if (this.multipleSelection.length <= 0) {
-                this.$warningTost('请选择考勤');
+                this.$warningToast('请选择考勤');
             } else {
                 this.visible = true;
             }
         },
         repulseAutio() {
             if (this.Text.length <= 0) {
-                this.$warningTost('请填写不通过原因');
+                this.$warningToast('请填写不通过原因');
             } else {
                 this.$confirm('确认审核不通过, 是否继续?', '审核不通过', {
                     confirmButtonText: '确定',
@@ -337,18 +337,18 @@ export default {
                                 type: 'success'
                             });
                         } else {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
                 });
             }
         },
         // 审核通过
         subAutio() {
             if (this.multipleSelection.length <= 0) {
-                this.$warningTost('请选择订单');
+                this.$warningToast('请选择订单');
             } else {
                 this.$confirm('确认审核通过, 是否继续?', '审核通过', {
                     confirmButtonText: '确定',
@@ -371,11 +371,11 @@ export default {
                             this.GetAuditList();
                         } else {
                             this.GetAuditList();
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
                 });
             }
         },

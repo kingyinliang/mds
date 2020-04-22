@@ -260,7 +260,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -371,7 +371,7 @@ export default {
                         type: 'success'
                     });
                 }).catch(() => {
-                    this.$errorTost('网络请求失败，请刷新重试');
+                    this.$errorToast('网络请求失败，请刷新重试');
                     this.isRedact = false;
                     this.visible = false;
                 });
@@ -468,13 +468,13 @@ export default {
                                 });
                             })
                             .catch(() => {
-                                this.$errorTost('网络请求失败，请刷新重试');
+                                this.$errorToast('网络请求失败，请刷新重试');
                                 this.isRedact = false;
                                 this.visible = false;
                             });
                     })
                     .catch(() => {
-                        this.$errorTost('网络请求失败，请刷新重试');
+                        this.$errorToast('网络请求失败，请刷新重试');
                         this.isRedact = false;
                         this.visible = false;
                     });
@@ -500,7 +500,7 @@ export default {
                         this.visible = false;
                     })
                     .catch(() => {
-                        this.$errorTost('网络请求失败，请刷新重试');
+                        this.$errorToast('网络请求失败，请刷新重试');
                         this.isRedact = false;
                         this.visible = false;
                     });
@@ -531,7 +531,7 @@ export default {
             ];
             this.$http(`${PACKAGING_API.PKGSAVEFORM_API}`, 'POST', paras).then(({ data }) => {
                 if (data.code !== 0) {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 if (resolve) {
                     resolve('resolve');

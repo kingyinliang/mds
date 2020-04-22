@@ -121,7 +121,7 @@ export default {
                     this.dataList = data.current;
                     this.dataListRe = data.history;
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         }

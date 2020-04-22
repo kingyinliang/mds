@@ -418,7 +418,7 @@ export default class Index extends Vue {
         }).then(() => {
             row.delFlag = '1';
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 
@@ -588,7 +588,7 @@ export default class Index extends Vue {
 
     saveEnd() {
         if (this.endForm.endAmount.toString() === '') {
-            Vue.prototype.$warningTost('结束数不能为空');
+            Vue.prototype.$warningToast('结束数不能为空');
             return false;
         }
         this.availableMap.set(this.endForm.deviceId, '0');
@@ -610,13 +610,13 @@ export default class Index extends Vue {
 
     startValidate() {
         if (this.startForm.fermentPotNo === '') {
-            Vue.prototype.$warningTost('领用发酵罐不能为空');
+            Vue.prototype.$warningToast('领用发酵罐不能为空');
             return false;
         } else if (this.startForm.batch.length !== 10) {
-            Vue.prototype.$warningTost('批次长度必须为10');
+            Vue.prototype.$warningToast('批次长度必须为10');
             return false;
         } else if (this.startForm.startAmount.toString() === '') {
-            Vue.prototype.$warningTost('起始数不能为空');
+            Vue.prototype.$warningToast('起始数不能为空');
             return false;
         }
         return true;
@@ -624,16 +624,16 @@ export default class Index extends Vue {
 
     modifyValidate() {
         if (this.modifyForm.fermentPotNo === '') {
-            Vue.prototype.$warningTost('领用发酵罐不能为空');
+            Vue.prototype.$warningToast('领用发酵罐不能为空');
             return false;
         } else if (this.modifyForm.batch.length !== 10) {
-            Vue.prototype.$warningTost('批次长度必须为10');
+            Vue.prototype.$warningToast('批次长度必须为10');
             return false;
         } else if (this.modifyForm.startAmount.toString() === '') {
-            Vue.prototype.$warningTost('起始数不能为空');
+            Vue.prototype.$warningToast('起始数不能为空');
             return false;
         } else if (this.modifyForm.endAmount.toString() === '') {
-            Vue.prototype.$warningTost('结束数不能为空');
+            Vue.prototype.$warningToast('结束数不能为空');
             return false;
         }
         return true;
@@ -773,19 +773,19 @@ export default class Index extends Vue {
 
     getOrderList() {
         if (this.params.factoryId === '') {
-            Vue.prototype.$warningTost('请选择工厂');
+            Vue.prototype.$warningToast('请选择工厂');
             return;
         }
         if (this.params.workshopId === '') {
-            Vue.prototype.$warningTost('请选择车间');
+            Vue.prototype.$warningToast('请选择车间');
             return;
         }
         if (this.params.productLineId === '') {
-            Vue.prototype.$warningTost('请选择布浆线');
+            Vue.prototype.$warningToast('请选择布浆线');
             return;
         }
         if (this.params.applyDate === null || this.params.applyDate === '') {
-            Vue.prototype.$warningTost('请选择领用日期');
+            Vue.prototype.$warningToast('请选择领用日期');
             return;
         }
         // 保存选项值到common store
@@ -885,7 +885,7 @@ export default class Index extends Vue {
                     });
                 });
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 

@@ -52,7 +52,7 @@
                                         <el-input v-model="OrgDetail.costCenter" auto-complete="off" :disabled="isRedact" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item v-if="OrgDetail.deptType === 'productLine'" label="产线图片：" :class="{'limit-upload': fileList.length}">
-                                        <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :disabled="isRedact" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
+                                        <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :disabled="isRedact" :limit="1" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
                                             <i class="el-icon-plus" />
                                         </el-upload>
                                     </el-form-item>
@@ -87,7 +87,7 @@
             <img width="100%" :src="dialogImageUrl" alt="" style="margin-bottom: 20px;">
         </el-dialog>
         <el-dialog id="adddepform" width="400px" :close-on-click-modal="false" :visible.sync="dialogFormVisible1" :title="sibling ? '新增同级' : '新增下级'">
-            <el-form :model="addDep" size="small" label-position="left" label-width="100px">
+            <el-form ref="dataForm" :model="addDep" size="small" label-position="left" label-width="100px">
                 <el-form-item label="部门编号：">
                     <el-input v-model="addDep.deptCode" auto-complete="off" />
                 </el-form-item>
@@ -95,8 +95,7 @@
                     <el-input v-model="addDep.deptName" auto-complete="off" />
                 </el-form-item>
                 <el-form-item label="上级部门：">
-                    <span v-if="sibling">{{ addDep.parentName }}</span>
-                    <span v-if="!sibling">{{ addDep.parentName }}</span>
+                    <el-input v-model="addDep.parentName" disabled />
                 </el-form-item>
                 <el-form-item label="生产调度员：">
                     <el-input v-model="addDep.dispatchMan" />
@@ -115,12 +114,12 @@
                 <el-form-item v-if="addDep.deptType == 'productLine'" label="成本中心：">
                     <el-input v-model="addDep.costCenter" auto-complete="off" />
                 </el-form-item>
-                <el-form-item v-if="addDep.deptType == 'productLine'" label="产线图片：">
-                    <el-upload :action="FILE_API" :limit="1" :http-request="httpRequest" list-type="picture" :on-success="DeptAddfile">
-                        <el-button size="small" type="primary">
-                            选取文件
-                        </el-button>
-                    </el-upload>
+                <el-form-item v-if="addDep.deptType == 'productLine'" label="产线图片：" :class="{'limit-upload': fileList.length}">
+                    <div style="text-align: center;">
+                        <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
+                            <i class="el-icon-plus" />
+                        </el-upload>
+                    </div>
                 </el-form-item>
                 <el-form-item label="联系人：">
                     <el-input v-model="addDep.lxr" auto-complete="off" />
@@ -135,7 +134,7 @@
                     <el-button @click="addOrg">
                         保存
                     </el-button>
-                    <el-button @click="dialogFormVisible1 = false">
+                    <el-button @click="dialogFormVisible1 = false;">
                         关闭
                     </el-button>
                 </div>
@@ -144,19 +143,13 @@
         <ul v-show="menuVisible" id="menu">
             <li
                 class="menuli"
-                @click="
-                    dialogFormVisible1 = true;
-                    sibling = true;
-                    addDep.parentName = clickTreeNode.parentName;"
+                @click="menuClick(true, clickTreeNode.parentName, clickTreeNode.parentId)"
             >
                 新增同级
             </li>
             <li
                 class="menuli"
-                @click="
-                    dialogFormVisible1 = true;
-                    sibling = false;
-                    addDep.parentName = clickTreeNode.deptName;"
+                @click="menuClick(false, clickTreeNode.deptName, clickTreeNode.id)"
             >
                 新增下级
             </li>
@@ -170,7 +163,11 @@ import { COMMON_API } from 'common/api/api';
 
 @Component
 export default class OrgStructure extends Vue {
-    $refs: {tree: HTMLFormElement}
+    $refs: {
+        tree: HTMLFormElement;
+        dataForm: HTMLFormElement;
+    };
+
     filterText = ''
     FILE_API = ''
     dialogImageUrl = ''
@@ -193,7 +190,13 @@ export default class OrgStructure extends Vue {
     }
 
     mounted() {
-        this.FILE_API = process.env.VUE_APP_HOST;
+        COMMON_API.UPLOADFILE_API({
+            name: 'factory3.png'
+        }).then(({ data }) => {
+            if (data.code === 200) {
+                this.FILE_API = data.data.url
+            }
+        });
         this.getTree(true);
         this.getDictList();
         document.addEventListener('click', e => {
@@ -246,6 +249,17 @@ export default class OrgStructure extends Vue {
         menu.style.top = event.clientY + 'px';
     }
 
+    menuClick(sibling, parentName, parentId) {
+        this.dialogFormVisible1 = true;
+        setTimeout(() => {
+            this.addDep = {}
+            this.fileList = []
+            this.sibling = sibling;
+            this.addDep.parentName = parentName;
+            this.addDep.parentId = parentId;
+        }, 100)
+    }
+
     // 获取部门类型
     getDictList() {
         COMMON_API.DICTQUERY_API({
@@ -260,11 +274,6 @@ export default class OrgStructure extends Vue {
     // 新增部门
     addOrg() {
         this.addDep.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        if (this.sibling) {
-            this.addDep.parentId = this.clickTreeNode.parentId;
-        } else {
-            this.addDep.parentId = this.clickTreeNode.id;
-        }
         COMMON_API.ADDORG_API(this.addDep).then(({ data }) => {
             if (data.code === 200) {
                 this.$successToast('操作成功');
@@ -327,11 +336,12 @@ export default class OrgStructure extends Vue {
 
     // 上传图片后
     addfile(res) {
-        this.fileList = []
-        this.fileList[0] = {};
-        this.fileList[0].name = '';
-        this.fileList[0].url = 'data:image/gif;base64,' + res;
-        this.OrgDetail.imgUrl = res;
+        console.log(res);
+        // this.fileList = []
+        // this.fileList[0] = {};
+        // this.fileList[0].name = '';
+        // this.fileList[0].url = 'data:image/gif;base64,' + res;
+        // this.OrgDetail.imgUrl = res;
     }
 
     DeptAddfile(res) {
@@ -389,6 +399,31 @@ interface FileObject {
         line-height: 28px;
     }
 }
+.el-form-item {
+    /* float: left; */
+}
+
+.org-img-upload {
+    width: 250px;
+    height: 48px;
+
+    ::v-deep .el-upload--picture-card {/* stylelint-disable-line */
+        width: 60px;
+        height: 60px;
+        line-height: 70px;
+    }
+
+    ::v-deep .el-upload-list--picture-card .el-upload-list__item {/* stylelint-disable-line */
+        width: 60px;
+        height: 60px;
+    }
+}
+
+.limit-upload {
+    ::v-deep .el-upload--picture-card {/* stylelint-disable-line */
+        display: none;
+    }
+}
 
 .org-card {
     position: relative;
@@ -434,32 +469,6 @@ interface FileObject {
             min-width: 700px;
             margin: auto;
             text-align: center;
-
-            .el-form-item {
-                /* float: left; */
-            }
-
-            .org-img-upload {
-                width: 250px;
-                height: 48px;
-
-                ::v-deep .el-upload--picture-card {/* stylelint-disable-line */
-                    width: 60px;
-                    height: 60px;
-                    line-height: 70px;
-                }
-
-                ::v-deep .el-upload-list--picture-card .el-upload-list__item {/* stylelint-disable-line */
-                    width: 60px;
-                    height: 60px;
-                }
-            }
-
-            .limit-upload {
-                ::v-deep .el-upload--picture-card {/* stylelint-disable-line */
-                    display: none;
-                }
-            }
         }
     }
 

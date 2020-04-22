@@ -610,7 +610,7 @@
                 }).then(() => {
                     this.savedOrSubmitForm('submit');
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             // 保存
@@ -668,7 +668,7 @@
                             this.isRedact = false;
                         })
                         .catch(() => {
-                            this.$errorTost('网络请求失败，请刷新重试');
+                            this.$errorToast('网络请求失败，请刷新重试');
                         });
                 });
             },
@@ -683,7 +683,7 @@
                     if (data.code === 0) {
                         this.userList = data.page.list;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -691,27 +691,27 @@
                 let ty = true;
                 if (!this.tech.inCheck || this.tech.inCheck === '') {
                     ty = false;
-                    this.$warningTost('入曲检查必填');
+                    this.$warningToast('入曲检查必填');
                     return false;
                 }
                 if (!this.tech.inCheckMan || this.tech.inCheckMan === '') {
                     ty = false;
-                    this.$warningTost('检查人必填');
+                    this.$warningToast('检查人必填');
                     return false;
                 }
                 if (!this.tech.inStartTime || this.tech.inStartTime === '') {
                     ty = false;
-                    this.$warningTost('入曲开始时间为必填');
+                    this.$warningToast('入曲开始时间为必填');
                     return false;
                 }
                 if (!this.tech.inEndTime || this.tech.inEndTime === '') {
                     ty = false;
-                    this.$warningTost('入曲结束时间为必填');
+                    this.$warningToast('入曲结束时间为必填');
                     return false;
                 }
                 if (this.lookList.length === 0) {
                     ty = false;
-                    this.$warningTost('看曲记录未填');
+                    this.$warningToast('看曲记录未填');
                     return false;
                 }
                 for (const items of this.lookList) {
@@ -719,25 +719,25 @@
                         if (items.guardTime === '' || items.windTemp === '' || items.productTemp === '' || items.windSpeed === '' || items.windInFlag === '' || items.forceOutFlag === '' || items.jiashiFlag === '' || items.jiareFlag === '' || items.productTempOutsideUp === '' || items.productTempOutsideMid === '' || items.productTempOutsideDown === '' || items.thermometerOut === '' || items.thermometerInner === '' || items.productTempOutsideUp === '' || items.productTempOutsideMid === '' || items.productTempOutsideDown === '') {
                             // if (!items.guardTime || items.guardTime === '' || !items.guardTime || items.guardTime === '' || !items.windTemp || items.windTemp === '' || !items.productTemp || items.productTemp === '' || !items.windSpeed || items.windSpeed === '' || !items.windInFlag || items.windInFlag === '' || !items.forceOutFlag || items.forceOutFlag === '' || !items.jiashiFlag || items.jiashiFlag === '' || !items.jiareFlag || items.jiareFlag === '' || !items.productTempUp || items.productTempUp === '' || !items.productTempMid || items.productTempMid === '' || !items.productTempDown || items.productTempDown === '' || !items.thermometerOut || items.thermometerOut === '' || !items.thermometerInner || items.thermometerInner === '') {
                             ty = false;
-                            this.$warningTost('看曲记录必填项未填');
+                            this.$warningToast('看曲记录必填项未填');
                             return false;
                         }
                     }
                 }
                 if (!this.tech.overStartWeight || !this.tech.overEndWeight || this.tech.overStartWeight === '' || this.tech.overEndWeight === '') {
                     ty = false;
-                    this.$warningTost('请填写翻曲加水记录');
+                    this.$warningToast('请填写翻曲加水记录');
                     return false;
                 }
                 if (this.tech.overWeight < 0) {
                     ty = false;
-                    this.$warningTost('翻曲加水量不能为负数');
+                    this.$warningToast('翻曲加水量不能为负数');
                     return false;
                 }
                 this.assessList.map(item => {
                     if (typeof item.codeU === 'undefined' || typeof item.codeS === 'undefined' || typeof item.codeA === 'undefined') {
                         ty = false;
-                        this.$warningTost('感官评价记录必须全选');
+                        this.$warningToast('感官评价记录必须全选');
                         return false;
                     }
                 });
@@ -777,7 +777,7 @@
                 }).then(() => {
                     row.delFlag = '1';
                 }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             rowDelFlag({ row }) {
@@ -793,7 +793,7 @@
                 this.$http(`${KJM_API.DOULOOKSTATUS_API}`, 'POST', { status: this.statuss, orderHouseId: this.formHeader.orderHouseId })
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -815,7 +815,7 @@
                 this.$http(`${KJM_API.DOULOOKZHUSAVE_API}`, 'POST', this.tech)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -831,7 +831,7 @@
                 this.$http(`${KJM_API.DOULOOKKANQUSAVE_API}`, 'POST', this.lookList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -859,7 +859,7 @@
                 this.$http(`${KJM_API.DOULOOKGANGUANSAVE_API}`, 'POST', this.assessList)
                     .then(({ data }) => {
                         if (data.code !== 0) {
-                            this.$errorTost(data.msg);
+                            this.$errorToast(data.msg);
                         }
                         if (resolve) {
                             resolve('resolve');
@@ -884,7 +884,7 @@
                         this.assessList = data.feelList;
                         this.lookList = data.recordList;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -906,7 +906,7 @@
                             this.$refs.recordTable.bodyWrapper.scrollTop = this.$refs.recordTable.bodyWrapper.scrollHeight;
                         });
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }

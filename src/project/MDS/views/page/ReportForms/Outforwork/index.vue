@@ -115,7 +115,7 @@ export default {
                             ? this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1).slice(1)
                             : this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
                 this.lodingS = false;
             });
@@ -133,7 +133,7 @@ export default {
                     }, 4000);
                 } else {
                     this.lodingS = false;
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
             // let that = this
@@ -173,7 +173,7 @@ export default {
                     } else {
                         this.lodingS = false;
                         clearInterval(this.ExportTime);
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 })
                 .catch(() => {

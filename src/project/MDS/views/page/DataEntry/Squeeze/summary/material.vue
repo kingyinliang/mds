@@ -266,7 +266,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -279,7 +279,7 @@ export default {
                     if (data.code === 0) {
                         this.MaterialAudit = data.listRecord;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             }
@@ -324,7 +324,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -380,7 +380,7 @@ export default {
                 if (item.delFlag !== '1') {
                     if (!item.material.childPotNo && !item.material.childUsedAmount) {
                         ty = false;
-                        this.$warningTost('物料领用必填项未填写');
+                        this.$warningToast('物料领用必填项未填写');
                         return false;
                     }
                         this.sumAmount2[item.material.childPotNo]
@@ -392,7 +392,7 @@ export default {
             Object.keys(this.sumAmount2).forEach(key => {
                 if (this.sumAmount2[key] - (this.sumAmount1[key] ? this.sumAmount1[key] : 0) > (this.potList.filter(it => it.holderId === key).length ? this.potList.filter(it => it.holderId === key)[0].sumAmount : 0)) {
                     ty = false;
-                    this.$warningTost('剩余量不足');
+                    this.$warningToast('剩余量不足');
                     return false;
                 }
             });
@@ -411,14 +411,14 @@ export default {
             //   console.log(key, this.sumAmount2[key], this.sumAmount1[key])
             //   if (this.sumAmount2[key] - (this.sumAmount1[key] ? this.sumAmount1[key] : 0) > (this.potList.filter(it => it.holderId === key).length ? this.potList.filter(it => it.holderId === key)[0].sumAmount : 0)) {
             //     ty = false
-            //     this.$warningTost('剩余量不足')
+            //     this.$warningToast('剩余量不足')
             //     return false
             //   }
             // })
             for (const item of this.SumDate) {
                 if (item.material.childFullPotAmount < 0) {
                     ty = false;
-                    this.$warningTost('剩余量不足');
+                    this.$warningToast('剩余量不足');
                     return false;
                 }
             }
@@ -470,10 +470,10 @@ export default {
                     this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = newAmount;
                     this.ChangeDataListFullAmount(row.material.childPotNo, newAmount);
                 } else {
-                    this.$warningTost('此订单最后一条了，不能删除');
+                    this.$warningToast('此订单最后一条了，不能删除');
                 }
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         },
         RowDelFlag({ row }) {
@@ -498,7 +498,7 @@ export default {
                     if (reject) {
                         reject(data.msg);
                     }
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },

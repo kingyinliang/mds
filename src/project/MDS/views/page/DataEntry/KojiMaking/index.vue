@@ -689,19 +689,19 @@ export default class Index extends Vue {
 
     getOrderList() {
         if (this.params.factoryId === '') {
-            Vue.prototype.$warningTost('请选择工厂');
+            Vue.prototype.$warningToast('请选择工厂');
             return;
         }
         if (this.params.workshopId === '') {
-            Vue.prototype.$warningTost('请选择车间');
+            Vue.prototype.$warningToast('请选择车间');
             return;
         }
         if ((this.params.zqDate === '' || !this.params.zqDate) && this.params.orderNo === '') {
-            Vue.prototype.$warningTost('制曲日期或订单请选填一项');
+            Vue.prototype.$warningToast('制曲日期或订单请选填一项');
             return false;
         }
         if (this.params.productStatus === '') {
-            Vue.prototype.$warningTost('请选择生产状态');
+            Vue.prototype.$warningToast('请选择生产状态');
             return;
         }
         // 保存选项值到common store
@@ -791,7 +791,7 @@ export default class Index extends Vue {
                     .then(({ data }) => {
                         if (data.code === 0) {
                             this.datalist.splice(this.datalist.indexOf(row), 1);
-                            Vue.prototype.$successTost('删除成功!');
+                            Vue.prototype.$successToast('删除成功!');
                         } else {
                             this.$notify.error({
                                 title: '错误',
@@ -800,7 +800,7 @@ export default class Index extends Vue {
                         }
                     });
             }).catch(() => {
-                // this.$infoTost('已取消删除');
+                // this.$infoToast('已取消删除');
             });
         } else {
             // 新增数据前端删除
@@ -825,14 +825,14 @@ export default class Index extends Vue {
                     officialWorker.init(row.deptId, row.userId);
                 });
             } else {
-                Vue.prototype.$warningTost('请选择工序');
+                Vue.prototype.$warningToast('请选择工序');
             }
         } else if (row.userType === EMPType.TEMP) {
             this.$nextTick(() => {
                 temporaryWorker.init(row);
             });
         } else {
-            Vue.prototype.$warningTost('请选择人员属性');
+            Vue.prototype.$warningToast('请选择人员属性');
         }
     }
 
@@ -858,7 +858,7 @@ export default class Index extends Vue {
 
     save() {
         if (!this.datalist || this.datalist.length === 0) {
-            Vue.prototype.$warningTost('请先新增数据');
+            Vue.prototype.$warningToast('请先新增数据');
             return;
         }
         this.$confirm('确认保存，是否继续?', '提示', {
@@ -868,37 +868,37 @@ export default class Index extends Vue {
         }).then(() => {
             for (const item of this.datalist) {
                 if (!item.classType) {
-                    Vue.prototype.$warningTost({
+                    Vue.prototype.$warningToast({
                         title: '错误',
                         message: '班次不能为空'
                     });
                     return;
                 }
                 if (!item.deptId || item.deptId === '') {
-                    Vue.prototype.$warningTost({
+                    Vue.prototype.$warningToast({
                         title: '错误',
                         message: '工序不能为空'
                     });
                     return;
                 }
                 if (!item.userType) {
-                    Vue.prototype.$warningTost('人员属性不能为空');
+                    Vue.prototype.$warningToast('人员属性不能为空');
                     return;
                 }
                 if (!item.userId || item.userId.length === 0) {
-                    Vue.prototype.$warningTost('作业人员不能为空');
+                    Vue.prototype.$warningToast('作业人员不能为空');
                     return;
                 }
                 if (!item.startDate || item.startDate === '') {
-                    Vue.prototype.$warningTost('开始时间不能为空');
+                    Vue.prototype.$warningToast('开始时间不能为空');
                     return;
                 }
                 if (!item.dinner || item.dinner === '') {
-                    Vue.prototype.$warningTost('用餐时间不能为空');
+                    Vue.prototype.$warningToast('用餐时间不能为空');
                     return;
                 }
                 if (!item.endDate || item.endDate === '') {
-                    Vue.prototype.$warningTost('结束时间不能为空');
+                    Vue.prototype.$warningToast('结束时间不能为空');
                     return;
                 }
             }
@@ -906,7 +906,7 @@ export default class Index extends Vue {
                 .$http(`${WHT_API.CINDEXUPDATEUSER}`, 'POST', this.datalist)
                 .then(({ data }) => {
                     if (data.code === 0) {
-                        Vue.prototype.$successTost('操作成功');
+                        Vue.prototype.$successToast('操作成功');
                     } else {
                         this.$notify.error({ title: '错误', message: data.msg });
                     }
@@ -918,7 +918,7 @@ export default class Index extends Vue {
                     });
                 });
         }).catch(() => {
-            // this.$infoTost('已取消删除');
+            // this.$infoToast('已取消删除');
         });
     }
 

@@ -100,7 +100,7 @@ export default {
                     if (data.code === 0) {
                         this.dataForm = data.user;
                     } else {
-                        this.$errorTost(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             } else {
@@ -128,13 +128,13 @@ export default {
                                 // 修改
                                 this.$http(`${SYSTEMSETUP_API.USERUPDATE_API}`, 'POST', this.dataForm).then(({ data }) => {
                                     if (data.code === 0) {
-                                        this.$successTost('操作成功');
+                                        this.$successToast('操作成功');
                                         this.type = true;
                                         this.visible = false;
                                         this.$emit('refreshDataList');
                                     } else {
                                         this.type = true;
-                                        this.$errorTost(data.msg);
+                                        this.$errorToast(data.msg);
                                     }
                                 });
                             } else {
@@ -142,13 +142,13 @@ export default {
                                 this.dataForm.deptId = this.deptId;
                                 this.$http(`${SYSTEMSETUP_API.USERADD_API}`, 'POST', this.dataForm).then(({ data }) => {
                                     if (data.code === 0) {
-                                        this.$successTost('操作成功');
+                                        this.$successToast('操作成功');
                                         this.type = true;
                                         this.visible = false;
                                         this.$emit('refreshDataList');
                                     } else {
                                         this.type = true;
-                                        this.$errorTost(data.msg);
+                                        this.$errorToast(data.msg);
                                     }
                                 });
                             }

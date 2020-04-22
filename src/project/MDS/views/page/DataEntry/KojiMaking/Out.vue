@@ -149,22 +149,22 @@ export default {
     methods: {
         getOrderList() {
             if (this.params.factoryId === '') {
-                this.$warningTost('请选择工厂');
+                this.$warningToast('请选择工厂');
                 return;
             }
             if (this.params.workShop === '') {
-                this.$warningTost('请选择车间');
+                this.$warningToast('请选择车间');
                 return;
             }
             if (this.params.type === '') {
-                this.$warningTost('请选择类型');
+                this.$warningToast('请选择类型');
                 return;
             }
             this.$http(`${KJM_API.KJMAKINGORDERLIST_API}`, 'POST', this.params).then(({ data }) => {
                 if (data.code === 0) {
                     this.orderList = this.ProcessingData(data.list);
                 } else {
-                    this.$errorTost(data.msg);
+                    this.$errorToast(data.msg);
                 }
             });
         },
