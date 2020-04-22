@@ -135,7 +135,7 @@ export default {
                 this.$notify.error({ title: '错误', message: '请选择组织层级' });
                 return;
             }
-            COMMON_API.USER_QUERY_API({
+            COMMON_API.USER_ROLE_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.deptID,
                 realName: this.condition.param,
@@ -169,12 +169,11 @@ export default {
                     this.$refs.addOrUpdateuUser.init(this.deptID, this.deptName, id);
                 });
             } else {
-                this.$notify.error({ title: '错误', message: '请重新登入' });
+                this.$notify.error({ title: '错误', message: '请先选择部门' });
             }
         },
         // 删除
         removeUser() {
-            console.log(this.multipleSelection)
             if (this.multipleSelection.length === 0) {
                 this.$notify.error({
                     title: '错误',
@@ -184,8 +183,10 @@ export default {
                 const roleName = [];
                 const userID = [];
                 this.multipleSelection.forEach(item => {
-                    if (item.realName) {
-                        roleName.push(item.realName);
+                    if (item.roles) {
+                        item.roles.forEach(subItem => {
+                            roleName.push(subItem.roleName);
+                        })
                     }
                     userID.push(item.id);
                 });
