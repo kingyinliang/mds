@@ -311,7 +311,12 @@
                                     this.$refs[linkagePropItemObj.prop][0].emitChange('');
                                     // 获取联动的下拉
                                     if (val) {
-                                        linkagePropItemObj.optionsFn(val).then(({ data }) => {
+                                        let secondVal = '';
+                                        if (linkagePropItemObj.returnValue) {
+                                            // 抓取其他接口返回的其他参数
+                                            secondVal = this.optionLists[linkagePropItemObj.returnValue.findList].find(it => it[linkagePropItemObj.returnValue.findId] === val)[linkagePropItemObj.returnValue.findField]
+                                        }
+                                        linkagePropItemObj.optionsFn(val, secondVal).then(({ data }) => {
                                             if (data.code === 0) {
                                                 const getPath = creatGetPath(linkagePropItemObj.resVal.resData);
                                                 const dataTemp = getPath(data);
