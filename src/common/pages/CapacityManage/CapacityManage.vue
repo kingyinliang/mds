@@ -156,7 +156,7 @@
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             ids: this.multipleSelection
                         }).then(({ data }) => {
-                            if (data.code === 0) {
+                            if (data.code === 200) {
                                 this.$successToast('删除成功!');
                                 this.multipleSelection = [];
                                 this.getData();
