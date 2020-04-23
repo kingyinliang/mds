@@ -25,7 +25,7 @@
                             <el-dropdown-item @click.native="updatePassword">
                                 修改密码
                             </el-dropdown-item>
-                            <el-dropdown-item @click.native="SelectFactory" v-if="factory.length > 1">
+                            <el-dropdown-item v-if="factory.length > 1" @click.native="selectFactory">
                                 选择工厂
                             </el-dropdown-item>
                             <el-dropdown-item @click.native="logoutHandle()">
@@ -50,7 +50,7 @@ export default {
             type: Function,
             default: () => 1
         },
-        SelectFactory: {
+        selectFactory: {
             type: Function,
             default: () => {
                 //    s

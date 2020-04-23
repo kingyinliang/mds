@@ -175,4 +175,4 @@ export function generateUuid(len: number, radix: number) {
         }
     }
     return uuid.join('');
-};
+}

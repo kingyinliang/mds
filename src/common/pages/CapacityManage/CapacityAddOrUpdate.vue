@@ -9,7 +9,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="标准产能：" prop="basicCapacity">
-                    <el-input type="number" v-model="dataForm.basicCapacity" placeholder="手动输入" />
+                    <el-input v-model="dataForm.basicCapacity" type="number" placeholder="手动输入" />
                 </el-form-item>
                 <el-form-item label="设计产能：" prop="designCapacity">
                     <el-input v-model="dataForm.designCapacity" placeholder="手动输入" />

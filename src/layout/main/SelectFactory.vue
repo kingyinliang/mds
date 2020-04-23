@@ -15,7 +15,7 @@
                         <!--@click="setOther(index)"-->
                         <!--/>-->
                     </div>
-                    <div @click="goFa(item)" style="cursor: pointer;">
+                    <div style="cursor: pointer;" @click="goFa(item)">
                         <img :src="'../static/img/factory'+ index + '.png'" alt="">
                     </div>
                 </div>

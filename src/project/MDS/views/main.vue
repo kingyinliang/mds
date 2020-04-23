@@ -1,7 +1,7 @@
 <template>
     <div class="site-wrapper" :class="{ 'site-sidebar--fold': sidebarFold }">
         <template v-if="!loading">
-            <main-navbar :update-password="updatePassword"  :select-factory="SelectFactory"/>
+            <main-navbar :update-password="updatePassword" :select-factory="SelectFactory" />
             <main-sidebar />
             <div class="site-content__wrapper" :style="{ 'min-height': documentClientHeight + 'px' }">
                 <main-content />
@@ -9,7 +9,7 @@
             <scroll-top />
         </template>
         <update-pass v-if="pasVisible" id="upPass" ref="upPass" :refresh-data-list="refreshDataList" />
-        <select-factory v-if="factoryVisible" ref="selectfactory"></select-factory>
+        <select-factory v-if="factoryVisible" ref="selectfactory" />
     </div>
 </template>
 
