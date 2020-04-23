@@ -975,7 +975,10 @@ export const REP_API = {
     STERILIZATIONFILTRATION_EXPORT_API: HOST + '/report/res/expectFilterTrace', // 存储时间追溯
     /** *************************** 原汁车间 *******************************************/
     JUICEMOVE_LIST_API: HOST + '/report/res/juiceMove', // 原汁移动报表
-    JUICEMOVE_EXPORT_API: HOST + '/report/res/expectJuiceMove'
+    JUICEMOVE_EXPORT_API: HOST + '/report/res/expectJuiceMove',
+    /** *************************** 原料领用汇总 *******************************************/
+    KJMWHEATPULP_LIST_API: HOST + '/report/res/kjmWheatPulp', // 原汁移动报表
+    KJMWHEATPULP_EXPORT_API: HOST + '/report/res/expectKjmWheatPulp'
 };
 /*
  *炒麦api
