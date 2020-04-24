@@ -18,7 +18,7 @@
                             <el-form-item label="品项：">
                                 <el-select v-model="plantList.material" filterable placeholder="请选择">
                                     <el-option label="请选择" value="" />
-                                    <el-option v-for="item in SerchSapList" :key="item.sapCode + '-' + item.itemId" :label="item.sapCode + ' ' + item.itemName" :value="item.sapCode + ' ' + item.itemName" />
+                                    <el-option v-for="item in SerchSapList" :key="item.sapCode + '-' + item.itemName" :label="item.sapCode + ' ' + item.itemName" :value="item.sapCode + ' ' + item.itemName" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="生产日期：" class="dateinput">
