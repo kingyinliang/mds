@@ -10,7 +10,6 @@
                     </el-form-item>
                     <el-form-item label="生产车间：">
                         <el-select v-model="plantList.workshopIDValue" class="selectwpx" style="width: 140px;" :disabled="plantList.factoryIDValue === '' || workshopList.length === 0" @change="changeWorkshopOptions(plantList.workshopIDValue)">
-                            <el-option label="请选择" value="" />
                             <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
                         </el-select>
                     </el-form-item>
