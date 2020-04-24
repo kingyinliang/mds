@@ -11,18 +11,21 @@ module.exports = {
         title: '欣和-制造管理系统',
         entry: 'src/project/LOGIN/main.ts',
         template: 'public/index.html',
-        filename: 'index.html'
+        filename: 'index.html',
+        chunk: ["chunk-vendors", "chunk-common", 'index']
     },
     MDS: {
         title: '欣和-制造管理系统',
         entry: 'src/project/MDS/main.ts',
         template: 'public/MDS.html',
-        filename: 'MDS.html'
+        filename: 'MDS.html',
+        chunk: ["chunk-vendors", "chunk-common", 'MDS']
     },
     DFMDS: {
         title: '欣和-制造管理系统',
         entry: 'src/project/DFMDS/main.ts',
         template: 'public/DFMDS.html',
-        filename: 'DFMDS.html'
+        filename: 'DFMDS.html',
+        chunk: ["chunk-vendors", "chunk-common", 'DFMDS']
     },
 }

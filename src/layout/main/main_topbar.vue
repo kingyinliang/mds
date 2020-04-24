@@ -25,6 +25,9 @@
                             <el-dropdown-item @click.native="updatePassword">
                                 修改密码
                             </el-dropdown-item>
+                            <el-dropdown-item v-if="factory.length > 1" @click.native="selectFactory">
+                                选择工厂
+                            </el-dropdown-item>
                             <el-dropdown-item @click.native="logoutHandle()">
                                 退出
                             </el-dropdown-item>
@@ -46,11 +49,18 @@ export default {
         updatePassword: {
             type: Function,
             default: () => 1
+        },
+        selectFactory: {
+            type: Function,
+            default: () => {
+            //    s
+            }
         }
     },
     data() {
         return {
-            visible: false
+            visible: false,
+            factory: JSON.parse(sessionStorage.getItem('userFactory') || '[]')
         };
     },
     computed: {

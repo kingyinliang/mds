@@ -4,8 +4,8 @@ const StyleLintPlugin = require('stylelint-webpack-plugin')
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
-const IS_PROD = ['production', 'test', 'development'].includes(process.env.NODE_ENV)
-
+const IS_PROD = ['production', 'uat', 'development'].includes(process.env.NODE_ENV)
+console.log(IS_PROD);
 const pagesInfo = require('./pages.config')
 
 const resolve = (dir) => {
@@ -13,7 +13,7 @@ const resolve = (dir) => {
 }
 
 module.exports = {
-    productionSourceMap: !IS_PROD,
+    productionSourceMap: !IS_PROD, // 生产环境的 source map
     lintOnSave: 'warning',
     pages: pagesInfo,
     // css: {
@@ -58,64 +58,51 @@ module.exports = {
         // 修复HMR
         config.resolve.symlinks(true)
         // Chunks
-        // config.optimization.splitChunks({
-        //     cacheGroups: {
-        //         common: {
-        //             name: "chunk-common",
-        //             chunks: "initial",
-        //             minChunks: 2,
-        //             maxInitialRequests: 5,
-        //             minSize: 0,
-        //             priority: 1,
-        //             reuseExistingChunk: true,
-        //             enforce: true
-        //         },
-        //         vendors: {
-        //             name: "chunk-vendors",
-        //             test: /[\\/]node_modules[\\/]/,
-        //             chunks: "initial",
-        //             priority: 2,
-        //             reuseExistingChunk: true,
-        //             enforce: true
-        //         },
-        //         elementUI: {
-        //             name: "chunk-elementui",
-        //             test: /[\\/]node_modules[\\/]element-ui[\\/]/,
-        //             chunks: "all",
-        //             priority: 3,
-        //             reuseExistingChunk: true,
-        //             enforce: true
-        //         },
-        //         echarts: {
-        //             name: "chunk-echarts",
-        //             test: /[\\/]node_modules[\\/](vue-)?echarts[\\/]/,
-        //             chunks: "all",
-        //             priority: 4,
-        //             reuseExistingChunk: true,
-        //             enforce: true
-        //         }
-        //     }
-        // });
-        // 压缩图片
+        config.optimization.splitChunks({
+            chunks: 'all',// async表示抽取异步模块，all表示对所有模块生效，initial表示对同步模块生效
+            cacheGroups: {
+                vendors: {
+                    test: /[\/]node_modules[\/]/,// 指定是node_modules下的第三方包
+                    name: 'chunk-vendors',
+                    chunks: 'all',
+                    priority: -10   // 抽取优先级
+                },
+                // 抽离自定义工具库
+                utilCommon: {
+                    name: 'chunk-common',
+                    minSize: 1024, // 将引用模块分离成新代码文件的最小体积
+                    minChunks: 2, // 表示将引用模块如不同文件引用了多少次，才能分离生成新chunk
+                    priority: -20
+                }
+            }
+        });
         if (IS_PROD) {
-            // 压缩图片
+            // 压缩代码
+            config.optimization.minimize(true);
+            // 图片大的打包成base64
             config.module
                 .rule('images')
-                .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
-                .use('image-webpack-loader')
-                .loader('image-webpack-loader')
-                .options({
-                    mozjpeg: {
-                        progressive: true,
-                        quality: 65
-                    },
-                    optipng: { enabled: false },
-                    pngquant: {
-                        quality: [0.65, 0.90],
-                        speed: 4
-                    },
-                    gifsicle: { interlaced: false }
-                })
+                .use('url-loader')
+                .loader('url-loader')
+                .tap(options => Object.assign(options, { limit: 1024 }))
+            // 压缩图片
+            // config.module
+            //     .rule('images')
+            //     .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
+            //     .use('image-webpack-loader')
+            //     .loader('image-webpack-loader')
+            //     .options({
+            //         mozjpeg: {
+            //             progressive: true,
+            //             quality: 65
+            //         },
+            //         optipng: { enabled: false },
+            //         pngquant: {
+            //             quality: [0.65, 0.90],
+            //             speed: 4
+            //         },
+            //         gifsicle: { interlaced: false }
+            //     })
         }
         // 添加打包分析
         if (process.env.npm_config_report) {
@@ -127,6 +114,8 @@ module.exports = {
                 openAnalyzer: true
             }])
         }
+        // hash解决缓存
+        config.output.filename('[name].[hash].js').end();
     }
 }
 

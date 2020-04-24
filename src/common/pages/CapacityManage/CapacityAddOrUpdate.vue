@@ -9,7 +9,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="标准产能：" prop="basicCapacity">
-                    <el-input type="number" v-model="dataForm.basicCapacity" placeholder="手动输入" />
+                    <el-input v-model="dataForm.basicCapacity" type="number" placeholder="手动输入" />
                 </el-form-item>
                 <el-form-item label="设计产能：" prop="designCapacity">
                     <el-input v-model="dataForm.designCapacity" placeholder="手动输入" />
@@ -147,6 +147,7 @@ export default {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     this.dataForm.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    this.dataForm.materialName = this.serchSapList.filter(item => item.materialCode === this.dataForm.materialCode)[0].materialName;
                     let http;
                     this.CapacityId ? http = COMMON_API.CAPACITYUPDATA_API : http = COMMON_API.CAPACITYADD_API;
                     http(this.dataForm).then(({ data }) => {

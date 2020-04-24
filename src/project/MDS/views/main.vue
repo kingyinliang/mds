@@ -1,7 +1,7 @@
 <template>
     <div class="site-wrapper" :class="{ 'site-sidebar--fold': sidebarFold }">
         <template v-if="!loading">
-            <main-navbar :update-password="updatePassword" />
+            <main-navbar :update-password="updatePassword" :select-factory="SelectFactory" />
             <main-sidebar />
             <div class="site-content__wrapper" :style="{ 'min-height': documentClientHeight + 'px' }">
                 <main-content />
@@ -9,12 +9,14 @@
             <scroll-top />
         </template>
         <update-pass v-if="pasVisible" id="upPass" ref="upPass" :refresh-data-list="refreshDataList" />
+        <select-factory v-if="factoryVisible" ref="selectfactory" />
     </div>
 </template>
 
 <script>
 import UpdatePass from '@/views/common/UpdatePass';
 import { MAIN_API } from '@/api/api';
+import SelectFactory from 'src/layout/main/SelectFactory';
 
 export default {
     name: 'MainFrame',
@@ -28,12 +30,14 @@ export default {
         MainNavbar: resolve => {
             require(['@/views/main_topbar'], resolve);
         },
-        UpdatePass
+        UpdatePass,
+        SelectFactory
     },
     data() {
         return {
             pasVisible: false,
-            loading: true
+            loading: true,
+            factoryVisible: false
         };
     },
     computed: {
@@ -84,6 +88,13 @@ export default {
     methods: {
         refreshDataList() {
             this.pasVisible = false;
+        },
+        // 选择工厂
+        SelectFactory() {
+            this.factoryVisible = true
+            this.$nextTick(() => {
+                this.$refs['selectfactory'].init();
+            });
         },
         // 修改密码
         updatePassword() {
