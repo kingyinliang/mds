@@ -52,7 +52,7 @@
                                         <el-input v-model="OrgDetail.costCenter" auto-complete="off" :disabled="isRedact" style="width: 250px;" />
                                     </el-form-item>
                                     <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="产线图片：" :class="{'limit-upload': fileList.length}">
-                                        <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :disabled="isRedact" :limit="1" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
+                                        <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :disabled="isRedact" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
                                             <i class="el-icon-plus" />
                                         </el-upload>
                                     </el-form-item>
@@ -160,7 +160,6 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { COMMON_API } from 'common/api/api';
-import { generateUuid } from 'utils/utils';
 import axios from 'axios';
 
 @Component
@@ -192,13 +191,6 @@ export default class OrgStructure extends Vue {
     }
 
     mounted() {
-        COMMON_API.UPLOADFILE_API({
-            name: generateUuid(32, 62)
-        }).then(({ data }) => {
-            if (data.code === 200) {
-                this.FILE_API = data.data.url
-            }
-        });
         this.getTree(true);
         this.getDictList();
         document.addEventListener('click', e => {
@@ -234,7 +226,7 @@ export default class OrgStructure extends Vue {
                     this.fileList = []
                     this.fileList[0] = {};
                     this.fileList[0].name = '';
-                    this.fileList[0].url = 'data:image/gif;base64,' + this.OrgDetail.imgUrl;
+                    this.fileList[0].url = 'https://s3-033-shinho-mds-uat-bjs.s3.cn-north-1.amazonaws.com.cn/df-system/' + this.OrgDetail.imgUrl;
                 } else {
                     this.fileList = [];
                 }
@@ -325,35 +317,33 @@ export default class OrgStructure extends Vue {
 
     // 上传图片前
     httpRequest(options) {
-        console.log(options);
-        // const fileReader = new FileReader();
-        // const file = options.file;
-        // if (file) {
-        //     fileReader.readAsDataURL(file);
-        // }
-        // fileReader.onload = () => {
-        //     const base64Str = fileReader.result as string;
-        //     options.onSuccess(base64Str.split(',')[1], file);
-        // };
-        const form = new FormData();
-        // 文件对象
-        form.append('file', options.file);
-        axios.request({
-            url: this.FILE_API,
-            method: 'POST',
-            data: form
-        })
-        axios.put(this.FILE_API, form)
+        COMMON_API.UPLOADFILE_API({
+            name: options.file.name
+        }).then(({ data }) => {
+            if (data.code === 200) {
+                this.FILE_API = data.data.url
+                axios.put(data.data.url, options.file).then(res => {
+                    if (res.status === 200) {
+                        options.onSuccess(data.data.key, options);
+                    }
+                })
+            }
+        });
     }
 
     // 上传图片后
-    addfile(res) {
-        console.log(res);
+    addfile(key, options) {
+        console.log(key);
+        console.log(options);
         // this.fileList = []
         // this.fileList[0] = {};
         // this.fileList[0].name = '';
         // this.fileList[0].url = 'data:image/gif;base64,' + res;
-        // this.OrgDetail.imgUrl = res;
+        if (this.dialogFormVisible1) {
+            this.addDep.imgUrl = key;
+        } else {
+            this.OrgDetail.imgUrl = key;
+        }
     }
 
     DeptAddfile(res) {
