@@ -5,7 +5,7 @@ const StyleLintPlugin = require('stylelint-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const IS_PROD = ['production', 'uat', 'development'].includes(process.env.NODE_ENV)
-console.log(IS_PROD);
+
 const pagesInfo = require('./pages.config')
 
 const resolve = (dir) => {
