@@ -223,10 +223,15 @@ export default class OrgStructure extends Vue {
             if (data.code === 200) {
                 this.OrgDetail = data.data;
                 if (this.OrgDetail.imgUrl) {
-                    this.fileList = []
-                    this.fileList[0] = {};
-                    this.fileList[0].name = '';
-                    this.fileList[0].url = 'https://s3-033-shinho-mds-uat-bjs.s3.cn-north-1.amazonaws.com.cn/df-system/' + this.OrgDetail.imgUrl;
+                    COMMON_API.DOWNLOADFILE_API({
+                        key: this.OrgDetail.imgUrl
+                    }).then((res) => {
+                        console.log(res);
+                        this.fileList = []
+                        this.fileList[0] = {};
+                        this.fileList[0].name = '';
+                        this.fileList[0].url = res.data.url;
+                    })
                 } else {
                     this.fileList = [];
                 }
