@@ -82,13 +82,10 @@
                 <el-form-item label="结束时间：" prop="endTime">
                     <el-date-picker v-model="workInfo.endTime" type="datetime" placeholder="选择时间" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" />
                 </el-form-item>
-                <el-form-item v-if="workInfo.content === '过滤' && workInfo.id === ''" label="领用罐号：">
+                <el-form-item v-if="workInfo.content === '过滤'" label="领用罐号：">
                     <el-select v-model="workInfo.holderId" filterable style="width: 220px;">
                         <el-option v-for="(sole, index) in holderList" :key="index" :value="sole.holderId" :label="sole.holderName" />
                     </el-select>
-                </el-form-item>
-                <el-form-item v-if="workInfo.id" label="领用罐号：">
-                    <el-select v-model="workInfo.holderName" :disabled="true" />
                 </el-form-item>
                 <el-form-item label="备注：">
                     <el-input v-model="workInfo.remark" style="width: 220px;" />
@@ -265,6 +262,14 @@ export default {
         EditInfo(row) {
             if (this.isRedact === true && row.status !== 'checked' && row.status !== 'submit') {
                 this.dialogVisible = true;
+                const holderInfo = this.holderList.find(item => item.holderId === row.holderId)
+                // eslint-disable-next-line
+                if (holderInfo === undefined) {
+                    this.holderList.push({
+                        holderId: row.holderId,
+                        holderName: row.holderName
+                    })
+                }
                 this.workInfo = Object.assign({}, row);
             }
         },
