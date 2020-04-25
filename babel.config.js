@@ -1,4 +1,4 @@
-const IS_PROD = ['production', 'uat', 'development'].includes(process.env.NODE_ENV);
+const IS_PROD = ['production'].includes(process.env.NODE_ENV);
 
 const plugins = [["component", { "libraryName": "element-ui", "styleLibraryName": "theme-chalk" }]];
 if (IS_PROD) {
