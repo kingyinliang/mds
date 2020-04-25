@@ -3,7 +3,9 @@ import axios from 'axios';
 import router from '@/router';
 import { HTTP_METHOD, HTTP_RESPONSE_STATE } from './http';
 import { Notification, Loading } from 'element-ui';
-
+const http = axios.create({
+    timeout: 1000
+});
 const HOST = process.env.VUE_APP_BASE_API + process.env.VUE_APP_API_V;
 
 let loading:any;// eslint-disable-line
@@ -41,7 +43,7 @@ export function tryHideFullScreenLoading() {
 /**
  * 请求拦截
  */
-axios.interceptors.request.use(
+http.interceptors.request.use(
     config => {
         if (Vue['cookie'].get('token')) {
             config.headers['Authorization'] = Vue['cookie'].get('token'); // 请求头带上token
@@ -56,7 +58,7 @@ axios.interceptors.request.use(
 /**
  * 响应拦截
  */
-axios.interceptors.response.use(
+http.interceptors.response.use(
     response => {
         if (response.data && response.data.code === HTTP_RESPONSE_STATE.SUCCESS) {
             //    成功
@@ -108,5 +110,5 @@ export default (url: string, method: any = HTTP_METHOD.GET, data = {}, ContentTy
         options['params'] = data;
     }
 
-    return axios(options);
+    return http(options);
 };

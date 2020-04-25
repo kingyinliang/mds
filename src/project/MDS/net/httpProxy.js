@@ -6,6 +6,9 @@ import { HTTP_METHOD } from './http';
 // import ElementUI from 'element-ui'
 import { Notification, Loading } from 'element-ui';
 // import storage, { AUTHORIZATION_KEY } from '@/storage/storage'
+const http = axios.create({
+    timeout: 1000
+});
 let loading;
 // 使用Element loading-start 方法
 function startLoading() {
@@ -78,7 +81,7 @@ export default (url, method = HTTP_METHOD.GET, data = {}, ContentType = false, r
     /**
      * 请求拦截
      */
-    axios.interceptors.request.use(
+    http.interceptors.request.use(
         config => {
             config.headers['Authorization'] = Vue.cookie.get('token'); // 请求头带上token
             showFullScreenLoading(); // 显示遮罩
@@ -91,7 +94,7 @@ export default (url, method = HTTP_METHOD.GET, data = {}, ContentType = false, r
     /**
      * 响应拦截
      */
-    axios.interceptors.response.use(
+    http.interceptors.response.use(
         response => {
             if (response.data && response.data.code === 401) {
                 // 401, token失效
@@ -119,5 +122,5 @@ export default (url, method = HTTP_METHOD.GET, data = {}, ContentType = false, r
         options.params = data;
     }
 
-    return axios(options);
+    return http(options);
 };
