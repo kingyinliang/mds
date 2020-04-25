@@ -90,6 +90,16 @@ const mainRoutes: RouteConfig = {
                 title: '容器管理',
                 isTab: true
             }
+        },
+        {
+            path: '/Specification',
+            name: 'Specification',
+            component: () => import('common/pages/SpecificationManage/index.vue'),
+            meta: {
+                menuId: 1,
+                title: '规格管理',
+                isTab: true
+            }
         }
     ],
     beforeEnter(to, from, next) {

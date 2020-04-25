@@ -146,6 +146,10 @@ export const COMMON_API = {
      */
     ORGDETAIL_API: params => httpProxy('/sysDept/query', 'GET', params),
     /**
+     * @property {string} ORG_QUERY_WORKSHOP_API 基础数据-组织架构-按工厂和类型查询组织机构
+     */
+    ORG_QUERY_WORKSHOP_API: params => httpProxy('/sysDept/getTypeDept', 'POST', params),
+    /**
      * @property {string} DICTQUERY_API 数据字典根据类型获取详情
      */
     DICTQUERY_API: params => httpProxy('/sysDictItem/dropDown', 'GET', params),
@@ -216,5 +220,33 @@ export const COMMON_API = {
     /**
      * @property {string} ALLMATERIAL_API 物料管理拿全部物料
      */
-    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params)
+    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params),
+    /**
+     * @property {string} Dictionary_dropDown_API 系统管理-数据字典-主表下拉
+     */
+    DICTIONARY_DROPDOWN_API: params => httpProxy('/sysDict/dropDown', 'GET', params),
+    /**
+     * @property {string} SPECS_DROPDOWN_API 基础数据--规格管理-下拉列表
+     */
+    SPECS_DROPDOWN_API: params => httpProxy('/sysSpecs/dropDown', 'POST', params),
+    /**
+     * @property {string} SPECS_INSERT_API 基础数据--规格管理-新增
+     */
+    SPECS_INSERT_API: params => httpProxy('/sysSpecs/insert', 'POST', params),
+    /**
+     * @property {string} SPECS_QUERY_API 基础数据--规格管理-列表
+     */
+    SPECS_QUERY_API: params => httpProxy('/sysSpecs/query', 'POST', params),
+    /**
+     * @property {string} SPECS_QUERY_BY_ID_API 基础数据--规格管理-详情
+     */
+    SPECS_QUERY_BY_ID_API: params => httpProxy('/sysSpecs/queryById', 'GET', params),
+    /**
+     * @property {string} SPECS_REMOVE_API 基础数据--规格管理-删除
+     */
+    SPECS_REMOVE_API: params => httpProxy('/sysSpecs/remove', 'POST', params),
+    /**
+     * @property {string} SPECS_UPDATE_API 基础数据--规格管理-修改
+     */
+    SPECS_UPDATE_API: params => httpProxy('/sysSpecs/update', 'POST', params)
 };
