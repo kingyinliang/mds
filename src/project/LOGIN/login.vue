@@ -182,6 +182,9 @@ export default {
         canvas.init();
     },
     methods: {
+        goDataViews() {
+            window.location.href = '/MDS.html#/DataEcharts/KojiMaking-DataScreening-index'
+        },
         goFa(item) {
             sessionStorage.setItem('vuex', '');
             if (item.deptCode === '6010' || item.deptCode === '7100' || item.deptCode === '7101') {
@@ -267,6 +270,8 @@ export default {
 
 <style lang="scss">
 .selectFa {
+    background: url("./assets/img/LoginToastBg.png") no-repeat;
+    background-size: 100% 100%;
     .el-dialog {
         width: 100%;
         background: none;
