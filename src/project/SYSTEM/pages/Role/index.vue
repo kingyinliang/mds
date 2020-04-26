@@ -6,7 +6,7 @@
                     <el-col>
                         <el-form :inline="true" :model="form" size="small" label-width="85px" class="topforms">
                             <el-form-item label="角色名称：">
-                                <el-input v-model="form.username" placeholder="角色名称" clearable />
+                                <el-input v-model="form.username" placeholder="角色名称" clearable @clear="getItemsList()" />
                             </el-form-item>
                         </el-form>
                     </el-col>
@@ -14,7 +14,7 @@
                         <el-button v-if="isAuth('sys:role:list')" type="primary" size="small" :disabled="form.username.trim()===''" @click="getItemsList(true,form.username)">
                             查询
                         </el-button>
-                        <el-button v-if="isAuth('sys:role:save')" type="primary" size="small" @click="addOrUpdateItem({style:'add',info:{}})">
+                        <el-button v-if="isAuth('sys:role:save')" type="primary" size="small" @click="addOrUpdateItem()">
                             新增
                         </el-button>
                     </el-col>
@@ -29,7 +29,7 @@
                                 <a v-if="isAuth('sys:role:updateuser')" style="margin-right: 0.3em;" @click="manageUser(scope.row.id)">人员管理</a>
                                 <a v-if="isAuth('sys:role:updatemenu')" style="margin-right: 0.3em;" @click="manageFunction(scope.row.id)">功能分配</a>
                                 <a v-if="isAuth('sys:role:updatedept')" style="margin-right: 0.3em;" @click="manageDepartment(scope.row.id)">部门分配</a>
-                                <a v-if="isAuth('sys:role:update')" style="margin-right: 0.3em;" @click="addOrUpdateItem({style:'modify',info:scope.row})">修改角色</a>
+                                <a v-if="isAuth('sys:role:update')" style="margin-right: 0.3em;" @click="addOrUpdateItem(scope.row)">修改角色</a>
                                 <a v-if="isAuth('sys:role:delete')" @click="removeItems(scope.row.id)">删除角色</a>
                             </template>
                         </el-table-column>
@@ -106,7 +106,7 @@
                     factory: this.factoryID,
                     current: JSON.stringify(this.currPage),
                     size: JSON.stringify(this.pageSize),
-                    roleName: searchWord
+                    roleName: searchWord.trim()
                 }).then(({ data }) => {
                     if (data.code === 200) {
                         if (haveParas && data.data.records.length === 0) {
@@ -149,13 +149,10 @@
                 });
             },
             // 新增或修改
-            addOrUpdateItem(styleInfo) {
+            addOrUpdateItem(obj) {
                 this.isRoleAddOrUpdateShow = true;
                 this.$nextTick(() => {
-                    this.$refs.addOrUpdateItem.init({
-                        roleStyle: styleInfo.style,
-                        roleInfo: styleInfo.info
-                    });
+                    this.$refs.addOrUpdateItem.init(obj);
                 });
             },
             // 删除角色
