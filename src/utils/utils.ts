@@ -92,7 +92,7 @@ export class AddRoutes {
                     route['meta']['iframeUrl'] = menuList[i].menuUrl;
                 } else {
                     try {
-                        route['component'] = importTarget(`MDS/views/page/${menuList[i].menuUrl}`) || null;
+                        route['component'] = importTarget(`${menuList[i].menuUrl}`) || null;
                     } catch (e) {
                         //
                     }
@@ -151,6 +151,10 @@ export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
 export function isAuth(key) {
     return JSON.parse(sessionStorage.getItem('permissions') || '[]').indexOf(key) !== -1 || false;
 }
+/**
+ * 生成id
+ * @param {*} len长度 radix
+ */
 export function generateUuid(len: number, radix: number) {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
     const uuid: Array<string> = [];

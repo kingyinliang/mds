@@ -22,7 +22,7 @@
                     <el-form-item label="生产状态：">
                         <el-select v-model="plantList.status" class="selectwpx" style="width: 140px;">
                             <el-option label="正常生产" value="normal" />
-                            <el-option v-if="isAuth('wht:user:listUser')" label="无生产" value="abnormal" />
+                            <el-option v-if="isAuth('wht:user:listUser')" label="无生产" value="abnormal" />2u/4
                         </el-select>
                     </el-form-item>
                     <el-form-item style="float: right;">
@@ -577,7 +577,6 @@ export default {
                 if (targetFactoryList && targetFactoryList['deptName']) {
                     this.fwFactoryName = targetFactoryList['deptName'];
                 }
-                console.log(this.plantList.workshopIDValue)
                 this.$http(`${WHT_API.CINDEXORDERLIST_API}`, 'POST', {
                     workShop: this.plantList.workshopIDValue,
                     productDate: this.plantList.productDate,
@@ -585,8 +584,6 @@ export default {
                 }).then(({ data }) => {
                     if (data.code === 0) {
                         if (data.list.length !== 0) {
-                            console.log('===normal===')
-                            console.log(data)
                             this.FryWheatList = orderList(data.list);
                             // this.workShop = this.plantList.workshopIDValue;
                             // this.workshopList = this.plantList.workshopIDValue;
@@ -611,8 +608,6 @@ export default {
                     productDate: this.plantList.productDate
                 }).then(({ data }) => {
                     if (data.code === 0) {
-                        console.log('===abnormal===')
-                        console.log(data)
                         if (data.infoUser.length !== 0) {
                             if (this.plantList.currPage === 1) {
                                 this.totalList = data.infoUser;
@@ -627,7 +622,6 @@ export default {
                             this.dataList = [];
                             this.isAbnormalDataEditStatus = false;
                             this.processStatus = this.plantList.status;
-                            console.log('this.processStatus:' + this.processStatus)
                             this.$infoToast('该搜寻条件无任何资料！');
                         }
 
@@ -662,7 +656,7 @@ export default {
         orderChange(row) {
             if (row.orderNo && row.orderNo !== row.orderNo2) {
                 this.$http(`${WHT_API.CINDEXORDERLIST_API}`, 'POST', {
-                    workShop: this.workshopList,
+                    workShop: this.plantList.workshopIDValue,
                     productDate: this.productDate,
                     orderNo: row.orderNo
                 }).then(({ data }) => {
