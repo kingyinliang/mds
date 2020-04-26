@@ -226,11 +226,10 @@ export default class OrgStructure extends Vue {
                     COMMON_API.DOWNLOADFILE_API({
                         key: this.OrgDetail.imgUrl
                     }).then((res) => {
-                        console.log(res);
                         this.fileList = []
                         this.fileList[0] = {};
                         this.fileList[0].name = '';
-                        this.fileList[0].url = res.data.url;
+                        this.fileList[0].url = res.data.data.url;
                     })
                 } else {
                     this.fileList = [];
