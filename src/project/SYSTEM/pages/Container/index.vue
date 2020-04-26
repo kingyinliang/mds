@@ -24,17 +24,16 @@
                             </el-form-item>
                             <el-form-item class="floatr">
                                 <el-button
-                                    v-if="isAuth('sys:holder:checkList')"
                                     type="primary"
                                     size="small"
                                     @click="getItemsList(true)"
                                 >
                                     查询
                                 </el-button>
-                                <el-button v-if="isAuth('sys:holder:save')" type="primary" size="small" @click="addOrUpdateItem()">
+                                <el-button type="primary" size="small" @click="addOrUpdateItem()">
                                     新增
                                 </el-button>
-                                <el-button v-if="isAuth('sys:holder:delete')" type="danger" size="small" :disabled="containerList.length===0" @click="removeItems()">
+                                <el-button type="danger" size="small" :disabled="containerList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
@@ -67,7 +66,7 @@
                         </el-table-column>
                         <el-table-column fixed="right" label="操作" header-align="left" align="left" width="65">
                             <template slot-scope="scope">
-                                <el-button v-if="isAuth('sys:holder:delete') && isAuth('sys:holder:findById')" style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row)">
+                                <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row)">
                                     编辑
                                 </el-button>
                             </template>
@@ -124,10 +123,6 @@
             this.getItemsList();
         },
         methods: {
-            // #remove
-            // isAuth() {
-            //     return true
-            // },
             // 序号
             indexMethod(index) {
                 return index + 1 + (Number(this.searchForm.currPage) - 1) * Number(this.searchForm.pageSize);
