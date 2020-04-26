@@ -10,25 +10,25 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item label="人员工号：">
-                    <el-input v-model="dataForm.workNum" placeholder="手动输入" />
+                    <el-input v-model="dataForm.workNum" placeholder="手动输入" clearable />
                 </el-form-item>
                 <el-form-item label="虚拟工号：">
-                    <el-input v-model="dataForm.workNumTemp" placeholder="手动输入" />
+                    <el-input v-model="dataForm.workNumTemp" placeholder="手动输入" clearable />
                 </el-form-item>
                 <el-form-item label="人员姓名：" prop="realName">
-                    <el-input v-model="dataForm.realName" placeholder="手动输入" auto-complete="off" />
+                    <el-input v-model="dataForm.realName" placeholder="手动输入" auto-complete="off" clearable />
                 </el-form-item>
                 <el-form-item label="用户名：" prop="userName">
-                    <el-input v-model="dataForm.userName" placeholder="手动输入" auto-complete="off" />
+                    <el-input v-model="dataForm.userName" placeholder="手动输入" auto-complete="off" clearable />
                 </el-form-item>
                 <el-form-item label="职务：">
-                    <el-input v-model="dataForm.post" placeholder="手动输入" />
+                    <el-input v-model="dataForm.post" placeholder="手动输入" clearable />
                 </el-form-item>
                 <el-form-item label="邮箱：">
-                    <el-input v-model="dataForm.email" placeholder="手动输入" />
+                    <el-input v-model="dataForm.email" placeholder="手动输入" clearable />
                 </el-form-item>
                 <el-form-item label="手机号：">
-                    <el-input v-model="dataForm.mobile" placeholder="手动输入" />
+                    <el-input v-model="dataForm.mobile" placeholder="手动输入" clearable />
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

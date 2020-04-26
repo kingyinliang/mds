@@ -6,7 +6,7 @@
                     <el-row style="float: right;">
                         <el-form :inline="true" :model="searchForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="searchForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable />
+                                <el-input v-model="searchForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button v-if="isAuth('sys:spec:listSpec')" type="primary" size="small" :disabled="searchForm.materialCode.trim()===''" @click="getItemsList(true)">

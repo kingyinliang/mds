@@ -6,7 +6,7 @@
                     <div style="float: right;">
                         <el-form :inline="true" :model="condition" size="small" label-width="68px" class="topforms2">
                             <el-form-item>
-                                <el-input v-model="condition.param" placeholder="用户名/工号" suffix-icon="el-icon-search" clearable />
+                                <el-input v-model="condition.param" placeholder="用户名/工号" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" size="small" :disabled="condition.param.trim()===''" @click="getItemsList(true)">
