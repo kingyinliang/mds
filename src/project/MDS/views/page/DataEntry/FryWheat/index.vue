@@ -660,6 +660,7 @@ export default {
         },
         // 订单号下拉
         orderChange(row) {
+            console.log(row)
             if (row.orderNo && row.orderNo !== row.orderNo2) {
                 this.$http(`${WHT_API.CINDEXORDERLIST_API}`, 'POST', {
                     workShop: this.workshopList,

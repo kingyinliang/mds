@@ -6,10 +6,10 @@
                     <el-row style="float: right;">
                         <el-form :inline="true" :model="searchForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="searchForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" />
+                                <el-input v-model="searchForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable />
                             </el-form-item>
                             <el-form-item>
-                                <el-button v-if="isAuth('sys:spec:listSpec')" type="primary" size="small" @click="getItemsList(true)">
+                                <el-button v-if="isAuth('sys:spec:listSpec')" type="primary" size="small" :disabled="searchForm.materialCode.trim()===''" @click="getItemsList(true)">
                                     查询
                                 </el-button>
                                 <el-button v-if="isAuth('sys:spec:listSpec')" type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
@@ -18,7 +18,7 @@
                                 <el-button v-if="isAuth('sys:spec:saveSpec')" type="primary" size="small" @click="addOrupdateItem()">
                                     新增
                                 </el-button>
-                                <el-button v-if="isAuth('sys:spec:delSpec')" type="danger" size="small" @click="removeItems()">
+                                <el-button v-if="isAuth('sys:spec:delSpec')" type="danger" size="small" :disabled="specificationList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
@@ -27,8 +27,8 @@
                 </div>
                 <el-row>
                     <el-table ref="table1" class="orderTable" border header-row-class-name="tableHead" :data="specificationList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="34" />
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
+                        <el-table-column v-if="specificationList.length!==0" type="selection" width="34" />
+                        <el-table-column type="index" label="#" :index="indexMethod" width="55" />
                         <el-table-column label="物料" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode }} {{ scope.row.materialName }}
@@ -153,6 +153,9 @@
                     size: JSON.stringify(this.pageSize)
                 }).then(({ data }) => {
                     if (data.code === 200) {
+                        if (haveParas && data.data.records.length === 0) {
+                                this.$infoToast('该搜寻条件无任何资料！');
+                        }
                         this.specificationList = data.data.records;
                         this.currPage = data.data.current;
                         this.pageSize = data.data.size;

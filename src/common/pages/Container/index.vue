@@ -23,13 +23,18 @@
                                 <el-input v-model="searchForm.holderVolume" placeholder="手动输入" clearable />
                             </el-form-item>
                             <el-form-item class="floatr">
-                                <el-button v-if="isAuth('sys:holder:checkList')" type="primary" size="small" @click="getItemsList(true)">
+                                <el-button
+                                    v-if="isAuth('sys:holder:checkList')"
+                                    type="primary"
+                                    size="small"
+                                    @click="getItemsList(true)"
+                                >
                                     查询
                                 </el-button>
                                 <el-button v-if="isAuth('sys:holder:save')" type="primary" size="small" @click="addOrUpdateItem()">
                                     新增
                                 </el-button>
-                                <el-button v-if="isAuth('sys:holder:delete')" type="danger" size="small" @click="removeItems()">
+                                <el-button v-if="isAuth('sys:holder:delete')" type="danger" size="small" :disabled="containerList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
@@ -37,9 +42,9 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="containerList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" :re-serch-spec-list="reSerchSpecList" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="45" />
-                        <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
+                    <el-table ref="table1" header-row-class-name="tableHead" :data="containerList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                        <el-table-column v-if="containerList.length!==0" type="selection" width="45" />
+                        <el-table-column type="index" :index="indexMethod" label="#" width="55" />
                         <el-table-column label="容器类型" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 {{ containerTypeObject[scope.row.holderType] }}
@@ -74,7 +79,7 @@
                 </el-row>
             </el-card>
         </div>
-        <contaniner-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :workshop-list="workshopList" :container-type-list="containerTypeList" @refreshDataList="getContainerList" />
+        <contaniner-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :workshop-list="workshopList" :container-type-list="containerTypeList" @refreshDataList="getItemsList" />
     </el-col>
 </template>
 
@@ -110,12 +115,13 @@
         },
         computed: {},
         mounted() {
+            console.log(this.searchForm.dept_id)
             // 获取车间下拉列表
             this.getWorkshopList();
             // 获取容器状态
             this.getContainerTypeList();
             // 获取容器清单
-            this.getContainerList();
+            this.getItemsList();
         },
         methods: {
             // #remove
@@ -127,7 +133,10 @@
                 return index + 1 + (Number(this.searchForm.currPage) - 1) * Number(this.searchForm.pageSize);
             },
             // 获取容器列表
-            getContainerList() {
+            getItemsList(havePars) {
+                if (havePars) {
+                    this.searchForm.currPage = 1;
+                }
                 COMMON_API.HOLDER_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     current: this.searchForm.currPage,
@@ -137,11 +146,16 @@
                     holderVolume: this.searchForm.holderVolume
                 }).then(({ data }) => {
                     if (data.code === 200) {
+                        console.log(data)
+                        if (havePars && data.data.records.length === 0) {
+                            this.$infoToast('该搜寻条件无任何资料！');
+                        }
                         this.multipleSelection = [];
                         this.containerList = data.data.records;
                         this.searchForm.currPage = data.data.pages;
                         this.searchForm.pageSize = data.data.size;
                         this.searchForm.totalCount = data.data.total;
+
                     } else {
                         this.$errorToast(data.msg);
                     }
@@ -182,13 +196,6 @@
             handleSelectionChange(val) {
                 this.multipleSelectionTemp = val;
             },
-            // 查询
-            getItemsList(havePars) {
-                if (havePars) {
-                    this.searchForm.currPage = 1;
-                }
-                this.getContainerList();
-            },
             // 编辑
             addOrUpdateItem(id) {
                 this.isDialogShow = true;
@@ -218,7 +225,7 @@
                                 if (data.code === 200) {
                                     this.$successToast('删除成功!');
                                     this.multipleSelection = [];
-                                    this.getContainerList();
+                                    this.getItemsList();
                                 } else {
                                     this.$errorToast(data.msg);
                                 }
@@ -230,12 +237,12 @@
             // 改变每页条数
             handleSizeChange(val) {
                 this.searchForm.pageSize = val;
-                this.getContainerList();
+                this.getItemsList();
             },
             // 跳转页数
             handleCurrentChange(val) {
                 this.searchForm.currPage = val;
-                this.getContainerList();
+                this.getItemsList();
             }
         }
     };

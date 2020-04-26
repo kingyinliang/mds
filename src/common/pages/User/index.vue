@@ -6,10 +6,10 @@
                     <div style="float: right;">
                         <el-form :inline="true" :model="condition" size="small" label-width="68px" class="topforms2">
                             <el-form-item>
-                                <el-input v-model="condition.param" placeholder="用户名/工号" suffix-icon="el-icon-search" />
+                                <el-input v-model="condition.param" placeholder="用户名/工号" suffix-icon="el-icon-search" clearable />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" size="small" @click="getItemsList(true)">
+                                <el-button type="primary" size="small" :disabled="condition.param.trim()===''" @click="getItemsList(true)">
                                     查询
                                 </el-button>
                             </el-form-item>
@@ -31,14 +31,14 @@
                                 人员
                             </div>
                             <div>
-                                <el-button v-if="isAuth('sys:user:delete')" type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" @click="removeItems()">
+                                <el-button v-if="isAuth('sys:user:delete')" type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" :disabled="userInfoList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                                 <el-button v-if="isAuth('sys:user:save')" type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrUpdateItem()">
                                     增加
                                 </el-button>
                                 <el-table ref="userInfoList" :data="userInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                                    <el-table-column type="selection" width="34" />
+                                    <el-table-column v-if="userInfoList.length!==0" type="selection" width="34" />
                                     <el-table-column type="index" :index="indexMethod" width="55" />
                                     <el-table-column prop="workNum" label="人员工号" width="87" />
                                     <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
@@ -144,6 +144,9 @@ export default {
                 size: JSON.stringify(this.pageSize)
             }).then(({ data }) => {
                 if (data.code === 200) {
+                    if (haveParas && data.data.records.length === 0) {
+                            this.$infoToast('该搜寻条件无任何资料！');
+                    }
                     this.multipleSelection = [];
                     this.userInfoList = data.data.records;
                     this.currPage = data.data.current;
