@@ -101,7 +101,7 @@ export default {
             },
             column: [
                 {
-                    prop: 'holderNo',
+                    prop: 'holderName',
                     label: '罐号',
                     width: '80'
                 },
@@ -146,7 +146,7 @@ export default {
                     width: '120'
                 },
                 {
-                    prop: 'inHolderNo',
+                    prop: 'inHolderName',
                     label: '罐号',
                     width: '60'
                 },

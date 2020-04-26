@@ -258,6 +258,18 @@ export default {
             holderId: '',
             factory: '',
             deptId: ''
+        },
+        /**
+         * 盐水库存
+         */
+        BrineInventory: {
+            factoryId: '',
+            location: '',
+            factoryName: '',
+            workShopName: '',
+            materialCode: '',
+            materialName: '',
+            sumAmount: ''
         }
     },
     mutations: {
@@ -426,6 +438,10 @@ export default {
         /** 计量仓豆粕罐 */
         updateMeasureBarnBeanPulp(state, params) {
             state.MeasureBarnBeanPulp = params;
+        },
+        /** 盐水库存 */
+        updateBrineInventory(state, name) {
+            state.BrineInventory = name;
         }
     }
 };
