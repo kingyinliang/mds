@@ -1858,3 +1858,13 @@ export const MEASUREBARN_WHEAT_API = {
      */
     WHEAT_ADJUST_LIST: HOST + '/gra/adjust/adjustMeasuringBin'
 };
+
+/**
+ * 库存管理
+ */
+export const INVENTORY_API = {
+    BRINE_INVENTPRY_LIST_API: HOST + '/kjm/saltPage/list', // 盐水库存 - 查询
+    BRINE_INVENTPRY_DETAIL_API: HOST + '/kjm/saltPage/detailList', // 盐水库存 - 明细
+    BRINE_INVENTPRY_USELIST_API: HOST + '/kjm/saltPage/useList', // 盐水库存 - 页面领用
+    BRINE_INVENTPRY_ADJUST_API: HOST + '/kjm/saltPage/adjust' // 盐水库存 - 调整
+};

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="功能分配" :close-on-click-modal="false" :visible.sync="isDaologShow">
+    <el-dialog title="功能分配" :close-on-click-modal="false" :visible.sync="isDialogShow">
         <div style="height: 300px; overflow: auto;">
             <el-tree
                 ref="menuListTree"
@@ -15,7 +15,7 @@
             />
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="isDaologShow = false">取消</el-button>
+            <el-button @click="isDialogShow = false">取消</el-button>
             <el-button type="primary" @click="submitDataForm">确定</el-button>
         </span>
     </el-dialog>
@@ -29,7 +29,7 @@ export default {
     components: {},
     data() {
         return {
-            isDaologShow: false,
+            isDialogShow: false,
             menuList: []
         };
     },
@@ -50,7 +50,7 @@ export default {
                     }
                 })
                 .then(() => {
-                    this.isDaologShow = true;
+                    this.isDialogShow = true;
                 })
                 .then(() => {
                     COMMON_API.ROLE_MENU_QUERY_API({
@@ -96,7 +96,7 @@ export default {
             }).then(({ data }) => {
                 if (data.code === 200) {
                     this.$successToast('操作成功');
-                    this.isDaologShow = false;
+                    this.isDialogShow = false;
                     this.$emit('refreshDataList');
                 } else {
                     this.$errorToast(data.msg);

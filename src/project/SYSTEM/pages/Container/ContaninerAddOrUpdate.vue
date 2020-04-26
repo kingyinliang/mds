@@ -13,10 +13,10 @@
                 <el-input v-model="dataForm.holderName" placeholder="手动输入" clearable />
             </el-form-item>
             <el-form-item label="容器量：">
-                <el-input v-model="dataForm.holderVolume" type="number" placeholder="手动输入" min="0" />
+                <el-input v-model="dataForm.holderVolume" type="number" placeholder="手动输入" min="0" clearable />
             </el-form-item>
             <el-form-item label="批数：">
-                <el-input v-model="dataForm.holderBatch" type="number" placeholder="手动输入" min="0" />
+                <el-input v-model="dataForm.holderBatch" type="number" placeholder="手动输入" min="0" clearable />
             </el-form-item>
             <el-form-item v-show="holderStatusList.length!==0" label="容器状态：">
                 <el-select v-model="dataForm.holderStatus" placeholder="请选择" style="width: 100%;">
