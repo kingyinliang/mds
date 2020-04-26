@@ -12,9 +12,14 @@
                     <i class="iconfont factory-shouqicaidan switching" :class="{ open: sidebarFold, packup: !sidebarFold }" style="font-size: 25px;" />
                 </el-menu-item>
             </el-menu>
-            <el-menu v-if="menuList.filter(item => item.type === '4').length > 0" class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
-                <el-menu-item class="site-navbar__switch" index="4" style="padding: 8px 0;" @click="goEacharts">
-                    <span style=" display: block; height: 16px; padding: 0 11px; color: #00a2d4; font-size: 16px; line-height: 16px; border-left: 1px solid #d9d9d9;">数据面板 <i class="iconfont factory-mianban" style="color: #00a2d4;" /></span>
+            <!--<el-menu v-if="menuList.filter(item => item.type === '4').length > 0" class="site-navbar__menu site-navbar__menu&#45;&#45;right" mode="horizontal">-->
+            <!--<el-menu-item class="site-navbar__switch" index="4" style="padding: 8px 0;" @click="goEacharts">-->
+            <!--<span style=" display: block; height: 16px; padding: 0 11px; color: #00a2d4; font-size: 16px; line-height: 16px; border-left: 1px solid #d9d9d9;">数据面板 <i class="iconfont factory-mianban" style="color: #00a2d4;" /></span>-->
+            <!--</el-menu-item>-->
+            <!--</el-menu>-->
+            <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
+                <el-menu-item class="site-navbar__switch" index="4" style="padding: 8px 0;" @click.native="selectFactory">
+                    <span style=" display: block; height: 16px; padding: 0 11px; color: #00a2d4; font-size: 16px; line-height: 16px; border-left: 1px solid #d9d9d9;">{{ factoryName }} <i class="iconfont factory-gongchang" style="color: #00a2d4;" /></span>
                 </el-menu-item>
             </el-menu>
             <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
@@ -25,9 +30,9 @@
                             <el-dropdown-item @click.native="updatePassword">
                                 修改密码
                             </el-dropdown-item>
-                            <el-dropdown-item v-if="factory.length > 1" @click.native="selectFactory">
-                                选择工厂
-                            </el-dropdown-item>
+                            <!--<el-dropdown-item v-if="factory.length > 1" @click.native="selectFactory">-->
+                            <!--选择工厂-->
+                            <!--</el-dropdown-item>-->
                             <el-dropdown-item @click.native="logoutHandle()">
                                 退出
                             </el-dropdown-item>
@@ -60,7 +65,8 @@ export default {
     data() {
         return {
             visible: false,
-            factory: JSON.parse(sessionStorage.getItem('userFactory') || '[]')
+            factory: JSON.parse(sessionStorage.getItem('userFactory') || '[]'),
+            factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName
         };
     },
     computed: {
