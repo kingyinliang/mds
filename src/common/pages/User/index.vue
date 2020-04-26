@@ -4,12 +4,12 @@
             <el-card>
                 <el-row class="clearfix">
                     <div style="float: right;">
-                        <el-form :inline="true" :model="condition" size="small" label-width="68px" class="topforms2" @keyup.enter.native="getResultList(true)">
+                        <el-form :inline="true" :model="condition" size="small" label-width="68px" class="topforms2">
                             <el-form-item>
                                 <el-input v-model="condition.param" placeholder="用户名/工号" suffix-icon="el-icon-search" />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" size="small" @click="getResultList(true)">
+                                <el-button type="primary" size="small" @click="getItemsList(true)">
                                     查询
                                 </el-button>
                             </el-form-item>
@@ -28,13 +28,13 @@
                     <el-col v-if="isAuth('sys:user:checkList')" :span="16">
                         <el-card>
                             <div slot="header" class="clearfix">
-                                <span>人员</span>
+                                人员
                             </div>
                             <div>
-                                <el-button v-if="isAuth('sys:user:delete')" type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" @click="removeUser()">
+                                <el-button v-if="isAuth('sys:user:delete')" type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" @click="removeItems()">
                                     批量删除
                                 </el-button>
-                                <el-button v-if="isAuth('sys:user:save')" type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrUpdateuUser()">
+                                <el-button v-if="isAuth('sys:user:save')" type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrUpdateItem()">
                                     增加
                                 </el-button>
                                 <el-table ref="userInfoList" :data="userInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
@@ -50,7 +50,7 @@
                                     <el-table-column prop="created" label="创建日期" width="160" />
                                     <el-table-column label="操作" fixed="right" width="65">
                                         <template slot-scope="scope">
-                                            <el-button v-if="isAuth('sys:user:update') && isAuth('sys:user:info')" style="padding: 0;" type="text" @click="addOrUpdateuUser(scope.row.id)">
+                                            <el-button v-if="isAuth('sys:user:update') && isAuth('sys:user:info')" style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
                                                 编辑
                                             </el-button>
                                         </template>
@@ -65,13 +65,13 @@
                 </el-row>
             </el-card>
         </div>
-        <user-add-or-update v-if="isDaologShow" ref="addOrUpdateuUser" :org-tree="orgTree" @refreshDataList="getResultList" />
+        <user-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :org-tree="orgTree" @refreshDataList="getItemsList" />
     </el-col>
 </template>
 
 <script>
-import UserAddOrUpdate from './UserAddOrUpdate';
 import { COMMON_API } from 'common/api/api';
+import UserAddOrUpdate from './UserAddOrUpdate';
 export default {
     name: 'UserManages',
     components: {
@@ -82,12 +82,13 @@ export default {
             condition: {
                 param: ''
             },
-            isDaologShow: false,
+            isDialogShow: false,
             deptID: '',
             deptName: '',
             orgTree: [],
             userInfoList: [],
             multipleSelection: [],
+            multipleSelectionTemp: [],
             totalCount: 1,
             currPage: 1,
             arrList: [],
@@ -114,7 +115,7 @@ export default {
             }).then(({ data }) => {
                 if (data.code === 200) {
                     this.orgTree = data.data;
-                    this.arrList = [this.orgTree[0].children[0].id];
+                    this.arrList = this.orgTree[0].children.length !== 0 ? [this.orgTree[0].children[0].id] : [];
                 } else {
                     this.$errorToast(data.msg);
                 }
@@ -124,11 +125,11 @@ export default {
         showOrgDetail(data) {
             this.deptID = data.id;
             this.deptName = data.deptName;
-            this.getResultList();
+            this.getItemsList();
         },
         // 获取列表
-        getResultList(st) {
-            if (st) {
+        getItemsList(haveParas) {
+            if (haveParas) {
                 this.currPage = 1;
             }
             if (!this.deptID) {
@@ -151,34 +152,32 @@ export default {
                 } else {
                     this.$errorToast(data.msg);
                 }
-                this.isDaologShow = false;
+                this.isDialogShow = false;
             });
         },
         // 表格选中
         handleSelectionChange(val) {
-            this.multipleSelection = [];
-            val.forEach((item) => {
-                this.multipleSelection.push(item);
-            });
+            this.multipleSelectionTemp = val;
         },
         // 新增  修改
-        addOrUpdateuUser(id) {
+        addOrUpdateItem(id) {
             if (this.deptID) {
-                this.isDaologShow = true;
+                this.isDialogShow = true;
                 this.$nextTick(() => {
-                    this.$refs.addOrUpdateuUser.init(this.deptID, this.deptName, id);
+                    this.$refs.addOrUpdateItem.init(this.deptID, this.deptName, id);
                 });
             } else {
                 this.$notify.error({ title: '错误', message: '请先选择部门' });
             }
         },
         // 删除
-        removeUser() {
-            if (this.multipleSelection.length === 0) {
-                this.$notify.error({
-                    title: '错误',
-                    message: '请选择要删除的用户'
+        removeItems() {
+            this.multipleSelection = [];
+                this.multipleSelectionTemp.forEach(item => {
+                    this.multipleSelection.push(item.id);
                 });
+            if (this.multipleSelection.length === 0) {
+                this.$warningToast('请选择要删除的用户');
             } else {
                 const roleName = [];
                 const userID = [];
@@ -214,7 +213,7 @@ export default {
                                 if (data.code === 200) {
                                     this.$successToast('删除成功!');
                                     this.multipleSelection = [];
-                                    this.getResultList();
+                                    this.getItemsList();
                                 } else {
                                     this.$errorToast(data.msg);
                                 }
@@ -229,12 +228,12 @@ export default {
         // 改变每页条数
         handleSizeChange(val) {
             this.pageSize = val;
-            this.getResultList();
+            this.getItemsList();
         },
         // 跳转页数
         handleCurrentChange(val) {
             this.currPage = val;
-            this.getResultList();
+            this.getItemsList();
         }
     }
 };

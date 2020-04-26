@@ -30,7 +30,7 @@
                                 <a v-if="isAuth('sys:role:updatemenu')" style="margin-right: 0.3em;" @click="manageFunction(scope.row.id)">功能分配</a>
                                 <a v-if="isAuth('sys:role:updatedept')" style="margin-right: 0.3em;" @click="manageDepartment(scope.row.id)">部门分配</a>
                                 <a v-if="isAuth('sys:role:update')" style="margin-right: 0.3em;" @click="addOrUpdateRole({style:'modify',info:scope.row})">修改角色</a>
-                                <a v-if="isAuth('sys:role:delete')" @click="roleRemove(scope.row.id)">删除角色</a>
+                                <a v-if="isAuth('sys:role:delete')" @click="removeRole(scope.row.id)">删除角色</a>
                             </template>
                         </el-table-column>
                         <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="150" />
@@ -48,7 +48,6 @@
         <user-manage v-if="isUserManageShow" ref="manageUser" @refreshDataList="getResultList()" />
         <department-manage v-if="isDepartmentManageShow" ref="manageDepartment" @refreshDataList="getResultList()" />
         <role-add-or-update v-if="isRoleAddOrUpdateShow" ref="addOrUpdateRole" @refreshDataList="getResultList()" />
-        <!-- <component :is="currentComponent" /> -->
     </el-col>
 </template>
 
@@ -157,7 +156,7 @@
                 });
             },
             // 删除角色
-            roleRemove(id) {
+            removeRole(id) {
                 this.$confirm('确认删除该角色, 是否继续?', '删除角色', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
