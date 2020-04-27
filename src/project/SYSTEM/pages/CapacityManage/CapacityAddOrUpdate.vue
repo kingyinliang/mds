@@ -54,7 +54,7 @@ import { COMMON_API } from 'common/api/api';
     }
 })
 export default class CapacityAddOrUpdate extends Vue {
-    @Prop({ default: [] }) serchSapList: Array;
+    @Prop({ default: [] }) serchSapList: SapObj[];
 
     $refs: {dataForm: HTMLFormElement}
     Unit = [];
@@ -177,6 +177,11 @@ interface CapacityObj {
     endDate?: string;
     changer?: string;
     changed?: string;
+}
+
+interface SapObj {
+    materialCode?: string;
+    materialName?: string;
 }
 </script>
 
