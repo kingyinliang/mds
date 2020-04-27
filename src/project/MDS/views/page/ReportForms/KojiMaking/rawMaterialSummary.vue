@@ -65,8 +65,8 @@ export default {
                 {
                     type: 'date-interval',
                     label: '制曲日期',
-                    prop: 'moveTimeStart',
-                    propTwo: 'moveTimeEnd'
+                    prop: 'inKjmDateStart',
+                    propTwo: 'inKjmDateEnd'
                 }
             ],
             listInterface: params => {
