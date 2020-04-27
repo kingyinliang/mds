@@ -11,10 +11,10 @@
                         </el-form>
                     </el-col>
                     <el-col style="width: 200px;">
-                        <el-button v-if="isAuth('sys:role:list')" type="primary" size="small" :disabled="form.username.trim()===''" @click="getItemsList(true,form.username)">
+                        <el-button type="primary" size="small" :disabled="form.username.trim()===''" @click="getItemsList(true,form.username)">
                             查询
                         </el-button>
-                        <el-button v-if="isAuth('sys:role:save')" type="primary" size="small" @click="addOrUpdateItem()">
+                        <el-button type="primary" size="small" @click="addOrUpdateItem()">
                             新增
                         </el-button>
                     </el-col>
@@ -26,11 +26,11 @@
                         <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
                         <el-table-column label="操作" width="">
                             <template slot-scope="scope">
-                                <a v-if="isAuth('sys:role:updateuser')" style="margin-right: 0.3em;" @click="manageUser(scope.row.id)">人员管理</a>
-                                <a v-if="isAuth('sys:role:updatemenu')" style="margin-right: 0.3em;" @click="manageFunction(scope.row.id)">功能分配</a>
-                                <a v-if="isAuth('sys:role:updatedept')" style="margin-right: 0.3em;" @click="manageDepartment(scope.row.id)">部门分配</a>
-                                <a v-if="isAuth('sys:role:update')" style="margin-right: 0.3em;" @click="addOrUpdateItem(scope.row)">修改角色</a>
-                                <a v-if="isAuth('sys:role:delete')" @click="removeItems(scope.row.id)">删除角色</a>
+                                <a style="margin-right: 0.3em;" @click="manageUser(scope.row.id)">人员管理</a>
+                                <a style="margin-right: 0.3em;" @click="manageFunction(scope.row.id)">功能分配</a>
+                                <a style="margin-right: 0.3em;" @click="manageDepartment(scope.row.id)">部门分配</a>
+                                <a style="margin-right: 0.3em;" @click="addOrUpdateItem(scope.row)">修改角色</a>
+                                <a @click="removeItems(scope.row.id)">删除角色</a>
                             </template>
                         </el-table-column>
                         <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="150" />
@@ -89,10 +89,6 @@
             this.getItemsList();
         },
         methods: {
-            // #remove
-            // isAuth() {
-            //     return true
-            // },
             // 序号
             indexMethod(index) {
                 return index + 1 + (Number(this.currPage) - 1) * Number(this.pageSize);

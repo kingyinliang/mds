@@ -492,8 +492,7 @@ export default {
         margin-bottom: 5px;
     }
 }
-</style>
-<style>
+
 .orgcard .el-card__body {
     height: 450px;
     overflow: auto;

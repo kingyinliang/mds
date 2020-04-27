@@ -237,7 +237,7 @@
             this.headanimation(this.$);
             this.$nextTick(() => {
                 if (this.fixTableHeightFromTop !== 0) {
-                    this.tableHeightSet = window.innerHeight - this.$refs.table.$el.offsetTop - this.fixTableHeightFromTop;
+                    // this.tableHeightSet = window.innerHeight - this.$refs.table.$el.offsetTop - this.fixTableHeightFromTop;
                     // 监听窗口大小变化
                     // let self = this
                     // window.onresize = function () {

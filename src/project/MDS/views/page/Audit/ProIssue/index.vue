@@ -92,7 +92,7 @@
                         </el-form-item>
                     </el-form>
                     <el-table ref="table1" header-row-class-name="tableHead" max-height="450" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="checkboxT" width="34" fixed="left" />
+                        <el-table-column type="selection" :selectable="checkboxT" width="45" fixed="left" align="center" />
                         <el-table-column label="审核状态" width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? (scope.row.interfaceReturnStatus === '0' ? '接口失败' : '审核通过') : scope.row.status === 'noPass' ? '审核不通过' : '' }}
@@ -154,13 +154,13 @@
                         <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="150" />
                         <el-table-column prop="verifyMan" :show-overflow-tooltip="true" label="审核人" />
                         <el-table-column prop="verifyDate" label="审核时间" width="160" />
-                        <el-table-column fixed="right" label="备注" width="80">
+                        <el-table-column label="备注" width="80">
                             <template slot-scope="scope">
                                 <el-input v-if="scope.row.redact" v-model="scope.row.remark" size="mini" />
                                 <el-input v-else v-model="scope.row.remark" size="mini" disabled />
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="120">
+                        <el-table-column fixed="right" label="操作" width="70">
                             <template slot-scope="scope">
                                 <el-button v-if="!((scope.row.status === 'checked' && scope.row.interfaceReturnStatus === '1') || scope.row.status === 'noPass') && isAuth('verify:material:update')" class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)">
                                     {{ scope.row.redact ? '保存' : '编辑' }}
@@ -278,7 +278,7 @@
                         if (data.code === 0) {
                             this.orderTypeList = data.dicList[0].prolist;
                         } else {
-                            this.$successToast(data.msg);
+                            this.$warningToast(data.msg);
                         }
                     })
                     .catch(error => {
@@ -304,7 +304,7 @@
                         this.plantList.pageSize = data.page.pageSize;
                         this.plantList.totalCount = data.page.totalCount;
                     } else {
-                        this.$successToast(data.msg);
+                        this.$warningToast(data.msg);
                     }
                     this.dataListLoading = false;
                 });
@@ -332,7 +332,7 @@
                             this.GetAuditList();
                             this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                         } else {
-                            this.$successToast(data.msg);
+                            this.$warningToast(data.msg);
                         }
                     });
                 }).catch(() => {
@@ -345,7 +345,7 @@
                     if (data.code === 0) {
                         this.MoveReas = data.dicList;
                     } else {
-                        this.$successToast(data.msg);
+                        this.$warningToast(data.msg);
                     }
                 });
             },
@@ -356,7 +356,7 @@
                         this.factory = data.typeList;
                         this.plantList.factory = data.typeList[0].deptId;
                     } else {
-                        this.$successToast(data.msg);
+                        this.$warningToast(data.msg);
                     }
                 });
             },
@@ -372,7 +372,7 @@
                                 this.plantList.workShop = data.typeList[0].deptId;
                             }
                         } else {
-                            this.$successToast(data.msg);
+                            this.$warningToast(data.msg);
                         }
                     });
                 } else {
@@ -387,7 +387,7 @@
                         if (data.code === 0) {
                             this.productline = data.childList;
                         } else {
-                            this.$successToast(data.msg);
+                            this.$warningToast(data.msg);
                         }
                     });
                 } else {
@@ -431,7 +431,7 @@
                                 this.AuditList.splice(this.AuditList.length, 0, {});
                                 this.AuditList.splice(this.AuditList.length - 1, 1);
                             } else {
-                                this.$successToast(data.msg);
+                                this.$warningToast(data.msg);
                             }
                             this.GetAuditList();
                         })
@@ -474,7 +474,7 @@
                                             this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                                             this.GetAuditList();
                                         } else {
-                                            this.$successToast(data.msg);
+                                            this.$warningToast(data.msg);
                                         }
                                     })
                                     .catch(() => {
@@ -514,7 +514,7 @@
                                             this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                                             this.GetAuditList();
                                         } else {
-                                            this.$successToast(data.msg);
+                                            this.$warningToast(data.msg);
                                             this.GetAuditList();
                                         }
                                     })
@@ -543,7 +543,7 @@
     };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
     .searchCard {
         margin-bottom: 0;
     }
@@ -587,7 +587,7 @@
     }
     .el-table {
         .el-table__fixed-right {
-            right: 6px !important;
+            right: 0 !important;
         }
     }
 </style>

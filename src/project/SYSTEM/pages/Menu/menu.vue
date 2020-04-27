@@ -10,7 +10,6 @@
                 </el-row>
                 <el-row>
                     <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" style="width: 100%;">
-                        <el-table-column prop="id" header-align="left" align="left" width="80" label="ID" />
                         <table-tree-column prop="menuName" header-align="left" width="150" :show-overflow-tooltip="true" label="名称" />
                         <el-table-column prop="parentName" header-align="left" align="left" width="100" :show-overflow-tooltip="true" label="上级菜单" />
                         <el-table-column header-align="left" align="left" :show-overflow-tooltip="true" label="图标">

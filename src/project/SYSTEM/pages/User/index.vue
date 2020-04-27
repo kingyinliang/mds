@@ -25,16 +25,16 @@
                             <el-tree :data="orgTree" node-key="id" :default-expanded-keys="arrList" :expand-on-click-node="false" :props="{label: 'deptName',children:'children'}" @node-click="showOrgDetail" />
                         </el-card>
                     </el-col>
-                    <el-col v-if="isAuth('sys:user:checkList')" :span="16">
+                    <el-col :span="16">
                         <el-card>
                             <div slot="header" class="clearfix">
                                 人员
                             </div>
                             <div>
-                                <el-button v-if="isAuth('sys:user:delete')" type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" :disabled="userInfoList.length===0" @click="removeItems()">
+                                <el-button type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" :disabled="userInfoList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
-                                <el-button v-if="isAuth('sys:user:save')" type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrUpdateItem()">
+                                <el-button type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrUpdateItem()">
                                     增加
                                 </el-button>
                                 <el-table ref="userInfoList" :data="userInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
@@ -50,7 +50,7 @@
                                     <el-table-column prop="created" label="创建日期" width="160" />
                                     <el-table-column label="操作" fixed="right" width="65">
                                         <template slot-scope="scope">
-                                            <el-button v-if="isAuth('sys:user:update') && isAuth('sys:user:info')" style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
+                                            <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
                                                 编辑
                                             </el-button>
                                         </template>
@@ -100,10 +100,6 @@ export default {
         this.getTree();
     },
     methods: {
-        // #remove
-        // isAuth() {
-        //     return true
-        // },
         // 序号
         indexMethod(index) {
             return index + 1 + (Number(this.currPage) - 1) * (Number(this.pageSize));

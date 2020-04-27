@@ -1038,6 +1038,10 @@ export default class Index extends Vue {
 //     background:rgba(233,233,233,1);
 //   }
 // }
+
+.el-table .el-table__fixed-right {
+    right: 0 !important;
+}
 </style>
 <style lang="scss">
 .dialog__class {

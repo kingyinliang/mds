@@ -6,7 +6,13 @@
 .main {
     padding: 5px 10px;
 }
+.marginL10px {
+    margin-left: 10px;
+}
 
+.textAlignR {
+    text-align: right;
+}
 .topTitle {
     width: 100%;
     background-color: white;
@@ -374,7 +380,7 @@
             top: 32px;
             left: 170px;
             right: 0;
-            z-index: 930;
+            z-index: 1000;
             padding: 0 55px 0 15px;
             box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
             background-color: #fff;

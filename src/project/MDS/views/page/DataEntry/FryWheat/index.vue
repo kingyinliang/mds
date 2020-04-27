@@ -407,7 +407,8 @@ export default {
                     item.productDate = this.plantList.productDate;
                 }
             }
-            this.FWworkShop = this.workshopList;
+            // this.FWworkShop = this.workshopList;
+            this.FWworkShop = this.plantList.workshopIDValue
             this.FWfactoryid = this.factoryID;
             if (item.productLineName === '炒麦') {
                 // 存储炒麦的state

@@ -46,7 +46,7 @@
                     <el-table-column prop="changed" label="操作时间" width="120" :show-overflow-tooltip="true" />
                     <el-table-column label="操作" width="50" fixed="right">
                         <template slot-scope="scope">
-                            <el-button v-if="isAuth('sys:capacity:saveOrUpdateCapa')" style="padding: 0;" type="text" @click="addOrupdate(scope.row)">
+                            <el-button style="padding: 0;" type="text" @click="addOrupdate(scope.row)">
                                 编辑
                             </el-button>
                         </template>
