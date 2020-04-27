@@ -526,4 +526,8 @@ export default class Index extends Vue {
     }
 }
 </script>
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.el-form-item--small.el-form-item {
+    margin-bottom: 18px;
+}
+</style>
