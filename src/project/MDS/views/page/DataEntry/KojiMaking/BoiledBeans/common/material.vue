@@ -107,10 +107,10 @@
                         </el-popover>
                     </div>
                     <div style="width: 100%; text-align: center;">
-                        <el-button class="boxButton" :disabled="!isRedact" style=" float: initial; width: 75px; height: 30px; margin: 15px auto; line-height: 30px;" @click="startwheat(sole)">
+                        <el-button class="boxButton" :disabled="!isRedact" style=" float: initial; width: 75px; height: 30px; margin: 15px 10px; line-height: 30px;" @click="startwheat(sole)">
                             开始领用
                         </el-button>
-                        <el-button class="boxButton" :disabled="!isRedact" style=" float: initial; width: 75px; height: 30px; margin: 15px auto; line-height: 30px;" @click="endwheat(sole)">
+                        <el-button class="boxButton" :disabled="!isRedact" style=" float: initial; width: 75px; height: 30px; margin: 15px 10px; line-height: 30px;" @click="endwheat(sole)">
                             结束领用
                         </el-button>
                     </div>
@@ -124,9 +124,10 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="麦粉罐" prop="holderName" width="140" />
-                <el-table-column label="批次" align="center">
+                <el-table-column label="批次" align="center" width="180">
                     <template slot-scope="scope">
-                        <span style="display: inline-block; text-align: left;" :style="{width: getContextWidth+'px'}"><em>{{ scope.row.whtBatch }}</em></span>
+                        <!-- <span style="display: inline-block; text-align: left;" :style="{width: getContextWidth()+'px'}"><em>{{ scope.row.whtBatch }}</em></span> -->
+                        {{ scope.row.whtBatch }}
                     </template>
                 </el-table-column>
                 <el-table-column label="起始" prop="startWeight" />
@@ -197,10 +198,11 @@
                 </el-table-column>
                 <el-table-column label="领用粮仓" prop="foodHolderName" width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="豆粕仓" prop="pulpHolderName" width="130" :show-overflow-tooltip="true" />
-                <el-table-column label="批次" :show-overflow-tooltip="true">
+                <el-table-column label="批次" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
                         <div style="text-align: center;">
-                            <span style="display: inline-block; text-align: left;" :style="{width: getContextWidth+'px'}"><em>{{ scope.row.batch }}</em></span>
+                            <!-- <span style="display: inline-block; text-align: left;" :style="{width: getContextWidth()+'px'}"><em>{{ scope.row.batch }}</em></span> -->
+                            {{ scope.row.batch }}
                         </div>
                     </template>
                 </el-table-column>
@@ -536,13 +538,6 @@
             };
         },
         computed: {
-            getContextWidth: function() {
-                let temp = 0;
-                this.soyList.forEach(item => {
-                    temp = item.batch.length > temp ? item.batch.length : temp
-                })
-                return temp * 8.5
-            },
             lnum: function() {
                 return this.wheat.startWeight - this.wheat.endWeight;
             },
@@ -650,6 +645,14 @@
             }
         },
         methods: {
+            getContextWidth: function() {
+                let temp = 0;
+                this.soyList.forEach(item => {
+                    temp = item.batch.length > temp ? item.batch.length : temp
+                })
+                console.log(temp * 8.5)
+                return temp * 8.5
+            },
             drawPie(id, piciData, totalkg) {
                 const pici = [];
                 if (typeof piciData !== 'undefined') {
@@ -799,7 +802,7 @@
                 let ty = true;
                 if (this.materialList.length === 0) {
                     ty = false;
-                    this.$warning_SHINHO('请填写种曲');
+                    this.$warningToast('请填写种曲');
                     return false;
                 }
                 this.materialList.forEach(item => {
@@ -811,7 +814,7 @@
                     }
                 });
                 if (!ty) {
-                    this.$warning_SHINHO('种曲必填项未填');
+                    this.$warningToast('种曲必填项未填');
                     return false;
                 }
                 this.materialList.forEach(item => {
@@ -823,7 +826,7 @@
                     }
                 });
                 if (!ty) {
-                    this.$warning_SHINHO('种曲批次长度应为10位');
+                    this.$warningToast('种曲批次长度应为10位');
                     return false;
                 }
                 // if (!this.wheatliang || this.wheatliang === 0 || this.wheatliang.trim() === '') {
@@ -832,7 +835,7 @@
                 // }
                 if (this.wheatList.length === 0) {
                     ty = false;
-                    this.$warning_SHINHO('请填写小麦粉数据');
+                    this.$warningToast('请填写小麦粉数据');
                     return false;
                 }
                 // if (!this.soyliang || this.soyliang === 0 || this.soyliang.trim() === '') {
@@ -841,7 +844,7 @@
                 // }
                 if (this.soyList.length === 0) {
                     ty = false;
-                    this.$warning_SHINHO('请填写豆粕数据');
+                    this.$warningToast('请填写豆粕数据');
                     return false;
                 }
                 let useType = true;
@@ -851,13 +854,13 @@
                     }
                     if (Number(it.useWeight) <= 0) {
                         ty = false;
-                        this.$warning_SHINHO('出罐数量不能为0');
+                        this.$warningToast('出罐数量不能为0');
                         return false;
                     }
                 });
                 if (useType) {
                     ty = false;
-                    this.$warning_SHINHO('豆粕没有出罐领用数据，请确认');
+                    this.$warningToast('豆粕没有出罐领用数据，请确认');
                     return false;
                 }
                 return ty;
@@ -1027,7 +1030,7 @@
                     };
                     this.dialogFormVisibleMai = true;
                 } else {
-                    this.$warning_SHINHO('请结束后开始');
+                    this.$warningToast('请结束后开始');
                 }
             },
             endwheat(row) {
@@ -1074,7 +1077,7 @@
                     };
                     this.dialogFormVisibleMai2 = true;
                 } else {
-                    this.$warning_SHINHO('请先领用');
+                    this.$warningToast('请先领用');
                 }
             },
             // 小麦领用修改
@@ -1094,7 +1097,7 @@
                     this.$set(this.wheat, 'userWeight', this.wheat.startWeight - this.wheat.endWeight);
                 }
                 if (this.wheat.endWeight > this.wheat.startWeight) {
-                    this.$warning_SHINHO('结束数不能大于起始数');
+                    this.$warningToast('结束数不能大于起始数');
                     return;
                 }
                 this.$refs[formName].validate(valid => {
@@ -1199,7 +1202,7 @@
                 this.$refs[formName].validate(valid => {
                     if (valid) {
                         if (this.rusoylnum <= 0) {
-                            this.$warning_SHINHO('领用数必须大于0');
+                            this.$warningToast('领用数必须大于0');
                         } else {
                             let soyUsedTotal = 0;
                             let obj = {};
@@ -1221,7 +1224,7 @@
                                     }
                                 });
                                 if (soyUsedTotal + (this.rusoy.endWeight - this.rusoy.startWeight) > this.PulpCangBatchList.find(item => item.batch === this.rusoy.batch).currentQuantity) {
-                                    this.$warning_SHINHO('领用数不能大于剩余量');
+                                    this.$warningToast('领用数不能大于剩余量');
                                     return false;
                                 }
                             }
@@ -1308,7 +1311,7 @@
                 this.$refs[formName].validate(valid => {
                     if (valid) {
                         if (this.chusoylnum <= 0) {
-                            this.$warning_SHINHO('领用数必须大于0');
+                            this.$warningToast('领用数必须大于0');
                         } else {
                             this.dialogFormVisibleDouChu = false;
                             let currentRecord = [];
