@@ -160,7 +160,7 @@
                                 <el-input v-else v-model="scope.row.remark" size="mini" disabled />
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="120">
+                        <el-table-column fixed="right" label="操作" width="70">
                             <template slot-scope="scope">
                                 <el-button v-if="!((scope.row.status === 'checked' && scope.row.interfaceReturnStatus === '1') || scope.row.status === 'noPass') && isAuth('verify:material:update')" class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)">
                                     {{ scope.row.redact ? '保存' : '编辑' }}
