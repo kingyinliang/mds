@@ -521,7 +521,7 @@
     };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
     .searchCard {
         margin-bottom: 0;
     }

@@ -543,7 +543,7 @@
     };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
     .searchCard {
         margin-bottom: 0;
     }
@@ -587,7 +587,7 @@
     }
     .el-table {
         .el-table__fixed-right {
-            right: 6px !important;
+            right: 0 !important;
         }
     }
 </style>
