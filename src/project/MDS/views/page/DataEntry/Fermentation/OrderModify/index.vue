@@ -67,7 +67,7 @@
                         </el-row>
                         <el-row>
                             <el-table ref="multipleTables" header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleSelectionChange">
-                                <el-table-column type="selection" width="40" />
+                                <el-table-column type="selection" width="50" />
                                 <el-table-column label="罐号" width="55" prop="holderNo" />
                                 <el-table-column label="订单号" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">

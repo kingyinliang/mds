@@ -42,7 +42,7 @@
                 </el-row>
                 <el-row>
                     <el-table ref="table1" header-row-class-name="tableHead" :data="containerList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column v-if="containerList.length!==0" type="selection" width="45" />
+                        <el-table-column v-if="containerList.length!==0" type="selection" width="50" />
                         <el-table-column type="index" :index="indexMethod" label="#" width="55" />
                         <el-table-column label="容器类型" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">

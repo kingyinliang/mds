@@ -2,7 +2,7 @@
     <div>
         <el-card>
             <el-table v-if="formHeader.pressure === 1" :data="materialList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
-                <el-table-column fixed="left" type="selection" width="40" />
+                <el-table-column fixed="left" type="selection" width="50" />
                 <el-table-column label="工序" width="50">
                     预压
                 </el-table-column>

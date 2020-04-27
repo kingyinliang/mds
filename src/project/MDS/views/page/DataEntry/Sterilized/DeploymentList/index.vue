@@ -70,7 +70,7 @@
                         <el-button>调配列表</el-button>
                     </span>
                     <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;" @row-dblclick="GetInfo" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="35" :selectable="CheckBoxInit" fixed="left" />
+                        <el-table-column type="selection" width="50" :selectable="CheckBoxInit" fixed="left" />
                         <el-table-column label="状态" prop="status" width="95" />
                         <el-table-column label="调配单号" prop="orderNo" width="130" />
                         <el-table-column label="生产车间" prop="workShopName" width="100" />
@@ -104,7 +104,7 @@
                         <el-button>分配列表</el-button>
                     </span>
                     <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;" @row-dblclick="GetInfo" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="35" :selectable="CheckBoxInit" fixed="left" />
+                        <el-table-column type="selection" width="50" :selectable="CheckBoxInit" fixed="left" />
                         <el-table-column label="分配单号" prop="orderNo" width="130" />
                         <el-table-column label="生产车间" prop="workShopName" width="100" />
                         <el-table-column label="分配单日期" prop="allocateDate" width="110" />

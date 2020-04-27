@@ -27,7 +27,7 @@
                 </div>
                 <el-row>
                     <el-table ref="table1" class="orderTable" border header-row-class-name="tableHead" :data="specificationList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column v-if="specificationList.length!==0" type="selection" width="34" />
+                        <el-table-column v-if="specificationList.length!==0" type="selection" width="50" />
                         <el-table-column type="index" label="#" :index="indexMethod" width="55" />
                         <el-table-column label="物料" :show-overflow-tooltip="true">
                             <template slot-scope="scope">

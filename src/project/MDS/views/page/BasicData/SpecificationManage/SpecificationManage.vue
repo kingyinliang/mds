@@ -27,7 +27,7 @@
                 </div>
                 <el-row>
                     <el-table ref="table1" class="orderTable" border header-row-class-name="tableHead" :data="SpecificationList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="34" />
+                        <el-table-column type="selection" width="50" />
                         <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
                         <el-table-column width="230" label="工厂" :show-overflow-tooltip="true" prop="factoryName" />
                         <el-table-column label="物料" :show-overflow-tooltip="true">
