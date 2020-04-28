@@ -33,7 +33,7 @@
                                 <el-button type="primary" size="small" @click="addOrUpdateItem()">
                                     新增
                                 </el-button>
-                                <el-button type="danger" size="small" :disabled="containerList.length===0" @click="removeItems()">
+                                <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
@@ -41,8 +41,8 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="containerList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column v-if="containerList.length!==0" type="selection" width="50" />
+                    <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
                         <el-table-column type="index" :index="indexMethod" label="#" width="55" />
                         <el-table-column label="容器类型" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
@@ -73,7 +73,7 @@
                         </el-table-column>
                     </el-table>
                 </el-row>
-                <el-row v-if="containerList.length!==0">
+                <el-row v-if="targetInfoList.length!==0">
                     <el-pagination :current-page="searchForm.currPage" :page-sizes="[10, 20, 50]" :page-size="searchForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="searchForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
@@ -108,7 +108,7 @@
                 multipleSelectionTemp: [],
                 containerTypeList: [],
                 containerTypeObject: {},
-                containerList: [],
+                targetInfoList: [],
                 holderStatusObject: { E: '空', R: '投料', F: '发酵', U: '领用', C: '清洗' }
             };
         },
@@ -146,7 +146,7 @@
                             this.$infoToast('该搜寻条件无任何资料！');
                         }
                         this.multipleSelection = [];
-                        this.containerList = data.data.records;
+                        this.targetInfoList = data.data.records;
                         this.searchForm.currPage = data.data.pages;
                         this.searchForm.pageSize = data.data.size;
                         this.searchForm.totalCount = data.data.total;

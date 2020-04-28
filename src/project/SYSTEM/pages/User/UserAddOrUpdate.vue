@@ -9,12 +9,12 @@
                         请选择
                     </el-button>
                 </el-form-item>
-                <el-form-item label="人员工号：">
+                <el-form-item label="人员工号：" prop="workNum">
                     <el-input v-model="dataForm.workNum" placeholder="手动输入" clearable />
                 </el-form-item>
-                <el-form-item label="虚拟工号：">
+                <!-- <el-form-item label="虚拟工号：">
                     <el-input v-model="dataForm.workNumTemp" placeholder="手动输入" clearable />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="人员姓名：" prop="realName">
                     <el-input v-model="dataForm.realName" placeholder="手动输入" auto-complete="off" clearable />
                 </el-form-item>
@@ -71,12 +71,19 @@ export default {
                 userName: '',
                 realName: '',
                 workNum: '',
-                workNumTemp: '',
+
                 post: '',
                 email: '',
                 mobile: ''
             },
             checkRules: {
+                workNum: [
+                    {
+                        required: true,
+                        message: '工号不能为空',
+                        trigger: 'blur'
+                    }
+                ],
                 realName: [
                     {
                         required: true,
@@ -137,7 +144,7 @@ export default {
         submitDataForm() {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
-                        if (this.dataForm.workNum || this.dataForm.workNumTemp) {
+                        if (this.dataForm.workNum) {
                             if (this.targetID) {
                                 // 修改
                                 COMMON_API.USER_UPDATE_API(this.dataForm).then(({ data }) => {
@@ -152,6 +159,15 @@ export default {
                             } else {
                                 // 新增
                                 this.dataForm.deptId = this.deptID;
+                                const patt = new RegExp('^[A-Z]');
+
+                                if (patt.test(this.dataForm.workNum)) {
+                                        this.dataForm.workNumTemp = 'Y'
+                                    } else {
+                                        this.dataForm.workNumTemp = 'N'
+                                    }
+
+
                                 COMMON_API.USER_INSERT_API({
                                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                     deptId: this.dataForm.deptId,

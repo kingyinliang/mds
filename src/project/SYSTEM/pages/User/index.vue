@@ -31,16 +31,16 @@
                                 人员
                             </div>
                             <div>
-                                <el-button type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" :disabled="userInfoList.length===0" @click="removeItems()">
+                                <el-button type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                                 <el-button type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrUpdateItem()">
                                     增加
                                 </el-button>
-                                <el-table ref="userInfoList" :data="userInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                                    <el-table-column v-if="userInfoList.length!==0" type="selection" width="50" />
-                                    <el-table-column type="index" :index="indexMethod" width="55" />
-                                    <el-table-column prop="workNum" label="人员工号" width="87" />
+                                <el-table ref="targetInfoList" :data="targetInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                                    <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
+                                    <el-table-column type="index" :index="indexMethod" width="40" />
+                                    <el-table-column prop="workNum" label="人员工号" width="100" />
                                     <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
                                     <el-table-column prop="realName" label="人员姓名" width="87" />
                                     <el-table-column prop="deptName" label="所属部门" width="87" :show-overflow-tooltip="true" />
@@ -57,7 +57,7 @@
                                     </el-table-column>
                                 </el-table>
                             </div>
-                            <el-row v-if="userInfoList.length!==0">
+                            <el-row v-if="targetInfoList.length!==0">
                                 <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                             </el-row>
                         </el-card>
@@ -86,7 +86,7 @@ export default {
             deptID: '',
             deptName: '',
             orgTree: [],
-            userInfoList: [],
+            targetInfoList: [],
             multipleSelection: [],
             multipleSelectionTemp: [],
             totalCount: 1,
@@ -144,7 +144,7 @@ export default {
                             this.$infoToast('该搜寻条件无任何资料！');
                     }
                     this.multipleSelection = [];
-                    this.userInfoList = data.data.records;
+                    this.targetInfoList = data.data.records;
                     this.currPage = data.data.current;
                     this.pageSize = data.data.size;
                     this.totalCount = data.data.total;

@@ -239,6 +239,7 @@
         methods: {
             // 获取列表
             getAuditList(st) {
+                this.AuditList = [];
                 if (!this.plantList.factory) {
                     this.$warningToast('请选择工厂');
                     return;
