@@ -93,7 +93,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="SaveDialog('workInfo')">确 定</el-button>
+                <el-button type="primary" @click="SaveDialog()">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -233,7 +233,7 @@ export default {
             }
             // this.$refs[formName].validate(valid => {
             //     if (valid) {
-            if (this.workInfo.content === '过滤' && this.workInfo.id === '') {
+            if (this.workInfo.content === '过滤') {
                 this.workInfo.holderName = this.holderList.find((item) => item.holderId === this.workInfo.holderId).holderName;
             }
             this.workInfo.timeLength = ((new Date(this.workInfo.endTime) - new Date(this.workInfo.startTime)) / 3600000).toFixed(2);
