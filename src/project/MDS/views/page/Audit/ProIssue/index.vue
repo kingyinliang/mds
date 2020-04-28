@@ -267,7 +267,7 @@
                     if (data.code === 0) {
                         this.materialList = data.list;
                     } else {
-                        this.$warningToast(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -278,7 +278,7 @@
                         if (data.code === 0) {
                             this.orderTypeList = data.dicList[0].prolist;
                         } else {
-                            this.$warningToast(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     })
                     .catch(error => {
@@ -304,7 +304,7 @@
                         this.plantList.pageSize = data.page.pageSize;
                         this.plantList.totalCount = data.page.totalCount;
                     } else {
-                        this.$warningToast(data.msg);
+                        this.$errorToast(data.msg);
                     }
                     this.dataListLoading = false;
                 });
@@ -345,7 +345,7 @@
                     if (data.code === 0) {
                         this.MoveReas = data.dicList;
                     } else {
-                        this.$warningToast(data.msg);
+                        this.$errorToast(data.msg);
                     }
                 });
             },
@@ -372,7 +372,7 @@
                                 this.plantList.workShop = data.typeList[0].deptId;
                             }
                         } else {
-                            this.$warningToast(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -387,7 +387,7 @@
                         if (data.code === 0) {
                             this.productline = data.childList;
                         } else {
-                            this.$warningToast(data.msg);
+                            this.$errorToast(data.msg);
                         }
                     });
                 } else {
@@ -431,7 +431,7 @@
                                 this.AuditList.splice(this.AuditList.length, 0, {});
                                 this.AuditList.splice(this.AuditList.length - 1, 1);
                             } else {
-                                this.$warningToast(data.msg);
+                                this.$errorToast(data.msg);
                             }
                             this.GetAuditList();
                         })
@@ -474,7 +474,7 @@
                                             this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                                             this.GetAuditList();
                                         } else {
-                                            this.$warningToast(data.msg);
+                                            this.$errorToast(data.msg);
                                         }
                                     })
                                     .catch(() => {
@@ -514,7 +514,7 @@
                                             this.$notify({ title: '成功', message: '操作成功', type: 'success' });
                                             this.GetAuditList();
                                         } else {
-                                            this.$warningToast(data.msg);
+                                            this.$errorToast(data.msg);
                                             this.GetAuditList();
                                         }
                                     })

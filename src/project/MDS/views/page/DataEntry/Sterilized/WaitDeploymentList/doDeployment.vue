@@ -134,7 +134,7 @@
                 订单分配
             </div>
             <el-table ref="multipleTable" :data="orderPropList" :row-key="getRowKeys" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="35" :reserve-selection="true" prop="orderNo" />
+                <el-table-column type="selection" width="50" :reserve-selection="true" prop="orderNo" />
                 <el-table-column label="订单号" prop="orderNo" width="120" />
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">

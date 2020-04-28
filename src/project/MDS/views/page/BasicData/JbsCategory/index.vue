@@ -51,7 +51,7 @@
                 <i class="el-icon-caret-bottom" />
             </div>
             <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @row-dblclick="EditInfo" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="55" />
+                <el-table-column type="selection" width="50" />
                 <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" />
                 <el-table-column label="物料编码" :show-overflow-tooltip="true">
                     <template slot-scope="scope">

@@ -59,7 +59,7 @@
                     </el-col>
                 </el-row>
                 <el-table :data="dataList" :row-key="getRowKeys" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="35" :selectable="CheckBoxInit" />
+                    <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
                     <el-table-column label="订单号" prop="orderNo" width="120" />
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
@@ -87,7 +87,7 @@
                     </el-col>
                 </el-row>
                 <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="35" :selectable="CheckBoxInit" />
+                    <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
                     <el-table-column label="订单号" prop="orderNo" width="120" />
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
