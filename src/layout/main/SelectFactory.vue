@@ -75,10 +75,10 @@
         margin: auto;
         .factory__close {
             position: absolute;
-            color: white;
-            font-size: 32px;
             top: -64px;
             right: -32px;
+            color: white;
+            font-size: 32px;
             cursor: pointer;
         }
     }
