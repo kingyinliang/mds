@@ -106,7 +106,7 @@ export class AddRoutes {
         } else {
             this.mainRoutes['name'] = 'main-dynamic';
             this.mainRoutes['children'] = routes;
-            this.router.addRoutes([this.mainRoutes]);
+            this.router.addRoutes([this.mainRoutes, { path: '*', redirect: { path: '/404' } }]);
             sessionStorage.setItem('dynamicMenuRoutes', JSON.stringify(this.SSRoutes || '[]'));
             console.log('\n');
             console.log('%c!<-------------------- 动态(菜单)路由 s -------------------->', 'color:blue');
