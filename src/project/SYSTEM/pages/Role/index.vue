@@ -20,8 +20,8 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-table ref="userlist" header-row-class-name="tableHead" :data="roleList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column v-if="roleList.length!==0" type="selection" width="50" />
+                    <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
                         <el-table-column type="index" :index="indexMethod" width="50" align="right" />
                         <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
                         <el-table-column label="操作" width="">
@@ -80,7 +80,7 @@
                 currPage: 1,
                 pageSize: 10,
                 totalCount: 1,
-                roleList: [],
+                targetInfoList: [],
                 currentComponent: ''
             };
         },
@@ -109,7 +109,7 @@
                             this.$infoToast('该搜寻条件无任何资料！');
                         }
                         // this.form.username = '';
-                        this.roleList = data.data.records;
+                        this.targetInfoList = data.data.records;
                         this.currPage = data.data.current;
                         this.pageSize = data.data.size;
                         this.totalCount = data.data.total;

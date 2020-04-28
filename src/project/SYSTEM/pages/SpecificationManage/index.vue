@@ -18,7 +18,7 @@
                                 <el-button type="primary" size="small" @click="addOrupdateItem()">
                                     新增
                                 </el-button>
-                                <el-button type="danger" size="small" :disabled="specificationList.length===0" @click="removeItems()">
+                                <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
@@ -26,8 +26,8 @@
                     </el-row>
                 </div>
                 <el-row>
-                    <el-table ref="table1" class="orderTable" border header-row-class-name="tableHead" :data="specificationList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column v-if="specificationList.length!==0" type="selection" width="50" />
+                    <el-table ref="targetInfoList" class="orderTable" border header-row-class-name="tableHead" :data="targetInfoList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
                         <el-table-column type="index" label="#" :index="indexMethod" width="55" />
                         <el-table-column label="物料" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
@@ -62,7 +62,7 @@
                         </el-table-column>
                     </el-table>
                 </el-row>
-                <el-row v-if="specificationList.length!==0">
+                <el-row v-if="targetInfoList.length!==0">
                     <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
@@ -113,7 +113,7 @@
                 unitClassObject: {},
                 largeClass: [], // 大类缓存
                 largeClassObject: {},
-                specificationList: [],
+                targetInfoList: [],
                 multipleSelection: [],
                 isAddOrUpdateDailogShow: false,
                 isAdvanceSearchDailogShow: false,
@@ -153,7 +153,7 @@
                         if (haveParas && data.data.records.length === 0) {
                                 this.$infoToast('该搜寻条件无任何资料！');
                         }
-                        this.specificationList = data.data.records;
+                        this.targetInfoList = data.data.records;
                         this.currPage = data.data.current;
                         this.pageSize = data.data.size;
                         this.totalCount = data.data.total;
