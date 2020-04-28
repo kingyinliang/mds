@@ -1039,9 +1039,6 @@ export default class Index extends Vue {
 //   }
 // }
 
-.el-table .el-table__fixed-right {
-    right: 0 !important;
-}
 </style>
 <style lang="scss">
 .dialog__class {

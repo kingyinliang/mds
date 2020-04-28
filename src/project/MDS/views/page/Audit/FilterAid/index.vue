@@ -45,7 +45,7 @@
                 </el-form-item>
             </el-form>
             <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" :selectable="checkboxT" width="34" />
+                <el-table-column type="selection" :selectable="checkboxT" width="50" />
                 <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
                 <el-table-column label="审核状态" width="100">
                     <template slot-scope="scope">

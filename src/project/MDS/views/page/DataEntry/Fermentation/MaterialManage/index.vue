@@ -76,7 +76,7 @@
                 <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />发料列表
             </h2>
             <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="GetLog">
-                <el-table-column type="selection" :selectable="checkboxT" width="34" />
+                <el-table-column type="selection" :selectable="checkboxT" width="50" />
                 <el-table-column type="index" label="序号" width="55" />
                 <el-table-column label="订单号" width="120" prop="ferOrderNo" />
                 <el-table-column label="状态" width="93" prop="approveStatus">

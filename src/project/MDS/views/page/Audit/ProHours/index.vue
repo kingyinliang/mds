@@ -77,7 +77,7 @@
                         </el-form-item>
                     </el-form>
                     <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" max-height="450" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="checkboxT" width="34" />
+                        <el-table-column type="selection" :selectable="checkboxT" width="50" />
                         <el-table-column label="审核状态" width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? (scope.row.interfaceReturnStatus === '0' ? '接口失败' : '审核通过') : scope.row.status === 'noPass' ? '审核不通过' : '' }}
@@ -579,11 +579,6 @@
     .topforms {
         .el-date-editor.el-input {
             width: auto;
-        }
-    }
-    .el-table {
-        .el-table__fixed-right {
-            right: 6px !important;
         }
     }
 </style>

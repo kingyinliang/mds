@@ -72,7 +72,7 @@
                 </div>
                 <el-row v-if="clearStatus">
                     <el-table ref="table1" header-row-class-name="tableHead" :data="datalist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="checkboxT" width="34" />
+                        <el-table-column type="selection" :selectable="checkboxT" width="50" />
                         <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'saved' ? '已保存' : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'checked' ? '审核通过' : scope.row.status === 'noPass' ? '审核不通过' : '' }}

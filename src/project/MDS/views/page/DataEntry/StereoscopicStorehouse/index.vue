@@ -67,7 +67,7 @@
                 </div>
                 <div>
                     <el-table ref="table1" header-row-class-name="tableHead" :data="LtkList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="checkboxT" width="34" />
+                        <el-table-column type="selection" :selectable="checkboxT" width="50" />
                         <el-table-column label="审核状态" width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? '审核通过' : scope.row.status === 'noPass' ? '审核不通过' : '' }}

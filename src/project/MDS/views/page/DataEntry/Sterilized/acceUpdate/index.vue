@@ -64,7 +64,7 @@
                 </h3>
             </div>
             <el-table ref="multipleTable" header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleSelectionChange" @row-dblclick="Dblckick">
-                <el-table-column type="selection" :selectable="CheckBoxOrder" width="40" align="center" />
+                <el-table-column type="selection" :selectable="CheckBoxOrder" width="50" align="center" />
                 <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" />
                 <el-table-column label="辅料状态" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
