@@ -28,4 +28,11 @@ module.exports = {
         filename: 'DFMDS.html',
         chunk: ["chunk-vendors", "chunk-common", 'DFMDS']
     },
+    SYSTEM: {
+        title: '欣和-制造管理系统',
+        entry: 'src/project/SYSTEM/main.ts',
+        template: 'public/SYSTEM.html',
+        filename: 'SYSTEM.html',
+        chunk: ["chunk-vendors", "chunk-common", 'SYSTEM']
+    },
 }

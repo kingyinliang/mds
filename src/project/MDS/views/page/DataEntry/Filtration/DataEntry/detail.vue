@@ -293,8 +293,9 @@ export default {
             }
             const materialHolderList = this.$refs.material.GetmaterialList()
             const equWorkingHolderList = this.$refs.equworkinghours.GetequWorkingList()
-            const diffArr = [...equWorkingHolderList].filter(x => [...materialHolderList].every(y => (y.holderId !== x.holderId)));
-            const diffArrs = [...materialHolderList].filter(x => [...equWorkingHolderList].every(y => (y.holderId !== x.holderId)));
+            const equWorkingHolderLists = equWorkingHolderList.filter(xy => xy.content === '过滤')
+            const diffArr = [...equWorkingHolderLists].filter(x => [...materialHolderList].every(y => (y.holderId !== x.holderId)));
+            const diffArrs = [...materialHolderList].filter(x => [...equWorkingHolderLists].every(y => (y.holderId !== x.holderId)));
             if (diffArr.length !== 0 || diffArrs.length !== 0) {
                 this.$warningToast('设备工时与物料领用罐号须一致');
                 return false;
