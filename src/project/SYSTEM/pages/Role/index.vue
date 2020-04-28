@@ -4,14 +4,14 @@
             <el-card>
                 <el-row type="flex">
                     <el-col>
-                        <el-form :inline="true" :model="form" size="small" label-width="85px" class="topforms">
+                        <el-form :inline="true" :model="controllableForm" size="small" label-width="85px" class="topforms">
                             <el-form-item label="角色名称：">
-                                <el-input v-model="form.username" placeholder="角色名称" clearable @clear="getItemsList()" />
+                                <el-input v-model="controllableForm.username" placeholder="角色名称" clearable @clear="getItemsList()" />
                             </el-form-item>
                         </el-form>
                     </el-col>
                     <el-col style="width: 200px;">
-                        <el-button type="primary" size="small" :disabled="form.username.trim()===''" @click="getItemsList(true,form.username)">
+                        <el-button type="primary" size="small" :disabled="controllableForm.username.trim()===''" @click="getItemsList(true,controllableForm.username)">
                             查询
                         </el-button>
                         <el-button type="primary" size="small" @click="addOrUpdateItem()">
@@ -73,7 +73,7 @@
                 isUserManageShow: false,
                 isDepartmentManageShow: false,
                 isRoleAddOrUpdateShow: false,
-                form: {
+                controllableForm: {
                     username: ''
                 },
                 menuList: [],
@@ -108,7 +108,7 @@
                         if (haveParas && data.data.records.length === 0) {
                             this.$infoToast('该搜寻条件无任何资料！');
                         }
-                        // this.form.username = '';
+                        // this.controllableForm.username = '';
                         this.targetInfoList = data.data.records;
                         this.currPage = data.data.current;
                         this.pageSize = data.data.size;

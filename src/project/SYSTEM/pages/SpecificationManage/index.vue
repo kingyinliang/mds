@@ -4,12 +4,12 @@
             <el-card>
                 <div class="clearfix">
                     <el-row style="float: right;">
-                        <el-form :inline="true" :model="searchForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
+                        <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="searchForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
+                                <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" size="small" :disabled="searchForm.materialCode.trim()===''" @click="getItemsList(true)">
+                                <el-button type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true)">
                                     查询
                                 </el-button>
                                 <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
@@ -70,18 +70,18 @@
         <specification-add-or-update v-if="isAddOrUpdateDailogShow" ref="SpecificationAddOrUpdate" :large-class="largeClass" :unit-class="unitClass" :serch-spec-list="serchSpecList" @refreshDataList="getItemsList" />
         <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow">
             <div class="formdata">
-                <el-form :model="searchForm" size="small" label-width="110px" class="orderdialog">
+                <el-form :model="controllableForm" size="small" label-width="110px" class="orderdialog">
                     <el-form-item label="物料：">
-                        <el-input v-model="searchForm.materialCode" placeholder="手工录入" clearable />
+                        <el-input v-model="controllableForm.materialCode" placeholder="手工录入" clearable />
                     </el-form-item>
                     <el-form-item label="品牌：">
-                        <el-input v-model="searchForm.brand" placeholder="手工录入" clearable />
+                        <el-input v-model="controllableForm.brand" placeholder="手工录入" clearable />
                     </el-form-item>
                     <el-form-item label="箱规格：">
-                        <el-input v-model="searchForm.boxSpec" placeholder="手工录入" clearable />
+                        <el-input v-model="controllableForm.boxSpec" placeholder="手工录入" clearable />
                     </el-form-item>
                     <el-form-item label="瓶规格：">
-                        <el-input v-model="searchForm.productSpec" placeholder="手工录入" clearable />
+                        <el-input v-model="controllableForm.productSpec" placeholder="手工录入" clearable />
                     </el-form-item>
                 </el-form>
             </div>
@@ -117,7 +117,7 @@
                 multipleSelection: [],
                 isAddOrUpdateDailogShow: false,
                 isAdvanceSearchDailogShow: false,
-                searchForm: {
+                controllableForm: {
                     brand: '',
                     materialCode: '',
                     boxSpec: '',
@@ -142,10 +142,10 @@
                 }
                 COMMON_API.SPECS_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    boxSpec: this.searchForm.boxSpec.trim(),
-                    bottleSpec: this.searchForm.productSpec.trim(),
-                    brand: this.searchForm.brand.trim(),
-                    material: this.searchForm.materialCode.trim(),
+                    boxSpec: this.controllableForm.boxSpec.trim(),
+                    bottleSpec: this.controllableForm.productSpec.trim(),
+                    brand: this.controllableForm.brand.trim(),
+                    material: this.controllableForm.materialCode.trim(),
                     current: JSON.stringify(this.currPage),
                     size: JSON.stringify(this.pageSize)
                 }).then(({ data }) => {
