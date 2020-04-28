@@ -138,7 +138,7 @@
             <el-row>
                 <el-col>
                     <el-table ref="multipleTable" :data="newDataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="CheckBoxInit" width="35" fixed="left" />
+                        <el-table-column type="selection" :selectable="CheckBoxInit" width="50" fixed="left" />
                         <el-table-column label="状态" width="65">
                             <template slot-scope="scope">
                                 {{ scope.row.guan === '已开罐' ? '已开罐' : '未开罐' }}
