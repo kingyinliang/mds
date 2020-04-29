@@ -9,7 +9,7 @@
             </el-button>
         </el-row>
         <el-table ref="table1" :data="fumet" header-row-class-name="tableHead" border tooltip-effect="dark" @row-dblclick="GetLog" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" :selectable="checkboxApply" width="34" />
+            <el-table-column type="selection" :selectable="checkboxApply" width="50" />
             <el-table-column label="状态" width="95">
                 <template slot-scope="scope">
                     <span

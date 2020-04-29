@@ -76,8 +76,8 @@
                             <el-date-picker v-model="plantList.postgDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
                         </el-form-item>
                     </el-form>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="checkboxT" width="34" />
+                    <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" max-height="450" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                        <el-table-column type="selection" :selectable="checkboxT" width="50" />
                         <el-table-column label="审核状态" width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? (scope.row.interfaceReturnStatus === '0' ? '接口失败' : '审核通过') : scope.row.status === 'noPass' ? '审核不通过' : '' }}
@@ -128,7 +128,7 @@
                         <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="150" />
                         <el-table-column prop="verifyMan" label="审核人" width="150" />
                         <el-table-column prop="verifyDate" label="审核时间" width="160" />
-                        <el-table-column fixed="right" label="操作" width="120">
+                        <el-table-column fixed="right" label="操作" width="70">
                             <template slot-scope="scope">
                                 <el-button v-if="!((scope.row.status === 'checked' && scope.row.interfaceReturnStatus === '1') || scope.row.status === 'noPass') && isAuth('verify:time:update')" class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)">
                                     {{ scope.row.redact ? '保存' : '编辑' }}
@@ -239,6 +239,7 @@
         methods: {
             // 获取列表
             getAuditList(st) {
+                this.AuditList = [];
                 if (!this.plantList.factory) {
                     this.$warningToast('请选择工厂');
                     return;
@@ -544,7 +545,7 @@
     };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
     .searchCard {
         margin-bottom: 0;
     }
@@ -579,11 +580,6 @@
     .topforms {
         .el-date-editor.el-input {
             width: auto;
-        }
-    }
-    .el-table {
-        .el-table__fixed-right {
-            right: 6px !important;
         }
     }
 </style>

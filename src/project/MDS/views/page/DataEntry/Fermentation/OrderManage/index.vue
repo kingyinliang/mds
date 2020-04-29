@@ -5,39 +5,43 @@
                 <el-row type="flex">
                     <el-col>
                         <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px;" @change="changeOptions('workshop')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="罐号：">
-                                <el-select v-model="params.potId" class="selectwpx" filterable style="width: 140px;" @change="changeOptions('pot')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in potList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="物料：">
-                                <el-select v-model="params.materialCode" class="selectwpx" filterable style="width: 140px;" @change="changeOptions('material')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="订单日期：">
-                                <el-date-picker v-model="params.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
-                                - <el-date-picker v-model="params.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
-                            </el-form-item>
-                            <el-form-item class="floatr">
-                                <el-button v-if="isAuth('fer:order:list')" type="primary" size="small" style="float: right;" @click="getOrderList()">
-                                    查询
-                                </el-button>
-                            </el-form-item>
+                            <el-row type="flex" class="row-bg">
+                                <el-form-item label="生产工厂：">
+                                    <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
+                                        <el-option label="请选择" value="" />
+                                        <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="生产车间：">
+                                    <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px;" @change="changeOptions('workshop')">
+                                        <el-option label="请选择" value="" />
+                                        <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="罐号：">
+                                    <el-select v-model="params.potId" class="selectwpx" filterable style="width: 140px;" @change="changeOptions('pot')">
+                                        <el-option label="请选择" value="" />
+                                        <el-option v-for="sole in potList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="物料：">
+                                    <el-select v-model="params.materialCode" class="selectwpx" filterable style="width: 140px;" @change="changeOptions('material')">
+                                        <el-option label="请选择" value="" />
+                                        <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
+                                    </el-select>
+                                </el-form-item>
+                            </el-row>
+                            <el-row type="flex" class="row-bg" justify="space-between">
+                                <el-form-item label="订单日期：">
+                                    <el-date-picker v-model="params.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
+                                    - <el-date-picker v-model="params.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button v-if="isAuth('fer:order:list')" type="primary" size="small" style="float: right;" @click="getOrderList()">
+                                        查询
+                                    </el-button>
+                                </el-form-item>
+                            </el-row>
                         </el-form>
                     </el-col>
                 </el-row>

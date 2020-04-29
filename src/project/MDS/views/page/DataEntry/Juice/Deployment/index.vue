@@ -60,7 +60,7 @@
             </div>
             <el-card>
                 <el-table :data="dataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="35" :selectable="CheckBoxInit" />
+                    <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
                     <el-table-column label="状态" width="90" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span

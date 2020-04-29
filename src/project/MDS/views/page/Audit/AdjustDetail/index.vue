@@ -72,7 +72,7 @@
                     <el-button>待调整</el-button>
                 </span>
                 <el-table ref="multipleTable1" :data="dataList" :row-key="getRowKeys" header-row-class-name="tableHead" border @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" :reserve-selection="true" width="34" fixed="left" />
+                    <el-table-column type="selection" :reserve-selection="true" width="50" fixed="left" />
                     <el-table-column label="容器类型" prop="holderTypeName" show-overflow-tooltip />
                     <el-table-column label="容器号" prop="holderName" width="100" show-overflow-tooltip />
                     <el-table-column label="物料" width="190" show-overflow-tooltip>
@@ -98,7 +98,7 @@
                     <el-button>调整中</el-button>
                 </span>
                 <el-table ref="multipleTable2" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" :reserve-selection="true" width="34" fixed="left" />
+                    <el-table-column type="selection" :reserve-selection="true" width="50" fixed="left" />
                     <el-table-column label="容器类型" prop="holderTypeName" show-overflow-tooltip />
                     <el-table-column label="容器号" width="100" prop="holderName" show-overflow-tooltip />
                     <el-table-column label="物料" width="190" show-overflow-tooltip>

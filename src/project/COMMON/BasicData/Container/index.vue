@@ -5,22 +5,22 @@
                 <h3>容器管理列表</h3>
                 <el-row type="flex">
                     <el-col class="header_main" style="margin-bottom: 10px;">
-                        <el-form :inline="true" :model="searchForm" size="small" label-width="70px" class="multi_row" @submit.native.prevent>
+                        <el-form :inline="true" :model="controllableForm" size="small" label-width="70px" class="multi_row" @submit.native.prevent>
                             <el-form-item label="归属车间：">
-                                <el-select v-model="searchForm.dept_id" placeholder="请选择">
+                                <el-select v-model="controllableForm.dept_id" placeholder="请选择">
                                     <el-option v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="容器类型：">
-                                <el-select v-model="searchForm.holderType" placeholder="请选择">
+                                <el-select v-model="controllableForm.holderType" placeholder="请选择">
                                     <el-option v-for="(item, index) in containerTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="容器号：">
-                                <el-input v-model="searchForm.holderNo" placeholder="手动输入" clearable />
+                                <el-input v-model="controllableForm.holderNo" placeholder="手动输入" clearable />
                             </el-form-item>
                             <el-form-item label="容器量：">
-                                <el-input v-model="searchForm.holderVolume" placeholder="手动输入" clearable />
+                                <el-input v-model="controllableForm.holderVolume" placeholder="手动输入" clearable />
                             </el-form-item>
                             <el-form-item class="floatr">
                                 <el-button
@@ -33,7 +33,7 @@
                                 <el-button type="primary" size="small" @click="addOrUpdateItem()">
                                     新增
                                 </el-button>
-                                <el-button type="danger" size="small" :disabled="containerList.length===0" @click="removeItems()">
+                                <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
@@ -41,8 +41,8 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="containerList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column v-if="containerList.length!==0" type="selection" width="45" />
+                    <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
                         <el-table-column type="index" :index="indexMethod" label="#" width="55" />
                         <el-table-column label="容器类型" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
@@ -73,8 +73,8 @@
                         </el-table-column>
                     </el-table>
                 </el-row>
-                <el-row v-if="containerList.length!==0">
-                    <el-pagination :current-page="searchForm.currPage" :page-sizes="[10, 20, 50]" :page-size="searchForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="searchForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-row v-if="targetInfoList.length!==0">
+                    <el-pagination :current-page="controllableForm.currPage" :page-sizes="[10, 20, 50]" :page-size="controllableForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="controllableForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
@@ -93,7 +93,7 @@
         data() {
             return {
                 isDialogShow: false,
-                searchForm: {
+                controllableForm: {
                     deptID: '',
                     holderType: '',
                     holderNo: '',
@@ -108,13 +108,13 @@
                 multipleSelectionTemp: [],
                 containerTypeList: [],
                 containerTypeObject: {},
-                containerList: [],
+                targetInfoList: [],
                 holderStatusObject: { E: '空', R: '投料', F: '发酵', U: '领用', C: '清洗' }
             };
         },
         computed: {},
         mounted() {
-            console.log(this.searchForm.dept_id)
+            console.log(this.controllableForm.dept_id)
             // 获取车间下拉列表
             this.getWorkshopList();
             // 获取容器状态
@@ -125,20 +125,20 @@
         methods: {
             // 序号
             indexMethod(index) {
-                return index + 1 + (Number(this.searchForm.currPage) - 1) * Number(this.searchForm.pageSize);
+                return index + 1 + (Number(this.controllableForm.currPage) - 1) * Number(this.controllableForm.pageSize);
             },
             // 获取容器列表
             getItemsList(havePars) {
                 if (havePars) {
-                    this.searchForm.currPage = 1;
+                    this.controllableForm.currPage = 1;
                 }
                 COMMON_API.HOLDER_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    current: this.searchForm.currPage,
-                    size: this.searchForm.pageSize,
-                    holderType: this.searchForm.holderType,
-                    holderNo: this.searchForm.holderNo,
-                    holderVolume: this.searchForm.holderVolume
+                    current: this.controllableForm.currPage,
+                    size: this.controllableForm.pageSize,
+                    holderType: this.controllableForm.holderType,
+                    holderNo: this.controllableForm.holderNo,
+                    holderVolume: this.controllableForm.holderVolume
                 }).then(({ data }) => {
                     if (data.code === 200) {
                         console.log(data)
@@ -146,10 +146,10 @@
                             this.$infoToast('该搜寻条件无任何资料！');
                         }
                         this.multipleSelection = [];
-                        this.containerList = data.data.records;
-                        this.searchForm.currPage = data.data.pages;
-                        this.searchForm.pageSize = data.data.size;
-                        this.searchForm.totalCount = data.data.total;
+                        this.targetInfoList = data.data.records;
+                        this.controllableForm.currPage = data.data.pages;
+                        this.controllableForm.pageSize = data.data.size;
+                        this.controllableForm.totalCount = data.data.total;
 
                     } else {
                         this.$errorToast(data.msg);
@@ -231,12 +231,12 @@
             },
             // 改变每页条数
             handleSizeChange(val) {
-                this.searchForm.pageSize = val;
+                this.controllableForm.pageSize = val;
                 this.getItemsList();
             },
             // 跳转页数
             handleCurrentChange(val) {
-                this.searchForm.currPage = val;
+                this.controllableForm.currPage = val;
                 this.getItemsList();
             }
         }

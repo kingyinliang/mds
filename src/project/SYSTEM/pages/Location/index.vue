@@ -9,7 +9,7 @@
                                 <el-input v-model="form.deptName" placeholder="车间" suffix-icon="el-icon-search" />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" size="small" :disabled="form.deptName.trim()===''" @click="getVagueItemList(true)">
+                                <el-button type="primary" size="small" :disabled="form.deptName.trim() === ''" @click="getVagueItemList(true)">
                                     查询
                                 </el-button>
                                 <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
@@ -18,7 +18,7 @@
                                 <el-button type="primary" size="small" @click="addItem()">
                                     新增
                                 </el-button>
-                                <el-button type="danger" size="small" :disabled="itemList.length===0" @click="removeItems()">
+                                <el-button type="danger" size="small" :disabled="itemList.length === 0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
@@ -57,7 +57,7 @@
                         </el-table-column>
                     </el-table>
                 </el-row>
-                <el-row v-if="itemList.length!==0">
+                <el-row v-if="itemList.length !== 0">
                     <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
@@ -142,34 +142,34 @@
                 }
                 if (this.currentQueryStatus === 0) {
                     COMMON_API.STORAGE_QUERY_API({
-                    factory: '0FBAFB40ECA8AD58FF',
-                    deptId: this.form.deptId,
-                    deptName: this.form.deptName,
-                    materialType: this.form.materialTypeCode,
-                    storageLocation: this.form.storageLocation,
-                    size: this.pageSize,
-                    current: this.currPage
-                }).then(({ data }) => {
-                    this.isAddOrUpdateDailogShow = false;
-                    this.isAdvanceSearchDailogShow = false;
-                    this.currentQueryStatus = 0;
-                    if (data.code === 200) {
-                        this.multipleSelection = [];
-                        this.itemList = data.data.records;
-                        this.currPage = data.data.current;
-                        this.pageSize = data.data.size;
-                        this.totalCount = data.data.total;
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
-                });
+                        factory: '0FBAFB40ECA8AD58FF',
+                        deptId: this.form.deptId,
+                        deptName: this.form.deptName,
+                        materialType: this.form.materialTypeCode,
+                        storageLocation: this.form.storageLocation,
+                        size: this.pageSize,
+                        current: this.currPage
+                    }).then(({ data }) => {
+                        this.isAddOrUpdateDailogShow = false;
+                        this.isAdvanceSearchDailogShow = false;
+                        this.currentQueryStatus = 0;
+                        if (data.code === 200) {
+                            this.multipleSelection = [];
+                            this.itemList = data.data.records;
+                            this.currPage = data.data.current;
+                            this.pageSize = data.data.size;
+                            this.totalCount = data.data.total;
+                        } else {
+                            this.$errorToast(data.msg);
+                        }
+                    });
                 } else {
                     this.getVagueItemList();
                 }
             },
             //模糊查询
             getVagueItemList(st) {
-                 if (st) {
+                if (st) {
                     this.currPage = 1;
                 }
                 COMMON_API.STORAGE_VAGUEQUERY_API({
@@ -206,11 +206,11 @@
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         ids: this.multipleSelection
                     }).then(({ data }) => {
-                         if (data.code === 200) {
+                        if (data.code === 200) {
                             this.$successToast('删除成功!');
                             this.multipleSelection = [];
                             this.$nextTick(() => {
-                                alert(this.currentQueryStatus)
+                                alert(this.currentQueryStatus);
                             });
                         } else {
                             this.$errorTost(data.msg);
@@ -260,13 +260,13 @@
             // 表格选中
             handleSelectionChange(val) {
                 this.multipleSelection = [];
-                val.forEach((item) => {
+                val.forEach(item => {
                     this.multipleSelection.push(item.id);
                 });
             },
             // 序号
             indexMethod(index) {
-                return index + 1 + (Number(this.currPage) - 1) * (Number(this.pageSize));
+                return index + 1 + (Number(this.currPage) - 1) * Number(this.pageSize);
             },
             // 改变每页条数
             handleSizeChange(val) {

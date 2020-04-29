@@ -1,6 +1,7 @@
 <template>
     <el-dialog :show-close="false" :visible.sync="factoryVisible" class="selectFa">
         <div class="factoryBox">
+            <i class="el-icon-close factory__close" @click="factoryVisible = false" />
             <div v-for="(item, index) in factory" :key="index" class="factoryItem">
                 <div class="itemBox">
                     <div class="item-title">
@@ -69,13 +70,23 @@
         }
     }
     .factoryBox {
+        position: relative;
         width: 1168px;
         margin: auto;
+        .factory__close {
+            position: absolute;
+            top: -64px;
+            right: -32px;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+        }
     }
     .factoryItem {
         display: inline-block;
         padding: 5px;
         .itemBox {
+            box-sizing: content-box !important;
             width: 250px;
             padding: 16px;
             background: white;

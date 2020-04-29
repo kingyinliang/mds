@@ -143,7 +143,7 @@
                             <el-row>
                                 <el-col>
                                     <el-table ref="multipleTable" header-row-class-name="tableHead" :data="orderDetailList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @selection-change="handleChange" @row-dblclick="showModifyDetial">
-                                        <el-table-column type="selection" width="55" />
+                                        <el-table-column type="selection" width="50" />
                                         <el-table-column type="index" width="55" label="序号" />
                                         <el-table-column label="曲房状态" width="80">
                                             <template slot-scope="scope">
@@ -1038,6 +1038,7 @@ export default class Index extends Vue {
 //     background:rgba(233,233,233,1);
 //   }
 // }
+
 </style>
 <style lang="scss">
 .dialog__class {

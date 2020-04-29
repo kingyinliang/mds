@@ -92,7 +92,7 @@
                     </el-row>
                     <el-row>
                         <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleChange" @row-dblclick="showDetail">
-                            <el-table-column type="selection" :selectable="selectable" width="55" />
+                            <el-table-column type="selection" :selectable="selectable" width="50" />
                             <el-table-column type="index" label="序号" width="55" />
                             <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
                                 <template slot-scope="scope">

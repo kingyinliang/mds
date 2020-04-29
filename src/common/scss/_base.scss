@@ -6,7 +6,13 @@
 .main {
     padding: 5px 10px;
 }
+.marginL10px {
+    margin-left: 10px;
+}
 
+.textAlignR {
+    text-align: right;
+}
 .topTitle {
     width: 100%;
     background-color: white;
@@ -374,7 +380,7 @@
             top: 32px;
             left: 170px;
             right: 0;
-            z-index: 930;
+            z-index: 1000;
             padding: 0 55px 0 15px;
             box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
             background-color: #fff;
@@ -392,7 +398,7 @@
                 position: fixed;
                 top: 32px;
                 right: 0;
-                z-index: 931;
+                z-index: 1001;
                 height: 40px;
                 padding: 0 12px;
                 font-size: 16px;
@@ -1391,6 +1397,9 @@ $indexlist: (1: 11, 2: 10, 3: 9, 4: 8, 5: 7, 6: 6, 7: 5, 8: 4, 9: 3, 10: 2, 11: 
 // tabs加z-index
 
 /* scrollbar */
+.el-table--scrollable-y .el-table__fixed-right {
+    right: 6px !important;
+}
 .el-table__body-wrapper::-webkit-scrollbar, .SelfScrollbar::-webkit-scrollbar {
     width: 6px;
     background: #ebeef5;

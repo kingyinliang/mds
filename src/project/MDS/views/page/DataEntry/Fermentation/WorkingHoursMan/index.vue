@@ -77,7 +77,7 @@
         <el-tabs v-model="activeName" type="border-card" style="margin-top: 15px;" @tab-click="tabClick">
             <el-tab-pane name="noMatureReport" label="未成熟">
                 <el-table :data="dataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
-                    <el-table-column type="selection" :selectable="CheckBoxInit" fixed="left" align="center" />
+                    <el-table-column type="selection" :selectable="CheckBoxInit" fixed="left" align="center" width="50" />
                     <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <label :style="{ color: scope.row.status === 'fail' ? 'red' : scope.row.status === 'success' ? '#7ED321' : '' }">{{ scope.row.status === 'success' ? '已审核' : scope.row.status === 'fail' ? '审核不通过' : scope.row.status === 'init' ? '已保存' : scope.row.status === 'submit' ? '已提交' : '' }}</label>
@@ -144,7 +144,7 @@
             </el-tab-pane>
             <el-tab-pane name="maturedReport" label="已成熟">
                 <el-table :data="dataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
-                    <el-table-column type="selection" :selectable="CheckBoxInit" />
+                    <el-table-column type="selection" :selectable="CheckBoxInit" width="50" />
                     <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <label :style="{ color: scope.row.status === 'fail' ? 'red' : scope.row.status === 'success' ? '#7ED321' : '' }">{{ scope.row.status === 'success' ? '已审核' : scope.row.status === 'fail' ? '审核不通过' : scope.row.status === 'init' ? '已保存' : scope.row.status === 'submit' ? '已提交' : '' }}</label>
@@ -207,7 +207,7 @@
             </el-tab-pane>
             <el-tab-pane name="rework" label="返工订单">
                 <el-table :data="dataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
-                    <el-table-column type="selection" :selectable="CheckBoxInit" />
+                    <el-table-column type="selection" :selectable="CheckBoxInit" width="50" />
                     <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             <label :style="{ color: scope.row.status === 'fail' ? 'red' : scope.row.status === 'success' ? '#7ED321' : '' }">{{ scope.row.status === 'success' ? '已审核' : scope.row.status === 'fail' ? '审核不通过' : scope.row.status === 'init' ? '已保存' : scope.row.status === 'submit' ? '已提交' : '' }}</label>

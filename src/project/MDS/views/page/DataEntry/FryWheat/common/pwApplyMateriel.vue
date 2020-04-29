@@ -8,7 +8,7 @@
                     <el-button type="primary" size="small" :disabled="!isRedact || appyMaterielState == 'submit' || appyMaterielState == 'checked'" @click="addNewRecord">
                         新增
                     </el-button>
-                    <el-button type="primary" style="margin-left: 0;" size="small" :disabled="!isRedact || !enableSubmit" @click="saveOrderMateriel">
+                    <el-button type="primary" style="margin-left: 10px;" size="small" :disabled="!isRedact || !enableSubmit" @click="saveOrderMateriel">
                         申请订单
                     </el-button>
                 </div>

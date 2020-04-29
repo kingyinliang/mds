@@ -20,7 +20,7 @@
                     </el-button>
                 </div>
                 <el-table ref="table1" class="newTable" border header-row-class-name="tableHead" :data="deviceList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="40" />
+                    <el-table-column type="selection" width="50" />
                     <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
                     <el-table-column prop="deviceNo" width="120" :show-overflow-tooltip="true" label="设备编号" />
                     <el-table-column prop="deviceName" label="设备描述" :show-overflow-tooltip="true" />

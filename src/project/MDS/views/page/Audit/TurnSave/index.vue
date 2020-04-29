@@ -56,7 +56,7 @@
                     style="width: 100%; margin-bottom: 20px;"
                     @selection-change="handleSelectionChange"
                 >
-                    <el-table-column type="selection" :selectable="checkboxT" width="34" />
+                    <el-table-column type="selection" :selectable="checkboxT" width="50" />
                     <el-table-column prop="holderName" label="领用罐号" width="100" :show-overflow-tooltip="true" />
                     <el-table-column
                         prop="verifyMan"
@@ -104,7 +104,7 @@
                     style="width: 100%; margin-bottom: 20px;"
                     @selection-change="handleSelectionChange1"
                 >
-                    <el-table-column type="selection" :selectable="checkboxT" width="34" />
+                    <el-table-column type="selection" :selectable="checkboxT" width="50" />
                     <el-table-column prop="moveType" label="移动类型" width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="holderName" label="领用罐号" width="100" :show-overflow-tooltip="true" />
                     <el-table-column

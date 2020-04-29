@@ -13,7 +13,7 @@
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
-            @success="GetOrderList"
+            @success="getOrderList"
             @updateProductDate="updateProductDate"
         >
             <template slot="1" slot-scope="data">
@@ -241,14 +241,14 @@ export default {
         // yyyyMMdd
         this.productDate = this.FWproductDate;
         this.workShop = this.FWworkShop;
-        this.GetOrderList();
+        this.getOrderList();
     },
     methods: {
         tabClick(val) {
             this.$refs.tabs.setCurrentName(val.name);
         },
         // 获取表头
-        GetOrderList() {
+        getOrderList() {
             this.$http(
                 `${WHT_API.CINDEXORDERLIST_API}`,
                 'POST',
@@ -261,24 +261,28 @@ export default {
                 false,
                 false
             ).then(({ data }) => {
-                this.formHeader = {};
-                this.formHeader = data.list[0];
-                this.orderStatus = data.list[0].orderStatus;
-                this.$refs.readytime.GetMachine(this.formHeader.productLine);
-                this.$refs.excrecord.GetequipmentType(this.formHeader.productLine);
-                this.$refs.excrecord.getDataList(this.formHeader.factory);
-                this.$refs.workerref.GetTeam(this.formHeader.workShop, this.formHeader.factory);
-                this.$refs.workerref.getTree(this.formHeader.factory);
-                this.$refs.workerref.GetProductShift(this.formHeader.factory);
-                this.$refs.instock.getWheatDataList(this.formHeader.orderId);
-                this.$refs.instock.getBatch(this.workShop);
-                this.$refs.applymateriel.getMaterielDataList(this.formHeader.orderId);
-                this.$refs.applymateriel.GetWheatCang(this.formHeader);
-                if (this.orderStatus !== '已同步') {
-                    this.$refs.readytime.GetReadyList(this.formHeader.orderId);
-                    this.$refs.workerref.GetUserList(this.formHeader.orderId);
-                    this.$refs.excrecord.GetExcDate(this.formHeader.orderId);
-                    this.$refs.textrecord.GetText(this.formHeader.orderId);
+                if (data.code === 0) {
+                    this.formHeader = {};
+                    this.formHeader = data.list[0];
+                    this.orderStatus = data.list[0].orderStatus;
+                    this.$refs.readytime.GetMachine(this.formHeader.productLine);
+                    this.$refs.excrecord.GetequipmentType(this.formHeader.productLine);
+                    this.$refs.excrecord.getDataList(this.formHeader.factory);
+                    this.$refs.workerref.GetTeam(this.formHeader.workShop, this.formHeader.factory);
+                    this.$refs.workerref.getTree(this.formHeader.factory);
+                    this.$refs.workerref.GetProductShift(this.formHeader.factory);
+                    this.$refs.instock.getWheatDataList(this.formHeader.orderId);
+                    this.$refs.instock.getBatch(this.workShop);
+                    this.$refs.applymateriel.getMaterielDataList(this.formHeader.orderId);
+                    this.$refs.applymateriel.GetWheatCang(this.formHeader);
+                    if (this.orderStatus !== '已同步') {
+                        this.$refs.readytime.GetReadyList(this.formHeader.orderId);
+                        this.$refs.workerref.GetUserList(this.formHeader.orderId);
+                        this.$refs.excrecord.GetExcDate(this.formHeader.orderId);
+                        this.$refs.textrecord.GetText(this.formHeader.orderId);
+                    }
+                } else {
+                    this.$warningToast(data.msg);
                 }
             });
         },
@@ -399,7 +403,7 @@ export default {
                     });
                     const net12 = Promise.all([net6, net7, net8]);
                     net12.then(() => {
-                        this.GetOrderList();
+                        this.getOrderList();
                         this.$notify({
                             title: '成功',
                             message: '提交成功',
@@ -416,7 +420,7 @@ export default {
                 });
                 const net10 = Promise.all([net0, net1, net2, net3, net4, net5, instock, material]);
                 net10.then(() => {
-                    this.GetOrderList();
+                    this.getOrderList();
                     this.$notify({
                         title: '成功',
                         message: '保存成功',

@@ -20,6 +20,18 @@ const mainRoutes: RouteConfig = {
             component: importTarget('MDS/views/common/home'),
             name: 'home',
             meta: { title: '首页' }
+        },
+        {
+            path: '/404',
+            component: importTarget('COMMON/404'),
+            name: '404',
+            meta: { title: '404' }
+        },
+        {
+            path: '/500',
+            component: importTarget('COMMON/500'),
+            name: '500',
+            meta: { title: '500' }
         }
     ],
     beforeEnter(to, from, next) {

@@ -21,15 +21,15 @@
                 </el-row>
                 <el-row>
                     <el-table ref="userlist" header-row-class-name="tableHead" :data="role" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column type="selection" width="34" />
+                        <el-table-column type="selection" width="50" />
                         <el-table-column type="index" :index="indexMethod" width="55" />
                         <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
                         <el-table-column label="操作" width="320">
                             <template slot-scope="scope">
-                                <a v-if="isAuth('sys:role:updateuser')" @click="userManage(scope.row.roleId)">人员管理</a>
-                                <a v-if="isAuth('sys:role:updatemenu')" @click="fnManage(scope.row.roleId)">功能分配</a>
-                                <a v-if="isAuth('sys:role:updatedept')" @click="roleDept(scope.row.roleId)">部门分配</a>
-                                <a v-if="isAuth('sys:role:update')" @click="roleAddOrUpdate(scope.row)">修改角色</a>
+                                <a v-if="isAuth('sys:role:updateuser')" style="margin-right: 5px;" @click="userManage(scope.row.roleId)">人员管理</a>
+                                <a v-if="isAuth('sys:role:updatemenu')" style="margin-right: 5px;" @click="fnManage(scope.row.roleId)">功能分配</a>
+                                <a v-if="isAuth('sys:role:updatedept')" style="margin-right: 5px;" @click="roleDept(scope.row.roleId)">部门分配</a>
+                                <a v-if="isAuth('sys:role:update')" style="margin-right: 5px;" @click="roleAddOrUpdate(scope.row)">修改角色</a>
                                 <a v-if="isAuth('sys:role:delete')" @click="removes(scope.row.roleId)">删除角色</a>
                             </template>
                         </el-table-column>
