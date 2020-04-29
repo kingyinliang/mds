@@ -114,7 +114,7 @@ export default {
     computed: {},
     mounted() {
         this.getItemsList();
-        this.PuplWheatList();
+        this.getHolderList();
     },
     methods: {
         // 获取库位列表
@@ -184,8 +184,9 @@ export default {
                 });
         },
         // 罐号
-        PuplWheatList() {
-            COMMON_API({
+        getHolderList() {
+            COMMON_API.HOLDER_DROPDOWN_API({
+                factoryID: sessionStorage.getItem('factory').id, // 工厂名称
                 types: ['002', '012']
             }).then(({ data }) => {
                 this.guanList = data.list;

@@ -26,9 +26,9 @@
                         <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
                         <el-table-column label="操作" width="">
                             <template slot-scope="scope">
-                                <a style="margin-right: 0.3em;" @click="manageUser(scope.row.id)">人员管理</a>
-                                <a style="margin-right: 0.3em;" @click="manageFunction(scope.row.id)">功能分配</a>
                                 <a style="margin-right: 0.3em;" @click="manageDepartment(scope.row.id)">部门分配</a>
+                                <a style="margin-right: 0.3em;" @click="manageFunction(scope.row.id)">功能分配</a>
+                                <a style="margin-right: 0.3em;" @click="manageUser(scope.row.id)">人员管理</a>
                                 <a style="margin-right: 0.3em;" @click="addOrUpdateItem(scope.row)">修改角色</a>
                                 <a @click="removeItems(scope.row.id)">删除角色</a>
                             </template>
