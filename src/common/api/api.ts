@@ -246,6 +246,26 @@ export const COMMON_API = {
      */
     SPECS_UPDATE_API: params => httpProxy('/sysSpecs/update', 'POST', params),
     /**
+     * @property {string} STORAGE_INSERT_API 基础数据--库位管理-新增
+     */
+    STORAGE_INSERT_API: params => httpProxy('/sysStorage/insert', 'POST', params),
+    /**
+     * @property {string} STORAGE_UPDATE_API 基础数据--库位管理-编辑
+     */
+    STORAGE_UPDATE_API: params => httpProxy('/sysStorage/update', 'POST', params),
+    /**
+     * @property {string} STORAGE_REMOVE_API 基础数据--库位管理-删除
+     */
+    STORAGE_REMOVE_API: params => httpProxy('/sysStorage/remove', 'POST', params),
+    /**
+     * @property {string} STORAGE_QUERY_API 基础数据--库位管理-查询
+     */
+    STORAGE_QUERY_API: params => httpProxy('/sysStorage/query', 'POST', params),
+    /**
+     * @property {string} STORAGE_VAGUEQUERY_API 基础数据--库位管理-查询
+     */
+    STORAGE_VAGUEQUERY_API: params => httpProxy('/sysStorage/vagueQuery', 'POST', params),
+    /**
      * @property {string} METERIAL_DROPDOWN_API 基础数据-物料管理-查询指定工厂的全部物料
      */
     METERIAL_DROPDOWN_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params),
