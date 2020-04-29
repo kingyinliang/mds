@@ -248,5 +248,26 @@ export const COMMON_API = {
     /**
      * @property {string} SPECS_UPDATE_API 基础数据--规格管理-修改
      */
-    SPECS_UPDATE_API: params => httpProxy('/sysSpecs/update', 'POST', params)
+    SPECS_UPDATE_API: params => httpProxy('/sysSpecs/update', 'POST', params),
+    /**
+     * @property {string} STORAGE_INSERT_API 基础数据--库位管理-新增
+     */
+    STORAGE_INSERT_API: params => httpProxy('/sysStorage/insert', 'POST', params),
+    /**
+     * @property {string} STORAGE_UPDATE_API 基础数据--库位管理-编辑
+     */
+    STORAGE_UPDATE_API: params => httpProxy('/sysStorage/update', 'POST', params),
+    /**
+     * @property {string} STORAGE_REMOVE_API 基础数据--库位管理-删除
+     */
+    STORAGE_REMOVE_API: params => httpProxy('/sysStorage/remove', 'POST', params),
+    /**
+     * @property {string} STORAGE_QUERY_API 基础数据--库位管理-查询
+     */
+    STORAGE_QUERY_API: params => httpProxy('/sysStorage/query', 'POST', params),
+    /**
+     * @property {string} STORAGE_VAGUEQUERY_API 基础数据--库位管理-查询
+     */
+    STORAGE_VAGUEQUERY_API: params => httpProxy('/sysStorage/vagueQuery', 'POST', params)
+
 };
