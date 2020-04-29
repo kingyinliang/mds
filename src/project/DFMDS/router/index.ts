@@ -32,6 +32,12 @@ const mainRoutes: RouteConfig = {
             component: importTarget('COMMON/500'),
             name: '500',
             meta: { title: '500' }
+        },
+        {
+            path: '/ProIn',
+            component: importTarget('COMMON/Audit/ProInStore'),
+            name: 'ProIn',
+            meta: { title: 'ProIn' }
         }
     ],
     beforeEnter(to, from, next) {
