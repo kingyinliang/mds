@@ -65,17 +65,17 @@
                 </el-row>
             </el-card>
         </div>
-        <user-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :org-tree="orgTree" @refreshDataList="getItemsList" />
+        <staff-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :org-tree="orgTree" @refreshDataList="getItemsList" />
     </el-col>
 </template>
 
 <script>
 import { COMMON_API } from 'common/api/api';
-import UserAddOrUpdate from './UserAddOrUpdate';
+import StaffAddOrUpdate from './StaffAddOrUpdate';
 export default {
-    name: 'UserManages',
+    name: 'StaffManages',
     components: {
-        UserAddOrUpdate
+        StaffAddOrUpdate
     },
     data() {
         return {
