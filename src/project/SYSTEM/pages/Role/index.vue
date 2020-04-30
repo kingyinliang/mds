@@ -4,14 +4,14 @@
             <el-card>
                 <el-row type="flex">
                     <el-col>
-                        <el-form :inline="true" :model="form" size="small" label-width="85px" class="topforms">
+                        <el-form :inline="true" :model="controllableForm" size="small" label-width="85px" class="topforms">
                             <el-form-item label="角色名称：">
-                                <el-input v-model="form.username" placeholder="角色名称" clearable @clear="getItemsList()" />
+                                <el-input v-model="controllableForm.username" placeholder="角色名称" clearable @clear="getItemsList()" />
                             </el-form-item>
                         </el-form>
                     </el-col>
                     <el-col style="width: 200px;">
-                        <el-button type="primary" size="small" :disabled="form.username.trim()===''" @click="getItemsList(true,form.username)">
+                        <el-button type="primary" size="small" :disabled="controllableForm.username.trim()===''" @click="getItemsList(true,controllableForm.username)">
                             查询
                         </el-button>
                         <el-button type="primary" size="small" @click="addOrUpdateItem()">
@@ -20,15 +20,15 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-table ref="userlist" header-row-class-name="tableHead" :data="roleList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column v-if="roleList.length!==0" type="selection" width="50" />
+                    <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
                         <el-table-column type="index" :index="indexMethod" width="50" align="right" />
                         <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
                         <el-table-column label="操作" width="">
                             <template slot-scope="scope">
                                 <a style="margin-right: 0.3em;" @click="manageUser(scope.row.id)">人员管理</a>
-                                <a style="margin-right: 0.3em;" @click="manageFunction(scope.row.id)">功能分配</a>
                                 <a style="margin-right: 0.3em;" @click="manageDepartment(scope.row.id)">部门分配</a>
+                                <a style="margin-right: 0.3em;" @click="manageFunction(scope.row.id)">功能分配</a>
                                 <a style="margin-right: 0.3em;" @click="addOrUpdateItem(scope.row)">修改角色</a>
                                 <a @click="removeItems(scope.row.id)">删除角色</a>
                             </template>
@@ -73,14 +73,14 @@
                 isUserManageShow: false,
                 isDepartmentManageShow: false,
                 isRoleAddOrUpdateShow: false,
-                form: {
+                controllableForm: {
                     username: ''
                 },
                 menuList: [],
                 currPage: 1,
                 pageSize: 10,
                 totalCount: 1,
-                roleList: [],
+                targetInfoList: [],
                 currentComponent: ''
             };
         },
@@ -108,8 +108,8 @@
                         if (haveParas && data.data.records.length === 0) {
                             this.$infoToast('该搜寻条件无任何资料！');
                         }
-                        // this.form.username = '';
-                        this.roleList = data.data.records;
+                        // this.controllableForm.username = '';
+                        this.targetInfoList = data.data.records;
                         this.currPage = data.data.current;
                         this.pageSize = data.data.size;
                         this.totalCount = data.data.total;
