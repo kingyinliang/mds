@@ -37,7 +37,21 @@ const mainRoutes: RouteConfig = {
             path: '/ProIn',
             component: importTarget('COMMON/Audit/ProInStore'),
             name: 'ProIn',
-            meta: { title: 'ProIn' }
+            meta: {
+                menuId: 2,
+                title: 'ProIn',
+                isTab: true
+            }
+        },
+        {
+            path: '/org',
+            component: importTarget('COMMON/BasicData/OrgStructure/index'),
+            name: 'org',
+            meta: {
+                menuId: 1,
+                title: 'org',
+                isTab: true
+            }
         },
         {
             path: '/Location',

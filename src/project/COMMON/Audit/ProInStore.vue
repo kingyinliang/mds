@@ -138,7 +138,7 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: 'workshop'
+                        deptType: 'WORK_SHOP'
                     })
                 },
                 resVal: {
@@ -152,13 +152,13 @@
                 type: 'select',
                 label: '生产产线',
                 prop: 'productLine',
-                defaultOptionsFn: val => {
+                optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
                         parentId: val || ''
                     })
                 },
                 resVal: {
-                    resData: 'typeList',
+                    resData: 'data',
                     label: ['deptName'],
                     value: 'id'
                 }
@@ -203,8 +203,8 @@
             {
                 type: 'date-interval',
                 label: '生产日期',
-                prop: 'productDateStart',
-                propTwo: 'productDateEnd'
+                prop: 'startDate',
+                propTwo: 'endDate'
             }
         ]
 
