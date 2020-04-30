@@ -12,11 +12,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 import httpProxy from '@/net/httpProxy';
 import { isAuth } from '@/net/validate';
 // import SentryUtil from '@/net/sentryUtil'
-import '@/assets/scss/index.scss';
+import 'common/scss/index.scss';
 
 import App from './App.vue';
 
-import useComponents from '@/components/index';
+import useComponents from 'src/components/index';
 // import 'script-loader!file-saver'
 // funDebug
 // import fundebugVue from 'fundebug-vue'

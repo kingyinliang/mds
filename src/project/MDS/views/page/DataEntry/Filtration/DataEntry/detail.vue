@@ -288,7 +288,7 @@ export default {
                 return false;
             }
             if (!this.$refs.instorage.countOutputNum) {
-                this.$warningToast('入库数未0，不能提交');
+                this.$warningToast('入库数为0，不能提交');
                 return false;
             }
             const materialHolderList = this.$refs.material.GetmaterialList()

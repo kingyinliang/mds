@@ -26,6 +26,10 @@ export const COMMON_API = {
      */
     MENUSELECT_API: params => httpProxy('/sysMenu/selectMenu', 'GET', params),
     /**
+     * @property {string} MENUSELECT_API 根据角色id查功能
+     */
+    ROLEGETMENU_API: params => httpProxy('/sysMenu/selectByRole', 'GET', params),
+    /**
      * @property {string} MENUADD_API 菜单管理新增
      */
     MENUADD_API: params => httpProxy('/sysMenu/insert', 'POST', params),
@@ -150,6 +154,11 @@ export const COMMON_API = {
      */
     ORG_QUERY_WORKSHOP_API: params => httpProxy('/sysDept/getTypeDept', 'POST', params),
     /**
+     * @property {string} ORG_QUERY_WORKSHOP_API 基础数据-组织架构-按id查询下一级
+     * param parentId
+     */
+    ORG_QUERY_CHILDREN_API: params => httpProxy('/sysDept/childList', 'GET', params),
+    /**
      * @property {string} DICTQUERY_API 数据字典根据类型获取详情
      */
     DICTQUERY_API: params => httpProxy('/sysDictItem/dropDown', 'GET', params),
@@ -262,10 +271,6 @@ export const COMMON_API = {
      */
     STORAGE_QUERY_API: params => httpProxy('/sysStorage/query', 'POST', params),
     /**
-     * @property {string} STORAGE_VAGUEQUERY_API 基础数据--库位管理-查询
-     */
-    STORAGE_VAGUEQUERY_API: params => httpProxy('/sysStorage/vagueQuery', 'POST', params),
-    /**
      * @property {string} METERIAL_DROPDOWN_API 基础数据-物料管理-查询指定工厂的全部物料
      */
     METERIAL_DROPDOWN_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params),
@@ -338,3 +343,30 @@ export const COMMON_API = {
      */
     OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params)
 };
+
+export const AUDIT_API = {
+    /**
+     * @property {string} INLIST_API 入库审核列表
+     */
+    INLIST_API: params => httpProxy('/verifyInStorage/query', 'POST', params),
+    /**
+     * @property {string} INADD_API 入库审核新增
+     */
+    INADD_API: params => httpProxy('/verifyInStorage/insert', 'POST', params),
+    /**
+     * @property {string} INUPDATE_API 入库审核修改
+     */
+    INUPDATE_API: params => httpProxy('/verifyInStorage/upate', 'POST', params),
+    /**
+     * @property {string} INPASS_API 入库审核过账
+     */
+    INPASS_API: params => httpProxy('/verifyInStorage/pass', 'POST', params),
+    /**
+     * @property {string} INREFUSE_API 入库审核退回
+     */
+    INREFUSE_API: params => httpProxy('/verifyInStorage/refuse', 'POST', params),
+    /**
+     * @property {string} INWRITEOFFS_API 入库审核反审
+     */
+    INWRITEOFFS_API: params => httpProxy('/verifyInStorage/writeOffs', 'POST', params)
+}

@@ -40,7 +40,7 @@ export default {
         init(id) {
             this.roleID = id;
             COMMON_API.ORGSTRUCTURE_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                factory: 'common'
             })
                 .then(({ data }) => {
                     if (data.code === 200) {

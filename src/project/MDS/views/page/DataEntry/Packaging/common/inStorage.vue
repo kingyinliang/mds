@@ -363,7 +363,7 @@
 
 <script>
 import { PACKAGING_API, SYSTEMSETUP_API } from '@/api/api';
-import { GetStatus } from '@/net/validate';
+import { GetStatus, accAdd } from '@/net/validate';
 export default {
     name: 'InStorage',
     components: {
@@ -590,7 +590,7 @@ export default {
                     }
                 }
             });
-            if (this.order.workShopName !== '包装三车间' && this.order.factoryCode !== '6010') {
+            if (this.order.properties !== '二合一&礼盒产线' && this.order.workShopName !== '包装三车间' && this.order.factoryCode !== '6010') {
                 Object.keys(obj).forEach(key => {
                     let tmp = true;
                     this.InVlist.forEach(item => {
@@ -604,6 +604,33 @@ export default {
                         return false;
                     }
                 });
+            }
+            // 批次 确认数校验
+            if (this.order.properties !== '二合一&礼盒产线' && this.order.workShopName !== '包装三车间' && this.order.factoryCode !== '6010') {
+                // 数据整理
+                const InDateArray = [];
+                this.InDate.filter(items => items.delFlag === '0').map(item => {
+                    const InDateSole = InDateArray.find(x => x.batch === item.batch);
+                    if (InDateSole) {
+                        InDateSole.aiShelves = accAdd(InDateSole.aiShelves, item.aiShelves);
+                    } else {
+                        InDateArray.push({
+                            batch: item.batch,
+                            aiShelves: Number(item.aiShelves)
+                        });
+                    }
+                })
+                if (this.InVlist.length !== InDateArray.filter(x => x.aiShelves !== 0).length) {
+                    ty = false;
+                    this.$warningToast('生产入库批次不一致，请确认');
+                    return false;
+                }
+                const jiaoji = this.InVlist.filter(x => InDateArray.find(y => (x.batch === y.batch && Number(x.aiShelves) === y.aiShelves)))
+                if (jiaoji.length !== this.InVlist.length) {
+                    ty = false;
+                    this.$warningToast('生产入库机维组确认数不一致，请确认');
+                    return false;
+                }
             }
             return ty;
         },
