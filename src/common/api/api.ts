@@ -262,10 +262,6 @@ export const COMMON_API = {
      */
     STORAGE_QUERY_API: params => httpProxy('/sysStorage/query', 'POST', params),
     /**
-     * @property {string} STORAGE_VAGUEQUERY_API 基础数据--库位管理-查询
-     */
-    STORAGE_VAGUEQUERY_API: params => httpProxy('/sysStorage/vagueQuery', 'POST', params),
-    /**
      * @property {string} METERIAL_DROPDOWN_API 基础数据-物料管理-查询指定工厂的全部物料
      */
     METERIAL_DROPDOWN_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params),
