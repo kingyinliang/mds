@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="targetID ? '编辑库位信息' : '新增库位'" :close-on-click-modal="false" :visible.sync="isDialogShow" class="locationdialog1">
+    <el-dialog :title="targetID ? '编辑库位信息' : '新增库位'" :close-on-click-modal="false" :visible.sync="isDialogShow" class="locationdialog1" @close="closeDialog()">
         <div style="width: 400px; margin: auto;">
             <el-form ref="addLo" :model="formatDate" :rules="dataRule" size="small" label-width="110px" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
                 <el-form-item label="车间：" prop="deptId">
@@ -32,8 +32,8 @@
                 </el-form-item>
                 <el-form-item label="发料/入库：" prop="materialUse">
                     <el-select v-model="formatDate.materialUse" placeholder="请选择">
-                        <el-option label="发料" value="发料" />
-                        <el-option label="入库" value="入库" />
+                        <el-option label="发料" value="F" />
+                        <el-option label="入库" value="R" />
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -117,7 +117,7 @@ export default {
                     if (this.targetID) {
                         COMMON_API.STORAGE_UPDATE_API({
                             id: this.targetID,
-                            factory: '0FBAFB40ECA8AD58FF',
+                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             deptId: this.formatDate.deptId,
                             materialCode: this.formatDate.materialCode,
                             materialTypeCode: this.formatDate.materialTypeCode,
@@ -138,7 +138,7 @@ export default {
                     })
                     } else {
                         COMMON_API.STORAGE_INSERT_API({
-                                factory: '0FBAFB40ECA8AD58FF',
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 deptId: this.formatDate.deptId,
                                 materialCode: this.formatDate.materialCode,
                                 materialTypeCode: this.formatDate.materialTypeCode,
@@ -160,6 +160,10 @@ export default {
                 }
                 }
             });
+        },
+        closeDialog() {
+            this.isDialogShow = false;
+            this.$refs.addLo.resetFields();
         }
     }
 };
