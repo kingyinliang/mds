@@ -40,10 +40,10 @@
                         <div class="dataEntry-head-leftRight-message__item">
                             <el-tooltip class="item" effect="dark" :content="(formData.materialNo ? formData.materialNo : '') + ' ' + (formData.materialName ? formData.materialName : '')" placement="top">
                                 <p>
-                                    {{ (formData.materialNo ? formData.materialNo : '') + ' ' + (formData.materialName ? formData.materialName : '') }}
+                                    小麦
                                 </p>
                             </el-tooltip>
-                            <p> <i class="iconfont factory-bianma" />物料编码 </p>
+                            <p> <i class="iconfont factory-bianma" />物料 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>{{ total }} KG</p>

@@ -324,5 +324,13 @@ export const COMMON_API = {
     /**
      * @property {string} DICTIONARY_ITEM_UPDATE_API 系统管理-数据字典-修改
      */
-    DICTIONARY_ITEM_UPDATE_API: params => httpProxy('/sysDictItem/update', 'POST', params)
+    DICTIONARY_ITEM_UPDATE_API: params => httpProxy('/sysDictItem/update', 'POST', params),
+    /**
+     * @property {string} ORDER_QUERY_API 计划管理--计划订单-查询
+     */
+    ORDER_QUERY_API: params => httpProxy('/order/query', 'POST', params),
+    /**
+     * @property {string} OREDER_SYNC_API 计划管理--计划订单-订单同步（增量）
+     */
+    OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params)
 };
