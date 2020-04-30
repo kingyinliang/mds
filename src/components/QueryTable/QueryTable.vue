@@ -17,7 +17,7 @@
                             <el-row>
                                 <el-col :span="12">
                                     <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 135px;" />
-                                    <span>-</span>
+                                    <span style="margin-left: 5px;">-</span>
                                 </el-col>
                                 <el-col :span="12">
                                     <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 135px;" />
@@ -43,13 +43,16 @@
                 <i class="el-icon-caret-top" />
             </div>
         </el-card>
-        <el-tabs v-if="tabs.length" v-model="activeName" type="border-card">
+        <el-tabs v-if="tabs.length" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane v-for="(tabItem, index) in tabs" :key="index" :name="index.toString()" :label="tabItem.label">
-                <el-table ref="table" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                <div>
+                    <slot :name="'tab-head' + index" />
+                </div>
+                <el-table ref="table" class="newTable" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                     <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
                     <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
-                    <template v-for="item in tabItem.column">
-                        <el-table-column v-if="!item.hide" :key="item.prop" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
+                    <template v-for="(item, index) in tabItem.column">
+                        <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                             <template v-if="item.child">
                                 <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip || false" :width="chind.width || ''" />
                             </template>
@@ -75,8 +78,8 @@
             <el-table v-if="showTable" ref="table" :data="tableData" :height="tableHeightSet" :span-method="spanMethod" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                 <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
                 <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
-                <template v-for="item in column">
-                    <el-table-column v-if="!item.hide" :key="item.prop" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
+                <template v-for="(item, index) in column">
+                    <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                         <template v-if="item.child">
                             <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip" :width="chind.width || ''" />
                         </template>
@@ -317,18 +320,14 @@
                                             secondVal = this.optionLists[linkagePropItemObj.returnValue.findList].find(it => it[linkagePropItemObj.returnValue.findId] === val)[linkagePropItemObj.returnValue.findField]
                                         }
                                         linkagePropItemObj.optionsFn(val, secondVal).then(({ data }) => {
-                                            if (data.code === 0) {
-                                                const getPath = creatGetPath(linkagePropItemObj.resVal.resData);
-                                                const dataTemp = getPath(data);
-                                                this.$set(this.optionLists, linkagePropItemObj.prop, dataTemp);
-                                                if (dataTemp.length > 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
-                                                    this.$set(this.queryForm, linkagePropItemObj.prop, dataTemp[0][linkagePropItemObj.resVal.value]);
-                                                    this.$nextTick(() => {
-                                                        this.$refs[linkagePropItemObj.prop][0].emitChange(dataTemp[0][linkagePropItemObj.resVal.value]);
-                                                    });
-                                                }
-                                            } else {
-                                                this.$errorToast(data.msg);
+                                            const getPath = creatGetPath(linkagePropItemObj.resVal.resData);
+                                            const dataTemp = getPath(data);
+                                            this.$set(this.optionLists, linkagePropItemObj.prop, dataTemp);
+                                            if (dataTemp.length > 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
+                                                this.$set(this.queryForm, linkagePropItemObj.prop, dataTemp[0][linkagePropItemObj.resVal.value]);
+                                                this.$nextTick(() => {
+                                                    this.$refs[linkagePropItemObj.prop][0].emitChange(dataTemp[0][linkagePropItemObj.resVal.value]);
+                                                });
                                             }
                                         });
                                     } else {

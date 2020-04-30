@@ -1,6 +1,17 @@
 <template>
     <div class="header_main">
-        <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:production:jbsReport'" :column="column" :export-excel="true" :export-option="exportOption" get-list-field="jbsReport" :show-page="false" />
+        <query-table
+            ref="queryTable"
+            :query-form-data="queryFormData"
+            :list-interface="listInterface"
+            :query-auth="'report:production:jbsReport'"
+            :export-excel="true"
+            :export-option="exportOption"
+            get-list-field="jbsReport"
+            :tabs="tabs"
+            :show-page="false"
+            @get-data-success="setData"
+        />
     </div>
 </template>
 
@@ -11,6 +22,28 @@ export default {
     name: 'Index',
     components: {},
     data() {
+        const JbsColumn = [
+            {
+                prop: 'type',
+                label: '大类'
+            },
+            {
+                prop: 'unit',
+                label: '单位'
+            },
+            {
+                prop: 'jbsOut',
+                label: 'JBS出库数'
+            },
+            {
+                prop: 'filterNums',
+                label: '过滤领用数'
+            },
+            {
+                prop: 'jbsProduce',
+                label: 'JBS出品率'
+            }
+        ];
         return {
             queryFormData: [
                 {
@@ -35,6 +68,18 @@ export default {
                     valueFormat: 'yyyy-MM'
                 }
             ],
+            tabs: [
+                {
+                    label: '杀菌一车间',
+                    tableData: [],
+                    column: JbsColumn
+                },
+                {
+                    label: '杀菌二车间',
+                    tableData: [],
+                    column: JbsColumn
+                }
+            ],
             listInterface: params => {
                 return this.$http(`${REP_API.JBS_REPORT_LIST}`, 'POST', params);
             },
@@ -42,33 +87,16 @@ export default {
                 exportInterface: REP_API.JBS_REPORT_EXPORT,
                 auth: 'report:production:jbsReportExport',
                 text: 'JBS出品率'
-            },
-            column: [
-                {
-                    prop: 'type',
-                    label: '大类'
-                },
-                {
-                    prop: 'unit',
-                    label: '单位'
-                },
-                {
-                    prop: 'jbsOut',
-                    label: 'JBS出库数'
-                },
-                {
-                    prop: 'filterNums',
-                    label: '过滤领用数'
-                },
-                {
-                    prop: 'jbsProduce',
-                    label: 'JBS出品率'
-                }
-            ]
+            }
         };
     },
     computed: {},
-    methods: {}
+    methods: {
+        setData(data) {
+            this.tabs[0].tableData = data.jbsReport;
+            this.tabs[1].tableData = data.jbsReport2;
+        }
+    }
 };
 </script>
 
