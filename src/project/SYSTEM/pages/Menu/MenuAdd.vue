@@ -195,8 +195,9 @@ export default class MenuAdd extends Vue {
     }
 
     init(item) {
-        COMMON_API.MENUSELECT_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
+        // COMMON_API.MENUSELECT_API({
+        COMMON_API.MENULIST_API({
+            factory: 'common'
         }).then(({ data }) => {
             this.menuList = treeDataTranslate(data.data);
         }).then(() => {

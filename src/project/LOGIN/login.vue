@@ -280,6 +280,9 @@ export default {
         width: 100%;
         background: none;
         box-shadow: none;
+        .el-dialog__header {
+            background: none;
+        }
         .el-dialog__body {
             display: flex;
             justify-content: center;

@@ -46,72 +46,72 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, AUDIT_API } from 'common/api/api';
 
     const Column = [
         {
-            prop: 'theDate',
+            prop: 'status',
             label: '过账状态'
         },
         {
-            prop: 'theDate',
+            prop: 'orderProductDate',
             label: '生产日期'
         },
         {
-            prop: 'theDate',
+            prop: 'orderNo',
             label: '生产订单'
         },
         {
-            prop: 'theDate',
+            prop: 'orderMaterialCode',
             label: '生产物料 '
         },
         {
-            prop: 'theDate',
+            prop: 'orderAmount',
             label: '计划数量'
         },
         {
-            prop: 'theDate',
+            prop: 'orderEntryUom',
             label: '单位'
         },
         {
-            prop: 'theDate',
+            prop: 'entryQnt',
             label: '入库数量'
         },
         {
-            prop: 'theDate',
+            prop: 'entryUom',
             label: '单位'
         },
         {
-            prop: 'theDate',
+            prop: 'isSample',
             label: '是否样品'
         },
         {
-            prop: 'theDate',
+            prop: 'batch',
             label: '物料批次'
         },
         {
-            prop: 'theDate',
-            label: '生产日期'
+            prop: 'pkgOrderProductDate',
+            label: '订单生产日期'
         },
         {
-            prop: 'theDate',
+            prop: 'stgeLoc',
             label: '入库库位'
         },
         {
-            prop: 'theDate',
+            prop: 'moveType',
             label: '移动类型'
         },
         {
-            prop: 'theDate',
+            prop: 'stckType',
             label: '库存类型'
         },
         {
-            prop: 'theDate',
+            prop: 'noMoreGr',
             label: '交货已完成',
             width: '120'
         },
         {
-            prop: 'theDate',
+            prop: 'expirydate',
             label: '货架寿命到期日',
             width: '120'
         },
@@ -120,7 +120,7 @@
             label: '备注'
         },
         {
-            prop: 'theDate',
+            prop: 'interfaceReturn',
             label: '接口回写'
         }
     ]
@@ -142,19 +142,19 @@
                     })
                 },
                 resVal: {
-                    resData: 'typeList',
+                    resData: 'data',
                     label: ['deptName'],
                     value: 'id'
-                }
+                },
+                linkageProp: ['productLine']
             },
             {
                 type: 'select',
                 label: '生产产线',
                 prop: 'productLine',
-                defaultOptionsFn: () => {
-                    return COMMON_API.ORG_QUERY_WORKSHOP_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: 'workshop'
+                defaultOptionsFn: val => {
+                    return COMMON_API.ORG_QUERY_CHILDREN_API({
+                        parentId: val || ''
                     })
                 },
                 resVal: {
@@ -173,15 +173,15 @@
                 label: '订单类型',
                 prop: 'orderType',
                 defaultOptionsFn: () => {
-                    return COMMON_API.ORG_QUERY_WORKSHOP_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: 'workshop'
+                    return COMMON_API.DICTQUERY_API({
+                        dictType: 'COMMON_CHECK_STATUS'
                     })
                 },
+                defaultValue: '',
                 resVal: {
-                    resData: 'typeList',
-                    label: ['deptName'],
-                    value: 'id'
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
                 }
             },
             {
@@ -189,15 +189,15 @@
                 label: '订单状态',
                 prop: 'orderStatus',
                 defaultOptionsFn: () => {
-                    return COMMON_API.ORG_QUERY_WORKSHOP_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: 'workshop'
+                    return COMMON_API.DICTQUERY_API({
+                        dictType: 'COMMON_CHECK_STATUS'
                     })
                 },
+                defaultValue: '',
                 resVal: {
-                    resData: 'typeList',
-                    label: ['deptName'],
-                    value: 'id'
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
                 }
             },
             {
@@ -222,7 +222,8 @@
         ]
 
         listInterface = params => {
-            return COMMON_API.ORG_QUERY_WORKSHOP_API(params);
+            params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            return AUDIT_API.INLIST_API(params);
         }
     }
 </script>
