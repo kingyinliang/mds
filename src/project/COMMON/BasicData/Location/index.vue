@@ -4,18 +4,18 @@
             <el-card>
                 <div class="clearfix">
                     <el-row style="float: right;">
-                        <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="getVagueItemList(true)" @submit.native.prevent>
+                        <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="form.deptName" placeholder="车间" suffix-icon="el-icon-search" />
+                                <el-input v-model="form.deptName" placeholder="车间" suffix-icon="el-icon-search" clearable @clear="getQueryItemList()" @keyup.enter.native="getQueryItemList()" />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" size="small" :disabled="form.deptName.trim() === ''" @click="getVagueItemList(true)">
+                                <el-button type="primary" size="small" :disabled="form.deptName.trim() === ''" @click="getQueryItemList()">
                                     查询
                                 </el-button>
-                                <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
+                                <el-button type="primary" size="small" @click="isAdvanceSearchDialogShow = true">
                                     高级查询
                                 </el-button>
-                                <el-button type="primary" size="small" @click="addItem()">
+                                <el-button type="primary" size="small" @click="addOrUpdateItem()">
                                     新增
                                 </el-button>
                                 <el-button type="danger" size="small" :disabled="itemList.length === 0" @click="removeItems()">
@@ -26,11 +26,10 @@
                     </el-row>
                 </div>
                 <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="itemList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange" @row-dblclick="updateItem">
+                    <el-table ref="table1" header-row-class-name="tableHead" :data="itemList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange" @row-dblclick="addOrUpdateItem">
                         <el-table-column type="selection" width="34" />
                         <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
-                        <el-table-column prop="id" width="120" :show-overflow-tooltip="true" label="工厂" />
-                        <el-table-column prop="deptName" width="120" :show-overflow-tooltip="true" label="车间" />
+                        <el-table-column prop="deptName" width="160" :show-overflow-tooltip="true" label="车间" />
                         <el-table-column :show-overflow-tooltip="true" label="物料类型">
                             <template slot-scope="scope">
                                 {{ scope.row.materialTypeCode + ' ' + scope.row.materialTypeName }}
@@ -47,10 +46,14 @@
                                 {{ scope.row.sampleFlag === 0 ? '否' : '是' }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="materialUse" width="84" label="发料/入库" />
+                        <el-table-column width="84" label="发料/入库">
+                            <template slot-scope="scope">
+                                {{ scope.row.materialUse === 'F' ? '发料' : '入库' }}
+                            </template>
+                        </el-table-column>
                         <el-table-column width="84" label="操作">
                             <template slot-scope="scope">
-                                <el-button type="primary" size="small" @click="updateItem(scope.row)">
+                                <el-button type="primary" size="small" @click="addOrUpdateItem(scope.row)">
                                     编辑
                                 </el-button>
                             </template>
@@ -62,8 +65,8 @@
                 </el-row>
             </el-card>
         </div>
-        <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow">
-            <el-form :model="form" size="small" label-width="110px" class="locationdialog">
+        <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDialogShow" @close="closeSearchDialog()">
+            <el-form ref="searchDialog" :model="form" size="small" label-width="110px" class="locationdialog">
                 <el-form-item label="车间：" prop="orderNo1">
                     <el-select v-model="form.deptId" placeholder="请选择">
                         <el-option label="" value="">
@@ -85,15 +88,15 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="isAdvanceSearchDailogShow = false">
+                <el-button @click="isAdvanceSearchDialogShow = false">
                     取消
                 </el-button>
-                <el-button type="primary" @click="getItemList(true)">
+                <el-button type="primary" @click="getAdvanceQueryItemList()">
                     确定
                 </el-button>
             </span>
         </el-dialog>
-        <location-add v-if="isAddOrUpdateDailogShow" ref="locationAdd" :work-shop="workShop" :material-list="materialList" @refreshDataList="getItemList()" />
+        <location-add v-if="isAddOrUpdateDialogShow" ref="locationAdd" :work-shop="workShop" :material-list="materialList" @refreshDataList="getItemList()" />
     </el-col>
 </template>
 
@@ -107,8 +110,9 @@
         },
         data() {
             return {
-                isAdvanceSearchDailogShow: false,
-                isAddOrUpdateDailogShow: false,
+                isAdvanceSearchDialogShow: false,
+                isAddOrUpdateDialogShow: false,
+                isClickSearchDialogConfirm: false,
                 form: {
                     deptId: '',
                     deptName: '',
@@ -131,7 +135,7 @@
         computed: {},
         mounted() {
             this.getItemList();
-            this.Getdeptbyid();
+            this.getDeptByFactoryId();
             this.getMaterial();
         },
         methods: {
@@ -140,40 +144,8 @@
                 if (st) {
                     this.currPage = 1;
                 }
-                if (this.currentQueryStatus === 0) {
-                    COMMON_API.STORAGE_QUERY_API({
-                        factory: '0FBAFB40ECA8AD58FF',
-                        deptId: this.form.deptId,
-                        deptName: this.form.deptName,
-                        materialType: this.form.materialTypeCode,
-                        storageLocation: this.form.storageLocation,
-                        size: this.pageSize,
-                        current: this.currPage
-                    }).then(({ data }) => {
-                        this.isAddOrUpdateDailogShow = false;
-                        this.isAdvanceSearchDailogShow = false;
-                        this.currentQueryStatus = 0;
-                        if (data.code === 200) {
-                            this.multipleSelection = [];
-                            this.itemList = data.data.records;
-                            this.currPage = data.data.current;
-                            this.pageSize = data.data.size;
-                            this.totalCount = data.data.total;
-                        } else {
-                            this.$errorToast(data.msg);
-                        }
-                    });
-                } else {
-                    this.getVagueItemList();
-                }
-            },
-            //模糊查询
-            getVagueItemList(st) {
-                if (st) {
-                    this.currPage = 1;
-                }
-                COMMON_API.STORAGE_VAGUEQUERY_API({
-                    factory: '0FBAFB40ECA8AD58FF',
+                COMMON_API.STORAGE_QUERY_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     deptId: this.form.deptId,
                     deptName: this.form.deptName,
                     materialType: this.form.materialTypeCode,
@@ -181,10 +153,12 @@
                     size: this.pageSize,
                     current: this.currPage
                 }).then(({ data }) => {
-                    this.isAddOrUpdateDailogShow = false;
-                    this.isAdvanceSearchDailogShow = false;
-                    this.currentQueryStatus = 1;
+                    this.isAddOrUpdateDialogShow = false;
+                    this.isAdvanceSearchDialogShow = false;
                     if (data.code === 200) {
+                        if (st && data.data.records.length === 0) {
+                            this.$infoToast('该搜寻条件无任何库位数据！');
+                        }
                         this.multipleSelection = [];
                         this.itemList = data.data.records;
                         this.currPage = data.data.current;
@@ -194,6 +168,27 @@
                         this.$errorToast(data.msg);
                     }
                 });
+            },
+            //模糊查询
+            getQueryItemList() {
+                this.form.deptId = '';
+                this.form.materialTypeCode = '';
+                this.form.storageLocation = '';
+                this.getItemList(true);
+            },
+            //高级查询
+            getAdvanceQueryItemList() {
+                this.form.deptName = '';
+                this.isClickSearchDialogConfirm = true;
+                this.getItemList(true);
+            },
+            //关闭高级查询对话框
+            closeSearchDialog() {
+                if (this.isClickSearchDialogConfirm === false) {
+                    this.form.deptId = '';
+                    this.form.materialTypeCode = '';
+                    this.form.storageLocation = '';
+                }
             },
             // 批量删除
             removeItems() {
@@ -210,7 +205,7 @@
                             this.$successToast('删除成功!');
                             this.multipleSelection = [];
                             this.$nextTick(() => {
-                                alert(this.currentQueryStatus);
+                                this.getItemList()
                             });
                         } else {
                             this.$errorTost(data.msg);
@@ -218,24 +213,17 @@
                     });
                 });
             },
-            // 新增库位
-            addItem() {
-                this.isAddOrUpdateDailogShow = true;
+            //编辑或新增库位
+            addOrUpdateItem(data) {
+                this.isAddOrUpdateDialogShow = true;
                 this.$nextTick(() => {
-                    this.$refs.locationAdd.init();
-                });
-            },
-            // 修改库位
-            updateItem(row) {
-                this.isAddOrUpdateDailogShow = true;
-                this.$nextTick(() => {
-                    this.$refs.locationAdd.init(row);
+                    this.$refs.locationAdd.init(data);
                 });
             },
             //获取车间
-            Getdeptbyid() {
+            getDeptByFactoryId() {
                 COMMON_API.ORG_QUERY_WORKSHOP_API({
-                    factory: '0FBAFB40ECA8AD58FF',
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     deptType: 'workshop'
                 }).then(({ data }) => {
                     if (data.code === 200) {
