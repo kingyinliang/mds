@@ -6,10 +6,10 @@
                     <el-row style="float: right;">
                         <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
+                                <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.materialCode===''?getItemsList():false" />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true)">
+                                <el-button type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')">
                                     查询
                                 </el-button>
                                 <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
@@ -68,28 +68,28 @@
             </el-card>
         </div>
         <specification-add-or-update v-if="isAddOrUpdateDailogShow" ref="SpecificationAddOrUpdate" :large-class="largeClass" :unit-class="unitClass" :serch-spec-list="serchSpecList" @refreshDataList="getItemsList" />
-        <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow">
+        <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow" @close="closeDialog">
             <div class="formdata">
-                <el-form :model="controllableForm" size="small" label-width="110px" class="orderdialog">
+                <el-form :model="controllableForm" size="small" label-width="110px" class="orderdialog" :rules="checkRules">
                     <el-form-item label="物料：">
                         <el-input v-model="controllableForm.materialCode" placeholder="手工录入" clearable />
                     </el-form-item>
                     <el-form-item label="品牌：">
                         <el-input v-model="controllableForm.brand" placeholder="手工录入" clearable />
                     </el-form-item>
-                    <el-form-item label="箱规格：">
+                    <el-form-item label="箱规格：" prop="boxSpec">
                         <el-input v-model="controllableForm.boxSpec" placeholder="手工录入" clearable />
                     </el-form-item>
-                    <el-form-item label="瓶规格：">
+                    <el-form-item label="瓶规格：" prop="productSpec">
                         <el-input v-model="controllableForm.productSpec" placeholder="手工录入" clearable />
                     </el-form-item>
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="isAdvanceSearchDailogShow = false">
+                <el-button @click="closeDialog">
                     取消
                 </el-button>
-                <el-button type="primary" @click="getItemsList(true)">
+                <el-button type="primary" @click="getItemsList(true,'Advance')">
                     确定
                 </el-button>
             </div>
@@ -125,7 +125,13 @@
                 },
                 currPage: 1,
                 pageSize: 10,
-                totalCount: 1
+                totalCount: 1,
+                checkRules: {
+                    productSpec: [{ pattern: /^[1-9]\d*$/, message: '需为数字', trigger: 'blur' }
+                    ],
+                    boxSpec: [{ pattern: /^[1-9]\d*$/, message: '需为数字', trigger: 'blur' }
+                    ]
+                }
             };
         },
         computed: {},
@@ -136,10 +142,23 @@
             this.getMaterial();
         },
         methods: {
-            getItemsList(haveParas) {
+            closeDialog() {
+                this.isAdvanceSearchDailogShow = false;
+                this.controllableForm.brand = '';
+                this.controllableForm.boxSpec = '';
+                this.controllableForm.productSpec = '';
+            },
+            getItemsList(haveParas, type = 'normal') {
                 if (haveParas) {
                     this.currPage = 1;
                 }
+                if (type === 'normal') {
+                    this.controllableForm.brand = '';
+                    this.controllableForm.boxSpec = '';
+                    this.controllableForm.productSpec = '';
+                }
+
+
                 COMMON_API.SPECS_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     boxSpec: this.controllableForm.boxSpec.trim(),

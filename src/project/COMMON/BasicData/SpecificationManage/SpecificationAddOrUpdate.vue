@@ -1,6 +1,6 @@
 <template>
-    <el-dialog :title="targetID ? '修改规格信息' : '新增规格'" :close-on-click-modal="false" :visible.sync="isDialogShow">
-        <el-form ref="dataForm" :model="dataForm" status-icon :rules="checkRules" label-width="100px" size="small" @keyup.enter.native="submitDataForm()">
+    <el-dialog :title="targetID ? '修改规格信息' : '新增规格'" :close-on-click-modal="false" :visible.sync="isDialogShow" @close="closeDialog">
+        <el-form ref="dataForm" :model="dataForm" status-icon :rules="checkRules" label-width="100px" size="small">
             <el-form-item label="物料：" prop="material">
                 <el-select v-if="!targetID" v-model="dataForm.material" filterable placeholder="请选择" style="width: 100%;" @change="setBrand">
                     <el-option v-for="item in serchSpecList" :key="item.id" :label="item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName" :value="item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName" />
@@ -25,7 +25,7 @@
                     <el-option v-for="item in unitClass" :key="item.dictCode" :label="item.dictValue" :value="item.dictCode" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="瓶规格：">
+            <el-form-item label="瓶规格：" prop="bottleSpec">
                 <el-input v-model="dataForm.bottleSpec" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="单位：">
@@ -92,7 +92,8 @@
                     brand: [{ required: true, message: '品牌不能为空', trigger: 'blur' }],
                     largeClass: [{ required: true, message: '大类不能为空', trigger: 'blur' }],
                     boxSpec: [{ required: true, message: '箱规格不能为空', trigger: 'blur' }],
-                    boxSpecUnit: [{ required: true, message: '箱规格单位不能为空', trigger: 'blur' }]
+                    boxSpecUnit: [{ required: true, message: '箱规格单位不能为空', trigger: 'blur' }],
+                    bottleSpec: [{ pattern: /^[1-9]\d*$/, message: '需为数字', trigger: 'blur' }]
                 }
             };
         },
@@ -107,6 +108,7 @@
         },
         methods: {
             closeDialog() {
+                console.log('22222')
                 this.isDialogShow = false;
                 this.$refs.dataForm.resetFields();
             },
