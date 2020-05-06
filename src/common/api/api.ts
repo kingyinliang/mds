@@ -26,6 +26,10 @@ export const COMMON_API = {
      */
     MENUSELECT_API: params => httpProxy('/sysMenu/selectMenu', 'GET', params),
     /**
+     * @property {string} MENUSELECT_API 根据角色id查功能
+     */
+    ROLEGETMENU_API: params => httpProxy('/sysMenu/selectByRole', 'GET', params),
+    /**
      * @property {string} MENUADD_API 菜单管理新增
      */
     MENUADD_API: params => httpProxy('/sysMenu/insert', 'POST', params),
@@ -150,6 +154,11 @@ export const COMMON_API = {
      */
     ORG_QUERY_WORKSHOP_API: params => httpProxy('/sysDept/getTypeDept', 'POST', params),
     /**
+     * @property {string} ORG_QUERY_WORKSHOP_API 基础数据-组织架构-按id查询下一级
+     * param parentId
+     */
+    ORG_QUERY_CHILDREN_API: params => httpProxy('/sysDept/childList', 'GET', params),
+    /**
      * @property {string} DICTQUERY_API 数据字典根据类型获取详情
      */
     DICTQUERY_API: params => httpProxy('/sysDictItem/dropDown', 'GET', params),
@@ -222,10 +231,6 @@ export const COMMON_API = {
      */
     ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params),
     /**
-     * @property {string} Dictionary_dropDown_API 系统管理-数据字典-主表下拉
-     */
-    DICTIONARY_DROPDOWN_API: params => httpProxy('/sysDict/dropDown', 'GET', params),
-    /**
      * @property {string} SPECS_DROPDOWN_API 基础数据--规格管理-下拉列表
      */
     SPECS_DROPDOWN_API: params => httpProxy('/sysSpecs/dropDown', 'POST', params),
@@ -248,5 +253,120 @@ export const COMMON_API = {
     /**
      * @property {string} SPECS_UPDATE_API 基础数据--规格管理-修改
      */
-    SPECS_UPDATE_API: params => httpProxy('/sysSpecs/update', 'POST', params)
+    SPECS_UPDATE_API: params => httpProxy('/sysSpecs/update', 'POST', params),
+    /**
+     * @property {string} STORAGE_INSERT_API 基础数据--库位管理-新增
+     */
+    STORAGE_INSERT_API: params => httpProxy('/sysStorage/insert', 'POST', params),
+    /**
+     * @property {string} STORAGE_UPDATE_API 基础数据--库位管理-编辑
+     */
+    STORAGE_UPDATE_API: params => httpProxy('/sysStorage/update', 'POST', params),
+    /**
+     * @property {string} STORAGE_REMOVE_API 基础数据--库位管理-删除
+     */
+    STORAGE_REMOVE_API: params => httpProxy('/sysStorage/remove', 'POST', params),
+    /**
+     * @property {string} STORAGE_QUERY_API 基础数据--库位管理-查询
+     */
+    STORAGE_QUERY_API: params => httpProxy('/sysStorage/query', 'POST', params),
+    /**
+     * @property {string} METERIAL_DROPDOWN_API 基础数据-物料管理-查询指定工厂的全部物料
+     */
+    METERIAL_DROPDOWN_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params),
+    /**
+     * @property {string} METERIAL_QUERY_API 基础数据-物料管理-分页获取物料
+     */
+    METERIAL_QUERY_API: params => httpProxy('/sysMaterial/query', 'POST', params),
+    /**
+     * @property {string} METERIAL_SYNC_API 基础数据-物料管理-同步信息
+     */
+    METERIAL_SYNC_API: params => httpProxy('/sysMaterial/sync', 'POST', params),
+    /**
+     * @property {string} METERIAL_ITEM_QUERY_API 基础数据-物料管理-根据ID查询物料明细
+     */
+    METERIAL_ITEM_QUERY_API: params => httpProxy('/sysMaterialItem/query', 'POST', params),
+    /**
+     * @property {string} ROWMETERIAL_QUERY_API 基础数据-原材料入库记录-查询列表
+     */
+    ROWMETERIAL_QUERY_API: params => httpProxy('/sysRowMaterial/query', 'POST', params),
+    /**
+     * @property {string} ROWMETERIAL_SYNC_API 基础数据-原料入库记录-同步信息
+     */
+    ROWMETERIAL_SYNC_API: params => httpProxy('/sysRowMaterial/sync', 'POST', params),
+    /**
+     * @property {string} DICTIONARY_DELETE_API 系统管理-数据字典-主表删除
+     */
+    DICTIONARY_DELETE_API: params => httpProxy('/sysDict/delete', 'POST', params),
+    /**
+     * @property {string} DICTIONARY_DROPDOWN_API 系统管理-数据字典-主表下拉
+     */
+    DICTIONARY_DROPDOWN_API: params => httpProxy('/sysDict/dropDown', 'GET', params),
+    /**
+     * @property {string} DICTIONARY_INSERT_API 系统管理-数据字典-主表新增
+     */
+    DICTIONARY_INSERT_API: params => httpProxy('/sysDict/insert', 'POST', params),
+    /**
+     * @property {string} DICTIONARY_QUERY_AP 系统管理-数据字典-主表列表
+     */
+    DICTIONARY_QUERY_API: params => httpProxy('/sysDict/query', 'POST', params),
+    /**
+     * @property {string} DICTIONARY_UPDATE_API 系统管理-数据字典-主表修改
+     */
+    DICTIONARY_UPDATE_API: params => httpProxy('/sysDict/update', 'POST', params),
+    /**
+     * @property {string} DICTIONARY_ITEM_DELETE_API 系统管理-数据字典-删除
+     */
+    DICTIONARY_ITEM_DELETE_API: params => httpProxy('/sysDictItem/delete', 'POST', params),
+    /**
+     * @property {string} DICTIONARY_ITEM_DROPDOWN_API 系统管理-数据字典-下拉
+     */
+    DICTIONARY_ITEM_DROPDOWN_API: params => httpProxy('/sysDictItem/dropDown', 'GET', params),
+    /**
+     * @property {string} DICTIONARY_ITEM_INSERT_API 系统管理-数据字典-新增
+     */
+    DICTIONARY_ITEM_INSERT_API: params => httpProxy('/sysDictItem/insert', 'POST', params),
+    /**
+     * @property {string} DICTIONARY_ITEM_QUERY_API 系统管理-数据字典-列表
+     */
+    DICTIONARY_ITEM_QUERY_API: params => httpProxy('/sysDictItem/query', 'POST', params),
+    /**
+     * @property {string} DICTIONARY_ITEM_UPDATE_API 系统管理-数据字典-修改
+     */
+    DICTIONARY_ITEM_UPDATE_API: params => httpProxy('/sysDictItem/update', 'POST', params),
+    /**
+     * @property {string} ORDER_QUERY_API 计划管理--计划订单-查询
+     */
+    ORDER_QUERY_API: params => httpProxy('/order/query', 'POST', params),
+    /**
+     * @property {string} OREDER_SYNC_API 计划管理--计划订单-订单同步（增量）
+     */
+    OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params)
 };
+
+export const AUDIT_API = {
+    /**
+     * @property {string} INLIST_API 入库审核列表
+     */
+    INLIST_API: params => httpProxy('/verifyInStorage/query', 'POST', params),
+    /**
+     * @property {string} INADD_API 入库审核新增
+     */
+    INADD_API: params => httpProxy('/verifyInStorage/insert', 'POST', params),
+    /**
+     * @property {string} INUPDATE_API 入库审核修改
+     */
+    INUPDATE_API: params => httpProxy('/verifyInStorage/upate', 'POST', params),
+    /**
+     * @property {string} INPASS_API 入库审核过账
+     */
+    INPASS_API: params => httpProxy('/verifyInStorage/pass', 'POST', params),
+    /**
+     * @property {string} INREFUSE_API 入库审核退回
+     */
+    INREFUSE_API: params => httpProxy('/verifyInStorage/refuse', 'POST', params),
+    /**
+     * @property {string} INWRITEOFFS_API 入库审核反审
+     */
+    INWRITEOFFS_API: params => httpProxy('/verifyInStorage/writeOffs', 'POST', params)
+}

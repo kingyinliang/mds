@@ -4,12 +4,12 @@
             <el-card>
                 <el-row class="clearfix">
                     <div style="float: right;">
-                        <el-form :inline="true" :model="condition" size="small" label-width="68px" class="topforms2">
+                        <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2">
                             <el-form-item>
-                                <el-input v-model="condition.param" placeholder="用户名/工号" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
+                                <el-input v-model="controllableForm.param" placeholder="用户名/工号" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" size="small" :disabled="condition.param.trim()===''" @click="getItemsList(true)">
+                                <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
                                     查询
                                 </el-button>
                             </el-form-item>
@@ -31,16 +31,16 @@
                                 人员
                             </div>
                             <div>
-                                <el-button type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" :disabled="userInfoList.length===0" @click="removeItems()">
+                                <el-button type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                                 <el-button type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrUpdateItem()">
                                     增加
                                 </el-button>
-                                <el-table ref="userInfoList" :data="userInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                                    <el-table-column v-if="userInfoList.length!==0" type="selection" width="50" />
-                                    <el-table-column type="index" :index="indexMethod" width="55" />
-                                    <el-table-column prop="workNum" label="人员工号" width="87" />
+                                <el-table ref="targetInfoList" :data="targetInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                                    <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
+                                    <el-table-column type="index" :index="indexMethod" width="40" />
+                                    <el-table-column prop="workNum" label="人员工号" width="100" />
                                     <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
                                     <el-table-column prop="realName" label="人员姓名" width="87" />
                                     <el-table-column prop="deptName" label="所属部门" width="87" :show-overflow-tooltip="true" />
@@ -57,7 +57,7 @@
                                     </el-table-column>
                                 </el-table>
                             </div>
-                            <el-row v-if="userInfoList.length!==0">
+                            <el-row v-if="targetInfoList.length!==0">
                                 <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                             </el-row>
                         </el-card>
@@ -65,28 +65,28 @@
                 </el-row>
             </el-card>
         </div>
-        <user-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :org-tree="orgTree" @refreshDataList="getItemsList" />
+        <staff-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :org-tree="orgTree" @refreshDataList="getItemsList" />
     </el-col>
 </template>
 
 <script>
 import { COMMON_API } from 'common/api/api';
-import UserAddOrUpdate from './UserAddOrUpdate';
+import StaffAddOrUpdate from './StaffAddOrUpdate';
 export default {
-    name: 'UserManages',
+    name: 'StaffManages',
     components: {
-        UserAddOrUpdate
+        StaffAddOrUpdate
     },
     data() {
         return {
-            condition: {
+            controllableForm: {
                 param: ''
             },
             isDialogShow: false,
             deptID: '',
             deptName: '',
             orgTree: [],
-            userInfoList: [],
+            targetInfoList: [],
             multipleSelection: [],
             multipleSelectionTemp: [],
             totalCount: 1,
@@ -135,7 +135,7 @@ export default {
             COMMON_API.USER_ROLE_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.deptID,
-                realName: this.condition.param,
+                realName: this.controllableForm.param,
                 current: JSON.stringify(this.currPage),
                 size: JSON.stringify(this.pageSize)
             }).then(({ data }) => {
@@ -144,7 +144,7 @@ export default {
                             this.$infoToast('该搜寻条件无任何资料！');
                     }
                     this.multipleSelection = [];
-                    this.userInfoList = data.data.records;
+                    this.targetInfoList = data.data.records;
                     this.currPage = data.data.current;
                     this.pageSize = data.data.size;
                     this.totalCount = data.data.total;

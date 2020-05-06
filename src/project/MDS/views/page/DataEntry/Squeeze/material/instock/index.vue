@@ -371,7 +371,8 @@ export default class Index extends Vue {
         mixType: '',
         changed: '',
         changer: '',
-        uuid: ''
+        uuid: '',
+        holderStatus: ''
     };
 
     endForm = {
@@ -409,7 +410,8 @@ export default class Index extends Vue {
         remark: '',
         changed: '',
         changer: '',
-        uuid: ''
+        uuid: '',
+        holderStatus: ''
     };
 
     mounted() {
@@ -417,7 +419,7 @@ export default class Index extends Vue {
         this.getFactory();
         this.getWorkshop(this.params.factoryId);
         // this.getProductLine(this.params.workshopId)
-        this.getPot(this.params);
+        // this.getPot(this.params);
         this.getMaterial(this.params.factoryId);
     }
 
@@ -517,10 +519,13 @@ export default class Index extends Vue {
             remark: row.remark ? row.remark : '',
             changed: dateFormat(new Date(), 'yyyy-MM-dd h:m:s'),
             changer: this.$store.state.user.realName + `(${this.$store.state.user.name})`,
-            uuid: row.uuid
+            uuid: row.uuid,
+            holderStatus: row.holderStatus
         };
         this.dialogFormVisible3 = true;
-        this.changeOptions('potModify');
+        if (row.holderStatus !== '6') {
+            this.changeOptions('potModify');
+        }
     }
 
     saveModify() {
@@ -541,6 +546,8 @@ export default class Index extends Vue {
             }
             if (matchedIndex >= 0) {
                 const record = this.dataList[matchedIndex];
+                // eslint-disable-next-line
+                const potSole: any = this.potList.find(ele => ele['holderId'] === this.modifyForm.potNo);
                 Object.assign(record, {
                     batch: this.modifyForm.batch,
                     materialCode: this.modifyForm.materialCode,
@@ -558,7 +565,8 @@ export default class Index extends Vue {
                     fulPotDate: this.modifyForm.fulPotDate,
                     changed: this.modifyForm.changed,
                     changer: this.modifyForm.changer,
-                    uuid: this.modifyForm.uuid
+                    uuid: this.modifyForm.uuid,
+                    holderStatus: potSole['holderStatus']
                 });
                 this.dataList.splice(matchedIndex, 1, record);
             }
@@ -585,7 +593,8 @@ export default class Index extends Vue {
             mixType: '正常',
             changed: dateFormat(new Date(), 'yyyy-MM-dd h:m:s'),
             changer: this.$store.state.user.realName + `(${this.$store.state.user.name})`,
-            uuid: ''
+            uuid: '',
+            holderStatus: ''
         };
         this.dialogFormVisible = true;
     }
@@ -610,7 +619,8 @@ export default class Index extends Vue {
                 changed: this.startForm.changed,
                 changer: this.startForm.changer,
                 delFlag: 0,
-                uuid: Vue.prototype.uuid()
+                uuid: Vue.prototype.uuid(),
+                holderStatus: this.startForm.holderStatus
             };
             this.dataList.push(result);
             this.dialogFormVisible = false;
@@ -745,11 +755,33 @@ export default class Index extends Vue {
             this.startForm.materialName = item.materialName || '';
             item.materialCode ? (this.startForm.materialSt = true) : (this.startForm.materialSt = false);
             item.batch ? (this.startForm.batchSt = true) : (this.startForm.batchSt = false);
+            (!item.batch || item.holderStatus === '6') ? (this.startForm.batchSt = false) : (this.startForm.materialSt = true);
+            this.startForm.holderStatus = item.holderStatus;
+            // if (!item.batch) {
+            //     this.startForm.batchSt = false;
+            // } else {
+            //     if (item.holderStatus === '6') {
+            //         this.startForm.batchSt = false;
+            //     } else {
+            //         this.startForm.batchSt = true;
+            //     }
+            // }
         } else if (flag === 'potModify') {
             this.ci = Number(this.ci) + Number(1);
             const item: any = this.potList.find(ele => ele['holderId'] === this.modifyForm.potNo);// eslint-disable-line
             if (item && item.batch === '') {
                 if (this.teststr !== this.modifyForm.potNo) {
+                    const fa = this.potList.find(it => it['holderId'] === this.modifyForm.potNo)
+                    this.modifyForm.potName = fa ? fa['holderName'] : '';
+                    this.modifyForm.batch = item.batch;
+                    this.modifyForm.mixType = '正常';
+                    this.modifyForm.materialCode = item.materialCode;
+                    this.modifyForm.materialName = item.materialName;
+                    this.modifyForm.batchSt = false;
+                    this.modifyForm.materialSt = false;
+                    this.modifyForm.mixTypeSt = false;
+                    this.modifyForm.holderStatus = item.holderStatus;
+                } else if (this.ci !== 1) {
                     const fa = this.potList.find(it => it['holderId'] === this.modifyForm.potNo)
                     this.modifyForm.potName = fa ? fa['holderName'] : '';
                     this.modifyForm.batch = '';
@@ -759,17 +791,8 @@ export default class Index extends Vue {
                     this.modifyForm.batchSt = false;
                     this.modifyForm.materialSt = false;
                     this.modifyForm.mixTypeSt = false;
-                } else if (this.ci !== 1) {
-                        const fa = this.potList.find(it => it['holderId'] === this.modifyForm.potNo)
-                        this.modifyForm.potName = fa ? fa['holderName'] : '';
-                        this.modifyForm.batch = '';
-                        this.modifyForm.mixType = '正常';
-                        this.modifyForm.materialCode = item.materialCode;
-                        this.modifyForm.materialName = item.materialName;
-                        this.modifyForm.batchSt = false;
-                        this.modifyForm.materialSt = false;
-                        this.modifyForm.mixTypeSt = false;
-                    }
+                    this.modifyForm.holderStatus = item.holderStatus;
+                }
             } else {
                 this.modifyForm.potName = item ? item.holderName : '';
                 this.modifyForm.batch = item ? item.batch : '';
@@ -780,7 +803,11 @@ export default class Index extends Vue {
                 this.modifyForm.materialCode = item ? item.materialCode : '';
                 this.modifyForm.materialName = item ? item.materialName : '';
                 item.materialCode ? (this.modifyForm.batchSt = true) : (this.modifyForm.batchSt = false);
-                this.modifyForm.materialSt = (Boolean(item['batch']));
+                if (item.holderStatus === '6') {
+                    this.modifyForm.materialSt = false;
+                } else {
+                    this.modifyForm.materialSt = (Boolean(item['batch']));
+                }
             }
         }
     }
@@ -879,7 +906,7 @@ export default class Index extends Vue {
     getPot(params) {
         this.potList = [];
         if (params.workshopId) {
-            Vue.prototype.$http(`${SQU_API.PRE_INSTORAGE_LIST_API}`, 'POST', { factory: params.factoryId, workShop: params.workshopId }, false, false, false).then(res => {
+            Vue.prototype.$http(`${SQU_API.PRE_INSTORAGE_LIST_API}`, 'POST', { factory: params.factoryId, workShop: params.workshopId, created: params.applyDate }, false, false, false).then(res => {
                 if (res.data.code === 0) {
                     this.potList = res.data.holderList;
                 } else {
@@ -931,6 +958,7 @@ export default class Index extends Vue {
             this.$notify({ title: '错误', message: '请选择入罐日期', type: 'warning' });
             return;
         }
+        this.getPot(this.params);
         // 保存选项值到common store
         this.setStore(this.params);
         this.searched = true;
@@ -1106,7 +1134,7 @@ export default class Index extends Vue {
         this.params.productLineId = '';
         this.params.productLineName = '';
         // this.getProductLine(newVal)
-        this.getPot(this.params);
+        // this.getPot(this.params);
     }
 }
 </script>

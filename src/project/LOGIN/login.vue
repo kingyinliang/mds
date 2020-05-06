@@ -75,7 +75,8 @@
                             <!--/>-->
                         </div>
                         <div @click="goFa(item)">
-                            <img :src="'../static/img/factory'+ index + '.png'" alt="">
+                            <img v-if="item.deptCode === '8888'" src="./assets/img/factory8.png" alt="">
+                            <img v-else :src="'../static/img/factory'+ index + '.png'" alt="">
                         </div>
                     </div>
                 </div>
@@ -190,6 +191,9 @@ export default {
             if (item.deptCode === '6010' || item.deptCode === '7100' || item.deptCode === '7101') {
                 sessionStorage.setItem('factory', JSON.stringify(item || ''));
                 window.location.href = '/MDS.html'
+            } else if (item.deptCode === '8888') {
+                sessionStorage.setItem('factory', JSON.stringify(item || ''));
+                window.location.href = '/SYSTEM.html'
             } else {
                 sessionStorage.setItem('factory', JSON.stringify(item || ''));
                 window.location.href = '/DFMDS.html'
@@ -276,6 +280,9 @@ export default {
         width: 100%;
         background: none;
         box-shadow: none;
+        .el-dialog__header {
+            background: none;
+        }
         .el-dialog__body {
             display: flex;
             justify-content: center;
@@ -289,6 +296,7 @@ export default {
         display: inline-block;
         padding: 5px;
         .itemBox {
+            box-sizing: content-box !important;
             width: 250px;
             padding: 16px;
             background: white;

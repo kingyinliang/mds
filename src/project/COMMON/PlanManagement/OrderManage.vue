@@ -14,27 +14,29 @@
                             <el-button type="primary" size="small" @click="visible = true">
                                 高级查询
                             </el-button>
-                            <el-button type="primary" size="small" @click="SapOrderUpdate('7100')">
-                                欣和企业同步
-                            </el-button>
-                            <el-button type="primary" size="small" @click="SapOrderUpdate('6010')">
-                                味达美同步
+                            <el-button type="primary" size="small" @click="SapOrderUpdate()">
+                                订单同步
                             </el-button>
                         </el-form-item>
                     </el-form>
                 </el-row>
                 <el-row>
                     <el-table :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
-                        <el-table-column type="index" label="序号" width="50" />
-                        <el-table-column prop="date" label="生产订单" width="180" show-overflow-tooltip />
-                        <el-table-column prop="date1" label="订单类型" width="180" show-overflow-tooltip />
-                        <el-table-column prop="date2" label="工厂" width="180" show-overflow-tooltip />
-                        <el-table-column prop="date3" label="基本完成日期" width="180" show-overflow-tooltip />
-                        <el-table-column prop="date3" label="物料" width="180" show-overflow-tooltip />
-                        <el-table-column prop="date3" label="订单数量" width="180" show-overflow-tooltip />
-                        <el-table-column prop="date3" label="订单单位" width="180" show-overflow-tooltip />
-                        <el-table-column prop="date3" label="生产调度员" width="180" show-overflow-tooltip />
-                        <el-table-column prop="date3" label="同步日期" width="180" show-overflow-tooltip />
+                        <el-table-column type="index" label="序号" width="50" align="center" />
+                        <el-table-column prop="orderNo" label="生产订单" width="122" show-overflow-tooltip />
+                        <el-table-column prop="orderType" label="订单类型" width="77" show-overflow-tooltip />
+                        <el-table-column prop="factoryCode" label="工厂" width="77" show-overflow-tooltip />
+                        <el-table-column prop="orderEndDate" label="基本完成日期" width="105" show-overflow-tooltip />
+                        <el-table-column prop="orderStartDate" label="基本开始日期" width="105" show-overflow-tooltip />
+                        <el-table-column label="物料" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="planOutput" label="订单数量" width="80" show-overflow-tooltip />
+                        <el-table-column prop="outputUnit" label="订单单位" width="80" show-overflow-tooltip />
+                        <el-table-column prop="dispatchMan" label="生产调度员" width="100" show-overflow-tooltip />
+                        <el-table-column prop="changed" label="同步日期" width="100" show-overflow-tooltip />
                     </el-table>
                     <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
@@ -45,7 +47,7 @@
                         <el-input v-model="formHeader.orderNo" placeholder="手工录入" style="width: 325px;" />
                     </el-form-item>
                     <el-form-item label="生产物料：">
-                        <el-input v-model="formHeader.materialCode" placeholder="手工录入" style="width: 325px;" />
+                        <el-input v-model="formHeader.material" placeholder="手工录入" style="width: 325px;" />
                     </el-form-item>
                     <el-form-item label="生产调度员：">
                         <el-input v-model="formHeader.dispatchMan" placeholder="手工录入" style="width: 325px;" />
@@ -53,29 +55,29 @@
                     <el-form-item label="基本开始日期：" class="times">
                         <el-row>
                             <el-col :span="12">
-                                <el-date-picker v-model="formHeader.startDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
+                                <el-date-picker v-model="formHeader.orderStartDateBegin" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
                                 <span class="marginL10px">-</span>
                             </el-col>
                             <el-col :span="12">
-                                <el-date-picker v-model="formHeader.startDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
+                                <el-date-picker v-model="formHeader.orderStartDateEnd" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
                             </el-col>
                         </el-row>
                     </el-form-item>
                     <el-form-item label="基本完成日期：" class="times">
                         <el-row>
                             <el-col :span="12">
-                                <el-date-picker v-model="formHeader.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
+                                <el-date-picker v-model="formHeader.orderEndDateBegin" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
                                 <span class="marginL10px">-</span>
                             </el-col>
                             <el-col :span="12">
-                                <el-date-picker v-model="formHeader.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
+                                <el-date-picker v-model="formHeader.orderEndDateEnd" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
                             </el-col>
                         </el-row>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button size="small" @click="visible = false">取消</el-button>
-                    <el-button type="primary" size="small" @click="GetDataList(true)">确定</el-button>
+                    <el-button type="primary" size="small" @click="GetDataList(true)">确定111</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -83,41 +85,69 @@
 </template>
 
 <script>
-// import { COMMON_API } from 'common/api/api';
+import { COMMON_API } from 'common/api/api';
 export default {
     name: 'OrderManage',
     data() {
         return {
             formHeader: {
                 orderNo: '',
-                factory: '',
-                materialCode: '',
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                material: '',
                 dispatchMan: '',
-                startDateOne: '',
-                startDateTwo: '',
-                commitDateOne: '',
-                commitDateTwo: ''
+                orderStartDateBegin: '',
+                orderStartDateEnd: '',
+                orderEndDateBegin: '',
+                orderEndDateEnd: '',
+                current: this.currentPage,
+                size: this.pageSize
             },
             factory: [],
             dataList: [],
             visible: false,
-            currentPage: 2,
+            currentPage: 1,
             pageSize: 10,
-            totalCount: 20
+            totalCount: 0
         };
     },
     methods: {
-        GetDataList() {
-            console.log('12');
+        GetDataList(st) {
+            if (st === true) {
+                this.currentPage = 1;
+            }
+            COMMON_API.ORDER_QUERY_API(this.formHeader).then(({ data }) => {
+                this.visible = false;
+                if (data.code === 200) {
+                    this.dataList = data.data.records
+                    this.totalCount = data.data.total
+                    if (data.data.records.length === 0) {
+                        this.$infoToast('该搜寻条件无任何资料！');
+                    }
+                } else {
+                    this.$errorToast(data.msg);
+                }
+            });
         },
         SapOrderUpdate() {
-            console.log('12');
+            COMMON_API.OREDER_SYNC_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                incremental: true
+            }).then(({ data }) => {
+                if (data.code === 0) {
+                    this.$successToast(data.msg)
+                    this.GetDataList(true)
+                } else {
+                    this.$warningToast(data.msg)
+                }
+            })
         },
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
+            this.pageSize = val;
+            this.GetDataList();
         },
         handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
+            this.currentPage = val;
+            this.GetDataList();
         }
     }
 }

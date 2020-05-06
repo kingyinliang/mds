@@ -41,8 +41,8 @@ export default {
         // 获取功能
         init(id) {
             this.roleID = id;
-            COMMON_API.MENUSELECT_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            COMMON_API.ROLEGETMENU_API({
+                roleId: id
             })
                 .then(({ data }) => {
                     if (data.code === 200) {

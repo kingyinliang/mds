@@ -4,12 +4,12 @@
             <el-card>
                 <div class="clearfix">
                     <el-row style="float: right;">
-                        <el-form :inline="true" :model="searchForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
+                        <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="searchForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
+                                <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.materialCode===''?getItemsList():false" />
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary" size="small" :disabled="searchForm.materialCode.trim()===''" @click="getItemsList(true)">
+                                <el-button type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')">
                                     查询
                                 </el-button>
                                 <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
@@ -18,7 +18,7 @@
                                 <el-button type="primary" size="small" @click="addOrupdateItem()">
                                     新增
                                 </el-button>
-                                <el-button type="danger" size="small" :disabled="specificationList.length===0" @click="removeItems()">
+                                <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
@@ -26,8 +26,8 @@
                     </el-row>
                 </div>
                 <el-row>
-                    <el-table ref="table1" class="orderTable" border header-row-class-name="tableHead" :data="specificationList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column v-if="specificationList.length!==0" type="selection" width="50" />
+                    <el-table ref="targetInfoList" class="orderTable" border header-row-class-name="tableHead" :data="targetInfoList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
                         <el-table-column type="index" label="#" :index="indexMethod" width="55" />
                         <el-table-column label="物料" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
@@ -62,34 +62,34 @@
                         </el-table-column>
                     </el-table>
                 </el-row>
-                <el-row v-if="specificationList.length!==0">
+                <el-row v-if="targetInfoList.length!==0">
                     <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
         </div>
         <specification-add-or-update v-if="isAddOrUpdateDailogShow" ref="SpecificationAddOrUpdate" :large-class="largeClass" :unit-class="unitClass" :serch-spec-list="serchSpecList" @refreshDataList="getItemsList" />
-        <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow">
+        <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow" @close="closeDialog">
             <div class="formdata">
-                <el-form :model="searchForm" size="small" label-width="110px" class="orderdialog">
+                <el-form :model="controllableForm" size="small" label-width="110px" class="orderdialog" :rules="checkRules">
                     <el-form-item label="物料：">
-                        <el-input v-model="searchForm.materialCode" placeholder="手工录入" clearable />
+                        <el-input v-model="controllableForm.materialCode" placeholder="手工录入" clearable />
                     </el-form-item>
                     <el-form-item label="品牌：">
-                        <el-input v-model="searchForm.brand" placeholder="手工录入" clearable />
+                        <el-input v-model="controllableForm.brand" placeholder="手工录入" clearable />
                     </el-form-item>
-                    <el-form-item label="箱规格：">
-                        <el-input v-model="searchForm.boxSpec" placeholder="手工录入" clearable />
+                    <el-form-item label="箱规格：" prop="boxSpec">
+                        <el-input v-model="controllableForm.boxSpec" placeholder="手工录入" clearable />
                     </el-form-item>
-                    <el-form-item label="瓶规格：">
-                        <el-input v-model="searchForm.productSpec" placeholder="手工录入" clearable />
+                    <el-form-item label="瓶规格：" prop="productSpec">
+                        <el-input v-model="controllableForm.productSpec" placeholder="手工录入" clearable />
                     </el-form-item>
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="isAdvanceSearchDailogShow = false">
+                <el-button @click="closeDialog">
                     取消
                 </el-button>
-                <el-button type="primary" @click="getItemsList(true)">
+                <el-button type="primary" @click="getItemsList(true,'Advance')">
                     确定
                 </el-button>
             </div>
@@ -113,11 +113,11 @@
                 unitClassObject: {},
                 largeClass: [], // 大类缓存
                 largeClassObject: {},
-                specificationList: [],
+                targetInfoList: [],
                 multipleSelection: [],
                 isAddOrUpdateDailogShow: false,
                 isAdvanceSearchDailogShow: false,
-                searchForm: {
+                controllableForm: {
                     brand: '',
                     materialCode: '',
                     boxSpec: '',
@@ -125,7 +125,13 @@
                 },
                 currPage: 1,
                 pageSize: 10,
-                totalCount: 1
+                totalCount: 1,
+                checkRules: {
+                    productSpec: [{ pattern: /^[1-9]\d*$/, message: '需为数字', trigger: 'blur' }
+                    ],
+                    boxSpec: [{ pattern: /^[1-9]\d*$/, message: '需为数字', trigger: 'blur' }
+                    ]
+                }
             };
         },
         computed: {},
@@ -136,16 +142,29 @@
             this.getMaterial();
         },
         methods: {
-            getItemsList(haveParas) {
+            closeDialog() {
+                this.isAdvanceSearchDailogShow = false;
+                this.controllableForm.brand = '';
+                this.controllableForm.boxSpec = '';
+                this.controllableForm.productSpec = '';
+            },
+            getItemsList(haveParas, type = 'normal') {
                 if (haveParas) {
                     this.currPage = 1;
                 }
+                if (type === 'normal') {
+                    this.controllableForm.brand = '';
+                    this.controllableForm.boxSpec = '';
+                    this.controllableForm.productSpec = '';
+                }
+
+
                 COMMON_API.SPECS_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    boxSpec: this.searchForm.boxSpec.trim(),
-                    bottleSpec: this.searchForm.productSpec.trim(),
-                    brand: this.searchForm.brand.trim(),
-                    material: this.searchForm.materialCode.trim(),
+                    boxSpec: this.controllableForm.boxSpec.trim(),
+                    bottleSpec: this.controllableForm.productSpec.trim(),
+                    brand: this.controllableForm.brand.trim(),
+                    material: this.controllableForm.materialCode.trim(),
                     current: JSON.stringify(this.currPage),
                     size: JSON.stringify(this.pageSize)
                 }).then(({ data }) => {
@@ -153,7 +172,7 @@
                         if (haveParas && data.data.records.length === 0) {
                                 this.$infoToast('该搜寻条件无任何资料！');
                         }
-                        this.specificationList = data.data.records;
+                        this.targetInfoList = data.data.records;
                         this.currPage = data.data.current;
                         this.pageSize = data.data.size;
                         this.totalCount = data.data.total;

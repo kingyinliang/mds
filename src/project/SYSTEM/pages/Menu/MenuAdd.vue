@@ -8,6 +8,13 @@
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
+            <el-form-item label="工厂" prop="deptIdList">
+                <el-checkbox-group v-model="dataForm.deptIdList">
+                    <el-checkbox v-for="(item, index) in factory" :key="index" :label="item.id" name="factory">
+                        {{ item.deptName }}
+                    </el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
             <el-form-item :label="'名称'" prop="menuName">
                 <el-input v-model="dataForm.menuName" :placeholder="'名称'" />
             </el-form-item>
@@ -123,9 +130,10 @@ export default class MenuAdd extends Vue {
 
     visible = false
     type = true
+    factory = JSON.parse(sessionStorage.getItem('userFactory') || '[]')
     dataForm = {
         id: '',
-        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+        deptIdList: [],
         menuType: 'C',
         menuName: '',
         parentId: 0,
@@ -137,6 +145,13 @@ export default class MenuAdd extends Vue {
     }
 
     dataRule = {
+        deptIdList: [
+            {
+                required: true,
+                message: '工厂不能为空',
+                trigger: 'blur'
+            }
+        ],
         menuName: [
             {
                 required: true,
@@ -169,9 +184,20 @@ export default class MenuAdd extends Vue {
         return callback();
     }
 
+    mounted() {
+        // COMMON_API.GETORGBYTYPE_API({
+        //     factory: '',
+        //     deptType: 'FACTORY'
+        // }).then(({ data }) => {
+        //     console.log(data);
+        // });
+
+    }
+
     init(item) {
-        COMMON_API.MENUSELECT_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+        // COMMON_API.MENUSELECT_API({
+        COMMON_API.MENULIST_API({
+            factory: 'common'
         }).then(({ data }) => {
             this.menuList = treeDataTranslate(data.data);
         }).then(() => {
@@ -186,7 +212,7 @@ export default class MenuAdd extends Vue {
                     this.type = true;
                     this.dataForm = {
                         id: '',
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        deptIdList: [],
                         menuType: 'C',
                         menuName: '',
                         parentId: 0,
@@ -200,7 +226,7 @@ export default class MenuAdd extends Vue {
                     // 修改
                     this.type = false;
                     this.dataForm.id = item.id;
-                    this.dataForm.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    this.dataForm.deptIdList = item.deptIdList;
                     this.dataForm.menuType = item.menuType;
                     this.dataForm.menuName = item.menuName;
                     this.dataForm.parentId = item.parentId;

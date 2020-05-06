@@ -34,30 +34,16 @@ const mainRoutes: RouteConfig = {
             meta: { title: '500' }
         },
         {
-            path: '/ProIn',
-            component: importTarget('COMMON/Audit/ProInStore'),
-            name: 'ProIn',
-            meta: {
-                menuId: 2,
-                title: 'ProIn',
-                isTab: true
-            }
+            path: '/menu',
+            component: importTarget('SYSTEM/pages/Menu/menu'),
+            name: 'menu',
+            meta: { title: 'menu' }
         },
         {
-            path: '/org',
-            component: importTarget('COMMON/BasicData/OrgStructure/index'),
-            name: 'org',
-            meta: {
-                menuId: 1,
-                title: 'org',
-                isTab: true
-            }
-        },
-        {
-            path: '/Location',
-            component: importTarget('COMMON/BasicData/Location/index'),
-            name: 'Location',
-            meta: { title: 'Location' }
+            path: '/role',
+            component: importTarget('SYSTEM/pages/Role/index'),
+            name: 'menu',
+            meta: { title: 'menu' }
         }
     ],
     beforeEnter(to, from, next) {

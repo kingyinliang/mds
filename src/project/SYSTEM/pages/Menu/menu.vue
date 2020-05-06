@@ -83,7 +83,7 @@ export default class Menu extends Vue {
     // 获取数据列表
     getDataList() {
         COMMON_API.MENULIST_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            factory: 'common'
         }).then(({ data }) => {
             this.dataList = treeDataTranslate(data.data);
             this.addOrUpdateVisible = false;
