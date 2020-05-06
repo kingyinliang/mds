@@ -960,6 +960,7 @@ export const REP_API = {
     JBS_REPORT_EXPORT: HOST + '/jbs/report/jbsReportExport', // JBS导出
     PKGOUTPUT_LIST_API: HOST + '/report/fromEs/materialSummary', // 包装品项产量汇总查询
     PKGOUTPUT_EXPORT_API: HOST + '/report/fromEs/expectMaterialSummary', // 包装品项产量汇总导出
+    ALLWORKSHOPDAY_EXPORT_API: HOST + '/report/fromEs/expectAllDaily', // 生管日报表导出
     /* eslint-disable @typescript-eslint/camelcase */
     MaterialTraceability_LIST_API: HOST + '/materialView/list', // 物料追溯报表
     MaterialTraceability_checkOver_API: HOST + '/materialView/checkOver',

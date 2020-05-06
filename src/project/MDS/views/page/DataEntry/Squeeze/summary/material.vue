@@ -99,7 +99,7 @@
                             placeholder="手工录入"
                             :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')"
                             @focus="GetOldAmount(scope.row)"
-                            @blur="PostAmount(scope.row)"
+                            @input="PostAmount(scope.row)"
                         />
                     </template>
                 </el-table-column>
