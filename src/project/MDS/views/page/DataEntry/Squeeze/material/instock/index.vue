@@ -546,7 +546,8 @@ export default class Index extends Vue {
             }
             if (matchedIndex >= 0) {
                 const record = this.dataList[matchedIndex];
-                const potSole = this.potList.find(ele => ele['holderId'] === this.modifyForm.potNo);
+                // eslint-disable-next-line
+                const potSole: any = this.potList.find(ele => ele['holderId'] === this.modifyForm.potNo);
                 Object.assign(record, {
                     batch: this.modifyForm.batch,
                     materialCode: this.modifyForm.materialCode,
@@ -565,7 +566,7 @@ export default class Index extends Vue {
                     changed: this.modifyForm.changed,
                     changer: this.modifyForm.changer,
                     uuid: this.modifyForm.uuid,
-                    holderStatus: potSole.holderStatus
+                    holderStatus: potSole['holderStatus']
                 });
                 this.dataList.splice(matchedIndex, 1, record);
             }
