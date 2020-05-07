@@ -692,8 +692,8 @@ export const AUDIT_API = {
     AUDIT_TURNSAVE_SUBMIT: HOST + '/ver/adjust/adjust',
     AUDIT_TURNSAVE_MATERIAL: HOST + '/all/dropDown/getAdjustMaterial',
     JUICT_POT_LIST: HOST + '/juice/pot/materialPotList',
-    AUDIT_ADD_EXPORT: HOST + '/juiceExamineAddExport', // 原汁生管添加审核导出
-    AUDIT_DUMP_EXPORT: HOST + '/juiceExamineDumpExport', // 原汁生管转储审核导出
+    AUDIT_ADD_EXPORT: HOST + '/juice/pot/juiceExamineAddExport', // 原汁生管添加审核导出
+    AUDIT_DUMP_EXPORT: HOST + '/juice/pot/juiceExamineDumpExport', // 原汁生管转储审核导出
     /**
      * 助滤剂审核
      */

@@ -51,8 +51,8 @@
                 <el-table ref="table" class="newTable" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                     <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
                     <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
-                    <template v-for="(item, index) in tabItem.column">
-                        <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
+                    <template v-for="(item, index2) in tabItem.column">
+                        <el-table-column v-if="!item.hide" :key="index2" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                             <template v-if="item.child">
                                 <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip || false" :width="chind.width || ''" />
                             </template>
@@ -106,6 +106,12 @@
         name: 'QueryTable',
         components: {},
         props: {
+            pagePagination: {
+                type: Object,
+                default: () => {
+                    return {}
+                }
+            },
             showTable: {
                 type: Boolean,
                 default: true
@@ -374,6 +380,15 @@
                 }
                 if (st) {
                     this.queryForm.currPage = 1;
+                }
+                if (this.pagePagination.currPage) {
+                    this.queryForm[this.pagePagination.currPage] = this.queryForm.currPage
+                }
+                if (this.pagePagination.pageSize) {
+                    this.queryForm[this.pagePagination.pageSize] = this.queryForm.pageSize
+                }
+                if (this.pagePagination.currPage) {
+                    this.queryForm[this.pagePagination.totalCount] = this.queryForm.totalCount
                 }
                 this.listInterface(this.queryForm).then(({ data }) => {
                     if (data.code === 0) {

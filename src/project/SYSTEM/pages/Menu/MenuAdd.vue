@@ -130,7 +130,7 @@ export default class MenuAdd extends Vue {
 
     visible = false
     type = true
-    factory = JSON.parse(sessionStorage.getItem('userFactory') || '[]')
+    factory = []
     dataForm = {
         id: '',
         deptIdList: [],
@@ -195,8 +195,12 @@ export default class MenuAdd extends Vue {
     }
 
     init(item) {
-        // COMMON_API.MENUSELECT_API({
-        COMMON_API.MENULIST_API({
+        COMMON_API.ORG_QUERY_WORKSHOP_API({
+            deptType: ['FACTORY', 'FAKE_FACTORY']
+        }).then(({ data }) => {
+            this.factory = data.data
+        })
+        COMMON_API.MENUSELECT_API({
             factory: 'common'
         }).then(({ data }) => {
             this.menuList = treeDataTranslate(data.data);

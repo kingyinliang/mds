@@ -32,18 +32,6 @@ const mainRoutes: RouteConfig = {
             component: importTarget('COMMON/500'),
             name: '500',
             meta: { title: '500' }
-        },
-        {
-            path: '/menu',
-            component: importTarget('SYSTEM/pages/Menu/menu'),
-            name: 'menu',
-            meta: { title: 'menu' }
-        },
-        {
-            path: '/role',
-            component: importTarget('SYSTEM/pages/Role/index'),
-            name: 'menu',
-            meta: { title: 'menu' }
         }
     ],
     beforeEnter(to, from, next) {

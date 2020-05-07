@@ -41,6 +41,12 @@
             if (item.deptCode === '6010' || item.deptCode === '7100' || item.deptCode === '7101') {
                 sessionStorage.setItem('factory', JSON.stringify(item || ''));
                 window.location.href = '/MDS.html'
+            } else if (item.deptCode === '9999-xn') {
+                sessionStorage.setItem('factory', JSON.stringify(item || ''));
+                window.location.href = '/SYSTEM.html'
+            } else if (item.deptCode === '8888-xn') {
+                sessionStorage.setItem('factory', JSON.stringify(item || ''));
+                window.location.href = '/MDS.html#/DataEcharts/KojiMaking-DataScreening-index'
             } else {
                 sessionStorage.setItem('factory', JSON.stringify(item || ''));
                 window.location.href = '/DFMDS.html'

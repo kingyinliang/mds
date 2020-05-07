@@ -160,7 +160,7 @@
             getWorkshopList() {
                 COMMON_API.ORG_QUERY_WORKSHOP_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    deptType: 'workshop'
+                    deptType: ['WORK_SHOP']
                 }).then(({ data }) => {
                     if (data.code === 200) {
                         this.workshopList = data.data;

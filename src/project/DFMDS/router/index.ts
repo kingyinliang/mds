@@ -32,56 +32,6 @@ const mainRoutes: RouteConfig = {
             component: importTarget('COMMON/500'),
             name: '500',
             meta: { title: '500' }
-        },
-        {
-            path: '/ProIn',
-            component: importTarget('COMMON/Audit/ProInStore'),
-            name: 'ProIn',
-            meta: {
-                menuId: 2,
-                title: 'ProIn',
-                isTab: true
-            }
-        },
-        {
-            path: '/org',
-            component: importTarget('COMMON/BasicData/OrgStructure/index'),
-            name: 'org',
-            meta: {
-                menuId: 1,
-                title: 'org',
-                isTab: true
-            }
-        },
-        {
-            path: '/Location',
-            component: importTarget('COMMON/BasicData/Location/index'),
-            name: 'Location',
-            meta: { title: 'Location' }
-        },
-        {
-            path: '/SpecificationManage',
-            component: importTarget('COMMON/BasicData/SpecificationManage/index'),
-            name: 'SpecificationManage',
-            meta: { title: 'SpecificationManage' }
-        },
-        {
-            path: '/Supplies',
-            component: importTarget('COMMON/BasicData/Supplies/index'),
-            name: 'Supplies',
-            meta: { title: 'Supplies' }
-        },
-        {
-            path: '/RawMaterial',
-            component: importTarget('COMMON/BasicData/RawMaterial/index'),
-            name: 'RawMaterial',
-            meta: { title: 'RawMaterial' }
-        },
-        {
-            path: '/Parameter',
-            component: importTarget('SYSTEM/pages/Parameter/index'),
-            name: 'Parameter',
-            meta: { title: 'Parameter' }
         }
     ],
     beforeEnter(to, from, next) {

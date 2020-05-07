@@ -84,37 +84,31 @@
         },
         {
             prop: 'isSample',
-            label: '是否样品'
+            label: '组件物料'
         },
         {
             prop: 'batch',
+            label: '发料数量'
+        },
+        {
+            prop: 'entryUom',
+            label: '单位'
+        },
+        {
+            prop: 'entryUom',
             label: '物料批次'
         },
         {
-            prop: 'pkgOrderProductDate',
-            label: '订单生产日期'
+            prop: 'entryUom',
+            label: '出库库位'
         },
         {
-            prop: 'stgeLoc',
-            label: '入库库位'
-        },
-        {
-            prop: 'moveType',
+            prop: 'entryUom',
             label: '移动类型'
         },
         {
-            prop: 'stckType',
-            label: '库存类型'
-        },
-        {
-            prop: 'noMoreGr',
-            label: '交货已完成',
-            width: '120'
-        },
-        {
-            prop: 'expirydate',
-            label: '货架寿命到期日',
-            width: '120'
+            prop: 'entryUom',
+            label: '移动原因'
         },
         {
             prop: 'theDate',
@@ -168,6 +162,11 @@
                 type: 'input',
                 label: '生产订单',
                 prop: 'orderNo'
+            },
+            {
+                type: 'input',
+                label: '组件物料',
+                prop: 'materialCode'
             },
             {
                 type: 'select',

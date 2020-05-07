@@ -65,11 +65,7 @@ http.interceptors.response.use(
         } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.EXPIRED_TOKEN) {
             Vue['cookie'].delete('token');
             router.options.isAddDynamicMenuRoutes = false;
-            if (response.data.msg) {
-                Vue.prototype.$errorToast(response.data.msg)
-            } else {
-                window.location.href = `${process.env.VUE_APP_HOST}`;
-            }
+            window.location.href = `${process.env.VUE_APP_HOST}`;
         } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.WARNING) {
             Vue.prototype.$warningToast(response.data.msg)
         } else {
