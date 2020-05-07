@@ -22,7 +22,7 @@
                     <el-form-item label="生产状态：">
                         <el-select v-model="plantList.status" class="selectwpx" style="width: 140px;">
                             <el-option label="正常生产" value="normal" />
-                            <el-option v-if="isAuth('wht:user:listUser')" label="无生产" value="abnormal" />2u/4
+                            <el-option v-if="isAuth('wht:user:listUser')" label="无生产" value="abnormal" />
                         </el-select>
                     </el-form-item>
                     <el-form-item style="float: right;">
@@ -374,6 +374,7 @@ export default {
             if (this.oriAPIData[0].workshop.length !== 0) {
                 this.workshopList = this.oriAPIData[0].workshop;
                 this.plantList.workshopIDValue = this.oriAPIData[0].workshop[0].deptId;
+                this.changeWorkshopOptions(this.plantList.workshopIDValue);
             } else {
                 this.workshopList = [];
                 this.plantList.workshopIDValue = '';
@@ -518,6 +519,8 @@ export default {
             const item = this.oriAPIData.find(ele => ele.deptId === flag);
             if (item.workshop.length !== 0) {
                 this.workshopList = item.workshop;
+                this.plantList.workshopIDValue = this.workshopList[0]['deptId'];
+                this.changeWorkshopOptions(this.plantList.workshopIDValue);
             } else {
                 this.workshopList = [];
                 this.plantList.workshopIDValue = '';
@@ -525,6 +528,7 @@ export default {
         },
         // 改变车间选单数据  // 根据车间获取工序
         changeWorkshopOptions(flag) {
+            console.log('flag' + flag);
             this.processesList = [];
             this.$http(`${BASICDATA_API.FINDTEAM_API}`, 'POST', {
                 id: flag,
