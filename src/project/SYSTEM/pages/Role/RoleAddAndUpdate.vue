@@ -48,8 +48,6 @@
         },
         methods: {
             init(obj) {
-                console.log('obj')
-                console.log(obj)
                 if (obj) {
                     this.targetID = obj.id;
                     this.dataForm.roleID = obj.id;
@@ -73,35 +71,27 @@
                                 roleCode: this.dataForm.roleCode,
                                 roleName: this.dataForm.roleName,
                                 remark: this.dataForm.roleDescribe
-                            }).then(({ data }) => {
-                                if (data.code === 200) {
-                                    this.$successToast('操作成功');
-                                    this.isDialogShow = false;
-                                    this.$emit('refreshDataList');
-                                } else {
-                                    this.$errorToast(data.msg);
-                                }
+                            }).then(() => {
+                                this.$successToast('操作成功');
+                                this.isDialogShow = false;
+                                this.$emit('refreshDataList');
                             }).catch(() => {
                                 //
                             });
                         } else {
                             // 新增
                             COMMON_API.ROLE_INSERT_API({
-                                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                                    roleCode: this.dataForm.roleCode,
-                                    roleName: this.dataForm.roleName,
-                                    remark: this.dataForm.roleDescribe
-                                }).then(({ data }) => {
-                                    if (data.code === 200) {
-                                        this.$successToast('操作成功');
-                                        this.isDialogShow = false;
-                                        this.$emit('refreshDataList');
-                                    } else {
-                                        this.$errorToast(data.msg);
-                                    }
-                                }).catch(() => {
-                                    //
-                                });
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                roleCode: this.dataForm.roleCode,
+                                roleName: this.dataForm.roleName,
+                                remark: this.dataForm.roleDescribe
+                            }).then(() => {
+                                this.$successToast('操作成功');
+                                this.isDialogShow = false;
+                                this.$emit('refreshDataList');
+                            }).catch(() => {
+                                //
+                            });
                         }
                     }
                 });

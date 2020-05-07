@@ -120,11 +120,7 @@ export default {
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     ids: [this.targetID]
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.dataForm = data.data[0];
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
+                    this.dataForm = data.data[0];
                 });
             } else {
                 this.targetID = '';
@@ -147,14 +143,10 @@ export default {
                         if (this.dataForm.workNum) {
                             if (this.targetID) {
                                 // 修改
-                                COMMON_API.USER_UPDATE_API(this.dataForm).then(({ data }) => {
-                                    if (data.code === 200) {
-                                        this.$successToast('操作成功');
-                                        this.isDialogShow = false;
-                                        this.$emit('refreshDataList');
-                                    } else {
-                                        this.$errorToast(data.msg);
-                                    }
+                                COMMON_API.USER_UPDATE_API(this.dataForm).then(() => {
+                                    this.$successToast('操作成功');
+                                    this.isDialogShow = false;
+                                    this.$emit('refreshDataList');
                                 });
                             } else {
                                 // 新增
@@ -178,14 +170,10 @@ export default {
                                     post: this.dataForm.post,
                                     email: this.dataForm.email,
                                     phone: this.dataForm.mobile
-                                }).then(({ data }) => {
-                                    if (data.code === 200) {
-                                        this.$successToast('操作成功');
-                                        this.isDialogShow = false;
-                                        this.$emit('refreshDataList');
-                                    } else {
-                                        this.$errorToast(data.msg);
-                                    }
+                                }).then(() => {
+                                    this.$successToast('操作成功');
+                                    this.isDialogShow = false;
+                                    this.$emit('refreshDataList');
                                 });
                             }
                         } else {

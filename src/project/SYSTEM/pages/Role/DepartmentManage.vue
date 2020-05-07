@@ -43,11 +43,7 @@ export default {
                 factory: 'common'
             })
                 .then(({ data }) => {
-                    if (data.code === 200) {
-                        this.orgTree = data.data;
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
+                    this.orgTree = data.data;
                     this.isDaologShow = true;
                 })
                 .then(() => {
@@ -55,11 +51,7 @@ export default {
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         roleId: id
                     }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.$refs.deptListTree.setCheckedKeys(data.data);
-                        } else {
-                            this.$errorToast(data.msg);
-                        }
+                        this.$refs.deptListTree.setCheckedKeys(data.data);
                     });
                 });
         },
@@ -69,14 +61,10 @@ export default {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 roleId: this.roleID,
                 deptId: [].concat(this.$refs.deptListTree.getCheckedKeys())
-            }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.$successToast('操作成功');
-                    this.isDaologShow = false;
-                    this.$emit('refreshDataList');
-                } else {
-                    this.$errorToast(data.msg);
-                }
+            }).then(() => {
+                this.$successToast('操作成功');
+                this.isDaologShow = false;
+                this.$emit('refreshDataList');
                 this.isDaologShow = true;
             });
         }
