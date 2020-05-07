@@ -151,7 +151,7 @@ export const COMMON_API = {
     ORGDETAIL_API: params => httpProxy('/sysDept/query', 'GET', params),
     /**
      * @property {string} ORG_QUERY_WORKSHOP_API 基础数据-组织架构-按工厂和类型查询组织机构
-     * params list<string>
+     * params deptType: list<string> factory:
      */
     ORG_QUERY_WORKSHOP_API: params => httpProxy('/sysDept/getTypeDept', 'POST', params),
     /**
