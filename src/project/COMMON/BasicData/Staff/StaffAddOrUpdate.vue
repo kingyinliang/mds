@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog :title="targetID ? '修改人员信息' : '新增人员'" :close-on-click-modal="false" :visible.sync="isDialogShow">
+        <el-dialog :title="targetID ? '修改人员信息' : '新增人员'" :close-on-click-modal="false" :visible.sync="isDialogShow" @close="closeDialog">
             <el-form ref="dataForm" :model="dataForm" status-icon :rules="checkRules" size="small" label-width="100px">
                 <el-form-item label="所属部门：">
                     <span v-if="targetID" style="margin-right: 10px;">{{ dataForm.deptName }}</span>

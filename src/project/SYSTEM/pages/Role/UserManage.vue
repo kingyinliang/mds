@@ -14,7 +14,6 @@
 
 <script>
     import { COMMON_API } from 'common/api/api';
-    // import { transfer } from 'utils/validate';
     export default {
         name: 'UserManage',
         components: {},

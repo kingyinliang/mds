@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="targetID ? '修改角色信息' : '新增角色'" :close-on-click-modal="false" :visible.sync="isDialogShow">
+    <el-dialog :title="targetID ? '修改角色信息' : '新增角色'" :close-on-click-modal="false" :visible.sync="isDialogShow" @close="closeDialog">
         <el-form ref="dataForm" :model="dataForm" label-width="100px" :rules="checkRules">
             <el-form-item label="角色名称：" prop="roleName">
                 <el-input v-model="dataForm.roleName" placeholder="手动输入" clearable />
