@@ -13,6 +13,19 @@ const resolve = (dir) => {
 }
 
 module.exports = {
+    devServer: {
+        proxy: {
+            '/dt': {
+                target: 'http://10.10.22.46:8081/', // 目标代理接口地址
+                secure: false,
+                changeOrigin: true, // 开启代理，在本地创建一个虚拟服务端
+                // ws: true, // 是否启用websockets
+                pathRewrite: {
+                    '^/dt': '/'
+                }
+            }
+        }
+    },
     productionSourceMap: !IS_PROD, // 生产环境的 source map
     lintOnSave: 'warning',
     pages: pagesInfo,
