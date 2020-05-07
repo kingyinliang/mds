@@ -692,8 +692,8 @@ export const AUDIT_API = {
     AUDIT_TURNSAVE_SUBMIT: HOST + '/ver/adjust/adjust',
     AUDIT_TURNSAVE_MATERIAL: HOST + '/all/dropDown/getAdjustMaterial',
     JUICT_POT_LIST: HOST + '/juice/pot/materialPotList',
-    AUDIT_ADD_EXPORT: HOST + '/juiceExamineAddExport', // 原汁生管添加审核导出
-    AUDIT_DUMP_EXPORT: HOST + '/juiceExamineDumpExport', // 原汁生管转储审核导出
+    AUDIT_ADD_EXPORT: HOST + '/juice/pot/juiceExamineAddExport', // 原汁生管添加审核导出
+    AUDIT_DUMP_EXPORT: HOST + '/juice/pot/juiceExamineDumpExport', // 原汁生管转储审核导出
     /**
      * 助滤剂审核
      */
@@ -960,6 +960,7 @@ export const REP_API = {
     JBS_REPORT_EXPORT: HOST + '/jbs/report/jbsReportExport', // JBS导出
     PKGOUTPUT_LIST_API: HOST + '/report/fromEs/materialSummary', // 包装品项产量汇总查询
     PKGOUTPUT_EXPORT_API: HOST + '/report/fromEs/expectMaterialSummary', // 包装品项产量汇总导出
+    ALLWORKSHOPDAY_EXPORT_API: HOST + '/report/fromEs/expectAllDaily', // 生管日报表导出
     /* eslint-disable @typescript-eslint/camelcase */
     MaterialTraceability_LIST_API: HOST + '/materialView/list', // 物料追溯报表
     MaterialTraceability_checkOver_API: HOST + '/materialView/checkOver',

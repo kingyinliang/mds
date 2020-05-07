@@ -91,6 +91,24 @@
                 </el-table>
             </el-card>
         </div>
+        <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
+            <el-row>
+                <el-col style="width: 500px;">
+                    <el-transfer
+                        v-model="selctId"
+                        filterable
+                        :titles="['未分配人员', '已分配人员']"
+                        :filter-method="filterMethod"
+                        filter-placeholder="请输入用户名称"
+                        :data="userlist"
+                    />
+                </el-col>
+            </el-row>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visible = false">取消</el-button>
+                <el-button type="primary" @click="updatauser(row)">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
