@@ -58,6 +58,30 @@ const mainRoutes: RouteConfig = {
             component: importTarget('COMMON/BasicData/Location/index'),
             name: 'Location',
             meta: { title: 'Location' }
+        },
+        {
+            path: '/SpecificationManage',
+            component: importTarget('COMMON/BasicData/SpecificationManage/index'),
+            name: 'SpecificationManage',
+            meta: { title: 'SpecificationManage' }
+        },
+        {
+            path: '/Supplies',
+            component: importTarget('COMMON/BasicData/Supplies/index'),
+            name: 'Supplies',
+            meta: { title: 'Supplies' }
+        },
+        {
+            path: '/RawMaterial',
+            component: importTarget('COMMON/BasicData/RawMaterial/index'),
+            name: 'RawMaterial',
+            meta: { title: 'RawMaterial' }
+        },
+        {
+            path: '/Parameter',
+            component: importTarget('SYSTEM/pages/Parameter/index'),
+            name: 'Parameter',
+            meta: { title: 'Parameter' }
         }
     ],
     beforeEnter(to, from, next) {
