@@ -110,8 +110,6 @@ export default {
     mounted() {
         this.getItemsList();
         this.getHolderList();
-        console.log('111111')
-        console.log(this.controllableForm.batch)
     },
     methods: {
         closeDialog() {
@@ -141,16 +139,10 @@ export default {
                 holderNo: this.controllableForm.holderNo
             }).then(({ data }) => {
                 this.isAdvanceSearchDailogShow = false;
-                if (data.code === 200) {
-                    console.log('data')
-                    console.log(data)
-                    this.targetInfoList = data.data.records;
-                    this.currPage = data.data.current;
-                    this.pageSize = data.data.size;
-                    this.totalCount = data.data.total;
-                } else {
-                    this.$errorTost(data.msg);
-                }
+                this.targetInfoList = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
             });
         },
         // 改变每页条数
@@ -165,27 +157,15 @@ export default {
         },
         // 数据同步
         syncData() {
-            // this.loading = Loading.service({
-            //     lock: true,
-            //     spinner: 'loadingGif',
-            //     text: '加载中……',
-            //     background: 'rgba(255, 255, 255, 0.7)'
-            // });
             COMMON_API.ROWMETERIAL_SYNC_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             })
                 .then(({ data }) => {
-                    console.log('同步')
-                    console.log(data)
-                    if (data.code === 200) {
-                        this.$successToast(data.msg);
-                        this.getItemsList()
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
+                    this.$successToast(data.msg);
+                    this.getItemsList()
                 })
                 .catch(() => {
-                    // this.loading.close();
+                    //
                 });
         },
         // 罐号
@@ -194,8 +174,6 @@ export default {
                 factoryID: sessionStorage.getItem('factory').id, // 工厂名称
                 size: 10
             }).then(({ data }) => {
-                console.log('罐号')
-                console.log(data)
                 this.guanList = data.data;
             });
         }

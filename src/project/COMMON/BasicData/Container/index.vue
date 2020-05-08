@@ -140,20 +140,14 @@
                     holderNo: this.controllableForm.holderNo,
                     holderVolume: this.controllableForm.holderVolume
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        console.log(data)
-                        if (havePars && data.data.records.length === 0) {
-                            this.$infoToast('该搜寻条件无任何资料！');
-                        }
-                        this.multipleSelection = [];
-                        this.targetInfoList = data.data.records;
-                        this.controllableForm.currPage = data.data.pages;
-                        this.controllableForm.pageSize = data.data.size;
-                        this.controllableForm.totalCount = data.data.total;
-
-                    } else {
-                        this.$errorToast(data.msg);
+                    if (havePars && data.data.records.length === 0) {
+                        this.$infoToast('该搜寻条件无任何资料！');
                     }
+                    this.multipleSelection = [];
+                    this.targetInfoList = data.data.records;
+                    this.controllableForm.currPage = data.data.pages;
+                    this.controllableForm.pageSize = data.data.size;
+                    this.controllableForm.totalCount = data.data.total;
                 });
             },
             // #获取归属车间
@@ -162,14 +156,10 @@
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     deptType: ['WORK_SHOP']
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.workshopList = data.data;
-                        this.workshopList.forEach(item => {
-                            this.workshopaObject[item.id] = item.deptName;
-                        })
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
+                    this.workshopList = data.data;
+                    this.workshopList.forEach(item => {
+                        this.workshopaObject[item.id] = item.deptName;
+                    })
                 });
             },
             // 容器类型下拉
@@ -177,14 +167,10 @@
                 COMMON_API.DICTQUERY_API({
                     dictType: 'COMMON_HOLDER_TYPE'
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.containerTypeList = data.data;
-                        this.containerTypeList.forEach(item => {
-                            this.containerTypeObject[item.dictCode] = item.dictValue;
-                        })
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
+                    this.containerTypeList = data.data;
+                    this.containerTypeList.forEach(item => {
+                        this.containerTypeObject[item.dictCode] = item.dictValue;
+                    })
                 });
             },
             // 表格选中
@@ -216,14 +202,10 @@
                             COMMON_API.HOLDER_REMOVE_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 ids: this.multipleSelection
-                            }).then(({ data }) => {
-                                if (data.code === 200) {
-                                    this.$successToast('删除成功!');
-                                    this.multipleSelection = [];
-                                    this.getItemsList();
-                                } else {
-                                    this.$errorToast(data.msg);
-                                }
+                            }).then(() => {
+                                this.$successToast('删除成功!');
+                                this.multipleSelection = [];
+                                this.getItemsList();
                             });
                         })
                         .catch();

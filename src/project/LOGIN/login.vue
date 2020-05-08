@@ -58,7 +58,7 @@
             </span>
         </el-dialog>
         <!--选择工厂-->
-        <select-factory v-if="factoryVisible" ref="selectfactory" />
+        <select-factory v-show="factoryVisible" ref="selectfactory" />
     </div>
 </template>
 

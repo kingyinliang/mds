@@ -32,7 +32,7 @@
                         <p class="packaging__main__item__title__left">
                             产线：<span>A#</span>产线
                         </p>
-                        <p class="packaging__main__item__title__right"></p>
+                        <p class="packaging__main__item__title__right" />
                     </div>
                 </div>
             </el-col>

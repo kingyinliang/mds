@@ -98,17 +98,8 @@
             };
         },
         computed: {},
-        mounted() {
-            // // 获取大类
-            // this.getLargeClass();
-            // // 获取单位
-            // this.getUnit();
-            // 获取物料
-            // this.getMaterial();
-        },
         methods: {
             closeDialog() {
-                console.log('22222')
                 this.isDialogShow = false;
                 this.$refs.dataForm.resetFields();
             },
@@ -116,33 +107,6 @@
             setBrand(val) {
                 this.dataForm.brand = val.split(' ')[2];
             },
-            // // 大类下拉
-            // getLargeClass() {
-            //     COMMON_API.DICTQUERY_API({
-            //         dictType: 'COMMON_CATEGORY'
-            //         }).then(({ data }) => {
-            //             console.log('大类')
-            //             console.log(data)
-            //             if (data.code === 200) {
-            //                 this.largeClass = data.data;
-            //             } else {
-            //                 this.$errorTost(data.msg);
-            //             }
-            //         });
-            // },
-            // // 单位下拉
-            // getUnit() {
-            //     COMMON_API.DICTQUERY_API({
-            //         dictType: 'COMMON_SPEC_UNIT'
-            //         }).then(({ data }) => {
-            //             if (data.code === 200) {
-            //                 this.unitClass = data.data;
-            //             } else {
-            //                 this.$errorTost(data.msg);
-            //             }
-            //         });
-            // },
-
             init(data) {
                 if (data) {
                     this.targetID = data.id;
@@ -180,14 +144,10 @@
                                 materialCode: this.dataForm.material.split(' ')[0],
                                 version: this.dataForm.version
                                 // :this.dataForm.changer,
-                            }).then(({ data }) => {
-                                if (data.code === 200) {
-                                    this.isDialogShow = false;
-                                    this.$successToast('操作成功');
-                                    this.$emit('refreshDataList');
-                                } else {
-                                    this.$errorTost(data.msg);
-                                }
+                            }).then(() => {
+                                this.isDialogShow = false;
+                                this.$successToast('操作成功');
+                                this.$emit('refreshDataList');
                             });
                         } else {
                             COMMON_API.SPECS_INSERT_API({
@@ -201,14 +161,10 @@
                                 materialName: this.dataForm.material.split(' ')[1],
                                 materialCode: this.dataForm.material.split(' ')[0]
                                 // :this.dataForm.changer,
-                            }).then(({ data }) => {
-                                if (data.code === 200) {
-                                    this.isDialogShow = false;
-                                    this.$successToast('操作成功');
-                                    this.$emit('refreshDataList');
-                                } else {
-                                    this.$errorTost(data.msg);
-                                }
+                            }).then(() => {
+                                this.isDialogShow = false;
+                                this.$successToast('操作成功');
+                                this.$emit('refreshDataList');
                             });
                         }
                     }
