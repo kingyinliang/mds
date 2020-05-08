@@ -544,7 +544,7 @@ export default {
         // 获取研发字典
         GetRDorder(id) {
             if (id) {
-                this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', { factory: id, type: 'order_type', value: '研发订单' }, false, false, false).then(({ data }) => {
+                this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', { factory: id, type: 'order_type', valueS: '研发订单' }, false, false, false).then(({ data }) => {
                     if (data.code === 0) {
                         this.RDorder = data.dicList[0].code;
                     } else {
