@@ -360,7 +360,7 @@
                     { type: 'tooltip', icon: 'factory-pinleiguanli', label: '生产品项', value: ['materialCode', 'materialName'] },
                     { type: 'p', icon: 'factory-dingdan', label: '生产日期', value: 'productDate' },
                     { type: 'p', icon: 'factory-xianchangrenyuan', label: '提交人员', value: 'changer' },
-                    { type: 'p', icon: 'factory-riqi', label: '提交时间', value: 'changed' },
+                    { type: 'tooltip', icon: 'factory-riqi', label: '提交时间', value: 'changed' },
                     { type: 'p', icon: 'factory-riqi', label: '入 罐 号 ', value: 'inPotNoName' },
                     {
                         type: 'p',

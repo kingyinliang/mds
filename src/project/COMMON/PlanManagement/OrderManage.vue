@@ -38,7 +38,7 @@
                         <el-table-column prop="dispatchMan" label="生产调度员" width="100" show-overflow-tooltip />
                         <el-table-column prop="changed" label="同步日期" width="100" show-overflow-tooltip />
                     </el-table>
-                    <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="formHeader.current" :page-sizes="[10, 20, 50]" :page-size="formHeader.size" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </el-card>
             <el-dialog title="高级查询" width="500px" :close-on-click-modal="false" :visible.sync="visible">
@@ -77,7 +77,7 @@
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button size="small" @click="visible = false">取消</el-button>
-                    <el-button type="primary" size="small" @click="GetDataList(true)">确定111</el-button>
+                    <el-button type="primary" size="small" @click="GetDataList(true)">确定</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -90,6 +90,7 @@ export default {
     name: 'OrderManage',
     data() {
         return {
+            totalCount: 0,
             formHeader: {
                 orderNo: '',
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -99,21 +100,18 @@ export default {
                 orderStartDateEnd: '',
                 orderEndDateBegin: '',
                 orderEndDateEnd: '',
-                current: this.currentPage,
-                size: this.pageSize
+                current: 1,
+                size: 10
             },
             factory: [],
             dataList: [],
-            visible: false,
-            currentPage: 1,
-            pageSize: 10,
-            totalCount: 0
+            visible: false
         };
     },
     methods: {
         GetDataList(st) {
             if (st === true) {
-                this.currentPage = 1;
+                this.formHeader.current = 1;
             }
             COMMON_API.ORDER_QUERY_API(this.formHeader).then(({ data }) => {
                 this.visible = false;
@@ -123,8 +121,6 @@ export default {
                     if (data.data.records.length === 0) {
                         this.$infoToast('该搜寻条件无任何资料！');
                     }
-                } else {
-                    this.$errorToast(data.msg);
                 }
             });
         },
@@ -133,20 +129,18 @@ export default {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 incremental: true
             }).then(({ data }) => {
-                if (data.code === 0) {
-                    this.$successToast(data.msg)
-                    this.GetDataList(true)
-                } else {
-                    this.$warningToast(data.msg)
+                if (data.code === 200) {
+                    this.$successToast('同步成功');
+                    this.GetDataList(true);
                 }
             })
         },
         handleSizeChange(val) {
-            this.pageSize = val;
+            this.formHeader.size = val;
             this.GetDataList();
         },
         handleCurrentChange(val) {
-            this.currentPage = val;
+            this.formHeader.current = val;
             this.GetDataList();
         }
     }
