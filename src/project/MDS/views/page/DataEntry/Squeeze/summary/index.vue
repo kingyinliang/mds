@@ -170,7 +170,7 @@ export default {
             orderAudit: [],
             fumet: [],
             statusArr: [{ status: '' }, { status: '' }, { status: '' }],
-            PoTestVar: ''
+            PoTestVar: {}
         };
     },
     computed: {},

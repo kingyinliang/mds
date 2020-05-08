@@ -89,8 +89,8 @@ export default {
             type: Boolean
         },
         poTestVar: {
-            type: String,
-            default: ''
+            type: Object,
+            default: () => { return {} }
         },
         versionList: {
             type: Array,

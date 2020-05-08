@@ -45,9 +45,7 @@ export default {
                 roleId: id
             })
                 .then(({ data }) => {
-                    if (data.code === 200) {
-                        this.menuList = this.translateTreeData(data.data);
-                    }
+                    this.menuList = this.translateTreeData(data.data);
                 })
                 .then(() => {
                     this.isDialogShow = true;
@@ -57,11 +55,7 @@ export default {
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         roleId: id
                     }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.$refs.menuListTree.setCheckedKeys(data.data);
-                        } else {
-                            this.$errorToast(data.msg);
-                        }
+                        this.$refs.menuListTree.setCheckedKeys(data.data);
                     });
                 });
         },
@@ -94,13 +88,9 @@ export default {
                 roleId: this.roleID,
                 menuId: [].concat(this.$refs.menuListTree.getCheckedKeys())
             }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.$successToast('操作成功');
-                    this.isDialogShow = false;
-                    this.$emit('refreshDataList');
-                } else {
-                    this.$errorToast(data.msg);
-                }
+                this.$successToast('操作成功');
+                this.isDialogShow = false;
+                this.$emit('refreshDataList');
             });
         }
     }

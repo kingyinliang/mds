@@ -14,7 +14,6 @@
 
 <script>
     import { COMMON_API } from 'common/api/api';
-    // import { transfer } from 'utils/validate';
     export default {
         name: 'UserManage',
         components: {},
@@ -38,14 +37,10 @@
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     roleId: id
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        const finalData = this.transfer(data.data)
-                        this.userList = finalData.res;
-                        this.selectedUserID = finalData.selectedID;
-                        this.selectedUserIDTemp = finalData.selectedID
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
+                    const finalData = this.transfer(data.data)
+                    this.userList = finalData.res;
+                    this.selectedUserID = finalData.selectedID;
+                    this.selectedUserIDTemp = finalData.selectedID;
                     this.isDaologShow = true;
                 });
             },
@@ -73,14 +68,10 @@
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         roleId: this.roleID,
                         userId: this.selectedUserID
-                    }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.$successToast('操作成功');
-                            this.isDaologShow = false;
-                            this.$emit('refreshDataList');
-                        } else {
-                            this.$errorToast(data.msg);
-                        }
+                    }).then(() => {
+                        this.$successToast('操作成功');
+                        this.isDaologShow = false;
+                        this.$emit('refreshDataList');
                     }).catch(() => {
                          //
                     });
