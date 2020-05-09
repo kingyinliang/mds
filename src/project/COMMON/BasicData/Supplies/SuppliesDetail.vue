@@ -64,11 +64,7 @@
                     materialId: id
                 })
                     .then(({ data }) => {
-                        if (data.code === 200) {
-                            this.dataForm = data.data;
-                        } else {
-                            this.$errorTost(data.msg);
-                        }
+                        this.dataForm = data.data;
                     })
                     .then(() => {
                         this.isDialogShow = true;

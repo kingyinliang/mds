@@ -89,16 +89,10 @@ export default {
                 current: this.currPage,
                 size: this.pageSize
             }).then(({ data }) => {
-                if (data.code === 200) {
-                    console.log('data')
-                    console.log(data)
-                    this.targetInfoList = data.data.records;
-                    this.pageSize = data.data.size;
-                    this.totalCount = data.data.total;
-                    this.currPage = data.data.current;
-                } else {
-                    this.$errorTost(data.msg);
-                }
+                this.targetInfoList = data.data.records;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+                this.currPage = data.data.current;
             });
         },
         // 详情弹窗
@@ -109,23 +103,10 @@ export default {
             });
         },
         syncData() {
-            // this.loading = Loading.service({
-            //     lock: true,
-            //     spinner: 'loadingGif',
-            //     text: '加载中……',
-            //     background: 'rgba(255, 255, 255, 0.7)'
-            // });
             COMMON_API.METERIAL_SYNC_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.$successToast(data.msg);
+            }).then(() => {
                     this.getItemsList()
-
-                } else {
-                    // this.loading.close();
-                    this.$errorToast(data.msg);
-                }
             });
         },
         // 改变每页条数

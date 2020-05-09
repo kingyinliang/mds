@@ -38,7 +38,7 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="closeDialog">
+            <el-button class="j_closeBtn" @click="closeDialog">
                 取消
             </el-button>
             <el-button type="primary" @click="submitDataForm">
@@ -104,8 +104,9 @@
         },
         methods: {
             closeDialog() {
-                this.isDialogShow = false;
+                document.querySelectorAll('.j_closeBtn')[0].focus(); // bug 优化
                 this.$refs.dataForm.resetFields();
+                this.isDialogShow = false;
             },
             init(obj) {
                 if (obj) {
@@ -115,21 +116,17 @@
                         id: obj.id,
                         version: obj.version
                     }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.dataForm.id = data.data.id;
-                            this.dataForm.holderId = data.data.holderId;
-                            this.dataForm.holderType = data.data.holderType;
-                            this.dataForm.holderNo = data.data.holderNo;
-                            this.dataForm.holderName = data.data.holderName;
-                            this.dataForm.holderVolume = data.data.holderVolume;
-                            this.dataForm.holderBatch = data.data.holderBatch;
-                            this.dataForm.holderStatus = data.data.holderStatus;
-                            this.dataForm.holderArea = data.data.holderArea;
-                            this.dataForm.workshop = data.data.deptId;
-                            this.dataForm.version = data.data.version;
-                        } else {
-                            this.$errorTost(data.msg);
-                        }
+                        this.dataForm.id = data.data.id;
+                        this.dataForm.holderId = data.data.holderId;
+                        this.dataForm.holderType = data.data.holderType;
+                        this.dataForm.holderNo = data.data.holderNo;
+                        this.dataForm.holderName = data.data.holderName;
+                        this.dataForm.holderVolume = data.data.holderVolume;
+                        this.dataForm.holderBatch = data.data.holderBatch;
+                        this.dataForm.holderStatus = data.data.holderStatus;
+                        this.dataForm.holderArea = data.data.holderArea;
+                        this.dataForm.workshop = data.data.deptId;
+                        this.dataForm.version = data.data.version;
                         this.isDialogShow = true;
                     });
                 } else {
@@ -142,11 +139,7 @@
                 COMMON_API.DICTQUERY_API({
                     dictType: 'COMMON_HOLDER_STATUS'
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.holderStatusList = data.data;
-                    } else {
-                        this.$errorTost(data.msg);
-                    }
+                    this.holderStatusList = data.data;
                 });
             },
             submitDataForm() {
@@ -165,14 +158,9 @@
                                 deptId: this.dataForm.workshop,
                                 id: this.containerID,
                                 version: this.dataForm.version
-                            }).then(({ data }) => {
-                                if (data.code === 200) {
-                                    this.$successToast('修改成功');
-                                    this.isDialogShow = false;
-                                    this.$emit('refreshDataList');
-                                } else {
-                                    this.$errorToast(data.msg);
-                                }
+                            }).then(() => {
+                                this.$emit('refreshDataList');
+                                this.isDialogShow = false;
                             });
                         } else {
                             COMMON_API.HOLDER_INSERT_API({ // 新增
@@ -186,14 +174,9 @@
                                 holderArea: this.dataForm.holderArea,
                                 deptId: this.dataForm.workshop,
                                 current: 1
-                            }).then(({ data }) => {
-                                if (data.code === 200) {
-                                    this.$successToast('新增成功');
-                                    this.isDialogShow = false;
-                                    this.$emit('refreshDataList');
-                                } else {
-                                    this.$errorTost(data.msg);
-                                }
+                            }).then(() => {
+                                this.$emit('refreshDataList');
+                                this.isDialogShow = false;
                             });
                         }
                     } else {

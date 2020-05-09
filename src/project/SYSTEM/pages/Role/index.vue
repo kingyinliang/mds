@@ -104,19 +104,14 @@
                     size: JSON.stringify(this.pageSize),
                     roleName: searchWord.trim()
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        if (haveParas && data.data.records.length === 0) {
-                            this.$infoToast('该搜寻条件无任何资料！');
-                        }
-                        // this.controllableForm.username = '';
-                        this.targetInfoList = data.data.records;
-                        this.currPage = data.data.current;
-                        this.pageSize = data.data.size;
-                        this.totalCount = data.data.total;
-                    } else {
-                        console.log(data.msg)
-                        this.$errorToast(data.msg);
+                    if (haveParas && data.data.records.length === 0) {
+                        this.$infoToast('该搜寻条件无任何资料！');
                     }
+                    // this.controllableForm.username = '';
+                    this.targetInfoList = data.data.records;
+                    this.currPage = data.data.current;
+                    this.pageSize = data.data.size;
+                    this.totalCount = data.data.total;
                     this.isFunctionManageShow = false;
                     this.isUserManageShow = false;
                     this.isDepartmentManageShow = false;
@@ -159,13 +154,8 @@
                     type: 'warning'
                 })
                     .then(() => {
-                        COMMON_API.ROLE_REMOVE_API({ id: id }).then(({ data }) => {
-                            if (data.code === 200) {
-                                this.$successToast('删除成功!');
-                                this.getItemsList();
-                            } else {
-                                this.$errorToast(data.msg);
-                            }
+                        COMMON_API.ROLE_REMOVE_API({ id: id }).then(() => {
+                            this.getItemsList();
                         }).catch(() => {
                             //
                         });

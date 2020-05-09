@@ -109,12 +109,8 @@ export default {
             COMMON_API.ORGSTRUCTURE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.orgTree = data.data;
-                    this.arrList = this.orgTree[0].children.length !== 0 ? [this.orgTree[0].children[0].id] : [];
-                } else {
-                    this.$errorToast(data.msg);
-                }
+                this.orgTree = data.data;
+                this.arrList = this.orgTree[0].children.length !== 0 ? [this.orgTree[0].children[0].id] : [];
             });
         },
         // 根据deptId查询用户
@@ -139,18 +135,14 @@ export default {
                 current: JSON.stringify(this.currPage),
                 size: JSON.stringify(this.pageSize)
             }).then(({ data }) => {
-                if (data.code === 200) {
-                    if (haveParas && data.data.records.length === 0) {
-                            this.$infoToast('该搜寻条件无任何资料！');
-                    }
-                    this.multipleSelection = [];
-                    this.targetInfoList = data.data.records;
-                    this.currPage = data.data.current;
-                    this.pageSize = data.data.size;
-                    this.totalCount = data.data.total;
-                } else {
-                    this.$errorToast(data.msg);
+                if (haveParas && data.data.records.length === 0) {
+                        this.$infoToast('该搜寻条件无任何资料！');
                 }
+                this.multipleSelection = [];
+                this.targetInfoList = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
                 this.isDialogShow = false;
             });
         },
@@ -208,14 +200,9 @@ export default {
                             COMMON_API.USER_DELETE_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 ids: userID
-                            }).then(({ data }) => {
-                                if (data.code === 200) {
-                                    this.$successToast('删除成功!');
-                                    this.multipleSelection = [];
-                                    this.getItemsList();
-                                } else {
-                                    this.$errorToast(data.msg);
-                                }
+                            }).then(() => {
+                                this.multipleSelection = [];
+                                this.getItemsList();
                             });
                         })
                         .catch(() => {
