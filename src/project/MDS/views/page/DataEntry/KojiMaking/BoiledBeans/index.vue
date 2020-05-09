@@ -87,7 +87,7 @@ export default {
                     value: 'changer'
                 },
                 {
-                    type: 'p',
+                    type: 'tooltip',
                     icon: 'factory-riqi',
                     label: '提交时间',
                     value: 'changed'
