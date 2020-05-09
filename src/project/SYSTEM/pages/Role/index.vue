@@ -154,8 +154,7 @@
                     type: 'warning'
                 })
                     .then(() => {
-                        COMMON_API.ROLE_REMOVE_API({ id: id }).then(({ data }) => {
-                            this.$successToast('删除成功!');
+                        COMMON_API.ROLE_REMOVE_API({ id: id }).then(() => {
                             this.getItemsList();
                         }).catch(() => {
                             //

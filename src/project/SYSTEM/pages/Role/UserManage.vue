@@ -69,9 +69,8 @@
                         roleId: this.roleID,
                         userId: this.selectedUserID
                     }).then(() => {
-                        this.$successToast('操作成功');
-                        this.isDaologShow = false;
                         this.$emit('refreshDataList');
+                        this.isDaologShow = false;
                     }).catch(() => {
                          //
                     });

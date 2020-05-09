@@ -201,7 +201,6 @@ export default {
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 ids: userID
                             }).then(() => {
-                                this.$successToast('删除成功!');
                                 this.multipleSelection = [];
                                 this.getItemsList();
                             });
