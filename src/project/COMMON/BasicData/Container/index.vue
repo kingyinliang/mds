@@ -203,7 +203,6 @@
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 ids: this.multipleSelection
                             }).then(() => {
-                                this.$successToast('删除成功!');
                                 this.multipleSelection = [];
                                 this.getItemsList();
                             });

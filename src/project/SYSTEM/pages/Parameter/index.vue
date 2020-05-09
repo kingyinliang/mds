@@ -3,11 +3,11 @@
         <div class="main main-header">
             <el-card>
                 <el-row style="margin-bottom: 10px;">
-                    <el-select v-model="factory" clearable placeholder="请选择">
+                    <el-select v-model="factoryForSearch" clearable placeholder="请选择" style="width: 300px;">
                         <el-option v-for="sole in factoryList" :key="sole.id" :label="sole.deptName" :value="sole.id" />
                     </el-select>
-                    <el-input v-model="searchString" placeholder="请输入" suffix-icon="el-icon-search" clearable style="width: 200px; margin: 0 10px;" @clear="getItemsList()" />
-                    <el-button type="primary" :disabled="searchString.trim()==='' && factory===''" @click="getItemsList">
+                    <el-input v-model="stringForSearch" placeholder="请输入" suffix-icon="el-icon-search" clearable style="width: 200px; margin: 0 10px;" @clear="getParentItemsList(true)" @blur="factoryForSearch===''&&stringForSearch===''? getParentItemsList(true):false" />
+                    <el-button type="primary" :disabled="stringForSearch.trim()==='' && factoryForSearch===''" @click="getParentItemsList(true)">
                         查询
                     </el-button>
                 </el-row>
@@ -21,13 +21,23 @@
                                 </div>
                             </div>
                             <div>
-                                <el-table header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @row-click="getTypeDetail">
+                                <el-table ref="targetInfoList" header-row-class-name="tableHead" row-key="index" :data="targetInfoList" highlight-current-row border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @row-click="getChildItemList">
                                     <el-table-column type="index" width="50" label="序号" />
-                                    <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factory" />
+                                    <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" />
                                     <el-table-column prop="dictType" :show-overflow-tooltip="true" label="参数类型编码" width="110" />
                                     <el-table-column prop="dictName" :show-overflow-tooltip="true" label="参数类型名称" width="110" />
+                                    <el-table-column width="96" label="操作" fixed="right">
+                                        <template slot-scope="scope">
+                                            <el-button type="text" @click="removeItems(scope.row)">
+                                                删除
+                                            </el-button>
+                                            <el-button type="text" @click="addOrUpdateItem('type', scope.row)">
+                                                编辑
+                                            </el-button>
+                                        </template>
+                                    </el-table-column>
                                 </el-table>
-                                <el-pagination v-if="targetInfoList.length!==0" :current-page="currPageFromMainTable" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromMainTable" layout="total, prev, pager, next, jumper" :total="totalCountFromMainTable" @size-change="handlePageSizeChangeFromMain" @current-change="handleCurrentPageChangeFromMain" />
+                                <el-pagination v-if="targetInfoList.length!==0" :current-page="currPageFromParent" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromParent" layout="total, prev, pager, next, jumper" :total="totalCountFromParent" @size-change="handlePageSizeChangeFromMain" @current-change="handleCurrentPageChangeFromMain" />
                             </div>
                         </el-card>
                     </el-col>
@@ -35,22 +45,30 @@
                         <el-card>
                             <div slot="header" class="clearfix">
                                 <span style="float: left; line-height: 40px;">参数</span>
-                                <el-button v-if="targetParameterList.length!==0" type="text" icon="el-icon-plus" style="display: inline-block; float: right; padding: 12px;" @click="addOrUpdateItem('param',tempTargetRow)" />
+                                <el-button v-if="isFocusChild" type="text" icon="el-icon-plus" style="display: inline-block; float: right; padding: 12px;" @click="addOrUpdateItem('param',tempParentRow)" />
                             </div>
                             <div>
-                                <el-table ref="table1" header-row-class-name="tableHead" :data="targetParameterList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                                <el-table ref="targetParameterList" header-row-class-name="tableHead" :data="targetParameterList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                                     <el-table-column type="index" width="50" label="序号" />
-                                    <el-table-column prop="factory" :show-overflow-tooltip="true" label="工厂" width="100" />
-                                    <el-table-column prop="dictType" :show-overflow-tooltip="true" label="参数类型编码" />
-                                    <el-table-column prop="dictName" :show-overflow-tooltip="true" label="参数类型名称" />
+                                    <el-table-column prop="factoryName" :show-overflow-tooltip="true" label="工厂" width="100" />
+                                    <el-table-column prop="dictType" :show-overflow-tooltip="true" label="参数类型编码">
+                                        <template>
+                                            {{ tempParentRow.dictType }}
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="dictName" :show-overflow-tooltip="true" label="参数类型名称">
+                                        <template>
+                                            {{ tempParentRow.dictName }}
+                                        </template>
+                                    </el-table-column>
                                     <el-table-column prop="dictCode" :show-overflow-tooltip="true" label="参数编码" />
                                     <el-table-column prop="dictValue" :show-overflow-tooltip="true" label="参数名称" />
-                                    <el-table-column width="96" label="操作">
+                                    <el-table-column v-if="targetParameterList.length!==0" width="96" label="操作" fixed="right">
                                         <template slot-scope="scope">
                                             <el-button type="text" @click="removeItems(scope.row)">
                                                 删除
                                             </el-button>
-                                            <el-button type="text" @click="addOrUpdateItem('param', tempTargetRow, scope.row)">
+                                            <el-button type="text" @click="addOrUpdateItem('param', tempParentRow, scope.row)">
                                                 编辑
                                             </el-button>
                                         </template>
@@ -63,7 +81,7 @@
                 </el-row>
             </el-card>
         </div>
-        <parameter-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :factory-list="factoryList" @refreshDataList="getItemsList" />
+        <parameter-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :factory-list="factoryList" @refreshParentDataList="getreParentItemsList" @refreshChildDataList="getreChildItemList(arguments)" />
     </el-col>
 </template>
 
@@ -78,83 +96,167 @@ export default {
     data() {
         return {
             isDialogShow: false,
-            activeItem: {},
             targetInfoList: [],
             targetParameterList: [],
-            adds: {},
             factoryList: [],
             factory: '',
-            searchString: '',
-            totalCountFromMainTable: 1,
-            currPageFromMainTable: 1,
-            pageSizeFromMainTable: 10,
+            stringForSearch: '',
+            factoryForSearch: '',
+            totalCountFromParent: 1,
+            currPageFromParent: 1,
+            pageSizeFromParent: 10,
             totalCount: 1,
             currPage: 1,
             pageSize: 10,
-            tempTargetRow: {}
+            tempParentRow: {},
+            preDaraArray: {},
+            isFocusParent: true,
+            isFocusChild: false,
+            currentFocusChildRow: ''
         };
     },
     computed: {},
     mounted() {
-        this.getItemsList();
+        this.getParentItemsList(true);
         this.getFactoryList();
     },
     methods: {
         // 获取类型
-        getItemsList() {
-            COMMON_API.DICTIONARY_QUERY_API({
-                // factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                factory: this.factory,
-                typeOrName: this.searchString,
-                current: this.currPageFromMainTable,
-                size: this.pageSizeFromMainTable
-            }).then(({ data }) => {
-                console.log(data)
-                this.targetParameterList = [];
-                this.targetInfoList = data.data.records;
-                this.totalCountFromMainTable = data.data.total;
-                this.currPageFromMainTable = data.data.current;
-                this.pageSizeFromMainTable = data.data.size;
+        getParentItemsList(haveParas) {
+            if (haveParas) {
+                this.currPageFromParent = 1;
+            }
+            const parasObj = {
+                factory: this.factoryForSearch,
+                typeOrName: this.stringForSearch,
+                current: this.currPageFromParent,
+                size: this.pageSizeFromParent
+            }
+            COMMON_API.DICTIONARY_QUERY_API(parasObj).then(({ data }) => {
+                this.isFocusChild = false; // 判断左右边 focus
+                this.targetInfoList = data.data.records; // parent table data
+                this.targetParameterList = []; // child table data
+                // this.preDaraArray = parasObj;
+                this.totalCountFromParent = data.data.total;
+                this.currPageFromParent = data.data.current;
+                this.pageSizeFromParent = data.data.size;
 
             });
         },
-        // 表格删除
-        removeItems(row) {
-            this.$confirm('确认删除参数, 是否继续?', '删除参数', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                console.log(row)
-                COMMON_API.DICTIONARY_ITEM_DELETE_API({
-                    factory: this.tempTargetRow.factory,
-                    ids: [row.id]
-                }).then(() => {
-                    this.$successToast('删除成功!');
-                    this.getTypeDetail();
-                });
-            }).catch(() => {
-                // this.$infoTost('已取消删除');
+        // 获取类型
+        getreParentItemsList() {
+            this.currPageFromParent = 1;
+            const parasObj = {
+                factory: '',
+                typeOrName: this.stringForSearch,
+                current: this.currPageFromParent,
+                size: this.pageSizeFromParent
+            }
+            COMMON_API.DICTIONARY_QUERY_API(parasObj).then(({ data }) => {
+                this.isFocusChild = false; // 判断左右边 focus
+                this.targetInfoList = data.data.records; // parent table data
+                this.targetParameterList = []; // child table data
+                // this.preDaraArray = parasObj;
+                this.totalCountFromParent = data.data.total;
+                this.currPageFromParent = data.data.current;
+                this.pageSizeFromParent = data.data.size;
             });
+
+        },
+        // 参数类型删除
+        removeItems(row) {
+            console.log('删除')
+            console.log(row)
+            if (!row.dictId) { // 删除参数类型
+                this.$confirm('确认删除参数类型, 是否继续?', '删除参数类型', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    COMMON_API.DICTIONARY_DELETE_API({
+                        factory: this.factory,
+                        ids: [row.id]
+                    }).then(() => {
+                        this.getParentItemsList(true);
+                    });
+
+                }).catch(() => {
+                    // this.$infoTost('已取消删除');
+                });
+            } else {
+                this.$confirm('确认删除参数, 是否继续?', '删除参数', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    COMMON_API.DICTIONARY_ITEM_DELETE_API({
+                        factory: this.factory,
+                        ids: [row.id]
+                    }).then(() => {
+                        this.getreChildItemList(); //需确认
+                    });
+
+                }).catch(() => {
+                    // this.$infoTost('已取消删除');
+                });
+            }
+
+
         },
         //  设置类型參數
-        getTypeDetail(row) {
+        getChildItemList(row, col) {
             if (row) {
-                this.tempTargetRow = {};
-                this.tempTargetRow = row;
+                this.currPage = 1;
             }
+            if (col.label !== '操作') { //  操作栏位点击无用
+                if (this.currentFocusChildRow !== row.id) { // 避免同 row 重复点击
+                    if (row) {
+                        this.tempParentRow = {};
+                        this.tempParentRow = row;
+                    }
+                    this.factoryList.forEach(item => {
+                        if (item.deptName === row.factoryName) {
+                            this.factory = item.id
+                        }
+                    })
+                    COMMON_API.DICTIONARY_ITEM_QUERY_API({
+                        factory: this.tempParentRow.factory,
+                        dictId: this.tempParentRow.id,
+                        size: this.pageSize,
+                        current: this.currPage
+                    }).then(({ data }) => {
+                        this.isFocusChild = true;
+                        this.currentFocusChildRow = row.id;
+                        console.log('我是清单回传值')
+                        if (data.data.records.length !== 0) {
+                            this.targetParameterList = data.data.records;
+                        } else {
+                            this.targetParameterList = [];
+                        }
+                        this.totalCount = data.data.total;
+                        this.currPage = data.data.current;
+                        this.pageSize = data.data.size;
+                    });
+                }
+            }
+
+
+        },
+        getreChildItemList() {
+            this.currPage = 1;
+            this.currentFocusChildRow = ''
             COMMON_API.DICTIONARY_ITEM_QUERY_API({
-                factory: this.tempTargetRow.factory,
-                dictId: this.tempTargetRow.id,
+                factory: this.tempParentRow.factory,
+                dictId: this.tempParentRow.id,
                 size: this.pageSize,
                 current: this.currPage
             }).then(({ data }) => {
-                this.targetParameterList = data.data.records;
-                this.targetParameterList.forEach(item => {
-                    item.factory = this.tempTargetRow.factory;
-                    item.dictType = this.tempTargetRow.dictType;
-                    item.dictName = this.tempTargetRow.dictName;
-                })
+                this.isFocusChild = true;
+                if (data.data.records.length !== 0) {
+                    this.targetParameterList = data.data.records;
+                } else {
+                    this.targetParameterList = [];
+                }
                 this.totalCount = data.data.total;
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
@@ -170,32 +272,35 @@ export default {
         // 获取工厂
         getFactoryList() {
             COMMON_API.ORG_QUERY_WORKSHOP_API({ deptType: ['factory'] }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.factoryList = data.data;
-                } else {
-                    this.$notify.error({ title: '错误', message: data.msg });
-                }
+                this.factoryList = data.data;
+                this.factoryList.push({
+                    deptCode: 'common',
+                    deptName: '共用字段',
+                    deptShort: '共用字段',
+                    deptType: 'FACTORY',
+                    id: 'common'
+                })
             });
         },
         // 改变每页条数
         handlePageSizeChangeFromMain(val) {
-            this.pageSizeFromMainTable = val;
-            this.getItemsList();
+            this.pageSizeFromParent = val;
+            this.getParentItemsList();
         },
         // 跳转页数
         handleCurrentPageChangeFromMain(val) {
-            this.currPageFromMainTable = val;
-            this.getItemsList();
+            this.currPageFromParent = val;
+            this.getParentItemsList();
         },
         // 改变每页条数
         handlePageSizeChange(val) {
             this.pageSize = val;
-            this.getTypeDetail();
+            this.getChildItemList();
         },
         // 跳转页数
         handleCurrentPageChange(val) {
             this.currPage = val;
-            this.getTypeDetail();
+            this.getChildItemList();
         }
 
     }

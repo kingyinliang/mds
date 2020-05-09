@@ -105,8 +105,7 @@ export default {
         syncData() {
             COMMON_API.METERIAL_SYNC_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            }).then(({ data }) => {
-                    this.$successToast(data.msg);
+            }).then(() => {
                     this.getItemsList()
             });
         },

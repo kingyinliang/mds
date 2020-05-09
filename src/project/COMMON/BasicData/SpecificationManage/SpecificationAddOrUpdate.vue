@@ -38,7 +38,7 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="closeDialog">
+            <el-button class="j_closeBtn" @click="closeDialog">
                 取消
             </el-button>
             <el-button type="primary" @click="submitDataForm">
@@ -100,8 +100,9 @@
         computed: {},
         methods: {
             closeDialog() {
-                this.isDialogShow = false;
+                document.querySelectorAll('.j_closeBtn')[0].focus(); // bug 优化
                 this.$refs.dataForm.resetFields();
+                this.isDialogShow = false;
             },
             // 设置品牌
             setBrand(val) {
@@ -145,9 +146,8 @@
                                 version: this.dataForm.version
                                 // :this.dataForm.changer,
                             }).then(() => {
-                                this.isDialogShow = false;
-                                this.$successToast('操作成功');
                                 this.$emit('refreshDataList');
+                                this.isDialogShow = false;
                             });
                         } else {
                             COMMON_API.SPECS_INSERT_API({
@@ -162,9 +162,8 @@
                                 materialCode: this.dataForm.material.split(' ')[0]
                                 // :this.dataForm.changer,
                             }).then(() => {
-                                this.isDialogShow = false;
-                                this.$successToast('操作成功');
                                 this.$emit('refreshDataList');
+                                this.isDialogShow = false;
                             });
                         }
                     }

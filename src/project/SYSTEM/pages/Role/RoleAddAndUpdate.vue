@@ -12,7 +12,7 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="closeDialog">取消</el-button>
+            <el-button class="j_closeBtn" @click="closeDialog">取消</el-button>
             <el-button type="primary" @click="submitDataForm">确定</el-button>
         </span>
     </el-dialog>
@@ -72,9 +72,8 @@
                                 roleName: this.dataForm.roleName,
                                 remark: this.dataForm.roleDescribe
                             }).then(() => {
-                                this.$successToast('操作成功');
-                                this.isDialogShow = false;
                                 this.$emit('refreshDataList');
+                                this.isDialogShow = false;
                             }).catch(() => {
                                 //
                             });
@@ -86,9 +85,8 @@
                                 roleName: this.dataForm.roleName,
                                 remark: this.dataForm.roleDescribe
                             }).then(() => {
-                                this.$successToast('操作成功');
-                                this.isDialogShow = false;
                                 this.$emit('refreshDataList');
+                                this.isDialogShow = false;
                             }).catch(() => {
                                 //
                             });
@@ -98,8 +96,9 @@
             },
             // 重置
             closeDialog() {
-                this.isDialogShow = false
+                document.querySelectorAll('.j_closeBtn')[0].focus(); // bug 优化
                 this.$refs.dataForm.resetFields();
+                this.isDialogShow = false
             }
         }
     };

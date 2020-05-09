@@ -38,7 +38,7 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="closeDialog">
+            <el-button class="j_closeBtn" @click="closeDialog">
                 取消
             </el-button>
             <el-button type="primary" @click="submitDataForm">
@@ -104,8 +104,9 @@
         },
         methods: {
             closeDialog() {
-                this.isDialogShow = false;
+                document.querySelectorAll('.j_closeBtn')[0].focus(); // bug 优化
                 this.$refs.dataForm.resetFields();
+                this.isDialogShow = false;
             },
             init(obj) {
                 if (obj) {
@@ -158,9 +159,8 @@
                                 id: this.containerID,
                                 version: this.dataForm.version
                             }).then(() => {
-                                this.$successToast('修改成功');
-                                this.isDialogShow = false;
                                 this.$emit('refreshDataList');
+                                this.isDialogShow = false;
                             });
                         } else {
                             COMMON_API.HOLDER_INSERT_API({ // 新增
@@ -175,9 +175,8 @@
                                 deptId: this.dataForm.workshop,
                                 current: 1
                             }).then(() => {
-                                this.$successToast('新增成功');
-                                this.isDialogShow = false;
                                 this.$emit('refreshDataList');
+                                this.isDialogShow = false;
                             });
                         }
                     } else {

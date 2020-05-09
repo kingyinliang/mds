@@ -32,7 +32,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button size="small" @click="closeDialog">
+                <el-button size="small" class="j_closeBtn" @click="closeDialog">
                     取消
                 </el-button>
                 <el-button type="primary" size="small" @click="submitDataForm">
@@ -107,8 +107,9 @@ export default {
     },
     methods: {
         closeDialog() {
-            this.isDialogShow = false;
+            document.querySelectorAll('.j_closeBtn')[0].focus(); // bug 优化
             this.$refs.dataForm.resetFields();
+            this.isDialogShow = false;
         },
         // init
         init(deptID, deptName, id) {
@@ -144,9 +145,8 @@ export default {
                             if (this.targetID) {
                                 // 修改
                                 COMMON_API.USER_UPDATE_API(this.dataForm).then(() => {
-                                    this.$successToast('操作成功');
-                                    this.isDialogShow = false;
                                     this.$emit('refreshDataList');
+                                    this.isDialogShow = false;
                                 });
                             } else {
                                 // 新增
@@ -171,9 +171,8 @@ export default {
                                     email: this.dataForm.email,
                                     phone: this.dataForm.mobile
                                 }).then(() => {
-                                    this.$successToast('操作成功');
-                                    this.isDialogShow = false;
                                     this.$emit('refreshDataList');
+                                    this.isDialogShow = false;
                                 });
                             }
                         } else {
