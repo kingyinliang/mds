@@ -1,10 +1,10 @@
 <template>
-    <el-dialog :title="isParasType ? '新增类型' : isAddParas ? '新增参数':'修改参数'" :close-on-click-modal="false" :visible.sync="isDialogShow" @close="closeDialog">
+    <el-dialog :title="isParasType ? isAddParas ? '修改类型':'新增类型' : isAddParas ? '修改参数':'新增参数'" :close-on-click-modal="false" :visible.sync="isDialogShow" @close="closeDialog">
         <div style="height: 330px; overflow: auto;">
             <el-form ref="dataForm" :model="dataForm" label-width="125px" :rules="checkRules">
                 <el-form-item label="工厂：" prop="factory">
-                    <span v-if="!isParasType">{{ dataForm.factory }}</span>
-                    <el-select v-if="isParasType" v-model="dataForm.factory" @change="changeFactory">
+                    <span v-if="!isParasType">{{ dataForm.factoryName }}</span>
+                    <el-select v-if="isParasType" v-model="factory" @change="changeFactory">
                         <el-option v-for="sole in factoryList" :key="sole.id" :label="sole.deptName" :value="sole.id" />
                     </el-select>
                 </el-form-item>
@@ -16,16 +16,16 @@
                     <span v-if="!isParasType">{{ dataForm.dictName }}</span>
                     <el-input v-if="isParasType" v-model.trim="dataForm.dictName" placeholder="手动输入" clearable />
                 </el-form-item>
-                <el-form-item label="参数编码：" prop="dictCode">
+                <el-form-item v-if="!isParasType" label="参数编码：" prop="dictCode">
                     <el-input v-model.trim="dataForm.dictCode" placeholder="手动输入" clearable />
                 </el-form-item>
-                <el-form-item label="参数名称：" prop="dictValue">
+                <el-form-item v-if="!isParasType" label="参数名称：" prop="dictValue">
                     <el-input v-model.trim="dataForm.dictValue" placeholder="手动输入" clearable />
                 </el-form-item>
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="closeDialog">取消</el-button>
+            <el-button class="j_closeBtn" @click="closeDialog">取消</el-button>
             <el-button type="primary" @click="submitDataForm">确定</el-button>
         </span>
     </el-dialog>
@@ -45,24 +45,25 @@ export default {
     },
     data() {
         return {
+            factory: '',
             isAddParas: false,
             dataForm: {
-                factory: '',
+                factoryName: '',
                 dictType: '',
                 dictName: '',
                 dictCode: '',
-                dictValue: ''
+                dictValue: '',
+                parentId: ''
             },
             isDialogShow: false,
-            isParasType: true,
-            submitType: true,
+            isParasType: true, // 类型或参数
             checkRules: {
-                factory: [
+                factoryName: [
                     { required: true, message: '请选择工厂', trigger: 'blur' }
                 ],
                 dictType: [
                     { required: true, message: '请输入参数类型编码', trigger: 'blur' },
-                    { pattern: /^[A-Z_]+$/, message: '需为大写字母', trigger: 'blur' }
+                    { pattern: /^[A-Z_0-9]+$/, message: '需为大写字母', trigger: 'blur' }
                 ],
                 dictName: [
                     { required: true, message: '请输入参数类型名称', trigger: 'blur' }
@@ -77,30 +78,62 @@ export default {
         };
     },
     computed: {},
+    mounted() {
+        //
+    },
     methods: {
         init(parasLevel, parentItem, targetItem) {
+
+            this.factoryList.forEach(item => {
+                if (item.deptName === parentItem.factoryName) {
+                    this.factory = item.id
+                }
+            })
+
             if (parasLevel === 'type') {
                 this.isParasType = true;
-                    this.dataForm = {
-                        factory: '',
-                        dictType: '',
-                        dictName: '',
-                        dictCode: '',
-                        dictValue: ''
-                    }
-            } else {
-                this.isParasType = false;
-                if (JSON.stringify(targetItem) !== '{}') {
-                    this.isAddParas = false;
-                    this.dataForm = targetItem;
-                } else {
+                if (JSON.stringify(parentItem) !== '{}') {
                     this.isAddParas = true;
+                    console.log('类型编辑')
                     this.dataForm = {
-                        factory: parentItem.factory,
+                        factoryName: parentItem.factoryName,
                         dictType: parentItem.dictType,
                         dictName: parentItem.dictName,
                         dictCode: '',
-                        dictValue: ''
+                        dictValue: '',
+                        parentId: parentItem.id
+                    }
+                } else {
+                    this.isAddParas = false;
+                    console.log('类型新增')
+                    this.dataForm = {
+                        factoryName: '',
+                        dictType: '',
+                        dictName: '',
+                        dictCode: '',
+                        dictValue: '',
+                        parentId: ''
+                    }
+                }
+            } else {
+                this.isParasType = false;
+                if (JSON.stringify(targetItem) !== '{}') {
+                    this.isAddParas = true;
+                    console.log('参数编辑')
+                    this.dataForm = targetItem;
+                    this.dataForm.parentId = parentItem.id
+                    this.dataForm.dictType = parentItem.dictType
+                    this.dataForm.dictName = parentItem.dictName
+                } else {
+                    this.isAddParas = false;
+                    console.log('参数新增')
+                    this.dataForm = {
+                        factoryName: parentItem.factoryName,
+                        dictType: parentItem.dictType,
+                        dictName: parentItem.dictName,
+                        dictCode: '',
+                        dictValue: '',
+                        parentId: parentItem.id
                     }
                 }
             }
@@ -110,76 +143,73 @@ export default {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
                     if (this.isParasType) {
-                        console.log('我是类型')
-                            if (this.isAddParas) {
-                                console.log('我是类型新增')
-                                COMMON_API.DICTIONARY_INSERT_API({
-                                    factory: this.dataForm.factory,
-                                    dictName: this.dataForm.dictName,
-                                    dictType: this.dataForm.dictType
-                                }).then(() => {
-                                        this.dataForm = {};
-                                        this.$successTost('操作成功');
-                                        this.isDialogShow = false;
-                                        this.$emit('refreshDataList');
-                                });
-                            } else {
-                                console.log('我是类型編輯')
-                                COMMON_API.DICTIONARY_UPDATE_API({
-                                    factory: this.dataForm.factory,
-                                    dictName: this.dataForm.dictName,
-                                    dictType: this.dataForm.dictType
-                                }).then(() => {
-                                        this.dataForm = {};
-                                        this.$successTost('操作成功');
-                                        this.isDialogShow = false;
-                                        this.$emit('refreshDataList');
-                                });
-                            }
-
+                        if (!this.isAddParas) {
+                            console.log('类型新增请求送出')
+                            COMMON_API.DICTIONARY_INSERT_API({
+                                factory: this.factory,
+                                dictName: this.dataForm.dictName,
+                                dictType: this.dataForm.dictType
+                            }).then(() => {
+                                this.$emit('refreshParentDataList');
+                                this.dataForm = {};
+                                this.isDialogShow = false;
+                            });
+                        } else {
+                            console.log('类型编辑请求送出')
+                            COMMON_API.DICTIONARY_UPDATE_API({
+                                factory: this.factory,
+                                dictName: this.dataForm.dictName,
+                                dictType: this.dataForm.dictType,
+                                id: this.dataForm.parentId
+                            }).then(() => {
+                                this.$emit('refreshParentDataList');
+                                this.dataForm = {};
+                                this.isDialogShow = false;
+                            });
+                        }
                     } else {
                         console.log('我是参数')
-                            if (this.isAddParas) {
-                                console.log('我是参数新增')
-                                COMMON_API.DICTIONARY_ITEM_INSERT_API({
-                                    factory: this.dataForm.factory,
-                                    dictCode: this.dataForm.dictCode,
-                                    dictValue: this.dataForm.dictValue,
-                                    dictId: this.dataForm.id
-                                }).then(() => {
-                                        this.dataForm = {};
-                                        this.$successTost('操作成功');
-                                        this.isDialogShow = false;
-                                        this.$emit('refreshDataList');
-                                });
-                            } else {
-                                console.log('我是参数編輯')
-                                COMMON_API.DICTIONARY_ITEM_UPDATE_API({
-                                    factory: this.dataForm.factory,
-                                    dictCode: this.dataForm.dictCode,
-                                    dictValue: this.dataForm.dictValue,
-                                    dictId: this.dataForm.id
-                                }).then(() => {
-                                        this.dataForm = {};
-                                        this.$successTost('操作成功');
-                                        this.isDialogShow = false;
-                                        this.$emit('refreshDataList');
-                                });
-                            }
+                        if (!this.isAddParas) {
+                            console.log('参数新增请求送出')
+                            COMMON_API.DICTIONARY_ITEM_INSERT_API({
+                                factory: this.factory,
+                                dictCode: this.dataForm.dictCode,
+                                dictValue: this.dataForm.dictValue,
+                                dictId: this.dataForm.parentId
+                            }).then(() => {
+                                this.$emit('refreshChildDataList')
+                                this.dataForm = {};
+                                this.isDialogShow = false;
+                            });
+                        } else {
+                            console.log('参数編輯请求送出')
+                            COMMON_API.DICTIONARY_ITEM_UPDATE_API({
+                                factory: this.factory,
+                                dictCode: this.dataForm.dictCode,
+                                dictValue: this.dataForm.dictValue,
+                                dictId: this.dataForm.parentId
+                            }).then(() => {
+                                this.$emit('refreshChildDataList');
+                                this.dataForm = {};
+                                this.isDialogShow = false;
+                            });
+                        }
                     }
                 }
             })
         },
         changeFactory(value) {
-            const factory = this.factoryList.find(item => item.deptId === value);
+            const factory = this.factoryList.find(item => item.id === value);
             if (factory) {
-                this.dataForm.deptName = factory.deptName;
+                this.dataForm.factoryName = factory.deptName;
             }
         },
         // 重置
         closeDialog() {
-            this.isDialogShow = false
+            document.querySelectorAll('.j_closeBtn')[0].focus(); // bug 优化
+            this.dataForm.factoryName = '';
             this.$refs.dataForm.resetFields();
+            this.isDialogShow = false;
         }
     }
 };
