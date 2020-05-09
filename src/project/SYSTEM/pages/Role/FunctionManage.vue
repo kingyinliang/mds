@@ -87,8 +87,7 @@ export default {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 roleId: this.roleID,
                 menuId: [].concat(this.$refs.menuListTree.getCheckedKeys())
-            }).then(({ data }) => {
-                this.$successToast('操作成功');
+            }).then(() => {
                 this.isDialogShow = false;
                 this.$emit('refreshDataList');
             });

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="部门分配" :close-on-click-modal="false" :visible.sync="isDaologShow">
+    <el-dialog title="部门分配" :close-on-click-modal="false" :visible.sync="isDialogShow">
         <div style="height: 300px; overflow: auto;">
             <el-tree
                 ref="deptListTree"
@@ -13,7 +13,7 @@
             />
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="isDaologShow = false">取消</el-button>
+            <el-button @click="isDialogShow = false">取消</el-button>
             <el-button type="primary" @click="submitDataForm">确定</el-button>
         </span>
     </el-dialog>
@@ -27,7 +27,7 @@ export default {
     data() {
         return {
             roleID: '',
-            isDaologShow: false,
+            isDialogShow: false,
             orgTree: []
         };
     },
@@ -44,7 +44,7 @@ export default {
             })
                 .then(({ data }) => {
                     this.orgTree = data.data;
-                    this.isDaologShow = true;
+                    this.isDialogShow = true;
                 })
                 .then(() => {
                     COMMON_API.ROLE_ALLOT_QUERY_API({
@@ -62,10 +62,8 @@ export default {
                 roleId: this.roleID,
                 deptId: [].concat(this.$refs.deptListTree.getCheckedKeys())
             }).then(() => {
-                this.$successToast('操作成功');
-                this.isDaologShow = false;
                 this.$emit('refreshDataList');
-                this.isDaologShow = true;
+                this.isDialogShow = false;
             });
         }
     }
