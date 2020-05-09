@@ -58,6 +58,12 @@ const mainRoutes: RouteConfig = {
             component: importTarget('COMMON/BasicData/Location/index'),
             name: 'Location',
             meta: { title: 'Location' }
+        },
+        {
+            path: '/ProIssue',
+            component: importTarget('COMMON/Audit/ProIssue/index'),
+            name: 'ProIssue',
+            meta: { title: 'ProIssue' }
         }
     ],
     beforeEnter(to, from, next) {
