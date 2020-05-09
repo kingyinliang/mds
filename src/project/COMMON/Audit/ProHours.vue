@@ -21,10 +21,10 @@
                         <el-button type="primary" size="small" @click="pass">
                             过账
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-red" @click="refuse">
+                        <el-button type="primary" size="small" class="sub-red" @click="visibleRefuse = true">
                             退回
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-yellow" @click="writeOffs">
+                        <el-button type="primary" size="small" class="sub-yellow" @click="visibleBack = true">
                             反审
                         </el-button>
                     </div>
@@ -34,6 +34,12 @@
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
                     <span>报工列表</span>
+                    <div style="float: right;">
+                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 120px; margin-right: 10px;" />
+                        <el-button type="primary" size="small" class="sub-yellow" @click="visibleBack = true">
+                            反审
+                        </el-button>
+                    </div>
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
@@ -42,6 +48,20 @@
                 </el-button>
             </template>
         </query-table>
+        <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
+            <el-input v-model="ReText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visibleRefuse = false">取消</el-button>
+                <el-button type="primary" @click="refuse()">确定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="反审原因" :close-on-click-modal="false" :visible.sync="visibleBack">
+            <el-input v-model="BackText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visibleWriteOffs = false">取消</el-button>
+                <el-button type="primary" @click="writeOffs()">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -140,6 +160,12 @@
         $refs: {
             queryTable: HTMLFormElement;
         };
+
+        ReText = ''
+        BackText = ''
+        postingDate = ''
+        visibleRefuse = false
+        visibleBack = false
 
         multipleSelection: object[] = [];
 
@@ -262,8 +288,6 @@
             console.log(val);
         };
 
-        postingDate = ''
-
         setData(data) {
             this.tabs[this.$refs.queryTable.activeName].tableData = data.data.records;
             this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = data.data.current;
@@ -277,31 +301,50 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                let list = []
-
-                this.$refs.queryTable.multipleSelection.forEach((item) => {
-                    list.push({
-                        id: item.id,
-                        orderNo: item.orderNo,
-                        orderId: item.orderId,
-                    })
-                })
                 AUDIT_API.HOURS_PASS_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    list: list,
+                    list: this.$refs.queryTable.multipleSelection,
                     postingDate: this.postingDate
                 }).then(({ data }) => {
                     this.$successToast(data.msg)
+                    this.$refs.queryTable.getDataList()
                 })
             })
         }
 
         refuse() {
-            //    c
+            this.$confirm(`确定退回，是否继续？`, '退回确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                AUDIT_API.HOURS_REFUSE_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    list: this.$refs.queryTable.multipleSelection,
+                    reason: this.ReText
+                }).then(({ data }) => {
+                    this.visibleRefuse = false
+                    this.$successToast(data.msg)
+                    this.$refs.queryTable.getDataList()
+                })
+            })
         }
 
         writeOffs() {
-            //    c
+            this.$confirm(`确定反审，是否继续？`, '反审确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                AUDIT_API.HOURS_WRITEOFFS_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    list: this.$refs.queryTable.multipleSelection
+                }).then(({ data }) => {
+                    this.visibleRefuse = false
+                    this.$successToast(data.msg)
+                    this.$refs.queryTable.getDataList()
+                })
+            })
         }
     }
 </script>
