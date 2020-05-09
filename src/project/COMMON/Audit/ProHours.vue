@@ -3,28 +3,28 @@
         <query-table
             ref="queryTable"
             :query-form-data="queryFormData"
-            :page-pagination="pages"
             :list-interface="listInterface"
+            :custom-data="true"
             :tabs="tabs"
             :show-index-column="true"
             :show-select-column="true"
             :show-operation-column="true"
             :operation-column-width="70"
+            @get-data-success="setData"
         >
             <template slot="tab-head0">
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
-                    <span>发料列表</span>
+                    <span>报工列表</span>
                     <div style="float: right;">
-                        <span>过账日期：</span><el-date-picker size="small" style="width: 120px; margin-right: 10px;" />
-                        <span>抬头文本：</span><el-input size="small" style="width: 190px; margin-right: 10px;" />
-                        <el-button type="primary" size="small">
+                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 120px; margin-right: 10px;" />
+                        <el-button type="primary" size="small" @click="pass">
                             过账
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-red">
+                        <el-button type="primary" size="small" class="sub-red" @click="refuse">
                             退回
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-yellow">
+                        <el-button type="primary" size="small" class="sub-yellow" @click="writeOffs">
                             反审
                         </el-button>
                     </div>
@@ -33,7 +33,7 @@
             <template slot="tab-head1">
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
-                    <span>发料列表</span>
+                    <span>报工列表</span>
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
@@ -83,35 +83,47 @@
             label: '单位'
         },
         {
-            prop: 'isSample',
-            label: '组件物料'
+            prop: 'confActivity1',
+            label: '准备工时'
         },
         {
-            prop: 'batch',
-            label: '发料数量'
-        },
-        {
-            prop: 'entryUom',
+            prop: 'confActiUnit1',
             label: '单位'
         },
         {
-            prop: 'entryUom',
-            label: '物料批次'
+            prop: 'confActivity2',
+            label: '机器工时'
         },
         {
-            prop: 'entryUom',
-            label: '出库库位'
+            prop: 'confActiUnit2',
+            label: '单位'
         },
         {
-            prop: 'entryUom',
-            label: '移动类型'
+            prop: 'confActivity3',
+            label: '人工工时'
         },
         {
-            prop: 'entryUom',
-            label: '移动原因'
+            prop: 'confActiUnit3',
+            label: '单位'
         },
         {
-            prop: 'theDate',
+            prop: 'execStartDate',
+            label: '开始日期'
+        },
+        {
+            prop: 'execStartTime',
+            label: '完成日期'
+        },
+        {
+            prop: 'operation',
+            label: '操作活动编号'
+        },
+        {
+            prop: 'finConf',
+            label: '部分/最后确认'
+        },
+        {
+            prop: 'remark',
             label: '备注'
         },
         {
@@ -125,11 +137,17 @@
         }
     })
     export default class ProInStore extends Vue {
+        $refs: {
+            queryTable: HTMLFormElement;
+        };
+
+        multipleSelection: object[] = [];
+
         queryFormData = [
             {
                 type: 'select',
                 label: '生产车间',
-                prop: 'workShop',
+                prop: 'workshop',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -161,7 +179,7 @@
             {
                 type: 'input',
                 label: '生产订单',
-                prop: 'orderNo'
+                prop: 'orderId'
             },
             {
                 type: 'input',
@@ -203,33 +221,78 @@
             {
                 type: 'date-interval',
                 label: '生产日期',
-                prop: 'startDate',
-                propTwo: 'endDate'
+                prop: 'produceStart',
+                propTwo: 'produceEnd'
             }
-        ]
-
-        pages = {
-            currPage: 'current',
-            pageSize: 'size',
-            totalCount: 'total'
-        }
+        ];
 
         tabs = [
             {
                 label: '未过账',
                 tableData: [],
+                pages: {
+                    currPage: 1,
+                    pageSize: 10,
+                    totalCount: 0
+                },
                 column: Column
             },
             {
                 label: '已过账',
                 tableData: [],
+                pages: {
+                    currPage: 1,
+                    pageSize: 10,
+                    totalCount: 0
+                },
                 column: Column
             }
-        ]
+        ];
 
         listInterface = params => {
+            params.passStatus = this.$refs.queryTable.activeName * 1;// eslint-disable-line
+            params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
+            params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
+            params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            return AUDIT_API.INLIST_API(params);
+            return AUDIT_API.HOURS_LIST_API(params);
+        };
+
+        selectableFn = val => {
+            console.log(val);
+        };
+
+        postingDate = ''
+
+        setData(data) {
+            this.tabs[this.$refs.queryTable.activeName].tableData = data.data.records;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = data.data.current;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = data.data.size;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = data.data.total;
+        }
+
+        pass() {
+            this.$confirm(`确定过账，是否继续？`, '过账确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                AUDIT_API.HOURS_PASS_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    list: this.$refs.queryTable.multipleSelection,
+                    postingDate: this.postingDate
+                }).then(({ data }) => {
+                    this.$successToast(data.msg)
+                })
+            })
+        }
+
+        refuse() {
+            //    c
+        }
+
+        writeOffs() {
+            //    c
         }
     }
 </script>

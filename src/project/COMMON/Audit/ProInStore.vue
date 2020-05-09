@@ -3,13 +3,14 @@
         <query-table
             ref="queryTable"
             :query-form-data="queryFormData"
-            :page-pagination="pages"
             :list-interface="listInterface"
+            :custom-data="true"
             :tabs="tabs"
             :show-index-column="true"
             :show-select-column="true"
             :show-operation-column="true"
             :operation-column-width="70"
+            @get-data-success="setData"
         >
             <template slot="tab-head0">
                 <div class="tab__heads clearfix">
@@ -18,13 +19,13 @@
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker size="small" style="width: 120px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input size="small" style="width: 190px; margin-right: 10px;" />
-                        <el-button type="primary" size="small">
+                        <el-button type="primary" size="small" @click="pass">
                             过账
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-red">
+                        <el-button type="primary" size="small" class="sub-red" @click="refuse">
                             退回
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-yellow">
+                        <el-button type="primary" size="small" class="sub-yellow" @click="writeOffs">
                             反审
                         </el-button>
                     </div>
@@ -131,6 +132,10 @@
         }
     })
     export default class ProInStore extends Vue {
+        $refs: {
+            queryTable: HTMLFormElement;
+        };
+
         queryFormData = [
             {
                 type: 'select',
@@ -207,30 +212,63 @@
                 prop: 'startDate',
                 propTwo: 'endDate'
             }
-        ]
-
-        pages = {
-            currPage: 'current',
-            pageSize: 'size',
-            totalCount: 'total'
-        }
+        ];
 
         tabs = [
             {
                 label: '未过账',
                 tableData: [],
+                pages: {
+                    currPage: 1,
+                    pageSize: 10,
+                    totalCount: 0
+                },
                 column: Column
             },
             {
                 label: '已过账',
                 tableData: [],
+                pages: {
+                    currPage: 1,
+                    pageSize: 10,
+                    totalCount: 0
+                },
                 column: Column
             }
-        ]
+        ];
 
         listInterface = params => {
-            params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            params.gzStatus = this.$refs.queryTable.activeName;// eslint-disable-line
+            params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
+            params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
+            params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
+            params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return AUDIT_API.INLIST_API(params);
+        }
+
+        setData(data) {
+            this.tabs[this.$refs.queryTable.activeName].tableData = data.data.records;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = data.data.current;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = data.data.size;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = data.data.total;
+        }
+
+        pass() {
+            this.$confirm(`确定过账，是否继续？`, '过账确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                AUDIT_API.INPASS_API({})
+            })
+        }
+
+        refuse() {
+            //    c
+        }
+
+        writeOffs() {
+            //    c
         }
     }
 </script>

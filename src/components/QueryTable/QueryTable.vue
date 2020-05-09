@@ -64,6 +64,9 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-row v-if="tabItem.pages">
+                    <el-pagination :current-page="tabItem.pages.currPage" :page-sizes="[10, 20, 50]" :page-size="tabItem.pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="tabItem.pages.totalCount" @size-change="(val) => {tabHandleSizeChange(tabItem.pages, val)}" @current-change="(val) => {tabHandleCurrentChange(tabItem.pages, val)}" />
+                </el-row>
             </el-tab-pane>
         </el-tabs>
         <el-card v-if="!tabs.length" class="tableCard" style="min-height: 400px;">
@@ -106,6 +109,12 @@
         name: 'QueryTable',
         components: {},
         props: {
+            resData: {
+                type: Object,
+                default: () => {
+                    return {}
+                }
+            },
             pagePagination: {
                 type: Object,
                 default: () => {
@@ -379,7 +388,11 @@
                     return false;
                 }
                 if (st) {
-                    this.queryForm.currPage = 1;
+                    if (this.tabs.length && this.tabs[this.activeName].pages) {
+                        this.tabs[this.activeName].pages.currPage = 1;
+                    } else {
+                        this.queryForm.currPage = 1;
+                    }
                 }
                 if (this.pagePagination.currPage) {
                     this.queryForm[this.pagePagination.currPage] = this.queryForm.currPage
@@ -391,22 +404,34 @@
                     this.queryForm[this.pagePagination.totalCount] = this.queryForm.totalCount
                 }
                 this.listInterface(this.queryForm).then(({ data }) => {
-                    if (data.code === 0) {
-                        if (this.getListField) {
-                            const getPath = creatGetPath(this.getListField);
-                            this.tableData = getPath(data);
-                        } else if (!this.customData) {
-                            const getPath = creatGetPath(this.returnColumnType);
-                            const path = getPath(data);
+                    if (this.getListField) {
+                        const getPath = creatGetPath(this.getListField);
+                        this.tableData = getPath(data);
+                    } else if (!this.customData) {
+                        const getPath = creatGetPath(this.returnColumnType);
+                        const path = getPath(data);
+                        if (this.resData.list) {
+                            this.tableData = path[this.resData.list];
+                        } else {
                             this.tableData = path.list;
+                        }
+                        if (this.resData.currPage) {
+                            this.queryForm.currPage = path[this.resData.currPage];
+                        } else {
                             this.queryForm.currPage = path.currPage;
+                        }
+                        if (this.resData.pageSize) {
+                            this.queryForm.pageSize = path[this.resData.pageSize];
+                        } else {
                             this.queryForm.pageSize = path.pageSize;
+                        }
+                        if (this.resData.totalCount) {
+                            this.queryForm.totalCount = path[this.resData.totalCount];
+                        } else {
                             this.queryForm.totalCount = path.totalCount;
                         }
-                        this.$emit('get-data-success', data);
-                    } else {
-                        this.$errorToast(data.msg);
                     }
+                    this.$emit('get-data-success', data);
                 });
             },
             // 导出
@@ -461,6 +486,16 @@
                 val.forEach((item) => {
                     this.multipleSelection.push(item);
                 });
+            },
+            // 改变每页条数
+            tabHandleSizeChange(item, val) {
+                item.pageSize = val;
+                this.getDataList();
+            },
+            // 跳转页数
+            tabHandleCurrentChange(item, val) {
+                item.currPage = val;
+                this.getDataList();
             },
             // 改变每页条数
             handleSizeChange(val) {
