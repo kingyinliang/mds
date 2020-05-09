@@ -277,9 +277,17 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                let list = []
+                this.$refs.queryTable.multipleSelection.forEach((item) => {
+                    list.push({
+                        id: item.id,
+                        orderNo: item.orderNo,
+                        orderId: item.orderId,
+                    })
+                })
                 AUDIT_API.HOURS_PASS_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    list: this.$refs.queryTable.multipleSelection,
+                    list: list,
                     postingDate: this.postingDate
                 }).then(({ data }) => {
                     this.$successToast(data.msg)
