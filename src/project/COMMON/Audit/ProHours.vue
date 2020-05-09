@@ -278,6 +278,7 @@
                 type: 'warning'
             }).then(() => {
                 let list = []
+
                 this.$refs.queryTable.multipleSelection.forEach((item) => {
                     list.push({
                         id: item.id,
