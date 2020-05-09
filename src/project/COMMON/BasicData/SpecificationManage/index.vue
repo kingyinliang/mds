@@ -168,17 +168,13 @@
                     current: JSON.stringify(this.currPage),
                     size: JSON.stringify(this.pageSize)
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        if (haveParas && data.data.records.length === 0) {
-                                this.$infoToast('该搜寻条件无任何资料！');
-                        }
-                        this.targetInfoList = data.data.records;
-                        this.currPage = data.data.current;
-                        this.pageSize = data.data.size;
-                        this.totalCount = data.data.total;
-                    } else {
-                        this.$errorToast(data.msg);
+                    if (haveParas && data.data.records.length === 0) {
+                            this.$infoToast('该搜寻条件无任何资料！');
                     }
+                    this.targetInfoList = data.data.records;
+                    this.currPage = data.data.current;
+                    this.pageSize = data.data.size;
+                    this.totalCount = data.data.total;
                     this.isAddOrUpdateDailogShow = false;
                     this.isAdvanceSearchDailogShow = false;
                 });
@@ -204,16 +200,12 @@
                             COMMON_API.SPECS_REMOVE_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 ids: this.multipleSelection
-                            }).then(({ data }) => {
-                                if (data.code === 200) {
-                                    this.$successToast('删除成功!');
-                                    this.multipleSelection = [];
-                                    this.$nextTick(() => {
-                                        this.getItemsList();
-                                    });
-                                } else {
-                                    this.$errorToast(data.msg);
-                                }
+                            }).then(() => {
+                                this.$successToast('删除成功!');
+                                this.multipleSelection = [];
+                                this.$nextTick(() => {
+                                    this.getItemsList();
+                                });
                             });
                         })
                         .catch();
@@ -232,11 +224,7 @@
                     COMMON_API.ALLMATERIAL_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
                         }).then(({ data }) => {
-                            if (data.code === 200) {
-                                this.serchSpecList = data.data;
-                            } else {
-                                this.$errorTost(data.msg);
-                            }
+                            this.serchSpecList = data.data;
                         });
                 // }
             },
@@ -245,14 +233,10 @@
                 COMMON_API.DICTQUERY_API({
                     dictType: 'COMMON_CATEGORY'
                     }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.largeClass = data.data;
-                            this.largeClass.forEach(item => {
-                                this.largeClassObject[item.dictCode] = item.dictValue
-                            })
-                        } else {
-                            this.$errorTost(data.msg);
-                        }
+                        this.largeClass = data.data;
+                        this.largeClass.forEach(item => {
+                            this.largeClassObject[item.dictCode] = item.dictValue
+                        })
                     });
             },
             // 单位下拉
@@ -260,14 +244,10 @@
                 COMMON_API.DICTQUERY_API({
                     dictType: 'COMMON_SPEC_UNIT'
                     }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.unitClass = data.data;
-                            this.unitClass.forEach(item => {
-                            this.unitClassObject[item.dictCode] = item.dictValue
-                            })
-                        } else {
-                            this.$errorTost(data.msg);
-                        }
+                        this.unitClass = data.data;
+                        this.unitClass.forEach(item => {
+                        this.unitClassObject[item.dictCode] = item.dictValue
+                        })
                     });
             },
             // 序号

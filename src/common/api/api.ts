@@ -151,6 +151,7 @@ export const COMMON_API = {
     ORGDETAIL_API: params => httpProxy('/sysDept/query', 'GET', params),
     /**
      * @property {string} ORG_QUERY_WORKSHOP_API 基础数据-组织架构-按工厂和类型查询组织机构
+     * params deptType: list<string> factory:
      */
     ORG_QUERY_WORKSHOP_API: params => httpProxy('/sysDept/getTypeDept', 'POST', params),
     /**
@@ -345,48 +346,52 @@ export const COMMON_API = {
 };
 
 export const AUDIT_API = {
-    /**
-     * @property {string} INLIST_API 入库审核列表
-     */
-    INLIST_API: params => httpProxy('/verifyInStorage/query', 'POST', params),
-    /**
-     * @property {string} INADD_API 入库审核新增
-     */
-    INADD_API: params => httpProxy('/verifyInStorage/insert', 'POST', params),
-    /**
-     * @property {string} INUPDATE_API 入库审核修改
-     */
-    INUPDATE_API: params => httpProxy('/verifyInStorage/upate', 'POST', params),
-    /**
-     * @property {string} INPASS_API 入库审核过账
-     */
-    INPASS_API: params => httpProxy('/verifyInStorage/pass', 'POST', params),
-    /**
-     * @property {string} INREFUSE_API 入库审核退回
-     */
-    INREFUSE_API: params => httpProxy('/verifyInStorage/refuse', 'POST', params),
-    /**
-     * @property {string} INWRITEOFFS_API 入库审核反审
-     */
-    INWRITEOFFS_API: params => httpProxy('/verifyInStorage/writeOffs', 'POST', params),
-    /**
-     * @property {string} PROISSUEQUERY_API 生产发料列表
-     */
-    PROISSUEQUERY_API: params => httpProxy('/verifyMaterial/query', 'POST', params),
-    /**
-     * @property {string} PROISSUEPASS_API 生产发料过账
-     */
-    PROISSUEPASS_API: params => httpProxy('/verifyMaterial/pass', 'POST', params),
-    /**
-     * @property {string} PROISSUEREFUSE_API 生产发料退回
-     */
-    PROISSUEREFUSE_API: params => httpProxy('/verifyMaterial/refuse', 'POST', params),
-    /**
-     * @property {string} PROISSUEWRITEOFFS_API 生产发料反审
-     */
-    PROISSUEWRITEOFFS_API: params => httpProxy('/verifyMaterial/writeOffs', 'POST', params),
-    /**
-     * @property {string} PROISSUEUPDATE_API 生产发料修改
-     */
-    PROISSUEUPDATE_API: params => httpProxy('/verifyMaterial/update', 'POST', params)
-};
+           /**
+            * @property {string} INLIST_API 入库审核列表
+            */
+           INLIST_API: params => httpProxy('/verifyInStorage/query', 'POST', params),
+           /**
+            * @property {string} INADD_API 入库审核新增
+            */
+           INADD_API: params => httpProxy('/verifyInStorage/insert', 'POST', params),
+           /**
+            * @property {string} INUPDATE_API 入库审核修改
+            */
+           INUPDATE_API: params => httpProxy('/verifyInStorage/upate', 'POST', params),
+           /**
+            * @property {string} INPASS_API 入库审核过账
+            */
+           INPASS_API: params => httpProxy('/verifyInStorage/pass', 'POST', params),
+           /**
+            * @property {string} INREFUSE_API 入库审核退回
+            */
+           INREFUSE_API: params => httpProxy('/verifyInStorage/refuse', 'POST', params),
+           /**
+            * @property {string} INWRITEOFFS_API 入库审核反审
+            */
+           INWRITEOFFS_API: params => httpProxy('/verifyInStorage/writeOffs', 'POST', params),
+           /**
+            * @property {string} PROISSUEQUERY_API 生产发料列表
+            */
+           PROISSUEQUERY_API: params => httpProxy('/verifyMaterial/query', 'POST', params),
+           /**
+            * @property {string} PROISSUEPASS_API 生产发料过账
+            */
+           PROISSUEPASS_API: params => httpProxy('/verifyMaterial/pass', 'POST', params),
+           /**
+            * @property {string} PROISSUEREFUSE_API 生产发料退回
+            */
+           PROISSUEREFUSE_API: params => httpProxy('/verifyMaterial/refuse', 'POST', params),
+           /**
+            * @property {string} PROISSUEWRITEOFFS_API 生产发料反审
+            */
+           PROISSUEWRITEOFFS_API: params => httpProxy('/verifyMaterial/writeOffs', 'POST', params),
+           /**
+            * @property {string} PROISSUEUPDATE_API 生产发料修改
+            */
+           PROISSUEUPDATE_API: params => httpProxy('/verifyMaterial/update', 'POST', params),
+           /**
+            * @property {string} PROISSUEDROPDOWN_API 生产发料修改
+            */
+           PROISSUEDROPDOWN_API: params => httpProxy('/verifyMaterial/dropDown', 'POST', params)
+       };

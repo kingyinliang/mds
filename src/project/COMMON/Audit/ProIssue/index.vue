@@ -147,7 +147,7 @@
                                     <template slot-scope="scope">
                                         <el-select v-if="scope.row.redact" v-model="scope.row.moveReason" placeholder="请选择" size="mini">
                                             <el-option label="请选择" value="" />
-                                            <el-option v-for="(item, index) in moveReas" :key="index" :label="item.value" :value="item.code" />
+                                            <el-option v-for="(item, index) in moveReas" :key="index" :label="item.dictValue" :value="item.id" />
                                         </el-select>
                                         <span v-else>{{ scope.row.moveReason }}</span>
                                     </template>
@@ -307,11 +307,11 @@
             }
         },
         mounted() {
-            this.getDeptByFactoryId();
             this.GetAuditList();
-            // this.getProductLineType();
-            // this.getMaterialsList();
-            // this.getOrderTypeList();
+            this.getDeptByFactoryId();
+            this.getMoveReas();
+            this.getMaterialsList();
+            this.getOrderTypeList();
             headanimation(this.$);
         },
         methods: {
@@ -365,23 +365,27 @@
             },
             //获取组件物料
             getMaterialsList() {
-                COMMON_API.ORG_QUERY_WORKSHOP_API({
-                    types: 'order_type'
+                AUDIT_API.PROISSUEDROPDOWN_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
                 }).then(({ data }) => {
                     console.log(data);
                 });
             },
             //获取订单类型
             getOrderTypeList() {
-                COMMON_API.ORG_QUERY_WORKSHOP_API({
-                    types: 'order_type'
+                COMMON_API.DICTIONARY_ITEM_QUERY_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
                 }).then(({ data }) => {
                     console.log(data);
                 });
             },
             //获取移动类型
             getMoveReas() {
-                alert('');
+                COMMON_API.DICTQUERY_API({
+                    dictType: 'COMMON_MOVE_REASON'
+                }).then(({ data }) => {
+                    this.moveReas = data.data;
+                });
             },
             //显示退回或反审
             refuseDialogShow(bol) {

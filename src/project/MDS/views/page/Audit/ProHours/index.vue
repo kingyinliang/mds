@@ -36,6 +36,13 @@
                                         <el-option label="接口失败" value="0" />
                                     </el-select>
                                 </el-form-item>
+                                <el-form-item label="是否报工：">
+                                    <el-select v-model="plantList.finConf" placeholder="请选择" style="width: 160px;">
+                                        <el-option label="请选择" value="" />
+                                        <el-option label="部分" value="0" />
+                                        <el-option label="完全" value="X" />
+                                    </el-select>
+                                </el-form-item>
                                 <el-form-item label="生产日期：" class="dateinput">
                                     <el-row>
                                         <el-col :span="12">
@@ -217,7 +224,8 @@
                     status: '',
                     currPage: 1,
                     pageSize: 10,
-                    totalCount: 0
+                    totalCount: 0,
+                    finConf: ''
                 },
                 AuditList: [],
                 multipleSelection: []

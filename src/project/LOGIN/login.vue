@@ -58,40 +58,20 @@
             </span>
         </el-dialog>
         <!--选择工厂-->
-        <el-dialog :show-close="false" :visible.sync="factoryVisible" class="selectFa">
-            <div class="factoryBox">
-                <div v-for="(item, index) in factory" :key="index" class="factoryItem">
-                    <div class="itemBox">
-                        <div class="item-title">
-                            <p class="item-title-p">
-                                {{ item.deptName }}
-                            </p>
-                            <!--<el-switch-->
-                            <!--v-model="item.value"-->
-                            <!--style="float: right;"-->
-                            <!--active-color="#8BC34A"-->
-                            <!--inactive-color="#dcdfe6"-->
-                            <!--@click="setOther(index)"-->
-                            <!--/>-->
-                        </div>
-                        <div @click="goFa(item)">
-                            <img v-if="item.deptCode === '8888'" src="./assets/img/factory8.png" alt="">
-                            <img v-else :src="'../static/img/factory'+ index + '.png'" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </el-dialog>
+        <select-factory v-show="factoryVisible" ref="selectfactory" />
     </div>
 </template>
 
 <script>
 import { COMMON_API } from 'common/api/api';
 import { LoginAnimation } from './loginCanvas';
+import SelectFactory from 'src/layout/main/SelectFactory';
 
 export default {
     name: 'Login',
-    components: {},
+    components: {
+        SelectFactory
+    },
     data() {
         const validatePass = (rule, value, callback) => {
             if (value === '') {
@@ -183,31 +163,6 @@ export default {
         canvas.init();
     },
     methods: {
-        goDataViews() {
-            window.location.href = '/MDS.html#/DataEcharts/KojiMaking-DataScreening-index'
-        },
-        goFa(item) {
-            sessionStorage.setItem('vuex', '');
-            if (item.deptCode === '6010' || item.deptCode === '7100' || item.deptCode === '7101') {
-                sessionStorage.setItem('factory', JSON.stringify(item || ''));
-                window.location.href = '/MDS.html'
-            } else if (item.deptCode === '8888') {
-                sessionStorage.setItem('factory', JSON.stringify(item || ''));
-                window.location.href = '/SYSTEM.html'
-            } else {
-                sessionStorage.setItem('factory', JSON.stringify(item || ''));
-                window.location.href = '/DFMDS.html'
-            }
-        },
-        setOther(Num) {
-            this.factory.forEach((item, index) => {
-                if (Num !== index) {
-                    item.value = false
-                } else {
-                    item.value = !item.value
-                }
-            })
-        },
         play() {
             this.curr++;
             if (this.curr >= this.videoList.length) this.curr = 0;
@@ -222,9 +177,12 @@ export default {
                             this.$successToast('操作成功');
                             this.visible = false;
                             if (this.factory.length > 1) {
-                                this.factoryVisible = true
+                                this.factoryVisible = true;
+                                this.$nextTick(() => {
+                                    this.$refs['selectfactory'].init();
+                                });
                             } else if (this.factory.length === 1) {
-                                this.goFa(this.factory[0])
+                                this.$refs.selectfactory.goFa(this.factory[0])
                             }
                         }
                     });
@@ -260,9 +218,12 @@ export default {
         selectFactory(data) {
             this.factory = data.userFactory
             if (data.userFactory.length > 1) {
-                this.factoryVisible = true
+                this.factoryVisible = true;
+                this.$nextTick(() => {
+                    this.$refs['selectfactory'].init();
+                });
             } else if (data.userFactory.length === 1) {
-                this.goFa(data.userFactory[0])
+                this.$refs.selectfactory.goFa(data.userFactory[0])
             }
         },
         resetForm(formName) {
@@ -272,104 +233,11 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .selectFa {
     background: url("./assets/img/LoginToastBg.png") no-repeat;
     background-size: 100% 100%;
-    .el-dialog {
-        width: 100%;
-        background: none;
-        box-shadow: none;
-        .el-dialog__header {
-            background: none;
-        }
-        .el-dialog__body {
-            display: flex;
-            justify-content: center;
-        }
-    }
-    .factoryBox {
-        width: 1168px;
-        margin: auto;
-    }
-    .factoryItem {
-        display: inline-block;
-        padding: 5px;
-        .itemBox {
-            box-sizing: content-box !important;
-            width: 250px;
-            padding: 16px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
-            cursor: pointer;
-            img {
-                display: block;
-                width: 150px;
-                height: 103px;
-                margin: auto;
-            }
-            .item-title {
-                margin: 0 0 30px 0;
-                font-weight: bold;
-                font-size: 16px;
-                .item-title-p {
-                    width: 250px;
-                    margin: 0;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                }
-            }
-        }
-    }
 }
-.bg1 {
-    position: absolute;
-    width: 200px;
-    transform: rotateY(35deg);
-    transform-style: preserve-3d;
-}
-
-video {
-    object-fit: fill;
-}
-
-.loginForm {
-    position: fixed;
-    top: 200px;
-    right: 105px;
-    z-index: 999;
-    width: 320px;
-    height: 254px;
-
-    label {
-        color: white !important;
-    }
-
-    input {
-        background: #fff !important;
-    }
-
-    .el-form-item__content {
-        margin-left: 0 !important;
-    }
-
-    .el-input__prefix {
-        margin-left: 6px;
-    }
-
-    .reset {
-        position: absolute;
-        right: 0;
-        bottom: -22px;
-        float: right;
-        padding: 0;
-        color: white;
-        font-size: 12px;
-    }
-}
-
 .loginFormBg {
     position: fixed;
     top: 165px;
@@ -385,7 +253,7 @@ video {
     width: 100%;
     height: 100%;
 
-    .el-col {
+    ::v-deep .el-col {/* stylelint-disable-line */
         height: 100%;
         overflow: hidden;
     }
@@ -426,12 +294,14 @@ video {
     }
 
     .login_title1 {
+        margin-top: 0;
         margin-bottom: 10px;
         font-size: 22px;
         line-height: 26px;
     }
 
     .login_title2 {
+        margin-top: 0;
         margin-bottom: 15px;
         font-size: 28px;
         line-height: 40px;
@@ -450,11 +320,11 @@ video {
         background: #fff !important;
     }
 
-    .el-form-item__content {
+    ::v-deep .el-form-item__content {/* stylelint-disable-line */
         margin-left: 0 !important;
     }
 
-    .el-input__prefix {
+    ::v-deep .el-input__prefix {/* stylelint-disable-line */
         margin-left: 6px;
     }
 

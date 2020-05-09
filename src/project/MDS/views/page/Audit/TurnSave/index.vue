@@ -256,10 +256,11 @@ export default {
             } else if (this.activeName === '2') {
                 this.formHeader.listType = 'add';
             }
+            this.plantList = this.formHeader;
             if (this.formHeader.listType === 'add') {
-                exportFile(`${AUDIT_API.AUDIT_DUMP_EXPORT}`, '原汁生管转储审核导出', this);
+                exportFile(`${AUDIT_API.AUDIT_ADD_EXPORT}`, '原汁生管转储审核导出', this);
             } else {
-                exportFile(`${AUDIT_API.AUDIT_ADD_EXPORT}`, '原汁生管添加审核导出', this);
+                exportFile(`${AUDIT_API.AUDIT_DUMP_EXPORT}`, '原汁生管添加审核导出', this);
             }
         },
         // 审核通过禁用
