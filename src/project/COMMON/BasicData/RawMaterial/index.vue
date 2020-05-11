@@ -114,7 +114,6 @@ export default {
     },
     methods: {
         closeDialog() {
-            console.log('22222')
             this.isAdvanceSearchDailogShow = false;
             if (!this.keepAdvanceSearchData) {
                 this.controllableForm.materialCode = '';

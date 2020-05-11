@@ -7,7 +7,7 @@
                     <el-col class="header_main" style="margin-bottom: 10px;">
                         <el-form :inline="true" :model="controllableForm" size="small" label-width="70px" class="multi_row" @submit.native.prevent>
                             <el-form-item label="归属车间：">
-                                <el-select v-model="controllableForm.dept_id" placeholder="请选择">
+                                <el-select v-model="controllableForm.deptID" placeholder="请选择">
                                     <el-option v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id" />
                                 </el-select>
                             </el-form-item>
@@ -43,7 +43,7 @@
                 <el-row>
                     <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                         <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
-                        <el-table-column type="index" :index="indexMethod" label="#" width="55" />
+                        <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
                         <el-table-column label="容器类型" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
                                 {{ containerTypeObject[scope.row.holderType] }}
@@ -114,7 +114,6 @@
         },
         computed: {},
         mounted() {
-            console.log(this.controllableForm.dept_id)
             // 获取车间下拉列表
             this.getWorkshopList();
             // 获取容器状态
@@ -135,6 +134,7 @@
                 COMMON_API.HOLDER_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     current: this.controllableForm.currPage,
+                    deptId: this.controllableForm.deptID,
                     size: this.controllableForm.pageSize,
                     holderType: this.controllableForm.holderType,
                     holderNo: this.controllableForm.holderNo,
