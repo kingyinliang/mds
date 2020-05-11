@@ -6,6 +6,7 @@
             :list-interface="listInterface"
             :custom-data="true"
             :tabs="tabs"
+            :selectable-fn="selectableFn"
             :show-index-column="true"
             :show-select-column="true"
             :show-operation-column="true"
@@ -15,18 +16,15 @@
             <template slot="tab-head0">
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
-                    <span>发料列表</span>
+                    <span>入库列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker size="small" style="width: 120px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input size="small" style="width: 190px; margin-right: 10px;" />
                         <el-button type="primary" size="small" @click="pass">
                             过账
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-red" @click="refuse">
+                        <el-button type="primary" size="small" class="sub-red" @click="visibleRefuse = true">
                             退回
-                        </el-button>
-                        <el-button type="primary" size="small" class="sub-yellow" @click="writeOffs">
-                            反审
                         </el-button>
                     </div>
                 </div>
@@ -34,15 +32,36 @@
             <template slot="tab-head1">
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
-                    <span>发料列表</span>
+                    <span>入库列表</span>
+                    <div style="float: right;">
+                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 120px; margin-right: 10px;" />
+                        <span>抬头文本：</span><el-input size="small" style="width: 190px; margin-right: 10px;" />
+                        <el-button type="primary" size="small" class="sub-yellow" @click="visibleBack = true">
+                            反审
+                        </el-button>
+                    </div>
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="primary" round size="mini" @click="addOrupdate(scope.row)">
-                    编辑
+                <el-button class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
+                    {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
             </template>
         </query-table>
+        <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
+            <el-input v-model="ReText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visibleRefuse = false">取消</el-button>
+                <el-button type="primary" @click="refuse()">确定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="反审原因" :close-on-click-modal="false" :visible.sync="visibleBack">
+            <el-input v-model="BackText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visibleWriteOffs = false">取消</el-button>
+                <el-button type="primary" @click="writeOffs()">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -96,28 +115,40 @@
             label: '订单生产日期'
         },
         {
+            type: 'input',
+            redact: true,
             prop: 'stgeLoc',
             label: '入库库位'
         },
         {
+            type: 'input',
+            redact: true,
             prop: 'moveType',
             label: '移动类型'
         },
         {
+            type: 'input',
+            redact: true,
             prop: 'stckType',
             label: '库存类型'
         },
         {
+            type: 'input',
+            redact: true,
             prop: 'noMoreGr',
             label: '交货已完成',
             width: '120'
         },
         {
+            type: 'input',
+            redact: true,
             prop: 'expirydate',
             label: '货架寿命到期日',
             width: '120'
         },
         {
+            type: 'input',
+            redact: true,
             prop: 'theDate',
             label: '备注'
         },
@@ -135,6 +166,14 @@
         $refs: {
             queryTable: HTMLFormElement;
         };
+
+        ReText = ''
+        BackText = ''
+        postingDate = ''
+        visibleRefuse = false
+        visibleBack = false
+
+        multipleSelection: object[] = [];
 
         queryFormData = [
             {
@@ -246,11 +285,63 @@
             return AUDIT_API.INLIST_API(params);
         }
 
-        setData(data) {
-            this.tabs[this.$refs.queryTable.activeName].tableData = data.data.records;
-            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = data.data.current;
-            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = data.data.size;
-            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = data.data.total;
+        selectableFn = row => {
+            if (row.status === '已退回') {
+                return 0;
+            }
+            return 1;
+        };
+
+        setData(datas, st) {
+            if (st) {
+                this.tabs.forEach((item, index) => {
+                    if (index !== Number(this.$refs.queryTable.activeName)) {
+                        const params = this.$refs.queryTable.queryForm
+                        params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                        params.passStatus = index;
+                        params.current = 1;
+                        params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
+                        params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
+                        AUDIT_API.HOURS_LIST_API(params).then(({ data }) => {
+                            this.tabs[index].tableData = data.data.records;
+                            this.setRedact(this.tabs[this.$refs.queryTable.activeName].tableData);
+                            this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
+                            this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
+                            this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
+                        });
+                    } else {
+                        this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                        this.setRedact(this.tabs[this.$refs.queryTable.activeName].tableData);
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+                    }
+                })
+            } else {
+                this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                this.setRedact(this.tabs[this.$refs.queryTable.activeName].tableData);
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+            }
+        }
+
+        setRedact(data) {
+            data.forEach(item => {
+                item.redact = false
+            })
+        }
+
+        addOrupdate(row) {
+            if (!row.redact) {
+                row.redact = true;
+            } else {
+                row.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                AUDIT_API.INUPDATE_API(row).then(({ data }) => {
+                    this.$successToast(data.msg);
+                    row.redact = false
+                })
+            }
         }
 
         pass() {
@@ -259,16 +350,50 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                AUDIT_API.INPASS_API({})
+                AUDIT_API.INPASS_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    list: this.$refs.queryTable.multipleSelection,
+                    postingDate: this.postingDate
+                }).then(({ data }) => {
+                    this.$successToast(data.msg)
+                    this.$refs.queryTable.getDataList()
+                })
             })
         }
 
         refuse() {
-            //    c
+            this.$confirm(`确定退回，是否继续？`, '退回确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                AUDIT_API.INREFUSE_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    list: this.$refs.queryTable.multipleSelection,
+                    reason: this.ReText
+                }).then(({ data }) => {
+                    this.visibleRefuse = false
+                    this.$successToast(data.msg)
+                    this.$refs.queryTable.getDataList()
+                })
+            })
         }
 
         writeOffs() {
-            //    c
+            this.$confirm(`确定反审，是否继续？`, '反审确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                AUDIT_API.INWRITEOFFS_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    list: this.$refs.queryTable.multipleSelection
+                }).then(({ data }) => {
+                    this.visibleRefuse = false
+                    this.$successToast(data.msg)
+                    this.$refs.queryTable.getDataList()
+                })
+            })
         }
     }
 </script>

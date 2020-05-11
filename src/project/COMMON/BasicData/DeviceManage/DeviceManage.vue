@@ -26,7 +26,7 @@
                     <el-table-column prop="deviceName" label="设备描述" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="65">
                         <template slot-scope="scope">
-                            <el-button v-if="isAuth('sys:device:update')" type="text" @click="addOrupdate(scope.row)">
+                            <el-button type="text" @click="addOrupdate(scope.row)">
                                 编辑
                             </el-button>
                         </template>
