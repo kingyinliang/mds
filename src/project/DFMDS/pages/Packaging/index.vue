@@ -55,7 +55,7 @@
             productLine: []
         }
 
-        getDataList(a) {
+        getDataList(ab) {
         //    c
         }
     }
