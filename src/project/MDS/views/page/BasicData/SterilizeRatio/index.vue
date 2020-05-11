@@ -257,4 +257,11 @@ export default {
         }
     }
 }
+
+.el-form {
+    .el-form-item.el-form-item--small {
+        margin-bottom: 18px;
+    }
+}
+
 </style>

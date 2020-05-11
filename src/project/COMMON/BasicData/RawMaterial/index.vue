@@ -58,20 +58,20 @@
             </div>
             <el-form :model="controllableForm" size="small" label-width="130px" class="locationdialog">
                 <el-form-item label="批次：">
-                    <el-input v-model="controllableForm.batch" style="width: 283px;" />
+                    <el-input v-model="controllableForm.batch" style="width: 283px;" clearable />
                 </el-form-item>
                 <el-form-item label="物料：">
-                    <el-input v-model="controllableForm.materialCode" style="width: 283px;" />
+                    <el-input v-model="controllableForm.materialCode" style="width: 283px;" clearable />
                 </el-form-item>
                 <el-form-item label="罐号：">
-                    <el-select v-model="controllableForm.holderNo" placeholder="请选择" filterable style="width: 283px;">
+                    <el-select v-model="controllableForm.holderNo" placeholder="请选择" filterable style="width: 283px;" clearable>
                         <el-option v-for="(sole, index) in guanList" :key="index" :value="sole.holderNo" :label="sole.holderName" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="过账日期：">
-                    <el-date-picker v-model="controllableForm.commitDateOne" type="date" placeholder="选择日期" style="width: 135px;" />
+                    <el-date-picker v-model="controllableForm.commitDateOne" type="date" placeholder="选择日期" style="width: 135px;" clearable />
                     -
-                    <el-date-picker v-model="controllableForm.commitDateTwo" type="date" placeholder="选择日期" style="width: 135px;" />
+                    <el-date-picker v-model="controllableForm.commitDateTwo" type="date" placeholder="选择日期" style="width: 135px;" clearable />
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -103,7 +103,8 @@ export default {
             currPage: 1,
             pageSize: 10,
             totalCount: 0,
-            guanList: []
+            guanList: [],
+            keepAdvanceSearchData: false
         };
     },
     computed: {},
@@ -113,18 +114,22 @@ export default {
     },
     methods: {
         closeDialog() {
+            console.log('22222')
             this.isAdvanceSearchDailogShow = false;
-            this.controllableForm.materialCode = '';
-            this.controllableForm.holderNo = '';
-            this.controllableForm.commitDateOne = '';
-            this.controllableForm.commitDateTwo = '';
+            if (!this.keepAdvanceSearchData) {
+                this.controllableForm.materialCode = '';
+                this.controllableForm.holderNo = '';
+                this.controllableForm.commitDateOne = '';
+                this.controllableForm.commitDateTwo = '';
+            }
         },
         // 获取库位列表
-        getItemsList(haveParas, type = 'normal') {
-            if (haveParas) {
+        getItemsList(hasParas, type = 'normal') {
+            if (hasParas) {
                 this.currPage = 1;
             }
             if (type === 'normal') {
+                this.keepAdvanceSearchData = false;
                 this.controllableForm.materialCode = '';
                 this.controllableForm.commitDateOne = '';
                 this.controllableForm.commitDateTwo = '';
@@ -132,13 +137,14 @@ export default {
             COMMON_API.ROWMETERIAL_QUERY_API({
                 batch: this.controllableForm.batch.trim(),
                 materialCode: this.controllableForm.materialCode.trim(),
-                commitDateOne: this.controllableForm.commitDateOne.trim(),
-                commitDateTwo: this.controllableForm.commitDateTwo.trim(),
+                commitDateOne: this.controllableForm.commitDateOne,
+                commitDateTwo: this.controllableForm.commitDateTwo,
                 current: this.currPage,
                 size: this.pageSize,
                 holderNo: this.controllableForm.holderNo
             }).then(({ data }) => {
                 this.isAdvanceSearchDailogShow = false;
+                this.keepAdvanceSearchData = true;
                 this.targetInfoList = data.data.records;
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;

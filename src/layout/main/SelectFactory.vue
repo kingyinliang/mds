@@ -17,7 +17,9 @@
                         <!--/>-->
                     </div>
                     <div style="cursor: pointer;" @click="goFa(item)">
-                        <img :src="'../static/img/factory'+ index + '.png'" alt="">
+                        <img v-if="item.deptCode === '9999-xn'" src="../assets/img/factory7.png" alt="">
+                        <img v-else-if="item.deptCode === '8888-xn'" src="../assets/img/factory8.png" alt="">
+                        <img v-else :src="'../static/img/factory'+ index + '.png'" alt="">
                     </div>
                 </div>
             </div>
