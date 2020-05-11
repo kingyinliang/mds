@@ -115,8 +115,6 @@ export default {
         },
         // 根据deptId查询用户
         showOrgDetail(data) {
-            console.log('data')
-            console.log(data)
             this.deptID = data.id;
             this.deptName = data.deptName;
             this.getItemsList();
@@ -137,8 +135,6 @@ export default {
                 current: this.currPage,
                 size: this.pageSize
             }).then(({ data }) => {
-                console.log('列表')
-                console.log(data)
                 if (hasParas && data.data.records.length === 0) {
                         this.$infoToast('该搜寻条件无任何资料！');
                 }
@@ -149,14 +145,12 @@ export default {
                         item.workNumTemp = item.workNum;
                         item.workNum = '';
                     }
-                    item.deptName = this.deptName;
+                    item.deptName = item.sysDept.deptName;
                 })
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
                 this.isDialogShow = false;
-                console.log('this.targetInfoList')
-                console.log(this.targetInfoList)
             });
         },
         // 表格选中
