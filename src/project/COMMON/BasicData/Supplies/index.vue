@@ -6,7 +6,7 @@
                     <el-row style="float: right;">
                         <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="controllableForm.param" placeholder="物料/物料类型" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.param===''?getItemsList():false" />
+                                <el-input v-model="controllableForm.param" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.param===''?getItemsList():false" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
