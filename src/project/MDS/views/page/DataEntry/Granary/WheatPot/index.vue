@@ -19,6 +19,14 @@
                 </el-form-item>
             </el-form>
         </el-card>
+        <el-row v-if="isMainAreaShow" :gutter="30" style="margin: 10px 0;">
+            <el-col class="divWheatPotSum">
+                <div v-for="(item, index) in workshopList" :key="index">
+                    <span v-if="item.deptName === '炒麦一车间' && (plantList.workshopIDValue === item.deptId || !plantList.workshopIDValue)">一期合计数：{{ item.sum }} KG</span>
+                    <span v-if="item.deptName === '炒麦二车间' && (plantList.workshopIDValue === item.deptId || !plantList.workshopIDValue)">二期合计数：{{ item.sum }} KG</span>
+                </div>
+            </el-col>
+        </el-row>
         <el-row v-if="isMainAreaShow" :gutter="30" class="cardList">
             <el-col v-for="(item, index) in dataList" :key="index" :span="12">
                 <el-card class="card-item">
@@ -96,7 +104,7 @@
 
 <script>
 import { BASICDATA_API, GRANARY_API } from '@/api/api';
-import { isAuth } from '../../../../../net/validate';
+import { isAuth, accAdd } from '../../../../../net/validate';
 import MSG from '@/assets/js/hint-msg';
 export default {
     name: 'GranaryWheatPotIndex',
@@ -147,8 +155,19 @@ export default {
             }
         }
     },
-    // watch: {
-    // },
+    watch: {
+        'plantList.factoryIDValue'() {
+            this.dataList = '';
+        },
+        'plantList.workshopIDValue'(n) {
+            this.dataList = '';
+            if (n) {
+                this.plantList.workshopName = this.workshopList.find(ele => ele.deptId === n).deptName;
+            } else {
+                this.plantList.workshopName = ''
+            }
+        }
+    },
     mounted() {
         this.getOriDataFromAPI().then(() => {
             // 初始化搜寻条件
@@ -156,6 +175,7 @@ export default {
             if (this.oriAPIData[0].workshop.length !== 0) {
                 this.workshopList = this.oriAPIData[0].workshop;
                 this.plantList.workshopIDValue = this.oriAPIData[0].workshop[0].deptId;
+                this.plantList.workshopName = this.oriAPIData[0].workshop[0].deptName;
             } else {
                 this.workshopList = [];
                 this.plantList.workshopIDValue = '';
@@ -258,6 +278,15 @@ export default {
                             item.wheatList = item.stocks;
                             delete item.stocks;
                         });
+                        this.workshopList.map(items => {
+                            items.sum = 0;
+                            this.dataList.map(item => {
+                                if (item.deptId === items.deptId) {
+                                    const soleSum = this.sumBatch(item.wheatList);
+                                    items.sum = accAdd(items.sum, soleSum);
+                                }
+                            })
+                        });
                     } else {
                         this.$notify.info({
                             title: MSG.API.BeanPulp.searchResult.title,
@@ -301,4 +330,9 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped >
+.divWheatPotSum div {
+    float: left;
+    margin-right: 50px;
+}
+</style>

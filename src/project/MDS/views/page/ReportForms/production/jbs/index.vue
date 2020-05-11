@@ -36,6 +36,10 @@ export default {
                 label: 'JBS出库数'
             },
             {
+                prop: 'steJbsOut',
+                label: '半成品罐JBS出库数'
+            },
+            {
                 prop: 'filterNums',
                 label: '过滤领用数'
             },
