@@ -172,8 +172,7 @@
                                 holderBatch: this.dataForm.holderBatch,
                                 holderStatus: this.dataForm.holderStatus,
                                 holderArea: this.dataForm.holderArea,
-                                deptId: this.dataForm.workshop,
-                                current: 1
+                                deptId: this.dataForm.workshop
                             }).then(() => {
                                 this.$emit('refreshDataList');
                                 this.isDialogShow = false;

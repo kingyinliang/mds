@@ -6,7 +6,7 @@
                     <div style="float: right;">
                         <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2">
                             <el-form-item>
-                                <el-input v-model="controllableForm.param" placeholder="用户名/工号" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
+                                <el-input v-model="controllableForm.param" placeholder="工号" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
@@ -38,7 +38,7 @@
                                     增加
                                 </el-button>
                                 <el-table ref="targetInfoList" :data="targetInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                                    <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
+                                    <el-table-column type="selection" width="50" />
                                     <el-table-column type="index" :index="indexMethod" width="40" />
                                     <el-table-column prop="workNum" label="人员工号" width="100" />
                                     <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
@@ -46,9 +46,9 @@
                                     <el-table-column prop="deptName" label="所属部门" width="87" :show-overflow-tooltip="true" />
                                     <el-table-column prop="post" label="职务" :show-overflow-tooltip="true" width="150" />
                                     <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="true" width="250" />
-                                    <el-table-column prop="mobile" label="手机号" :show-overflow-tooltip="true" width="112" />
+                                    <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true" width="112" />
                                     <el-table-column prop="created" label="创建日期" width="160" />
-                                    <el-table-column label="操作" fixed="right" width="65">
+                                    <el-table-column v-if="targetInfoList.length!==0" label="操作" fixed="right" width="65">
                                         <template slot-scope="scope">
                                             <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
                                                 编辑
@@ -115,13 +115,15 @@ export default {
         },
         // 根据deptId查询用户
         showOrgDetail(data) {
+            console.log('data')
+            console.log(data)
             this.deptID = data.id;
             this.deptName = data.deptName;
             this.getItemsList();
         },
         // 获取列表
-        getItemsList(haveParas) {
-            if (haveParas) {
+        getItemsList(hasParas) {
+            if (hasParas) {
                 this.currPage = 1;
             }
             if (!this.deptID) {
@@ -131,19 +133,30 @@ export default {
             COMMON_API.USER_ROLE_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.deptID,
-                realName: this.controllableForm.param,
-                current: JSON.stringify(this.currPage),
-                size: JSON.stringify(this.pageSize)
+                workNum: this.controllableForm.param,
+                current: this.currPage,
+                size: this.pageSize
             }).then(({ data }) => {
-                if (haveParas && data.data.records.length === 0) {
+                console.log('列表')
+                console.log(data)
+                if (hasParas && data.data.records.length === 0) {
                         this.$infoToast('该搜寻条件无任何资料！');
                 }
                 this.multipleSelection = [];
                 this.targetInfoList = data.data.records;
+                this.targetInfoList.forEach(item => {
+                    if (item.tempFlag === 'Y') {
+                        item.workNumTemp = item.workNum;
+                        item.workNum = '';
+                    }
+                    item.deptName = this.deptName;
+                })
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
                 this.isDialogShow = false;
+                console.log('this.targetInfoList')
+                console.log(this.targetInfoList)
             });
         },
         // 表格选中
@@ -164,16 +177,16 @@ export default {
         // 删除
         removeItems() {
             this.multipleSelection = [];
-                this.multipleSelectionTemp.forEach(item => {
-                    this.multipleSelection.push(item.id);
-                });
+            this.multipleSelectionTemp.forEach(item => {
+                this.multipleSelection.push(item.id);
+            });
             if (this.multipleSelection.length === 0) {
                 this.$warningToast('请选择要删除的用户');
             } else {
                 const roleName = [];
                 const userID = [];
-                this.multipleSelection.forEach(item => {
-                    if (item.roles) {
+                this.multipleSelectionTemp.forEach(item => {
+                    if (item.roles.length !== 0) {
                         item.roles.forEach(subItem => {
                             roleName.push(subItem.roleName);
                         })

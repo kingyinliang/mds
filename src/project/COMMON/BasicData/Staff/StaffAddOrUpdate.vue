@@ -28,7 +28,7 @@
                     <el-input v-model="dataForm.email" placeholder="手动输入" clearable />
                 </el-form-item>
                 <el-form-item label="手机号：">
-                    <el-input v-model="dataForm.mobile" placeholder="手动输入" clearable />
+                    <el-input v-model="dataForm.phone" placeholder="手动输入" clearable />
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -68,13 +68,13 @@ export default {
             isDialogShow: false,
             isOrgTreeShow: false,
             dataForm: {
-                userName: '',
-                realName: '',
+                deptName: '',
                 workNum: '',
-
+                realName: '',
+                userName: '',
                 post: '',
                 email: '',
-                mobile: ''
+                phone: ''
             },
             checkRules: {
                 workNum: [
@@ -154,8 +154,10 @@ export default {
                                 const patt = new RegExp('^[A-Z]');
 
                                 if (patt.test(this.dataForm.workNum)) {
+                                        console.log('我是临时工号')
                                         this.dataForm.workNumTemp = 'Y'
                                     } else {
+                                        console.log('我是工号')
                                         this.dataForm.workNumTemp = 'N'
                                     }
 
@@ -169,7 +171,7 @@ export default {
                                     tempFlag: this.dataForm.workNumTemp,
                                     post: this.dataForm.post,
                                     email: this.dataForm.email,
-                                    phone: this.dataForm.mobile
+                                    phone: this.dataForm.phone
                                 }).then(() => {
                                     this.$emit('refreshDataList');
                                     this.isDialogShow = false;
