@@ -96,11 +96,10 @@
                         <el-input
                             v-model="scope.row.material.childUsedAmount"
                             size="small"
-                            placeholder="手工录入"
+                            placeholder="手工录入1"
                             :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')"
                             @focus="GetOldAmount(scope.row)"
-                            @input="PostAmount(scope.row)"
-                            @keyup.native="GetOldAmount(scope.row)"
+                            @blur="PostAmount(scope.row)"
                         />
                     </template>
                 </el-table-column>
@@ -390,13 +389,20 @@ export default {
 
                 }
             });
-            Object.keys(this.sumAmount2).forEach(key => {
-                if (this.sumAmount2[key] - (this.sumAmount1[key] ? this.sumAmount1[key] : 0) > (this.potList.filter(it => it.holderId === key).length ? this.potList.filter(it => it.holderId === key)[0].sumAmount : 0)) {
+            // Object.keys(this.sumAmount2).forEach(key => {
+            //     if (this.sumAmount2[key] - (this.sumAmount1[key] ? this.sumAmount1[key] : 0) > (this.potList.filter(it => it.holderId === key).length ? this.potList.filter(it => it.holderId === key)[0].sumAmount : 0)) {
+            //         ty = false;
+            //         this.$warningToast('剩余量不足');
+            //         return false;
+            //     }
+            // });
+            for (const item of this.SumDate) {
+                if (item.material.childFullPotAmount < 0) {
                     ty = false;
                     this.$warningToast('剩余量不足');
                     return false;
                 }
-            });
+            }
             return ty;
         },
         // 数量校验
