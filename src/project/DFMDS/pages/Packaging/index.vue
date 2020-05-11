@@ -1,7 +1,7 @@
 <template>
     <div class="packaging header_main">
         <el-card class="searchCard" style="margin-bottom: 10px;">
-            <el-form :model="queryForm" size="small" :inline="true" label-width="70px" class="multi_row clearfix">
+            <el-form :model="queryForm" size="small" :inline="true" label-width="70px" class="sole_row clearfix">
                 <el-form-item label="生产车间：">
                     <el-select v-model="queryForm.workShop" style="width: 170px;" placeholder="请选择生产车间">
                         <el-option v-for="(opt, optIndex) in optionLists.workShop" :key="optIndex" :label="opt.deptName" :value="opt.id" />
@@ -55,7 +55,7 @@
             productLine: []
         }
 
-        getDataList() {
+        getDataList(a) {
         //    c
         }
     }

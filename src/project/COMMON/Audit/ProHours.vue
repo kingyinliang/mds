@@ -24,9 +24,6 @@
                         <el-button type="primary" size="small" class="sub-red" @click="visibleRefuse = true">
                             退回
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-yellow" @click="visibleBack = true">
-                            反审
-                        </el-button>
                     </div>
                 </div>
             </template>
