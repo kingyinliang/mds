@@ -72,7 +72,7 @@
             </div>
         </el-dialog>
         <el-dialog title="审核日志" width="600px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
-            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true"/>
+            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
             <div slot="footer" class="dialog-footer" />
         </el-dialog>
     </div>
@@ -393,7 +393,7 @@
             AUDIT_API.AUDIT_LOG_LIST_API({
                 orderNo: row.orderNo
             }).then(({ data }) => {
-                console.log(data);
+                this.auditLogData = data.data
                 this.visibleAuditLog = true
             })
         }
