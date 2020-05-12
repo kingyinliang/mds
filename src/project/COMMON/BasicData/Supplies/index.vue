@@ -6,7 +6,7 @@
                     <el-row style="float: right;">
                         <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
-                                <el-input v-model="controllableForm.param" placeholder="物料/物料类型" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.param===''?getItemsList():false" />
+                                <el-input v-model="controllableForm.param" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.param===''?getItemsList():false" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
@@ -89,16 +89,10 @@ export default {
                 current: this.currPage,
                 size: this.pageSize
             }).then(({ data }) => {
-                if (data.code === 200) {
-                    console.log('data')
-                    console.log(data)
-                    this.targetInfoList = data.data.records;
-                    this.pageSize = data.data.size;
-                    this.totalCount = data.data.total;
-                    this.currPage = data.data.current;
-                } else {
-                    this.$errorTost(data.msg);
-                }
+                this.targetInfoList = data.data.records;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+                this.currPage = data.data.current;
             });
         },
         // 详情弹窗
@@ -109,23 +103,10 @@ export default {
             });
         },
         syncData() {
-            // this.loading = Loading.service({
-            //     lock: true,
-            //     spinner: 'loadingGif',
-            //     text: '加载中……',
-            //     background: 'rgba(255, 255, 255, 0.7)'
-            // });
             COMMON_API.METERIAL_SYNC_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.$successToast(data.msg);
+            }).then(() => {
                     this.getItemsList()
-
-                } else {
-                    // this.loading.close();
-                    this.$errorToast(data.msg);
-                }
             });
         },
         // 改变每页条数

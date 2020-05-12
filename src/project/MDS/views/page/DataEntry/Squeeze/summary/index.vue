@@ -170,7 +170,7 @@ export default {
             orderAudit: [],
             fumet: [],
             statusArr: [{ status: '' }, { status: '' }, { status: '' }],
-            PoTestVar: ''
+            PoTestVar: {}
         };
     },
     computed: {},
@@ -298,6 +298,8 @@ export default {
         },
         // 保存or提交
         savedOrSubmitForm(str) {
+            // eslint-disable-next-line
+            setTimeout(() => {}, 100)
             if (str === 'saved') {
                 if (!this.$refs.materielref.AmountRul()) {
                     return;

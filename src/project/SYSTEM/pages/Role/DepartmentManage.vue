@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="部门分配" :close-on-click-modal="false" :visible.sync="isDaologShow">
+    <el-dialog title="部门分配" :close-on-click-modal="false" :visible.sync="isDialogShow">
         <div style="height: 300px; overflow: auto;">
             <el-tree
                 ref="deptListTree"
@@ -13,7 +13,7 @@
             />
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="isDaologShow = false">取消</el-button>
+            <el-button @click="isDialogShow = false">取消</el-button>
             <el-button type="primary" @click="submitDataForm">确定</el-button>
         </span>
     </el-dialog>
@@ -27,7 +27,7 @@ export default {
     data() {
         return {
             roleID: '',
-            isDaologShow: false,
+            isDialogShow: false,
             orgTree: []
         };
     },
@@ -43,23 +43,15 @@ export default {
                 factory: 'common'
             })
                 .then(({ data }) => {
-                    if (data.code === 200) {
-                        this.orgTree = data.data;
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
-                    this.isDaologShow = true;
+                    this.orgTree = data.data;
+                    this.isDialogShow = true;
                 })
                 .then(() => {
                     COMMON_API.ROLE_ALLOT_QUERY_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         roleId: id
                     }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.$refs.deptListTree.setCheckedKeys(data.data);
-                        } else {
-                            this.$errorToast(data.msg);
-                        }
+                        this.$refs.deptListTree.setCheckedKeys(data.data);
                     });
                 });
         },
@@ -69,15 +61,9 @@ export default {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 roleId: this.roleID,
                 deptId: [].concat(this.$refs.deptListTree.getCheckedKeys())
-            }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.$successToast('操作成功');
-                    this.isDaologShow = false;
-                    this.$emit('refreshDataList');
-                } else {
-                    this.$errorToast(data.msg);
-                }
-                this.isDaologShow = true;
+            }).then(() => {
+                this.$emit('refreshDataList');
+                this.isDialogShow = false;
             });
         }
     }

@@ -950,7 +950,7 @@ export default class Index extends Vue {
     }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .input_bommom {
     width: 147px;
     overflow: hidden;

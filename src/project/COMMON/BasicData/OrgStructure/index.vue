@@ -34,6 +34,9 @@
                                     <el-form-item label="上级部门：">
                                         <el-input v-model="OrgDetail.parentName" :disabled="true" auto-complete="off" style="width: 250px;" />
                                     </el-form-item>
+                                    <el-form-item label="部门简称：">
+                                        <el-input v-model="OrgDetail.deptShort" :disabled="isRedact" auto-complete="off" style="width: 250px;" />
+                                    </el-form-item>
                                     <el-form-item label="生产调度员：">
                                         <el-input v-model="OrgDetail.dispatchMan" :disabled="isRedact" auto-complete="off" style="width: 250px;" />
                                     </el-form-item>
@@ -51,7 +54,7 @@
                                     <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="成本中心：">
                                         <el-input v-model="OrgDetail.costCenter" auto-complete="off" :disabled="isRedact" style="width: 250px;" />
                                     </el-form-item>
-                                    <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="产线图片：" :class="{'limit-upload': fileList.length}">
+                                    <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="产线图片：" :class="{'limit-upload': fileList.length || OrgDetail.imgUrl}">
                                         <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :disabled="isRedact" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
                                             <i class="el-icon-plus" />
                                         </el-upload>
@@ -68,7 +71,7 @@
                                 </el-form>
                             </div>
                             <div class="org-detail-btn">
-                                <el-button type="primary" size="small" @click="isRedact = !isRedact">
+                                <el-button type="primary" size="small" @click="setRedact">
                                     {{ isRedact? '编辑' : '取消' }}
                                 </el-button>
                                 <el-button v-if="!isRedact" type="primary" size="small" @click="savedatail">
@@ -87,12 +90,15 @@
             <img width="100%" :src="dialogImageUrl" alt="" style="margin-bottom: 20px;">
         </el-dialog>
         <el-dialog id="adddepform" width="400px" :close-on-click-modal="false" :visible.sync="dialogFormVisible1" :title="sibling ? '新增同级' : '新增下级'">
-            <el-form ref="dataForm" :model="addDep" size="small" label-position="left" label-width="100px">
-                <el-form-item label="部门编号：">
+            <el-form ref="dataForm" :model="addDep" :rules="dataRule" size="small" label-position="left" label-width="100px">
+                <el-form-item label="部门编号：" prop="deptCode">
                     <el-input v-model="addDep.deptCode" auto-complete="off" />
                 </el-form-item>
-                <el-form-item label="部门名称：">
+                <el-form-item label="部门名称：" prop="deptName">
                     <el-input v-model="addDep.deptName" auto-complete="off" />
+                </el-form-item>
+                <el-form-item label="部门简称：">
+                    <el-input v-model="addDep.deptShort" auto-complete="off" />
                 </el-form-item>
                 <el-form-item label="上级部门：">
                     <el-input v-model="addDep.parentName" disabled />
@@ -100,7 +106,7 @@
                 <el-form-item label="生产调度员：">
                     <el-input v-model="addDep.dispatchMan" />
                 </el-form-item>
-                <el-form-item label="部门类型：">
+                <el-form-item label="部门类型：" prop="deptType">
                     <el-select v-model="addDep.deptType" placeholder="请选择部门类型" style="width: 100%;">
                         <el-option v-for="(item, index) in dictList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                     </el-select>
@@ -114,7 +120,7 @@
                 <el-form-item v-if="addDep.deptType == 'PRODUCT_LINE'" label="成本中心：">
                     <el-input v-model="addDep.costCenter" auto-complete="off" />
                 </el-form-item>
-                <el-form-item v-if="addDep.deptType == 'PRODUCT_LINE'" label="产线图片：" :class="{'limit-upload': fileList.length}">
+                <el-form-item v-if="addDep.deptType == 'PRODUCT_LINE'" label="产线图片：" :class="{'limit-upload': uploadBtn}">
                     <div style="text-align: center;">
                         <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
                             <i class="el-icon-plus" />
@@ -130,27 +136,21 @@
                 <el-form-item label="备注：">
                     <el-input v-model="addDep.remark" type="textarea" />
                 </el-form-item>
-                <div style="text-align: center;">
-                    <el-button @click="addOrg">
-                        保存
-                    </el-button>
-                    <el-button @click="dialogFormVisible1 = false;">
-                        关闭
-                    </el-button>
-                </div>
             </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="small" @click="dialogFormVisible1 = false;">
+                    取消
+                </el-button>
+                <el-button type="primary" size="small" @click="addOrg">
+                    确定
+                </el-button>
+            </div>
         </el-dialog>
         <ul v-show="menuVisible" id="menu">
-            <li
-                class="menuli"
-                @click="menuClick(true, clickTreeNode.parentName, clickTreeNode.parentId)"
-            >
+            <li class="menuli" @click="menuClick(true, clickTreeNode.parentName, clickTreeNode.parentId)">
                 新增同级
             </li>
-            <li
-                class="menuli"
-                @click="menuClick(false, clickTreeNode.deptName, clickTreeNode.id)"
-            >
+            <li class="menuli" @click="menuClick(false, clickTreeNode.deptName, clickTreeNode.id)">
                 新增下级
             </li>
         </ul>
@@ -169,12 +169,37 @@ export default class OrgStructure extends Vue {
         dataForm: HTMLFormElement;
     };
 
+    dataRule = {
+        deptCode: [
+            {
+                required: true,
+                message: '部门编号不能为空',
+                trigger: 'blur'
+            }
+        ],
+        deptName: [
+            {
+                required: true,
+                message: '部门名称不能为空',
+                trigger: 'blur'
+            }
+        ],
+        deptType: [
+            {
+                required: true,
+                message: '部门类型不能为空',
+                trigger: 'blur'
+            }
+        ]
+    }
+
     filterText = ''
     FILE_API = ''
     dialogImageUrl = ''
     fileList: FileObject[] = []
     OrgTree: object[] = []
     sibling = true
+    uploadBtn = false
     menuVisible = false
     dialogVisible = false
     dialogFormVisible1 = false
@@ -249,6 +274,7 @@ export default class OrgStructure extends Vue {
 
     menuClick(sibling, parentName, parentId) {
         this.dialogFormVisible1 = true;
+        this.uploadBtn = false;
         setTimeout(() => {
             this.addDep = {}
             this.fileList = []
@@ -256,6 +282,13 @@ export default class OrgStructure extends Vue {
             this.addDep.parentName = parentName;
             this.addDep.parentId = parentId;
         }, 100)
+    }
+
+    setRedact() {
+        if (!this.isRedact) {
+            this.setdetail({ id: this.OrgDetail.id });
+        }
+        this.isRedact = !this.isRedact
     }
 
     // 获取部门类型
@@ -271,15 +304,19 @@ export default class OrgStructure extends Vue {
 
     // 新增部门
     addOrg() {
-        this.addDep.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        COMMON_API.ADDORG_API(this.addDep).then(({ data }) => {
-            if (data.code === 200) {
-                this.$successToast('操作成功');
-                this.getTree();
-                this.addDep = {};
-                this.dialogFormVisible1 = false;
+        this.$refs['dataForm'].validate(valid => {
+            if (valid) {
+                this.addDep.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                COMMON_API.ADDORG_API(this.addDep).then(({ data }) => {
+                    if (data.code === 200) {
+                        this.$successToast('操作成功');
+                        this.getTree();
+                        this.addDep = {};
+                        this.dialogFormVisible1 = false;
+                    }
+                });
             }
-        });
+        })
     }
 
     // 保存详情
@@ -336,15 +373,10 @@ export default class OrgStructure extends Vue {
     }
 
     // 上传图片后
-    addfile(key, options) {
-        console.log(key);
-        console.log(options);
-        // this.fileList = []
-        // this.fileList[0] = {};
-        // this.fileList[0].name = '';
-        // this.fileList[0].url = 'data:image/gif;base64,' + res;
+    addfile(key) {
         if (this.dialogFormVisible1) {
             this.addDep.imgUrl = key;
+            this.uploadBtn = true;
         } else {
             this.OrgDetail.imgUrl = key;
         }

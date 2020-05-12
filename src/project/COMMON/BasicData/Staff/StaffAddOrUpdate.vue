@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog :title="targetID ? '修改人员信息' : '新增人员'" :close-on-click-modal="false" :visible.sync="isDialogShow">
+        <el-dialog :title="targetID ? '修改人员信息' : '新增人员'" :close-on-click-modal="false" :visible.sync="isDialogShow" @close="closeDialog">
             <el-form ref="dataForm" :model="dataForm" status-icon :rules="checkRules" size="small" label-width="100px">
                 <el-form-item label="所属部门：">
                     <span v-if="targetID" style="margin-right: 10px;">{{ dataForm.deptName }}</span>
@@ -28,11 +28,11 @@
                     <el-input v-model="dataForm.email" placeholder="手动输入" clearable />
                 </el-form-item>
                 <el-form-item label="手机号：">
-                    <el-input v-model="dataForm.mobile" placeholder="手动输入" clearable />
+                    <el-input v-model="dataForm.phone" placeholder="手动输入" clearable />
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button size="small" @click="closeDialog">
+                <el-button size="small" class="j_closeBtn" @click="closeDialog">
                     取消
                 </el-button>
                 <el-button type="primary" size="small" @click="submitDataForm">
@@ -62,19 +62,19 @@ export default {
     },
     data() {
         return {
-            deptId: '',
+            deptID: '',
             deptName: '',
             targetID: '',
             isDialogShow: false,
             isOrgTreeShow: false,
             dataForm: {
-                userName: '',
-                realName: '',
+                deptName: '',
                 workNum: '',
-
+                realName: '',
+                userName: '',
                 post: '',
                 email: '',
-                mobile: ''
+                phone: ''
             },
             checkRules: {
                 workNum: [
@@ -107,8 +107,9 @@ export default {
     },
     methods: {
         closeDialog() {
-            this.isDialogShow = false;
+            document.querySelectorAll('.j_closeBtn')[0].focus(); // bug 优化
             this.$refs.dataForm.resetFields();
+            this.isDialogShow = false;
         },
         // init
         init(deptID, deptName, id) {
@@ -120,11 +121,8 @@ export default {
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     ids: [this.targetID]
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.dataForm = data.data[0];
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
+                    this.dataForm = data.data[0];
+                    this.dataForm.deptName = deptName;
                 });
             } else {
                 this.targetID = '';
@@ -136,7 +134,7 @@ export default {
             this.isOrgTreeShow = true;
         },
         setDepartment(event, data) {
-            this.dataForm.deptId = data.deptId;
+            this.dataForm.deptId = data.id;
             this.dataForm.deptName = data.deptName;
             this.isOrgTreeShow = false;
         },
@@ -147,24 +145,27 @@ export default {
                         if (this.dataForm.workNum) {
                             if (this.targetID) {
                                 // 修改
-                                COMMON_API.USER_UPDATE_API(this.dataForm).then(({ data }) => {
-                                    if (data.code === 200) {
-                                        this.$successToast('操作成功');
-                                        this.isDialogShow = false;
-                                        this.$emit('refreshDataList');
-                                    } else {
-                                        this.$errorToast(data.msg);
-                                    }
+                                const patt = new RegExp('^[A-Z]');
+
+                                if (patt.test(this.dataForm.workNum)) {
+                                    this.dataForm.tempFlag = 'Y'
+                                } else {
+                                    this.dataForm.tempFlag = 'N'
+                                }
+                                COMMON_API.USER_UPDATE_API(this.dataForm).then(() => {
+                                    this.$emit('refreshDataList');
+                                    this.isDialogShow = false;
                                 });
                             } else {
                                 // 新增
                                 this.dataForm.deptId = this.deptID;
+                                this.dataForm.deptName = this.deptName;
                                 const patt = new RegExp('^[A-Z]');
 
                                 if (patt.test(this.dataForm.workNum)) {
-                                        this.dataForm.workNumTemp = 'Y'
+                                        this.dataForm.tempFlag = 'Y'
                                     } else {
-                                        this.dataForm.workNumTemp = 'N'
+                                        this.dataForm.tempFlag = 'N'
                                     }
 
 
@@ -174,18 +175,13 @@ export default {
                                     userName: this.dataForm.userName,
                                     realName: this.dataForm.realName,
                                     workNum: this.dataForm.workNum,
-                                    tempFlag: this.dataForm.workNumTemp,
+                                    tempFlag: this.dataForm.tempFlag,
                                     post: this.dataForm.post,
                                     email: this.dataForm.email,
-                                    phone: this.dataForm.mobile
-                                }).then(({ data }) => {
-                                    if (data.code === 200) {
-                                        this.$successToast('操作成功');
-                                        this.isDialogShow = false;
-                                        this.$emit('refreshDataList');
-                                    } else {
-                                        this.$errorToast(data.msg);
-                                    }
+                                    phone: this.dataForm.phone
+                                }).then(() => {
+                                    this.$emit('refreshDataList');
+                                    this.isDialogShow = false;
                                 });
                             }
                         } else {

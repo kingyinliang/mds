@@ -212,7 +212,7 @@
 </template>
 
 <script>
-import { dateFormat } from '@/net/validate';
+import { dateFormat, exportFile } from '@/net/validate';
 import { BASICDATA_API, REP_API } from '@/api/api';
 export default {
     name: 'QueryTable',
@@ -400,7 +400,7 @@ export default {
         },
         // 导出
         FormExportExcel() {
-            // exportFile(`${REP_API.STERILIZATIONDAYS_EXPORT_API}`, '所有车间日报表', this);
+            exportFile(`${REP_API.ALLWORKSHOPDAY_EXPORT_API}`, '生管日报表', this);
         }
     }
 };

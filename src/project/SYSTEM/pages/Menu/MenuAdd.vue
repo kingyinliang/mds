@@ -68,10 +68,14 @@
                 </el-row>
             </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="visible = false">取消</el-button>
-            <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
-        </span>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="small" @click="visible = false">
+                取消
+            </el-button>
+            <el-button size="small" type="primary" @click="dataFormSubmit()">
+                确定
+            </el-button>
+        </div>
     </el-dialog>
 </template>
 
@@ -130,7 +134,7 @@ export default class MenuAdd extends Vue {
 
     visible = false
     type = true
-    factory = JSON.parse(sessionStorage.getItem('userFactory') || '[]')
+    factory = []
     dataForm = {
         id: '',
         deptIdList: [],
@@ -195,8 +199,12 @@ export default class MenuAdd extends Vue {
     }
 
     init(item) {
-        // COMMON_API.MENUSELECT_API({
-        COMMON_API.MENULIST_API({
+        COMMON_API.ORG_QUERY_WORKSHOP_API({
+            deptType: ['FACTORY', 'FAKE_FACTORY']
+        }).then(({ data }) => {
+            this.factory = data.data
+        })
+        COMMON_API.MENUSELECT_API({
             factory: 'common'
         }).then(({ data }) => {
             this.menuList = treeDataTranslate(data.data);

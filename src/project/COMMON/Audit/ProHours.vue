@@ -16,10 +16,9 @@
             <template slot="tab-head0">
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
-                    <span>入库列表</span>
+                    <span>报工列表</span>
                     <div style="float: right;">
-                        <span>过账日期：</span><el-date-picker size="small" style="width: 120px; margin-right: 10px;" />
-                        <span>抬头文本：</span><el-input size="small" style="width: 190px; margin-right: 10px;" />
+                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 120px; margin-right: 10px;" />
                         <el-button type="primary" size="small" @click="pass">
                             过账
                         </el-button>
@@ -32,10 +31,9 @@
             <template slot="tab-head1">
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
-                    <span>入库列表</span>
+                    <span>报工列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 120px; margin-right: 10px;" />
-                        <span>抬头文本：</span><el-input size="small" style="width: 190px; margin-right: 10px;" />
                         <el-button type="primary" size="small" class="sub-yellow" @click="visibleBack = true">
                             反审
                         </el-button>
@@ -83,73 +81,83 @@
             label: '生产订单'
         },
         {
-            prop: 'orderMaterialCode',
+            prop: 'materialCode',
             label: '生产物料 '
         },
         {
-            prop: 'orderAmount',
+            prop: 'planOutput',
             label: '计划数量'
         },
         {
-            prop: 'orderEntryUom',
+            prop: 'outputUnit',
             label: '单位'
         },
         {
-            prop: 'entryQnt',
+            prop: 'countOutput',
             label: '入库数量'
         },
         {
-            prop: 'entryUom',
+            prop: 'countOutputUnit',
             label: '单位'
         },
         {
-            prop: 'isSample',
-            label: '是否样品'
+            prop: 'confActivity1',
+            label: '准备工时'
         },
         {
-            prop: 'batch',
-            label: '物料批次'
+            prop: 'confActiUnit1',
+            label: '单位'
         },
         {
-            prop: 'pkgOrderProductDate',
-            label: '订单生产日期'
+            prop: 'confActivity2',
+            label: '机器工时'
+        },
+        {
+            prop: 'confActiUnit2',
+            label: '单位'
+        },
+        {
+            prop: 'confActivity3',
+            label: '人工工时'
+        },
+        {
+            prop: 'confActiUnit3',
+            label: '单位'
+        },
+        {
+            type: 'date-picker',
+            redact: true,
+            valueFormat: 'yyyy-MM-dd',
+            prop: 'execStartDate',
+            label: '开始日期',
+            width: '130'
+        },
+        {
+            type: 'date-picker',
+            redact: true,
+            valueFormat: 'yyyy-MM-dd',
+            prop: 'execStartTime',
+            label: '完成日期',
+            width: '130'
+        },
+        {
+            width: '120',
+            prop: 'operation',
+            label: '操作活动编号',
+            type: 'input',
+            redact: true
         },
         {
             type: 'input',
             redact: true,
-            prop: 'stgeLoc',
-            label: '入库库位'
-        },
-        {
-            type: 'input',
-            redact: true,
-            prop: 'moveType',
-            label: '移动类型'
-        },
-        {
-            type: 'input',
-            redact: true,
-            prop: 'stckType',
-            label: '库存类型'
-        },
-        {
-            type: 'input',
-            redact: true,
-            prop: 'noMoreGr',
-            label: '交货已完成',
+            prop: 'finConf',
+            label: '部分/最后确认',
             width: '120'
         },
         {
             type: 'input',
             redact: true,
-            prop: 'expirydate',
-            label: '货架寿命到期日',
-            width: '120'
-        },
-        {
-            type: 'input',
-            redact: true,
-            prop: 'theDate',
+            prop: 'remark',
             label: '备注'
         },
         {
@@ -173,13 +181,11 @@
         visibleRefuse = false
         visibleBack = false
 
-        multipleSelection: object[] = [];
-
         queryFormData = [
             {
                 type: 'select',
                 label: '生产车间',
-                prop: 'workShop',
+                prop: 'workshop',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -211,7 +217,12 @@
             {
                 type: 'input',
                 label: '生产订单',
-                prop: 'orderNo'
+                prop: 'orderId'
+            },
+            {
+                type: 'input',
+                label: '组件物料',
+                prop: 'materialCode'
             },
             {
                 type: 'select',
@@ -248,8 +259,8 @@
             {
                 type: 'date-interval',
                 label: '生产日期',
-                prop: 'startDate',
-                propTwo: 'endDate'
+                prop: 'produceStart',
+                propTwo: 'produceEnd'
             }
         ];
 
@@ -277,13 +288,13 @@
         ];
 
         listInterface = params => {
-            params.gzStatus = this.$refs.queryTable.activeName;// eslint-disable-line
+            params.passStatus = this.$refs.queryTable.activeName * 1;// eslint-disable-line
             params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
             params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
             params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return AUDIT_API.INLIST_API(params);
-        }
+            return AUDIT_API.HOURS_LIST_API(params);
+        };
 
         selectableFn = row => {
             if (row.status === '已退回') {
@@ -337,7 +348,7 @@
                 row.redact = true;
             } else {
                 row.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                AUDIT_API.INUPDATE_API(row).then(({ data }) => {
+                AUDIT_API.HOURS_UPDATE_API(row).then(({ data }) => {
                     this.$successToast(data.msg);
                     row.redact = false
                 })
@@ -350,7 +361,7 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                AUDIT_API.INPASS_API({
+                AUDIT_API.HOURS_PASS_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     list: this.$refs.queryTable.multipleSelection,
                     postingDate: this.postingDate
@@ -367,7 +378,7 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                AUDIT_API.INREFUSE_API({
+                AUDIT_API.HOURS_REFUSE_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     list: this.$refs.queryTable.multipleSelection,
                     reason: this.ReText
@@ -385,7 +396,7 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                AUDIT_API.INWRITEOFFS_API({
+                AUDIT_API.HOURS_WRITEOFFS_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     list: this.$refs.queryTable.multipleSelection
                 }).then(({ data }) => {

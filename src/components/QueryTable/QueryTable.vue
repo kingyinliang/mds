@@ -51,10 +51,15 @@
                 <el-table ref="table" class="newTable" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                     <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
                     <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
-                    <template v-for="(item, index) in tabItem.column">
-                        <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
+                    <template v-for="(item, index2) in tabItem.column">
+                        <el-table-column v-if="!item.hide" :key="index2" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                             <template v-if="item.child">
                                 <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip || false" :width="chind.width || ''" />
+                            </template>
+                            <template slot-scope="scope">
+                                <el-input v-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
+                                <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" />
+                                <span v-else>{{ scope.row[item.prop] }}</span>
                             </template>
                         </el-table-column>
                     </template>
@@ -64,6 +69,9 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-row v-if="tabItem.pages">
+                    <el-pagination :current-page="tabItem.pages.currPage" :page-sizes="[10, 20, 50]" :page-size="tabItem.pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="tabItem.pages.totalCount" @size-change="(val) => {tabHandleSizeChange(tabItem.pages, val)}" @current-change="(val) => {tabHandleCurrentChange(tabItem.pages, val)}" />
+                </el-row>
             </el-tab-pane>
         </el-tabs>
         <el-card v-if="!tabs.length" class="tableCard" style="min-height: 400px;">
@@ -106,6 +114,18 @@
         name: 'QueryTable',
         components: {},
         props: {
+            resData: {
+                type: Object,
+                default: () => {
+                    return {}
+                }
+            },
+            pagePagination: {
+                type: Object,
+                default: () => {
+                    return {}
+                }
+            },
             showTable: {
                 type: Boolean,
                 default: true
@@ -373,25 +393,50 @@
                     return false;
                 }
                 if (st) {
-                    this.queryForm.currPage = 1;
+                    if (this.tabs.length && this.tabs[this.activeName].pages) {
+                        this.tabs[this.activeName].pages.currPage = 1;
+                    } else {
+                        this.queryForm.currPage = 1;
+                    }
+                }
+                if (this.pagePagination.currPage) {
+                    this.queryForm[this.pagePagination.currPage] = this.queryForm.currPage
+                }
+                if (this.pagePagination.pageSize) {
+                    this.queryForm[this.pagePagination.pageSize] = this.queryForm.pageSize
+                }
+                if (this.pagePagination.currPage) {
+                    this.queryForm[this.pagePagination.totalCount] = this.queryForm.totalCount
                 }
                 this.listInterface(this.queryForm).then(({ data }) => {
-                    if (data.code === 0) {
-                        if (this.getListField) {
-                            const getPath = creatGetPath(this.getListField);
-                            this.tableData = getPath(data);
-                        } else if (!this.customData) {
-                            const getPath = creatGetPath(this.returnColumnType);
-                            const path = getPath(data);
+                    if (this.getListField) {
+                        const getPath = creatGetPath(this.getListField);
+                        this.tableData = getPath(data);
+                    } else if (!this.customData) {
+                        const getPath = creatGetPath(this.returnColumnType);
+                        const path = getPath(data);
+                        if (this.resData.list) {
+                            this.tableData = path[this.resData.list];
+                        } else {
                             this.tableData = path.list;
+                        }
+                        if (this.resData.currPage) {
+                            this.queryForm.currPage = path[this.resData.currPage];
+                        } else {
                             this.queryForm.currPage = path.currPage;
+                        }
+                        if (this.resData.pageSize) {
+                            this.queryForm.pageSize = path[this.resData.pageSize];
+                        } else {
                             this.queryForm.pageSize = path.pageSize;
+                        }
+                        if (this.resData.totalCount) {
+                            this.queryForm.totalCount = path[this.resData.totalCount];
+                        } else {
                             this.queryForm.totalCount = path.totalCount;
                         }
-                        this.$emit('get-data-success', data);
-                    } else {
-                        this.$errorToast(data.msg);
                     }
+                    this.$emit('get-data-success', data, st);
                 });
             },
             // 导出
@@ -446,6 +491,16 @@
                 val.forEach((item) => {
                     this.multipleSelection.push(item);
                 });
+            },
+            // 改变每页条数
+            tabHandleSizeChange(item, val) {
+                item.pageSize = val;
+                this.getDataList();
+            },
+            // 跳转页数
+            tabHandleCurrentChange(item, val) {
+                item.currPage = val;
+                this.getDataList();
             },
             // 改变每页条数
             handleSizeChange(val) {

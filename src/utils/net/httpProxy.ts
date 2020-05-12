@@ -62,21 +62,22 @@ http.interceptors.response.use(
     response => {
         if (response.data && response.data.code === HTTP_RESPONSE_STATE.SUCCESS) {
             //    成功
+            tryHideFullScreenLoading(); // 关闭遮罩
+            return Promise.resolve(response);
         } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.EXPIRED_TOKEN) {
             Vue['cookie'].delete('token');
             router.options.isAddDynamicMenuRoutes = false;
-            if (response.data.msg) {
-                Vue.prototype.$errorToast(response.data.msg)
-            } else {
-                window.location.href = `${process.env.VUE_APP_HOST}`;
-            }
+            window.location.href = `${process.env.VUE_APP_HOST}`;
+            tryHideFullScreenLoading(); // 关闭遮罩
+            return Promise.reject(response);
         } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.WARNING) {
             Vue.prototype.$warningToast(response.data.msg)
-        } else {
-            Vue.prototype.$errorToast(response.data.msg)
+            tryHideFullScreenLoading(); // 关闭遮罩
+            return Promise.reject(response);
         }
+        Vue.prototype.$errorToast(response.data.msg)
         tryHideFullScreenLoading(); // 关闭遮罩
-        return response;
+        return Promise.reject(response);
     },
     error => {
         // Vue.prototype.$log.writeErrorLog(new Error(`网络请求失败，接口：${url}`), `${error}`)

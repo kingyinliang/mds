@@ -151,6 +151,7 @@ export const COMMON_API = {
     ORGDETAIL_API: params => httpProxy('/sysDept/query', 'GET', params),
     /**
      * @property {string} ORG_QUERY_WORKSHOP_API 基础数据-组织架构-按工厂和类型查询组织机构
+     * params deptType: list<string> factory:
      */
     ORG_QUERY_WORKSHOP_API: params => httpProxy('/sysDept/getTypeDept', 'POST', params),
     /**
@@ -218,6 +219,10 @@ export const COMMON_API = {
      * @property {string} DEVICELIST_API 设备管理新增
      */
     DEVICEADD_API: params => httpProxy('/sysDevice/insert', 'POST', params),
+    /**
+     * @property {string} DEVICECONFIG_API 设备管理配置
+     */
+    DEVICECONFIG_API: params => httpProxy('/sysDevice/updateStatus', 'POST', params),
     /**
      * @property {string} DEVICELIST_API 设备管理修改
      */
@@ -368,5 +373,29 @@ export const AUDIT_API = {
     /**
      * @property {string} INWRITEOFFS_API 入库审核反审
      */
-    INWRITEOFFS_API: params => httpProxy('/verifyInStorage/writeOffs', 'POST', params)
+    INWRITEOFFS_API: params => httpProxy('/verifyInStorage/writeOffs', 'POST', params),
+    /**
+     * @property {string} HOURS_LIST_API 报工审核列表
+     */
+    HOURS_LIST_API: params => httpProxy('/verifyTimeSheet/query', 'POST', params),
+    /**
+     * @property {string} HOURS_ADD_API 报工审核新增
+     */
+    HOURS_ADD_API: params => httpProxy('/verifyTimeSheet/insert', 'POST', params),
+    /**
+     * @property {string} HOURS_UPDATE_API 报工审核修改
+     */
+    HOURS_UPDATE_API: params => httpProxy('/verifyTimeSheet/update', 'POST', params),
+    /**
+     * @property {string} HOURS_PASS_API 报工审核过账
+     */
+    HOURS_PASS_API: params => httpProxy('/verifyTimeSheet/pass', 'POST', params),
+    /**
+     * @property {string} HOURS_REFUSE_API 报工审核退回
+     */
+    HOURS_REFUSE_API: params => httpProxy('/verifyTimeSheet/refuse', 'POST', params),
+    /**
+     * @property {string} HOURS_WRITEOFFS_API 报工审核反审
+     */
+    HOURS_WRITEOFFS_API: params => httpProxy('/verifyTimeSheet/reset', 'POST', params)
 }
