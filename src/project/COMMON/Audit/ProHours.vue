@@ -136,7 +136,7 @@
             type: 'date-picker',
             redact: true,
             valueFormat: 'yyyy-MM-dd',
-            prop: 'execStartTime',
+            prop: 'setupFinDate',
             label: '完成日期',
             width: '130'
         },

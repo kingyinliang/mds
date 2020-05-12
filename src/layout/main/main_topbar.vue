@@ -63,7 +63,7 @@ export default {
         return {
             visible: false,
             factory: JSON.parse(sessionStorage.getItem('userFactory') || '[]'),
-            factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName
+            factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort
         };
     },
     computed: {
