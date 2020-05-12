@@ -6,7 +6,7 @@
                 <div class="itemBox">
                     <div class="item-title">
                         <p class="item-title-p">
-                            {{ item.deptName }}
+                            {{ item.deptShort }}
                         </p>
                         <!--<el-switch-->
                         <!--v-model="item.value"-->
