@@ -220,6 +220,10 @@ export const COMMON_API = {
      */
     DEVICEADD_API: params => httpProxy('/sysDevice/insert', 'POST', params),
     /**
+     * @property {string} DEVICECONFIG_API 设备管理配置
+     */
+    DEVICECONFIG_API: params => httpProxy('/sysDevice/updateStatus', 'POST', params),
+    /**
      * @property {string} DEVICELIST_API 设备管理修改
      */
     DEVICEUPDATA_API: params => httpProxy('/sysDevice/update', 'POST', params),

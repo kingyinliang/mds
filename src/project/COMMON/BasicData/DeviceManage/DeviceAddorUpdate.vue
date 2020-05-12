@@ -10,10 +10,14 @@
                 </el-form-item>
             </el-form>
         </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="visible = false">取消</el-button>
-            <el-button type="primary" @click="submitForm">确定</el-button>
-        </span>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="small" @click="visible = false">
+                取消
+            </el-button>
+            <el-button size="small" type="primary" @click="submitForm">
+                确定
+            </el-button>
+        </div>
     </el-dialog>
 </template>
 

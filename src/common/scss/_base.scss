@@ -1491,6 +1491,10 @@ $indexlist: (1: 11, 2: 10, 3: 9, 4: 8, 5: 7, 6: 6, 7: 5, 8: 4, 9: 3, 10: 2, 11: 
             right: 26px;
         }
     }
+    .dialog__bottom__btn{
+        padding-bottom: 10px;
+        text-align: right;
+    }
 }
 
 .bg_dialog.el-dialog {

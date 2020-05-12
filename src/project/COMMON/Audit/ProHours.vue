@@ -6,6 +6,7 @@
             :list-interface="listInterface"
             :custom-data="true"
             :tabs="tabs"
+            :selectable-fn="selectableFn"
             :show-index-column="true"
             :show-select-column="true"
             :show-operation-column="true"
@@ -24,9 +25,6 @@
                         <el-button type="primary" size="small" class="sub-red" @click="visibleRefuse = true">
                             退回
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-yellow" @click="visibleBack = true">
-                            反审
-                        </el-button>
                     </div>
                 </div>
             </template>
@@ -43,8 +41,8 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="primary" round size="mini" @click="addOrupdate(scope.row)">
-                    编辑
+                <el-button class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
+                    {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
             </template>
         </query-table>
@@ -83,23 +81,23 @@
             label: '生产订单'
         },
         {
-            prop: 'orderMaterialCode',
+            prop: 'materialCode',
             label: '生产物料 '
         },
         {
-            prop: 'orderAmount',
+            prop: 'planOutput',
             label: '计划数量'
         },
         {
-            prop: 'orderEntryUom',
+            prop: 'outputUnit',
             label: '单位'
         },
         {
-            prop: 'entryQnt',
+            prop: 'countOutput',
             label: '入库数量'
         },
         {
-            prop: 'entryUom',
+            prop: 'countOutputUnit',
             label: '单位'
         },
         {
@@ -127,22 +125,38 @@
             label: '单位'
         },
         {
+            type: 'date-picker',
+            redact: true,
+            valueFormat: 'yyyy-MM-dd',
             prop: 'execStartDate',
-            label: '开始日期'
+            label: '开始日期',
+            width: '130'
         },
         {
+            type: 'date-picker',
+            redact: true,
+            valueFormat: 'yyyy-MM-dd',
             prop: 'execStartTime',
-            label: '完成日期'
+            label: '完成日期',
+            width: '130'
         },
         {
+            width: '120',
             prop: 'operation',
-            label: '操作活动编号'
+            label: '操作活动编号',
+            type: 'input',
+            redact: true
         },
         {
+            type: 'input',
+            redact: true,
             prop: 'finConf',
-            label: '部分/最后确认'
+            label: '部分/最后确认',
+            width: '120'
         },
         {
+            type: 'input',
+            redact: true,
             prop: 'remark',
             label: '备注'
         },
@@ -166,8 +180,6 @@
         postingDate = ''
         visibleRefuse = false
         visibleBack = false
-
-        multipleSelection: object[] = [];
 
         queryFormData = [
             {
@@ -280,19 +292,67 @@
             params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
             params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
             params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
-            params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return AUDIT_API.HOURS_LIST_API(params);
         };
 
-        selectableFn = val => {
-            console.log(val);
+        selectableFn = row => {
+            if (row.status === '已退回') {
+                return 0;
+            }
+            return 1;
         };
 
-        setData(data) {
-            this.tabs[this.$refs.queryTable.activeName].tableData = data.data.records;
-            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = data.data.current;
-            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = data.data.size;
-            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = data.data.total;
+        setData(datas, st) {
+            if (st) {
+                this.tabs.forEach((item, index) => {
+                    if (index !== Number(this.$refs.queryTable.activeName)) {
+                        const params = this.$refs.queryTable.queryForm
+                        params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                        params.passStatus = index;
+                        params.current = 1;
+                        params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
+                        params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
+                        AUDIT_API.HOURS_LIST_API(params).then(({ data }) => {
+                            this.tabs[index].tableData = data.data.records;
+                            this.setRedact(this.tabs[this.$refs.queryTable.activeName].tableData);
+                            this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
+                            this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
+                            this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
+                        });
+                    } else {
+                        this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                        this.setRedact(this.tabs[this.$refs.queryTable.activeName].tableData);
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                        this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+                    }
+                })
+            } else {
+                this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                this.setRedact(this.tabs[this.$refs.queryTable.activeName].tableData);
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+            }
+        }
+
+        setRedact(data) {
+            data.forEach(item => {
+                item.redact = false
+            })
+        }
+
+        addOrupdate(row) {
+            if (!row.redact) {
+                row.redact = true;
+            } else {
+                row.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                AUDIT_API.HOURS_UPDATE_API(row).then(({ data }) => {
+                    this.$successToast(data.msg);
+                    row.redact = false
+                })
+            }
         }
 
         pass() {

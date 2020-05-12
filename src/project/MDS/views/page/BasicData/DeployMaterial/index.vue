@@ -19,13 +19,13 @@
             <div slot="title">
                 {{ addAndupdate ? '新增调配物料' : '修改调配物料' }}
             </div>
-            <el-form ref="AddDialogTable" :model="AddDialogTable" label-width="100px" size="small">
-                <el-form-item label="工厂：">
+            <el-form ref="AddDialogTable" :model="AddDialogTable" :rules="rules" label-width="100px" size="small">
+                <el-form-item label="工厂：" prop="factory">
                     <el-select v-model="AddDialogTable.factory" placeholder="请选择" style="width: 100%;">
                         <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="生产物料：">
+                <el-form-item label="生产物料：" prop="productionMaterielCode">
                     <el-select
                         v-model="AddDialogTable.productionMaterielCode"
                         filterable
@@ -43,7 +43,11 @@
                 <el-row>
                     <el-row v-for="(item, index) in AddDialogTable.useMateriel" :key="index" style="width: 510px;">
                         <el-col style="width: 290px;">
-                            <el-form-item label="领用物料：">
+                            <el-form-item>
+                                <template slot="label">
+                                    <i class="reqI">*</i>
+                                    <span>领用物料：</span>
+                                </template>
                                 <el-select
                                     v-model="item.useMaterielCode"
                                     filterable
@@ -56,7 +60,11 @@
                             </el-form-item>
                         </el-col>
                         <el-col style="width: 180px;">
-                            <el-form-item label="BL_LY标识：" label-width="90px">
+                            <el-form-item label-width="95px" prop="type">
+                                <template slot="label">
+                                    <i class="reqI">*</i>
+                                    <span>BL_LY标识：</span>
+                                </template>
                                 <el-select v-model="item.type" placeholder="请选择" style="width: 100%;">
                                     <el-option v-for="(sunItem, subIndex) in queryFormData[3].options" :key="subIndex" :label="sunItem.label" :value="sunItem.value" />
                                 </el-select>
@@ -71,8 +79,6 @@
                 <el-form-item label="备注：">
                     <el-input v-model="AddDialogTable.remark" placeholder="手动输入" clearable />
                 </el-form-item>
-                <el-form-item label="操作人：" />
-                <el-form-item label="操作时间：" />
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="AddDialogTableVisible = false">取消</el-button>
@@ -89,6 +95,14 @@ export default {
     components: {},
     data() {
         return {
+            rules: {
+                factory: [
+                    { required: true, message: '请选择工厂', trigger: 'change' }
+                ],
+                productionMaterielCode: [
+                    { required: true, message: '请选择生产物料', trigger: 'change' }
+                ]
+            },
             AddDialogTableVisible: false,
             addAndupdate: false,
             AddDialogTable: {},
@@ -119,6 +133,7 @@ export default {
                     },
                     filterable: true,
                     defaultValue: '',
+                    clearable: true,
                     resVal: {
                         resData: 'materielList.productionMateriel',
                         label: ['MATERIAL_CODE', 'MATERIAL_NAME'],
@@ -134,6 +149,7 @@ export default {
                     },
                     defaultValue: '',
                     filterable: true,
+                    clearable: true,
                     resVal: {
                         resData: 'materielList.useMateriel',
                         label: ['MATERIAL_CODE', 'MATERIAL_NAME'],
@@ -218,7 +234,7 @@ export default {
         getMeateriel(val) {
             this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_SELECT_LIST}`, 'POST', {
                 factory: val
-            }).then(({ data }) => {
+            }, false, false, false).then(({ data }) => {
                 if (data.code === 0) {
                     this.productionMaterielCode = data.materielList.productionMateriel;
                     this.useMaterielCode = data.materielList.useMateriel;
@@ -279,11 +295,17 @@ export default {
                     //     type: this.AddDialogTable.type
                     //   }]
                     // }
+                    for (const item of this.AddDialogTable.useMateriel) {
+                        if (item.useMaterielCode === '' || item.useMaterielName === '') {
+                            this.$warningToast('请选择领用物料、BL_LY标识');
+                            return false
+                        }
+                    }
                     this.$http(`${!this.addAndupdate ? BASICDATA_API.DEPLOY_MATERIAL_SAVE : BASICDATA_API.DEPLOY_MATERIAL_UPDATE}`, 'POST', this.AddDialogTable).then(({ data }) => {
                         if (data.code === 0) {
                             this.AddDialogTableVisible = false;
                             this.$successToast('操作成功');
-                            this.$refs.queryTable.GetDataList();
+                            this.$refs.queryTable.getDataList();
                         } else {
                             this.$errorToast(data.msg);
                         }
@@ -301,7 +323,7 @@ export default {
                     this.$http(`${BASICDATA_API.DEPLOY_MATERIAL_DEL}`, 'POST', this.$refs.queryTable.multipleSelection).then(({ data }) => {
                         if (data.code === 0) {
                             this.$successToast('操作成功');
-                            this.$refs.queryTable.GetDataList();
+                            this.$refs.queryTable.getDataList();
                         } else {
                             this.$errorToast(data.msg);
                         }
