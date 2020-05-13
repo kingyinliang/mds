@@ -379,6 +379,34 @@ export const AUDIT_API = {
      */
     INWRITEOFFS_API: params => httpProxy('/verifyInStorage/writeOffs', 'POST', params),
     /**
+     * @property {string} PROISSUEQUERY_API 生产发料列表
+     */
+    PROISSUEQUERY_API: params => httpProxy('/verifyMaterial/query', 'POST', params),
+    /**
+     * @property {string} PROISSUEPASS_API 生产发料过账
+     */
+    PROISSUEPASS_API: params => httpProxy('/verifyMaterial/pass', 'POST', params),
+    /**
+     * @property {string} PROISSUEREFUSE_API 生产发料退回
+     */
+    PROISSUEREFUSE_API: params => httpProxy('/verifyMaterial/refuse', 'POST', params),
+    /**
+     * @property {string} PROISSUEWRITEOFFS_API 生产发料反审
+     */
+    PROISSUEWRITEOFFS_API: params => httpProxy('/verifyMaterial/writeOffs', 'POST', params),
+    /**
+     * @property {string} PROISSUEUPDATE_API 生产发料修改
+     */
+    PROISSUEUPDATE_API: params => httpProxy('/verifyMaterial/update', 'POST', params),
+    /**
+     * @property {string} PROISSUEDROPDOWN_API 生产发料组件物料下拉
+     */
+    PROISSUEDROPDOWN_API: params => httpProxy('/verifyMaterial/dropDown', 'POST', params),
+    /**
+     * @property {string} PROISSUEQUERYBYNO_API 生产发料审核日志
+     */
+    PROISSUEQUERYBYNO_API: params => httpProxy('/verifyRecord/queryByNo', 'GET', params),
+    /**
      * @property {string} HOURS_LIST_API 报工审核列表
      */
     HOURS_LIST_API: params => httpProxy('/verifyTimeSheet/query', 'POST', params),
@@ -402,4 +430,4 @@ export const AUDIT_API = {
      * @property {string} HOURS_WRITEOFFS_API 报工审核反审
      */
     HOURS_WRITEOFFS_API: params => httpProxy('/verifyTimeSheet/reset', 'POST', params)
-}
+};
