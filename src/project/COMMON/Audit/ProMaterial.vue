@@ -29,7 +29,7 @@
                             <el-form-item label="订单类型：">
                                 <el-select v-model="plantList.orderType" placeholder="请选择" style="width: 170px;">
                                     <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.dictValue" :value="item.id" />
+                                    <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="过账状态：">
@@ -53,7 +53,7 @@
                                 </el-row>
                             </el-form-item>
                             <el-form-item class="floatr">
-                                <el-button type="primary" size="small" @click="GetAuditList(true)">
+                                <el-button type="primary" size="small" @click="getAuditList(true)">
                                     查询
                                 </el-button>
                             </el-form-item>
@@ -146,13 +146,13 @@
                                         <el-option label="" value="">
                                             请选择
                                         </el-option>
-                                        <el-option v-for="(item, index) in moveReas" :key="index" :label="item.dictValue" :value="item.id" />
+                                        <el-option v-for="(item, index) in moveReas" :key="index" :label="item.dictValue" :value="item.dictCode" />
                                     </el-select>
                                     <el-select v-else v-model="scope.row.moveReason" placeholder="请选择" size="mini" disabled>
                                         <el-option label="" value="">
                                             请选择
                                         </el-option>
-                                        <el-option v-for="(item, index) in moveReas" :key="index" :label="item.dictValue" :value="item.id" />
+                                        <el-option v-for="(item, index) in moveReas" :key="index" :label="item.dictValue" :value="item.dictCode" />
                                     </el-select>
                                 </el-form-item>
                             </template>
@@ -227,9 +227,17 @@
                             <i class="reqI">*</i><span>移动类型</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="moveReason" label="移动原因" width="130" :show-overflow-tooltip="true">
+                    <el-table-column label="移动原因" width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <i class="reqI">*</i><span>移动原因</span>
+                        </template>
+                        <template slot-scope="scope">
+                            <el-select v-model="scope.row.moveReason" placeholder="请选择" size="mini" disabled>
+                                <el-option label="" value="">
+                                    请选择
+                                </el-option>
+                                <el-option v-for="(item, index) in moveReas" :key="index" :label="item.dictValue" :value="item.dictCode" />
+                            </el-select>
                         </template>
                     </el-table-column>
                     <el-table-column prop="remark" :show-overflow-tooltip="true" label="备注" width="112" />
@@ -280,11 +288,6 @@
     import { COMMON_API, AUDIT_API } from 'common/api/api';
     export default {
         name: 'Index',
-        filters: {
-            SetDate: function(value) {
-                return value.slice(0, value.indexOf(' '));
-            }
-        },
         components: {},
         data() {
             return {
@@ -337,16 +340,20 @@
             }
         },
         mounted() {
-            this.getDeptByFactoryId();
-            this.getMoveReas();
+            this.getWorkShopList();
             this.getMaterialsList();
             this.getOrderTypeList();
+            this.getMoveReas();
         },
         methods: {
             // 获取列表
-            GetAuditList(st) {
+            getAuditList(st) {
                 if (st) {
-                    this.plantList.currPage = 1;
+                    if (this.activeName === '0') {
+                        this.noPassCurrPage = 1;
+                    } else {
+                        this.passCurrPage = 1;
+                    }
                 }
                 //刷新数据时清除验证
                 this.$refs.newFrom.clearValidate();
@@ -354,28 +361,31 @@
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     current: this.activeName === '0' ? this.noPassCurrPage : this.passCurrPage,
                     size: this.activeName === '0' ? this.noPassPageSize : this.passPageSize,
-                    // workShop: this.plantList.workShop,
+                    workShop: this.plantList.workShop,
                     productLine: this.plantList.productLine,
                     orderNo: this.plantList.orderNo,
                     materialCode: this.plantList.material,
                     orderType: this.plantList.orderType,
                     postingStatus: this.plantList.status,
-                    // oneorderProductDate: this.plantList.prodDateBegin,
+                    oneorderProductDate: this.plantList.prodDateBegin,
                     twoorderProductDate: this.plantList.prodDateEnd,
                     passStatus: this.activeName
                 }).then(({ data }) => {
                     if (this.activeName === '0') {
                         this.setRedact(data.data.records);
                         this.plantList.auditNoPassList = data.data.records;
-                        this.noPassCurrPage = data.data.pages;
+                        this.noPassCurrPage = data.data.current;
                         this.noPassPageSize = data.data.size;
                         this.noPassTotalCount = data.data.total;
                     } else {
                         this.plantList.auditPassList = data.data.records;
-                        this.passCurrPage = data.data.pages;
+                        this.passCurrPage = data.data.current;
                         this.passPageSize = data.data.size;
                         this.passTotalCount = data.data.total;
                     }
+                    if (st && data.data.records.length === 0) {
+                            this.$infoToast('该搜寻条件无任何数据！');
+                        }
                 });
             },
             setRedact(data) {
@@ -384,7 +394,7 @@
                 })
             },
             //获取车间
-            getDeptByFactoryId() {
+            getWorkShopList() {
                 COMMON_API.ORG_QUERY_WORKSHOP_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     deptType: ['WORK_SHOP']
@@ -420,7 +430,7 @@
             getOrderTypeList() {
                 COMMON_API.DICTQUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    dictType: 'COMMON_CHECK_STATUS'
+                    dictType: 'ORDER_TYPE'
                 }).then(({ data }) => {
                     this.orderTypeList = data.data;
                 });
@@ -463,7 +473,7 @@
                                 headerText: this.plantList.headerTxt
                             }).then(({ data }) => {
                                 this.$successToast(data.msg)
-                                this.GetAuditList();
+                                this.getAuditList();
                             });
                         })
                     }
@@ -487,7 +497,7 @@
                             }).then(({ data }) => {
                                 this.isRefuseOrWriteOffsDialogShow = false;
                                 this.$successToast(data.msg)
-                                this.GetAuditList();
+                                this.getAuditList();
                             });
                         })
                     }
@@ -507,7 +517,7 @@
                             }).then(({ data }) => {
                                 this.isRefuseOrWriteOffsDialogShow = false;
                                 this.$successToast(data.msg)
-                                this.GetAuditList();
+                                this.getAuditList();
                             });
                         })
                     }
@@ -594,22 +604,22 @@
             // 未过账页签下改变每页条数
             noPassHandleSizeChange(val) {
                 this.noPassPageSize = val;
-                this.GetAuditList();
+                this.getAuditList();
             },
             // 未过账页签下跳转页数
             noPassHandleCurrentChange(val) {
                 this.noPassCurrPage = val;
-                this.GetAuditList();
+                this.getAuditList();
             },
             // 已过账页签下改变每页条数
             passHandleSizeChange(val) {
                 this.passPageSize = val;
-                this.GetAuditList();
+                this.getAuditList();
             },
             // 已过账页签下跳转页数
             passHandleCurrentChange(val) {
                 this.passCurrPage = val;
-                this.GetAuditList();
+                this.getAuditList();
             }
         }
     };
