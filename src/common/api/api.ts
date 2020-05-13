@@ -431,3 +431,10 @@ export const AUDIT_API = {
      */
     HOURS_WRITEOFFS_API: params => httpProxy('/verifyTimeSheet/reset', 'POST', params)
 };
+
+export const PKG_API = {
+    /**
+     * @property {string} PKG_HOME_LIST_API 包装车间首页
+     */
+    PKG_HOME_LIST_API: params => httpProxy('/order/queryListPkg', 'POST', params)
+}
