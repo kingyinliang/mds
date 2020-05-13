@@ -25,7 +25,7 @@
                     <el-table-column prop="deptName" width="120" :show-overflow-tooltip="true" label="所属部门" />
                     <el-table-column prop="deviceNo" width="120" :show-overflow-tooltip="true" label="设备编号" />
                     <el-table-column prop="deviceName" label="设备描述" :show-overflow-tooltip="true" />
-                    <el-table-column fixed="right" label="操作" width="100">
+                    <el-table-column fixed="right" label="操作" width="120">
                         <template slot-scope="scope">
                             <el-button type="text" @click="addOrupdate(scope.row)">
                                 编辑
@@ -38,9 +38,9 @@
                 </el-table>
             </template>
         </org-view>
-        <el-dialog title="配置" :close-on-click-modal="false" :visible.sync="configVisible">
-            <div :class="{'limit-upload': ImageUrl}">
-                <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
+        <el-dialog title="配置" width="400px" :close-on-click-modal="false" :visible.sync="configVisible">
+            <div :class="{'limit-upload': ImageUrl}" style="text-align: center;">
+                <el-upload ref="upload" class="org-img-upload" list-type="picture-card" :action="FILE_API" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
                     <i class="el-icon-plus" />
                 </el-upload>
             </div>
@@ -74,6 +74,7 @@
     export default class CapacityManage extends Vue {
         $refs: {
             addOrupdate: HTMLFormElement;
+            upload: HTMLFormElement;
         };
 
         FILE_API = ''
@@ -179,6 +180,10 @@
             } else {
                 this.configId = row.id;
                 this.configVisible = true
+                this.$nextTick(() => {
+                    this.ImageUrl = '';
+                    this.$refs.upload.clearFiles();
+                })
             }
         }
 

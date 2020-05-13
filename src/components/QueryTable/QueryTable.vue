@@ -48,7 +48,7 @@
                 <div>
                     <slot :name="'tab-head' + index" />
                 </div>
-                <el-table ref="table" class="newTable" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                <el-table ref="table" class="newTable" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change=" val => tabHandleSelectionChange(val, index)">
                     <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
                     <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
                     <template v-for="(item, index2) in tabItem.column">
@@ -59,7 +59,7 @@
                             <template slot-scope="scope">
                                 <el-input v-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
                                 <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" />
-                                <span v-else>{{ scope.row[item.prop] }}</span>
+                                <span v-else>{{ item.formatter? item.formatter(scope.row) : scope.row[item.prop] }}</span>
                             </template>
                         </el-table-column>
                     </template>
@@ -484,6 +484,14 @@
             // 序号
             indexMethod(index) {
                 return index + 1 + (Number(this.queryForm.currPage) - 1) * (Number(this.queryForm.pageSize));
+            },
+            // tab表格选中
+            tabHandleSelectionChange(val, index) {
+                this.tabs[index].multipleSelection = [];
+                val.forEach((item) => {
+                    this.tabs[index].multipleSelection.push(item);
+                });
+                console.log(this.tabs);
             },
             // 表格选中
             handleSelectionChange(val) {

@@ -351,6 +351,10 @@ export const COMMON_API = {
 
 export const AUDIT_API = {
     /**
+     * @property {string} INLIST_API 订单号查询审核日志  orderNo
+     */
+    AUDIT_LOG_LIST_API: params => httpProxy('/verifyRecord/queryByNo', 'GET', params),
+    /**
      * @property {string} INLIST_API 入库审核列表
      */
     INLIST_API: params => httpProxy('/verifyInStorage/query', 'POST', params),
