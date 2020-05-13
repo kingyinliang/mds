@@ -39,11 +39,14 @@
                     <slot name="mds-button" />
                 </el-form-item>
             </el-form>
-            <div v-if="!tabs.length" class="toggleSearchBottom">
+            <div v-if="!tabs.length && type !== 'home'" class="toggleSearchBottom">
                 <i class="el-icon-caret-top" />
             </div>
         </el-card>
-        <el-tabs v-if="tabs.length" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
+        <div v-if="type === 'home'">
+            <slot name="home" />
+        </div>
+        <el-tabs v-else-if="tabs.length" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane v-for="(tabItem, index) in tabs" :key="index" :name="index.toString()" :label="tabItem.label">
                 <div>
                     <slot :name="'tab-head' + index" />
@@ -74,7 +77,7 @@
                 </el-row>
             </el-tab-pane>
         </el-tabs>
-        <el-card v-if="!tabs.length" class="tableCard" style="min-height: 400px;">
+        <el-card v-else class="tableCard" style="min-height: 400px;">
             <div class="toggleSearchTop">
                 <i class="el-icon-caret-bottom" />
             </div>
@@ -114,6 +117,10 @@
         name: 'QueryTable',
         components: {},
         props: {
+            type: {
+                type: String,
+                default: 'queryTable'
+            },
             resData: {
                 type: Object,
                 default: () => {
