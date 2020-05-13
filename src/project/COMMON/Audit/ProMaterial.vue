@@ -94,14 +94,14 @@
                         <el-table-column type="selection" width="50" :selectable="noPassSelectable" />
                         <el-table-column type="index" label="序号" :index="noPassIndexMethod" width="55" />
                         <el-table-column prop="status" label="过账状态" width="100" />
-                        <el-table-column prop="orderProductDate" label="生产日期" :show-overflow-tooltip="true" width="130" />
-                        <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="120" />
-                        <el-table-column prop="materialName" label="生产物料" :show-overflow-tooltip="true" width="112" />
+                        <el-table-column prop="orderProductDate" label="生产日期" width="120" :show-overflow-tooltip="true" />
+                        <el-table-column prop="orderNo" label="生产订单" width="120" :show-overflow-tooltip="true" />
+                        <el-table-column prop="materialName" label="生产物料" width="120" :show-overflow-tooltip="true" />
                         <el-table-column prop="planOutput" label="计划数量" width="80" />
                         <el-table-column prop="outputUnit" label="单位" width="50" />
                         <el-table-column prop="countOutput" label="入库数量" width="80" />
                         <el-table-column prop="countOutputUnit" label="单位" width="50" />
-                        <el-table-column label="组件物料" :show-overflow-tooltip="true" width="120">
+                        <el-table-column label="组件物料" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode + scope.row.materialName }}
                             </template>
@@ -157,8 +157,8 @@
                                 </el-form-item>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" width="112" />
-                        <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="112" />
+                        <el-table-column prop="remark" label="备注" width="112" :show-overflow-tooltip="true" />
+                        <el-table-column prop="interfaceReturn" label="接口回写" width="112" :show-overflow-tooltip="true" />
                         <el-table-column fixed="right" label="操作" width="135">
                             <template slot-scope="scope">
                                 <el-button class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
@@ -202,14 +202,14 @@
                     <el-table-column type="selection" width="50" />
                     <el-table-column type="index" label="序号" :index="passIndexMethod" width="55" />
                     <el-table-column prop="status" label="过账状态" width="100" />
-                    <el-table-column prop="orderProductDate" label="生产日期" :show-overflow-tooltip="true" width="130" />
+                    <el-table-column prop="orderProductDate" label="生产日期" :show-overflow-tooltip="true" width="120" />
                     <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="120" />
-                    <el-table-column prop="materialName" label="生产物料" :show-overflow-tooltip="true" width="112" />
+                    <el-table-column prop="materialName" label="生产物料" :show-overflow-tooltip="true" width="120" />
                     <el-table-column prop="planOutput" label="计划数量" width="80" />
                     <el-table-column prop="outputUnit" label="单位" width="50" />
                     <el-table-column prop="countOutput" label="入库数量" width="80" />
                     <el-table-column prop="countOutputUnit" label="单位" width="50" />
-                    <el-table-column label="组件物料" :show-overflow-tooltip="true" width="120">
+                    <el-table-column label="组件物料" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + scope.row.materialName }}
                         </template>
@@ -240,8 +240,8 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="remark" :show-overflow-tooltip="true" label="备注" width="112" />
-                    <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="112" />
+                    <el-table-column prop="remark" label="备注" width="112" :show-overflow-tooltip="true" />
+                    <el-table-column prop="interfaceReturn" label="接口回写" width="112" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="85">
                         <template slot-scope="scope">
                             <el-button class="ra_btn" type="text" round size="mini" @click="getAuditLog(scope.row)">
@@ -267,19 +267,9 @@
                 </el-button>
             </span>
         </el-dialog>
-        <el-dialog title="审核日志" :close-on-click-modal="false" :visible.sync="isAuditLogDialogShow">
-            <el-table header-row-class-name="tableHead" :data="logList" border tooltip-effect="dark" style="width: 100%;">
-                <el-table-column type="index" label="序号" :index="logIndexMethod" width="55" />
-                <el-table-column prop="status" label="审核动作" width="120" />
-                <el-table-column prop="memo" label="审核意见" width="150" :show-overflow-tooltip="true" />
-                <el-table-column prop="verifyMan" label="审核人" width="150" :show-overflow-tooltip="true" />
-                <el-table-column label="审核时间">
-                    <template slot-scope="scope">
-                        {{ getNewDate(scope.row) }}
-                    </template>
-                </el-table-column>
-            </el-table>
-            <span slot="footer" />
+        <el-dialog title="审核日志" width="600px" :close-on-click-modal="false" :visible.sync="isAuditLogDialogShow">
+            <audit-log :table-data="logList" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
+            <div slot="footer" class="dialog-footer" />
         </el-dialog>
     </div>
 </template>
@@ -287,7 +277,6 @@
 <script>
     import { COMMON_API, AUDIT_API } from 'common/api/api';
     export default {
-        name: 'Index',
         components: {},
         data() {
             return {
@@ -383,6 +372,7 @@
                         this.passPageSize = data.data.size;
                         this.passTotalCount = data.data.total;
                     }
+                    console.log(this.noPassMultipleSelection, this.passMultipleSelection);
                     if (st && data.data.records.length === 0) {
                             this.$infoToast('该搜寻条件无任何数据！');
                         }
@@ -555,27 +545,23 @@
                     this.isAuditLogDialogShow = true;
                 });
             },
-            //时间转化
-            getNewDate(row) {
-                const d = new Date(row.verifyDate);
-                const year = d.getFullYear();
-                const month = d.getMonth() + 1 > 10 ? d.getMonth() + 1 : '0' + (d.getMonth() + 1);
-                const date = d.getDate() > 10 ? d.getDate() : '0' + d.getDate();
-                const hours = d.getHours() > 10 ? d.getHours() : '0' + d.getHours();
-                const minutes = d.getMinutes() > 10 ? d.getMinutes() : '0' + d.getMinutes();
-                const seconds = d.getSeconds() > 10 ? d.getSeconds() : '0' + d.getSeconds();
-                return year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
-            },
+            // //时间转化
+            // getNewDate(row) {
+            //     const d = new Date(row.verifyDate);
+            //     const year = d.getFullYear();
+            //     const month = d.getMonth() + 1 > 10 ? d.getMonth() + 1 : '0' + (d.getMonth() + 1);
+            //     const date = d.getDate() > 10 ? d.getDate() : '0' + d.getDate();
+            //     const hours = d.getHours() > 10 ? d.getHours() : '0' + d.getHours();
+            //     const minutes = d.getMinutes() > 10 ? d.getMinutes() : '0' + d.getMinutes();
+            //     const seconds = d.getSeconds() > 10 ? d.getSeconds() : '0' + d.getSeconds();
+            //     return year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
+            // },
             //未过账页签下已退回数据无法过账和退回
             noPassSelectable(row) {
                 if (row.status === '已退回') {
                     return false;
                 }
                 return true;
-            },
-            //审核日志序号
-            logIndexMethod(index) {
-                return index + 1;
             },
              // 未过账序号
             noPassIndexMethod(index) {
@@ -625,7 +611,7 @@
     };
 </script>
 
-<style lang="scss">
+<style scoed lang="scss">
     .table-colnum {
         padding: 0 !important;
         & > div.cell {

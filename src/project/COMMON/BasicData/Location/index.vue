@@ -155,18 +155,14 @@
                 }).then(({ data }) => {
                     this.isAddOrUpdateDialogShow = false;
                     this.isAdvanceSearchDialogShow = false;
-                    if (data.code === 200) {
-                        if (st && data.data.records.length === 0) {
+                    if (st && data.data.records.length === 0) {
                             this.$infoToast('该搜寻条件无任何库位数据！');
                         }
-                        this.multipleSelection = [];
-                        this.itemList = data.data.records;
-                        this.currPage = data.data.current;
-                        this.pageSize = data.data.size;
-                        this.totalCount = data.data.total;
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
+                    this.multipleSelection = [];
+                    this.itemList = data.data.records;
+                    this.currPage = data.data.current;
+                    this.pageSize = data.data.size;
+                    this.totalCount = data.data.total;
                 });
             },
             //模糊查询
@@ -201,15 +197,11 @@
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         ids: this.multipleSelection
                     }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.$successToast('删除成功!');
-                            this.multipleSelection = [];
-                            this.$nextTick(() => {
-                                this.getItemList()
-                            });
-                        } else {
-                            this.$errorTost(data.msg);
-                        }
+                        this.$successToast((data.msg));
+                        this.multipleSelection = [];
+                        this.$nextTick(() => {
+                            this.getItemList()
+                        });
                     });
                 });
             },
@@ -226,11 +218,7 @@
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     deptType: ['WORK_SHOP']
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.workShop = data.data;
-                    } else {
-                        this.$errorTost(data.msg);
-                    }
+                    this.workShop = data.data;
                 });
             },
             // 获取物料
@@ -238,11 +226,7 @@
                 COMMON_API.DICTQUERY_API({
                     dictType: 'COMMON_MATERIAL_TYPE'
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.materialList = data.data;
-                    } else {
-                        this.$errorTost(data.msg);
-                    }
+                    this.materialList = data.data;
                 });
             },
             // 表格选中
