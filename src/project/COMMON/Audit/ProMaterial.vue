@@ -29,7 +29,7 @@
                             <el-form-item label="订单类型：">
                                 <el-select v-model="plantList.orderType" placeholder="请选择" style="width: 170px;">
                                     <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.value" :value="item.code" />
+                                    <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.dictValue" :value="item.id" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="过账状态：">
@@ -89,81 +89,89 @@
                         </el-form>
                     </div>
                 </div>
-                <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="auditNoPassList" border tooltip-effect="dark" height="400" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="50" :selectable="noPassSelectable" />
-                    <el-table-column type="index" label="序号" :index="noPassIndexMethod" width="55" />
-                    <el-table-column prop="status" label="过账状态" width="112" />
-                    <el-table-column prop="orderProductDate" label="生产日期" :show-overflow-tooltip="true" width="120" />
-                    <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="112" />
-                    <el-table-column label="生产物料" :show-overflow-tooltip="true" width="112">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialCode + scope.row.materialName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="planOutput" label="计划数量" width="80" />
-                    <el-table-column prop="outputUnit" label="单位" width="50" />
-                    <el-table-column prop="countOutput" label="入库数量" width="80" />
-                    <el-table-column prop="countOutputUnit" label="单位" width="50" />
-                    <el-table-column label="组件物料" :show-overflow-tooltip="true" width="120">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialCode + scope.row.materialName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="entryQnt" label="发料数量" width="80" />
-                    <el-table-column prop="entryUom" label="单位" width="50" />
-                    <el-table-column label="物料批次" width="120" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            <el-input v-if="scope.row.redact" v-model="scope.row.batch" size="mini" />
-                            <el-input v-else v-model="scope.row.batch" size="mini" disabled />
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="dictType" label="出库库位" width="112">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>出库库位</span>
-                        </template>
-                        <template slot-scope="scope">
-                            <el-input v-if="scope.row.redact" v-model="scope.row.stgeLoc" size="mini" />
-                            <el-input v-else v-model="scope.row.stgeLoc" size="mini" disabled />
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="移动类型" width="112" :show-overflow-tooltip="true">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>移动类型</span>
-                        </template>
-                        <template slot-scope="scope">
-                            <el-input v-if="scope.row.redact" v-model="scope.row.moveType" size="mini" />
-                            <el-input v-else v-model="scope.row.moveType" size="mini" disabled />
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="移动原因" width="120" :show-overflow-tooltip="true">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>移动原因</span>
-                        </template>
-                        <template slot-scope="scope">
-                            <el-select v-if="scope.row.redact" v-model="scope.row.moveReason" placeholder="请选择" size="mini">
-                                <el-option label="请选择" value="" />
-                                <el-option v-for="(item, index) in moveReas" :key="index" :label="item.dictValue" :value="item.id" />
-                            </el-select>
-                            <el-select v-else v-model="scope.row.moveReason" placeholder="请选择" size="mini" disabled>
-                                <el-option label="请选择" value="" />
-                                <el-option v-for="(item, index) in moveReas" :key="index" :label="item.dictValue" :value="item.id" />
-                            </el-select>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" width="112" />
-                    <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="112" />
-                    <el-table-column fixed="right" label="操作" width="135">
-                        <template slot-scope="scope">
-                            <el-button class="ra_btn" type="primary" size="mini" @click="redact(scope.row)">
-                                {{ scope.row.redact ? '保存' : '编辑' }}
-                            </el-button>
-                            <el-button class="ra_btn" type="primary" size="mini" @click="getAuditLog(scope.row)">
-                                审核日志
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-row>
+                <el-form ref="newFrom" :model="plantList" :inline-message="true">
+                    <el-table ref="table1" class="newTable" header-row-class-name="newTableHead" :data="plantList.auditNoPassList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                        <el-table-column type="selection" width="50" :selectable="noPassSelectable" />
+                        <el-table-column type="index" label="序号" :index="noPassIndexMethod" width="55" />
+                        <el-table-column prop="status" label="过账状态" width="100" />
+                        <el-table-column prop="orderProductDate" label="生产日期" :show-overflow-tooltip="true" width="130" />
+                        <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="120" />
+                        <el-table-column prop="materialName" label="生产物料" :show-overflow-tooltip="true" width="112" />
+                        <el-table-column prop="planOutput" label="计划数量" width="80" />
+                        <el-table-column prop="outputUnit" label="单位" width="50" />
+                        <el-table-column prop="countOutput" label="入库数量" width="80" />
+                        <el-table-column prop="countOutputUnit" label="单位" width="50" />
+                        <el-table-column label="组件物料" :show-overflow-tooltip="true" width="120">
+                            <template slot-scope="scope">
+                                {{ scope.row.materialCode + scope.row.materialName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="entryQnt" label="发料数量" width="80" />
+                        <el-table-column prop="entryUom" label="单位" width="50" />
+                        <el-table-column label="物料批次" width="120" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                <el-input v-if="scope.row.redact" v-model="scope.row.batch" size="mini" />
+                                <el-input v-else v-model="scope.row.batch" size="mini" disabled />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="出库库位" width="130" class-name="table-colnum">
+                            <template slot="header">
+                                <i class="reqI">*</i><span>出库库位</span>
+                            </template>
+                            <template slot-scope="scope">
+                                <el-form-item :prop="'auditNoPassList.' + scope.$index + '.stgeLoc'" :rules="dataRules.stgeLoc">
+                                    <el-input v-if="scope.row.redact" v-model="scope.row.stgeLoc" size="mini" />
+                                    <el-input v-else v-model="scope.row.stgeLoc" size="mini" disabled />
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="移动类型" width="130" class-name="table-colnum">
+                            <template slot="header">
+                                <i class="reqI">*</i><span>移动类型</span>
+                            </template>
+                            <template slot-scope="scope">
+                                <el-form-item :prop="'auditNoPassList.' + scope.$index + '.moveType'" :rules="dataRules.moveType">
+                                    <el-input v-if="scope.row.redact" v-model="scope.row.moveType" size="mini" />
+                                    <el-input v-else v-model="scope.row.moveType" size="mini" disabled />
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="移动原因" width="130" class-name="table-colnum">
+                            <template slot="header">
+                                <i class="reqI">*</i><span>移动原因</span>
+                            </template>
+                            <template slot-scope="scope">
+                                <el-form-item :prop="'auditNoPassList.' + scope.$index + '.moveReason'" :rules="dataRules.moveReason">
+                                    <el-select v-if="scope.row.redact" v-model="scope.row.moveReason" placeholder="请选择" size="mini" class="table-select">
+                                        <el-option label="" value="">
+                                            请选择
+                                        </el-option>
+                                        <el-option v-for="(item, index) in moveReas" :key="index" :label="item.dictValue" :value="item.id" />
+                                    </el-select>
+                                    <el-select v-else v-model="scope.row.moveReason" placeholder="请选择" size="mini" disabled>
+                                        <el-option label="" value="">
+                                            请选择
+                                        </el-option>
+                                        <el-option v-for="(item, index) in moveReas" :key="index" :label="item.dictValue" :value="item.id" />
+                                    </el-select>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" width="112" />
+                        <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="112" />
+                        <el-table-column fixed="right" label="操作" width="135">
+                            <template slot-scope="scope">
+                                <el-button class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
+                                    {{ scope.row.redact ? '保存' : '编辑' }}
+                                </el-button>
+                                <el-button class="ra_btn" type="text" round size="mini" @click="getAuditLog(scope.row)">
+                                    审核日志
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-form>
+                <el-row v-if="plantList.auditNoPassList.length !== 0">
                     <el-pagination :current-page="noPassCurrPage" :page-sizes="[10, 20, 50]" :page-size="noPassPageSize" layout="total, sizes, prev, pager, next, jumper" :total="noPassTotalCount" @size-change="noPassHandleSizeChange" @current-change="noPassHandleCurrentChange" />
                 </el-row>
             </el-tab-pane>
@@ -190,17 +198,13 @@
                         </el-form>
                     </div>
                 </div>
-                <el-table ref="table2" class="newTable" header-row-class-name="tableHead" :data="auditPassList" border tooltip-effect="dark" height="400" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                <el-table ref="table2" class="newTable" header-row-class-name="newTableHead" :data="plantList.auditPassList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" :row-style="{height:'67px'}" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" />
                     <el-table-column type="index" label="序号" :index="passIndexMethod" width="55" />
-                    <el-table-column prop="status" label="过账状态" width="112" />
-                    <el-table-column prop="orderProductDate" label="生产日期" :show-overflow-tooltip="true" width="120" />
-                    <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="112" />
-                    <el-table-column label="生产物料" :show-overflow-tooltip="true" width="112">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialCode + scope.row.materialName }}
-                        </template>
-                    </el-table-column>
+                    <el-table-column prop="status" label="过账状态" width="100" />
+                    <el-table-column prop="orderProductDate" label="生产日期" :show-overflow-tooltip="true" width="130" />
+                    <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="120" />
+                    <el-table-column prop="materialName" label="生产物料" :show-overflow-tooltip="true" width="112" />
                     <el-table-column prop="planOutput" label="计划数量" width="80" />
                     <el-table-column prop="outputUnit" label="单位" width="50" />
                     <el-table-column prop="countOutput" label="入库数量" width="80" />
@@ -212,38 +216,38 @@
                     </el-table-column>
                     <el-table-column prop="entryQnt" label="发料数量" width="80" />
                     <el-table-column prop="entryUom" label="单位" width="50" />
-                    <el-table-column prop="batch" label="物料批次" width="112" :show-overflow-tooltip="true" />
-                    <el-table-column prop="stgeLoc" label="出库库位" width="112" :show-overflow-tooltip="true">
+                    <el-table-column prop="batch" label="物料批次" width="120" :show-overflow-tooltip="true" />
+                    <el-table-column prop="stgeLoc" label="出库库位" width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <i class="reqI">*</i><span>出库库位</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="moveType" label="移动类型" width="112" :show-overflow-tooltip="true">
+                    <el-table-column prop="moveType" label="移动类型" width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <i class="reqI">*</i><span>移动类型</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="moveReason" label="移动原因" width="112" :show-overflow-tooltip="true">
+                    <el-table-column prop="moveReason" label="移动原因" width="130" :show-overflow-tooltip="true">
                         <template slot="header">
-                            <i class="reqI">*</i><span>移动类型</span>
+                            <i class="reqI">*</i><span>移动原因</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="remark" :show-overflow-tooltip="true" label="备注" width="112" />
                     <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="112" />
                     <el-table-column fixed="right" label="操作" width="85">
                         <template slot-scope="scope">
-                            <el-button class="ra_btn" type="primary" size="mini" @click="getAuditLog(scope.row)">
+                            <el-button class="ra_btn" type="text" round size="mini" @click="getAuditLog(scope.row)">
                                 审核日志
                             </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-row>
+                <el-row v-if="plantList.auditPassList.length !== 0">
                     <el-pagination :current-page="passCurrPage" :page-sizes="[10, 20, 50]" :page-size="passPageSize" layout="total, sizes, prev, pager, next, jumper" :total="passTotalCount" @size-change="passHandleSizeChange" @current-change="passHandleCurrentChange" />
                 </el-row>
             </el-tab-pane>
         </el-tabs>
-        <el-dialog :close-on-click-modal="false" :visible.sync="isRefuseOrWriteOffsDialogShow" @close="closeRefuseDialog()">
+        <el-dialog :close-on-click-modal="false" :visible.sync="isRefuseOrWriteOffsDialogShow">
             <el-input v-model="refuseOrWriteOffsText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 150px;" />
             <span slot="title"> {{ dialogTitle }} </span>
             <span slot="footer" class="dialog-footer">
@@ -255,13 +259,17 @@
                 </el-button>
             </span>
         </el-dialog>
-        <el-dialog title="审核日志" :close-on-click-modal="false" :visible.sync="isAuditLogDialogShow" @close="closePostDataDialog()">
-            <el-table :data="logList" border tooltip-effect="dark" style="width: 100%;">
+        <el-dialog title="审核日志" :close-on-click-modal="false" :visible.sync="isAuditLogDialogShow">
+            <el-table header-row-class-name="tableHead" :data="logList" border tooltip-effect="dark" style="width: 100%;">
                 <el-table-column type="index" label="序号" :index="logIndexMethod" width="55" />
-                <el-table-column prop="action" label="审核动作" width="120" />
-                <el-table-column prop="opintion" label="审核意见" width="160" />
-                <el-table-column prop="reviewer" label="审核人" width="160" />
-                <el-table-column prop="reviewTime" label="审核时间" />
+                <el-table-column prop="status" label="审核动作" width="120" />
+                <el-table-column prop="memo" label="审核意见" width="150" :show-overflow-tooltip="true" />
+                <el-table-column prop="verifyMan" label="审核人" width="150" :show-overflow-tooltip="true" />
+                <el-table-column label="审核时间">
+                    <template slot-scope="scope">
+                        {{ getNewDate(scope.row) }}
+                    </template>
+                </el-table-column>
             </el-table>
             <span slot="footer" />
         </el-dialog>
@@ -270,7 +278,6 @@
 
 <script>
     import { COMMON_API, AUDIT_API } from 'common/api/api';
-    import { headanimation } from '@/net/validate';
     export default {
         name: 'Index',
         filters: {
@@ -291,8 +298,6 @@
                 dialogTitle: '',
                 refuseOrWriteOffsText: '',
                 moveReas: [],
-                auditNoPassList: [],
-                auditPassList: [],
                 noPassMultipleSelection: [],
                 passMultipleSelection: [],
                 logList: [],
@@ -306,7 +311,10 @@
                     prodDateBegin: new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate()),
                     prodDateEnd: '',
                     pstngDate: new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate()),
-                    headerTxt: ''
+                    headerTxt: '',
+                    auditPassList: [],
+                    auditNoPassList: []
+
                 },
                 noPassCurrPage: 1,
                 noPassPageSize: 10,
@@ -315,7 +323,10 @@
                 passPageSize: 10,
                 passTotalCount: 0,
                 dataRules: {
-                    pstngDate: [{ required: true, message: '过账日期不能为空', trigger: 'blur' }]
+                    pstngDate: [{ required: true, message: '过账日期不能为空', trigger: 'blur' }],
+                    stgeLoc: [{ required: true, message: '出库库位不能为空', trigger: 'blur' }],
+                    moveType: [{ required: true, message: '移动类型不能为空', trigger: 'blur' }],
+                    moveReason: [{ required: true, message: '移动原因不能为空', trigger: 'blur' }]
                 }
             };
         },
@@ -330,7 +341,6 @@
             this.getMoveReas();
             this.getMaterialsList();
             this.getOrderTypeList();
-            headanimation(this.$);
         },
         methods: {
             // 获取列表
@@ -338,6 +348,8 @@
                 if (st) {
                     this.plantList.currPage = 1;
                 }
+                //刷新数据时清除验证
+                this.$refs.newFrom.clearValidate();
                 AUDIT_API.PROISSUEQUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     current: this.activeName === '0' ? this.noPassCurrPage : this.passCurrPage,
@@ -353,17 +365,23 @@
                     passStatus: this.activeName
                 }).then(({ data }) => {
                     if (this.activeName === '0') {
-                        this.auditNoPassList = data.data.records;
+                        this.setRedact(data.data.records);
+                        this.plantList.auditNoPassList = data.data.records;
                         this.noPassCurrPage = data.data.pages;
                         this.noPassPageSize = data.data.size;
                         this.noPassTotalCount = data.data.total;
                     } else {
-                        this.auditPassList = data.data.records;
+                        this.plantList.auditPassList = data.data.records;
                         this.passCurrPage = data.data.pages;
                         this.passPageSize = data.data.size;
                         this.passTotalCount = data.data.total;
                     }
                 });
+            },
+            setRedact(data) {
+                data.forEach(item => {
+                    item.redact = false;
+                })
             },
             //获取车间
             getDeptByFactoryId() {
@@ -402,9 +420,9 @@
             getOrderTypeList() {
                 COMMON_API.DICTQUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    dictType: ''
+                    dictType: 'COMMON_CHECK_STATUS'
                 }).then(({ data }) => {
-                    console.log(data);
+                    this.orderTypeList = data.data;
                 });
             },
             //获取移动类型
@@ -444,8 +462,8 @@
                                 pstngDate: this.plantList.pstngDate,
                                 headerText: this.plantList.headerTxt
                             }).then(({ data }) => {
+                                this.$successToast(data.msg)
                                 this.GetAuditList();
-                                console.log(data);
                             });
                         })
                     }
@@ -464,12 +482,12 @@
                         }).then(() => {
                             AUDIT_API.PROISSUEREFUSE_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                                ids: this.noPassMultipleSelection,
+                                list: this.noPassMultipleSelection,
                                 reason: this.refuseOrWriteOffsText
                             }).then(({ data }) => {
                                 this.isRefuseOrWriteOffsDialogShow = false;
+                                this.$successToast(data.msg)
                                 this.GetAuditList();
-                                console.log(data);
                             });
                         })
                     }
@@ -483,12 +501,13 @@
                         }).then(() => {
                             AUDIT_API.PROISSUEWRITEOFFS_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                                ids: this.passMultipleSelection,
-                                remark: this.refuseOrWriteOffsText
+                                list: this.passMultipleSelection,
+                                pstngDate: this.plantList.pstngDate,
+                                reason: this.refuseOrWriteOffsText
                             }).then(({ data }) => {
                                 this.isRefuseOrWriteOffsDialogShow = false;
+                                this.$successToast(data.msg)
                                 this.GetAuditList();
-                                console.log(data);
                             });
                         })
                     }
@@ -497,20 +516,23 @@
             redact(row) {
                 if (!row.redact) {
                     row.redact = true;
+                    // this.$refs.table1.bodyWrapper.scrollLeft = document.querySelector('.el-table__body').offsetWidth - document.querySelector('.el-table__body-wrapper').clientWidth;
+                    this.$refs.table1.bodyWrapper.scrollLeft = 10000;
                 } else {
-                    //  this.$refs.formDom.validate(valid => {
-                    //     if (valid) {
+                     this.$refs.newFrom.validate(valid => {
+                        if (valid) {
                             AUDIT_API.PROISSUEUPDATE_API({
                                 id: row.id,
+                                batch: row.batch,
                                 stgeLoc: row.stgeLoc,
                                 moveType: row.moveType,
                                 moveReason: row.moveReason
                             }).then(({ data }) => {
                                 row.redact = false;
-                                console.log(data);
+                                this.$successToast(data.msg);
                             });
-                    //     }
-                    // });
+                        }
+                    });
                 }
             },
             //审核日志
@@ -519,9 +541,20 @@
                 AUDIT_API.PROISSUEQUERYBYNO_API({
                     orderNo: row.orderNo
                 }).then(({ data }) => {
-                    this.isAuditLogDialogShow = true;
                     this.logList = data.data;
+                    this.isAuditLogDialogShow = true;
                 });
+            },
+            //时间转化
+            getNewDate(row) {
+                const d = new Date(row.verifyDate);
+                const year = d.getFullYear();
+                const month = d.getMonth() + 1 > 10 ? d.getMonth() + 1 : '0' + (d.getMonth() + 1);
+                const date = d.getDate() > 10 ? d.getDate() : '0' + d.getDate();
+                const hours = d.getHours() > 10 ? d.getHours() : '0' + d.getHours();
+                const minutes = d.getMinutes() > 10 ? d.getMinutes() : '0' + d.getMinutes();
+                const seconds = d.getSeconds() > 10 ? d.getSeconds() : '0' + d.getSeconds();
+                return year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
             },
             //未过账页签下已退回数据无法过账和退回
             noPassSelectable(row) {
@@ -583,6 +616,41 @@
 </script>
 
 <style lang="scss">
+    .table-colnum {
+        padding: 0 !important;
+        & > div.cell {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 54px;
+            // transform: translate(0, -4px);
+            .el-form-item__content {
+                line-height: 1;
+                div.el-input {
+                    width: 100%;
+                }
+                div.el-form-item__error {
+                    position: absolute;
+                    bottom: -14px;
+                    left: 0;
+                }
+            }
+        }
+    }
+    .table-select {
+        & > .el-input {
+            & > input {
+                height: 28px !important;
+            }
+        }
+    }
+    .newTableHead {
+        height: 66px;
+        color: black;
+        font-weight: 600;
+        text-align: center;
+        background-color: #f9f9f9 !important;
+    }
     .searchCard {
         margin-bottom: 0;
     }
