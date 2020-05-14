@@ -83,6 +83,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, AUDIT_API } from 'common/api/api';
+    import { dateFormat } from 'utils/utils';
 
     @Component({
         components: {
@@ -145,18 +146,21 @@
             {
                 type: 'input',
                 redact: true,
+                header: true,
                 prop: 'stgeLoc',
                 label: '入库库位'
             },
             {
                 type: 'input',
                 redact: true,
+                header: true,
                 prop: 'moveType',
                 label: '移动类型'
             },
             {
                 type: 'input',
                 redact: true,
+                header: true,
                 prop: 'stckType',
                 label: '库存类型'
             },
@@ -276,7 +280,9 @@
                 type: 'date-interval',
                 label: '生产日期',
                 prop: 'startDate',
-                propTwo: 'endDate'
+                propTwo: 'endDate',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                defaultValueTwo: ''
             }
         ];
 

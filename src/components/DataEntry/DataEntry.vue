@@ -22,7 +22,7 @@
                 <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form">
                     <el-form-item v-for="(item, index) in headerBase" :key="index">
                         <template slot="label">
-                            <i class="iconfont" :class="item.icon" style="margin-left: 8px;" />
+                            <i class="iconfont" :class="item.icon" style="margin-right: 5px; margin-left: 2px;" />
                             <span>{{ item.label }}：</span>
                         </template>
                         <p v-if="item.type === 'p'">

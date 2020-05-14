@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="packaging__main__item__main__right">
                                         <el-form-item label="生产订单：">
-                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" :change="orderchange(item)">
+                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" :change="orderchange(item)" style="width: 100%;">
                                                 <el-option v-for="(subItem, subIndex) in item.orderNoList" :key="subIndex" :label="subItem" :value="subItem" />
                                             </el-select>
                                         </el-form-item>
@@ -68,7 +68,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, PKG_API } from 'common/api/api';
-    import { getS3Img } from 'utils/utils';
+    import { getS3Img, dateFormat } from 'utils/utils';
 
     @Component({
         components: {
@@ -119,7 +119,9 @@
             {
                 type: 'date-picker',
                 label: '生产日期',
-                prop: 'productDate'
+                prop: 'productDate',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                defaultValueTwo: ''
             }
         ];
 
@@ -155,7 +157,7 @@
 
         goDataEntry(item) {
             console.log(item);
-            this.$router.push({ name: `DFMDS-pages-Packaging-CheckData` });
+            this.$router.push({ name: `DFMDS-pages-Packaging-detail` });
         }
     }
     interface PkgObj{

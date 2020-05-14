@@ -59,6 +59,9 @@
                             <template v-if="item.child">
                                 <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip || false" :width="chind.width || ''" />
                             </template>
+                            <template v-if="item.header" slot="header">
+                                <i class="reqI">*</i><span>{{ item.label }}</span>
+                            </template>
                             <template slot-scope="scope">
                                 <el-input v-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
                                 <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" />
@@ -292,7 +295,7 @@
                     // 设置查询表单
                     this.$set(this.queryForm, item.prop, item.defaultValue || '');
                     if (item.type === 'date-interval') {
-                        this.$set(this.queryForm, item.propTwo, item.defaultValue || '');
+                        this.$set(this.queryForm, item.propTwo, item.defaultValueTwo || '');
                     }
                     // 下拉框获取下拉
                     if (item.options) {

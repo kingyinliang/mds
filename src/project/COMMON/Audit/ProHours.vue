@@ -81,6 +81,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, AUDIT_API } from 'common/api/api';
+    import { dateFormat } from 'utils/utils';
 
     @Component({
         components: {
@@ -154,6 +155,7 @@
             {
                 type: 'date-picker',
                 redact: true,
+                header: true,
                 valueFormat: 'yyyy-MM-dd',
                 prop: 'execStartDate',
                 label: '开始日期',
@@ -162,6 +164,7 @@
             {
                 type: 'date-picker',
                 redact: true,
+                header: true,
                 valueFormat: 'yyyy-MM-dd',
                 prop: 'setupFinDate',
                 label: '完成日期',
@@ -172,11 +175,13 @@
                 prop: 'operation',
                 label: '操作活动编号',
                 type: 'input',
+                header: true,
                 redact: true
             },
             {
                 type: 'input',
                 redact: true,
+                header: true,
                 prop: 'finConf',
                 label: '部分/最后确认',
                 width: '120'
@@ -280,6 +285,7 @@
             {
                 type: 'date-interval',
                 label: '生产日期',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
                 prop: 'produceStart',
                 propTwo: 'produceEnd'
             }
@@ -375,6 +381,7 @@
         addOrupdate(row) {
             if (!row.redact) {
                 row.redact = true;
+
             } else {
                 if (!row.execStartDate || !row.setupFinDate || !row.operation || !row.finConf) {
                     this.$warningToast('请填写必填项')
