@@ -83,6 +83,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, AUDIT_API } from 'common/api/api';
+    import { dateFormat } from 'utils/utils';
 
     @Component({
         components: {
@@ -276,7 +277,9 @@
                 type: 'date-interval',
                 label: '生产日期',
                 prop: 'startDate',
-                propTwo: 'endDate'
+                propTwo: 'endDate',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                defaultValueTwo: ''
             }
         ];
 
