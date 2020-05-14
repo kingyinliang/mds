@@ -12,14 +12,17 @@
                 <el-form-item label="人员工号：" prop="workNum">
                     <el-input v-model="dataForm.workNum" placeholder="手动输入" clearable />
                 </el-form-item>
-                <!-- <el-form-item label="虚拟工号：">
-                    <el-input v-model="dataForm.workNumTemp" placeholder="手动输入" clearable />
-                </el-form-item> -->
                 <el-form-item label="人员姓名：" prop="realName">
                     <el-input v-model="dataForm.realName" placeholder="手动输入" auto-complete="off" clearable />
                 </el-form-item>
                 <el-form-item label="用户名：" prop="userName">
                     <el-input v-model="dataForm.userName" placeholder="手动输入" auto-complete="off" clearable />
+                </el-form-item>
+                <el-form-item label="性别：">
+                    <el-select v-model="dataForm.sex" placeholder="请选择">
+                        <el-option label="男" value="M" />
+                        <el-option label="女" value="F" />
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="职务：">
                     <el-input v-model="dataForm.post" placeholder="手动输入" clearable />
@@ -72,6 +75,7 @@ export default {
                 workNum: '',
                 realName: '',
                 userName: '',
+                sex: '',
                 post: '',
                 email: '',
                 phone: ''
@@ -176,6 +180,7 @@ export default {
                                     realName: this.dataForm.realName,
                                     workNum: this.dataForm.workNum,
                                     tempFlag: this.dataForm.tempFlag,
+                                    sex: this.dataForm.sex,
                                     post: this.dataForm.post,
                                     email: this.dataForm.email,
                                     phone: this.dataForm.phone

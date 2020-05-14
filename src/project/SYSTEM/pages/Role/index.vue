@@ -21,8 +21,8 @@
                 </el-row>
                 <el-row>
                     <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
-                        <el-table-column type="index" :index="indexMethod" width="50" align="right" />
+                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" fixed />
+                        <el-table-column type="index" label="序号" :index="indexMethod" width="50" align="right" fixed />
                         <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
                         <el-table-column label="操作" width="">
                             <template slot-scope="scope">

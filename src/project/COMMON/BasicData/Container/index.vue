@@ -7,12 +7,12 @@
                     <el-col class="header_main" style="margin-bottom: 10px;">
                         <el-form :inline="true" :model="controllableForm" size="small" label-width="70px" class="multi_row" @submit.native.prevent>
                             <el-form-item label="归属车间：">
-                                <el-select v-model="controllableForm.deptID" placeholder="请选择">
+                                <el-select v-model="controllableForm.deptID" placeholder="请选择" clearable>
                                     <el-option v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="容器类型：">
-                                <el-select v-model="controllableForm.holderType" placeholder="请选择">
+                                <el-select v-model="controllableForm.holderType" placeholder="请选择" clearable>
                                     <el-option v-for="(item, index) in containerTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                                 </el-select>
                             </el-form-item>
