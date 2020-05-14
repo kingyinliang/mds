@@ -443,7 +443,7 @@ interface FileObject {
 
 .org-img-upload {
     width: 250px;
-    height: 48px;
+    height: 58px;
 
     ::v-deep .el-upload--picture-card {/* stylelint-disable-line */
         width: 60px;
