@@ -96,7 +96,7 @@
                         <el-input
                             v-model="scope.row.material.childUsedAmount"
                             size="small"
-                            placeholder="手工录入1"
+                            placeholder="手工录入"
                             :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')"
                             @focus="GetOldAmount(scope.row)"
                             @blur="PostAmount(scope.row)"
