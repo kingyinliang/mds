@@ -74,7 +74,6 @@ export default {
                 sampleFlag: '0',
                 storageLocation: ''
             },
-            submitType: true,
             dataRule: {
                 deptId: [{ required: true, message: '车间不能为空', trigger: 'blur' }],
                 materialTypeCode: [{ required: true, message: '物料类型不能为空', trigger: 'blur' }],
@@ -93,7 +92,7 @@ export default {
         init(data) {
             if (data) {
                 this.targetID = data.id;
-                this.formatDate = data;
+                this.formatDate = JSON.parse(JSON.stringify(data));
                 this.formatDate.sampleFlag = String(data.sampleFlag);
             } else {
                 this.targetID = '';
@@ -126,16 +125,10 @@ export default {
                             sampleFlag: this.formatDate.sampleFlag,
                             storageLocation: this.formatDate.storageLocation
                     }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.submitType = true;
                             this.isDialogShow = false;
-                            this.$successToast('操作成功');
+                            this.$successToast(data.msg);
                             this.$emit('refreshDataList');
-                        } else {
-                            this.submitType = true;
-                            this.$errorTost(data.msg);
-                        }
-                    })
+                        })
                     } else {
                         COMMON_API.STORAGE_INSERT_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -147,15 +140,9 @@ export default {
                                 sampleFlag: this.formatDate.sampleFlag,
                                 storageLocation: this.formatDate.storageLocation
                         }).then(({ data }) => {
-                            if (data.code === 200) {
-                                this.submitType = true;
                                 this.isDialogShow = false;
-                                this.$successToast('操作成功');
+                                this.$successToast(data.msg);
                                 this.$emit('refreshDataList');
-                            } else {
-                                this.submitType = true;
-                                this.$errorTost(data.msg);
-                            }
                         });
                 }
                 }

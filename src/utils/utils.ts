@@ -1,5 +1,6 @@
 import { RouteConfig } from 'vue-router';
 import { VueRouter } from 'vue-router/types/router';
+import { COMMON_API } from 'common/api/api';
 
 const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
 
@@ -72,7 +73,8 @@ export class AddRoutes {
         for (let i = 0; i < menuList.length; i++) {
             if (menuList[i].list && menuList[i].list.length >= 1) {
                 temp = temp.concat(menuList[i].list);
-            } else if (menuList[i].menuUrl && /\S/.test(menuList[i].menuUrl)) {
+            }
+            if (menuList[i].menuUrl && /\S/.test(menuList[i].menuUrl)) {
                 menuList[i].menuUrl = menuList[i].menuUrl.replace(/^\//, '');
                 const route: RouteConfig = {
                     path: menuList[i].menuUrl.replace(/\//g, '-'),
@@ -179,4 +181,36 @@ export function generateUuid(len: number, radix: number) {
         }
     }
     return uuid.join('');
+}
+
+/**
+ * 获取对象的路径 函数柯里化
+ * @param path 传入路径返回获取这个路径的方法
+ * @param obj 获取哪个对象的参数
+ */
+/* eslint-disable */
+export function creatGetPath(path) {
+    let paths = path.split('.');
+    return function getPath(obj) {
+        let res = obj;
+        let prop;
+        while ((prop = paths.shift())) {
+            res = res[prop];
+        }
+        return res;
+    };
+}
+/* eslint-enable */
+
+export function getS3Img(arrData, imgPath) {
+    const getPath = creatGetPath(imgPath);
+    arrData.forEach(item => {
+        COMMON_API.DOWNLOADFILE_API({
+            key: getPath(item)
+        }).then(({ data }) => {
+            item.img = data.data.url
+            arrData.splice(arrData.length, 0, {});
+            arrData.splice(arrData.length - 1, 1);
+        })
+    })
 }
