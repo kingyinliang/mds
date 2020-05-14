@@ -55,7 +55,7 @@
                 </div>
                 <el-table ref="maintain" header-row-class-name="tableHead" :data="noMaintainList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" :selectable="checkboxT" width="50" />
-                    <el-table-column type="index" width="55" />
+                    <el-table-column type="index" width="55" label="序号" />
                     <el-table-column prop="orderNo" label="生产订单号" :show-overflow-tooltip="true" width="120" />
                     <el-table-column label="品项" :show-overflow-tooltip="true" width="300">
                         <template slot-scope="scope">

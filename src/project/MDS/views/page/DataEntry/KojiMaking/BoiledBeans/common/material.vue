@@ -7,7 +7,7 @@
                 </el-button>
             </template>
             <el-table ref="materialTable" class="newTable" border max-height="267" style="margin-top: 10px;" header-row-class-name="tableHead" :data="materialList" :row-class-name="rowDelFlag">
-                <el-input type="index" />
+                <el-input type="index" label="序号" />
                 <el-table-column width="125px">
                     <template slot="header">
                         <i class="reqI">*</i>
