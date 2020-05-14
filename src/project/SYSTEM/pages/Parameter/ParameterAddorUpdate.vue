@@ -183,11 +183,13 @@ export default {
                             });
                         } else {
                             console.log('参数編輯请求送出')
+                            console.log(this.dataForm);
                             COMMON_API.DICTIONARY_ITEM_UPDATE_API({
                                 factory: this.factory,
                                 dictCode: this.dataForm.dictCode,
                                 dictValue: this.dataForm.dictValue,
-                                dictId: this.dataForm.parentId
+                                dictId: this.dataForm.dictId,
+                                id: this.dataForm.parentId
                             }).then(() => {
                                 this.$emit('refreshChildDataList');
                                 this.dataForm = {};
