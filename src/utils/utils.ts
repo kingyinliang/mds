@@ -202,6 +202,11 @@ export function creatGetPath(path) {
 }
 /* eslint-enable */
 
+/**
+ * S3获取文件路径
+ * @param {string} arrData 数组形式数据
+ * @param {string} imgPath key
+ */
 export function getS3Img(arrData, imgPath) {
     const getPath = creatGetPath(imgPath);
     arrData.forEach(item => {
@@ -213,4 +218,28 @@ export function getS3Img(arrData, imgPath) {
             arrData.splice(arrData.length - 1, 1);
         })
     })
+}
+/**
+ * S3获取文件路径
+ * @param {date} date 时间对象
+ * @param {string} fmt 时间格式
+ */
+export function dateFormat(date, fmt) {
+    const o = {
+        'M+': date.getMonth() + 1,
+        'd+': date.getDate(),
+        'h+': date.getHours(),
+        'm+': date.getMinutes(),
+        's+': date.getSeconds(),
+        'q+': Math.floor((date.getMonth() + 3) / 3),
+        S: date.getMilliseconds()
+    };
+    let fmtTemp;
+    if (/(y+)/.test(fmt)) fmtTemp = fmt.replace(RegExp.$1, String(date.getFullYear()).substr(4 - RegExp.$1.length));
+    for (const k in o) {
+        if (new RegExp('(' + k + ')').test(fmtTemp)) {
+            fmtTemp = fmtTemp.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(String(o[k]).length));
+        }
+    }
+    return fmtTemp;
 }

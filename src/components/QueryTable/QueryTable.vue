@@ -292,7 +292,7 @@
                     // 设置查询表单
                     this.$set(this.queryForm, item.prop, item.defaultValue || '');
                     if (item.type === 'date-interval') {
-                        this.$set(this.queryForm, item.propTwo, item.defaultValue || '');
+                        this.$set(this.queryForm, item.propTwo, item.defaultValueTwo || '');
                     }
                     // 下拉框获取下拉
                     if (item.options) {
