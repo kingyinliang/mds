@@ -38,16 +38,16 @@
                                     增加
                                 </el-button>
                                 <el-table ref="targetInfoList" :data="targetInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                                    <el-table-column type="selection" width="50" />
-                                    <el-table-column type="index" :index="indexMethod" width="40" />
-                                    <el-table-column prop="workNum" label="人员工号" width="100" />
-                                    <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
-                                    <el-table-column prop="realName" label="人员姓名" width="87" />
-                                    <el-table-column prop="deptName" label="所属部门" width="87" :show-overflow-tooltip="true" />
-                                    <el-table-column prop="post" label="职务" :show-overflow-tooltip="true" width="150" />
-                                    <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="true" width="250" />
-                                    <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true" width="112" />
-                                    <el-table-column prop="created" label="创建日期" width="160" />
+                                    <el-table-column type="selection" width="50" fixed />
+                                    <el-table-column type="index" label="序号" :index="indexMethod" width="50" />
+                                    <el-table-column prop="workNum" label="人员工号" width="120" />
+                                    <el-table-column prop="realName" label="人员姓名" width="100" />
+                                    <el-table-column prop="deptName" label="所属部门" width="100" :show-overflow-tooltip="true" />
+                                    <el-table-column prop="sex" label="性别" :show-overflow-tooltip="true" width="60" :formatter="sexFormatter" />
+                                    <el-table-column prop="post" label="职务" :show-overflow-tooltip="true" width="160" />
+                                    <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="true" width="260" />
+                                    <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true" width="120" />
+                                    <el-table-column prop="created" label="创建日期" width="180" />
                                     <el-table-column v-if="targetInfoList.length!==0" label="操作" fixed="right" width="65">
                                         <template slot-scope="scope">
                                             <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
@@ -140,11 +140,13 @@ export default {
                 }
                 this.multipleSelection = [];
                 this.targetInfoList = data.data.records;
+                console.log('22222')
+                console.log(this.targetInfoList)
                 this.targetInfoList.forEach(item => {
-                    if (item.tempFlag === 'Y') {
-                        item.workNumTemp = item.workNum;
-                        item.workNum = '';
-                    }
+                    // if (item.tempFlag === 'Y') {
+                    //     item.workNumTemp = item.workNum;
+                    //     item.workNum = '';
+                    // }
                     item.deptName = item.sysDept.deptName;
                 })
                 this.currPage = data.data.current;
@@ -227,6 +229,16 @@ export default {
         handleCurrentChange(val) {
             this.currPage = val;
             this.getItemsList();
+        },
+        sexFormatter(row, column) {
+            if (row.sex === 'M') {
+                return '男'
+            } else if (row.sex === 'F') {
+                return '女'
+            }
+                return ''
+
+
         }
     }
 };
