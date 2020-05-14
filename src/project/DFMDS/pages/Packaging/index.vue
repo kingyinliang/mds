@@ -219,8 +219,8 @@
         &__main {
             display: flex;
             &__left {
-                min-width: 140px;
                 width: 160px;
+                min-width: 140px;
                 height: 200px;
                 overflow: hidden;
                 border-radius: 8px;
