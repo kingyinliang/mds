@@ -13,6 +13,15 @@
             <template slot="1" slot-scope="data">
                 <ready-time ref="readytime" :is-redact="data.isRedact" />
             </template>
+            <template slot="2" slot-scope="data">
+                <product-people ref="productPeople" :is-redact="data.isRedact" />
+            </template>
+            <template slot="6" slot-scope="data">
+                <pending-num ref="PendingNum" :is-redact="data.isRedact" />
+            </template>
+            <template slot="7" slot-scope="data">
+                <text-record ref="PendingNum" :is-redact="data.isRedact" />
+            </template>
         </data-entry>
     </div>
 </template>
@@ -20,10 +29,16 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import ReadyTime from './common/readyTimes';
+    import ProductPeople from './common/productPeople';
+    import PendingNum from './common/pendingNum';
+    import TextRecord from './common/textRecord';
 
     @Component({
         components: {
-            ReadyTime
+            ReadyTime,
+            ProductPeople,
+            PendingNum,
+            TextRecord
         }
     })
     export default class PackagingDetail extends Vue {
