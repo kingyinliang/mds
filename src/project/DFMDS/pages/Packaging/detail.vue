@@ -13,6 +13,9 @@
             <template slot="1" slot-scope="data">
                 <ready-time ref="readytime" :is-redact="data.isRedact" />
             </template>
+            <template slot="5" slot-scope="data">
+                <material ref="material" :is-redact="data.isRedact" />
+            </template>
         </data-entry>
     </div>
 </template>
@@ -20,10 +23,12 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import ReadyTime from './common/readyTimes.vue';
+    import Material from './common/Material.vue';
 
     @Component({
         components: {
-            ReadyTime
+            ReadyTime,
+            Material
         }
     })
     export default class PackagingDetail extends Vue {
