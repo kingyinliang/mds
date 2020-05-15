@@ -230,7 +230,7 @@ export default {
             this.currPage = val;
             this.getItemsList();
         },
-        sexFormatter(row, column) {
+        sexFormatter(row) {
             if (row.sex === 'M') {
                 return '男'
             } else if (row.sex === 'F') {
