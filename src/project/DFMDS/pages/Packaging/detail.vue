@@ -28,10 +28,10 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import ReadyTime from './common/readyTimes';
-    import ProductPeople from './common/productPeople';
-    import PendingNum from './common/pendingNum';
-    import TextRecord from './common/textRecord';
+    import ReadyTime from './common/readyTimes.vue';
+    import ProductPeople from './common/productPeople.vue';
+    import PendingNum from './common/pendingNum.vue';
+    import TextRecord from './common/textRecord.vue';
 
     @Component({
         components: {

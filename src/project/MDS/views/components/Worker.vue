@@ -37,7 +37,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="人员选择" :show-overflow-tooltip="true" width="300">
+                <el-table-column label="人员选择" :show-overflow-tooltip="true">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>人员选择</span>
