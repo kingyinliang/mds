@@ -9,7 +9,9 @@
 .marginL10px {
     margin-left: 10px;
 }
-
+.floatr {
+    float: right;
+}
 .textAlignR {
     text-align: right;
 }
@@ -39,6 +41,10 @@
     display: block;
     margin: auto;
     margin-bottom: 15px;
+}
+
+.el-form-item{
+    margin-bottom: 10px !important;
 }
 
 //bass scss
@@ -1064,6 +1070,7 @@
                     font-size: 14px !important;
                     font-weight: bold;
                     float: left;
+                    width: 100%;
                     .title-icon {
                         float: left;
                         width: 4px;
@@ -1072,7 +1079,21 @@
                         border-radius: 2px;
                         margin-top: 10px;
                         margin-right: 5px;
-                    }
+                    };
+                    .point-icon {
+                        float: left;
+                        width: 5px;
+                        height: 5px;
+                        background: #487bff;
+                        border-radius: 3px;
+                        margin-top: 13px;
+                        margin-right: 5px;
+                    };
+                    .formS {
+                        float: right;
+                        width: 500px;
+                        text-align: right;
+                    };
                 }
             }
             &-show-hidden {

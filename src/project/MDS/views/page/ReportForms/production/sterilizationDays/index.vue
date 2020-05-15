@@ -129,16 +129,16 @@ export default {
                 if (index === 0) {
                     spanOneArr.push(1);
                 } else if (item.materialH === '') {
-                        spanOneArr.push(1);
-                        concatOne = index;
-                    } else if (item.materialH === tableData[index - 1].materialH) {
-                        // 第一列需合并相同内容的判断条件
-                        spanOneArr[concatOne] += 1;
-                        spanOneArr.push(0);
-                    } else {
-                        spanOneArr.push(1);
-                        concatOne = index;
-                    }
+                    spanOneArr.push(1);
+                    concatOne = index;
+                } else if (item.materialH === tableData[index - 1].materialH) {
+                    // 第一列需合并相同内容的判断条件
+                    spanOneArr[concatOne] += 1;
+                    spanOneArr.push(0);
+                } else {
+                    spanOneArr.push(1);
+                    concatOne = index;
+                }
             });
             Num === 1 ? (this.spanOneArr1 = spanOneArr) : (this.spanOneArr2 = spanOneArr);
         },
