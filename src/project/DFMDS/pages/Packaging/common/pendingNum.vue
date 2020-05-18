@@ -112,12 +112,12 @@ export default class PendingNum extends Vue {
     addRow() {
         const sole: ValueObject = {
             classes: '',
-            onlineBad: '',
-            pressMaterial: '',
-            sealingPlug: '',
-            wasteSauce: '',
-            deviceLoss: '',
-            other: '',
+            onlineBad: 0,
+            pressMaterial: 0,
+            sealingPlug: 0,
+            wasteSauce: 0,
+            deviceLoss: 0,
+            other: 0,
             remark: '',
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             changer: sessionStorage.getItem('realName') + `(${sessionStorage.getItem('userName')})`,
@@ -145,7 +145,7 @@ export default class PendingNum extends Vue {
 
     get computedSoy() {
         let Soynum = 0;
-        this.DataList.map((item) => {
+        this.DataList.map((item: ValueObject) => {
             if (item.delFlag === 0) {
                 Soynum = accAdd(Soynum, accAdd(accAdd(item.onlineBad, item.pressMaterial), item.sealingPlug));
             }
@@ -155,7 +155,7 @@ export default class PendingNum extends Vue {
 
     get computedScrap() {
         let ScrapNum = 0;
-        this.DataList.map((item) => {
+        this.DataList.map((item: ValueObject) => {
             if (item.delFlag === 0) {
                 ScrapNum = accAdd(ScrapNum, accAdd(item.wasteSauce, item.deviceLoss));
             }
