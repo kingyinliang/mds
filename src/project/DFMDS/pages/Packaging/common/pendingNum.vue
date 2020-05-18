@@ -112,12 +112,12 @@ export default class PendingNum extends Vue {
     addRow() {
         const sole: ValueObject = {
             classes: '',
-            onlineBad: 0,
-            pressMaterial: 0,
-            sealingPlug: 0,
-            wasteSauce: 0,
-            deviceLoss: 0,
-            other: 0,
+            onlineBad: '',
+            pressMaterial: '',
+            sealingPlug: '',
+            wasteSauce: '',
+            deviceLoss: '',
+            other: '',
             remark: '',
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             changer: getUserNameNumber(),
