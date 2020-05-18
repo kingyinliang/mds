@@ -1,4 +1,4 @@
-import httpProxy from 'utils/net/httpProxy';
+// import httpProxy from 'utils/net/httpProxy';
 import axios from 'axios';
 
 export default class TransmitDataToAPI {
