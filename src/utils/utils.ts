@@ -330,3 +330,6 @@ export function accDiv(arg1, arg2) {
 export function DeepClone(str) {
     return JSON.parse(JSON.stringify(str));
 }
+export function getUserNameNumber() {
+    return sessionStorage.getItem('realName') + `(${sessionStorage.getItem('userName')})`;
+}
