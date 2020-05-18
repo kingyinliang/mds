@@ -22,6 +22,9 @@
             <template slot="7" slot-scope="data">
                 <text-record ref="PendingNum" :is-redact="data.isRedact" />
             </template>
+            <template slot="5" slot-scope="data">
+                <material ref="material" :is-redact="data.isRedact" />
+            </template>
         </data-entry>
     </div>
 </template>
@@ -29,6 +32,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import ReadyTime from './common/readyTimes.vue';
+    import Material from './common/Material.vue';
     import ProductPeople from './common/productPeople.vue';
     import PendingNum from './common/pendingNum.vue';
     import TextRecord from './common/textRecord.vue';
@@ -38,7 +42,8 @@
             ReadyTime,
             ProductPeople,
             PendingNum,
-            TextRecord
+            TextRecord,
+            Material
         }
     })
     export default class PackagingDetail extends Vue {

@@ -99,7 +99,7 @@ import { COMMON_API } from 'common/api/api';
 })
 
 
-export default class OrgView extends Vue {
+export default class Index extends Vue {
 
     title='数据字典'
 
@@ -128,217 +128,217 @@ export default class OrgView extends Vue {
         this.getFactoryList();
     }
 
-        // 获取类型
-        getParentItemsList(haveParas: boolean): void {
-            if (haveParas) {
-                this.currPageFromParent = 1;
-            }
-            const parasObj = {
-                factory: this.factoryForSearch,
-                typeOrName: this.stringForSearch,
-                current: this.currPageFromParent,
-                size: this.pageSizeFromParent
-            }
-            COMMON_API.DICTIONARY_QUERY_API(parasObj).then(({ data }) => {
-                this.isFocusChild = false; // 判断左右边 focus
-                this.targetInfoList = data.data.records; // parent table data
-                this.targetParameterList = []; // child table data
-                // this.preDaraArray = parasObj;
-                this.totalCountFromParent = data.data.total;
-                this.currPageFromParent = data.data.current;
-                this.pageSizeFromParent = data.data.size;
-
-            });
-        }
-
-        // 获取类型
-        getreParentItemsList(): void {
+    // 获取类型
+    getParentItemsList(haveParas: boolean): void {
+        if (haveParas) {
             this.currPageFromParent = 1;
-            const parasObj = {
-                factory: '',
-                typeOrName: this.stringForSearch,
-                current: this.currPageFromParent,
-                size: this.pageSizeFromParent
-            }
-            COMMON_API.DICTIONARY_QUERY_API(parasObj).then(({ data }) => {
-                this.isFocusChild = false; // 判断左右边 focus
-                this.targetInfoList = data.data.records; // parent table data
-                this.targetParameterList = []; // child table data
-                // this.preDaraArray = parasObj;
-                this.totalCountFromParent = data.data.total;
-                this.currPageFromParent = data.data.current;
-                this.pageSizeFromParent = data.data.size;
+        }
+        const parasObj = {
+            factory: this.factoryForSearch,
+            typeOrName: this.stringForSearch,
+            current: this.currPageFromParent,
+            size: this.pageSizeFromParent
+        }
+        COMMON_API.DICTIONARY_QUERY_API(parasObj).then(({ data }) => {
+            this.isFocusChild = false; // 判断左右边 focus
+            this.targetInfoList = data.data.records; // parent table data
+            this.targetParameterList = []; // child table data
+            // this.preDaraArray = parasObj;
+            this.totalCountFromParent = data.data.total;
+            this.currPageFromParent = data.data.current;
+            this.pageSizeFromParent = data.data.size;
+
+        });
+    }
+
+    // 获取类型
+    getreParentItemsList(): void {
+        this.currPageFromParent = 1;
+        const parasObj = {
+            factory: '',
+            typeOrName: this.stringForSearch,
+            current: this.currPageFromParent,
+            size: this.pageSizeFromParent
+        }
+        COMMON_API.DICTIONARY_QUERY_API(parasObj).then(({ data }) => {
+            this.isFocusChild = false; // 判断左右边 focus
+            this.targetInfoList = data.data.records; // parent table data
+            this.targetParameterList = []; // child table data
+            // this.preDaraArray = parasObj;
+            this.totalCountFromParent = data.data.total;
+            this.currPageFromParent = data.data.current;
+            this.pageSizeFromParent = data.data.size;
+        });
+
+    }
+
+    // 参数类型删除
+    removeItems(row): void {
+        console.log('删除')
+        console.log(row)
+        if (!row.dictId) { // 删除参数类型
+            this.$confirm('确认删除参数类型, 是否继续?', '删除参数类型', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                COMMON_API.DICTIONARY_DELETE_API({
+                    factory: this.factory,
+                    ids: [row.id]
+                }).then(() => {
+                    this.getParentItemsList(true);
+                });
+
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
             });
-
-        }
-
-        // 参数类型删除
-        removeItems(row): void {
-            console.log('删除')
-            console.log(row)
-            if (!row.dictId) { // 删除参数类型
-                this.$confirm('确认删除参数类型, 是否继续?', '删除参数类型', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
+        } else {
+            this.$confirm('确认删除参数, 是否继续?', '删除参数', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                COMMON_API.DICTIONARY_ITEM_DELETE_API({
+                    factory: this.factory,
+                    ids: [row.id]
                 }).then(() => {
-                    COMMON_API.DICTIONARY_DELETE_API({
-                        factory: this.factory,
-                        ids: [row.id]
-                    }).then(() => {
-                        this.getParentItemsList(true);
-                    });
-
-                }).catch(() => {
-                    // this.$infoTost('已取消删除');
+                    this.getreChildItemList(); //需确认
                 });
-            } else {
-                this.$confirm('确认删除参数, 是否继续?', '删除参数', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    COMMON_API.DICTIONARY_ITEM_DELETE_API({
-                        factory: this.factory,
-                        ids: [row.id]
-                    }).then(() => {
-                        this.getreChildItemList(); //需确认
-                    });
 
-                }).catch(() => {
-                    // this.$infoTost('已取消删除');
-                });
-            }
-
-
+            }).catch(() => {
+                // this.$infoTost('已取消删除');
+            });
         }
 
-        //  设置类型參數
-        getChildItemListFromChange(): void {
 
-                    COMMON_API.DICTIONARY_ITEM_QUERY_API({
-                        // factory: this.tempParentRow.factory,
-                        dictId: this.tempParentRow.id,
-                        size: this.pageSize,
-                        current: this.currPage
-                    }).then(({ data }) => {
-                        this.isFocusChild = true;
-                        // this.currentFocusChildRow = row.id;
-                        console.log('我是清单回传值')
-                        if (data.data.records.length !== 0) {
-                            this.targetParameterList = data.data.records;
-                        } else {
-                            this.targetParameterList = [];
-                        }
-                        this.totalCount = data.data.total;
-                        this.currPage = data.data.current;
-                        this.pageSize = data.data.size;
-                    });
-        }
+    }
 
-        getChildItemList(row, col): void {
-            if (row) {
-                this.currPage = 1;
-            }
-            if (col.label !== '操作') { //  操作栏位点击无用
-                if (this.currentFocusChildRow !== row.id) { // 避免同 row 重复点击
-                    if (row) {
-                        this.tempParentRow = {};
-                        this.tempParentRow = row;
+    //  设置类型參數
+    getChildItemListFromChange(): void {
+
+                COMMON_API.DICTIONARY_ITEM_QUERY_API({
+                    // factory: this.tempParentRow.factory,
+                    dictId: this.tempParentRow.id,
+                    size: this.pageSize,
+                    current: this.currPage
+                }).then(({ data }) => {
+                    this.isFocusChild = true;
+                    // this.currentFocusChildRow = row.id;
+                    console.log('我是清单回传值')
+                    if (data.data.records.length !== 0) {
+                        this.targetParameterList = data.data.records;
+                    } else {
+                        this.targetParameterList = [];
                     }
-                    this.factoryList.forEach((item: FactoryListObject) => {
-                        if (item.deptName === row.factoryName) {
-                            this.factory = item.id
-                        }
-                    })
-                    COMMON_API.DICTIONARY_ITEM_QUERY_API({
-                        // factory: this.tempParentRow.factory,
-                        dictId: this.tempParentRow.id,
-                        size: this.pageSize,
-                        current: this.currPage
-                    }).then(({ data }) => {
-                        this.isFocusChild = true;
-                        this.currentFocusChildRow = row.id;
-                        console.log('我是清单回传值')
-                        if (data.data.records.length !== 0) {
-                            this.targetParameterList = data.data.records;
-                        } else {
-                            this.targetParameterList = [];
-                        }
-                        this.totalCount = data.data.total;
-                        this.currPage = data.data.current;
-                        this.pageSize = data.data.size;
-                    });
+                    this.totalCount = data.data.total;
+                    this.currPage = data.data.current;
+                    this.pageSize = data.data.size;
+                });
+    }
+
+    getChildItemList(row, col): void {
+        if (row) {
+            this.currPage = 1;
+        }
+        if (col.label !== '操作') { //  操作栏位点击无用
+            if (this.currentFocusChildRow !== row.id) { // 避免同 row 重复点击
+                if (row) {
+                    this.tempParentRow = {};
+                    this.tempParentRow = row;
                 }
+                this.factoryList.forEach((item: FactoryListObject) => {
+                    if (item.deptName === row.factoryName) {
+                        this.factory = item.id
+                    }
+                })
+                COMMON_API.DICTIONARY_ITEM_QUERY_API({
+                    // factory: this.tempParentRow.factory,
+                    dictId: this.tempParentRow.id,
+                    size: this.pageSize,
+                    current: this.currPage
+                }).then(({ data }) => {
+                    this.isFocusChild = true;
+                    this.currentFocusChildRow = row.id;
+                    console.log('我是清单回传值')
+                    if (data.data.records.length !== 0) {
+                        this.targetParameterList = data.data.records;
+                    } else {
+                        this.targetParameterList = [];
+                    }
+                    this.totalCount = data.data.total;
+                    this.currPage = data.data.current;
+                    this.pageSize = data.data.size;
+                });
             }
         }
+    }
 
-        getreChildItemList(): void {
-            this.currPage = 1;
-            this.currentFocusChildRow = ''
-            COMMON_API.DICTIONARY_ITEM_QUERY_API({
-                // factory: this.tempParentRow.factory,
-                dictId: this.tempParentRow.id,
-                size: this.pageSize,
-                current: this.currPage
-            }).then(({ data }) => {
-                this.isFocusChild = true;
-                if (data.data.records.length !== 0) {
-                    this.targetParameterList = data.data.records;
-                } else {
-                    this.targetParameterList = [];
-                }
-                this.totalCount = data.data.total;
-                this.currPage = data.data.current;
-                this.pageSize = data.data.size;
-            });
-        }
+    getreChildItemList(): void {
+        this.currPage = 1;
+        this.currentFocusChildRow = ''
+        COMMON_API.DICTIONARY_ITEM_QUERY_API({
+            // factory: this.tempParentRow.factory,
+            dictId: this.tempParentRow.id,
+            size: this.pageSize,
+            current: this.currPage
+        }).then(({ data }) => {
+            this.isFocusChild = true;
+            if (data.data.records.length !== 0) {
+                this.targetParameterList = data.data.records;
+            } else {
+                this.targetParameterList = [];
+            }
+            this.totalCount = data.data.total;
+            this.currPage = data.data.current;
+            this.pageSize = data.data.size;
+        });
+    }
 
-        // 新增  修改
-        addOrUpdateItem(parasLevel, parentItem = {}, targetItem = {}): void {
-            this.isDialogShow = true;
-            this.$nextTick(() => {
-                this.$refs.addOrUpdateItem.init(parasLevel, parentItem, targetItem);
-            });
-        }
+    // 新增  修改
+    addOrUpdateItem(parasLevel, parentItem = {}, targetItem = {}): void {
+        this.isDialogShow = true;
+        this.$nextTick(() => {
+            this.$refs.addOrUpdateItem.init(parasLevel, parentItem, targetItem);
+        });
+    }
 
-        // 获取工厂
-        getFactoryList(): void {
-            COMMON_API.ORG_QUERY_WORKSHOP_API({ deptType: ['factory'] }).then(({ data }) => {
-                this.factoryList = data.data;
-                this.factoryList.push({
-                    deptCode: 'common',
-                    deptName: '共用字段',
-                    deptShort: '共用字段',
-                    deptType: 'FACTORY',
-                    id: 'common'
-                })
-            });
-        }
+    // 获取工厂
+    getFactoryList(): void {
+        COMMON_API.ORG_QUERY_WORKSHOP_API({ deptType: ['factory'] }).then(({ data }) => {
+            this.factoryList = data.data;
+            this.factoryList.push({
+                deptCode: 'common',
+                deptName: '共用字段',
+                deptShort: '共用字段',
+                deptType: 'FACTORY',
+                id: 'common'
+            })
+        });
+    }
 
-        // 改变每页条数
-        handlePageSizeChangeFromMain(val: number): void {
-            this.pageSizeFromParent = val;
-            this.getParentItemsList(false);
-        }
+    // 改变每页条数
+    handlePageSizeChangeFromMain(val: number): void {
+        this.pageSizeFromParent = val;
+        this.getParentItemsList(false);
+    }
 
-        // 跳转页数
-        handleCurrentPageChangeFromMain(val: number): void {
-            this.currPageFromParent = val;
-            this.getParentItemsList(false);
-        }
+    // 跳转页数
+    handleCurrentPageChangeFromMain(val: number): void {
+        this.currPageFromParent = val;
+        this.getParentItemsList(false);
+    }
 
-        // 改变每页条数
-        handlePageSizeChange(val: number): void {
-            this.pageSize = val;
-            this.getChildItemListFromChange();
-        }
+    // 改变每页条数
+    handlePageSizeChange(val: number): void {
+        this.pageSize = val;
+        this.getChildItemListFromChange();
+    }
 
-        // 跳转页数
-        handleCurrentPageChange(val: number): void {
-            this.currPage = val;
-            this.getChildItemListFromChange();
-        }
+    // 跳转页数
+    handleCurrentPageChange(val: number): void {
+        this.currPage = val;
+        this.getChildItemListFromChange();
+    }
 }
 
 interface TempParentRowObject {
