@@ -91,7 +91,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { dateFormat, accAdd } from 'utils/utils';
+import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
 
 @Component({})
 
@@ -106,7 +106,7 @@ export default class PendingNum extends Vue {
         }
     ]
 
-    DataList: object[] = [];
+    DataList: ValueObject[] = [];
     ReadAudit = []
 
     addRow() {
@@ -120,7 +120,7 @@ export default class PendingNum extends Vue {
             other: 0,
             remark: '',
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-            changer: sessionStorage.getItem('realName') + `(${sessionStorage.getItem('userName')})`,
+            changer: getUserNameNumber(),
             delFlag: 0
         }
         this.DataList.push(sole);
@@ -172,12 +172,12 @@ export default class PendingNum extends Vue {
 
 interface ValueObject {
     classes?: string;
-    onlineBad?: number;
-    pressMaterial?: number;
-    sealingPlug?: number;
-    wasteSauce?: number;
-    deviceLoss?: number;
-    other?: number;
+    onlineBad?: string;
+    pressMaterial?: string;
+    sealingPlug?: string;
+    wasteSauce?: string;
+    deviceLoss?: string;
+    other?: string;
     remark?: string;
     changed?: string;
     changer?: string;
