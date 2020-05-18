@@ -7,7 +7,7 @@
                     <div class="item-title">
                         <p class="item-title-p">
                             {{ item.deptShort }}
-                            <el-radio v-model="defaultFactory" :label="item.deptCode" @change="setFactory" style="float: right;">
+                            <el-radio v-model="defaultFactory" :label="item.deptCode" style="float: right;" @change="setFactory">
                                 {{ '默认' }}
                             </el-radio>
                         </p>
@@ -62,7 +62,7 @@
 
         init() {
             this.factoryVisible = true;
-            this.defaultFactory = sessionStorage.getItem('defaultFactory');
+            this.defaultFactory = sessionStorage.getItem('defaultFactory') || '';
             this.factory = JSON.parse(sessionStorage.getItem('userFactory') || '[]')
         }
 
