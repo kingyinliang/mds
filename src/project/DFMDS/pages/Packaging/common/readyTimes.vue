@@ -1,6 +1,13 @@
 <template>
     <div>
-        <mds-card :title="'准备工时(单位：min)'" :name="'readyTimes'" :mds-card-form="mdsCardForm" @get-return-data="setData">
+        <mds-card :title="'准备工时(单位：min)'" :name="'readyTimes'">
+            <template slot="titleBtn">
+                <div style="float: right;">
+                    <el-select v-model="readyType" size="small">
+                        <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
+                    </el-select>
+                </div>
+            </template>
             <div v-if="readyType === '白班' || readyType === '多班'" class="marginL10px">
                 <div class="box-card-title clearfix">
                     <h3><i class="point-icon" />白班</h3>
@@ -160,41 +167,27 @@ export default {
     props: {},
     data() {
         return {
-            readyType: '白班',
-            mdsCardForm: [
+            classList: [
                 {
-                    type: 'select',
-                    labelName: '班次：',
-                    sole: 'classes',
-                    dataList: [
-                        {
-                            name: '白班',
-                            value: '白班'
-                        }, {
-                            name: '中班',
-                            value: '中班'
-                        }, {
-                            name: '夜班',
-                            value: '夜班'
-                        }, {
-                            name: '多班',
-                            value: '多班'
-                        }
-                    ],
-                    soleForm: {
-                        classes: '白班'
-                    },
-                    defaultValue: '白班'
+                    name: '白班',
+                    value: '白班'
+                }, {
+                    name: '中班',
+                    value: '中班'
+                }, {
+                    name: '夜班',
+                    value: '夜班'
+                }, {
+                    name: '多班',
+                    value: '多班'
                 }
             ],
+            readyType: '白班',
             formInline: {},
             ReadAudit: []
         }
     },
     methods: {
-        setData(data) {
-            this.readyType = data;
-        }
     }
 }
 </script>

@@ -5,16 +5,16 @@
                 <el-row class="textAlignR">
                     <el-form :inline="true" :model="formHeader" size="small">
                         <el-form-item>
-                            <el-input v-model="formHeader.orderNo" placeholder="订单号" suffix-icon="el-icon-search" />
+                            <el-input v-model.trim="formHeader.orderNo" placeholder="订单号" suffix-icon="el-icon-search" />
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" size="small" @click="GetDataList(true)">
+                            <el-button type="primary" size="small" @click="getDataList(true)">
                                 查询
                             </el-button>
                             <el-button type="primary" size="small" @click="visible = true">
                                 高级查询
                             </el-button>
-                            <el-button type="primary" size="small" @click="SapOrderUpdate()">
+                            <el-button type="primary" size="small" @click="sapOrderUpdate()">
                                 订单同步
                             </el-button>
                         </el-form-item>
@@ -44,13 +44,13 @@
             <el-dialog title="高级查询" width="500px" :close-on-click-modal="false" :visible.sync="visible">
                 <el-form :model="formHeader" size="small" label-width="110px" class="orderMangedialog">
                     <el-form-item label="生产订单：">
-                        <el-input v-model="formHeader.orderNo" placeholder="手工录入" style="width: 325px;" />
+                        <el-input v-model.trim="formHeader.orderNo" placeholder="手工录入" style="width: 325px;" />
                     </el-form-item>
                     <el-form-item label="生产物料：">
-                        <el-input v-model="formHeader.material" placeholder="手工录入" style="width: 325px;" />
+                        <el-input v-model.trim="formHeader.material" placeholder="手工录入" style="width: 325px;" />
                     </el-form-item>
                     <el-form-item label="生产调度员：">
-                        <el-input v-model="formHeader.dispatchMan" placeholder="手工录入" style="width: 325px;" />
+                        <el-input v-model.trim="formHeader.dispatchMan" placeholder="手工录入" style="width: 325px;" />
                     </el-form-item>
                     <el-form-item label="基本开始日期：" class="times">
                         <el-row>
@@ -77,73 +77,88 @@
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button size="small" @click="visible = false">取消</el-button>
-                    <el-button type="primary" size="small" @click="GetDataList(true)">确定</el-button>
+                    <el-button type="primary" size="small" @click="getDataList(true)">确定</el-button>
                 </span>
             </el-dialog>
         </div>
     </el-col>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
 import { COMMON_API } from 'common/api/api';
-export default {
-    name: 'OrderManage',
-    data() {
-        return {
-            totalCount: 0,
-            formHeader: {
-                orderNo: '',
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                material: '',
-                dispatchMan: '',
-                orderStartDateBegin: '',
-                orderStartDateEnd: '',
-                orderEndDateBegin: '',
-                orderEndDateEnd: '',
-                current: 1,
-                size: 10
-            },
-            factory: [],
-            dataList: [],
-            visible: false
-        };
-    },
-    methods: {
-        GetDataList(st) {
-            if (st === true) {
-                this.formHeader.current = 1;
-            }
-            COMMON_API.ORDER_QUERY_API(this.formHeader).then(({ data }) => {
-                this.visible = false;
-                if (data.code === 200) {
-                    this.dataList = data.data.records
-                    this.totalCount = data.data.total
-                    if (data.data.records.length === 0) {
-                        this.$infoToast('该搜寻条件无任何资料！');
-                    }
-                }
-            });
-        },
-        SapOrderUpdate() {
-            COMMON_API.OREDER_SYNC_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                incremental: true
-            }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.$successToast('同步成功');
-                    this.GetDataList(true);
-                }
-            })
-        },
-        handleSizeChange(val) {
-            this.formHeader.size = val;
-            this.GetDataList();
-        },
-        handleCurrentChange(val) {
-            this.formHeader.current = val;
-            this.GetDataList();
+
+@Component({})
+
+export default class OrderManage extends Vue {
+    formHeader: ValueObject = {
+        orderNo: '',
+        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+        material: '',
+        dispatchMan: '',
+        orderStartDateBegin: '',
+        orderStartDateEnd: '',
+        orderEndDateBegin: '',
+        orderEndDateEnd: '',
+        current: 1,
+        size: 10
+    };
+
+    totalCount = 0;
+    factory = [];
+    dataList = [];
+    visible = false;
+
+    getDataList(st?) {
+        if (st === true) {
+            this.formHeader.current = 1;
         }
+        COMMON_API.ORDER_QUERY_API(this.formHeader).then(({ data }) => {
+            this.visible = false;
+            if (data.code === 200) {
+                this.dataList = data.data.records;
+                this.totalCount = data.data.total;
+                if (data.data.records.length === 0) {
+                    this.$infoToast('该搜寻条件无任何资料！');
+                }
+            }
+        });
     }
+
+    sapOrderUpdate() {
+        COMMON_API.OREDER_SYNC_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            incremental: true
+        }).then(({ data }) => {
+            if (data.code === 200) {
+                this.$successToast('同步成功');
+                this.getDataList(true);
+            }
+        })
+    }
+
+    handleSizeChange(val) {
+        this.formHeader.size = val;
+        this.getDataList();
+    }
+
+    handleCurrentChange(val) {
+        this.formHeader.current = val;
+        this.getDataList();
+    }
+}
+
+interface ValueObject {
+    orderNo?: string;
+    factory?: string;
+    material?: string;
+    dispatchMan?: string;
+    orderStartDateBegin?: string;
+    orderStartDateEnd?: string;
+    orderEndDateBegin?: string;
+    orderEndDateEnd?: string;
+    current?: number;
+    size?: number;
 }
 </script>
 

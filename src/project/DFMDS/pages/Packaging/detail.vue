@@ -20,7 +20,7 @@
                 <pending-num ref="PendingNum" :is-redact="data.isRedact" />
             </template>
             <template slot="7" slot-scope="data">
-                <text-record ref="PendingNum" :is-redact="data.isRedact" />
+                <text-record ref="textRecord" :is-redact="data.isRedact" />
             </template>
             <template slot="5" slot-scope="data">
                 <material ref="material" :is-redact="data.isRedact" />

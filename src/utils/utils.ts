@@ -243,3 +243,93 @@ export function dateFormat(date, fmt) {
     }
     return fmtTemp;
 }
+// 浮点型加法函数
+export function accAdd(arg1, arg2) {
+    let r1, r2, argTemp1, argTemp2;
+    try {
+        r1 = arg1.toString().split('.')[1].length;
+    } catch (e) {
+        r1 = 0;
+    }
+    try {
+        r2 = arg2.toString().split('.')[1].length;
+    } catch (e) {
+        r2 = 0;
+    }
+    const c = Math.abs(r1 - r2);
+    const m = Math.pow(10, Math.max(r1, r2));
+    if (c > 0) {
+        const cm = Math.pow(10, c);
+        if (r1 > r2) {
+            argTemp1 = Number(arg1.toString().replace('.', ''));
+            argTemp2 = Number(arg2.toString().replace('.', '')) * cm;
+        } else {
+            argTemp1 = Number(arg1.toString().replace('.', '')) * cm;
+            argTemp2 = Number(arg2.toString().replace('.', ''));
+        }
+    } else {
+        argTemp1 = Number(arg1.toString().replace('.', ''));
+        argTemp2 = Number(arg2.toString().replace('.', ''));
+    }
+    return (argTemp1 + argTemp2) / m;
+}
+// 浮点型乘法
+export function accMul(arg1, arg2) {
+    let m = 0;
+    const s1 = arg1.toString();
+    const s2 = arg2.toString();
+    try {
+        m += s1.split('.')[1].length;
+    } catch (e) {
+        //
+    }
+    try {
+        m += s2.split('.')[1].length;
+    } catch (e) {
+        //
+    }
+    return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / Math.pow(10, m);
+}
+// 浮点型减法
+export function accSub(arg1, arg2) {
+    let r1;
+    let r2;
+    try {
+        r1 = arg1.toString().split('.')[1].length;
+    } catch (e) {
+        r1 = 0;
+    }
+    try {
+        r2 = arg2.toString().split('.')[1].length;
+    } catch (e) {
+        r2 = 0;
+    }
+    const m = Math.pow(10, Math.max(r1, r2)); // last modify by deeka //动态控制精度长度
+    const n = r1 >= r2 ? r1 : r2;
+    return ((arg1 * m - arg2 * m) / m).toFixed(n);
+}
+// 浮点型除法函数
+export function accDiv(arg1, arg2) {
+    let t1 = 0;
+    let t2 = 0;
+    try {
+        t1 = arg1.toString().split('.')[1].length;
+    } catch (e) {
+        //
+    }
+    try {
+        t2 = arg2.toString().split('.')[1].length;
+    } catch (e) {
+        //
+    }
+    const r1 = Number(arg1.toString().replace('.', ''));
+    const r2 = Number(arg2.toString().replace('.', ''));
+    return (r1 / r2) * Math.pow(10, t2 - t1);
+}
+// 深克隆
+export function DeepClone(str) {
+    return JSON.parse(JSON.stringify(str));
+}
+export function getUserNameNumber() {
+    return sessionStorage.getItem('realName') + `(${sessionStorage.getItem('userName')})`;
+}
