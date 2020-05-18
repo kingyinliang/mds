@@ -1,6 +1,6 @@
 <template>
     <el-dialog :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" :visible.sync="visible">
-        <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="120px" @keyup.enter.native="dataFormSubmit()">
+        <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="120px" size="small" @keyup.enter.native="dataFormSubmit()">
             <el-form-item label="类型" prop="menuType">
                 <el-radio-group v-model="dataForm.menuType">
                     <el-radio v-for="(subType, index) in typeList" :key="index" :label="subType.key" :value="subType.key">
@@ -11,7 +11,7 @@
             <el-form-item label="工厂" prop="deptIdList">
                 <el-checkbox-group v-model="dataForm.deptIdList">
                     <el-checkbox v-for="(item, index) in factory" :key="index" :label="item.id" name="factory">
-                        {{ item.deptName }}
+                        {{ item.deptShort }}
                     </el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
@@ -46,7 +46,7 @@
             </el-form-item>
             <el-form-item v-if="dataForm.type !== 'B'" label="菜单图标">
                 <el-row>
-                    <el-col :span="22">
+                    <el-col :span="24">
                         <el-popover ref="iconListPopover" placement="bottom-start" trigger="click" popper-class="mod-menu__icon-popover">
                             <div class="mod-menu__icon-list">
                                 <el-button
@@ -66,6 +66,9 @@
                         <el-input v-model="dataForm.menuIcon" v-popover:iconListPopover :readonly="true" placeholder="菜单图标名称" class="icon-list__input" />
                     </el-col>
                 </el-row>
+            </el-form-item>
+            <el-form-item label="备注">
+                <el-input v-model="dataForm.remark" />
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -145,7 +148,8 @@ export default class MenuAdd extends Vue {
         menuUrl: '',
         permission: '',
         menuOrder: 0,
-        menuIcon: ''
+        menuIcon: '',
+        remark: ''
     }
 
     dataRule = {
@@ -228,7 +232,8 @@ export default class MenuAdd extends Vue {
                         menuUrl: '',
                         permission: '',
                         menuOrder: 0,
-                        menuIcon: ''
+                        menuIcon: '',
+                        remark: ''
                     }
                 } else {
                     // 修改
@@ -243,6 +248,7 @@ export default class MenuAdd extends Vue {
                     this.dataForm.permission = item.permission;
                     this.dataForm.menuOrder = item.menuOrder;
                     this.dataForm.menuIcon = item.menuIcon;
+                    this.dataForm.remark = item.remark;
                     this.menuListTreeSetCurrentNode();
                 }
             })
