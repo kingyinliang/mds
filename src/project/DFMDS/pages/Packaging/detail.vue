@@ -20,7 +20,7 @@
                 <pending-num ref="PendingNum" :is-redact="data.isRedact" />
             </template>
             <template slot="7" slot-scope="data">
-                <text-record ref="PendingNum" :is-redact="data.isRedact" />
+                <text-record ref="textRecord" :is-redact="data.isRedact" />
             </template>
             <template slot="5" slot-scope="data">
                 <material ref="material" :is-redact="data.isRedact" />
@@ -31,11 +31,12 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import ReadyTime from './common/readyTimes.vue';
+    import ReadyTime from './common/ReadyTimes.vue';
     import Material from './common/Material.vue';
-    import ProductPeople from './common/productPeople.vue';
-    import PendingNum from './common/pendingNum.vue';
-    import TextRecord from './common/textRecord.vue';
+    import ProductPeople from './common/ProductPeople.vue';
+    import PendingNum from './common/PendingNum.vue';
+    import TextRecord from './common/TextRecord.vue';
+    import ProductInStore from './common/ProductInStore.vue';
 
     @Component({
         components: {
@@ -43,7 +44,8 @@
             ProductPeople,
             PendingNum,
             TextRecord,
-            Material
+            Material,
+            ProductInStore
         }
     })
     export default class PackagingDetail extends Vue {

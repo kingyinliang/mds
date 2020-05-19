@@ -120,8 +120,8 @@
                 type: 'date-picker',
                 label: '生产日期',
                 prop: 'productDate',
-                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
-                defaultValueTwo: ''
+                valueFormat: 'yyyy-MM-dd hh:mm:ss',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
             }
         ];
 

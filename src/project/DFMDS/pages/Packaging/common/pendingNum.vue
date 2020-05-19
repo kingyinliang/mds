@@ -1,64 +1,67 @@
 <template>
     <div>
-        <mds-card title="待处理数量(单位：KG)" :name="'productPeople'" :mds-card-button="mdsCardButton" @add-button-click="addRow">
-            <el-table class="newTable" :data="DataList" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+        <mds-card title="待处理数量(单位：KG)" :name="'productPeople'">
+            <template slot="titleBtn">
+                <div style="float: right;">
+                    <el-button type="primary" size="small" @click="addRow(DataList)">
+                        新增
+                    </el-button>
+                </div>
+            </template>
+            <el-table class="newTable" :data="DataList" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
                 <el-table-column label="序号" type="index" width="60" />
-                <el-table-column prop="status" width="100" :show-overflow-tooltip="true">
+                <el-table-column width="100" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        {{ status? scope.row.status : (scope.row.status === 'noPass' ? '不通过' : scope.row.status === 'checked' ? '通过' : scope.row.status === 'submit' ? '反审' : '') }}
+                        <el-select v-model="scope.row.classes" size="small">
+                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
+                        </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="线上不良" prop="memo" :show-overflow-tooltip="true">
+                <el-table-column label="线上不良" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row[memo] }}
+                        <el-input v-model.trim="scope.row.onlineBad" size="small" placeholder="输入数量" />
                     </template>
                 </el-table-column>
-                <el-table-column label="挤料" prop="verify_man" :show-overflow-tooltip="true">
+                <el-table-column label="挤料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row[verifyMan] }}
+                        <el-input v-model.trim="scope.row.pressMaterial" size="small" placeholder="输入数量" />
                     </template>
                 </el-table-column>
-                <el-table-column label="测密封堵" prop="verify_date" :show-overflow-tooltip="true">
+                <el-table-column label="测密封堵" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row[verifyDate] }}
+                        <el-input v-model.trim="scope.row.sealingPlug" size="small" placeholder="输入数量" />
                     </template>
                 </el-table-column>
-                <el-table-column label="废酱" prop="verify_date" :show-overflow-tooltip="true">
+                <el-table-column label="废酱" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row[verifyDate] }}
+                        <el-input v-model.trim="scope.row.wasteSauce" size="small" placeholder="输入数量" />
                     </template>
                 </el-table-column>
-                <el-table-column label="设备残留" prop="verify_date" :show-overflow-tooltip="true">
+                <el-table-column label="设备残留" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row[verifyDate] }}
+                        <el-input v-model.trim="scope.row.deviceLoss" size="small" placeholder="输入数量" />
                     </template>
                 </el-table-column>
-                <el-table-column label="其他" prop="verify_date" :show-overflow-tooltip="true">
+                <el-table-column label="其他" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row[verifyDate] }}
+                        <el-input v-model.trim="scope.row.other" size="small" placeholder="输入数量" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" label="备注" :show-overflow-tooltip="true">
+                <el-table-column label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row[verifyDate] }}
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入数量" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" label="操作人" :show-overflow-tooltip="true">
+                <el-table-column prop="changer" label="操作人" :show-overflow-tooltip="true" />
+                <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" />
+                <el-table-column fixed="right" label="操作" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row[verifyDate] }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="verify_date" label="操作时间" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row[verifyDate] }}
-                    </template>
-                </el-table-column>
-                <el-table-column fixed="right" prop="verify_date" label="操作" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row[verifyDate] }}
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delPendingNum(scope.row)">
+                            删除
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -67,48 +70,118 @@
                     带杀菌酱小计：
                 </div>
                 <div class="input_bottom">
-                    123
+                    {{ computedSoy }}
                 </div>
                 <div>
                     报废酱小计：
                 </div>
                 <div class="input_bottom">
-                    456
+                    {{ computedScrap }}
                 </div>
                 <div>
                     总计：
                 </div>
                 <div class="input_bottom">
-                    456
+                    {{ computedTotal }}
                 </div>
             </el-row>
         </mds-card>
     </div>
 </template>
 
-<script>
-export default {
-    name: 'PendingNum',
-    components: {
-    },
-    props: {},
-    data() {
-        return {
-            mdsCardButton: [
-                {
-                    type: 'add',
-                    returnFunction: 'addRowline'
-                }
-            ],
-            DataList: [],
-            ReadAudit: []
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
+
+@Component({})
+
+export default class PendingNum extends Vue {
+    classList = [
+        {
+            name: '白班'
+        }, {
+            name: '中班'
+        }, {
+            name: '夜班'
         }
-    },
-    methods: {
-        addRow() {
-            console.log('新增')
+    ]
+
+    DataList: ValueObject[] = [];
+    ReadAudit = []
+
+    addRow() {
+        const sole: ValueObject = {
+            classes: '',
+            onlineBad: '',
+            pressMaterial: '',
+            sealingPlug: '',
+            wasteSauce: '',
+            deviceLoss: '',
+            other: '',
+            remark: '',
+            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+            changer: getUserNameNumber(),
+            delFlag: 0
         }
+        this.DataList.push(sole);
     }
+
+    RowDelFlag({ row }) {
+        if (row.delFlag === '1') {
+            return 'rowDel';
+        }
+        return '';
+    }
+
+    delPendingNum(row) {
+        this.$confirm('是否删除?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            this.DataList.splice(this.DataList.indexOf(row), 1);
+        });
+    }
+
+    get computedSoy() {
+        let Soynum = 0;
+        this.DataList.map((item: ValueObject) => {
+            if (item.delFlag === 0) {
+                Soynum = accAdd(Soynum, accAdd(accAdd(item.onlineBad, item.pressMaterial), item.sealingPlug));
+            }
+        });
+        return Soynum;
+    }
+
+    get computedScrap() {
+        let ScrapNum = 0;
+        this.DataList.map((item: ValueObject) => {
+            if (item.delFlag === 0) {
+                ScrapNum = accAdd(ScrapNum, accAdd(item.wasteSauce, item.deviceLoss));
+            }
+        });
+        return ScrapNum;
+    }
+
+    get computedTotal() {
+        let Total = 0;
+        Total = accAdd(this.computedSoy, this.computedScrap)
+        return Total;
+    }
+}
+
+interface ValueObject {
+    classes?: string;
+    onlineBad?: string;
+    pressMaterial?: string;
+    sealingPlug?: string;
+    wasteSauce?: string;
+    deviceLoss?: string;
+    other?: string;
+    remark?: string;
+    changed?: string;
+    changer?: string;
+    delFlag?: number;
 }
 </script>
 

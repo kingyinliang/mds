@@ -14,6 +14,10 @@ export const COMMON_API = {
      */
     LOGOUT_API: params => httpProxy('/sysUser/quit', 'GET', params),
     /**
+     * @property {string} SET_FACTORY_API 默认工厂 factoryCode
+     */
+    SET_FACTORY_API: params => httpProxy('/sysUser/defaultFactory/update', 'GET', params),
+    /**
      * @property {string} NAV_API 路由获取菜单
      */
     NAV_API: params => httpProxy('/sysUser/userRole/menuQuery', 'GET', params),

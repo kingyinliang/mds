@@ -7,6 +7,9 @@
                     <div class="item-title">
                         <p class="item-title-p">
                             {{ item.deptShort }}
+                            <el-radio v-model="defaultFactory" :label="item.deptCode" style="float: right;" @change="setFactory">
+                                {{ '默认' }}
+                            </el-radio>
                         </p>
                         <!--<el-switch-->
                         <!--v-model="item.value"-->
@@ -29,6 +32,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
+    import { COMMON_API } from 'common/api/api';
 
     @Component({
         components: {
@@ -37,6 +41,7 @@
     export default class SelectFactory extends Vue {
         factory: object[] = [];
         factoryVisible = false;
+        defaultFactory = '';
 
         goFa(item) {
             sessionStorage.setItem('vuex', '');
@@ -57,7 +62,17 @@
 
         init() {
             this.factoryVisible = true;
+            this.defaultFactory = sessionStorage.getItem('defaultFactory') || '';
             this.factory = JSON.parse(sessionStorage.getItem('userFactory') || '[]')
+        }
+
+        setFactory() {
+            COMMON_API.SET_FACTORY_API({
+                factoryCode: this.defaultFactory
+            }).then(({ data }) => {
+                sessionStorage.setItem('defaultFactory', this.defaultFactory || '');
+                this.$successToast(data.msg)
+            })
         }
     }
 </script>

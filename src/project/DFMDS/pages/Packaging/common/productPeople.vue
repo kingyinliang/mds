@@ -1,6 +1,13 @@
 <template>
     <div>
-        <mds-card title="人员统计" :name="'productPeople'" :mds-card-button="mdsCardButton" @add-button-click="addRow">
+        <mds-card title="人员统计" :name="'productPeople'">
+            <template slot="titleBtn">
+                <div style="float: right;">
+                    <el-button type="primary" size="small" @click="addRow(DataList)">
+                        新增
+                    </el-button>
+                </div>
+            </template>
             <el-table class="newTable" :data="DataList" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
                 <el-table-column label="序号" type="index" width="60" />
                 <el-table-column prop="status" width="100" :show-overflow-tooltip="true">
