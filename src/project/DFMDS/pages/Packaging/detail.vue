@@ -18,9 +18,9 @@
         <template slot="4" slot-scope="data">
             <product-in-storage ref="productInStorage" :is-redact="data.isRedact" />
         </template>
-        <!-- <template slot="5" slot-scope="data">
+        <template slot="5" slot-scope="data">
             <material ref="material" :is-redact="data.isRedact" />
-        </template> -->
+        </template>
         <template slot="6" slot-scope="data">
             <pending-num ref="PendingNum" :is-redact="data.isRedact" />
         </template>
@@ -34,7 +34,7 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { PKG_API } from 'common/api/api';
     import ReadyTime from './common/ReadyTimes.vue';
-    // import Material from './common/Material.vue';
+    import Material from './common/Material.vue';
     import ProductPeople from './common/ProductPeople.vue';
     import PendingNum from './common/PendingNum.vue';
     import TextRecord from './common/TextRecord.vue';
@@ -47,7 +47,7 @@
             ProductPeople,
             PendingNum,
             TextRecord,
-            // Material,
+            Material,
             ProductInStorage
         }
     })
