@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="packaging__main__item__main__right">
                                         <el-form-item label="生产订单：">
-                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" :change="orderchange(item)" style="width: 100%;">
+                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" :change="orderchange(item)" style="width: 100%;" clearable>
                                                 <el-option v-for="(subItem, subIndex) in item.orderNoList" :key="subIndex" :label="subItem" :value="subItem" />
                                             </el-select>
                                         </el-form-item>
@@ -47,7 +47,7 @@
                                             </div>
                                         </el-form-item>
                                         <div class="packaging__main__item__main__right__btn">
-                                            <el-button size="small" type="primary" @click="goDataEntry(item)">
+                                            <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goDataEntry(item)">
                                                 生产数据
                                             </el-button>
                                             <el-button size="small" type="primary">
@@ -157,7 +157,13 @@
 
         goDataEntry(item) {
             console.log(item);
-            this.$router.push({ name: `DFMDS-pages-Packaging-detail` });
+            this.$router.push({
+                name: `DFMDS-pages-Packaging-detail`,
+                params: {
+                    orderNo: item.activeOrderNo,
+                    productLineName: item.productLineName
+                }
+            });
         }
     }
     interface PkgObj{

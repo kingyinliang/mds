@@ -1,42 +1,45 @@
 <template>
-    <div>
-        <data-entry
-            ref="dataEntry"
-            :redact-auth="'pkg:order:update'"
-            :save-auth="'pkg:order:update'"
-            :submit-auth="'pkg:order:update'"
-            :order-status="orderStatus"
-            :header-base="headerBase"
-            :form-header="formHeader"
-            :tabs="tabs"
-        >
-            <template slot="1" slot-scope="data">
-                <ready-time ref="readytime" :is-redact="data.isRedact" />
-            </template>
-            <template slot="2" slot-scope="data">
-                <product-people ref="productPeople" :is-redact="data.isRedact" />
-            </template>
-            <template slot="6" slot-scope="data">
-                <pending-num ref="PendingNum" :is-redact="data.isRedact" />
-            </template>
-            <template slot="7" slot-scope="data">
-                <text-record ref="textRecord" :is-redact="data.isRedact" />
-            </template>
-            <template slot="5" slot-scope="data">
-                <material ref="material" :is-redact="data.isRedact" />
-            </template>
-        </data-entry>
-    </div>
+    <data-entry
+        ref="dataEntry"
+        :redact-auth="'pkg:order:update'"
+        :save-auth="'pkg:order:update'"
+        :submit-auth="'pkg:order:update'"
+        :order-status="orderStatus"
+        :header-base="headerBase"
+        :form-header="formHeader"
+        :tabs="tabs"
+    >
+        <template slot="1" slot-scope="data">
+            <ready-time ref="readytime" :is-redact="data.isRedact" />
+        </template>
+        <template slot="2" slot-scope="data">
+            <product-people ref="productPeople" :is-redact="data.isRedact" />
+        </template>
+        <template slot="4" slot-scope="data">
+            <product-in-storage ref="productInStorage" :is-redact="data.isRedact" />
+        </template>
+        <!-- <template slot="5" slot-scope="data">
+            <material ref="material" :is-redact="data.isRedact" />
+        </template> -->
+        <template slot="6" slot-scope="data">
+            <pending-num ref="PendingNum" :is-redact="data.isRedact" />
+        </template>
+        <template slot="7" slot-scope="data">
+            <text-record ref="textRecord" :is-redact="data.isRedact" />
+        </template>
+    </data-entry>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
+    import { PKG_API } from 'common/api/api';
     import ReadyTime from './common/ReadyTimes.vue';
-    import Material from './common/Material.vue';
+    // import Material from './common/Material.vue';
     import ProductPeople from './common/ProductPeople.vue';
     import PendingNum from './common/PendingNum.vue';
     import TextRecord from './common/TextRecord.vue';
-    import ProductInStore from './common/ProductInStore.vue';
+    import ProductInStorage from './common/ProductInStorage.vue';
+
 
     @Component({
         components: {
@@ -44,21 +47,22 @@
             ProductPeople,
             PendingNum,
             TextRecord,
-            Material,
-            ProductInStore
+            // Material,
+            ProductInStorage
         }
     })
     export default class PackagingDetail extends Vue {
         orderStatus = ''
 
         formHeader = {}
+        orderData: OrderData = {}
 
         headerBase = [
             {
                 type: 'p',
                 icon: 'factory-shengchanchejian',
                 label: '生产车间',
-                value: 'workShopName'
+                value: 'workShop'
             },
             {
                 type: 'p',
@@ -137,7 +141,23 @@
                 label: '文本记录'
             }
         ];
+
+        mounted() {
+            console.log(this.$route.params.orderNo)
+            console.log(this.$route.params.productLineName)
+            PKG_API.PKG_HOME_QUERY_BY_NO_API({
+                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        orderNo: this.$route.params.orderNo
+            }).then(({ data }) => {
+                console.log(data)
+                this.orderData = data
+            })
+        }
     }
+interface OrderData{
+    workShop?: string;
+    productLine?: string;
+}
 </script>
 
 <style>
