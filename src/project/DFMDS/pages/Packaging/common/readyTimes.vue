@@ -156,38 +156,40 @@
     </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+
+@Component({
     name: 'ReadyTimes',
     components: {
         AuditLog: resolve => {
             require(['@/views/components/AuditLog'], resolve);
         }
-    },
-    props: {},
-    data() {
-        return {
-            classList: [
-                {
-                    name: '白班',
-                    value: '白班'
-                }, {
-                    name: '中班',
-                    value: '中班'
-                }, {
-                    name: '夜班',
-                    value: '夜班'
-                }, {
-                    name: '多班',
-                    value: '多班'
-                }
-            ],
-            readyType: '白班',
-            formInline: {},
-            ReadAudit: []
-        }
-    },
-    methods: {
     }
+    })
+
+export default class ReadyTimes extends Vue {
+
+    classList= [
+        {
+            name: '白班',
+            value: '白班'
+        }, {
+            name: '中班',
+            value: '中班'
+        }, {
+            name: '夜班',
+            value: '夜班'
+        }, {
+            name: '多班',
+            value: '多班'
+        }
+    ]
+
+    readyType='白班'
+    formInline= {}
+    ReadAudit= []
+
+
 }
 </script>
