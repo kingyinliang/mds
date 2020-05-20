@@ -16,11 +16,11 @@
                         <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :prop="item.prop">
                             <el-row>
                                 <el-col :span="12">
-                                    <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 135px;" />
+                                    <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 140px;" />
                                     <span style="margin-left: 5px;">-</span>
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 135px;" />
+                                    <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 140px;" />
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -65,6 +65,10 @@
                             <template slot-scope="scope">
                                 <el-input v-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
                                 <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" />
+                                <el-select v-else-if="item.redact && item.type === 'select'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" size="small">
+                                    <el-option label="请选择" value="" />
+                                    <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="opt[item.resVal.label]" :value="opt[item.resVal.value]" />
+                                </el-select>
                                 <span v-else>{{ item.formatter? item.formatter(scope.row) : scope.row[item.prop] }}</span>
                             </template>
                         </el-table-column>

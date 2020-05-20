@@ -1,7 +1,7 @@
 <template>
     <div>
         <mds-card :title="'包材领用'" :name="'materialP'">
-            <el-table header-row-class-name="tableHead" class="newTable" :data="materialP" :span-method="spanMethod" border tooltip-effect="dark">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="currentDataTable" :span-method="spanMethod" border tooltip-effect="dark">
                 <el-table-column type="index" label="序号" width="50px" />
                 <el-table-column label="领用物料" prop="material" width="150" />
                 <el-table-column label="单位" prop="amount" width="80" />
@@ -67,10 +67,11 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
 
     @Component({
+        name: 'Material',
         components: {
         }
     })
@@ -103,23 +104,23 @@
 
         MaterialAudit = [];
 
-        materialP = [];
+        currentDataTable: MaterialMap[] = [];
 
         materialS = [];
 
-        spanOneArr = [];
+        spanOneArr: number[] = [];
 
         mounted() {
             this.processData(this.ma);
-            this.merge(this.materialP)
+            this.merge(this.currentDataTable)
         }
 
         // 处理数据
         processData(data) {
-            const finalData = []
+            const finalData: MaterialMap[] = []
             data.forEach(item => {
                 item.list.forEach((listitem, index) => {
-                    const materialMap = {
+                    const materialMap: MaterialMap = {
                         id: item.id,
                         material: item.material,
                         amount: item.amount
@@ -131,12 +132,12 @@
                     finalData.push(materialMap)
                 })
             })
-            this.materialP = finalData
+            this.currentDataTable = finalData
         }
 
         // 设置合并行
         merge(tableData) {
-            const spanOneArr = [];
+            const spanOneArr: number[] = [];
             let concatOne = 0;
             tableData.forEach((item, index) => {
                 if (index === 0) {
@@ -164,15 +165,23 @@
 
         // 拆分
         SplitDate(row, index) {
-            this.materialP.splice(index + this.materialP.filter(item => item.id === row.id).length, 0, {
+            this.currentDataTable.splice(index + this.currentDataTable.filter(item => item.id === row.id).length, 0, {
                 id: row.id,
                 material: row.material,
                 amount: row.amount,
                 batch: ''
             });
-            this.merge(this.materialP)
+            this.merge(this.currentDataTable)
         }
     }
+
+interface MaterialMap{
+    id?: string;
+    material?: string;
+    amount?: string;
+    original?: boolean;
+    batch?: string;
+}
 </script>
 
 <style scoped>

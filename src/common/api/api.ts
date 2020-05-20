@@ -440,5 +440,13 @@ export const PKG_API = {
     /**
      * @property {string} PKG_HOME_LIST_API 包装车间首页
      */
-    PKG_HOME_LIST_API: params => httpProxy('/order/queryListPkg', 'POST', params)
-}
+    PKG_HOME_LIST_API: params => httpProxy('/order/queryListPkg', 'POST', params),
+    /**
+     * @property {string} PKG_HOME_QUERY_BY_NO_API 包装车间首页
+     */
+    PKG_HOME_QUERY_BY_NO_API: params => httpProxy('/order/queryByNo', 'GET', params),
+    /**
+     * @property {string} PKG_INSTORAGE_QUERY_API 生产数据-生产入库-查询
+     */
+    PKG_INSTORAGE_QUERY_API: params => httpProxy('/pkgInStorage/query', 'POST', params)
+};

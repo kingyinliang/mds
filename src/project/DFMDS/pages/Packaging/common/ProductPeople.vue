@@ -3,12 +3,12 @@
         <mds-card title="人员统计" :name="'productPeople'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" @click="addRow(DataList)">
+                    <el-button type="primary" size="small" @click="addRow(dataList)">
                         新增
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="DataList" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+            <el-table class="newTable" :data="dataList" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
                 <el-table-column label="序号" type="index" width="60" />
                 <el-table-column prop="status" width="100" :show-overflow-tooltip="true">
                     <template slot="header">
@@ -107,36 +107,38 @@
                 </div>
             </el-row>
         </mds-card>
-        <audit-log :table-data="ReadAudit" />
+        <audit-log :table-data="readAudit" />
     </div>
 </template>
 
-<script>
-export default {
-    name: 'ReadyTimes',
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator';
+
+@Component({
+    name: 'ProductPeople',
     components: {
         AuditLog: resolve => {
             require(['@/views/components/AuditLog'], resolve);
         }
-    },
-    props: {},
-    data() {
-        return {
-            mdsCardButton: [
-                {
-                    type: 'add',
-                    returnFunction: 'addRowline'
-                }
-            ],
-            DataList: [],
-            ReadAudit: []
-        }
-    },
-    methods: {
-        addRow() {
-            console.log('新增')
-        }
     }
+    })
+
+export default class ProductPeople extends Vue {
+
+    mdsCardButton= [
+        {
+            type: 'add',
+            returnFunction: 'addRowline'
+        }
+    ]
+
+    dataList= []
+    readAudit= []
+
+    addRow() {
+        console.log('新增')
+    }
+
 }
 </script>
 
