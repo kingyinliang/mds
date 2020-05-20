@@ -268,6 +268,12 @@ import { AsyncHook } from '@/utils/index.js';
     }
 })
 export default class OrderAuditing extends Vue {
+
+    $refs: {
+        dataEntry: HTMLFormElement;
+        tabs: HTMLFormElement;
+    }
+
     headerBase = [
         {
             type: 'p',
