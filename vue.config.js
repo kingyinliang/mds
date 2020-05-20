@@ -116,24 +116,6 @@ module.exports = {
                 .use('url-loader')
                 .loader('url-loader')
                 .tap(options => Object.assign(options, { limit: 1024 }))
-            // 压缩图片
-            // config.module
-            //     .rule('images')
-            //     .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
-            //     .use('image-webpack-loader')
-            //     .loader('image-webpack-loader')
-            //     .options({
-            //         mozjpeg: {
-            //             progressive: true,
-            //             quality: 65
-            //         },
-            //         optipng: { enabled: false },
-            //         pngquant: {
-            //             quality: [0.65, 0.90],
-            //             speed: 4
-            //         },
-            //         gifsicle: { interlaced: false }
-            //     })
         }
         // 添加打包分析
         if (process.env.npm_config_report) {

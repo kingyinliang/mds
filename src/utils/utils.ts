@@ -220,7 +220,7 @@ export function getS3Img(arrData, imgPath) {
     })
 }
 /**
- * S3获取文件路径
+ * 时间转换
  * @param {date} date 时间对象
  * @param {string} fmt 时间格式
  */

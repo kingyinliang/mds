@@ -92,7 +92,7 @@ http.interceptors.response.use(
  * @param {string} url{string} api地址 data{object} 参数 ContentType{boole} post拼接路径 responseType{boole}下载文件流 londingstatus{boole}加载遮罩
  * @param {string} [method] {@link module:constants/http method}
  * */
-export default (url: string, method: any = HTTP_METHOD.GET, data = {}, ContentType = false, responseType = false, londingstatus = true) => { // eslint-disable-line
+export default (url: string, method: any = HTTP_METHOD.GET, data = {}, londingstatus = true) => { // eslint-disable-line
     const options = {
         url: HOST + url,
         method,
@@ -100,9 +100,6 @@ export default (url: string, method: any = HTTP_METHOD.GET, data = {}, ContentTy
         timeout: 1000 * 60 * 20,
         withCredentials: false
     };
-    if (ContentType) {
-        options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-    }
     Vue.prototype.lodingState = londingstatus;
     if (method !== HTTP_METHOD.GET) {
         options['data'] = data;
