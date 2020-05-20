@@ -15,7 +15,7 @@
                         '': orderStatus === '已同步',
                     }"
                 >
-                    订单状态：{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus }}
+                    订单状态：{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus === 'toBeAudited' ? '待审核' : orderStatus }}
                 </i>
             </div>
             <div v-if="headShow" class="dataEntry-head-base">
@@ -65,9 +65,10 @@
                 <div class="redact clearfix">
                     <div class="redact_tips">
                         <i class="el-icon-info" />
-                        <span v-if="orderStatus === 'submit'">订单已提交，请等待审核</span>
-                        <span v-if="orderStatus === 'checked'">订单已审核通过</span>
-                        <span v-if="orderStatus !== 'submit' && orderStatus !== 'checked'">
+                        <span v-if="orderStatus === 'toBeAudited'">请仔细核对数据后再进行提交</span>
+                        <span v-else-if="orderStatus === 'checked'">订单已审核通过</span>
+                        <span v-else-if="orderStatus === 'submit'">订单已提交，请等待审核</span>
+                        <span v-else-if="orderStatus !== 'submit' && orderStatus !== 'checked'">
                             <span v-if="isRedact">点击提交按钮，当前页面编辑信息将提交系统</span>
                             <span v-else>点击编辑按钮，对当前页面进行编辑</span>
                         </span>
@@ -76,11 +77,11 @@
                         <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(redactAuth)" type="primary" size="small" @click="isRedact = !isRedact">
                             {{ isRedact ? '取消' : '编辑' }}
                         </el-button>
-                        <template v-if="isRedact">
+                        <template v-if="isRedact || onlySubmit">
                             <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
                                 保存
                             </el-button>
-                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
+                            <el-button v-if="ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
                                 提交
                             </el-button>
                         </template>
@@ -165,6 +166,16 @@
                 default: () => {
                     //    emoty
                 }
+            },
+            notPermitSubmitStatus: {
+                type: Array,
+                default: () => {
+                    return ['submit', 'checked'];
+                }
+            },
+            onlySubmit: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -238,6 +249,9 @@
                 }).catch(() => {
                 // this.$infoToast('已取消删除');
                 });
+            },
+            ifSubmit() {
+                return !this.notPermitSubmitStatus.includes(this.orderStatus);
             }
         }
     };
