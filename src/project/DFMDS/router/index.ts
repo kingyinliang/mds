@@ -17,7 +17,7 @@ const mainRoutes: RouteConfig = {
         { path: '/', redirect: '/home' },
         {
             path: '/home',
-            component: importTarget('MDS/views/common/home'),
+            component: importTarget('COMMON/home'),
             name: 'home',
             meta: { title: '首页' }
         },

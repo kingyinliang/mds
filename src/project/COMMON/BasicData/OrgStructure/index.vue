@@ -1,91 +1,76 @@
 <template>
-    <div class="header_main">
-        <mds-card :title="'组织架构'" :name="'org'" :pack-up="false" style="background: #fff;">
-            <el-row :gutter="20">
-                <el-col :span="8">
-                    <div class="org-card">
-                        <div class="org-card_title">
-                            组织架构一览
-                        </div>
-                        <div class="filter-input">
-                            <el-input v-model="filterText" placeholder="部门名称" size="small">
-                                <i slot="suffix" class="el-input__icon el-icon-search" />
-                            </el-input>
-                        </div>
-                        <div class="tree-main SelfScrollbar">
-                            <el-tree ref="tree" :data="OrgTree" node-key="id" :props="{ label: 'deptName' }" :expand-on-click-node="false" :default-expanded-keys="arrList" :filter-node-method="filterNode" @node-click="setdetail" @node-contextmenu="showMenu" />
-                        </div>
+    <div>
+        <org-view
+            ref="orgView"
+            :title="'组织架构'"
+            :right-tile="'组织详细信息'"
+            :type="'table'"
+            @treeNodeClick="setdetail"
+            @treeNodeContextMenu="showMenu"
+        >
+            <template slot="view" style="padding-top: 16px;">
+                <div class="detail-main">
+                    <div class="detail-main-form">
+                        <el-form :model="OrgDetail" size="small" :inline="true" label-width="90px" class="org-detail-form">
+                            <el-form-item label="部门编码：">
+                                <el-input v-model="OrgDetail.deptCode" :disabled="true" auto-complete="off" style="width: 250px;" />
+                            </el-form-item>
+                            <el-form-item label="部门名称：">
+                                <el-input v-model="OrgDetail.deptName" :disabled="true" auto-complete="off" style="width: 250px;" />
+                            </el-form-item>
+                            <el-form-item label="上级部门：">
+                                <el-input v-model="OrgDetail.parentName" :disabled="true" auto-complete="off" style="width: 250px;" />
+                            </el-form-item>
+                            <el-form-item label="部门简称：">
+                                <el-input v-model="OrgDetail.deptShort" :disabled="isRedact" auto-complete="off" style="width: 250px;" />
+                            </el-form-item>
+                            <el-form-item label="生产调度员：">
+                                <el-input v-model="OrgDetail.dispatchMan" :disabled="isRedact" auto-complete="off" style="width: 250px;" />
+                            </el-form-item>
+                            <el-form-item label="部门类型：">
+                                <el-select v-model="OrgDetail.deptType" :disabled="isRedact" style="width: 250px;">
+                                    <el-option v-for="(item, index) in dictList" :key="index" :label="item.dictValue" :value="item.dictCode" />
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="产线属性：">
+                                <el-select v-model="OrgDetail.properties" placeholder="请选择部门类型" :disabled="isRedact" style="width: 250px;">
+                                    <el-option label="普通产线" value="普通产线" />
+                                    <el-option label="二合一&礼盒产线" value="二合一&礼盒产线" />
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="成本中心：">
+                                <el-input v-model="OrgDetail.costCenter" auto-complete="off" :disabled="isRedact" style="width: 250px;" />
+                            </el-form-item>
+                            <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="产线图片：" :class="{'limit-upload': fileList.length || OrgDetail.imgUrl}">
+                                <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :disabled="isRedact" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
+                                    <i class="el-icon-plus" />
+                                </el-upload>
+                            </el-form-item>
+                            <el-form-item label="联系人：">
+                                <el-input v-model="OrgDetail.lxr" :disabled="isRedact" style="width: 250px;" />
+                            </el-form-item>
+                            <el-form-item label="电话：">
+                                <el-input v-model="OrgDetail.phone" :disabled="isRedact" style="width: 250px;" />
+                            </el-form-item>
+                            <el-form-item label="备注：">
+                                <el-input v-model="OrgDetail.remark" type="textarea" :disabled="isRedact" style="width: 590px;" />
+                            </el-form-item>
+                        </el-form>
                     </div>
-                </el-col>
-                <el-col :span="16">
-                    <div class="org-card">
-                        <div class="org-card_title">
-                            组织详细信息
-                        </div>
-                        <div class="detail-main">
-                            <div class="detail-main-form">
-                                <el-form :model="OrgDetail" size="small" :inline="true" label-width="90px" class="org-detail-form">
-                                    <el-form-item label="部门编码：">
-                                        <el-input v-model="OrgDetail.deptCode" :disabled="true" auto-complete="off" style="width: 250px;" />
-                                    </el-form-item>
-                                    <el-form-item label="部门名称：">
-                                        <el-input v-model="OrgDetail.deptName" :disabled="true" auto-complete="off" style="width: 250px;" />
-                                    </el-form-item>
-                                    <el-form-item label="上级部门：">
-                                        <el-input v-model="OrgDetail.parentName" :disabled="true" auto-complete="off" style="width: 250px;" />
-                                    </el-form-item>
-                                    <el-form-item label="部门简称：">
-                                        <el-input v-model="OrgDetail.deptShort" :disabled="isRedact" auto-complete="off" style="width: 250px;" />
-                                    </el-form-item>
-                                    <el-form-item label="生产调度员：">
-                                        <el-input v-model="OrgDetail.dispatchMan" :disabled="isRedact" auto-complete="off" style="width: 250px;" />
-                                    </el-form-item>
-                                    <el-form-item label="部门类型：">
-                                        <el-select v-model="OrgDetail.deptType" :disabled="isRedact" style="width: 250px;">
-                                            <el-option v-for="(item, index) in dictList" :key="index" :label="item.dictValue" :value="item.dictCode" />
-                                        </el-select>
-                                    </el-form-item>
-                                    <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="产线属性：">
-                                        <el-select v-model="OrgDetail.properties" placeholder="请选择部门类型" :disabled="isRedact" style="width: 250px;">
-                                            <el-option label="普通产线" value="普通产线" />
-                                            <el-option label="二合一&礼盒产线" value="二合一&礼盒产线" />
-                                        </el-select>
-                                    </el-form-item>
-                                    <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="成本中心：">
-                                        <el-input v-model="OrgDetail.costCenter" auto-complete="off" :disabled="isRedact" style="width: 250px;" />
-                                    </el-form-item>
-                                    <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="产线图片：" :class="{'limit-upload': fileList.length || OrgDetail.imgUrl}">
-                                        <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :disabled="isRedact" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
-                                            <i class="el-icon-plus" />
-                                        </el-upload>
-                                    </el-form-item>
-                                    <el-form-item label="联系人：">
-                                        <el-input v-model="OrgDetail.lxr" :disabled="isRedact" style="width: 250px;" />
-                                    </el-form-item>
-                                    <el-form-item label="电话：">
-                                        <el-input v-model="OrgDetail.phone" :disabled="isRedact" style="width: 250px;" />
-                                    </el-form-item>
-                                    <el-form-item label="备注：">
-                                        <el-input v-model="OrgDetail.remark" type="textarea" :disabled="isRedact" style="width: 590px;" />
-                                    </el-form-item>
-                                </el-form>
-                            </div>
-                            <div class="org-detail-btn">
-                                <el-button type="primary" size="small" @click="setRedact">
-                                    {{ isRedact? '编辑' : '取消' }}
-                                </el-button>
-                                <el-button v-if="!isRedact" type="primary" size="small" @click="savedatail">
-                                    保存
-                                </el-button>
-                                <el-button v-if="!isRedact" type="danger" size="small" @click="deleteorg">
-                                    删除
-                                </el-button>
-                            </div>
-                        </div>
+                    <div class="org-detail-btn">
+                        <el-button type="primary" size="small" @click="setRedact">
+                            {{ isRedact? '编辑' : '取消' }}
+                        </el-button>
+                        <el-button v-if="!isRedact" type="primary" size="small" @click="savedatail">
+                            保存
+                        </el-button>
+                        <el-button v-if="!isRedact" type="danger" size="small" @click="deleteorg">
+                            删除
+                        </el-button>
                     </div>
-                </el-col>
-            </el-row>
-        </mds-card>
+                </div>
+            </template>
+        </org-view>
         <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="" style="margin-bottom: 20px;">
         </el-dialog>
@@ -158,14 +143,14 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Vue, Component } from 'vue-property-decorator';
 import { COMMON_API } from 'common/api/api';
 import axios from 'axios';
 
 @Component
 export default class OrgStructure extends Vue {
     $refs: {
-        tree: HTMLFormElement;
+        orgView: HTMLFormElement;
         dataForm: HTMLFormElement;
     };
 
@@ -193,11 +178,9 @@ export default class OrgStructure extends Vue {
         ]
     }
 
-    filterText = ''
     FILE_API = ''
     dialogImageUrl = ''
     fileList: FileObject[] = []
-    OrgTree: object[] = []
     sibling = true
     uploadBtn = false
     menuVisible = false
@@ -210,32 +193,11 @@ export default class OrgStructure extends Vue {
     clickTreeNode: DetailObject = {}
     dictList: object[] = []
 
-    @Watch('filterText')
-    onChangeValue(newVal: string) {
-        this.$refs.tree.filter(newVal);
-    }
-
     mounted() {
-        this.getTree(true);
         this.getDictList();
         document.addEventListener('click', e => {
             const target: Node = e.target as Node
             if (target['className'] !== 'menuli') this.menuVisible = false;
-        });
-    }
-
-    // 获取组织结构树
-    getTree(type = false) {
-        COMMON_API.ORGSTRUCTURE_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-        }).then(({ data }) => {
-            if (data.code === 200) {
-                this.OrgTree = data.data;
-                this.arrList = [this.OrgTree[0]['children'][0]['id']];
-                if (type) {
-                    console.log(1)
-                }
-            }
         });
     }
 
@@ -310,7 +272,7 @@ export default class OrgStructure extends Vue {
                 COMMON_API.ADDORG_API(this.addDep).then(({ data }) => {
                     if (data.code === 200) {
                         this.$successToast('操作成功');
-                        this.getTree();
+                        this.$refs.orgView.getTree();
                         this.addDep = {};
                         this.dialogFormVisible1 = false;
                     }
@@ -349,7 +311,7 @@ export default class OrgStructure extends Vue {
             }).then(({ data }) => {
                 if (data.code === 200) {
                     this.$successToast('操作成功');
-                    this.getTree();
+                    this.$refs.orgView.getTree();
                     this.OrgDetail = {};
                 }
             });
@@ -395,12 +357,6 @@ export default class OrgStructure extends Vue {
     handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
-    }
-
-    // 搜索
-    filterNode(value, data) {
-        if (!value) return true;
-        return data.deptName.indexOf(value) !== -1;
     }
 }
 

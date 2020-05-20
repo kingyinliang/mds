@@ -38,10 +38,12 @@ import {
     Loading,
     Notification,
     InputNumber,
-    Scrollbar
+    Scrollbar,
+    Switch
 } from 'element-ui'
 
 export default () => {
+    Vue.use(Switch)
     Vue.use(Dialog)
     Vue.use(Menu)
     Vue.use(Submenu)
@@ -78,11 +80,6 @@ export default () => {
     Vue.use(InputNumber)
     Vue.use(Scrollbar)
     const MB = MessageBox
-    // MessageBox.install = (vue) => {
-    //     vue.prototype.$confirm = MessageBox.confirm;
-    //     vue.prototype.$alert = MessageBox.alert;
-    //     vue.prototype.$prompt = MessageBox.prompt;
-    // }
     Vue.prototype.$loading = Loading.service
     Vue.prototype.$msgbox = MB
     Vue.prototype.$alert = MB.alert
