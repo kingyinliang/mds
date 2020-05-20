@@ -8,7 +8,7 @@
         >
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
-                    <el-input v-model="deviceNo" size="small" placeholder="设备号" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
+                    <el-input v-model="deviceNo" size="small" placeholder="设备编号/设备描述" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
                     <el-button type="primary" size="small" @click="getData(false, true)">
                         查询
                     </el-button>
@@ -19,7 +19,7 @@
                         批量删除
                     </el-button>
                 </div>
-                <el-table ref="table1" class="newTable" border header-row-class-name="tableHead" :data="deviceList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                <el-table ref="table1" class="newTable" border header-row-class-name="tableHead" :height="documentClientHeight - 32 - 40 - 75 - 82 - 155" :data="deviceList" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" />
                     <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
                     <el-table-column prop="deptName" width="120" :show-overflow-tooltip="true" label="所属部门" />
@@ -36,6 +36,9 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-row>
+                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                </el-row>
             </template>
         </org-view>
         <el-dialog title="配置" width="400px" :close-on-click-modal="false" :visible.sync="configVisible">
@@ -72,26 +75,30 @@
         }
     })
     export default class CapacityManage extends Vue {
+        get documentClientHeight() {
+            return this.$store.state.common.documentClientHeight;
+        }
+
         $refs: {
             addOrupdate: HTMLFormElement;
             upload: HTMLFormElement;
         };
 
-        FILE_API = ''
-        ImageUrl = ''
-        configId = ''
-        fileList = []
-        dialogVisible = false
-        dialogImageUrl = ''
-        deptId = ''
-        deviceNo = ''
-        totalCount = 0
-        currPage = 1
-        pageSize = 10
-        configVisible = false
-        visible = false
-        deviceList: object[] = []
-        multipleSelection: string[] = []
+        FILE_API = '';
+        ImageUrl = '';
+        configId = '';
+        fileList = [];
+        dialogVisible = false;
+        dialogImageUrl = '';
+        deptId = '';
+        deviceNo = '';
+        totalCount = 0;
+        currPage = 1;
+        pageSize = 10;
+        configVisible = false;
+        visible = false;
+        deviceList: object[] = [];
+        multipleSelection: string[] = [];
 
         getData(row = false, first = false) {
             if (row) {

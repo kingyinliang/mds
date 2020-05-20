@@ -23,7 +23,9 @@
                 <iframe v-if="item.type === 'iframe'" :src="item.iframeUrl" width="100%" height="100%" title="" />
                 <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
                     <keep-alive>
-                        <router-view v-if="item.name === mainTabsActiveName" />
+                        <div :style="siteContentViewHeight">
+                            <router-view v-if="item.name === mainTabsActiveName" />
+                        </div>
                     </keep-alive>
                 </transition>
             </el-tab-pane>
@@ -31,7 +33,7 @@
         <!-- 主入口标签页 e -->
         <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
             <keep-alive>
-                <div :body-style="siteContentViewHeight">
+                <div :style="siteContentViewHeight">
                     <router-view />
                 </div>
             </keep-alive>
@@ -80,7 +82,7 @@ export default {
             }
         },
         siteContentViewHeight() {
-            let height = this.documentClientHeight - 50 - 30 - 2;
+            let height = this.documentClientHeight - 32 - 75;
             if (this.$route.meta.isTab) {
                 height -= 40;
                 return isURL(this.$route.meta.iframeUrl) ? { height: height + 'px' } : { minHeight: height + 'px' };
