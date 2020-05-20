@@ -21,10 +21,9 @@
                 </el-row>
                 <el-row>
                     <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" fixed />
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="50" align="right" fixed />
-                        <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
-                        <el-table-column label="操作" width="">
+                        <el-table-column type="index" label="序号" :index="indexMethod" width="50" align="center" fixed />
+                        <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" min-width="300" />
+                        <el-table-column label="操作" width="340">
                             <template slot-scope="scope">
                                 <a style="margin-right: 0.3em;" @click="manageUser(scope.row.id)">人员管理</a>
                                 <a style="margin-right: 0.3em;" @click="manageDepartment(scope.row.id)">部门分配</a>
@@ -34,9 +33,9 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="150" />
-                        <el-table-column prop="created" label="创建时间" width="100" />
+                        <el-table-column prop="created" label="创建时间" width="180" />
                         <el-table-column prop="changer" label="修改人" :show-overflow-tooltip="true" width="150" />
-                        <el-table-column prop="changed" label="修改时间" width="100" />
+                        <el-table-column prop="changed" label="修改时间" width="180" />
                     </el-table>
                 </el-row>
                 <el-row>

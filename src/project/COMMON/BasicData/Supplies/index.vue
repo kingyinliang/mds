@@ -20,9 +20,9 @@
                     </el-row>
                 </div>
                 <el-row>
-                    <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" size="small">
                         <el-table-column :show-overflow-tooltip="true" label="物料">
-                            <template slot-scope="scope">
+                            <template slot-scope="scope" min-width="360">
                                 <el-button style="padding: 0;" type="text" @click="showDetail(scope.row.id)">
                                     {{ scope.row.materialCode }} {{ scope.row.materialName }}
                                 </el-button>
@@ -37,7 +37,7 @@
                         </el-table-column>
                         <el-table-column prop="basicUnit" label="基本单位" :show-overflow-tooltip="true" width="79" />
                         <el-table-column prop="productUnit" label="生产单位" :show-overflow-tooltip="true" width="79" />
-                        <el-table-column prop="syncDate" label="同步日期" width="100" />
+                        <el-table-column prop="syncDate" label="同步日期" width="200" />
                     </el-table>
                 </el-row>
                 <el-row v-if="targetInfoList.length!==0">

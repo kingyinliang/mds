@@ -175,6 +175,6 @@
 
 <style scoped>
     .el-form-item--small.el-form-item {
-        margin-bottom: 14px;
+        margin-bottom: 20px;
     }
 </style>
