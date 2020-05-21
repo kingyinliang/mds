@@ -2,7 +2,7 @@
     <div class="header_main">
         <el-card class="searchCard">
             <el-row type="fiex">
-                <el-col :span="20">
+                <el-col>
                     <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
                         <el-form-item label="生产车间：">
                             <el-input v-model="formHeader.workShop" size="small" class="header_main__input" disabled />
@@ -33,17 +33,9 @@
                         </el-form-item>
                     </el-form>
                 </el-col>
-                <el-col :span="4">
-                    <div style="float: right; font-size: 14px; line-height: 30px;">
-                        <span class="point" :style="{background: orderStatus === 'noPass' ? 'red' : 'rgb(103, 194, 58)'}" />订单状态：
-                        <span :style="{color: orderStatus === 'noPass' ? 'red' : ''}">
-                            {{ orderStatus === 'noPass' ? '审核不通过' : (orderStatus === 'save' ? '已保存' : (orderStatus === 'submit' ? '已提交' : (orderStatus === 'checked' ? '通过' : ''))) }}
-                        </span>
-                    </div>
-                </el-col>
             </el-row>
         </el-card>
-        <el-tabs v-model="activeName" type="border-card" class="NewDaatTtabs tabsPages" @tab-click="tabClick">
+        <el-tabs v-model="activeName" type="border-card" class="NewDaatTtabs tabsPages">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
                     <el-button>密封度检测</el-button>
@@ -52,55 +44,57 @@
                     <i class="title-icon" />
                     <span>密封度：Kpa</span>
                     <div style="float: right;">
-                        <el-button type="primary" size="small" @click="addRow">
+                        <el-button :disabled="!isRedact" type="primary" size="small" @click="sealAddRow">
                             新增
                         </el-button>
                     </div>
                 </div>
-                <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="tightnesList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
-                    <el-table-column prop="testTime" width="200">
+                <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="sealList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table-column type="index" label="序号" width="55" />
+                    <el-table-column width="200">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.testTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="small" />
+                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第一排" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.firstRow" size="mini" />
+                            <el-input v-model="scope.row.pressOne" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第二排" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.secondRow" size="mini" />
+                            <el-input v-model="scope.row.pressTwo" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第三排" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.thirdRow" size="mini" />
+                            <el-input v-model="scope.row.pressThree" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第四排" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.fourthRow" size="mini" />
+                            <el-input v-model="scope.row.pressFour" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="备注">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" size="mini" />
+                            <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column prop="record" label="记录人">
+                    <el-table-column label="记录人">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.record" size="mini" />
+                            <el-input v-model="scope.row.changer" disabled size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="100">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini">
-                            删除
-                        </el-button>
+                        <template slot-scope="scope">
+                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="sealDelRow(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
             </el-tab-pane>
@@ -112,90 +106,92 @@
                     <i class="title-icon" />
                     <span>称重记录：g</span>
                     <div style="float: right;">
-                        <el-button type="primary" size="small" @click="addRow">
+                        <el-button :disabled="!isRedact" type="primary" size="small" @click="weightAddRow">
                             新增
                         </el-button>
                     </div>
                 </div>
-                <el-table ref="table2" class="newTable" header-row-class-name="tableHead" :data="weightRecordList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
-                    <el-table-column prop="recordTime" width="200">
+                <el-table ref="table2" class="newTable" header-row-class-name="tableHead" :data="weightList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table-column type="index" label="序号" width="55" />
+                    <el-table-column width="200">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.recordTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="small" />
+                            <el-date-picker v-model="scope.row.recordDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第一排净含量" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.firstRowContent" size="mini" />
+                            <el-input v-model="scope.row.netWeightOne" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第一排调称" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.firstRowTune" size="mini" />
+                            <el-input v-model="scope.row.adjustmentOne" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第二排净含量" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.secondRowContent" size="mini" />
+                            <el-input v-model="scope.row.netWeightTwo" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第二排调称" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.secondRowTune" size="mini" />
+                            <el-input v-model="scope.row.adjustmentTwo" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第三排净含量" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.thirdRowContent" size="mini" />
+                            <el-input v-model="scope.row.netWeightThree" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第三排调称" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.thirdRowTune" size="mini" />
+                            <el-input v-model="scope.row.adjustmentThree" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第四排净含量" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.fourthRowContent" size="mini" />
+                            <el-input v-model="scope.row.netWeightFour" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第四排调称" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.fourthRowTune" size="mini" />
+                            <el-input v-model="scope.row.adjustmentFour" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="酱盒重量下限" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.weightDown" size="mini" />
+                            <el-input v-model="scope.row.boxWeightFloor" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="酱盒重量上限" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.weightUp" size="mini" />
+                            <el-input v-model="scope.row.boxWeightCeiling" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="厂家" width="150">
+                    <el-table-column label="厂家" width="120">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.factory" size="mini" />
+                            <el-input v-model="scope.row.manufactor" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="备注" width="150">
+                    <el-table-column label="备注" width="180">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" size="mini" />
+                            <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="记录人" width="150">
+                    <el-table-column label="记录人" width="180">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.record" size="mini" />
+                            <el-input v-model="scope.row.changer" disabled size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="100" fixed="right">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini">
-                            删除
-                        </el-button>
+                        <template slot-scope="scope">
+                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="weightDelRow(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
             </el-tab-pane>
@@ -207,104 +203,106 @@
                     <i class="title-icon" />
                     <span>NR检测</span>
                     <div style="float: right;">
-                        <el-button type="primary" size="small" @click="addRow">
+                        <el-button :disabled="!isRedact" type="primary" size="small" @click="NRAddRow">
                             新增
                         </el-button>
                     </div>
                 </div>
-                <el-table ref="table3" class="newTable" header-row-class-name="tableHead" :data="NRTestList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
-                    <el-table-column prop="recordTime" width="200">
+                <el-table ref="table3" class="newTable borderTable" header-row-class-name="tableHead" :data="NRList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table-column type="index" label="序号" width="55" />
+                    <el-table-column width="120">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.recordTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="small" />
+                            <el-input v-model="scope.row.checkDate" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="NR含量（%）">
                         <el-table-column label="第一排" width="120">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.firstRowContent" size="mini" />
+                                <el-input v-model="scope.row.nrContentOne" :disabled="!isRedact" size="mini" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第二排" width="120">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.secondRowContent" size="mini" />
+                                <el-input v-model="scope.row.nrContentTwo" :disabled="!isRedact" size="mini" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第三排" width="120">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.thirdRowContent" size="mini" />
+                                <el-input v-model="scope.row.nrContentThree" :disabled="!isRedact" size="mini" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第四排" width="120">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.fourthRowContent" size="mini" />
+                                <el-input v-model="scope.row.nrContentFour" :disabled="!isRedact" size="mini" />
                             </template>
                         </el-table-column>
                     </el-table-column>
                     <el-table-column label="NR流量（L/min）">
                         <el-table-column label="第一排" width="120">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.firstRowFlow" size="mini" />
+                                <el-input v-model="scope.row.nrFlowOne" :disabled="!isRedact" size="mini" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第二排" width="120">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.secondRowFlow" size="mini" />
+                                <el-input v-model="scope.row.nrFlowTwo" :disabled="!isRedact" size="mini" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第三排" width="120">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.thirdRowFlow" size="mini" />
+                                <el-input v-model="scope.row.nrFlowThree" :disabled="!isRedact" size="mini" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第四排" width="120">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.fourthRowFlow" size="mini" />
+                                <el-input v-model="scope.row.nrFlowFour" :disabled="!isRedact" size="mini" />
                             </template>
                         </el-table-column>
                     </el-table-column>
-                    <el-table-column label="罐内温度（C）" width="120">
+                    <el-table-column label="罐内温度（°C）" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.tankTemperature" size="mini" />
+                            <el-input v-model="scope.row.potTemplate" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="NR温度（C）" width="120">
+                    <el-table-column label="NR温度（°C）" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.NRTemperature" size="mini" />
+                            <el-input v-model="scope.row.nrTemplate" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="NR纯度（%）" width="120">
+                    <el-table-column label="NR纯度（%）" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.NRPurity" size="mini" />
+                            <el-input v-model="scope.row.nrFineness" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="二级储压（Mpa）" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.secondPress" size="mini" />
+                            <el-input v-model="scope.row.pressure" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="混合比重（%）" width="120">
+                    <el-table-column label="混合比重（%）" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.mixProportion" size="mini" />
+                            <el-input v-model="scope.row.proportion" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="备注" width="150">
+                    <el-table-column label="备注" width="180">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" size="mini" />
+                            <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="记录人" width="150">
+                    <el-table-column label="记录人" width="180">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.record" size="mini" />
+                            <el-input v-model="scope.row.changer" disabled size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="100" fixed="right">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini">
-                            删除
-                        </el-button>
+                        <template slot-scope="scope">
+                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="NRDelRow(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
             </el-tab-pane>
@@ -316,45 +314,47 @@
                     <i class="title-icon" />
                     <span>扭力检测</span>
                     <div style="float: right;">
-                        <el-button type="primary" size="small" @click="addRow">
+                        <el-button :disabled="!isRedact" type="primary" size="small" @click="torqueAddRow">
                             新增
                         </el-button>
                     </div>
                 </div>
-                <el-table ref="table4" class="newTable" header-row-class-name="tableHead" :data="torqueTestList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
+                <el-table ref="table4" class="newTable" header-row-class-name="tableHead" :data="torqueList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                    <el-table-column type="index" label="序号" width="55" />
                     <el-table-column width="200">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.testTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="small" />
+                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="扭力矩/N.m" width="200">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.torque" size="mini" />
+                            <el-input v-model="scope.row.torque" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="真空度/Mpa" width="200">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.vacuum" size="mini" />
+                            <el-input v-model="scope.row.vacuum" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="备注">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" size="mini" />
+                            <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="检查人">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.check" size="mini" />
+                            <el-input v-model="scope.row.checkMan" disabled size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="100">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini">
-                            删除
-                        </el-button>
+                        <template slot-scope="scope">
+                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="torqueDelRow(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
             </el-tab-pane>
@@ -364,7 +364,7 @@
                 <div class="redact clearfix">
                     <div class="redact_tips">
                         <i class="el-icon-info" />
-                        <span v-if="isRedact">点击保存按钮，当前页面编辑信息将提交系统</span>
+                        <span v-if="isRedact">请及时保存数据</span>
                         <span v-else>点击编辑按钮，对当前页面进行编辑</span>
                     </div>
                     <div class="redact_btn">
@@ -382,122 +382,425 @@
 </template>
 
 <script>
-
-export default {
-    data() {
-        return {
-            formHeader: {
-                workShop: '压榨一车间',
-                productLine: '一车',
-                productMaterial: '六月香甜面酱手工线',
-                orderNo: '129300303',
-                orderQuantity: '1000KG',
-                orderDate: '2020-05-10',
-                productDate: '2020-05-13',
-                submitPeople: '李潇梅',
-                submitTime: '2020-05-10'
-
-            },
-            activeName: '1',
-            orderStatus: 'noPass',
-            isRedact: false,
-            tightnesList: [
-                { testTime: '2020-05-12 08:30', firstRow: '合格', secondRow: '不合格', thirdRow: '正常', fourthRow: '异常', remark: '备注', record: '李潇梅' },
-                { testTime: '2020-05-12 08:30', firstRow: '合格', secondRow: '不合格', thirdRow: '正常', fourthRow: '异常', remark: '备注', record: '李潇梅' },
-                { testTime: '2020-05-12 08:30', firstRow: '合格', secondRow: '不合格', thirdRow: '正常', fourthRow: '异常', remark: '备注', record: '李潇梅' }
-            ],
-            weightRecordList: [
-                { recordTime: '2020-05-12 08:30', firstRowContent: '120g', firstRowTune: '140g', secondRowContent: '160g', secondRowTune: '180g', thirdRowContent: '200g', thirdRowTune: '220g', fourthRowContent: '240g', fourthRowTune: '260', weightDown: '100g', weightUp: '300g', factory: '济南新昌', remark: '备注', record: '李潇梅' },
-                { recordTime: '2020-05-12 08:30', firstRowContent: '120g', firstRowTune: '140g', secondRowContent: '160g', secondRowTune: '180g', thirdRowContent: '200g', thirdRowTune: '220g', fourthRowContent: '240g', fourthRowTune: '260', weightDown: '100g', weightUp: '300g', factory: '济南新昌', remark: '备注', record: '李潇梅' },
-                { recordTime: '2020-05-12 08:30', firstRowContent: '120g', firstRowTune: '140g', secondRowContent: '160g', secondRowTune: '180g', thirdRowContent: '200g', thirdRowTune: '220g', fourthRowContent: '240g', fourthRowTune: '260', weightDown: '100g', weightUp: '300g', factory: '济南新昌', remark: '备注', record: '李潇梅' }
-            ],
-            NRTestList: [
-                { recordTime: '2020-05-12 08:30', firstRowContent: '30%', secondRowContent: '40%', thirdRowContent: '50%', fourthRowContent: '60%', firstRowFlow: '100', secondRowFlow: '120', thirdRowFlow: '140', fourthRowFlow: '160', tankTemperature: '85C', NRTemperature: '95C', NRPurity: '99.9%', secondPress: '100Mpa', mixProportion: '90%', remark: '备注', record: '李潇梅' },
-                { recordTime: '2020-05-12 08:30', firstRowContent: '30%', secondRowContent: '40%', thirdRowContent: '50%', fourthRowContent: '60%', firstRowFlow: '100', secondRowFlow: '120', thirdRowFlow: '140', fourthRowFlow: '160', tankTemperature: '85C', NRTemperature: '95C', NRPurity: '99.9%', secondPress: '100Mpa', mixProportion: '90%', remark: '备注', record: '李潇梅' },
-                { recordTime: '2020-05-12 08:30', firstRowContent: '30%', secondRowContent: '40%', thirdRowContent: '50%', fourthRowContent: '60%', firstRowFlow: '100', secondRowFlow: '120', thirdRowFlow: '140', fourthRowFlow: '160', tankTemperature: '85C', NRTemperature: '95C', NRPurity: '99.9%', secondPress: '100Mpa', mixProportion: '90%', remark: '备注', record: '李潇梅' }
-            ],
-            torqueTestList: [
-                { testTime: '2020-05-14 08:30', torque: '100/N.m', vacuum: '99Mpa', remark: '备注', check: '李潇梅' },
-                { testTime: '2020-05-14 08:30', torque: '100/N.m', vacuum: '99Mpa', remark: '备注', check: '李潇梅' },
-                { testTime: '2020-05-14 08:30', torque: '100/N.m', vacuum: '99Mpa', remark: '备注', check: '李潇梅' }
-            ],
-            currPage: 1,
-            pageSize: 10,
-            totalCount: 8
-        };
-    },
-    computed: {
-            sidebarFold: {
-                get() {
-                    return this.$store.state.common.sidebarFold;
+    import { PKG_API } from 'common/api/api';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
+    export default {
+        data() {
+            return {
+                formHeader: {
+                    workShop: '压榨一车间',
+                    productLine: '一车',
+                    productMaterial: '六月香甜面酱手工线',
+                    orderNo: '129300303',
+                    orderQuantity: '1000KG',
+                    orderDate: '2020-05-10',
+                    productDate: '2020-05-13',
+                    submitPeople: '李潇梅',
+                    submitTime: '2020-05-10'
+                },
+                activeName: '1',
+                isRedact: false,
+                sealList: [],
+                sealDelList: [],
+                newSealList: {
+                    id: '',
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    orderNo: '831000003241',
+                    orderId: '1234567',
+                    checkDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
+                    pressOne: '',
+                    pressTwo: '',
+                    pressThree: '',
+                    pressFour: '',
+                    reamrk: '',
+                    changer: getUserNameNumber()
+                },
+                weightList: [],
+                weightDelList: [],
+                newWeightList: {
+                    id: '',
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    orderNo: '831000003241',
+                    orderId: '1234567',
+                    recordDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
+                    netWeightOne: '',
+                    adjustmentOne: '',
+                    netWeightTwo: '',
+                    adjustmentTwo: '',
+                    netWeightThree: '',
+                    adjustmentThree: '',
+                    netWeightFour: '',
+                    adjustmentFour: '',
+                    boxWeightFloor: '',
+                    boxWeightCeiling: '',
+                    manufactor: '',
+                    remark: '',
+                    changer: getUserNameNumber()
+                },
+                NRList: [],
+                NRDelList: [],
+                newNRList: {
+                    id: '',
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    orderNo: '831000003241',
+                    orderId: '1234567',
+                    checkDate: '',
+                    nrContentOne: '',
+                    nrContentTwo: '',
+                    nrContentThree: '',
+                    nrContentFour: '',
+                    nrFlowOne: '',
+                    nrFlowTwo: '',
+                    nrFlowThree: '',
+                    nrFlowFour: '',
+                    potTemplate: '',
+                    nrTemplate: '',
+                    nrFineness: '',
+                    pressure: '',
+                    proportion: '',
+                    remark: '',
+                    changer: getUserNameNumber()
+                },
+                torqueList: [],
+                torqueDelList: [],
+                newTorqueList: {
+                    id: '',
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    orderNo: '831000003241',
+                    orderId: '1234567',
+                    checkDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
+                    torque: '',
+                    vacuum: '',
+                    remark: '',
+                    checkMan: getUserNameNumber()
+                },
+                originData: {
+                    originSealData: [],
+                    originWeightData: [],
+                    originNRData: [],
+                    originTourqeData: []
                 }
-            }
+            };
         },
-    methods: {
-        addRow() {
-            switch (this.activeName) {
-                case '1': if (this.tightnesList.length === 0) {
-                            alert('11');
+        computed: {
+                sidebarFold: {
+                    get() {
+                        return this.$store.state.common.sidebarFold;
+                    }
+                }
+            },
+        mounted() {
+            this.getAllData()
+        },
+        methods: {
+            getAllData() {
+                this.getSealList();
+                this.getWeightList();
+                this.getNRList();
+                this.getTourqeList();
+            },
+            getSealList() {
+                PKG_API.PKG_CHECKDATA_SEAL_QUERY_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    orderNo: '831000003241'
+                }).then(({ data }) => {
+                    this.sealList = data.data
+                    this.originData.originSealData = JSON.parse(JSON.stringify(this.sealList))
+                })
+            },
+            getWeightList() {
+                PKG_API.PKG_CHECKDATA_WEIGHT_QUERY_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    orderNo: '831000003241'
+                }).then(({ data }) => {
+                    this.weightList = data.data
+                    this.originData.originWeightData = JSON.parse(JSON.stringify(this.weightList))
+                })
+            },
+            getNRList() {
+                 PKG_API.PKG_CHECKDATA_NR_QUERY_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    orderNo: '831000003241'
+                }).then(({ data }) => {
+                    this.NRList = data.data
+                    this.originData.originNRData = JSON.parse(JSON.stringify(this.NRList))
+                })
+            },
+            getTourqeList() {
+                 PKG_API.PKG_CHECKDATA_TORQUE_QUERY_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    orderNo: '831000003241'
+                }).then(({ data }) => {
+                    this.torqueList = data.data
+                    this.originData.originTourqeData = JSON.parse(JSON.stringify(this.torqueList))
+                })
+            },
+            //密封度新增
+            sealAddRow() {
+                 if (this.sealList.length) {
+                    const last = JSON.parse(JSON.stringify(this.sealList[this.sealList.length - 1]));
+                    last.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    last.id = '';
+                    this.sealList.push(last);
+                } else {
+                    this.sealList.push(this.newSealList);
+                }
+            },
+            //密封度删除
+            sealDelRow(row) {
+                this.$confirm('是否删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    if (row.id.length) {
+                        this.sealDelList.push(row.id);
+                    }
+                    this.sealList.splice(this.sealList.indexOf(row), 1);
+                });
+            },
+            //称重新增
+            weightAddRow() {
+                if (this.weightList.length) {
+                    const last = JSON.parse(JSON.stringify(this.weightList[this.weightList.length - 1]));
+                    last.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    last.id = '';
+                    this.newWeightList.boxWeightFloor = last.boxWeightFloor;
+                    this.newWeightList.boxWeightCeiling = last.boxWeightCeiling;
+                    this.newWeightList.manufactor = last.manufactor;
+                    this.weightList.push(this.newWeightList);
+                } else {
+                    this.weightList.push(this.newWeightList);
+                }
+            },
+            //称重删除
+            weightDelRow(row) {
+                this.$confirm('是否删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    if (row.id.length) {
+                        this.weightDelList.push(row.id);
+                    }
+                    this.weightList.splice(this.weightList.indexOf(row), 1);
+                });
+            },
+            //NR新增
+            NRAddRow() {
+                if (this.NRList.length) {
+                    const last = JSON.parse(JSON.stringify(this.NRList[this.NRList.length - 1]));
+                    last.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    last.id = '';
+                    this.newNRList.nrFlowOne = last.nrFlowOne;
+                    this.newNRList.nrFlowTwo = last.nrFlowTwo;
+                    this.newNRList.nrFlowThree = last.nrFlowThree;
+                    this.newNRList.nrFlowFour = last.nrFlowFour;
+                    this.NRList.push(this.newNRList);
+                } else {
+                    this.NRList.push(this.newNRList);
+                }
+            },
+            //NR删除
+            NRDelRow(row) {
+                this.$confirm('是否删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    if (row.id.length) {
+                        this.NRDelList.push(row.id);
+                    }
+                    this.NRList.splice(this.NRList.indexOf(row), 1);
+                });
+            },
+            //扭力新增
+            torqueAddRow() {
+                this.torqueList.push(this.newTorqueList);
+            },
+            //扭力删除
+            torqueDelRow(row) {
+                this.$confirm('是否删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    if (row.id.length) {
+                        this.torqueDelList.push(row.id);
+                    }
+                    this.torqueList.splice(this.torqueList.indexOf(row), 1);
+                });
+            },
+            //取消
+            cancel() {
+                this.isRedact = false;
+                this.sealList = JSON.parse(JSON.stringify(this.originData.sealData));
+                this.weightList = JSON.parse(JSON.stringify(this.originData.weightData));
+                this.NRList = JSON.parse(JSON.stringify(this.originData.NRData));
+                this.torqueList = JSON.parse(JSON.stringify(this.originData.tourqeData));
+            },
+            //保存
+            save() {
+                if (!this.isRedact) {
+                    this.isRedact = !this.isRedact;
+                } else {
+                    const pkgSeal = {
+                        sealDels: JSON.parse(JSON.stringify(this.sealDelList)),
+                        sealInserts: [],
+                        sealUpdates: []
+                    }
+                    this.sealList.forEach(item => {
+                        if (item.id.length) {
+                            this.originData.originSealData.forEach(newItem => {
+                                if (newItem.id === item.id) {
+                                    if (!this.cmp(item, newItem)) {
+                                        pkgSeal.sealUpdates.push(item);
+                                    }
+                                }
+                            })
                         } else {
-                            const last = this.tightnesList[this.tightnesList.length - 1];
-                            this.tightnesList.push(last);
+                            pkgSeal.sealInserts.push(item);
                         }
-                    break;
-                case '2': if (this.weightRecordList.length === 0) {
-                            alert('11');
+                    })
+                    const pkgWeight = {
+                        pkgWeightDelete: JSON.parse(JSON.stringify(this.weightDelList)),
+                        pkgWeightInsert: [],
+                        pkgWeightUpdate: []
+                    }
+                    this.weightList.forEach(item => {
+                        if (item.id.length) {
+                            this.originData.originWeightData.forEach(newItem => {
+                                if (newItem.id === item.id) {
+                                    if (!this.cmp(item, newItem)) {
+                                        pkgWeight.pkgWeightUpdate.push(item);
+                                    }
+                                }
+                            })
                         } else {
-                            const last = this.weightRecordList[this.weightRecordList.length - 1];
-                            this.weightRecordList.push(last);
+                            pkgWeight.pkgWeightInsert.push(item);
                         }
-                    break;
-                case '3': if (this.NRTestList.length === 0) {
-                            alert('11');
+                    })
+                    const pkgNr = {
+                        pkgNrDelete: JSON.parse(JSON.stringify(this.NRDelList)),
+                        pkgNrInsert: [],
+                        pkgNrUpdate: []
+                    }
+                    this.NRList.forEach(item => {
+                        if (item.id.length) {
+                            this.originData.originNRData.forEach(newItem => {
+                                if (newItem.id === item.id) {
+                                    if (!this.cmp(item, newItem)) {
+                                        pkgNr.pkgNrUpdate.push(item);
+                                    }
+                                }
+                            })
                         } else {
-                            const last = this.NRTestList[this.NRTestList.length - 1];
-                            this.NRTestList.push(last);
+                            pkgNr.pkgNrInsert.push(item);
                         }
-                    break;
-                case '4': if (this.torqueTestList.length === 0) {
-                            alert('11');
+                    })
+                    const pkgTorque = {
+                        pkgTorqueDelete: JSON.parse(JSON.stringify(this.torqueDelList)),
+                        pkgTorqueInsert: [],
+                        pkgTorqueUpdate: []
+                    }
+                    this.torqueList.forEach(item => {
+                        if (item.id.length) {
+                            this.originData.originTourqeData.forEach(newItem => {
+                                if (newItem.id === item.id) {
+                                    if (!this.cmp(item, newItem)) {
+                                        pkgTorque.pkgTorqueUpdate.push(item);
+                                    }
+                                }
+                            })
                         } else {
-                            const last = this.torqueTestList[this.torqueTestList.length - 1];
-                            this.torqueTestList.push(last);
+                            pkgTorque.pkgTorqueInsert.push(item);
                         }
-                    break;
-                default:
-                    break;
+                    })
+                    PKG_API.PKG_CHECKDATA_SAVE_API({
+                        pkgSealData: pkgSeal,
+                        pkgWeightData: pkgWeight,
+                        pkgNrData: pkgNr,
+                        pkgTorqueData: pkgTorque
+                    }).then(({ data }) => {
+                        this.$successToast(data.msg);
+                        this.isRedact = !this.isRedact;
+                        this.sealDelList = [];
+                        this.weightDelList = [];
+                        this.NRDelList = [];
+                        this.torqueDelList = [];
+                        this.getAllData();
+                    })
+                }
+            },
+            cmp(x, y) {
+                // remember that NaN === NaN returns false
+                // and isNaN(undefined) returns true
+                if (isNaN(x) && isNaN(y) && typeof x === 'number' && typeof y === 'number') {
+                    return true;
+                }
+                // If both x and y are null or undefined and exactly the same
+                if (x === y) {
+                    return x !== 0 || 1 / x === 1 / y;
+                }
+
+                if (x === null || y === null) return x === y;
+
+                // Works in case when functions are created in constructor.
+                // Comparing dates is a common scenario. Another built-ins?
+                // We can even handle functions ㄋpassed across iframes
+                if ((typeof x === 'function' && typeof y === 'function') || (x instanceof Date && y instanceof Date) || (x instanceof RegExp && y instanceof RegExp) || (x instanceof String && y instanceof String) || (x instanceof Number && y instanceof Number)) {
+                    return x.toString() === y.toString();
+                }
+
+                // If they are not strictly equal, they both need to be Objects
+                if (!(x instanceof Object) || !(y instanceof Object)) {
+                    return false;
+                }
+
+                if (Object.prototype.isPrototypeOf.call(x, y) || Object.prototype.isPrototypeOf.call(y, x)) {
+                    return false;
+                }
+
+                //They must have the exact same prototype chain,the closest we can do is
+                //test the constructor.
+                if (x.constructor !== y.constructor) {
+                    return false;
+                }
+
+                if (x.prototype !== y.prototype) {
+                    return false;
+                }
+                for (const p in x) {
+                    //Inherited properties were tested using x.constructor === y.constructor
+                    if (Object.prototype.hasOwnProperty.call(x, p)) {
+                        // Allows comparing x[ p ] and y[ p ] when set to undefined
+                        if (!Object.prototype.hasOwnProperty.call(y, p)) {
+                            return false;
+                        }
+                        // If they have the same strict value or identity then they are equal
+                        if (x[p] === y[p]) {
+                            continue;
+                        }
+                        // Numbers, Strings, Functions, Booleans must be strictly equal
+                        if (typeof x[p] !== 'object') {
+                            return false;
+                        }
+                        // Objects and Arrays must be tested recursively
+                        // if (!Object.is(x[ p ], y[ p ])) {
+                        //     return false;
+                        // }
+                    }
+                }
+                for (const q in y) {
+                    // allows x[ p ] to be set to undefined
+                    if (Object.prototype.hasOwnProperty.call(y, q) && !Object.prototype.hasOwnProperty.call(x, q)) {
+                        return false;
+                    }
+                }
+                return true;
             }
-        },
-        cancel() {
-            this.isRedact = false;
-        },
-        save() {
-            if (!this.isRedact) {
-                alert('编辑');
-            } else {
-                alert('保存');
-            }
-            this.isRedact = !this.isRedact;
-        },
-        tabClick() {
-            switch (this.activeName) {
-                case '1':this.orderStatus = 'noPass';
-                    break;
-                case '2':this.orderStatus = 'save';
-                    break
-                case '3':this.orderStatus = 'submit';
-                    break;
-                case '4':this.orderStatus = 'checked';
-                    break;
-                default:
-                    break;
-            }
-        },
-        indexMethod(index) {
-            return index + 1 + (Number(this.currPage) - 1) * Number(this.pageSize);
         }
-    }
-};
+    };
 </script>
 
 <style scoed lang="scss">
@@ -520,46 +823,5 @@ export default {
     background: #487bff;
     border-radius: 2px;
 }
-
-// .redactBox {
-//     position: fixed;
-//     right: 0;
-//     bottom: 0;
-//     z-index: 99;
-//     width: 100%;
-//     height: 48px;
-//     transition: all 0.3s;
-//     .redact {
-//         width: 100%;
-//         height: 100%;
-//         padding: 8px 16px;
-//         background: rgba(255, 255, 255, 1);
-//         border: 1px solid rgba(232, 232, 232, 1);
-//         box-shadow: 2px -3px 5px 0 rgba(214, 210, 196, 1);
-//         &_tips {
-//             float: left;
-//             color: #999;
-//             font-size: 14px;
-//             line-height: 32px;
-//             i {
-//                 margin-right: 5px;
-//                 color: #487bff;
-//             }
-//         }
-//         &_btn {
-//             float: right;
-//             .el-button--primary {
-//                 color: #000;
-//                 background-color: #fff;
-//                 border-color: #d9d9d9;
-//             }
-//             .el-button--primary:last-child {
-//                 color: #fff;
-//                 background-color: #487bff;
-//                 border-color: #487bff;
-//             }
-//         }
-//     }
-// }
 
 </style>

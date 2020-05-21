@@ -448,5 +448,25 @@ export const PKG_API = {
     /**
      * @property {string} PKG_INSTORAGE_QUERY_API 生产数据-生产入库-查询
      */
-    PKG_INSTORAGE_QUERY_API: params => httpProxy('/pkgInStorage/query', 'POST', params)
+    PKG_INSTORAGE_QUERY_API: params => httpProxy('/pkgInStorage/query', 'POST', params),
+    /**
+     * @property {string} PKG_CHECKDATA_SEAL_QUERY_API 检查数据-密封度检测-查询
+     */
+    PKG_CHECKDATA_SEAL_QUERY_API: params => httpProxy('/pkgSealData/query', 'POST', params),
+    /**
+     * @property {string} PKG_CHECKDATA_WEIGHT_QUERY_API 检查数据-称重记录-查询
+     */
+    PKG_CHECKDATA_WEIGHT_QUERY_API: params => httpProxy('/pkgWeight/query', 'POST', params),
+    /**
+     * @property {string} PKG_CHECKDATA_NR_QUERY_API 检查数据-NR检测-查询
+     */
+    PKG_CHECKDATA_NR_QUERY_API: params => httpProxy('/pkgNr/query', 'POST', params),
+    /**
+     * @property {string} PKG_CHECKDATA_TORQUE_QUERY_API 检查数据-扭力矩检测-查询
+     */
+    PKG_CHECKDATA_TORQUE_QUERY_API: params => httpProxy('/pkgTorque/query', 'POST', params),
+    /**
+     * @property {string} PKG_CHECKDATA_SAVE_API 检查数据-保存
+     */
+    PKG_CHECKDATA_SAVE_API: params => httpProxy('/pkg/checkData/save', 'POST', params)
 };
