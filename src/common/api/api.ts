@@ -468,5 +468,9 @@ export const PKG_API = {
     /**
      * @property {string} PKG_CHECKDATA_SAVE_API 检查数据-保存
      */
-    PKG_CHECKDATA_SAVE_API: params => httpProxy('/pkg/checkData/save', 'POST', params)
+    PKG_CHECKDATA_SAVE_API: params => httpProxy('/pkg/checkData/save', 'POST', params),
+    /**
+     * @property {string}  生产数据-生产准备-查询
+     */
+    PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params)
 };
