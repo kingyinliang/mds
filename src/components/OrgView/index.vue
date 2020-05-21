@@ -133,6 +133,9 @@
         ::v-deep .el-tree-node__expand-icon { /* stylelint-disable-line */
             color: #487bff;
         }
+        ::v-deep .el-tree-node__expand-icon.is-leaf { /* stylelint-disable-line */
+            color: transparent;
+        }
 
         .org-card_title {
             height: 40px;
