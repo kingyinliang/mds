@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="packaging__main__item__main__right">
                                         <el-form-item label="生产订单：">
-                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" :change="orderchange(item)" style="width: 100%;" clearable>
+                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" :change="orderchange(item)" style="width: 100%;">
                                                 <el-option v-for="(subItem, subIndex) in item.orderNoList" :key="subIndex" :label="subItem" :value="subItem" />
                                             </el-select>
                                         </el-form-item>
@@ -50,7 +50,7 @@
                                             <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goDataEntry(item)">
                                                 生产数据
                                             </el-button>
-                                            <el-button size="small" type="primary">
+                                            <el-button size="small" type="primary" @click="goCheckData(item)">
                                                 检查数据
                                             </el-button>
                                         </div>
@@ -156,14 +156,19 @@
         }
 
         goDataEntry(item) {
-            console.log(item);
-            this.$router.push({
-                name: `DFMDS-pages-Packaging-detail`,
-                params: {
-                    orderNo: item.activeOrderNo,
-                    productLineName: item.productLineName
-                }
-            });
+            this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-detail'))
+            setTimeout(() => {
+                this.$router.push({ name: `DFMDS-pages-Packaging-detail` });
+            }, 100);
+        }
+
+        goCheckData(item) {
+            this.$store.commit('packaging/updatePackCheckData', item.activeOrderMap);
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-CheckData'))
+            setTimeout(() => {
+                this.$router.push({ name: `DFMDS-pages-Packaging-CheckData` });
+            }, 100);
         }
     }
     interface PkgObj{

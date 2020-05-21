@@ -5,6 +5,7 @@
             :right-tile="'设备信息'"
             :type="'table'"
             @treeNodeClick="getData"
+            @getTreeSuccess="setDeptId"
         >
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
@@ -20,7 +21,7 @@
                     </el-button>
                 </div>
                 <el-table ref="table1" class="newTable" border header-row-class-name="tableHead" :height="documentClientHeight - 32 - 40 - 75 - 82 - 155" :data="deviceList" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="50" />
+                    <el-table-column type="selection" width="50" fixed="left" />
                     <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
                     <el-table-column prop="deptName" width="120" :show-overflow-tooltip="true" label="所属部门" />
                     <el-table-column prop="deviceNo" width="120" :show-overflow-tooltip="true" label="设备编号" />
@@ -100,6 +101,10 @@
         deviceList: object[] = [];
         multipleSelection: string[] = [];
 
+        setDeptId(data) {
+            this.deptId = data[0].id
+        }
+
         getData(row = false, first = false) {
             if (row) {
                 this.deptId = row['id'];
@@ -114,12 +119,13 @@
                 size: this.pageSize,
                 current: this.currPage
             }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.multipleSelection = [];
-                    this.deviceList = data.data.records;
-                    this.currPage = data.data.current;
-                    this.pageSize = data.data.size;
-                    this.totalCount = data.data.total;
+                this.multipleSelection = [];
+                this.deviceList = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+                if (data.data.records.length === 0) {
+                    this.$infoToast('该搜寻条件下无任何资料');
                 }
             })
         }

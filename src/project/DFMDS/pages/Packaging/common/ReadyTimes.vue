@@ -3,14 +3,14 @@
         <mds-card :title="'准备工时(单位：min)'" :name="'readyTimes'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-select v-model="readyType" size="small">
-                        <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
+                    <el-select v-model="formInline.classes" size="small">
+                        <el-option v-for="(item, index) in classList" :key="index" :value="item.dictCode" :label="item.dictValue" />
                     </el-select>
                 </div>
             </template>
-            <div v-if="readyType === '白班' || readyType === '多班'" class="marginL10px">
+            <div v-if="formInline.classes === 'M' || formInline.classes === 'D'" class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />白班</h3>
+                    <h3><i class="point-icon" />{{ classList.find((item)=> item.dictCode === 'M').dictValue }}</h3>
                 </div>
                 <el-row>
                     <el-form :inline="true" :model="formInline" label-width="92px">
@@ -18,89 +18,89 @@
                             <template slot="label">
                                 <span class="notNull">*</span>参与人数：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.dayUser" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>交接班：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.dayShift" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>班前会：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.dayMeeting" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>生产前准备：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.dayPrepaired" placeholder="请输入" size="small" />
                         </el-form-item>
-                        <el-form-item label="">
+                        <el-form-item>
                             <template slot="label">
                                 <span class="notNull">*</span>生产后清场：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.dayClear" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="品质保证：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.dayQuality" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="切换时间：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.dayChange" placeholder="请输入" size="small" />
                         </el-form-item>
                     </el-form>
                 </el-row>
             </div>
-            <div v-if="readyType === '中班' || readyType === '多班'" class="marginL10px">
+            <div v-if="formInline.classes === 'A' || formInline.classes === 'D'" class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />中班</h3>
+                    <h3><i class="point-icon" />{{ classList.find((item)=> item.dictCode === 'A').dictValue }}</h3>
                 </div>
                 <el-row>
                     <el-form :inline="true" :model="formInline" label-width="92px">
                         <el-form-item>
                             <template slot="label">
-                                <span v-if="readyType === '中班'" class="notNull">*</span>参与人数：
+                                <span v-if="formInline.classes === '中班'" class="notNull">*</span>参与人数：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.midUser" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="readyType === '中班'" class="notNull">*</span>交接班：
+                                <span v-if="formInline.classes === '中班'" class="notNull">*</span>交接班：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.midShift" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="readyType === '中班'" class="notNull">*</span>班前会：
+                                <span v-if="formInline.classes === '中班'" class="notNull">*</span>班前会：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.midMeeting" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="readyType === '中班'" class="notNull">*</span>生产前准备：
+                                <span v-if="formInline.classes === '中班'" class="notNull">*</span>生产前准备：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.midPrepaired" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="readyType === '中班'" class="notNull">*</span>生产后清场：
+                                <span v-if="formInline.classes === '中班'" class="notNull">*</span>生产后清场：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.midClear" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="品质保证：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.midQualiry" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="切换时间：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.midChange" placeholder="请输入" size="small" />
                         </el-form-item>
                     </el-form>
                 </el-row>
             </div>
-            <div v-if="readyType === '夜班' || readyType === '多班'" class="marginL10px">
+            <div v-if="formInline.classes === 'N' || formInline.classes === 'D'" class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />夜班</h3>
+                    <h3><i class="point-icon" />{{ classList.find((item)=> item.dictCode === 'N').dictValue }}</h3>
                 </div>
                 <el-row>
                     <el-form :inline="true" :model="formInline" label-width="92px">
@@ -108,37 +108,37 @@
                             <template slot="label">
                                 <span class="notNull">*</span>参与人数：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.nightUser" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>交接班：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.nightShift" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>班前会：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.nightMeeting" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>生产前准备：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.nightPrepaired" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>生产后清场：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.nightClear" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="品质保证：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.nightQuality" placeholder="请输入" size="small" />
                         </el-form-item>
                         <el-form-item label="切换时间：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model="formInline.nightChange" placeholder="请输入" size="small" />
                         </el-form-item>
                     </el-form>
                 </el-row>
@@ -148,7 +148,7 @@
                     <h3><i class="point-icon" />备注</h3>
                 </div>
                 <el-row>
-                    <el-input v-model="formInline.Text" type="textarea" class="textarea" style="width: 100%; height: 100px;" />
+                    <el-input v-model="formInline.remark" type="textarea" class="textarea" style="width: 100%; height: 100px;" />
                 </el-row>
             </div>
         </mds-card>
@@ -157,7 +157,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { PKG_API } from 'common/api/api';
 
 @Component({
     name: 'ReadyTimes',
@@ -170,26 +171,18 @@ import { Vue, Component } from 'vue-property-decorator';
 
 export default class ReadyTimes extends Vue {
 
-    classList= [
-        {
-            name: '白班',
-            value: '白班'
-        }, {
-            name: '中班',
-            value: '中班'
-        }, {
-            name: '夜班',
-            value: '夜班'
-        }, {
-            name: '多班',
-            value: '多班'
-        }
-    ]
-
-    readyType='白班'
     formInline= {}
     ReadAudit= []
 
+    @Prop({ default: [] }) classList: object[]
+
+    getDataList(orderno) {
+        PKG_API.PKG_READYTIME_QUERY_API({ order: orderno }).then(({ data }) => {
+            if (data.code === 200) {
+                this.formInline = data.data
+            }
+        });
+    }
 
 }
 </script>
