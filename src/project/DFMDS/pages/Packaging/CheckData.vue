@@ -59,32 +59,32 @@
                             <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第一排" width="120">
+                    <el-table-column label="第一排" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.pressOne" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第二排" width="120">
+                    <el-table-column label="第二排" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.pressTwo" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.pressTwo" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第三排" width="120">
+                    <el-table-column label="第三排" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.pressThree" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.pressThree" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第四排" width="120">
+                    <el-table-column label="第四排" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.pressFour" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.pressFour" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="备注">
+                    <el-table-column label="备注" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="记录人">
+                    <el-table-column label="记录人" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.changer" disabled size="mini" />
                         </template>
@@ -121,67 +121,67 @@
                             <el-date-picker v-model="scope.row.recordDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第一排净含量" width="120">
+                    <el-table-column label="第一排净含量" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.netWeightOne" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.netWeightOne" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第一排调称" width="120">
+                    <el-table-column label="第一排调称" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.adjustmentOne" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.adjustmentOne" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第二排净含量" width="120">
+                    <el-table-column label="第二排净含量" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.netWeightTwo" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.netWeightTwo" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第二排调称" width="120">
+                    <el-table-column label="第二排调称" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.adjustmentTwo" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.adjustmentTwo" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第三排净含量" width="120">
+                    <el-table-column label="第三排净含量" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.netWeightThree" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.netWeightThree" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第三排调称" width="120">
+                    <el-table-column label="第三排调称" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.adjustmentThree" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.adjustmentThree" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第四排净含量" width="120">
+                    <el-table-column label="第四排净含量" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.netWeightFour" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.netWeightFour" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="第四排调称" width="120">
+                    <el-table-column label="第四排调称" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.adjustmentFour" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.adjustmentFour" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="酱盒重量下限" width="120">
+                    <el-table-column label="酱盒重量下限" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.boxWeightFloor" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.boxWeightFloor" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="酱盒重量上限" width="120">
+                    <el-table-column label="酱盒重量上限" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.boxWeightCeiling" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.boxWeightCeiling" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="厂家" width="120">
+                    <el-table-column label="厂家" width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.manufactor" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="备注" width="180">
+                    <el-table-column label="备注" width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="记录人" width="180">
+                    <el-table-column label="记录人" width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.changer" disabled size="mini" />
                         </template>
@@ -210,7 +210,7 @@
                 </div>
                 <el-table ref="table3" class="newTable borderTable" header-row-class-name="tableHead" :data="NRList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" label="序号" width="55" />
-                    <el-table-column width="120">
+                    <el-table-column width="120" :show-overflow-tooltip="true">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
@@ -219,80 +219,80 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="NR含量（%）">
-                        <el-table-column label="第一排" width="120">
+                        <el-table-column label="第一排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrContentOne" :disabled="!isRedact" size="mini" />
+                                <el-input v-model="scope.row.nrContentOne" :disabled="!isRedact" maxlength="12" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="第二排" width="120">
+                        <el-table-column label="第二排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrContentTwo" :disabled="!isRedact" size="mini" />
+                                <el-input v-model="scope.row.nrContentTwo" :disabled="!isRedact" maxlength="12" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="第三排" width="120">
+                        <el-table-column label="第三排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrContentThree" :disabled="!isRedact" size="mini" />
+                                <el-input v-model="scope.row.nrContentThree" :disabled="!isRedact" maxlength="12" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="第四排" width="120">
+                        <el-table-column label="第四排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrContentFour" :disabled="!isRedact" size="mini" />
+                                <el-input v-model="scope.row.nrContentFour" :disabled="!isRedact" maxlength="12" size="mini" />
                             </template>
                         </el-table-column>
                     </el-table-column>
                     <el-table-column label="NR流量（L/min）">
-                        <el-table-column label="第一排" width="120">
+                        <el-table-column label="第一排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrFlowOne" :disabled="!isRedact" size="mini" />
+                                <el-input v-model="scope.row.nrFlowOne" :disabled="!isRedact" maxlength="12" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="第二排" width="120">
+                        <el-table-column label="第二排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrFlowTwo" :disabled="!isRedact" size="mini" />
+                                <el-input v-model="scope.row.nrFlowTwo" :disabled="!isRedact" maxlength="12" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="第三排" width="120">
+                        <el-table-column label="第三排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrFlowThree" :disabled="!isRedact" size="mini" />
+                                <el-input v-model="scope.row.nrFlowThree" :disabled="!isRedact" maxlength="12" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="第四排" width="120">
+                        <el-table-column label="第四排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrFlowFour" :disabled="!isRedact" size="mini" />
+                                <el-input v-model="scope.row.nrFlowFour" :disabled="!isRedact" maxlength="12" size="mini" />
                             </template>
                         </el-table-column>
                     </el-table-column>
-                    <el-table-column label="罐内温度（°C）" width="140">
+                    <el-table-column label="罐内温度（°C）" width="140" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.potTemplate" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.potTemplate" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="NR温度（°C）" width="140">
+                    <el-table-column label="NR温度（°C）" width="140" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.nrTemplate" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.nrTemplate" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="NR纯度（%）" width="140">
+                    <el-table-column label="NR纯度（%）" width="140" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.nrFineness" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.nrFineness" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="二级储压（Mpa）" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.pressure" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.pressure" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="混合比重（%）" width="140">
+                    <el-table-column label="混合比重（%）" width="140" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.proportion" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.proportion" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="备注" width="180">
+                    <el-table-column label="备注" width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="记录人" width="180">
+                    <el-table-column label="记录人" width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.changer" disabled size="mini" />
                         </template>
@@ -329,22 +329,22 @@
                             <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="扭力矩/N.m" width="200">
+                    <el-table-column label="扭力矩/N.m" width="200" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.torque" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.torque" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="真空度/Mpa" width="200">
+                    <el-table-column label="真空度/Mpa" width="200" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.vacuum" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.vacuum" :disabled="!isRedact" maxlength="12" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="备注">
+                    <el-table-column label="备注" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="检查人">
+                    <el-table-column label="检查人" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.checkMan" disabled size="mini" />
                         </template>
