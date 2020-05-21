@@ -164,8 +164,11 @@
         }
 
         goCheckData(item) {
-            console.log(item);
-            this.$router.push({ name: `DFMDS-pages-Packaging-CheckData` });
+            this.$store.commit('packaging/updatePackCheckData', item.activeOrderMap);
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-CheckData'))
+            setTimeout(() => {
+                this.$router.push({ name: `DFMDS-pages-Packaging-CheckData` });
+            }, 100);
         }
     }
     interface PkgObj{
