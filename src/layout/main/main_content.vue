@@ -31,7 +31,7 @@
         <!-- 主入口标签页 e -->
         <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
             <keep-alive>
-                <router-view :style="siteContentViewHeight"/>
+                <router-view :style="siteContentViewHeight" />
             </keep-alive>
         </transition>
         <div class="footer">
