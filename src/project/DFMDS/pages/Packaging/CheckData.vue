@@ -17,10 +17,10 @@
                             <el-input v-model="formHeader.orderNo" size="small" class="header_main__input" disabled />
                         </el-form-item>
                         <el-form-item label="订单产量：">
-                            <el-input v-model="formHeader.orderQuantity" size="small" class="header_main__input" disabled />
+                            <el-input v-model="formHeader.planOutput" size="small" class="header_main__input" disabled />
                         </el-form-item>
                         <el-form-item label="订单日期：">
-                            <el-input v-model="formHeader.orderDate" size="small" class="header_main__input" disabled />
+                            <el-input v-model="formHeader.orderStartDate" size="small" class="header_main__input" disabled />
                         </el-form-item>
                         <el-form-item label="生产日期：">
                             <el-input v-model="formHeader.productDate" size="small" class="header_main__input" disabled />
@@ -29,7 +29,7 @@
                             <el-input v-model="formHeader.submitPeople" size="small" class="header_main__input" disabled />
                         </el-form-item>
                         <el-form-item label="提交时间：">
-                            <el-input v-model="formHeader.submitTime" size="small" class="header_main__input" disabled />
+                            <el-input v-model="formHeader.changed" size="small" class="header_main__input" disabled />
                         </el-form-item>
                     </el-form>
                 </el-col>
@@ -388,15 +388,15 @@
         data() {
             return {
                 formHeader: {
-                    workShop: '压榨一车间',
-                    productLine: '一车',
-                    productMaterial: '六月香甜面酱手工线',
-                    orderNo: '129300303',
-                    orderQuantity: '1000KG',
-                    orderDate: '2020-05-10',
-                    productDate: '2020-05-13',
-                    submitPeople: '李潇梅',
-                    submitTime: '2020-05-10'
+                    workShop: this.$store.state.packaging.packCheckData.workShop,
+                    productLine: this.$store.state.packaging.packCheckData.productLine,
+                    productMaterial: this.$store.state.packaging.packCheckData.materialName,
+                    orderNo: this.$store.state.packaging.packCheckData.orderNo,
+                    planOutput: this.$store.state.packaging.packCheckData.planOutput + this.$store.state.packaging.packCheckData.outputUnit,
+                    orderStartDate: this.$store.state.packaging.packCheckData.orderStartDate,
+                    productDate: this.$store.state.packaging.packCheckData.productDate,
+                    submitPeople: '',
+                    changed: this.$store.state.packaging.packCheckData.changed
                 },
                 activeName: '1',
                 isRedact: false,
@@ -405,7 +405,7 @@
                 newSealList: {
                     id: '',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    orderNo: '831000003241',
+                    orderNo: this.$store.state.packaging.packCheckData.orderNo,
                     orderId: '1234567',
                     checkDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
                     pressOne: '',
@@ -420,7 +420,7 @@
                 newWeightList: {
                     id: '',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    orderNo: '831000003241',
+                    orderNo: this.$store.state.packaging.packCheckData.orderNo,
                     orderId: '1234567',
                     recordDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
                     netWeightOne: '',
@@ -442,7 +442,7 @@
                 newNRList: {
                     id: '',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    orderNo: '831000003241',
+                    orderNo: this.$store.state.packaging.packCheckData.orderNo,
                     orderId: '1234567',
                     checkDate: '',
                     nrContentOne: '',
@@ -466,7 +466,7 @@
                 newTorqueList: {
                     id: '',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    orderNo: '831000003241',
+                    orderNo: this.$store.state.packaging.packCheckData.orderNo,
                     orderId: '1234567',
                     checkDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
                     torque: '',
@@ -502,7 +502,7 @@
             getSealList() {
                 PKG_API.PKG_CHECKDATA_SEAL_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    orderNo: '831000003241'
+                    orderNo: this.$store.state.packaging.packCheckData.orderNo
                 }).then(({ data }) => {
                     this.sealList = data.data
                     this.originData.originSealData = JSON.parse(JSON.stringify(this.sealList))
@@ -511,7 +511,7 @@
             getWeightList() {
                 PKG_API.PKG_CHECKDATA_WEIGHT_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    orderNo: '831000003241'
+                    orderNo: this.$store.state.packaging.packCheckData.orderNo
                 }).then(({ data }) => {
                     this.weightList = data.data
                     this.originData.originWeightData = JSON.parse(JSON.stringify(this.weightList))
@@ -520,7 +520,7 @@
             getNRList() {
                  PKG_API.PKG_CHECKDATA_NR_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    orderNo: '831000003241'
+                    orderNo: this.$store.state.packaging.packCheckData.orderNo
                 }).then(({ data }) => {
                     this.NRList = data.data
                     this.originData.originNRData = JSON.parse(JSON.stringify(this.NRList))
@@ -529,7 +529,7 @@
             getTourqeList() {
                  PKG_API.PKG_CHECKDATA_TORQUE_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    orderNo: '831000003241'
+                    orderNo: this.$store.state.packaging.packCheckData.orderNo
                 }).then(({ data }) => {
                     this.torqueList = data.data
                     this.originData.originTourqeData = JSON.parse(JSON.stringify(this.torqueList))
