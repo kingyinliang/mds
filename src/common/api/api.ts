@@ -448,5 +448,9 @@ export const PKG_API = {
     /**
      * @property {string} PKG_INSTORAGE_QUERY_API 生产数据-生产入库-查询
      */
-    PKG_INSTORAGE_QUERY_API: params => httpProxy('/pkgInStorage/query', 'POST', params)
+    PKG_INSTORAGE_QUERY_API: params => httpProxy('/pkgInStorage/query', 'POST', params),
+    /**
+     * @property {string}  生产数据-生产准备-查询
+     */
+    PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params)
 };

@@ -10,7 +10,7 @@
         :tabs="tabs"
     >
         <template slot="1" slot-scope="data">
-            <ready-time ref="readytime" :is-redact="data.isRedact" />
+            <ready-time ref="readytime" :class-list="classList" :is-redact="data.isRedact" />
         </template>
         <template slot="2" slot-scope="data">
             <product-people ref="productPeople" :is-redact="data.isRedact" />
@@ -32,14 +32,13 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { PKG_API } from 'common/api/api';
+    import { COMMON_API, PKG_API } from 'common/api/api';
     import ReadyTime from './common/ReadyTimes.vue';
     import Material from './common/Material.vue';
     import ProductPeople from './common/ProductPeople.vue';
     import PendingNum from './common/PendingNum.vue';
     import TextRecord from './common/TextRecord.vue';
     import ProductInStorage from './common/ProductInStorage.vue';
-
 
     @Component({
         components: {
@@ -51,6 +50,7 @@
             ProductInStorage
         }
     })
+
     export default class PackagingDetail extends Vue {
         orderStatus = ''
 
@@ -142,6 +142,17 @@
             }
         ];
 
+        classList = [];
+
+        created() {
+            // 班次拉取
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+                if (data.code === 200) {
+                    this.classList = data.data
+                }
+            });
+        }
+
         mounted() {
             console.log(this.$route.params.orderNo)
             console.log(this.$route.params.productLineName)
@@ -152,6 +163,12 @@
                 console.log(data)
                 this.orderData = data
             })
+            this.getList();
+        }
+
+        getList() {
+            // eslint-disable-next-line
+            (this.$refs.readytime as any).getDataList('1111')
         }
     }
 interface OrderData{
