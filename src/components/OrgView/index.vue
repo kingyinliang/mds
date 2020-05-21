@@ -90,7 +90,7 @@
                     this.OrgTree = data.data;
                     this.arrList = [this.OrgTree[0]['children'][0]['id']];
                     if (type) {
-                        console.log(1)
+                        this.$emit('getTreeSuccess', data.data);
                     }
                 }
             });

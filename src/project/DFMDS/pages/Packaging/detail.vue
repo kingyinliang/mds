@@ -143,14 +143,11 @@
         ];
 
         mounted() {
-            console.log(this.$route.params.orderNo)
-            console.log(this.$route.params.productLineName)
             PKG_API.PKG_HOME_QUERY_BY_NO_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        orderNo: this.$route.params.orderNo
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: this.$store.state.packaging.packDetail.orderNo
             }).then(({ data }) => {
-                console.log(data)
-                this.orderData = data
+                this.formHeader = data.data
             })
         }
     }

@@ -156,14 +156,11 @@
         }
 
         goDataEntry(item) {
-            console.log(item);
-            this.$router.push({
-                name: `DFMDS-pages-Packaging-detail`,
-                params: {
-                    orderNo: item.activeOrderNo,
-                    productLineName: item.productLineName
-                }
-            });
+            this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-detail'))
+            setTimeout(() => {
+                this.$router.push({ name: `DFMDS-pages-Packaging-detail` });
+            }, 100);
         }
     }
     interface PkgObj{
