@@ -23,9 +23,7 @@
                 <iframe v-if="item.type === 'iframe'" :src="item.iframeUrl" width="100%" height="100%" title="" />
                 <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
                     <keep-alive>
-                        <div :style="siteContentViewHeight">
-                            <router-view v-if="item.name === mainTabsActiveName" />
-                        </div>
+                        <router-view v-if="item.name === mainTabsActiveName" :style="siteContentViewHeight" />
                     </keep-alive>
                 </transition>
             </el-tab-pane>
@@ -33,9 +31,7 @@
         <!-- 主入口标签页 e -->
         <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
             <keep-alive>
-                <div :style="siteContentViewHeight">
-                    <router-view />
-                </div>
+                <router-view :style="siteContentViewHeight" />
             </keep-alive>
         </transition>
         <div class="footer">
