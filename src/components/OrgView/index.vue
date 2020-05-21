@@ -3,7 +3,7 @@
         <mds-card :title="title" :name="'org'" :pack-up="false" style="background: #fff;">
             <el-row :gutter="20">
                 <el-col :span="8">
-                    <div class="org-card">
+                    <div class="org-card" :style="siteContentViewHeight">
                         <div class="org-card_title">
                             组织架构一览
                         </div>
@@ -28,7 +28,7 @@
                     </div>
                 </el-col>
                 <el-col :span="16">
-                    <div class="org-card">
+                    <div class="org-card" :style="siteContentViewHeight">
                         <div class="org-card_title">
                             {{ rightTile }}
                         </div>
@@ -45,6 +45,9 @@
 <script lang="ts">
     import { Vue, Component, Watch, Prop } from 'vue-property-decorator';
     import { COMMON_API } from 'common/api/api';
+    // import { namespace } from 'vuex-class';
+
+    // const commonModule = namespace('common');
 
     @Component({
         components: {
@@ -53,6 +56,16 @@
     export default class OrgView extends Vue {
         @Prop({ default: '' }) title: string;
         @Prop({ default: '' }) rightTile: string;
+        // @commonModule.state('documentClientHeight') documentClientHeight
+
+        get documentClientHeight() {
+            return this.$store.state.common.documentClientHeight;
+        }
+
+        get siteContentViewHeight() {
+            const height = this.documentClientHeight - 32 - 40 - 75 - 82;
+            return { height: height + 'px' };
+        }
 
         $refs: {tree: HTMLFormElement}
         filterText = ''
@@ -119,6 +132,9 @@
 
         ::v-deep .el-tree-node__expand-icon { /* stylelint-disable-line */
             color: #487bff;
+        }
+        ::v-deep .el-tree-node__expand-icon.is-leaf { /* stylelint-disable-line */
+            color: transparent;
         }
 
         .org-card_title {

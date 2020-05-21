@@ -109,6 +109,10 @@ export default class OrderManage extends Vue {
     dataList = [];
     visible = false;
 
+    mounted() {
+        this.getDataList()
+    }
+
     getDataList(st?) {
         if (st === true) {
             this.formHeader.current = 1;

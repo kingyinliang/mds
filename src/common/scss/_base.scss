@@ -43,10 +43,6 @@
     margin-bottom: 15px;
 }
 
-.el-form-item{
-    margin-bottom: 10px !important;
-}
-
 //bass scss
 .searchCard,
 .tableCard {
@@ -368,7 +364,7 @@
 ------------------------------ */
 .site-content {
     position: relative;
-    padding-bottom: 80px;
+    padding-bottom: 75px;
     min-height: 610px;
     overflow: hidden;
     //padding: 15px;
@@ -1527,4 +1523,9 @@ body {
         background-color: $sys-sub-yellow !important;
         border-color: $sys-sub-yellow !important;
     }
+}
+
+/* button */
+.el-button--text {
+    padding: 2px 0;
 }

@@ -381,7 +381,6 @@
         addOrupdate(row) {
             if (!row.redact) {
                 row.redact = true;
-
             } else {
                 if (!row.execStartDate || !row.setupFinDate || !row.operation || !row.finConf) {
                     this.$warningToast('请填写必填项')

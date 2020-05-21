@@ -15,9 +15,6 @@
                 <el-form-item label="人员姓名：" prop="realName">
                     <el-input v-model="dataForm.realName" placeholder="手动输入" auto-complete="off" clearable />
                 </el-form-item>
-                <el-form-item label="用户名：" prop="userName">
-                    <el-input v-model="dataForm.userName" placeholder="手动输入" auto-complete="off" clearable />
-                </el-form-item>
                 <el-form-item label="性别：">
                     <el-select v-model="dataForm.sex" placeholder="请选择">
                         <el-option label="男" value="M" />
@@ -64,6 +61,21 @@ export default {
         }
     },
     data() {
+        const checkWorkNum = (rule, value, callback) => {
+            const patt = new RegExp('^[A-Z]');
+            let tempStr = ''
+            if (patt.test(this.dataForm.workNum.toUpperCase().substr(0, 1))) {
+                tempStr = this.dataForm.workNum.toUpperCase().substr(1)
+            } else {
+                tempStr = this.dataForm.workNum.toUpperCase()
+            }
+
+            if (tempStr.length > 10) {
+                return callback(new Error('请输入10个数字工号'));
+            }
+            callback();
+        };
+
         return {
             deptID: '',
             deptName: '',
@@ -86,19 +98,13 @@ export default {
                         required: true,
                         message: '工号不能为空',
                         trigger: 'blur'
-                    }
+                    },
+                    { validator: checkWorkNum, trigger: 'blur' }
                 ],
                 realName: [
                     {
                         required: true,
                         message: '人员姓名不能为空',
-                        trigger: 'blur'
-                    }
-                ],
-                userName: [
-                    {
-                        required: true,
-                        message: '用户名不能为空',
                         trigger: 'blur'
                     }
                 ]
@@ -176,9 +182,9 @@ export default {
                                 COMMON_API.USER_INSERT_API({
                                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                     deptId: this.dataForm.deptId,
-                                    userName: this.dataForm.userName,
+                                    userName: this.dataForm.workNum,
                                     realName: this.dataForm.realName,
-                                    workNum: this.dataForm.workNum,
+                                    workNum: this.dataForm.workNum.toUpperCase(),
                                     tempFlag: this.dataForm.tempFlag,
                                     sex: this.dataForm.sex,
                                     post: this.dataForm.post,
@@ -202,4 +208,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.el-form-item {
+    margin-bottom: 20px !important;
+}
+</style>

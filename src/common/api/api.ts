@@ -238,7 +238,7 @@ export const COMMON_API = {
     /**
      * @property {string} ALLMATERIAL_API 物料管理拿全部物料
      */
-    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params),
+    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params, false),
     /**
      * @property {string} SPECS_DROPDOWN_API 基础数据--规格管理-下拉列表
      */

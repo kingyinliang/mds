@@ -106,6 +106,7 @@ export default {
 
         };
         return {
+            // 修改密码校验
             dataRule: {
                 password: [
                     { required: true, message: '原密码必填', trigger: 'blur' },
@@ -133,11 +134,13 @@ export default {
             visible: false,
             factoryVisible: false,
             factory: [],
+            // 修改密码数据
             dataForm: {
                 password: '',
                 newPassword: '',
                 conPassword: ''
             },
+            // 登录用户信息
             ruleForm2: {
                 user: '',
                 pass: ''
