@@ -176,7 +176,7 @@ export default class OrgStructure extends Vue {
                 trigger: 'blur'
             }
         ]
-    }
+    };
 
     FILE_API = ''
     dialogImageUrl = ''
@@ -351,6 +351,9 @@ export default class OrgStructure extends Vue {
     // 移出图片
     removeFile() {
         this.fileList = []
+        this.OrgDetail.imgUrl = ''
+        this.addDep.imgUrl = '';
+        this.uploadBtn = true;
     }
 
     // 查看图片
@@ -400,6 +403,7 @@ interface FileObject {
 .org-img-upload {
     width: 250px;
     height: 58px;
+    text-align: left;
 
     ::v-deep .el-upload--picture-card {/* stylelint-disable-line */
         width: 60px;
