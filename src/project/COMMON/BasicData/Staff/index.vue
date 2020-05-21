@@ -6,7 +6,7 @@
                     <div style="float: right;">
                         <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2">
                             <el-form-item>
-                                <el-input v-model="controllableForm.param" placeholder="工号" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
+                                <el-input v-model="controllableForm.param" placeholder="工号/姓名" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
@@ -38,7 +38,7 @@
                                     增加
                                 </el-button>
                                 <el-table ref="targetInfoList" :data="targetInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                                    <el-table-column type="selection" width="50" fixed />
+                                    <el-table-column type="selection" width="50" fixed align="center" />
                                     <el-table-column type="index" label="序号" :index="indexMethod" width="50" />
                                     <el-table-column prop="workNum" label="人员工号" width="120" />
                                     <el-table-column prop="realName" label="人员姓名" width="100" />
@@ -110,11 +110,15 @@ export default {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             }).then(({ data }) => {
                 this.orgTree = data.data;
+                console.log(this.orgTree)
+                this.deptID = this.orgTree[0].id;
+                this.getItemsList(true);
                 this.arrList = this.orgTree[0].children.length !== 0 ? [this.orgTree[0].children[0].id] : [];
             });
         },
         // 根据deptId查询用户
         showOrgDetail(data) {
+            console.log(data)
             this.deptID = data.id;
             this.deptName = data.deptName;
             this.getItemsList();
@@ -140,8 +144,6 @@ export default {
                 }
                 this.multipleSelection = [];
                 this.targetInfoList = data.data.records;
-                console.log('22222')
-                console.log(this.targetInfoList)
                 this.targetInfoList.forEach(item => {
                     // if (item.tempFlag === 'Y') {
                     //     item.workNumTemp = item.workNum;

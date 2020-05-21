@@ -9,7 +9,7 @@
                     children: 'children'
                 }"
                 node-key="id"
-                :default-expand-all="true"
+                :default-expand-all="false"
                 :expand-on-click-node="false"
                 show-checkbox
             />
