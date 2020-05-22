@@ -472,5 +472,9 @@ export const PKG_API = {
     /**
      * @property {string}  生产数据-生产准备-查询
      */
-    PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params)
+    PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params),
+    /**
+     * @property {string}  生产数据-物料领用-包材-查询
+     */
+    PKG_MATERIAL_P_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params)
 };

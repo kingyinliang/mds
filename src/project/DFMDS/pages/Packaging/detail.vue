@@ -52,6 +52,10 @@
     })
 
     export default class PackagingDetail extends Vue {
+        $refs: {
+            material: HTMLFormElement;
+        };
+
         orderStatus = ''
 
         formHeader = {}
@@ -158,7 +162,8 @@
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.$store.state.packaging.packDetail.orderNo
             }).then(({ data }) => {
-                this.formHeader = data.data
+                this.formHeader = data.data;
+                this.$refs.material.init(this.formHeader);
             })
             this.getList();
         }
