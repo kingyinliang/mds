@@ -8,11 +8,11 @@
                         {{ scope.row.materialCode + scope.row.materialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="单位" prop="materialUnit" width="50" :show-overflow-tooltip="true"/>
-                <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true"/>
-                <el-table-column label="结算库存" prop="endStocks" width="80" :show-overflow-tooltip="true"/>
+                <el-table-column label="单位" prop="materialUnit" width="50" :show-overflow-tooltip="true" />
+                <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
+                <el-table-column label="结算库存" prop="endStocks" width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="初始库存" prop="startStocks" width="80" :show-overflow-tooltip="true" />
-                <el-table-column label="订单物料" prop="receiveMaterial" width="80" :show-overflow-tooltip="true"/>
+                <el-table-column label="订单物料" prop="receiveMaterial" width="80" :show-overflow-tooltip="true" />
                 <el-table-column width="70">
                     <template slot-scope="scope">
                         <el-button type="text" @click="SplitDate(scope.row, scope.$index)">
@@ -131,7 +131,7 @@
         processData(data) {
             const finalData: MaterialMap[] = []
             data.forEach(item => {
-                item.item.forEach((listitem, index) => {
+                item.item.forEach((listitem) => {
                     const materialMap: MaterialMap = {
                         id: item.id,
                         materialCode: item.materialCode,
@@ -207,9 +207,9 @@ interface MaterialMap{
     startStocks?: number;
     endStocks?: number;
     receiveMaterial?: string;
+    splitFlag?: string;
 }
 </script>
 
 <style scoped>
-
 </style>
