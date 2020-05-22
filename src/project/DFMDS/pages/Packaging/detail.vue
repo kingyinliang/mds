@@ -171,7 +171,7 @@
         }
 
         getList(formHeader: object) {
-            this.$refs.readytime.getDataList(formHeader['orderNo']);
+            this.$refs.readytime.getDataList(formHeader);
             this.$refs.pendingNum.getDataList(formHeader);
             this.$refs.textRecord.getDataInfo(formHeader);
         }

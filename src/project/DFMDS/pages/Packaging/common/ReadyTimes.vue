@@ -176,8 +176,8 @@ export default class ReadyTimes extends Vue {
 
     @Prop({ default: [] }) classList: object[]
 
-    getDataList(orderNo: string) {
-        PKG_API.PKG_READYTIME_QUERY_API({ orderNo: orderNo }).then(({ data }) => {
+    getDataList(formHeader: object) {
+        PKG_API.PKG_READYTIME_QUERY_API({ factory: formHeader['factory'], orderNo: formHeader['orderNo'] }).then(({ data }) => {
             if (data.code === 200) {
                 this.formInline = data.data
                 if (data.data.classes === '') {
