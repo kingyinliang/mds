@@ -448,5 +448,21 @@ export const PKG_API = {
     /**
      * @property {string} PKG_INSTORAGE_QUERY_API 生产数据-生产入库-查询
      */
-    PKG_INSTORAGE_QUERY_API: params => httpProxy('/pkgInStorage/query', 'POST', params)
+    PKG_INSTORAGE_QUERY_API: params => httpProxy('/pkgInStorage/query', 'POST', params),
+    /**
+     * @property {string} PKG_TEXT_QUERY_API 包装车间-生产数据-文本记录
+     */
+    PKG_TEXT_QUERY_API: params => httpProxy('/pkgText/query', 'POST', params),
+    /**
+     * @property {string} PKG_ALL_SAVE_API 包装车间-生产数据-提交
+     */
+    PKG_ALL_SAVE_API: params => httpProxy('/pkg/save', 'POST', params),
+    /**
+     * @property {string} PKG_TIMESHEET_QUERY_API 包装车间-生产准备-查询
+     */
+    PKG_TIMESHEET_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params),
+    /**
+     * @property {string} PKG_PACKAGEMATERIAL_QUERY_API 包装车间-物料领用-包材领用查询
+     */
+    PKG_PACKAGEMATERIAL_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params)
 };

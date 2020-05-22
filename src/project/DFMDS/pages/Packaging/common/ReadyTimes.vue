@@ -3,7 +3,7 @@
         <mds-card :title="'准备工时(单位：min)'" :name="'readyTimes'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-select v-model="readyType" size="small">
+                    <el-select v-model="readyType" size="small" style="width: 100px;">
                         <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
                     </el-select>
                 </div>
@@ -13,42 +13,42 @@
                     <h3><i class="point-icon" />白班</h3>
                 </div>
                 <el-row>
-                    <el-form :inline="true" :model="formInline" label-width="92px">
+                    <el-form :inline="true" :model="currentFormDataGroup" label-width="92px">
                         <el-form-item>
                             <template slot="label">
                                 <span class="notNull">*</span>参与人数：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.dayUser" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>交接班：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.dayShift" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>班前会：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.dayMeeting" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>生产前准备：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.dayPrepaired" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>生产后清场：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.dayClear" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="品质保证：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.dayQuality" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="切换时间：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.dayChange" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                     </el-form>
                 </el-row>
@@ -58,42 +58,42 @@
                     <h3><i class="point-icon" />中班</h3>
                 </div>
                 <el-row>
-                    <el-form :inline="true" :model="formInline" label-width="92px">
+                    <el-form :inline="true" :model="currentFormDataGroup" label-width="92px">
                         <el-form-item>
                             <template slot="label">
                                 <span v-if="readyType === '中班'" class="notNull">*</span>参与人数：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.midUser" placeholder="请输入" size="small" :disabled="!isRedact" type="number" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span v-if="readyType === '中班'" class="notNull">*</span>交接班：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.midShift" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span v-if="readyType === '中班'" class="notNull">*</span>班前会：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.midMeeting" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span v-if="readyType === '中班'" class="notNull">*</span>生产前准备：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.midPrepaired" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span v-if="readyType === '中班'" class="notNull">*</span>生产后清场：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.midClear" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="品质保证：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.midQualiry" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="切换时间：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.midChange" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                     </el-form>
                 </el-row>
@@ -103,42 +103,42 @@
                     <h3><i class="point-icon" />夜班</h3>
                 </div>
                 <el-row>
-                    <el-form :inline="true" :model="formInline" label-width="92px">
+                    <el-form :inline="true" :model="currentFormDataGroup" label-width="92px">
                         <el-form-item>
                             <template slot="label">
                                 <span class="notNull">*</span>参与人数：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.nightUser" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>交接班：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.nightShift" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>班前会：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.nightMeeting" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>生产前准备：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.nightPrepaired" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
                                 <span class="notNull">*</span>生产后清场：
                             </template>
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.nightClear" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="品质保证：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.nightQuality" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="切换时间：">
-                            <el-input v-model="formInline.user" placeholder="请输入" size="small" />
+                            <el-input v-model.number="currentFormDataGroup.nightChange" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                     </el-form>
                 </el-row>
@@ -148,17 +148,17 @@
                     <h3><i class="point-icon" />备注</h3>
                 </div>
                 <el-row>
-                    <el-input v-model="formInline.Text" type="textarea" class="textarea" style="width: 100%; height: 100px;" />
+                    <el-input v-model="currentFormDataGroup.remark" type="textarea" class="textarea" style="width: 100%; height: 100px;" :disabled="!isRedact" />
                 </el-row>
             </div>
         </mds-card>
-        <audit-log :table-data="ReadAudit" />
+        <audit-log :table-data="readAudit" />
     </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-
+import { Vue, Component, Prop } from 'vue-property-decorator';
+// import { PKG_API } from 'common/api/api';
 @Component({
     name: 'ReadyTimes',
     components: {
@@ -169,6 +169,7 @@ import { Vue, Component } from 'vue-property-decorator';
     })
 
 export default class ReadyTimes extends Vue {
+    @Prop({ type: Boolean, default: false }) isRedact
 
     classList= [
         {
@@ -187,9 +188,54 @@ export default class ReadyTimes extends Vue {
     ]
 
     readyType='白班'
-    formInline= {}
-    ReadAudit= []
+    currentFormDataGroup= {}
+    readyTimesData: ReadyTimesData= {}
+    readAudit= []
 
+    mounted() {
+       //
+    }
 
+    init(data) {
+        console.log('ReadyTimes带进来的 data')
+        console.log(data)
+        this.currentFormDataGroup = data
+    }
+
+    returnDataGroup() {
+        this.readyTimesData = JSON.parse(JSON.stringify(this.currentFormDataGroup))
+        return this.readyTimesData
+    }
+}
+interface ReadyTimesData {
+    checkStatus?: string; //审核状态(T:已同步，N:未录入、S:已保存、P:待审核、C:已审核、P:已过账、R:已退回)
+    classes?: string; // 班次
+    dayChange?: number; // 白班切换时间
+    dayClear?: number; // 生产后清场
+    dayMeeting?: number; // 班前会
+    dayPrepaired?: number; // 生产前准备
+    dayQuality?: number; // 白班品质保证
+    dayShift?: number; // 交接班
+    dayUser?: number; // 白班参与人数
+    factory?: string; // 工厂 #
+    funcCode?: string; // 功能code(暂时可不填)
+    id?: string; // 主键ID  #
+    midChange?: number; // 中班切换时间
+    midClear?: number; // 生产后清场
+    midMeeting?: number; // 班前会
+    midPrepaired?: number; // 生产前准备
+    midQualiry?: number; // 中班品质保证
+    midShift?: number; // 交接班
+    midUser?: number; // 中班参与人数
+    nightChange?: number; // 夜班切换时间
+    nightClear?: number; // 生产后清场
+    nightMeeting?: number; // 班前会
+    nightPrepaired?: number; // 生产前准备
+    nightQuality?: number; // 夜班品质保证
+    nightShift?: number; // 交接班
+    nightUser?: number; // 夜班参与人数
+    orderId?: string; // 所属订单ID
+    orderNo?: string; // 订单号
+    remark?: string; // 备注
 }
 </script>

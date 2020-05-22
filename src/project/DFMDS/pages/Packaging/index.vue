@@ -76,7 +76,8 @@
     })
     export default class PackagingIndex extends Vue {
         queryList: PkgObj[] = []
-
+        workshopName =''
+        productLineList: object[] = []
         // 查询表头
         queryFormData = [
             {
@@ -125,6 +126,10 @@
             }
         ];
 
+        mounted() {
+            //
+        }
+
         // 查询请求
         listInterface = params => {
             params.current = 1;
@@ -156,14 +161,29 @@
         }
 
         goDataEntry(item) {
-            console.log(item);
-            this.$router.push({
-                name: `DFMDS-pages-Packaging-detail`,
-                params: {
-                    orderNo: item.activeOrderNo,
-                    productLineName: item.productLineName
-                }
-            });
+            console.log('item')
+            console.log(item)
+            COMMON_API.ORG_QUERY_WORKSHOP_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptType: ['WORK_SHOP']
+            }).then(({ data }) => {
+                const temp = data.data
+                temp.forEach(element => {
+                    if (element.id === item.activeOrderMap.workShop) {
+                        this.workshopName = element.deptName
+                    }
+
+                });
+                this.$router.push({
+                    name: `DFMDS-pages-Packaging-detail`,
+                    params: {
+                        orderId: item.activeOrderMap.id,
+                        orderNo: item.activeOrderNo,
+                        productLineName: item.productLineName,
+                        workShopName: this.workshopName
+                    }
+                });
+            })
         }
     }
     interface PkgObj{
