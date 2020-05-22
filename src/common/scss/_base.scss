@@ -873,7 +873,17 @@
                     tr:nth-child(even) {
                         background-color: #f7f7f7;
                     }
+                    .el-table__row {
+                        td:first-child {
+                            border-left: 2px solid transparent;
+                        }
+                    }
                     .el-table__row:hover {
+                        td:first-child {
+                            border-left: 2px solid #487bff;
+                        }
+                    }
+                    .hover-row {
                         td:first-child {
                             border-left: 2px solid #487bff;
                         }
@@ -1041,7 +1051,17 @@
             tr:nth-child(even) {
                 background-color: #f7f7f7;
             }
+            .el-table__row {
+                td:first-child {
+                    border-left: 2px solid transparent;
+                }
+            }
             .el-table__row:hover {
+                td:first-child {
+                    border-left: 2px solid #487bff;
+                }
+            }
+            .hover-row {
                 td:first-child {
                     border-left: 2px solid #487bff;
                 }
@@ -1528,4 +1548,8 @@ body {
 /* button */
 .el-button--text {
     padding: 2px 0;
+}
+/* table selection */
+.el-table .el-table-column--selection {
+    text-align: center;
 }

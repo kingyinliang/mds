@@ -78,10 +78,10 @@
                         <el-input v-model="controllableForm.brand" placeholder="手工录入" clearable />
                     </el-form-item>
                     <el-form-item label="箱规格：" prop="boxSpec">
-                        <el-input v-model="controllableForm.boxSpec" placeholder="手工录入" clearable />
+                        <el-input v-model="controllableForm.boxSpec" placeholder="手工录入" oninput="value=value.replace(/\D*/g,'')" clearable />
                     </el-form-item>
                     <el-form-item label="瓶规格：" prop="productSpec">
-                        <el-input v-model="controllableForm.productSpec" placeholder="手工录入" clearable />
+                        <el-input v-model="controllableForm.productSpec" placeholder="手工录入" oninput="value=value.replace(/\D*/g,'')" clearable />
                     </el-form-item>
                 </el-form>
             </div>

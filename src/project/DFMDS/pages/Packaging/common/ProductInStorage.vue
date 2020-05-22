@@ -254,10 +254,10 @@
         }
 
         get computedTotal() {
-            let total = 0;
-            this.currentFormDataGroup.forEach(item => {
-                total = accAdd(total, item.output)
-            })
+            const total = 0;
+            // this.currentFormDataGroup.forEach(item => {
+            //     total = accAdd(total, item.output)
+            // })
             return total;
         }
     }

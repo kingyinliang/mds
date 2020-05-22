@@ -90,6 +90,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
+// import { PKG_API } from 'common/api/api';
 import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
 
 @Component({
@@ -109,7 +110,7 @@ export default class PendingNum extends Vue {
     ]
 
     currentDataTable: CurrentDataTable[] = [];
-    readAudit = []
+
 
     addNewDataRow() {
         const sole: CurrentDataTable = {

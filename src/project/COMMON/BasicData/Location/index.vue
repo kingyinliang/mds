@@ -1,6 +1,6 @@
 <template>
     <el-col>
-        <div class="main">
+        <div class="header_main">
             <el-card>
                 <div class="clearfix">
                     <el-row style="float: right;">
@@ -18,7 +18,7 @@
                                 <el-button type="primary" size="small" @click="addOrUpdateItem()">
                                     新增
                                 </el-button>
-                                <el-button type="danger" size="small" :disabled="itemList.length === 0" @click="removeItems()">
+                                <el-button type="danger" size="small" :disabled="itemList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
@@ -26,7 +26,7 @@
                     </el-row>
                 </div>
                 <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="itemList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange" @row-dblclick="addOrUpdateItem">
+                    <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="itemList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange" @row-dblclick="addOrUpdateItem">
                         <el-table-column type="selection" width="50" align="center" />
                         <el-table-column type="index" label="序号" :index="indexMethod" width="55" align="center" />
                         <el-table-column prop="deptName" width="160" :show-overflow-tooltip="true" label="车间" />

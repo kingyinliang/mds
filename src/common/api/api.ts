@@ -464,5 +464,37 @@ export const PKG_API = {
     /**
      * @property {string} PKG_PACKAGEMATERIAL_QUERY_API 包装车间-物料领用-包材领用查询
      */
-    PKG_PACKAGEMATERIAL_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params)
+    PKG_PACKAGEMATERIAL_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params),
+    /**
+     * @property {string} PKG_CHECKDATA_SEAL_QUERY_API 检查数据-密封度检测-查询
+     */
+    PKG_CHECKDATA_SEAL_QUERY_API: params => httpProxy('/pkgSealData/query', 'POST', params),
+    /**
+     * @property {string} PKG_CHECKDATA_WEIGHT_QUERY_API 检查数据-称重记录-查询
+     */
+    PKG_CHECKDATA_WEIGHT_QUERY_API: params => httpProxy('/pkgWeight/query', 'POST', params),
+    /**
+     * @property {string} PKG_CHECKDATA_NR_QUERY_API 检查数据-NR检测-查询
+     */
+    PKG_CHECKDATA_NR_QUERY_API: params => httpProxy('/pkgNr/query', 'POST', params),
+    /**
+     * @property {string} PKG_CHECKDATA_TORQUE_QUERY_API 检查数据-扭力矩检测-查询
+     */
+    PKG_CHECKDATA_TORQUE_QUERY_API: params => httpProxy('/pkgTorque/query', 'POST', params),
+    /**
+     * @property {string} PKG_CHECKDATA_SAVE_API 检查数据-保存
+     */
+    PKG_CHECKDATA_SAVE_API: params => httpProxy('/pkg/checkData/save', 'POST', params),
+    /**
+     * @property {string}  PKG_READYTIME_QUERY_API 生产数据-生产准备-查询
+     */
+    PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params),
+    /**
+     * @property {string}  PKG_PENDGNUM_QUERY_API 生产数据-待杀菌检测-查询
+     */
+    PKG_PENDGNUM_QUERY_API: params => httpProxy('/pkgGerms/query', 'POST', params),
+    /**
+     * @property {string}  PKG_MATERIALSTOCK_QUERY_API 包材库存-查询
+     */
+    PKG_MATERIALSTOCK_QUERY_API: params => httpProxy('/pkg/packageStorage/query', 'POST', params)
 };
