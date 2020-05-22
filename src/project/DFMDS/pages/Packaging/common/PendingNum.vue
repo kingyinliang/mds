@@ -90,6 +90,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import { PKG_API } from 'common/api/api';
 import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
 
 @Component({
@@ -109,6 +110,14 @@ export default class PendingNum extends Vue {
 
     dataList: ValueObject[] = [];
     readAudit = []
+
+    getDataList(formHeader: object) {
+        PKG_API.PKG_PENDGNUM_QUERY_API({ factory: formHeader['factory'], orderNo: formHeader['orderNo'] }).then(({ data }) => {
+            if (data.code === 200) {
+                this.dataList = data.data
+            }
+        });
+    }
 
     addRow() {
         const sole: ValueObject = {
