@@ -10,7 +10,7 @@
             </template>
             <div v-if="formInline.classes === 'M' || formInline.classes === 'D'" class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />{{ classList.find((item)=> item.dictCode === 'M').dictValue }}</h3>
+                    <h3><i class="point-icon" />{{ classList ? classList.find((item)=> item.dictCode === 'M').dictValue : '' }}</h3>
                 </div>
                 <el-row>
                     <el-form :inline="true" :model="formInline" label-width="92px">
@@ -55,7 +55,7 @@
             </div>
             <div v-if="formInline.classes === 'A' || formInline.classes === 'D'" class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />{{ classList.find((item)=> item.dictCode === 'A').dictValue }}</h3>
+                    <h3><i class="point-icon" />{{ classList ? classList.find((item)=> item.dictCode === 'A').dictValue : '' }}</h3>
                 </div>
                 <el-row>
                     <el-form :inline="true" :model="formInline" label-width="92px">
@@ -100,7 +100,7 @@
             </div>
             <div v-if="formInline.classes === 'N' || formInline.classes === 'D'" class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />{{ classList.find((item)=> item.dictCode === 'N').dictValue }}</h3>
+                    <h3><i class="point-icon" />{{ classList ? classList.find((item)=> item.dictCode === 'N').dictValue : '' }}</h3>
                 </div>
                 <el-row>
                     <el-form :inline="true" :model="formInline" label-width="92px">
@@ -176,10 +176,13 @@ export default class ReadyTimes extends Vue {
 
     @Prop({ default: [] }) classList: object[]
 
-    getDataList(orderno) {
-        PKG_API.PKG_READYTIME_QUERY_API({ order: orderno }).then(({ data }) => {
+    getDataList(orderNo: string) {
+        PKG_API.PKG_READYTIME_QUERY_API({ orderNo: orderNo }).then(({ data }) => {
             if (data.code === 200) {
                 this.formInline = data.data
+                if (data.data.classes === '') {
+                    this.formInline['classes'] = 'M';
+                }
             }
         });
     }

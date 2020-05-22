@@ -472,5 +472,17 @@ export const PKG_API = {
     /**
      * @property {string}  生产数据-生产准备-查询
      */
-    PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params)
+    PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params),
+    /**
+     * @property {string}  生产数据-待杀菌检测-查询
+     */
+    PKG_PENDGNUM_QUERY_API: params => httpProxy('/pkgGerms/query', 'POST', params),
+    /**
+     * @property {string}  生产数据-文本记录-查询
+     */
+    PKG_TEXT_QUERY_API: params => httpProxy('/pkgText/query', 'POST', params),
+    /**
+    * @property {string}  包材库存-查询
+    */
+   PKG_MATERIALSTOCK_QUERY_API: params => httpProxy('/pkg/packageStorage/query', 'POST', params)
 };
