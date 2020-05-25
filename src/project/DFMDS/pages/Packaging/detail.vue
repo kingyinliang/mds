@@ -22,7 +22,7 @@
             <material ref="material" :is-redact="data.isRedact" />
         </template>
         <template slot="6" slot-scope="data">
-            <pending-num ref="PendingNum" :is-redact="data.isRedact" />
+            <pending-num ref="pendingNum" :is-redact="data.isRedact" />
         </template>
         <template slot="7" slot-scope="data">
             <text-record ref="textRecord" :is-redact="data.isRedact" />
@@ -52,6 +52,14 @@
     })
 
     export default class PackagingDetail extends Vue {
+
+        $refs: {
+            material: HTMLFormElement;
+            readytime: HTMLFormElement;
+            pendingNum: HTMLFormElement;
+            textRecord: HTMLFormElement;
+        }
+
         orderStatus = ''
 
         formHeader = {}
@@ -158,14 +166,16 @@
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.$store.state.packaging.packDetail.orderNo
             }).then(({ data }) => {
-                this.formHeader = data.data
+                this.formHeader = data.data;
+                this.getList(data.data);
+                this.$refs.material.init(this.formHeader);
             })
-            this.getList();
         }
 
-        getList() {
-            // eslint-disable-next-line
-            (this.$refs.readytime as any).getDataList('1111')
+        getList(formHeader: object) {
+            this.$refs.readytime.getDataList(formHeader);
+            this.$refs.pendingNum.getDataList(formHeader);
+            this.$refs.textRecord.getDataInfo(formHeader);
         }
     }
 interface OrderData{

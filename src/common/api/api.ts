@@ -240,6 +240,10 @@ export const COMMON_API = {
      */
     ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params, false),
     /**
+     * @property {string} 根据编码查物料
+     */
+    SEARCH_MATERIAL_API: params => httpProxy('/sysMaterial/queryListByType', 'POST', params, false),
+    /**
      * @property {string} SPECS_DROPDOWN_API 基础数据--规格管理-下拉列表
      */
     SPECS_DROPDOWN_API: params => httpProxy('/sysSpecs/dropDown', 'POST', params),
@@ -472,5 +476,17 @@ export const PKG_API = {
     /**
      * @property {string}  生产数据-生产准备-查询
      */
-    PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params)
+    PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params),
+    /**
+     * @property {string}  生产数据-待杀菌检测-查询
+     */
+    PKG_PENDGNUM_QUERY_API: params => httpProxy('/pkgGerms/query', 'POST', params),
+    /**
+     * @property {string}  生产数据-文本记录-查询
+     */
+    PKG_TEXT_QUERY_API: params => httpProxy('/pkgText/query', 'POST', params),
+    /**
+     * @property {string}  生产数据-物料领用-包材-查询
+     */
+    PKG_MATERIAL_P_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params)
 };
