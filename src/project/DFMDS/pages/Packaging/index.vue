@@ -50,7 +50,7 @@
                                             <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goDataEntry(item)">
                                                 生产数据
                                             </el-button>
-                                            <el-button size="small" type="primary" @click="goCheckData(item)">
+                                            <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goCheckData(item)">
                                                 检查数据
                                             </el-button>
                                         </div>
