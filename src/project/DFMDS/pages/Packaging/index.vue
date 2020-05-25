@@ -139,21 +139,26 @@
         }
 
         setData(data) {
-            data.data.forEach(item => {
-                if (item.orderNoList.length === 1) {
-                    item.activeOrderNo = item.orderNoList[0]
-                    item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
-                } else {
-                    item.activeOrderNo = ''
-                    item.activeOrderMap = {
-                        planOutput: '',
-                        materialCode: '',
-                        countOutput: ''
+            const tempData = JSON.parse(JSON.stringify(data.data))
+            tempData.forEach((item, index) => {
+                if (item !== null) {
+                    if (item.orderNoList.length === 1) {
+                        item.activeOrderNo = item.orderNoList[0]
+                        item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
+                    } else {
+                        item.activeOrderNo = ''
+                        item.activeOrderMap = {
+                            planOutput: '',
+                            materialCode: '',
+                            countOutput: ''
+                        }
                     }
+                } else {
+                    tempData.splice(index, 1)
                 }
             })
-            getS3Img(data.data, 'productLineImage')
-            this.queryList = data.data
+            getS3Img(tempData, 'productLineImage')
+            this.queryList = tempData
         }
 
         orderchange(item) {
@@ -161,9 +166,6 @@
         }
 
         goDataEntry(item) {
-            // console.log('item')
-            // console.log(item)
-
             this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-detail'))
             COMMON_API.ORG_QUERY_WORKSHOP_API({
