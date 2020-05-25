@@ -60,7 +60,6 @@
             productInStorage: HTMLFormElement;
             material: HTMLFormElement;
 
-            // material: HTMLFormElement;
             readytime: HTMLFormElement;
             pendingNum: HTMLFormElement;
             textRecord: HTMLFormElement;
@@ -189,7 +188,8 @@
                 this.formHeader.productLineName = this.$route.params.productLineName
                 this.formHeader.workShopName = this.$route.params.workShopName
                 this.orderStatus = data.data.orderStatus
-
+                // 物料页签查询
+                this.$refs.material.init(this.formHeader);
 
                 // PKG_API.PKG_ALL_SAVE_API({
                 //         // pkgGerms: {
