@@ -164,33 +164,29 @@
             // console.log('item')
             // console.log(item)
 
-            // COMMON_API.ORG_QUERY_WORKSHOP_API({
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //     deptType: ['WORK_SHOP']
-            // }).then(({ data }) => {
-            //     const temp = data.data
-            //     temp.forEach(element => {
-            //         if (element.id === item.activeOrderMap.workShop) {
-            //             this.workshopName = element.deptName
-            //         }
-
-            //     });
-            //     this.$router.push({
-            //         name: `DFMDS-pages-Packaging-detail`,
-            //         params: {
-            //             orderId: item.activeOrderMap.id,
-            //             orderNo: item.activeOrderNo,
-            //             productLineName: item.productLineName,
-            //             workShopName: this.workshopName
-            //         }
-            //     });
-            // })
-
             this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-detail'))
-            setTimeout(() => {
-                this.$router.push({ name: `DFMDS-pages-Packaging-detail` });
-            }, 100);
+            COMMON_API.ORG_QUERY_WORKSHOP_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptType: ['WORK_SHOP']
+            }).then(({ data }) => {
+                const temp = data.data
+                temp.forEach(element => {
+                    if (element.id === item.activeOrderMap.workShop) {
+                        this.workshopName = element.deptName
+                    }
+
+                });
+                this.$router.push({
+                    name: `DFMDS-pages-Packaging-detail`,
+                    params: {
+                        orderId: item.activeOrderMap.id,
+                        orderNo: item.activeOrderNo,
+                        productLineName: item.productLineName,
+                        workShopName: this.workshopName
+                    }
+                });
+            })
         }
 
         goCheckData(item) {

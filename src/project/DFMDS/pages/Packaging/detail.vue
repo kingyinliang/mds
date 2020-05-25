@@ -11,7 +11,7 @@
         :saved-datas="sentData"
     >
         <template slot="1" slot-scope="data">
-            <ready-time ref="readyTime" :class-list="classList" :is-redact="data.isRedact" />
+            <ready-time ref="readyTime" :is-redact="data.isRedact" />
         </template>
         <template slot="2" slot-scope="data">
             <product-people ref="productPeople" :is-redact="data.isRedact" />
@@ -172,9 +172,7 @@
         created() {
             // 班次拉取
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.classList = data.data
-                }
+                this.classList = data.data
             });
         }
 
@@ -250,32 +248,32 @@
             })
 
             // # 生产准备
-            // PKG_API.PKG_TIMESHEET_QUERY_API({
-            //     // orderId: this.$route.params.orderId,
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //     orderNo: this.$route.params.orderNo
-            // }).then(({ data }) => {
-            //     console.log('生产准备-查询')
-            //     console.log(data)
-            //     if (data.data.length !== 0) {
-            //         this.$refs.readyTime.init(data.data)
-            //     }
-            // })
+            PKG_API.PKG_TIMESHEET_QUERY_API({
+                // orderId: this.$route.params.orderId,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: this.$route.params.orderNo
+            }).then(({ data }) => {
+                console.log('生产准备-查询')
+                console.log(data)
+                if (data.data.length !== 0) {
+                    this.$refs.readyTime.init(data.data)
+                }
+            })
 
             // # 生产人员
             // # 设备运行
             // # 生产入库
-            PKG_API.PKG_INSTORAGE_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: this.$route.params.orderNo
-            }).then(({ data }) => {
-                console.log('生产入库-查询')
-                console.log(data)
-                if (data.data.inStorages.length !== 0) {
-                    this.$refs.productInStorage.init(data.data)
-                }
+            // PKG_API.PKG_INSTORAGE_QUERY_API({
+            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            //     orderNo: this.$route.params.orderNo
+            // }).then(({ data }) => {
+            //     console.log('生产入库-查询')
+            //     console.log(data)
+            //     if (data.data.inStorages.length !== 0) {
+            //         this.$refs.productInStorage.init(data.data)
+            //     }
 
-            })
+            // })
 
             // # 物料领用
             // # 待处理数量
