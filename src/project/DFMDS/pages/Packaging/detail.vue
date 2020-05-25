@@ -55,10 +55,15 @@
     export default class PackagingDetail extends Vue {
 
         $refs: {
+<<<<<<< HEAD
             readyTime: HTMLFormElement;
             productPeople: HTMLFormElement;
             productInStorage: HTMLFormElement;
             material: HTMLFormElement;
+=======
+            material: HTMLFormElement;
+            readytime: HTMLFormElement;
+>>>>>>> a1afc98d7cebc4f20c791ed93069b9b299778e3f
             pendingNum: HTMLFormElement;
             textRecord: HTMLFormElement;
         }
@@ -258,6 +263,9 @@
                 if (data.data.length !== 0) {
                     this.$refs.readyTime.init(data.data)
                 }
+                // this.formHeader = data.data;
+                // this.getList(data.data);
+                // this.$refs.material.init(this.formHeader);
             })
 
             // # 生产人员
