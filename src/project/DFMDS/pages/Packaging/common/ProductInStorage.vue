@@ -3,37 +3,164 @@
         <mds-card :title="'生产入库'" :name="'productInStore'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" @click="addNewDataRow(DataList)">
+                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
                         新增
                     </el-button>
                 </div>
             </template>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="currentDataTable" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" />
-                <el-table-column label="生产日期" prop="productDate" width="100" />
-                <el-table-column label="班次" prop="classes" width="80" />
-                <el-table-column label="生产班次" prop="batch" width="100" />
-                <el-table-column label="生产入库" prop="inStorageCount" width="100" />
-                <el-table-column label="单位" prop="inStorageUnit" width="80" />
-                <el-table-column label="入库不良" prop="inStorageBadCount" width="100" />
-                <el-table-column label="单位" prop="inStorageBadUnit" width="100" />
-                <el-table-column label="线上不良" prop="onlineBadCount" width="80" />
-                <el-table-column label="单位" prop="onlineBadUnit" width="80" />
-                <el-table-column label="样品" prop="sampleCount" width="80" />
-                <el-table-column label="单位" prop="sampleUnit" width="80" />
-                <el-table-column label="产出数" prop="output" width="80" />
-                <el-table-column label="单位" prop="outputUnit" width="80" />
-                <el-table-column label="备注" prop="remark" width="80" />
-                <el-table-column label="操作人" prop="changer" width="80" />
-                <el-table-column label="操作时间" prop="changed" width="80" />
-                <el-table-column width="70">
-                    <el-table-column label="操作" fixed="right" width="70">
-                        <template slot-scope="scope">
-                            <el-button v-if="!scope.row.original" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.$index,scope.row)">
-                                删除
-                            </el-button>
-                        </template>
-                    </el-table-column>
+            <el-table header-row-class-name="tableHead" class="newTable" :row-class-name="rowDelFlag" :data="currentFormDataGroup" border tooltip-effect="dark" size="small">
+                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column label="生产日期" prop="productDate" width="180">
+                    <template slot="header">
+                        <span class="notNull">* </span>生产日期
+                    </template>
+                    <template slot-scope="scope">
+                        <el-date-picker
+                            v-model="scope.row.productDate"
+                            type="date"
+                            placeholder="选择日期"
+                            size="small"
+                            style="width: 140px;"
+                            :disabled="!isRedact"
+                        />
+                    </template>
+                </el-table-column>
+                <el-table-column label="班次" prop="classes" width="100">
+                    <template slot="header">
+                        <span class="notNull">* </span>班次
+                    </template>
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
+                            <el-option
+                                v-for="item in classesoptions"
+                                :key="item"
+                                :label="item"
+                                :value="item"
+                            />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="生产批次" prop="batch" width="100">
+                    <template slot="header">
+                        <span class="notNull">* </span>生产批次
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.batch" placeholder="请输入" size="small" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="生产入库" prop="inStorageCount" width="100">
+                    <template slot="header">
+                        <span class="notNull">* </span>生产入库
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.inStorageCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" prop="inStorageUnit" width="100">
+                    <template slot="header">
+                        <span class="notNull">* </span>单位
+                    </template>
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                            <el-option
+                                v-for="item in inStorageUnitOptions"
+                                :key="item"
+                                :label="item"
+                                :value="item"
+                            />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="入库不良" prop="inStorageBadCount" width="100">
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.inStorageBadCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" prop="inStorageBadUnit" width="100">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                            <el-option
+                                v-for="item in inStorageBadUnitOptions"
+                                :key="item"
+                                :label="item"
+                                :value="item"
+                            />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="线上不良" prop="onlineBadCount" width="100">
+                    <template slot-scope="scope">
+                        <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" prop="onlineBadUnit" width="100">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                            <el-option
+                                v-for="item in onlineBadUnitOptions"
+                                :key="item"
+                                :label="item"
+                                :value="item"
+                            />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="样品" prop="sampleCount" width="100">
+                    <template slot-scope="scope">
+                        <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" prop="sampleUnit" width="100">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                            <el-option
+                                v-for="item in sampleUnitOptions"
+                                :key="item"
+                                :label="item"
+                                :value="item"
+                            />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="产出数" prop="output" width="100">
+                    <template slot-scope="scope">
+                        <!-- <el-input v-model.number="scope.row.output" size="small" placeholder="请输入" :disabled="!isRedact" /> -->
+                        {{ scope.row.output }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" prop="outputUnit" width="100">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                            <el-option
+                                v-for="item in outputUnitOptions"
+                                :key="item"
+                                :label="item"
+                                :value="item"
+                            />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注" prop="remark" width="100">
+                    <template slot-scope="scope">
+                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作人" prop="changer" width="100">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作时间" prop="changed" width="160">
+                    <template slot-scope="scope">
+                        {{ scope.row.changed }}
+                    </template>
+                </el-table-column>
+                <el-table-column width="70" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button v-if="!scope.row.original" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.$index)">
+                            删除
+                        </el-button>
+                    </template>
                 </el-table-column>
             </el-table>
         </mds-card>
@@ -42,7 +169,7 @@
                 产出数合计：
             </div>
             <div class="input_bottom">
-                123
+                {{ computedTotal }}
             </div>
         </el-row>
         <audit-log :table-data="readAudit" />
@@ -50,8 +177,9 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
-    import { PKG_API } from 'common/api/api';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
+    // import { PKG_API } from 'common/api/api';
 
     @Component({
         name: 'ProductInStore',
@@ -60,36 +188,111 @@
     })
     export default class ProductInStore extends Vue {
 
-
-        currentDataTable = [];
+        @Prop({ type: Boolean, default: false }) isRedact
+        currentFormDataGroup: CurrentDataTable[] = [];
         readAudit= [];
         instorageDelete= []; // 入库删除集合
         instorageInsert= []; // 入库新增集合
         instorageUpdate=[]; // 入库修改集合
+        productInStoreData: [];
+        classesoptions=['白班', '中班', '夜班'];
 
         mounted() {
-            PKG_API.PKG_INSTORAGE_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: '831000003240'
-            }).then(({ data }) => {
-                console.log(data)
-                this.currentDataTable = data.inStorages
-            })
-
-
+            //
         }
 
-        removeDataRow() {
-            // this.currentDataTable.splice(index, 1)
+        init(data) {
+            console.log('ProductInStore带进来的 data')
+            console.log(data)
+            this.currentFormDataGroup = data
+        }
+
+        returnDataGroup() {
+            this.productInStoreData = JSON.parse(JSON.stringify(this.currentFormDataGroup))
+            return this.productInStoreData
+        }
+
+        removeDataRow(index) {
+            // this.currentFormDataGroup.splice(index, 1)
             // this.deleteList.push(row.id)
+            this.$confirm('是否删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.currentFormDataGroup.splice(index, 1);
+            });
         }
 
         addNewDataRow() {
-            //
+            const sole: CurrentDataTable = {
+                    productDate: '',
+                    classes: '',
+                    batch: '',
+                    inStorageCount: 0,
+                    inStorageUnit: '',
+                    inStorageBadCount: 0,
+                    inStorageBadUnit: '',
+                    onlineBadCount: 0,
+                    onlineBadUnit: '',
+                    sampleCount: 0,
+                    sampleUnit: '',
+                    output: 0,
+                    outputUnit: '',
+                    remark: '',
+                    changer: getUserNameNumber(),
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
+            this.currentFormDataGroup.push(sole)
+        }
+
+        rowDelFlag({ row }) {
+            if (row.delFlag === '1') {
+                return 'rowDel';
+            }
+            return '';
+        }
+
+        get computedTotal() {
+            const total = 0;
+            // this.currentFormDataGroup.forEach(item => {
+            //     total = accAdd(total, item.output)
+            // })
+            return total;
         }
     }
+interface CurrentDataTable{
+    productDate?: string;
+    classes?: string; // 班次
+    batch?: string; // 生产批次
+    inStorageCount?: number;
+    inStorageUnit?: string;
+    inStorageBadCount?: number;
+    inStorageBadUnit?: string;
+    onlineBadCount?: number;
+    onlineBadUnit?: string;
+    sampleCount?: number;
+    sampleUnit?: string;
+    output?: number;
+    outputUnit?: string;
+    remark?: string;
+    changer?: string;
+    changed?: string; // 操作日期
+    checkStatus?: string; // x 审核状态
+    emergencyFlag?: string; // x 紧急提交标记(是：Y，否：N)
+    factory?: string;
+}
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.solerow {
+    margin-top: 5px;
+    line-height: 33px;
+    div {
+        float: left;
+    }
+    .input_bottom {
+        margin-right: 50px;
+    }
+}
 </style>

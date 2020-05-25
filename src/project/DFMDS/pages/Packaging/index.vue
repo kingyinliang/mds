@@ -50,7 +50,7 @@
                                             <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goDataEntry(item)">
                                                 生产数据
                                             </el-button>
-                                            <el-button size="small" type="primary" @click="goCheckData(item)">
+                                            <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goCheckData(item)">
                                                 检查数据
                                             </el-button>
                                         </div>
@@ -76,7 +76,8 @@
     })
     export default class PackagingIndex extends Vue {
         queryList: PkgObj[] = []
-
+        workshopName =''
+        productLineList: object[] = []
         // 查询表头
         queryFormData = [
             {
@@ -125,6 +126,10 @@
             }
         ];
 
+        mounted() {
+            //
+        }
+
         // 查询请求
         listInterface = params => {
             params.current = 1;
@@ -134,21 +139,26 @@
         }
 
         setData(data) {
-            data.data.forEach(item => {
-                if (item.orderNoList.length === 1) {
-                    item.activeOrderNo = item.orderNoList[0]
-                    item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
-                } else {
-                    item.activeOrderNo = ''
-                    item.activeOrderMap = {
-                        planOutput: '',
-                        materialCode: '',
-                        countOutput: ''
+            const tempData = JSON.parse(JSON.stringify(data.data))
+            tempData.forEach((item, index) => {
+                if (item !== null) {
+                    if (item.orderNoList.length === 1) {
+                        item.activeOrderNo = item.orderNoList[0]
+                        item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
+                    } else {
+                        item.activeOrderNo = ''
+                        item.activeOrderMap = {
+                            planOutput: '',
+                            materialCode: '',
+                            countOutput: ''
+                        }
                     }
+                } else {
+                    tempData.splice(index, 1)
                 }
             })
-            getS3Img(data.data, 'productLineImage')
-            this.queryList = data.data
+            getS3Img(tempData, 'productLineImage')
+            this.queryList = tempData
         }
 
         orderchange(item) {
@@ -158,9 +168,27 @@
         goDataEntry(item) {
             this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-detail'))
-            setTimeout(() => {
-                this.$router.push({ name: `DFMDS-pages-Packaging-detail` });
-            }, 100);
+            COMMON_API.ORG_QUERY_WORKSHOP_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptType: ['WORK_SHOP']
+            }).then(({ data }) => {
+                const temp = data.data
+                temp.forEach(element => {
+                    if (element.id === item.activeOrderMap.workShop) {
+                        this.workshopName = element.deptName
+                    }
+
+                });
+                this.$router.push({
+                    name: `DFMDS-pages-Packaging-detail`,
+                    params: {
+                        orderId: item.activeOrderMap.id,
+                        orderNo: item.activeOrderNo,
+                        productLineName: item.productLineName,
+                        workShopName: this.workshopName
+                    }
+                });
+            })
         }
 
         goCheckData(item) {
