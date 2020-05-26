@@ -74,7 +74,7 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.splitFlag === 'N'" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.$index)">
+                        <el-button v-if="scope.row.splitFlag === 'N'" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -104,35 +104,14 @@
                 <el-table-column label="批次" prop="batch" width="150" :show-overflow-tooltip="true" />
                 <el-table-column label="实际用量" prop="realUsed" width="150" :show-overflow-tooltip="true" />
                 <el-table-column label="开始使用时间" prop="batch" width="150">
-                    <!-- <template slot-scope="scope">
-                        <el-input v-model="scope.row.startDate" size="small" />
-                    </template> -->
                     <template slot-scope="scope">
-                        <el-time-select
-                            v-model="scope.row.startDate"
-                            placeholder="开始使用时间"
-                            :picker-options="{
-                                start: '00:00',
-                                end: '24:00'
-                            }"
-                        />
+                        <el-input v-model="scope.row.startDate" size="small" />
                     </template>
                 </el-table-column>
 
                 <el-table-column label="用完时间" prop="batch" width="150">
-                    <!-- <template slot-scope="scope">
-                        <el-input v-model="scope.row.endDate" size="small" />
-                    </template> -->
                     <template slot-scope="scope">
-                        <el-time-select
-                            v-model="scope.row.endDate"
-                            placeholder="用完时间"
-                            :picker-options="{
-                                start: '00:00',
-                                end: '24:00',
-                                minTime: materialS[scope.$index].startDate
-                            }"
-                        />
+                        <el-input v-model="scope.row.endDate" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="140">
@@ -216,13 +195,8 @@
                 orderStatus: dataGroup.orderStatus,
                 productLine: dataGroup.productLine
             }).then(({ data }) => {
-                console.log('包材领用')
-                console.log(data)
                 this.processData(data.data, 'currentDataTable');
                 this.merge(this.currentDataTable, 'currentDataTable');
-
-                console.log('包材领用处理后')
-                console.log(this.currentDataTable)
             });
             PKG_API.PKG_MATERIAL_S_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -230,8 +204,6 @@
                 orderStatus: dataGroup.orderStatus,
                 productLine: dataGroup.productLine
             }).then(({ data }) => {
-                console.log('半成品领用')
-                console.log(data)
                 this.processData(data.data, 'materialS');
                 this.merge(this.materialS, 'materialS');
             })
@@ -323,14 +295,8 @@
         }
 
         // 删除
-        delMaterial(index) {
-            this.$confirm('是否删除?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.currentDataTable.splice(index, 1);
-            });
+        delMaterial(row) {
+            console.log(row)
         }
     }
 interface MaterialMap{
