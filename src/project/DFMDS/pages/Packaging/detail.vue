@@ -179,74 +179,16 @@
             });
 
             this.formHeader = this.$store.state.packaging.packDetail
+            console.log('表头数据顯示')
+            console.log(this.formHeader)
 
             PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 this.orderStatus = data.data.orderStatus
-                console.log('data')
+                console.log('訂單查詢結果顯示')
                 console.log(data)
-                console.log('this.formHeader')
-                console.log(this.formHeader)
-
-                // PKG_API.PKG_ALL_SAVE_API({
-                //         // pkgGerms: {
-                //         //     germsDelete: [],
-                //         //     germsInsert: [],
-                //         //     germsUpdate: []
-                //         // },
-                //         // pkgInstorage: {
-                //         //     instorageDelete: [],
-                //         //     instorageInsert: [],
-                //         //     instorageUpdate: []
-                //         // },
-                //         pkgOrderUpdate: {
-                //             orderId: this.formHeader.orderId,
-                //             orderNo: this.formHeader.orderNo,
-                //             productDate: this.formHeader.productDate,
-                //             productLine: this.formHeader.productLine,
-                //             workShop: this.formHeader.workShop
-                //         },
-                //         // pkgPackingMaterial: {
-                //         //     packingMaterialDelete: [],
-                //         //     packingMaterialInsert: [],
-                //         //     packingMaterialItemDel: [],
-                //         //     packingMaterialUpdate: []
-                //         // },
-                //         // pkgSemiMaterial: {
-                //         //     pkgSemiMaterialDelete: [],
-                //         //     pkgSemiMaterialInsert: [],
-                //         //     pkgSemiMaterialItemDelete: [],
-                //         //     pkgSemiMaterialUpdate: []
-                //         // },
-                //         pkgText: {
-                //             pkgTextInsert: {
-                //                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                //                 orderId: this.formHeader.orderId,
-                //                 orderNo: this.formHeader.orderNo,
-                //                 pkgText: '我是测试文本'
-                //             },
-                //             pkgTextUpdate: {}
-                //         }
-                //         // pkgTimeSheet: {
-                //         //     pkgTimeSheetInsertDto: {},
-                //         //     pkgTimeSheetUpdateDto: {}
-                //         // }
-                //     }).then((res) => {
-                //         console.log(res)
-                //     })
-                // PKG_API.PKG_PACKAGEMATERIAL_QUERY_API({
-                //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                //     orderNo: this.formHeader.orderNo,
-                //     orderStatus: this.orderStatus,
-                //     productLine: this.formHeader.productLine
-                // }).then((res) => {
-                //     console.log('物料领用-查询')
-                //     console.log(res)
-                //     // this.$refs.ProductInStorage.init(data.data)
-                // })
-
             })
         }
 
@@ -256,20 +198,20 @@
 
         initData() {
             // # 生产准备
-            // PKG_API.PKG_TIMESHEET_QUERY_API({
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //     orderNo: this.formHeader.orderNo
-            // }).then(({ data }) => {
-            //     console.log('生产准备-查询')
-            //     console.log(data)
-            //     let dataTemp = {};
-            //     if (dataTemp !== null) {
-            //         dataTemp = JSON.parse(JSON.stringify(data.data))
-            //     } else {
-            //         dataTemp = {}
-            //     }
-            //     this.$refs.readyTime.init(dataTemp)
-            // })
+            PKG_API.PKG_TIMESHEET_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: this.formHeader.orderNo
+            }).then(({ data }) => {
+                console.log('生产准备-查询')
+                console.log(data)
+                let dataTemp = {};
+                if (dataTemp !== null) {
+                    dataTemp = JSON.parse(JSON.stringify(data.data))
+                } else {
+                    dataTemp = {}
+                }
+                this.$refs.readyTime.init(dataTemp)
+            })
 
             // # 生产人员
             // # 设备运行
@@ -324,6 +266,7 @@
 
         sentData() {
             const dataGroup: SendData = {};
+            // # pkgOrderUpdate
             this.pkgOrderUpdate = {
                 orderId: this.formHeader.id,
                 orderNo: this.formHeader.orderNo,
@@ -333,25 +276,23 @@
             }
             dataGroup.pkgOrderUpdate = this.pkgOrderUpdate;
 
-            // TimeSheet 规则
-            // const timeSheetTemp = this.$refs.readyTime.returnDataGroup()
-            // timeSheetTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            // // console.log('timeSheetTemp')
-            // // console.log(timeSheetTemp)
-            // if (timeSheetTemp.id !== '') {
-            //     this.pkgTimeSheet = {
-            //         pkgTimeSheetInsertDto: {},
-            //         pkgTimeSheetUpdateDto: timeSheetTemp
-            //     }
-            // } else {
-            //     timeSheetTemp.orderId = this.formHeader.id
-            //     timeSheetTemp.orderNo = this.formHeader.orderNo
-            //     this.pkgTimeSheet = {
-            //         pkgTimeSheetInsertDto: timeSheetTemp,
-            //         pkgTimeSheetUpdateDto: {}
-            //     }
-            // }
-            // dataGroup.pkgTimeSheet = this.pkgTimeSheet;
+            // pkgTimeSheet
+            const timeSheetTemp = this.$refs.readyTime.returnDataGroup()
+            timeSheetTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            if (timeSheetTemp.id !== '') {
+                this.pkgTimeSheet = {
+                    pkgTimeSheetInsertDto: {},
+                    pkgTimeSheetUpdateDto: timeSheetTemp
+                }
+            } else {
+                timeSheetTemp.orderId = this.formHeader.id
+                timeSheetTemp.orderNo = this.formHeader.orderNo
+                this.pkgTimeSheet = {
+                    pkgTimeSheetInsertDto: timeSheetTemp,
+                    pkgTimeSheetUpdateDto: {}
+                }
+            }
+            dataGroup.pkgTimeSheet = this.pkgTimeSheet;
 
             // 文本记录
             // const textRecordTemp = this.$refs.textRecord.returnDataGroup()
@@ -375,9 +316,10 @@
             // dataGroup.pkgText = this.pkgText;
 
 
-            return PKG_API.PKG_ALL_SAVE_API(dataGroup).then((data) => {
-                console.log(data)
-                this.initData()
+            return PKG_API.PKG_ALL_SAVE_API(dataGroup).then(() => {
+                setTimeout(() => {
+                    this.initData() // 刷新
+                }, 1000);
             })
         }
 

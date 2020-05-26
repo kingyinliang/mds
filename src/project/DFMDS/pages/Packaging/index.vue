@@ -10,7 +10,7 @@
         >
             <template slot="home">
                 <el-row class="packaging__main" :gutter="10">
-                    <el-col v-for="(item, index) in queryList" :key="index" :span="8" style="margin-bottom: 10px;">
+                    <el-col v-for="(item, index) in queryResultList" :key="index" :span="8" style="margin-bottom: 10px;">
                         <el-form :model="item" size="small" label-position="right" label-width="85px">
                             <div class="packaging__main__item">
                                 <div class="packaging__main__item__title clearfix">
@@ -75,9 +75,7 @@
         }
     })
     export default class PackagingIndex extends Vue {
-        queryList: PkgObj[] = []
-        workshopName ='' // 车间名称
-        // productLineList: object[] = []
+        queryResultList: PkgObj[] = []
         // 查询表头
         queryFormData = [
             {
@@ -126,9 +124,6 @@
             }
         ];
 
-        mounted() {
-            //
-        }
 
         // 查询请求
         listInterface = params => {
@@ -158,7 +153,9 @@
                 }
             })
             getS3Img(tempData, 'productLineImage')
-            this.queryList = tempData
+            this.queryResultList = tempData
+            console.log('this.queryResultList')
+            console.log(this.queryResultList)
         }
 
         orderchange(item) {
@@ -168,18 +165,11 @@
         goDataEntry(item) {
             console.log('item')
             console.log(item)
+            this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-detail'))
-            COMMON_API.ORG_QUERY_WORKSHOP_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptType: ['WORK_SHOP']
-            }).then(({ data }) => {
-                console.log('data.data')
-                console.log(data.data)
-                this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
-                this.$router.push({
-                    name: `DFMDS-pages-Packaging-detail`
-                });
-            })
+            this.$router.push({
+                name: `DFMDS-pages-Packaging-detail`
+            });
         }
 
         goCheckData(item) {
