@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 <template>
     <div class="header_main">
         <el-card class="searchCard">
@@ -54,18 +53,17 @@
                 </div>
                 <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="sealList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" label="序号" width="55" />
-                    <el-table-column width="200">
+                    <el-table-column width="195">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
+                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第一排" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <!-- 正则表达式先切换中文输入法再切换回去绑定的值不会更新 -->
-                            <!-- <el-input v-model.trim="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" oninput="value=value. " /> -->
                             <!-- <el-input v-model.trim="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" oninput="if(isNaN(value)) { value = null } if(value.indexOf('.')>0){value=value.slice(0,value.indexOf('.')+3)}" /> -->
                             <el-input v-model.trim="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(sealList,scope.$index,'pressOne')" />
                         </template>
@@ -119,12 +117,12 @@
                 </div>
                 <el-table ref="table2" class="newTable" header-row-class-name="tableHead" :data="weightList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" label="序号" width="55" />
-                    <el-table-column width="200">
+                    <el-table-column width="195">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.recordDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
+                            <el-date-picker v-model="scope.row.recordDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第一排净含量" width="120" :show-overflow-tooltip="true">
@@ -327,12 +325,12 @@
                 </div>
                 <el-table ref="table4" class="newTable" header-row-class-name="tableHead" :data="torqueList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" label="序号" width="55" />
-                    <el-table-column width="200">
+                    <el-table-column width="195">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
+                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="扭力矩/N.m" width="200" :show-overflow-tooltip="true">
