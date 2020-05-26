@@ -4,7 +4,7 @@
             <el-card>
                 <el-row type="flex">
                     <el-col>
-                        <el-form :inline="true" :model="controllableForm" size="small" label-width="85px" class="topforms">
+                        <el-form :inline="true" :model="controllableForm" size="small" label-width="85px" class="topforms" @submit.native.prevent>
                             <el-form-item label="角色名称：">
                                 <el-input v-model="controllableForm.username" placeholder="角色名称" clearable @clear="getItemsList()" />
                             </el-form-item>

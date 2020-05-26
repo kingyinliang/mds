@@ -1,8 +1,8 @@
 <template>
-    <el-col>
+    <div>
         <div class="header_main">
-            <el-card>
-                <div class="clearfix">
+            <mds-card title="库位列表" :name="'location'" :pack-up="false" style="background: #fff;">
+                <template slot="titleBtn">
                     <el-row style="float: right;">
                         <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
@@ -24,46 +24,44 @@
                             </el-form-item>
                         </el-form>
                     </el-row>
-                </div>
-                <el-row>
-                    <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="itemList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange" @row-dblclick="addOrUpdateItem">
-                        <el-table-column type="selection" width="50" align="center" />
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="55" align="center" />
-                        <el-table-column prop="deptName" width="160" :show-overflow-tooltip="true" label="车间" />
-                        <el-table-column :show-overflow-tooltip="true" label="物料类型">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialTypeCode + ' ' + scope.row.materialTypeName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column :show-overflow-tooltip="true" label="物料编码">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialCode }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="80" prop="storageLocation" label="库位" />
-                        <el-table-column width="91" label="是否样品库">
-                            <template slot-scope="scope">
-                                {{ scope.row.sampleFlag === 0 ? '否' : '是' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="84" label="发料/入库">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialUse === 'F' ? '发料' : '入库' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="84" label="操作">
-                            <template slot-scope="scope">
-                                <el-button type="primary" size="small" @click="addOrUpdateItem(scope.row)">
-                                    编辑
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-row>
+                </template>
+                <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :height="documentClientHeight - 32 - 40 - 75 - 100 - 47" :data="itemList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange" @row-dblclick="addOrUpdateItem">
+                    <el-table-column type="selection" width="50" align="center" />
+                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" align="center" />
+                    <el-table-column prop="deptName" width="160" :show-overflow-tooltip="true" label="车间" />
+                    <el-table-column :show-overflow-tooltip="true" label="物料类型">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialTypeCode + ' ' + scope.row.materialTypeName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column :show-overflow-tooltip="true" label="物料编码">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialCode }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="80" prop="storageLocation" label="库位" />
+                    <el-table-column width="91" label="是否样品库">
+                        <template slot-scope="scope">
+                            {{ scope.row.sampleFlag === 0 ? '否' : '是' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="84" label="发料/入库">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialUse === 'F' ? '发料' : '入库' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="54" label="操作">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" @click="addOrUpdateItem(scope.row)">
+                                编辑
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
                 <el-row v-if="itemList.length !== 0">
                     <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
-            </el-card>
+            </mds-card>
         </div>
         <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDialogShow" @close="closeSearchDialog()">
             <el-form ref="searchDialog" :model="form" size="small" label-width="110px" class="locationdialog">
@@ -97,7 +95,7 @@
             </span>
         </el-dialog>
         <location-add v-if="isAddOrUpdateDialogShow" ref="locationAdd" :work-shop="workShop" :material-list="materialList" @refreshDataList="getItemList()" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -132,7 +130,11 @@
                 currentQueryStatus: 0
             };
         },
-        computed: {},
+        computed: {
+            documentClientHeight() {
+                return this.$store.state.common.documentClientHeight;
+            }
+        },
         mounted() {
             this.getItemList();
             this.getDeptByFactoryId();
