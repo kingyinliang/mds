@@ -12,7 +12,11 @@
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="结算库存" prop="endStocks" width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="初始库存" prop="startStocks" width="80" :show-overflow-tooltip="true" />
-                <el-table-column label="订单物料" prop="receiveMaterial" width="80" :show-overflow-tooltip="true" />
+                <el-table-column label="订单领料" prop="receiveMaterial" width="120" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.receiveMaterial" size="small" placeholder="请输入" />
+                    </template>
+                </el-table-column>
                 <el-table-column width="70">
                     <template slot-scope="scope">
                         <el-button type="text" @click="SplitDate('currentDataTable', scope.row, scope.$index)">
@@ -20,9 +24,12 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="实际用量" prop="realUseAmount" width="150">
+                <el-table-column label="实际用量" prop="realUseAmount" width="120">
+                    <template slot="header">
+                        <span class="notNull">* </span>实际用量
+                    </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.realUseAmount" size="small" />
+                        <el-input v-model="scope.row.realUseAmount" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="批次" prop="batch" width="150">
@@ -30,29 +37,39 @@
                         <el-input v-model="scope.row.batch" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="实际损耗" prop="realLoss" width="150">
+                <el-table-column label="实际损耗" prop="realLoss" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.realLoss" size="small" />
+                        <el-input v-model="scope.row.realLoss" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="不合格数" prop="unqualified" width="150">
+                <el-table-column label="不合格数" prop="unqualified" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.unqualified" size="small" />
+                        <el-input v-model="scope.row.unqualified" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="不良批次" prop="badBatch" width="150">
+                <el-table-column label="不良批次" prop="badBatch" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.badBatch" size="small" />
+                        <el-input v-model="scope.row.badBatch" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="厂家" prop="manufactor" width="150">
+                <el-table-column label="厂家" prop="manufactor" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.manufactor" size="small" />
+                        <el-input v-model="scope.row.manufactor" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" prop="remark">
+                <el-table-column label="备注" prop="remark" min-width="140">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" size="small" />
+                        <el-input v-model="scope.row.remark" size="small" placeholder="请输入" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作人" prop="changer" width="140">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作时间" prop="changed" width="180">
+                    <template slot-scope="scope">
+                        {{ scope.row.changed }}
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
@@ -91,14 +108,25 @@
                         <el-input v-model="scope.row.startDate" size="small" />
                     </template>
                 </el-table-column>
+
                 <el-table-column label="用完时间" prop="batch" width="150">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.endDate" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" prop="remark">
+                <el-table-column label="备注" prop="remark" min-width="140">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" size="small" />
+                        <el-input v-model="scope.row.remark" size="small" placeholder="请输入" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作人" prop="changer" width="140">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作时间" prop="changed" width="180">
+                    <template slot-scope="scope">
+                        {{ scope.row.changed }}
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
@@ -117,6 +145,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { PKG_API } from 'common/api/api';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
 
     @Component({
         name: 'Material',
@@ -159,21 +188,21 @@
         spanOneArr: number[] = [];
         spanTwoArr: number[] = [];
 
-        init(formHeader) {
+        init(dataGroup) {
             PKG_API.PKG_MATERIAL_P_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: formHeader.orderNo,
-                orderStatus: formHeader.orderStatus,
-                productLine: formHeader.productLine
+                orderNo: dataGroup.orderNo,
+                orderStatus: dataGroup.orderStatus,
+                productLine: dataGroup.productLine
             }).then(({ data }) => {
                 this.processData(data.data, 'currentDataTable');
                 this.merge(this.currentDataTable, 'currentDataTable');
             });
             PKG_API.PKG_MATERIAL_S_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: formHeader.orderNo,
-                orderStatus: formHeader.orderStatus,
-                productLine: formHeader.productLine
+                orderNo: dataGroup.orderNo,
+                orderStatus: dataGroup.orderStatus,
+                productLine: dataGroup.productLine
             }).then(({ data }) => {
                 this.processData(data.data, 'materialS');
                 this.merge(this.materialS, 'materialS');
@@ -181,7 +210,7 @@
         }
 
         // 处理数据
-        processData(data, Data) {
+        processData(data, dataGroup) {
             const finalData: MaterialMap[] = []
             data.forEach(item => {
                 item.item.forEach((listitem) => {
@@ -194,13 +223,15 @@
                         needNum: item.needNum,
                         startStocks: item.startStocks,
                         endStocks: item.endStocks,
-                        receiveMaterial: item.receiveMaterial
+                        receiveMaterial: item.receiveMaterial,
+                        changer: getUserNameNumber(),
+                        changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
                     };
                     Object.assign(materialMap, listitem);
                     finalData.push(materialMap)
                 })
             });
-            this[Data] = finalData
+            this[dataGroup] = finalData
         }
 
         // 设置合并行
@@ -236,6 +267,7 @@
             }
         }
 
+
         spanTwoMethod({ rowIndex, columnIndex }) {
             if (columnIndex <= 4) {
                 return {
@@ -264,10 +296,9 @@
 
         // 删除
         delMaterial(row) {
-            console.log(row);
+            console.log(row)
         }
     }
-
 interface MaterialMap{
     id?: string;
     original?: boolean;
@@ -280,6 +311,8 @@ interface MaterialMap{
     endStocks?: number;
     receiveMaterial?: string;
     splitFlag?: string;
+    changer?: string;
+    changed?: string;
 }
 </script>
 

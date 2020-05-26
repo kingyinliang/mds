@@ -10,15 +10,15 @@
         >
             <template slot="home">
                 <el-row class="packaging__main" :gutter="10">
-                    <el-col v-for="(item, index) in queryList" :key="index" :span="8" style="margin-bottom: 10px;">
+                    <el-col v-for="(item, index) in queryResultList" :key="index" :span="8" style="margin-bottom: 10px;">
                         <el-form :model="item" size="small" label-position="right" label-width="85px">
                             <div class="packaging__main__item">
                                 <div class="packaging__main__item__title clearfix">
                                     <p class="packaging__main__item__title__left">
                                         产线：<span class="packaging__main__item__title__left__proLine">{{ item.productLineName }}</span>产线
                                     </p>
-                                    <p class="packaging__main__item__title__right">
-                                        <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatus : '' }}</span>
+                                    <p v-if="item.activeOrderNo!==''" class="packaging__main__item__title__right">
+                                        <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatusValue : '' }}</span>
                                     </p>
                                 </div>
                                 <div class="packaging__main__item__main">
@@ -75,9 +75,16 @@
         }
     })
     export default class PackagingIndex extends Vue {
-        queryList: PkgObj[] = []
-        workshopName =''
-        productLineList: object[] = []
+        queryResultList: PkgObj[] = []
+        checkStatus: object[]=[]
+
+        // 取审核列表
+        created() {
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
+                this.checkStatus = data.data
+            });
+        }
+
         // 查询表头
         queryFormData = [
             {
@@ -126,9 +133,6 @@
             }
         ];
 
-        mounted() {
-            //
-        }
 
         // 查询请求
         listInterface = params => {
@@ -158,37 +162,27 @@
                 }
             })
             getS3Img(tempData, 'productLineImage')
-            this.queryList = tempData
+            this.queryResultList = tempData
         }
 
         orderchange(item) {
-            item.activeOrderMap = item.pkgOrderMap[item.activeOrderNo]
+            if (item.activeOrderNo !== '') {
+                item.activeOrderMap = item.pkgOrderMap[item.activeOrderNo]
+                this.checkStatus.forEach((element: OrderStatus) => {
+                    if (item.activeOrderMap.orderStatus === element.dictCode) {
+                        item.activeOrderMap.orderStatusValue = element.dictValue
+                    }
+                });
+            }
+
         }
 
         goDataEntry(item) {
             this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-detail'))
-            COMMON_API.ORG_QUERY_WORKSHOP_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptType: ['WORK_SHOP']
-            }).then(({ data }) => {
-                const temp = data.data
-                temp.forEach(element => {
-                    if (element.id === item.activeOrderMap.workShop) {
-                        this.workshopName = element.deptName
-                    }
-
-                });
-                this.$router.push({
-                    name: `DFMDS-pages-Packaging-detail`,
-                    params: {
-                        orderId: item.activeOrderMap.id,
-                        orderNo: item.activeOrderNo,
-                        productLineName: item.productLineName,
-                        workShopName: this.workshopName
-                    }
-                });
-            })
+            this.$router.push({
+                name: `DFMDS-pages-Packaging-detail`
+            });
         }
 
         goCheckData(item) {
@@ -209,6 +203,12 @@
     }
     interface OrderMap{
         materialCode?: string;
+    }
+    interface OrderStatus {
+        dictCode?: string;
+        dictId?: string;
+        dictValue?: string;
+        factoryName?: string;
     }
 </script>
 

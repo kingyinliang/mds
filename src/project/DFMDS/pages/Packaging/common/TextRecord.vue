@@ -23,25 +23,16 @@ export default class TextRecord extends Vue {
         orderNo: '' // 订单号
     }
 
-    init(data) {
-        console.log('textRecord带进来的 data')
-        console.log(data)
-        this.currentFormDataGroup = data
+    init(dataGroup) {
+        console.log('textRecord 带进来的 data')
+        console.log(dataGroup)
+        this.currentFormDataGroup = dataGroup
     }
 
     returnDataGroup() {
-        return this.currentFormDataGroup
+        return JSON.parse(JSON.stringify(this.currentFormDataGroup))
     }
 
-    // getDataInfo(formHeader: object) {
-    //     PKG_API.PKG_TEXT_QUERY_API({ factory: formHeader['factory'], orderNo: formHeader['orderNo'] }).then(({ data }) => {
-    //         if (data.code === 200) {
-    //             if (data.data.length !== 0) {
-    //                 this.pkgText = data.data[0]['pkgText']
-    //             }
-    //         }
-    //     });
-    // }
 }
 interface TextObj{
     pkgText?: string ; // 文本
