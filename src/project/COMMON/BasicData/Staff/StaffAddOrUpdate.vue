@@ -16,7 +16,7 @@
                     <el-input v-model="dataForm.realName" placeholder="手动输入" auto-complete="off" clearable />
                 </el-form-item>
                 <el-form-item label="性别：">
-                    <el-select v-model="dataForm.sex" placeholder="请选择">
+                    <el-select v-model="dataForm.sex" placeholder="请选择" style="width: 100%;">
                         <el-option label="男" value="M" />
                         <el-option label="女" value="F" />
                     </el-select>

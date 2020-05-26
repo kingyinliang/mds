@@ -12,7 +12,9 @@
                             <el-input v-model="formHeader.productLineName" size="small" class="header_main__input" disabled />
                         </el-form-item>
                         <el-form-item label="生产物料：">
-                            <el-input v-model="formHeader.productMaterial" size="small" class="header_main__input" disabled />
+                            <el-tooltip class="item" effect="dark" :content="formHeader.productMaterial" placement="top-start">
+                                <el-input v-model="formHeader.productMaterial" size="small" class="header_main__input" disabled />
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="生产订单：">
                             <el-input v-model="formHeader.orderNo" size="small" class="header_main__input" disabled />
@@ -394,7 +396,7 @@
                 formHeader: {
                     workShopName: this.$store.state.packaging.packCheckData.workShopName,
                     productLineName: this.$store.state.packaging.packCheckData.productLineName,
-                    productMaterial: this.$store.state.packaging.packCheckData.materialName,
+                    productMaterial: this.$store.state.packaging.packCheckData.materialCode + this.$store.state.packaging.packCheckData.materialName,
                     orderNo: this.$store.state.packaging.packCheckData.orderNo,
                     planOutput: this.$store.state.packaging.packCheckData.planOutput + this.$store.state.packaging.packCheckData.outputUnit,
                     orderStartDate: this.$store.state.packaging.packCheckData.orderStartDate,
