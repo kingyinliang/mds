@@ -25,14 +25,14 @@
                         />
                     </template>
                 </el-table-column>
-                <el-table-column label="班次" prop="classes" width="100">
+                <el-table-column label="班次" prop="classes" width="120">
                     <template slot="header">
                         <span class="notNull">* </span>班次
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
                             <el-option
-                                v-for="item in classesoptions"
+                                v-for="item in classesOptions"
                                 :key="item"
                                 :label="item"
                                 :value="item"
@@ -63,10 +63,10 @@
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact">
                             <el-option
-                                v-for="item in inStorageUnitOptions"
-                                :key="item"
-                                :label="item"
-                                :value="item"
+                                v-for="item in unitOptions"
+                                :key="item.key"
+                                :label="item.value"
+                                :value="item.key"
                             />
                         </el-select>
                     </template>
@@ -80,10 +80,10 @@
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
                             <el-option
-                                v-for="item in inStorageBadUnitOptions"
-                                :key="item"
-                                :label="item"
-                                :value="item"
+                                v-for="item in unitOptions"
+                                :key="item.key"
+                                :label="item.value"
+                                :value="item.key"
                             />
                         </el-select>
                     </template>
@@ -97,10 +97,10 @@
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
                             <el-option
-                                v-for="item in onlineBadUnitOptions"
-                                :key="item"
-                                :label="item"
-                                :value="item"
+                                v-for="item in unitOptions"
+                                :key="item.key"
+                                :label="item.value"
+                                :value="item.key"
                             />
                         </el-select>
                     </template>
@@ -114,10 +114,10 @@
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact">
                             <el-option
-                                v-for="item in sampleUnitOptions"
-                                :key="item"
-                                :label="item"
-                                :value="item"
+                                v-for="item in unitOptions"
+                                :key="item.key"
+                                :label="item.value"
+                                :value="item.key"
                             />
                         </el-select>
                     </template>
@@ -132,10 +132,10 @@
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact">
                             <el-option
-                                v-for="item in outputUnitOptions"
-                                :key="item"
-                                :label="item"
-                                :value="item"
+                                v-for="item in unitOptions"
+                                :key="item.key"
+                                :label="item.value"
+                                :value="item.key"
                             />
                         </el-select>
                     </template>
@@ -145,7 +145,7 @@
                         <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column label="操作人" prop="changer" width="100">
+                <el-table-column label="操作人" prop="changer" width="140">
                     <template slot-scope="scope">
                         {{ scope.row.changer }}
                     </template>
@@ -178,7 +178,8 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
+    // import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
     // import { PKG_API } from 'common/api/api';
 
     @Component({
@@ -195,21 +196,21 @@
         instorageInsert= []; // 入库新增集合
         instorageUpdate=[]; // 入库修改集合
         productInStoreData: [];
-        classesoptions=['白班', '中班', '夜班'];
+        classesOptions=['白班', '中班', '夜班'];
+        unitOptions: object[]=[]
 
-        mounted() {
-            //
-        }
-
-        init(data) {
+        init(dataGroup) {
             console.log('ProductInStore带进来的 data')
-            console.log(data)
-            this.currentFormDataGroup = data
+            console.log(dataGroup)
+            this.currentFormDataGroup = dataGroup.inStorages
+            this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
+            this.unitOptions.push({ key: dataGroup.productUnit, value: dataGroup.productUnitName })
+            console.log('this.unitOptions')
+            console.log(this.unitOptions)
         }
 
         returnDataGroup() {
-            this.productInStoreData = JSON.parse(JSON.stringify(this.currentFormDataGroup))
-            return this.productInStoreData
+            return JSON.parse(JSON.stringify(this.currentFormDataGroup))
         }
 
         removeDataRow(index) {
@@ -255,8 +256,8 @@
 
         get computedTotal() {
             const total = 0;
-            // this.currentFormDataGroup.forEach(item => {
-            //     total = accAdd(total, item.output)
+            // this.currentFormDataGroup.forEach((item: CurrentDataTable) => {
+            //     total += item.output
             // })
             return total;
         }
