@@ -178,7 +178,6 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    // import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
     // import { PKG_API } from 'common/api/api';
 

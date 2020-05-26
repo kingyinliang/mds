@@ -18,7 +18,7 @@
                                         产线：<span class="packaging__main__item__title__left__proLine">{{ item.productLineName }}</span>产线
                                     </p>
                                     <p class="packaging__main__item__title__right">
-                                        <span>状态：已保存</span>
+                                        <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatus : '' }}</span>
                                     </p>
                                 </div>
                                 <div class="packaging__main__item__main">
@@ -50,7 +50,7 @@
                                             <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goDataEntry(item)">
                                                 生产数据
                                             </el-button>
-                                            <el-button size="small" type="primary" @click="goCheckData(item)">
+                                            <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goCheckData(item)">
                                                 检查数据
                                             </el-button>
                                         </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 <template>
     <div class="header_main">
         <el-card class="searchCard">
@@ -5,10 +6,10 @@
                 <el-col>
                     <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
                         <el-form-item label="生产车间：">
-                            <el-input v-model="formHeader.workShop" size="small" class="header_main__input" disabled />
+                            <el-input v-model="formHeader.workShopName" size="small" class="header_main__input" disabled />
                         </el-form-item>
                         <el-form-item label="生产产线：">
-                            <el-input v-model="formHeader.productLine" size="small" class="header_main__input" disabled />
+                            <el-input v-model="formHeader.productLineName" size="small" class="header_main__input" disabled />
                         </el-form-item>
                         <el-form-item label="生产物料：">
                             <el-input v-model="formHeader.productMaterial" size="small" class="header_main__input" disabled />
@@ -26,7 +27,7 @@
                             <el-input v-model="formHeader.productDate" size="small" class="header_main__input" disabled />
                         </el-form-item>
                         <el-form-item label="提交人员：">
-                            <el-input v-model="formHeader.submitPeople" size="small" class="header_main__input" disabled />
+                            <el-input v-model="formHeader.changer" size="small" class="header_main__input" disabled />
                         </el-form-item>
                         <el-form-item label="提交时间：">
                             <el-input v-model="formHeader.changed" size="small" class="header_main__input" disabled />
@@ -61,22 +62,25 @@
                     </el-table-column>
                     <el-table-column label="第一排" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <!-- 正则表达式先切换中文输入法再切换回去绑定的值不会更新 -->
+                            <!-- <el-input v-model.trim="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" oninput="value=value. " /> -->
+                            <!-- <el-input v-model.trim="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" oninput="if(isNaN(value)) { value = null } if(value.indexOf('.')>0){value=value.slice(0,value.indexOf('.')+3)}" /> -->
+                            <el-input v-model.trim="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(sealList,scope.$index,'pressOne')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第二排" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.pressTwo" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.pressTwo" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(sealList,scope.$index,'pressTwo')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第三排" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.pressThree" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.pressThree" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(sealList,scope.$index,'pressThree')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第四排" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.pressFour" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.pressFour" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(sealList,scope.$index,'pressFour')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="备注" :show-overflow-tooltip="true">
@@ -123,52 +127,52 @@
                     </el-table-column>
                     <el-table-column label="第一排净含量" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.netWeightOne" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.netWeightOne" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(weightList,scope.$index,'netWeightOne')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第一排调称" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.adjustmentOne" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.adjustmentOne" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(weightList,scope.$index,'adjustmentOne')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第二排净含量" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.netWeightTwo" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.netWeightTwo" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(weightList,scope.$index,'netWeightTwo')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第二排调称" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.adjustmentTwo" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.adjustmentTwo" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(weightList,scope.$index,'adjustmentTwo')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第三排净含量" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.netWeightThree" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.netWeightThree" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(weightList,scope.$index,'netWeightThree')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第三排调称" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.adjustmentThree" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.adjustmentThree" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(weightList,scope.$index,'adjustmentThree')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第四排净含量" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.netWeightFour" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.netWeightFour" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(weightList,scope.$index,'netWeightFour')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第四排调称" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.adjustmentFour" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.adjustmentFour" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(weightList,scope.$index,'adjustmentFour')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="酱盒重量下限" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.boxWeightFloor" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.boxWeightFloor" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(weightList,scope.$index,'boxWeightFloor')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="酱盒重量上限" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.boxWeightCeiling" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.boxWeightCeiling" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(weightList,scope.$index,'boxWeightCeiling')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="厂家" width="180" :show-overflow-tooltip="true">
@@ -215,76 +219,76 @@
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.checkDate" :disabled="!isRedact" size="mini" />
+                            <el-input v-model="scope.row.checkDate" :disabled="!isRedact" size="mini" @input="changeInputType(NRList,scope.$index,'checkDate')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="NR含量（%）">
                         <el-table-column label="第一排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrContentOne" :disabled="!isRedact" maxlength="12" size="mini" />
+                                <el-input v-model="scope.row.nrContentOne" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'nrContentOne')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第二排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrContentTwo" :disabled="!isRedact" maxlength="12" size="mini" />
+                                <el-input v-model="scope.row.nrContentTwo" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'nrContentTwo')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第三排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrContentThree" :disabled="!isRedact" maxlength="12" size="mini" />
+                                <el-input v-model="scope.row.nrContentThree" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'nrContentThree')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第四排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrContentFour" :disabled="!isRedact" maxlength="12" size="mini" />
+                                <el-input v-model="scope.row.nrContentFour" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'nrContentFour')" />
                             </template>
                         </el-table-column>
                     </el-table-column>
                     <el-table-column label="NR流量（L/min）">
                         <el-table-column label="第一排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrFlowOne" :disabled="!isRedact" maxlength="12" size="mini" />
+                                <el-input v-model="scope.row.nrFlowOne" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'nrFlowOne')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第二排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrFlowTwo" :disabled="!isRedact" maxlength="12" size="mini" />
+                                <el-input v-model="scope.row.nrFlowTwo" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'nrFlowTwo')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第三排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrFlowThree" :disabled="!isRedact" maxlength="12" size="mini" />
+                                <el-input v-model="scope.row.nrFlowThree" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'nrFlowThree')" />
                             </template>
                         </el-table-column>
                         <el-table-column label="第四排" width="120" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
-                                <el-input v-model="scope.row.nrFlowFour" :disabled="!isRedact" maxlength="12" size="mini" />
+                                <el-input v-model="scope.row.nrFlowFour" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'nrFlowFour')" />
                             </template>
                         </el-table-column>
                     </el-table-column>
                     <el-table-column label="罐内温度（°C）" width="140" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.potTemplate" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.potTemplate" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'potTemplate')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="NR温度（°C）" width="140" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.nrTemplate" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.nrTemplate" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'nrTemplate')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="NR纯度（%）" width="140" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.nrFineness" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.nrFineness" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'nrFineness')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="二级储压（Mpa）" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.pressure" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.pressure" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'pressure')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="混合比重（%）" width="140" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.proportion" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.proportion" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(NRList,scope.$index,'proportion')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="备注" width="180" :show-overflow-tooltip="true">
@@ -331,12 +335,12 @@
                     </el-table-column>
                     <el-table-column label="扭力矩/N.m" width="200" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.torque" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.torque" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(torqueList,scope.$index,'torque')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="真空度/Mpa" width="200" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.vacuum" :disabled="!isRedact" maxlength="12" size="mini" />
+                            <el-input v-model="scope.row.vacuum" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(torqueList,scope.$index,'vacuum')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="备注" :show-overflow-tooltip="true">
@@ -388,14 +392,14 @@
         data() {
             return {
                 formHeader: {
-                    workShop: this.$store.state.packaging.packCheckData.workShop,
-                    productLine: this.$store.state.packaging.packCheckData.productLine,
+                    workShopName: this.$store.state.packaging.packCheckData.workShopName,
+                    productLineName: this.$store.state.packaging.packCheckData.productLineName,
                     productMaterial: this.$store.state.packaging.packCheckData.materialName,
                     orderNo: this.$store.state.packaging.packCheckData.orderNo,
                     planOutput: this.$store.state.packaging.packCheckData.planOutput + this.$store.state.packaging.packCheckData.outputUnit,
                     orderStartDate: this.$store.state.packaging.packCheckData.orderStartDate,
                     productDate: this.$store.state.packaging.packCheckData.productDate,
-                    submitPeople: '',
+                    changer: this.$store.state.packaging.packCheckData.changer,
                     changed: this.$store.state.packaging.packCheckData.changed
                 },
                 activeName: '1',
@@ -406,7 +410,7 @@
                     id: '',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     orderNo: this.$store.state.packaging.packCheckData.orderNo,
-                    orderId: '1234567',
+                    orderId: this.$store.state.packaging.packCheckData.id,
                     checkDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
                     pressOne: '',
                     pressTwo: '',
@@ -421,7 +425,7 @@
                     id: '',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     orderNo: this.$store.state.packaging.packCheckData.orderNo,
-                    orderId: '1234567',
+                    orderId: this.$store.state.packaging.packCheckData.id,
                     recordDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
                     netWeightOne: '',
                     adjustmentOne: '',
@@ -443,7 +447,7 @@
                     id: '',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     orderNo: this.$store.state.packaging.packCheckData.orderNo,
-                    orderId: '1234567',
+                    orderId: this.$store.state.packaging.packCheckData.id,
                     checkDate: '',
                     nrContentOne: '',
                     nrContentTwo: '',
@@ -467,7 +471,7 @@
                     id: '',
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     orderNo: this.$store.state.packaging.packCheckData.orderNo,
-                    orderId: '1234567',
+                    orderId: this.$store.state.packaging.packCheckData.id,
                     checkDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
                     torque: '',
                     vacuum: '',
@@ -479,7 +483,8 @@
                     originWeightData: [],
                     originNRData: [],
                     originTourqeData: []
-                }
+                },
+                newArr: []
             };
         },
         computed: {
@@ -563,12 +568,11 @@
             weightAddRow() {
                 if (this.weightList.length) {
                     const last = JSON.parse(JSON.stringify(this.weightList[this.weightList.length - 1]));
-                    last.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    last.id = '';
-                    this.newWeightList.boxWeightFloor = last.boxWeightFloor;
-                    this.newWeightList.boxWeightCeiling = last.boxWeightCeiling;
-                    this.newWeightList.manufactor = last.manufactor;
-                    this.weightList.push(this.newWeightList);
+                    const newRow = JSON.parse(JSON.stringify(this.newWeightList));
+                    newRow.boxWeightFloor = last.boxWeightFloor;
+                    newRow.boxWeightCeiling = last.boxWeightCeiling;
+                    newRow.manufactor = last.manufactor;
+                    this.weightList.push(newRow);
                 } else {
                     this.weightList.push(this.newWeightList);
                 }
@@ -590,13 +594,12 @@
             NRAddRow() {
                 if (this.NRList.length) {
                     const last = JSON.parse(JSON.stringify(this.NRList[this.NRList.length - 1]));
-                    last.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    last.id = '';
-                    this.newNRList.nrFlowOne = last.nrFlowOne;
-                    this.newNRList.nrFlowTwo = last.nrFlowTwo;
-                    this.newNRList.nrFlowThree = last.nrFlowThree;
-                    this.newNRList.nrFlowFour = last.nrFlowFour;
-                    this.NRList.push(this.newNRList);
+                    const newRow = JSON.parse(JSON.stringify(this.newNRList));
+                    newRow.nrFlowOne = last.nrFlowOne;
+                    newRow.nrFlowTwo = last.nrFlowTwo;
+                    newRow.nrFlowThree = last.nrFlowThree;
+                    newRow.nrFlowFour = last.nrFlowFour;
+                    this.NRList.push(newRow);
                 } else {
                     this.NRList.push(this.newNRList);
                 }
@@ -616,7 +619,8 @@
             },
             //扭力新增
             torqueAddRow() {
-                this.torqueList.push(this.newTorqueList);
+                const last = JSON.parse(JSON.stringify(this.newTorqueList));
+                this.torqueList.push(last);
             },
             //扭力删除
             torqueDelRow(row) {
@@ -716,6 +720,7 @@
                             pkgTorque.pkgTorqueInsert.push(item);
                         }
                     })
+                    console.log(pkgSeal)
                     PKG_API.PKG_CHECKDATA_SAVE_API({
                         pkgSealData: pkgSeal,
                         pkgWeightData: pkgWeight,
@@ -798,9 +803,24 @@
                     }
                 }
                 return true;
+            },
+            changeInputType(arr, index, type) {
+                this.$nextTick(() => {
+                    console.log(index);
+                    // 先把非数字的都替换掉(空)，除了数字和.
+                    arr[index][type] = arr[index][type].replace(/[^\d.]/g, '');
+                    // 如果第一个字符为.则替换为0.
+                    arr[index][type] = arr[index][type].replace(/^\./g, '0.');
+                    //保证不能出现..
+                    arr[index][type] = arr[index][type].replace(/\.{2,}/g, '.');
+                    // 如果第一个数字为0则之后只能输入.
+                    arr[index][type] = arr[index][type].replace(/^0[^\.]+/g, '0');
+                    //保留两位小数
+                    arr[index][type] = arr[index][type].replace(/^(\d+)\.(\d\d).*$/, '$1.$2');
+                });
             }
         }
-    };
+    }
 </script>
 
 <style scoed lang="scss">

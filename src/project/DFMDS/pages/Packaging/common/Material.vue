@@ -287,13 +287,14 @@
 
         // 合并行
         spanMethod({ rowIndex, columnIndex }) {
-            // if (columnIndex <= 7) {
-            //     return {
-            //         rowspan: this.spanOneArr[rowIndex],
-            //         colspan: this.spanOneArr[rowIndex] > 0 ? 1 : 0
-            //     };
-            // }
+            if (columnIndex <= 7) {
+                return {
+                    rowspan: this.spanOneArr[rowIndex],
+                    colspan: this.spanOneArr[rowIndex] > 0 ? 1 : 0
+                };
+            }
         }
+
 
         spanTwoMethod({ rowIndex, columnIndex }) {
             if (columnIndex <= 4) {

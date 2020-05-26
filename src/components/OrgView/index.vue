@@ -83,8 +83,14 @@
 
         // 获取组织结构树
         getTree(type = false) {
+            let id = ''
+            if (JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode === '9999-xn') {
+                id = ''
+            } else {
+                id = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            }
             COMMON_API.ORGSTRUCTURE_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                factory: id
             }).then(({ data }) => {
                 if (data.code === 200) {
                     this.OrgTree = data.data;
