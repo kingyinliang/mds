@@ -17,8 +17,8 @@
                                     <p class="packaging__main__item__title__left">
                                         产线：<span class="packaging__main__item__title__left__proLine">{{ item.productLineName }}</span>产线
                                     </p>
-                                    <p class="packaging__main__item__title__right">
-                                        <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatus : '' }}</span>
+                                    <p v-if="item.activeOrderNo!==''" class="packaging__main__item__title__right">
+                                        <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatusValue : '' }}</span>
                                     </p>
                                 </div>
                                 <div class="packaging__main__item__main">
@@ -76,6 +76,15 @@
     })
     export default class PackagingIndex extends Vue {
         queryResultList: PkgObj[] = []
+        checkStatus: object[]=[]
+
+        // 取审核列表
+        created() {
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
+                this.checkStatus = data.data
+            });
+        }
+
         // 查询表头
         queryFormData = [
             {
@@ -154,17 +163,21 @@
             })
             getS3Img(tempData, 'productLineImage')
             this.queryResultList = tempData
-            console.log('this.queryResultList')
-            console.log(this.queryResultList)
         }
 
         orderchange(item) {
-            item.activeOrderMap = item.pkgOrderMap[item.activeOrderNo]
+            if (item.activeOrderNo !== '') {
+                item.activeOrderMap = item.pkgOrderMap[item.activeOrderNo]
+                this.checkStatus.forEach((element: OrderStatus) => {
+                    if (item.activeOrderMap.orderStatus === element.dictCode) {
+                        item.activeOrderMap.orderStatusValue = element.dictValue
+                    }
+                });
+            }
+
         }
 
         goDataEntry(item) {
-            console.log('item')
-            console.log(item)
             this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-detail'))
             this.$router.push({
@@ -190,6 +203,12 @@
     }
     interface OrderMap{
         materialCode?: string;
+    }
+    interface OrderStatus {
+        dictCode?: string;
+        dictId?: string;
+        dictValue?: string;
+        factoryName?: string;
     }
 </script>
 
