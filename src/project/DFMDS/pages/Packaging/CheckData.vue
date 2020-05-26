@@ -548,7 +548,7 @@
                     last.id = '';
                     this.sealList.push(last);
                 } else {
-                    this.sealList.push(this.newSealList);
+                    this.sealList.push(JSON.parse(JSON.stringify(this.newSealList)));
                 }
             },
             //密封度删除
@@ -566,16 +566,14 @@
             },
             //称重新增
             weightAddRow() {
+                const newRow = JSON.parse(JSON.stringify(this.newWeightList));
                 if (this.weightList.length) {
                     const last = JSON.parse(JSON.stringify(this.weightList[this.weightList.length - 1]));
-                    const newRow = JSON.parse(JSON.stringify(this.newWeightList));
                     newRow.boxWeightFloor = last.boxWeightFloor;
                     newRow.boxWeightCeiling = last.boxWeightCeiling;
                     newRow.manufactor = last.manufactor;
-                    this.weightList.push(newRow);
-                } else {
-                    this.weightList.push(this.newWeightList);
                 }
+                this.weightList.push(newRow);
             },
             //称重删除
             weightDelRow(row) {
@@ -592,17 +590,15 @@
             },
             //NR新增
             NRAddRow() {
+                const newRow = JSON.parse(JSON.stringify(this.newNRList));
                 if (this.NRList.length) {
                     const last = JSON.parse(JSON.stringify(this.NRList[this.NRList.length - 1]));
-                    const newRow = JSON.parse(JSON.stringify(this.newNRList));
                     newRow.nrFlowOne = last.nrFlowOne;
                     newRow.nrFlowTwo = last.nrFlowTwo;
                     newRow.nrFlowThree = last.nrFlowThree;
                     newRow.nrFlowFour = last.nrFlowFour;
-                    this.NRList.push(newRow);
-                } else {
-                    this.NRList.push(this.newNRList);
                 }
+                this.NRList.push(newRow);
             },
             //NR删除
             NRDelRow(row) {
@@ -639,7 +635,7 @@
             cancel() {
                 this.isRedact = false;
                 this.sealList = JSON.parse(JSON.stringify(this.originData.sealData));
-                this.weightList = JSON.parse(JSON.stringify(this.originData.weightData));
+                this.weightList = JSON.parse(JSON.stringify(this.originData.wightData));
                 this.NRList = JSON.parse(JSON.stringify(this.originData.NRData));
                 this.torqueList = JSON.parse(JSON.stringify(this.originData.tourqeData));
             },
