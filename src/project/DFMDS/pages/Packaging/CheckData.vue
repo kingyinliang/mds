@@ -634,10 +634,10 @@
             //取消
             cancel() {
                 this.isRedact = false;
-                this.sealList = JSON.parse(JSON.stringify(this.originData.sealData));
-                this.weightList = JSON.parse(JSON.stringify(this.originData.wightData));
-                this.NRList = JSON.parse(JSON.stringify(this.originData.NRData));
-                this.torqueList = JSON.parse(JSON.stringify(this.originData.tourqeData));
+                this.sealList = JSON.parse(JSON.stringify(this.originData.originSealData));
+                this.weightList = JSON.parse(JSON.stringify(this.originData.originWeightData));
+                this.NRList = JSON.parse(JSON.stringify(this.originData.originNRData));
+                this.torqueList = JSON.parse(JSON.stringify(this.originData.originTourqeData));
             },
             //保存
             save() {
