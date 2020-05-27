@@ -1,57 +1,53 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <div class="clearfix">
-                    <el-row style="float: right;">
-                        <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetLocationList(true,'normal')" @submit.native.prevent>
-                            <el-form-item>
-                                <el-input v-model="controllableForm.batch" placeholder="批次" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.batch===''?getItemsList():false" />
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button :disabled="controllableForm.batch.trim()===''" type="primary" size="small" @click="getItemsList(true,'normal')">
-                                    查询
-                                </el-button>
-                                <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
-                                    高级查询
-                                </el-button>
-                                <el-button type="primary" size="small" @click="syncData()">
-                                    同步
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
-                </div>
-                <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column label="物料" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialCode }}
-                                {{ scope.row.materialName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="物料类型" :show-overflow-tooltip="true" width="130px">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialTypeCode }}
-                                {{ scope.row.materialTypeName }}
-                            </template>
-                        </el-table-column>
-                        <!-- <el-table-column label="工厂" :show-overflow-tooltip="true" prop="factoryName" /> -->
-                        <el-table-column label="过账日期" :show-overflow-tooltip="true" prop="postingDate" width="100px" />
-                        <el-table-column label="批次" :show-overflow-tooltip="true" prop="batch" width="120px" />
-                        <el-table-column label="数量" :show-overflow-tooltip="true" prop="quantity" width="100px" />
-                        <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" width="60px" />
-                        <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="moveType" width="90px" />
-                        <el-table-column label="库存" :show-overflow-tooltip="true" prop="quantity" width="80px" />
-                        <el-table-column label="罐号" :show-overflow-tooltip="true" prop="holderName" width="60px" />
-                        <el-table-column label="同步日期" :show-overflow-tooltip="true" prop="syncDate" width="100px" />
-                    </el-table>
+    <div class="header_main">
+        <mds-card title="原料入库记录" :name="'raw'" :pack-up="false" style="background: #fff;">
+            <template slot="titleBtn">
+                <el-row style="float: right;">
+                    <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetLocationList(true,'normal')" @submit.native.prevent>
+                        <el-form-item>
+                            <el-input v-model="controllableForm.batch" placeholder="批次" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.batch===''?getItemsList():false" />
+                        </el-form-item>
+                        <el-form-item style="height: 32px;">
+                            <el-button :disabled="controllableForm.batch.trim()===''" type="primary" size="small" @click="getItemsList(true,'normal')">
+                                查询
+                            </el-button>
+                            <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
+                                高级查询
+                            </el-button>
+                            <el-button type="primary" size="small" @click="syncData()">
+                                同步
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
                 </el-row>
-                <el-row v-if="targetInfoList.length!==0">
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+            </template>
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="targetInfoList" :height="documentClientHeight - 32 - 40 - 75 - 100 - 47" border tooltip-effect="dark" style="width: 100%;">
+                <el-table-column label="物料" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialCode }}
+                        {{ scope.row.materialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="物料类型" :show-overflow-tooltip="true" width="130px">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialTypeCode }}
+                        {{ scope.row.materialTypeName }}
+                    </template>
+                </el-table-column>
+                <!-- <el-table-column label="工厂" :show-overflow-tooltip="true" prop="factoryName" /> -->
+                <el-table-column label="过账日期" :show-overflow-tooltip="true" prop="postingDate" width="100px" />
+                <el-table-column label="批次" :show-overflow-tooltip="true" prop="batch" width="120px" />
+                <el-table-column label="数量" :show-overflow-tooltip="true" prop="quantity" width="100px" />
+                <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" width="60px" />
+                <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="moveType" width="90px" />
+                <el-table-column label="库存" :show-overflow-tooltip="true" prop="quantity" width="80px" />
+                <el-table-column label="罐号" :show-overflow-tooltip="true" prop="holderName" width="60px" />
+                <el-table-column label="同步日期" :show-overflow-tooltip="true" prop="syncDate" width="100px" />
+            </el-table>
+            <el-row v-if="targetInfoList.length!==0">
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <el-dialog :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow" width="510px" custom-class="dialog__class" @close="closeDialog">
             <div slot="title">
                 高级查询
@@ -79,7 +75,7 @@
                 <el-button type="primary" @click="getItemsList(true, 'advance')">确定</el-button>
             </span>
         </el-dialog>
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -107,7 +103,11 @@ export default {
             keepAdvanceSearchData: false
         };
     },
-    computed: {},
+    computed: {
+        documentClientHeight() {
+            return this.$store.state.common.documentClientHeight;
+        }
+    },
     mounted() {
         this.getItemsList();
         this.getHolderList();

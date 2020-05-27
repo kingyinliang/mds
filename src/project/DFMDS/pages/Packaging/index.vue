@@ -120,16 +120,16 @@
                 }
             },
             {
-                type: 'input',
-                label: '生产订单',
-                prop: 'orderNo'
-            },
-            {
                 type: 'date-picker',
                 label: '生产日期',
                 prop: 'productDate',
                 valueFormat: 'yyyy-MM-dd hh:mm:ss',
                 defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            },
+            {
+                type: 'input',
+                label: '生产订单',
+                prop: 'orderNo'
             }
         ];
 

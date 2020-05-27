@@ -1,85 +1,78 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <h3>容器管理列表</h3>
-                <el-row type="flex">
-                    <el-col class="header_main" style="margin-bottom: 10px;">
-                        <el-form :inline="true" :model="controllableForm" size="small" label-width="70px" class="multi_row" @submit.native.prevent>
-                            <el-form-item label="归属车间：">
-                                <el-select v-model="controllableForm.deptID" placeholder="请选择" clearable>
-                                    <el-option v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="容器类型：">
-                                <el-select v-model="controllableForm.holderType" placeholder="请选择" clearable>
-                                    <el-option v-for="(item, index) in containerTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="容器号：">
-                                <el-input v-model="controllableForm.holderNo" placeholder="手动输入" clearable />
-                            </el-form-item>
-                            <el-form-item label="容器量：">
-                                <el-input v-model="controllableForm.holderVolume" placeholder="手动输入" clearable />
-                            </el-form-item>
-                            <el-form-item class="floatr">
-                                <el-button
-                                    type="primary"
-                                    size="small"
-                                    @click="getItemsList(true)"
-                                >
-                                    查询
-                                </el-button>
-                                <el-button type="primary" size="small" @click="addOrUpdateItem()">
-                                    新增
-                                </el-button>
-                                <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
-                                    批量删除
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
-                        <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
-                        <el-table-column label="容器类型" :show-overflow-tooltip="true" width="100">
-                            <template slot-scope="scope">
-                                {{ containerTypeObject[scope.row.holderType] }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="holderNo" label="容器号" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="holderName" :show-overflow-tooltip="true" label="容器描述" />
-                        <el-table-column prop="holderVolume" label="容器量" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="holderBatch" label="批数" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column label="状态" width="120">
-                            <template slot-scope="scope">
-                                {{ holderStatusObject[scope.row.holderStatus] }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="holderArea" label="物理区域" :show-overflow-tooltip="true" width="120" />
-                        <el-table-column label="归属车间" :show-overflow-tooltip="true" width="92">
-                            <template slot-scope="scope">
-                                {{ workshopaObject[scope.row.deptId] }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column fixed="right" label="操作" header-align="left" align="left" width="65">
-                            <template slot-scope="scope">
-                                <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row)">
-                                    编辑
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-row>
-                <el-row v-if="targetInfoList.length!==0">
-                    <el-pagination :current-page="controllableForm.currPage" :page-sizes="[10, 20, 50]" :page-size="controllableForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="controllableForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+    <div class="header_main">
+        <mds-card title="容器管理列表" :name="'raw'" :pack-up="false" style="background: #fff;">
+            <div>
+                <el-form :inline="true" :model="controllableForm" size="small" label-width="70px" class="multi_row" @submit.native.prevent>
+                    <el-form-item label="归属车间：">
+                        <el-select v-model="controllableForm.deptID" placeholder="请选择" clearable>
+                            <el-option v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="容器类型：">
+                        <el-select v-model="controllableForm.holderType" placeholder="请选择" clearable>
+                            <el-option v-for="(item, index) in containerTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="容器号：">
+                        <el-input v-model="controllableForm.holderNo" placeholder="手动输入" clearable />
+                    </el-form-item>
+                    <el-form-item label="容器量：">
+                        <el-input v-model="controllableForm.holderVolume" placeholder="手动输入" clearable />
+                    </el-form-item>
+                    <el-form-item class="floatr" style="height: 32px;">
+                        <el-button
+                            type="primary"
+                            size="small"
+                            @click="getItemsList(true)"
+                        >
+                            查询
+                        </el-button>
+                        <el-button type="primary" size="small" @click="addOrUpdateItem()">
+                            新增
+                        </el-button>
+                        <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
+                            批量删除
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <el-table ref="targetInfoList" class="newTable" :height="documentClientHeight - 32 - 40 - 75 - 82 - 47 - 47" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
+                <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
+                <el-table-column label="容器类型" :show-overflow-tooltip="true" width="100">
+                    <template slot-scope="scope">
+                        {{ containerTypeObject[scope.row.holderType] }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="holderNo" label="容器号" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="holderName" :show-overflow-tooltip="true" label="容器描述" />
+                <el-table-column prop="holderVolume" label="容器量" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="holderBatch" label="批数" :show-overflow-tooltip="true" width="80" />
+                <el-table-column label="状态" width="120">
+                    <template slot-scope="scope">
+                        {{ holderStatusObject[scope.row.holderStatus] }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="holderArea" label="物理区域" :show-overflow-tooltip="true" width="120" />
+                <el-table-column label="归属车间" :show-overflow-tooltip="true" width="92">
+                    <template slot-scope="scope">
+                        {{ workshopaObject[scope.row.deptId] }}
+                    </template>
+                </el-table-column>
+                <el-table-column fixed="right" label="操作" header-align="left" align="left" width="65">
+                    <template slot-scope="scope">
+                        <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row)">
+                            编辑
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-row v-if="targetInfoList.length!==0">
+                <el-pagination :current-page="controllableForm.currPage" :page-sizes="[10, 20, 50]" :page-size="controllableForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="controllableForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <contaniner-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :workshop-list="workshopList" :container-type-list="containerTypeList" @refreshDataList="getItemsList" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -112,7 +105,11 @@
                 holderStatusObject: { E: '空', R: '投料', F: '发酵', U: '领用', C: '清洗' }
             };
         },
-        computed: {},
+        computed: {
+            documentClientHeight() {
+                return this.$store.state.common.documentClientHeight;
+            }
+        },
         mounted() {
             // 获取车间下拉列表
             this.getWorkshopList();

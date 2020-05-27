@@ -1,87 +1,79 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <el-row class="textAlignR">
-                    <el-form :inline="true" :model="formHeader" size="small">
-                        <el-form-item>
-                            <el-input v-model.trim="formHeader.orderNo" placeholder="订单号" suffix-icon="el-icon-search" />
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" size="small" @click="getDataList(true)">
-                                查询
-                            </el-button>
-                            <el-button type="primary" size="small" @click="visible = true">
-                                高级查询
-                            </el-button>
-                            <el-button type="primary" size="small" @click="sapOrderUpdate()">
-                                订单同步
-                            </el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-row>
-                <el-row>
-                    <el-table :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
-                        <el-table-column type="index" label="序号" width="50" align="center" />
-                        <el-table-column prop="orderNo" label="生产订单" width="122" show-overflow-tooltip />
-                        <el-table-column prop="orderType" label="订单类型" width="77" show-overflow-tooltip />
-                        <el-table-column prop="factoryCode" label="工厂" width="77" show-overflow-tooltip />
-                        <el-table-column prop="orderEndDate" label="基本完成日期" width="105" show-overflow-tooltip />
-                        <el-table-column prop="orderStartDate" label="基本开始日期" width="105" show-overflow-tooltip />
-                        <el-table-column label="物料" show-overflow-tooltip>
-                            <template slot-scope="scope">
-                                {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="planOutput" label="订单数量" width="80" show-overflow-tooltip />
-                        <el-table-column prop="outputUnit" label="订单单位" width="80" show-overflow-tooltip />
-                        <el-table-column prop="dispatchMan" label="生产调度员" width="100" show-overflow-tooltip />
-                        <el-table-column prop="changed" label="同步日期" width="100" show-overflow-tooltip />
-                    </el-table>
-                    <el-pagination :current-page="formHeader.current" :page-sizes="[10, 20, 50]" :page-size="formHeader.size" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-            <el-dialog title="高级查询" width="500px" :close-on-click-modal="false" :visible.sync="visible">
-                <el-form :model="formHeader" size="small" label-width="110px" class="orderMangedialog">
-                    <el-form-item label="生产订单：">
-                        <el-input v-model.trim="formHeader.orderNo" placeholder="手工录入" style="width: 325px;" />
-                    </el-form-item>
-                    <el-form-item label="生产物料：">
-                        <el-input v-model.trim="formHeader.material" placeholder="手工录入" style="width: 325px;" />
-                    </el-form-item>
-                    <el-form-item label="生产调度员：">
-                        <el-input v-model.trim="formHeader.dispatchMan" placeholder="手工录入" style="width: 325px;" />
-                    </el-form-item>
-                    <el-form-item label="基本开始日期：" class="times">
-                        <el-row>
-                            <el-col :span="12">
-                                <el-date-picker v-model="formHeader.orderStartDateBegin" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
-                                <span class="marginL10px">-</span>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-date-picker v-model="formHeader.orderStartDateEnd" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
-                            </el-col>
-                        </el-row>
-                    </el-form-item>
-                    <el-form-item label="基本完成日期：" class="times">
-                        <el-row>
-                            <el-col :span="12">
-                                <el-date-picker v-model="formHeader.orderEndDateBegin" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
-                                <span class="marginL10px">-</span>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-date-picker v-model="formHeader.orderEndDateEnd" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
-                            </el-col>
-                        </el-row>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button size="small" @click="visible = false">取消</el-button>
-                    <el-button type="primary" size="small" @click="getDataList(true)">确定</el-button>
-                </span>
-            </el-dialog>
-        </div>
-    </el-col>
+    <div class="header_main">
+        <mds-card title="角色信息列表" :name="'role'" :pack-up="false" style="background: #fff;">
+            <template slot="titleBtn">
+                <div style="float: right; height: 32px; margin-bottom: 10px;">
+                    <el-input v-model.trim="formHeader.orderNo" size="small" placeholder="订单号" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
+                    <el-button type="primary" size="small" @click="getDataList(true)">
+                        查询
+                    </el-button>
+                    <el-button type="primary" size="small" @click="visible = true">
+                        高级查询
+                    </el-button>
+                    <el-button type="primary" size="small" @click="sapOrderUpdate()">
+                        订单同步
+                    </el-button>
+                </div>
+            </template>
+            <el-table class="newTable" :data="dataList" :height="documentClientHeight - 32 - 40 - 75 - 92 - 47" header-row-class-name="tableHead" border tooltip-effect="dark">
+                <el-table-column type="index" label="序号" width="50" align="center" />
+                <el-table-column prop="orderNo" label="生产订单" width="122" show-overflow-tooltip />
+                <el-table-column prop="orderType" label="订单类型" width="77" show-overflow-tooltip />
+                <el-table-column prop="factoryCode" label="工厂" width="77" show-overflow-tooltip />
+                <el-table-column prop="orderEndDate" label="基本完成日期" width="105" show-overflow-tooltip />
+                <el-table-column prop="orderStartDate" label="基本开始日期" width="105" show-overflow-tooltip />
+                <el-table-column label="物料" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="planOutput" label="订单数量" width="80" show-overflow-tooltip />
+                <el-table-column prop="outputUnit" label="订单单位" width="80" show-overflow-tooltip />
+                <el-table-column prop="dispatchMan" label="生产调度员" width="100" show-overflow-tooltip />
+                <el-table-column prop="changed" label="同步日期" width="155" show-overflow-tooltip />
+            </el-table>
+            <el-pagination :current-page="formHeader.current" :page-sizes="[10, 20, 50]" :page-size="formHeader.size" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+        </mds-card>
+        <el-dialog title="高级查询" width="500px" :close-on-click-modal="false" :visible.sync="visible">
+            <el-form :model="formHeader" size="small" label-width="110px" class="orderMangedialog">
+                <el-form-item label="生产订单：">
+                    <el-input v-model.trim="formHeader.orderNo" placeholder="手工录入" style="width: 325px;" />
+                </el-form-item>
+                <el-form-item label="生产物料：">
+                    <el-input v-model.trim="formHeader.material" placeholder="手工录入" style="width: 325px;" />
+                </el-form-item>
+                <el-form-item label="生产调度员：">
+                    <el-input v-model.trim="formHeader.dispatchMan" placeholder="手工录入" style="width: 325px;" />
+                </el-form-item>
+                <el-form-item label="基本开始日期：" class="times">
+                    <el-row>
+                        <el-col :span="12">
+                            <el-date-picker v-model="formHeader.orderStartDateBegin" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
+                            <span class="marginL10px">-</span>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-date-picker v-model="formHeader.orderStartDateEnd" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+                <el-form-item label="基本完成日期：" class="times">
+                    <el-row>
+                        <el-col :span="12">
+                            <el-date-picker v-model="formHeader.orderEndDateBegin" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
+                            <span class="marginL10px">-</span>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-date-picker v-model="formHeader.orderEndDateEnd" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 150px;" />
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button size="small" @click="visible = false">取消</el-button>
+                <el-button type="primary" size="small" @click="getDataList(true)">确定</el-button>
+            </span>
+        </el-dialog>
+    </div>
 </template>
 
 <script lang="ts">
@@ -111,6 +103,10 @@ export default class OrderManage extends Vue {
 
     mounted() {
         this.getDataList()
+    }
+
+    get documentClientHeight() {
+        return this.$store.state.common.documentClientHeight;
     }
 
     getDataList(st?) {

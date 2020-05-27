@@ -1,53 +1,53 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <el-row type="flex">
-                    <el-col>
-                        <el-form :inline="true" :model="controllableForm" size="small" label-width="85px" class="topforms" @submit.native.prevent>
-                            <el-form-item label="角色名称：">
-                                <el-input v-model="controllableForm.username" placeholder="角色名称" clearable @clear="getItemsList()" />
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                    <el-col style="width: 200px;">
-                        <el-button type="primary" size="small" :disabled="controllableForm.username.trim()===''" @click="getItemsList(true,controllableForm.username)">
-                            查询
+    <div class="header_main">
+        <mds-card title="角色信息列表" :name="'role'" :pack-up="false" style="background: #fff;">
+            <template slot="titleBtn">
+                <div style="float: right; height: 32px; margin-bottom: 10px;">
+                    <el-input v-model="controllableForm.username" placeholder="角色名称" size="small" clearable style="width: 180px; margin-right: 16px;" @clear="getItemsList()" />
+                    <el-button type="primary" size="small" :disabled="controllableForm.username.trim()===''" @click="getItemsList(true,controllableForm.username)">
+                        查询
+                    </el-button>
+                    <el-button type="primary" size="small" @click="addOrUpdateItem()">
+                        新增
+                    </el-button>
+                </div>
+            </template>
+            <el-table ref="targetInfoList" class="newTable" header-row-class-name="tableHead" :data="targetInfoList" :height="documentClientHeight - 32 - 40 - 75 - 92 - 47" border tooltip-effect="dark" style="width: 100%;">
+                <el-table-column type="index" label="序号" :index="indexMethod" width="50" align="center" fixed />
+                <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" min-width="300" />
+                <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="150" />
+                <el-table-column prop="created" label="创建时间" width="180" />
+                <el-table-column prop="changer" label="修改人" :show-overflow-tooltip="true" width="150" />
+                <el-table-column prop="changed" label="修改时间" width="180" />
+                <el-table-column label="操作" width="360">
+                    <template slot-scope="scope">
+                        <el-button type="text" class="role__btn" @click="manageUser(scope.row.id)">
+                            人员管理
                         </el-button>
-                        <el-button type="primary" size="small" @click="addOrUpdateItem()">
-                            新增
+                        <el-button type="text" class="role__btn" @click="manageDepartment(scope.row.id)">
+                            部门分配
                         </el-button>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="50" align="center" fixed />
-                        <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" min-width="300" />
-                        <el-table-column label="操作" width="340">
-                            <template slot-scope="scope">
-                                <a style="margin-right: 0.3em;" @click="manageUser(scope.row.id)">人员管理</a>
-                                <a style="margin-right: 0.3em;" @click="manageDepartment(scope.row.id)">部门分配</a>
-                                <a style="margin-right: 0.3em;" @click="manageFunction(scope.row.id)">功能分配</a>
-                                <a style="margin-right: 0.3em;" @click="addOrUpdateItem(scope.row)">修改角色</a>
-                                <a @click="removeItems(scope.row.id)">删除角色</a>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="150" />
-                        <el-table-column prop="created" label="创建时间" width="180" />
-                        <el-table-column prop="changer" label="修改人" :show-overflow-tooltip="true" width="150" />
-                        <el-table-column prop="changed" label="修改时间" width="180" />
-                    </el-table>
-                </el-row>
-                <el-row>
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+                        <el-button type="text" class="role__btn" @click="manageFunction(scope.row.id)">
+                            功能分配
+                        </el-button>
+                        <el-button type="text" class="role__btn" @click="addOrUpdateItem(scope.row)">
+                            修改角色
+                        </el-button>
+                        <el-button type="text" class="role__btn" @click="removeItems(scope.row.id)">
+                            删除角色
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-row>
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <function-manage v-if="isFunctionManageShow" ref="functionManage" @refreshDataList="getItemsList()" />
         <user-manage v-if="isUserManageShow" ref="manageUser" @refreshDataList="getItemsList()" />
         <department-manage v-if="isDepartmentManageShow" ref="manageDepartment" @refreshDataList="getItemsList()" />
         <role-add-or-update v-if="isRoleAddOrUpdateShow" ref="addOrUpdateItem" @refreshDataList="getItemsList()" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -83,7 +83,11 @@
                 currentComponent: ''
             };
         },
-        computed: {},
+        computed: {
+            documentClientHeight() {
+                return this.$store.state.common.documentClientHeight;
+            }
+        },
         mounted() {
             this.getItemsList();
         },
@@ -177,5 +181,5 @@
     };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 </style>

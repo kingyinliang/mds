@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="功能分配" :close-on-click-modal="false" :visible.sync="isDialogShow">
-        <div style="height: 300px; overflow: auto;">
+        <div style="min-height: 53vh; max-height: 53vh; overflow: auto;">
             <el-tree
                 ref="menuListTree"
                 :data="menuList"
