@@ -78,7 +78,7 @@
         queryResultList: PkgObj[] = []
         checkStatus: object[]=[]
 
-        // 取审核列表
+        // 数据字典 - 取审核列表
         created() {
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
                 this.checkStatus = data.data
@@ -174,7 +174,6 @@
                     }
                 });
             }
-
         }
 
         goDataEntry(item) {

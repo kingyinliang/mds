@@ -13,34 +13,64 @@
                     <h3><i class="point-icon" />{{ classList ? classList.find((item)=> item.dictCode === 'M').dictValue : '' }}</h3>
                 </div>
                 <el-row>
-                    <el-form :inline="true" :model="currentFormDataGroup" label-width="92px">
-                        <el-form-item>
+                    <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
+                        <el-form-item
+                            prop="dayUser"
+                            :rules="[
+                                { required: true, message: '请输入人数'},
+                                { type: 'number', message: '必须为数字'}
+                            ]"
+                        >
                             <template slot="label">
-                                <span class="notNull">*</span>参与人数：
+                                参与人数：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.dayUser" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
-                        <el-form-item label="">
+                        <el-form-item
+                            prop="dayShift"
+                            :rules="[
+                                { required: true, message: '请输入'},
+                                { type: 'number', message: '必须为数字'}
+                            ]"
+                        >
                             <template slot="label">
-                                <span class="notNull">*</span>交接班：
+                                交接班：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.dayShift" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
-                        <el-form-item label="">
+                        <el-form-item
+                            prop="dayMeeting"
+                            :rules="[
+                                { required: true, message: '请输入'},
+                                { type: 'number', message: '必须为数字'}
+                            ]"
+                        >
                             <template slot="label">
-                                <span class="notNull">*</span>班前会：
+                                班前会：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.dayMeeting" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
-                        <el-form-item label="">
+                        <el-form-item
+                            prop="dayPrepaired"
+                            :rules="[
+                                { required: true, message: '请输入'},
+                                { type: 'number', message: '必须为数字'}
+                            ]"
+                        >
                             <template slot="label">
-                                <span class="notNull">*</span>生产前准备：
+                                生产前准备：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.dayPrepaired" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
-                        <el-form-item>
+                        <el-form-item
+                            prop="dayClear"
+                            :rules="[
+                                { required: true, message: '请输入'},
+                                { type: 'number', message: '必须为数字'}
+                            ]"
+                        >
                             <template slot="label">
-                                <span class="notNull">*</span>生产后清场：
+                                生产后清场：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.dayClear" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
@@ -58,34 +88,34 @@
                     <h3><i class="point-icon" />{{ classList ? classList.find((item)=> item.dictCode === 'A').dictValue : '' }}</h3>
                 </div>
                 <el-row>
-                    <el-form :inline="true" :model="currentFormDataGroup" label-width="92px">
-                        <el-form-item>
+                    <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
+                        <el-form-item label="">
                             <template slot="label">
-                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull">*</span>参与人数：
+                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull" />参与人数：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.midUser" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull">*</span>交接班：
+                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull" />交接班：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.midShift" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull">*</span>班前会：
+                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull" />班前会：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.midMeeting" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull">*</span>生产前准备：
+                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull" />生产前准备：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.midPrepaired" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull">*</span>生产后清场：
+                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull" />生产后清场：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.midClear" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
@@ -103,34 +133,64 @@
                     <h3><i class="point-icon" />{{ classList ? classList.find((item)=> item.dictCode === 'N').dictValue : '' }}</h3>
                 </div>
                 <el-row>
-                    <el-form :inline="true" :model="currentFormDataGroup" label-width="92px">
-                        <el-form-item>
+                    <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
+                        <el-form-item
+                            prop="nightUser"
+                            :rules="[
+                                { required: true, message: '请输入人数'},
+                                { type: 'number', message: '必须为数字'}
+                            ]"
+                        >
                             <template slot="label">
-                                <span class="notNull">*</span>参与人数：
+                                参与人数：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightUser" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
-                        <el-form-item label="">
+                        <el-form-item
+                            prop="nightUser"
+                            :rules="[
+                                { required: true, message: '请输入人数'},
+                                { type: 'number', message: '必须为数字'}
+                            ]"
+                        >
                             <template slot="label">
-                                <span class="notNull">*</span>交接班：
+                                交接班：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightShift" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
-                        <el-form-item label="">
+                        <el-form-item
+                            prop="nightMeeting"
+                            :rules="[
+                                { required: true, message: '请输入'},
+                                { type: 'number', message: '必须为数字'}
+                            ]"
+                        >
                             <template slot="label">
-                                <span class="notNull">*</span>班前会：
+                                班前会：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightMeeting" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
-                        <el-form-item label="">
+                        <el-form-item
+                            prop="nightPrepaired"
+                            :rules="[
+                                { required: true, message: '请输入'},
+                                { type: 'number', message: '必须为数字'}
+                            ]"
+                        >
                             <template slot="label">
-                                <span class="notNull">*</span>生产前准备：
+                                生产前准备：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightPrepaired" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
-                        <el-form-item label="">
+                        <el-form-item
+                            prop="nightClear"
+                            :rules="[
+                                { required: true, message: '请输入'},
+                                { type: 'number', message: '必须为数字'}
+                            ]"
+                        >
                             <template slot="label">
-                                <span class="notNull">*</span>生产后清场：
+                                生产后清场：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightClear" placeholder="请输入" size="small" :disabled="!isRedact" />
                         </el-form-item>
@@ -182,6 +242,7 @@ export default class ReadyTimes extends Vue {
         await COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
             this.classList = data.data
         });
+
 
         this.currentFormDataGroup = dataGroup
         if (dataGroup.classes === '') {
