@@ -1,52 +1,47 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <div class="clearfix">
-                    <el-row style="float: right;">
-                        <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
-                            <el-form-item>
-                                <el-input v-model="controllableForm.param" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.param===''?getItemsList():false" />
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
-                                    查询
-                                </el-button>
-                                <el-button type="primary" size="small" @click="syncData">
-                                    同步
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
-                </div>
-                <el-row>
-                    <el-table ref="targetInfoList" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" size="small">
-                        <el-table-column :show-overflow-tooltip="true" label="物料">
-                            <template slot-scope="scope" min-width="360">
-                                <el-button style="padding: 0;" type="text" @click="showDetail(scope.row.id)">
-                                    {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                        <!-- <el-table-column :show-overflow-tooltip="true" label="工厂" width="180" prop="factoryName" /> -->
-                        <el-table-column :show-overflow-tooltip="true" label="物料类型" width="180">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialTypeCode }}
-                                {{ scope.row.materialTypeName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="basicUnit" label="基本单位" :show-overflow-tooltip="true" width="79" />
-                        <el-table-column prop="productUnit" label="生产单位" :show-overflow-tooltip="true" width="79" />
-                        <el-table-column prop="syncDate" label="同步日期" width="200" />
-                    </el-table>
+    <div class="header_main">
+        <mds-card title="物料列表" :name="'sup'" :pack-up="false" style="background: #fff;">
+            <template slot="titleBtn">
+                <el-row style="float: right;">
+                    <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
+                        <el-form-item>
+                            <el-input v-model="controllableForm.param" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.param===''?getItemsList():false" />
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
+                                查询
+                            </el-button>
+                            <el-button type="primary" size="small" @click="syncData">
+                                同步
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
                 </el-row>
-                <el-row v-if="targetInfoList.length!==0">
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+            </template>
+            <el-table ref="targetInfoList" class="newTable" header-row-class-name="tableHead" :height="documentClientHeight - 32 - 40 - 75 - 82 - 155" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%;" size="small">
+                <el-table-column :show-overflow-tooltip="true" label="物料">
+                    <template slot-scope="scope" min-width="360">
+                        <el-button style="padding: 0;" type="text" @click="showDetail(scope.row.id)">
+                            {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                        </el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column :show-overflow-tooltip="true" label="物料类型" width="180">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialTypeCode }}
+                        {{ scope.row.materialTypeName }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="basicUnit" label="基本单位" :show-overflow-tooltip="true" width="79" />
+                <el-table-column prop="productUnit" label="生产单位" :show-overflow-tooltip="true" width="79" />
+                <el-table-column prop="syncDate" label="同步日期" width="200" />
+            </el-table>
+            <el-row v-if="targetInfoList.length!==0">
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <supplies-detail v-if="isDialogShow" ref="suppliesDetail" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -72,7 +67,11 @@ export default {
             targetInfoList: []
         };
     },
-    computed: {},
+    computed: {
+        documentClientHeight() {
+            return this.$store.state.common.documentClientHeight;
+        }
+    },
     mounted() {
         this.getItemsList();
     },
