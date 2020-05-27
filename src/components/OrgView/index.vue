@@ -85,7 +85,7 @@
         getTree(type = false) {
             let id = ''
             if (JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode === '9999-xn') {
-                id = ''
+                id = 'common'
             } else {
                 id = JSON.parse(sessionStorage.getItem('factory') || '{}').id
             }
