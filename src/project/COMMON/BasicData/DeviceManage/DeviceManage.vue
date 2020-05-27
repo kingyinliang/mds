@@ -125,7 +125,7 @@
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
                 if (data.data.records.length === 0) {
-                    this.$infoToast('该搜寻条件下无任何资料');
+                    this.$infoToast('暂无任何内容');
                 }
             })
         }
