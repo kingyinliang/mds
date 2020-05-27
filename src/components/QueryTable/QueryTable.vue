@@ -84,20 +84,35 @@
                 </el-row>
             </el-tab-pane>
         </el-tabs>
-        <el-card v-else class="tableCard" style="min-height: 400px;">
+        <div v-else class="tableCard box-card" style="min-height: 400px; background: #fff;">
             <div class="toggleSearchTop">
                 <i class="el-icon-caret-bottom" />
+            </div>
+            <div>
+                <slot :name="'tab-head-main'" />
             </div>
             <el-row>
                 <el-col style=" margin-bottom: 10px; text-align: right;">
                     <slot name="mds-button-middle" />
                 </el-col>
             </el-row>
-            <el-table v-if="showTable" ref="table" :data="tableData" :height="tableHeightSet" :span-method="spanMethod" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+            <el-table
+                v-if="showTable"
+                ref="table"
+                class="newTable"
+                :data="tableData"
+                :height="tableHeightSet"
+                :span-method="spanMethod"
+                border
+                tooltip-effect="dark"
+                header-row-class-name="tableHead"
+                style="width: 100%; margin-bottom: 20px;"
+                @selection-change="handleSelectionChange"
+            >
                 <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
                 <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
                 <template v-for="(item, index) in column">
-                    <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
+                    <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                         <template v-if="item.child">
                             <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip" :width="chind.width || ''" />
                         </template>
@@ -111,9 +126,9 @@
             </el-table>
             <slot v-if="!showTable" name="card-main" />
             <el-row v-if="showPage === true">
-                <el-pagination :current-page="queryForm.currPage" :page-sizes="[10, 20, 50]" :page-size="queryForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="queryForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="queryForm[currpageConfig]" :page-sizes="[10, 20, 50]" :page-size="queryForm[pagesizeConfig] " layout="total, sizes, prev, pager, next, jumper" :total="queryForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
-        </el-card>
+        </div>
     </div>
 </template>
 
@@ -124,6 +139,10 @@
         name: 'QueryTable',
         components: {},
         props: {
+            factoryType: {
+                type: Number,
+                default: 0
+            },
             type: {
                 type: String,
                 default: 'queryTable'
@@ -254,8 +273,6 @@
         data() {
             return {
                 queryForm: {
-                    currPage: 1,
-                    pageSize: 10,
                     totalCount: 0
                 },
                 activeName: 0,
@@ -263,7 +280,9 @@
                 optionLists: {},
                 tableData: [],
                 multipleSelection: [],
-                tableHeightSet: this.tableHeight
+                tableHeightSet: this.tableHeight,
+                currpageConfig: 'currPage',
+                pagesizeConfig: 'pageSize'
             };
         },
         computed: {},
@@ -295,6 +314,12 @@
             // 初始化
             init() {
                 console.time('组件初始化');
+                if (this.factoryType === 1) {
+                    this.currpageConfig = 'current';
+                    this.pagesizeConfig = 'size';
+                }
+                this.queryForm[this.currpageConfig] = 1;
+                this.queryForm[this.pagesizeConfig] = 10;
                 this.queryFormData.forEach(item => {
                     // 设置查询表单
                     this.$set(this.queryForm, item.prop, item.defaultValue || '');
@@ -388,7 +413,7 @@
             // 清空表格和分页
             clearTableAndPage() {
                 this.tableData = [];
-                this.queryForm.currPage = 1;
+                this.queryForm[this.currpageConfig] = 1;
                 this.queryForm.totalCount = 0;
                 // this.getDataList()
             },
@@ -410,14 +435,14 @@
                     if (this.tabs.length && this.tabs[this.activeName].pages) {
                         this.tabs[this.activeName].pages.currPage = 1;
                     } else {
-                        this.queryForm.currPage = 1;
+                        this.queryForm[this.currpageConfig] = 1;
                     }
                 }
                 if (this.pagePagination.currPage) {
-                    this.queryForm[this.pagePagination.currPage] = this.queryForm.currPage
+                    this.queryForm[this.pagePagination.currPage] = this.queryForm[this.currpageConfig]
                 }
                 if (this.pagePagination.pageSize) {
-                    this.queryForm[this.pagePagination.pageSize] = this.queryForm.pageSize
+                    this.queryForm[this.pagePagination.pageSize] = this.queryForm[this.pagesizeConfig]
                 }
                 if (this.pagePagination.currPage) {
                     this.queryForm[this.pagePagination.totalCount] = this.queryForm.totalCount
@@ -440,15 +465,18 @@
                             this.queryForm.currPage = path.currPage;
                         }
                         if (this.resData.pageSize) {
-                            this.queryForm.pageSize = path[this.resData.pageSize];
+                            this.queryForm[this.pagesizeConfig] = path[this.resData.pageSize];
                         } else {
-                            this.queryForm.pageSize = path.pageSize;
+                            this.queryForm[this.pagesizeConfig] = path.pageSize;
                         }
                         if (this.resData.totalCount) {
                             this.queryForm.totalCount = path[this.resData.totalCount];
                         } else {
                             this.queryForm.totalCount = path.totalCount;
                         }
+                    } else if (this.factoryType === 1) {
+                        this.tableData = data.data.records;
+                        this.queryForm.totalCount = data.data.total;
                     }
                     this.$emit('get-data-success', data, st);
                 });
@@ -497,7 +525,7 @@
              /* eslint-enable no-invalid-this */
             // 序号
             indexMethod(index) {
-                return index + 1 + (Number(this.queryForm.currPage) - 1) * (Number(this.queryForm.pageSize));
+                return index + 1 + (Number(this.queryForm[this.currpageConfig]) - 1) * (Number(this.queryForm[this.pagesizeConfig]));
             },
             // tab表格选中
             tabHandleSelectionChange(val, index) {
@@ -526,12 +554,12 @@
             },
             // 改变每页条数
             handleSizeChange(val) {
-                this.queryForm.pageSize = val;
+                this.queryForm[this.pagesizeConfig] = val;
                 this.getDataList();
             },
             // 跳转页数
             handleCurrentChange(val) {
-                this.queryForm.currPage = val;
+                this.queryForm[this.currpageConfig] = val;
                 this.getDataList();
             }
         }
