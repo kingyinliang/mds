@@ -24,27 +24,27 @@
                 </div>
                 <el-row>
                     <el-table ref="table1" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column label="物料" :show-overflow-tooltip="true">
+                        <el-table-column label="物料" :show-overflow-tooltip="true" width="200" fixed="left">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode }}
                                 {{ scope.row.materialName }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="物料类型" :show-overflow-tooltip="true" width="130px">
+                        <el-table-column label="物料类型" :show-overflow-tooltip="true" min-width="200" fixed="left">
                             <template slot-scope="scope">
                                 {{ scope.row.materialTypeCode }}
                                 {{ scope.row.materialTypeName }}
                             </template>
                         </el-table-column>
                         <!-- <el-table-column label="工厂" :show-overflow-tooltip="true" prop="factoryName" /> -->
-                        <el-table-column label="过账日期" :show-overflow-tooltip="true" prop="postingDate" width="100px" />
-                        <el-table-column label="批次" :show-overflow-tooltip="true" prop="batch" width="120px" />
-                        <el-table-column label="数量" :show-overflow-tooltip="true" prop="quantity" width="100px" />
-                        <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" width="60px" />
-                        <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="moveType" width="90px" />
-                        <el-table-column label="库存" :show-overflow-tooltip="true" prop="quantity" width="80px" />
-                        <el-table-column label="罐号" :show-overflow-tooltip="true" prop="holderName" width="60px" />
-                        <el-table-column label="同步日期" :show-overflow-tooltip="true" prop="syncDate" width="100px" />
+                        <el-table-column label="过账日期" :show-overflow-tooltip="true" prop="postingDate" width="140" />
+                        <el-table-column label="批次" :show-overflow-tooltip="true" prop="batch" width="120" />
+                        <el-table-column label="数量" :show-overflow-tooltip="true" prop="quantity" width="100" />
+                        <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" width="60" />
+                        <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="moveType" width="90" />
+                        <el-table-column label="库存" :show-overflow-tooltip="true" prop="quantity" width="80" />
+                        <el-table-column label="罐号" :show-overflow-tooltip="true" prop="holderName" width="60" />
+                        <el-table-column label="同步日期" :show-overflow-tooltip="true" prop="syncDate" width="120" />
                     </el-table>
                 </el-row>
                 <el-row v-if="targetInfoList.length!==0">

@@ -9,7 +9,7 @@
                             <el-button type="text" icon="el-icon-plus" style="margin-right: 10px; color: #fff; font-weight: 800;" @click="addOrUpdateItem('type')" />
                         </h4>
                         <div class="search-bar">
-                            <el-select v-model="factoryForSearch" size="small" clearable placeholder="请选择">
+                            <el-select v-model="factoryForSearch" size="small" clearable placeholder="请选择" @clear="stringForSearch===''?getParentItemsList(true):false">
                                 <el-option v-for="sole in factoryList" :key="sole.id" :label="sole.deptName" :value="sole.id" />
                             </el-select>
                             <el-input v-model="stringForSearch" size="small" placeholder="请输入" suffix-icon="el-icon-search" clearable @clear="getParentItemsList(true)" @blur="factoryForSearch===''&&stringForSearch===''? getParentItemsList(true):false" />
