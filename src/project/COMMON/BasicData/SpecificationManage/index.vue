@@ -1,72 +1,68 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <div class="clearfix">
-                    <el-row style="float: right;">
-                        <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
-                            <el-form-item>
-                                <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.materialCode===''?getItemsList():false" />
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')">
-                                    查询
-                                </el-button>
-                                <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
-                                    高级查询
-                                </el-button>
-                                <el-button type="primary" size="small" @click="addOrupdateItem()">
-                                    新增
-                                </el-button>
-                                <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
-                                    批量删除
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
-                </div>
-                <el-row>
-                    <el-table ref="targetInfoList" class="orderTable" border header-row-class-name="tableHead" :data="targetInfoList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
-                        <el-table-column label="物料" :show-overflow-tooltip="true" min-width="200">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="brand" label="品牌" min-width="200" :show-overflow-tooltip="true" />
-                        <el-table-column label="大类" width="80" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">
-                                {{ largeClassObject[scope.row.largeClass] }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="boxSpec" width="70" label="箱规格" :show-overflow-tooltip="true" />
-                        <el-table-column label="单位" width="70" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">
-                                {{ unitClassObject[scope.row.boxSpecUnit] }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="bottleSpec" width="70" label="瓶规格" :show-overflow-tooltip="true" />
-                        <el-table-column label="单位" width="70" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">
-                                {{ unitClassObject[scope.row.bottleSpecUnit] }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="changer" label="维护人" width="160" :show-overflow-tooltip="true" />
-                        <el-table-column width="60" label="操作" fixed="right">
-                            <template slot-scope="scope">
-                                <el-button style="padding: 0;" type="text" @click="addOrupdateItem(scope.row)">
-                                    编辑
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
+    <div class="header_main">
+        <mds-card title="规格列表" :name="'spe'" :pack-up="false" style="background: #fff;">
+            <template slot="titleBtn">
+                <el-row style="float: right;">
+                    <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
+                        <el-form-item>
+                            <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.materialCode===''?getItemsList():false" />
+                        </el-form-item>
+                        <el-form-item style="height: 32px;">
+                            <el-button type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')">
+                                查询
+                            </el-button>
+                            <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
+                                高级查询
+                            </el-button>
+                            <el-button type="primary" size="small" @click="addOrupdateItem()">
+                                新增
+                            </el-button>
+                            <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
+                                批量删除
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
                 </el-row>
-                <el-row v-if="targetInfoList.length!==0">
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+            </template>
+            <el-table ref="targetInfoList" class="newTable" border header-row-class-name="tableHead" :data="targetInfoList" :height="documentClientHeight - 32 - 40 - 75 - 100 - 47" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
+                <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
+                <el-table-column label="物料" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="brand" label="品牌" width="80" :show-overflow-tooltip="true" />
+                <el-table-column label="大类" width="80" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ largeClassObject[scope.row.largeClass] }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="boxSpec" width="70" label="箱规格" :show-overflow-tooltip="true" />
+                <el-table-column label="单位" width="70" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ unitClassObject[scope.row.boxSpecUnit] }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="bottleSpec" width="70" label="瓶规格" :show-overflow-tooltip="true" />
+                <el-table-column label="单位" width="70" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ unitClassObject[scope.row.bottleSpecUnit] }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="changer" label="维护人" width="120" :show-overflow-tooltip="true" />
+                <el-table-column width="60" label="操作">
+                    <template slot-scope="scope">
+                        <el-button style="padding: 0;" type="text" @click="addOrupdateItem(scope.row)">
+                            编辑
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-row v-if="targetInfoList.length!==0">
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <specification-add-or-update v-if="isAddOrUpdateDailogShow" ref="SpecificationAddOrUpdate" :large-class="largeClass" :unit-class="unitClass" :serch-spec-list="serchSpecList" @refreshDataList="getItemsList" />
         <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow" @close="closeDialog">
             <div class="formdata">
@@ -94,7 +90,7 @@
                 </el-button>
             </div>
         </el-dialog>
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -134,7 +130,11 @@
                 }
             };
         },
-        computed: {},
+        computed: {
+            documentClientHeight() {
+                return this.$store.state.common.documentClientHeight;
+            }
+        },
         mounted() {
             this.getItemsList();
             this.getLargeClass();
