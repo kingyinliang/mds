@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 <template>
     <div class="header_main">
         <el-card class="searchCard">
@@ -54,19 +53,17 @@
                 </div>
                 <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="sealList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" label="序号" width="55" />
-                    <el-table-column width="200">
+                    <el-table-column width="195">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
+                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第一排" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <!-- 正则表达式先切换中文输入法再切换回去绑定的值不会更新 -->
-                            <!-- <el-input v-model.trim="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" oninput="value=value. " /> -->
-                            <!-- <el-input v-model.trim="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" oninput="if(isNaN(value)) { value = null } if(value.indexOf('.')>0){value=value.slice(0,value.indexOf('.')+3)}" /> -->
                             <el-input v-model.trim="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(sealList,scope.$index,'pressOne')" />
                         </template>
                     </el-table-column>
@@ -87,7 +84,7 @@
                     </el-table-column>
                     <el-table-column label="备注" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
+                            <el-input v-model.trim="scope.row.remark" :disabled="!isRedact" maxlength="200" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="记录人" :show-overflow-tooltip="true">
@@ -97,7 +94,7 @@
                     </el-table-column>
                     <el-table-column label="操作" width="100">
                         <template slot-scope="scope">
-                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="sealDelRow(scope.row)">
+                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="sealDelRow(scope.row,scope.$index)">
                                 删除
                             </el-button>
                         </template>
@@ -119,12 +116,12 @@
                 </div>
                 <el-table ref="table2" class="newTable" header-row-class-name="tableHead" :data="weightList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" label="序号" width="55" />
-                    <el-table-column width="200">
+                    <el-table-column width="195">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.recordDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
+                            <el-date-picker v-model="scope.row.recordDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="第一排净含量" width="120" :show-overflow-tooltip="true">
@@ -179,12 +176,12 @@
                     </el-table-column>
                     <el-table-column label="厂家" width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.manufactor" :disabled="!isRedact" size="mini" />
+                            <el-input v-model.trim="scope.row.manufactor" :disabled="!isRedact" maxlength="64" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="备注" width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
+                            <el-input v-model.trim="scope.row.remark" :disabled="!isRedact" maxlength="200" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="记录人" width="180" :show-overflow-tooltip="true">
@@ -194,7 +191,7 @@
                     </el-table-column>
                     <el-table-column label="操作" width="100" fixed="right">
                         <template slot-scope="scope">
-                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="weightDelRow(scope.row)">
+                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="weightDelRow(scope.row,scope.$index)">
                                 删除
                             </el-button>
                         </template>
@@ -216,12 +213,12 @@
                 </div>
                 <el-table ref="table3" class="newTable borderTable" header-row-class-name="tableHead" :data="NRList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" label="序号" width="55" />
-                    <el-table-column width="120" :show-overflow-tooltip="true">
+                    <el-table-column width="195" :show-overflow-tooltip="true">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.checkDate" :disabled="!isRedact" size="mini" @input="changeInputType(NRList,scope.$index,'checkDate')" />
+                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="NR含量（%）">
@@ -295,7 +292,7 @@
                     </el-table-column>
                     <el-table-column label="备注" width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
+                            <el-input v-model.trim="scope.row.remark" :disabled="!isRedact" maxlength="200" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="记录人" width="180" :show-overflow-tooltip="true">
@@ -305,7 +302,7 @@
                     </el-table-column>
                     <el-table-column label="操作" width="100" fixed="right">
                         <template slot-scope="scope">
-                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="NRDelRow(scope.row)">
+                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="NRDelRow(scope.row,scope.$index)">
                                 删除
                             </el-button>
                         </template>
@@ -327,12 +324,12 @@
                 </div>
                 <el-table ref="table4" class="newTable" header-row-class-name="tableHead" :data="torqueList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column type="index" label="序号" width="55" />
-                    <el-table-column width="200">
+                    <el-table-column width="195">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择时间" size="mini" />
+                            <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择时间" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="扭力矩/N.m" width="200" :show-overflow-tooltip="true">
@@ -347,7 +344,7 @@
                     </el-table-column>
                     <el-table-column label="备注" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" :disabled="!isRedact" size="mini" />
+                            <el-input v-model.trim="scope.row.remark" :disabled="!isRedact" maxlength="200" size="mini" />
                         </template>
                     </el-table-column>
                     <el-table-column label="检查人" :show-overflow-tooltip="true">
@@ -357,7 +354,7 @@
                     </el-table-column>
                     <el-table-column label="操作" width="100">
                         <template slot-scope="scope">
-                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="torqueDelRow(scope.row)">
+                            <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="torqueDelRow(scope.row,scope.$index)">
                                 删除
                             </el-button>
                         </template>
@@ -396,7 +393,7 @@
                 formHeader: {
                     workShopName: this.$store.state.packaging.packCheckData.workShopName,
                     productLineName: this.$store.state.packaging.packCheckData.productLineName,
-                    productMaterial: this.$store.state.packaging.packCheckData.materialCode + this.$store.state.packaging.packCheckData.materialName,
+                    productMaterial: this.$store.state.packaging.packCheckData.materialCode + ' ' + this.$store.state.packaging.packCheckData.materialName,
                     orderNo: this.$store.state.packaging.packCheckData.orderNo,
                     planOutput: this.$store.state.packaging.packCheckData.planOutput + this.$store.state.packaging.packCheckData.outputUnit,
                     orderStartDate: this.$store.state.packaging.packCheckData.orderStartDate,
@@ -418,7 +415,7 @@
                     pressTwo: '',
                     pressThree: '',
                     pressFour: '',
-                    reamrk: '',
+                    remark: '',
                     changer: getUserNameNumber()
                 },
                 weightList: [],
@@ -450,7 +447,7 @@
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     orderNo: this.$store.state.packaging.packCheckData.orderNo,
                     orderId: this.$store.state.packaging.packCheckData.id,
-                    checkDate: '',
+                    checkDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
                     nrContentOne: '',
                     nrContentTwo: '',
                     nrContentThree: '',
@@ -550,11 +547,11 @@
                     last.id = '';
                     this.sealList.push(last);
                 } else {
-                    this.sealList.push(this.newSealList);
+                    this.sealList.push(JSON.parse(JSON.stringify(this.newSealList)));
                 }
             },
             //密封度删除
-            sealDelRow(row) {
+            sealDelRow(row, index) {
                 this.$confirm('是否删除?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -563,24 +560,22 @@
                     if (row.id.length) {
                         this.sealDelList.push(row.id);
                     }
-                    this.sealList.splice(this.sealList.indexOf(row), 1);
+                    this.sealList.splice(index, 1);
                 });
             },
             //称重新增
             weightAddRow() {
+                const newRow = JSON.parse(JSON.stringify(this.newWeightList));
                 if (this.weightList.length) {
                     const last = JSON.parse(JSON.stringify(this.weightList[this.weightList.length - 1]));
-                    const newRow = JSON.parse(JSON.stringify(this.newWeightList));
                     newRow.boxWeightFloor = last.boxWeightFloor;
                     newRow.boxWeightCeiling = last.boxWeightCeiling;
                     newRow.manufactor = last.manufactor;
-                    this.weightList.push(newRow);
-                } else {
-                    this.weightList.push(this.newWeightList);
                 }
+                this.weightList.push(newRow);
             },
             //称重删除
-            weightDelRow(row) {
+            weightDelRow(row, index) {
                 this.$confirm('是否删除?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -589,25 +584,23 @@
                     if (row.id.length) {
                         this.weightDelList.push(row.id);
                     }
-                    this.weightList.splice(this.weightList.indexOf(row), 1);
+                    this.weightList.splice(index, 1);
                 });
             },
             //NR新增
             NRAddRow() {
+                const newRow = JSON.parse(JSON.stringify(this.newNRList));
                 if (this.NRList.length) {
                     const last = JSON.parse(JSON.stringify(this.NRList[this.NRList.length - 1]));
-                    const newRow = JSON.parse(JSON.stringify(this.newNRList));
                     newRow.nrFlowOne = last.nrFlowOne;
                     newRow.nrFlowTwo = last.nrFlowTwo;
                     newRow.nrFlowThree = last.nrFlowThree;
                     newRow.nrFlowFour = last.nrFlowFour;
-                    this.NRList.push(newRow);
-                } else {
-                    this.NRList.push(this.newNRList);
                 }
+                this.NRList.push(newRow);
             },
             //NR删除
-            NRDelRow(row) {
+            NRDelRow(row, index) {
                 this.$confirm('是否删除?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -616,7 +609,7 @@
                     if (row.id.length) {
                         this.NRDelList.push(row.id);
                     }
-                    this.NRList.splice(this.NRList.indexOf(row), 1);
+                    this.NRList.splice(index, 1);
                 });
             },
             //扭力新增
@@ -625,7 +618,7 @@
                 this.torqueList.push(last);
             },
             //扭力删除
-            torqueDelRow(row) {
+            torqueDelRow(row, index) {
                 this.$confirm('是否删除?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -634,16 +627,16 @@
                     if (row.id.length) {
                         this.torqueDelList.push(row.id);
                     }
-                    this.torqueList.splice(this.torqueList.indexOf(row), 1);
+                    this.torqueList.splice(index, 1);
                 });
             },
             //取消
             cancel() {
                 this.isRedact = false;
-                this.sealList = JSON.parse(JSON.stringify(this.originData.sealData));
-                this.weightList = JSON.parse(JSON.stringify(this.originData.weightData));
-                this.NRList = JSON.parse(JSON.stringify(this.originData.NRData));
-                this.torqueList = JSON.parse(JSON.stringify(this.originData.tourqeData));
+                this.sealList = JSON.parse(JSON.stringify(this.originData.originSealData));
+                this.weightList = JSON.parse(JSON.stringify(this.originData.originWeightData));
+                this.NRList = JSON.parse(JSON.stringify(this.originData.originNRData));
+                this.torqueList = JSON.parse(JSON.stringify(this.originData.originTourqeData));
             },
             //保存
             save() {
@@ -722,7 +715,6 @@
                             pkgTorque.pkgTorqueInsert.push(item);
                         }
                     })
-                    console.log(pkgSeal)
                     PKG_API.PKG_CHECKDATA_SAVE_API({
                         pkgSealData: pkgSeal,
                         pkgWeightData: pkgWeight,

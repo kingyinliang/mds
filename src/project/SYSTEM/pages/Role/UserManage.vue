@@ -52,9 +52,9 @@
                         selectedID.push(item.userId);
                     }
                     res.push({
-                        label: item.userName,
+                        label: item.userName + '(' + item.workNum + ')',
                         key: item.userId,
-                        screncon: item.userName
+                        screncon: item.userName + ' ' + item.workNum
                     });
                 });
                 return {

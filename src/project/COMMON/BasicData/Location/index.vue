@@ -158,7 +158,7 @@
                     this.isAddOrUpdateDialogShow = false;
                     this.isAdvanceSearchDialogShow = false;
                     if (st && data.data.records.length === 0) {
-                            this.$infoToast('该搜寻条件无任何库位数据！');
+                            this.$infoToast('暂无任何内容');
                         }
                     this.multipleSelection = [];
                     this.itemList = data.data.records;

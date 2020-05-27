@@ -206,7 +206,7 @@ export default {
             this.$http(`${BOTTLE_API.BOTTLE_INDEX_LIST}`, 'POST', this.formHeader).then(({ data }) => {
                 if (data.code === 0) {
                     if (data.indexInfo.length === 0) {
-                        this.$infoToast('该搜寻条件无任何数据');
+                        this.$infoToast('暂无任何内容');
                         return false
                     }
                     this.AllList = data.indexInfo;
