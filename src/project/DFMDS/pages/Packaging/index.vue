@@ -10,15 +10,15 @@
         >
             <template slot="home">
                 <el-row class="packaging__main" :gutter="10">
-                    <el-col v-for="(item, index) in queryList" :key="index" :span="8" style="margin-bottom: 10px;">
+                    <el-col v-for="(item, index) in queryResultList" :key="index" :span="8" style="margin-bottom: 10px;">
                         <el-form :model="item" size="small" label-position="right" label-width="85px">
                             <div class="packaging__main__item">
                                 <div class="packaging__main__item__title clearfix">
                                     <p class="packaging__main__item__title__left">
                                         产线：<span class="packaging__main__item__title__left__proLine">{{ item.productLineName }}</span>产线
                                     </p>
-                                    <p class="packaging__main__item__title__right">
-                                        <span>状态：已保存</span>
+                                    <p v-if="item.activeOrderNo!==''" class="packaging__main__item__title__right">
+                                        <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatusValue : '' }}</span>
                                     </p>
                                 </div>
                                 <div class="packaging__main__item__main">
@@ -50,7 +50,7 @@
                                             <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goDataEntry(item)">
                                                 生产数据
                                             </el-button>
-                                            <el-button size="small" type="primary" @click="goCheckData(item)">
+                                            <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goCheckData(item)">
                                                 检查数据
                                             </el-button>
                                         </div>
@@ -75,7 +75,15 @@
         }
     })
     export default class PackagingIndex extends Vue {
-        queryList: PkgObj[] = []
+        queryResultList: PkgObj[] = []
+        checkStatus: object[]=[]
+
+        // 数据字典 - 取审核列表
+        created() {
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
+                this.checkStatus = data.data
+            });
+        }
 
         // 查询表头
         queryFormData = [
@@ -125,6 +133,7 @@
             }
         ];
 
+
         // 查询请求
         listInterface = params => {
             params.current = 1;
@@ -134,33 +143,45 @@
         }
 
         setData(data) {
-            data.data.forEach(item => {
-                if (item.orderNoList.length === 1) {
-                    item.activeOrderNo = item.orderNoList[0]
-                    item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
-                } else {
-                    item.activeOrderNo = ''
-                    item.activeOrderMap = {
-                        planOutput: '',
-                        materialCode: '',
-                        countOutput: ''
+            const tempData = JSON.parse(JSON.stringify(data.data))
+            tempData.forEach((item, index) => {
+                if (item !== null) {
+                    if (item.orderNoList.length === 1) {
+                        item.activeOrderNo = item.orderNoList[0]
+                        item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
+                    } else {
+                        item.activeOrderNo = ''
+                        item.activeOrderMap = {
+                            planOutput: '',
+                            materialCode: '',
+                            countOutput: ''
+                        }
                     }
+                } else {
+                    tempData.splice(index, 1)
                 }
             })
-            getS3Img(data.data, 'productLineImage')
-            this.queryList = data.data
+            getS3Img(tempData, 'productLineImage')
+            this.queryResultList = tempData
         }
 
         orderchange(item) {
-            item.activeOrderMap = item.pkgOrderMap[item.activeOrderNo]
+            if (item.activeOrderNo !== '') {
+                item.activeOrderMap = item.pkgOrderMap[item.activeOrderNo]
+                this.checkStatus.forEach((element: OrderStatus) => {
+                    if (item.activeOrderMap.orderStatus === element.dictCode) {
+                        item.activeOrderMap.orderStatusValue = element.dictValue
+                    }
+                });
+            }
         }
 
         goDataEntry(item) {
             this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-detail'))
-            setTimeout(() => {
-                this.$router.push({ name: `DFMDS-pages-Packaging-detail` });
-            }, 100);
+            this.$router.push({
+                name: `DFMDS-pages-Packaging-detail`
+            });
         }
 
         goCheckData(item) {
@@ -181,6 +202,12 @@
     }
     interface OrderMap{
         materialCode?: string;
+    }
+    interface OrderStatus {
+        dictCode?: string;
+        dictId?: string;
+        dictValue?: string;
+        factoryName?: string;
     }
 </script>
 

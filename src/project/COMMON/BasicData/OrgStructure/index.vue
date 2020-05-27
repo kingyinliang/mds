@@ -42,8 +42,10 @@
                                 <el-input v-model="OrgDetail.costCenter" auto-complete="off" :disabled="isRedact" style="width: 250px;" />
                             </el-form-item>
                             <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="产线图片：" :class="{'limit-upload': fileList.length || OrgDetail.imgUrl}">
-                                <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :disabled="isRedact" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
-                                    <i class="el-icon-plus" />
+                                <!--<el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :disabled="isRedact" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">-->
+                                <el-upload class="org-img-upload" :show-file-list="false" :action="FILE_API" :disabled="isRedact" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile">
+                                    <img v-if="fileList[0]" :src="fileList[0].url" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon" />
                                 </el-upload>
                             </el-form-item>
                             <el-form-item label="联系人：">
@@ -404,6 +406,30 @@ interface FileObject {
     width: 250px;
     height: 58px;
     text-align: left;
+
+    ::v-deep .el-upload {/* stylelint-disable-line */
+        position: relative;
+        overflow: hidden;
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    ::v-deep .el-upload:hover {/* stylelint-disable-line */
+        border-color: #409eff;
+    }
+    ::v-deep .avatar-uploader-icon {/* stylelint-disable-line */
+        width: 58px;
+        height: 58px;
+        color: #8c939d;
+        font-size: 28px;
+        line-height: 58px;
+        text-align: center;
+    }
+    ::v-deep .avatar {/* stylelint-disable-line */
+        display: block;
+        width: 58px;
+        height: 58px;
+    }
 
     ::v-deep .el-upload--picture-card {/* stylelint-disable-line */
         width: 60px;

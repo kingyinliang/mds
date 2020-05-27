@@ -454,6 +454,22 @@ export const PKG_API = {
      */
     PKG_INSTORAGE_QUERY_API: params => httpProxy('/pkgInStorage/query', 'POST', params),
     /**
+     * @property {string} PKG_TEXT_QUERY_API 包装车间-生产数据-文本记录
+     */
+    PKG_TEXT_QUERY_API: params => httpProxy('/pkgText/query', 'POST', params),
+    /**
+     * @property {string} PKG_ALL_SAVE_API 包装车间-生产数据-提交
+     */
+    PKG_ALL_SAVE_API: params => httpProxy('/pkg/save', 'POST', params),
+    /**
+     * @property {string} PKG_TIMESHEET_QUERY_API 包装车间-生产准备-查询
+     */
+    PKG_TIMESHEET_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params),
+    /**
+     * @property {string} PKG_PACKAGEMATERIAL_QUERY_API 包装车间-物料领用-包材领用查询
+     */
+    PKG_PACKAGEMATERIAL_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params),
+    /**
      * @property {string} PKG_CHECKDATA_SEAL_QUERY_API 检查数据-密封度检测-查询
      */
     PKG_CHECKDATA_SEAL_QUERY_API: params => httpProxy('/pkgSealData/query', 'POST', params),
@@ -474,31 +490,35 @@ export const PKG_API = {
      */
     PKG_CHECKDATA_SAVE_API: params => httpProxy('/pkg/checkData/save', 'POST', params),
     /**
-     * @property {string}  生产数据-生产准备-查询
+     * @property {string}  PKG_READYTIME_QUERY_API 生产数据-生产准备-查询
      */
     PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params),
     /**
-     * @property {string}  生产数据-待杀菌检测-查询
+     * @property {string}  PKG_PENDGNUM_QUERY_API 生产数据-待杀菌检测-查询
      */
     PKG_PENDGNUM_QUERY_API: params => httpProxy('/pkgGerms/query', 'POST', params),
     /**
-     * @property {string}  生产数据-文本记录-查询
+     * @property {string}  PKG_MATERIALSTOCK_QUERY_API 包材库存-查询
      */
-    PKG_TEXT_QUERY_API: params => httpProxy('/pkgText/query', 'POST', params),
+    PKG_MATERIALSTOCK_QUERY_API: params => httpProxy('/pkg/packageStorage/query', 'POST', params),
     /**
-    * @property {string}  包材库存-查询
-    */
-   PKG_MATERIALSTOCK_QUERY_API: params => httpProxy('/pkg/packageStorage/query', 'POST', params),
-   /**
     * @property {string}  包材库存-明细
     */
-   PKG_MATERIALSTOCK_STORAGEITEM_API: params => httpProxy('/pkg/pkgPackageStorageItem/query', 'POST', params),
-   /**
+    PKG_MATERIALSTOCK_STORAGEITEM_API: params => httpProxy('/pkg/pkgPackageStorageItem/query', 'POST', params),
+    /**
     * @property {string}  包材库存-转线保存
     */
-   PKG_MATERIALSTOCK_TRANSFER_API: params => httpProxy('/pkg/packageStorage/transfer', 'POST', params),
-   /**
+    PKG_MATERIALSTOCK_TRANSFER_API: params => httpProxy('/pkg/packageStorage/transfer', 'POST', params),
+    /**
     * @property {string}  包材库存-调整保存
     */
-   PKG_MATERIALSTOCK_ADJUST_API: params => httpProxy('/pkg/packageStorage/adjust', 'POST', params)
+    PKG_MATERIALSTOCK_ADJUST_API: params => httpProxy('/pkg/packageStorage/adjust', 'POST', params),
+    /**
+     * @property {string}  PKG_MATERIAL_S_QUERY_API 生产数据-物料领用-半成品-查询
+     */
+    PKG_MATERIAL_S_QUERY_API: params => httpProxy('/pkg/semiMaterial/query', 'POST', params),
+    /**
+     * @property {string}  生产数据-物料领用-包材-查询
+     */
+    PKG_MATERIAL_P_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params)
 };
