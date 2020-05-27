@@ -123,7 +123,7 @@ export default class OrderManage extends Vue {
                 this.dataList = data.data.records;
                 this.totalCount = data.data.total;
                 if (data.data.records.length === 0) {
-                    this.$infoToast('该搜寻条件无任何资料！');
+                    this.$infoToast('暂无任何内容');
                 }
             }
         });

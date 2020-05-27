@@ -212,7 +212,7 @@ export default {
                             }
                         });
                     } else {
-                        this.$infoToast('该搜寻条件无任何资料！');
+                        this.$infoToast('暂无任何内容');
                     }
 
                 } else {

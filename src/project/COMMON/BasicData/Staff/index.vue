@@ -107,7 +107,7 @@ export default {
                 size: this.pageSize
             }).then(({ data }) => {
                 if (hasParas && data.data.records.length === 0) {
-                        this.$infoToast('该搜寻条件无任何资料！');
+                        this.$infoToast('暂无任何内容');
                 }
                 this.multipleSelection = [];
                 this.targetInfoList = data.data.records;

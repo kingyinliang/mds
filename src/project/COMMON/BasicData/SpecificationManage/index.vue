@@ -29,12 +29,12 @@
                     <el-table ref="targetInfoList" class="orderTable" border header-row-class-name="tableHead" :data="targetInfoList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                         <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
                         <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
-                        <el-table-column label="物料" :show-overflow-tooltip="true">
+                        <el-table-column label="物料" :show-overflow-tooltip="true" min-width="200">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode }} {{ scope.row.materialName }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="brand" label="品牌" width="80" :show-overflow-tooltip="true" />
+                        <el-table-column prop="brand" label="品牌" min-width="200" :show-overflow-tooltip="true" />
                         <el-table-column label="大类" width="80" :show-overflow-tooltip="true">
                             <template slot-scope="scope">
                                 {{ largeClassObject[scope.row.largeClass] }}
@@ -52,8 +52,8 @@
                                 {{ unitClassObject[scope.row.bottleSpecUnit] }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="changer" label="维护人" width="120" :show-overflow-tooltip="true" />
-                        <el-table-column width="60" label="操作">
+                        <el-table-column prop="changer" label="维护人" width="160" :show-overflow-tooltip="true" />
+                        <el-table-column width="60" label="操作" fixed="right">
                             <template slot-scope="scope">
                                 <el-button style="padding: 0;" type="text" @click="addOrupdateItem(scope.row)">
                                     编辑
@@ -169,7 +169,7 @@
                     size: JSON.stringify(this.pageSize)
                 }).then(({ data }) => {
                     if (haveParas && data.data.records.length === 0) {
-                            this.$infoToast('该搜寻条件无任何资料！');
+                            this.$infoToast('暂无任何内容');
                     }
                     this.targetInfoList = data.data.records;
                     this.currPage = data.data.current;

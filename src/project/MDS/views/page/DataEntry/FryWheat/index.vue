@@ -597,7 +597,7 @@ export default {
                             this.FWproductDate = this.plantList.productDate;
                             this.processStatus = this.plantList.status;
                         } else {
-                            this.$infoToast('该搜寻条件无任何资料！');
+                            this.$infoToast('暂无任何内容');
                         }
                     } else {
                         this.$errorToast(data.msg);
@@ -627,7 +627,7 @@ export default {
                             this.dataList = [];
                             this.isAbnormalDataEditStatus = false;
                             this.processStatus = this.plantList.status;
-                            this.$infoToast('该搜寻条件无任何资料！');
+                            this.$infoToast('暂无任何内容');
                         }
 
                     } else {

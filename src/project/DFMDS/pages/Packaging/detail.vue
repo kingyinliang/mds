@@ -69,7 +69,7 @@
         formHeader: OrderData = {}
 
         packDetail: OrderData={}
-
+        dataGroup: SendData = {}; // 提交物件
         pkgGerms: PkgGerms = {}
         pkgInstorage: PkgInstorage ={}
         pkgOrderUpdate: PkgOrderUpdate={}
@@ -173,7 +173,7 @@
         classList = [];
 
         created() {
-            // 班次拉取
+            // 数据字典 - 班次拉取
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
                 this.classList = data.data
             });
@@ -207,8 +207,6 @@
                 let dataTemp = {};
                 if (dataTemp !== null) {
                     dataTemp = JSON.parse(JSON.stringify(data.data))
-                } else {
-                    dataTemp = {}
                 }
                 this.$refs.readyTime.init(dataTemp)
             })
@@ -217,17 +215,17 @@
             // # 设备运行
 
             // # 生产入库
-            // PKG_API.PKG_INSTORAGE_QUERY_API({
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //     orderNo: this.formHeader.orderNo,
-            //     materialCode: this.formHeader.materialCode
-            // }).then(({ data }) => {
-            //     console.log('生产入库-查询')
-            //     console.log(data)
-            //     // if (data.data.inStorages.length !== 0) {
-            //         this.$refs.productInStorage.init(data.data)
-            //     // }
-            // })
+            PKG_API.PKG_INSTORAGE_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: this.formHeader.orderNo,
+                materialCode: this.formHeader.materialCode
+            }).then(({ data }) => {
+                console.log('生产入库-查询')
+                console.log(data)
+                // if (data.data.inStorages.length !== 0) {
+                    this.$refs.productInStorage.init(data.data)
+                // }
+            })
 
             // # 物料领用
             // PKG_API.PKG_MATERIAL_P_QUERY_API({
@@ -240,43 +238,59 @@
             //     console.log(data)
             //     this.$refs.material.init(data.data)
             // })
-            this.$refs.material.init(this.formHeader)
+            // this.$refs.material.init(this.formHeader)
 
             // # 待处理数量
 
 
             // # 文本记录
-            // PKG_API.PKG_TEXT_QUERY_API({
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //     orderNo: this.formHeader.orderNo
-            // }).then(({ data }) => {
-            //     console.log('文本记录-查询')
-            //     console.log(data)
-            //     let dataTemp = {}
-            //     if (data.data !== null) {
-            //         dataTemp = JSON.parse(JSON.stringify(data.data))
-            //     } else {
-            //         dataTemp = {}
-            //     }
-            //     this.$refs.textRecord.init(dataTemp);
-            // })
+            PKG_API.PKG_TEXT_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: this.formHeader.orderNo
+            }).then(({ data }) => {
+                console.log('文本记录-查询')
+                console.log(data)
+                let dataTemp = {}
+                if (data.data !== null) {
+                    dataTemp = JSON.parse(JSON.stringify(data.data))
+                }
+                this.$refs.textRecord.init(dataTemp);
+            })
 
 
         }
 
         sentData() {
-            const dataGroup: SendData = {};
             // # pkgOrderUpdate
-            this.pkgOrderUpdate = {
+            this.pkgDataOrderUpdate();
+            // # pkgTimeSheet
+            //this.pkgDataTimeSheet()
+            // # pkgInstorage
+            this.pkgDataInstorage()
+            // 文本记录
+            //this.pkgDataText();
+
+
+            return PKG_API.PKG_ALL_SAVE_API(this.dataGroup).then(() => {
+                setTimeout(() => {
+                    this.initData() // 刷新
+                }, 1000);
+            })
+        }
+
+        // # pkgOrderUpdate
+        pkgDataOrderUpdate() {
+            this.dataGroup.pkgOrderUpdate = {
                 orderId: this.formHeader.id,
                 orderNo: this.formHeader.orderNo,
                 productDate: this.formHeader.productDate,
                 productLine: this.formHeader.productLine,
                 workShop: this.formHeader.workShop
-            }
-            dataGroup.pkgOrderUpdate = this.pkgOrderUpdate;
+            };
+        }
 
-            // pkgTimeSheet
+        // # pkgTimeSheet
+        pkgDataTimeSheet() {
             const timeSheetTemp = this.$refs.readyTime.returnDataGroup()
             timeSheetTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
             if (timeSheetTemp.id !== '') {
@@ -292,42 +306,62 @@
                     pkgTimeSheetUpdateDto: {}
                 }
             }
-            dataGroup.pkgTimeSheet = this.pkgTimeSheet;
-
-            // 文本记录
-            // const textRecordTemp = this.$refs.textRecord.returnDataGroup()
-            // textRecordTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
-
-            // console.log('textRecordTemp')
-            // console.log(textRecordTemp)
-            // if (textRecordTemp.id !== '') {
-            //     this.pkgText = {
-            //         pkgTextInsert: {},
-            //         pkgTextUpdate: textRecordTemp
-            //     }
-            // } else {
-            //     textRecordTemp.orderId = this.formHeader.id
-            //     textRecordTemp.orderNo = this.formHeader.orderNo
-            //     this.pkgText = {
-            //         pkgTextInsert: textRecordTemp,
-            //         pkgTextUpdate: {}
-            //     }
-            // }
-            // dataGroup.pkgText = this.pkgText;
-
-
-            return PKG_API.PKG_ALL_SAVE_API(dataGroup).then(() => {
-                setTimeout(() => {
-                    this.initData() // 刷新
-                }, 1000);
-            })
+            this.dataGroup.pkgTimeSheet = this.pkgTimeSheet;
         }
 
-        // getList(formHeader: object) {
-        //     this.$refs.readyTime.getDataList(formHeader['orderNo']);
-        //     this.$refs.pendingNum.getDataList(formHeader);
-        //     this.$refs.textRecord.getDataInfo(formHeader);
-        // }
+        // # pkgInstorage
+        pkgDataInstorage() {
+            const productInStorageTemp = this.$refs.productInStorage.returnDataGroup()
+            console.log(productInStorageTemp)
+            productInStorageTemp.forEach(item => {
+                item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                item.orderId = this.formHeader.id;
+                item.orderNo = this.formHeader.orderNo;
+            });
+            // productInStorageTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            // if (productInStorageTemp.id !== '') {
+            //     this.pkgTimeSheet = {
+            //         pkgTimeSheetInsertDto: {},
+            //         pkgTimeSheetUpdateDto: productInStorageTemp
+            //     }
+            // } else {
+            //     productInStorageTemp.orderId = this.formHeader.id
+            //     productInStorageTemp.orderNo = this.formHeader.orderNo
+            //     this.pkgTimeSheet = {
+            //         pkgTimeSheetInsertDto: productInStorageTemp,
+            //         pkgTimeSheetUpdateDto: {}
+            //     }
+            // }
+
+            this.pkgInstorage = {
+                counOutputUnit: 'BOX',
+                countOutput: 240,
+                instorageDelete: [],
+                instorageInsert: productInStorageTemp,
+                instorageUpdate: []
+            }
+            this.dataGroup.pkgInstorage = this.pkgInstorage;
+        }
+
+        // 文本记录
+        pkgDataText() {
+            const textRecordTemp = this.$refs.textRecord.returnDataGroup()
+            textRecordTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            if (textRecordTemp.id !== '') {
+                this.pkgText = {
+                    pkgTextInsert: {},
+                    pkgTextUpdate: textRecordTemp
+                }
+            } else {
+                textRecordTemp.orderId = this.formHeader.id
+                textRecordTemp.orderNo = this.formHeader.orderNo
+                this.pkgText = {
+                    pkgTextInsert: textRecordTemp,
+                    pkgTextUpdate: {}
+                }
+            }
+            this.dataGroup.pkgText = this.pkgText;
+        }
     }
 interface OrderData{
     changed?: string;
@@ -380,11 +414,11 @@ interface PkgGerms {
 interface PkgInstorage{
     counOutputUnit?: string;
     countOutput?: number;
-    factory?: string;
+    // factory?: string;
     instorageDelete?: string[];
     instorageInsert?: object[];
     instorageUpdate?: object[];
-    remark?: string;
+    // remark?: string;
 }
 
 interface PkgOrderUpdate {

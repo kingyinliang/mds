@@ -78,7 +78,7 @@
         queryResultList: PkgObj[] = []
         checkStatus: object[]=[]
 
-        // 取审核列表
+        // 数据字典 - 取审核列表
         created() {
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CHECK_STATUS' }).then(({ data }) => {
                 this.checkStatus = data.data
@@ -143,26 +143,31 @@
         }
 
         setData(data) {
-            const tempData = JSON.parse(JSON.stringify(data.data))
-            tempData.forEach((item, index) => {
-                if (item !== null) {
-                    if (item.orderNoList.length === 1) {
-                        item.activeOrderNo = item.orderNoList[0]
-                        item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
-                    } else {
-                        item.activeOrderNo = ''
-                        item.activeOrderMap = {
-                            planOutput: '',
-                            materialCode: '',
-                            countOutput: ''
+            if (data.data.length !== 0) {
+                const tempData = JSON.parse(JSON.stringify(data.data))
+                tempData.forEach((item, index) => {
+                    if (item !== null) {
+                        if (item.orderNoList.length === 1) {
+                            item.activeOrderNo = item.orderNoList[0]
+                            item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
+                        } else {
+                            item.activeOrderNo = ''
+                            item.activeOrderMap = {
+                                planOutput: '',
+                                materialCode: '',
+                                countOutput: ''
+                            }
                         }
+                    } else {
+                        tempData.splice(index, 1)
                     }
-                } else {
-                    tempData.splice(index, 1)
-                }
-            })
-            getS3Img(tempData, 'productLineImage')
-            this.queryResultList = tempData
+                })
+                getS3Img(tempData, 'productLineImage')
+                this.queryResultList = tempData
+            } else {
+                this.$infoToast('暂无任何内容');
+            }
+
         }
 
         orderchange(item) {
@@ -174,7 +179,6 @@
                     }
                 });
             }
-
         }
 
         goDataEntry(item) {
