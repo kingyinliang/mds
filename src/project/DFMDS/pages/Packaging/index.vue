@@ -94,7 +94,8 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: ['WORK_SHOP']
+                        deptType: ['WORK_SHOP'],
+                        deptName: '包装'
                     })
                 },
                 resVal: {
@@ -113,6 +114,7 @@
                         parentId: val || ''
                     })
                 },
+                defaultValue: '',
                 resVal: {
                     resData: 'data',
                     label: ['deptName'],
@@ -165,6 +167,7 @@
                 getS3Img(tempData, 'productLineImage')
                 this.queryResultList = tempData
             } else {
+                this.queryResultList = [];
                 this.$infoToast('暂无任何内容');
             }
 
