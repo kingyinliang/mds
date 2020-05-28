@@ -204,6 +204,7 @@
         }
 
         initData() {
+            this.$refs.material.init(this.formHeader);
             // # 生产准备
             PKG_API.PKG_TIMESHEET_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
