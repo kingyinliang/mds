@@ -20,7 +20,7 @@
                         批量删除
                     </el-button>
                 </div>
-                <el-table ref="table1" class="newTable" border header-row-class-name="tableHead" :height="documentClientHeight - 32 - 40 - 75 - 82 - 155" :data="deviceList" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                <el-table ref="table1" class="newTable" border header-row-class-name="tableHead" :height="mainClientHeight - 52 - 155" :data="deviceList" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" fixed="left" />
                     <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
                     <el-table-column prop="deptName" width="120" :show-overflow-tooltip="true" label="所属部门" />
@@ -76,8 +76,8 @@
         }
     })
     export default class CapacityManage extends Vue {
-        get documentClientHeight() {
-            return this.$store.state.common.documentClientHeight;
+        get mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
         }
 
         $refs: {

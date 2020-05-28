@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="header_main">
-            <mds-card title="库位列表" :name="'location'" :pack-up="false" style="background: #fff;">
+            <mds-card title="库位列表" :name="'location'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
                 <template slot="titleBtn">
                     <el-row style="float: right;">
                         <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
@@ -25,7 +25,7 @@
                         </el-form>
                     </el-row>
                 </template>
-                <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :height="documentClientHeight - 32 - 40 - 75 - 100 - 47" :data="itemList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange" @row-dblclick="addOrUpdateItem">
+                <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :height="mainClientHeight - 70 - 47" :data="itemList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange" @row-dblclick="addOrUpdateItem">
                     <el-table-column type="selection" width="50" align="center" />
                     <el-table-column type="index" label="序号" :index="indexMethod" width="55" align="center" />
                     <el-table-column prop="deptName" width="160" :show-overflow-tooltip="true" label="车间" />
@@ -58,7 +58,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-row v-if="itemList.length !== 0">
+                <el-row>
                     <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </mds-card>
@@ -131,8 +131,8 @@
             };
         },
         computed: {
-            documentClientHeight() {
-                return this.$store.state.common.documentClientHeight;
+            mainClientHeight() {
+                return this.$store.state.common.mainClientHeight;
             }
         },
         mounted() {

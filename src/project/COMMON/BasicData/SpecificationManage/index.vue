@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <mds-card title="规格列表" :name="'spe'" :pack-up="false" style="background: #fff;">
+        <mds-card title="规格列表" :name="'spe'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
             <template slot="titleBtn">
                 <el-row style="float: right;">
                     <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
@@ -24,7 +24,7 @@
                     </el-form>
                 </el-row>
             </template>
-            <el-table ref="targetInfoList" class="newTable" border header-row-class-name="tableHead" :data="targetInfoList" :height="documentClientHeight - 32 - 40 - 75 - 100 - 47" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+            <el-table ref="targetInfoList" class="newTable" border header-row-class-name="tableHead" :data="targetInfoList" :height="mainClientHeight - 70 - 47" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                 <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
                 <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
                 <el-table-column label="物料" :show-overflow-tooltip="true" min-width="200">
@@ -59,9 +59,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-row v-if="targetInfoList.length!==0">
-                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </el-row>
+            <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
         <specification-add-or-update v-if="isAddOrUpdateDailogShow" ref="SpecificationAddOrUpdate" :large-class="largeClass" :unit-class="unitClass" :serch-spec-list="serchSpecList" @refreshDataList="getItemsList" />
         <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow" @close="closeDialog">
@@ -131,8 +129,8 @@
             };
         },
         computed: {
-            documentClientHeight() {
-                return this.$store.state.common.documentClientHeight;
+            mainClientHeight() {
+                return this.$store.state.common.mainClientHeight;
             }
         },
         mounted() {

@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <mds-card :title="title" :name="'org'" :pack-up="false" style="background: #fff;">
+        <mds-card :title="title" :name="'org'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
             <el-row :gutter="20">
                 <el-col :span="8">
                     <div class="org-card" :style="siteContentViewHeight">
@@ -58,12 +58,12 @@
         @Prop({ default: '' }) rightTile: string;
         // @commonModule.state('documentClientHeight') documentClientHeight
 
-        get documentClientHeight() {
-            return this.$store.state.common.documentClientHeight;
+        get mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
         }
 
         get siteContentViewHeight() {
-            const height = this.documentClientHeight - 32 - 40 - 75 - 82;
+            const height = this.mainClientHeight - 52;
             return { height: height + 'px' };
         }
 
