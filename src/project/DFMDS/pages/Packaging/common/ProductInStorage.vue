@@ -9,7 +9,7 @@
                 </div>
             </template>
 
-            <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" border tooltip-effect="dark" size="small">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" border tooltip-effect="dark" size="small" @current-change="handleCurrentChange">
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="生产日期" prop="productDate" width="180">
                     <template slot="header">
@@ -46,7 +46,7 @@
                         <span class="notNull">* </span>生产批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.batch" maxlength="10" placeholder="请输入" size="small" :disabled="!isRedact" />
+                        <el-input v-model.trim="scope.row.batch" maxlength="10" placeholder="输入数量" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="生产入库" prop="inStorageCount" width="100">
@@ -54,7 +54,7 @@
                         <span class="notNull">* </span>生产入库
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="inStorageUnit" width="100">
@@ -62,7 +62,7 @@
                         <span class="notNull">* </span>单位
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact" @select="handleCurrentChange">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -74,7 +74,7 @@
                 </el-table-column>
                 <el-table-column label="入库不良" prop="inStorageBadCount" width="100">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="inStorageBadUnit" width="100">
@@ -91,7 +91,7 @@
                 </el-table-column>
                 <el-table-column label="线上不良" prop="onlineBadCount" width="100">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="onlineBadUnit" width="100">
@@ -108,7 +108,7 @@
                 </el-table-column>
                 <el-table-column label="样品" prop="sampleCount" width="100">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="sampleUnit" width="100">
@@ -155,6 +155,11 @@
                         {{ scope.row.changed }}
                     </template>
                 </el-table-column>
+                <el-table-column label="是否修改" prop="editedMark" width="160">
+                    <template slot-scope="scope">
+                        {{ scope.row.editedMark }}
+                    </template>
+                </el-table-column>
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="!scope.row.original" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.$index)">
@@ -169,7 +174,7 @@
                 产出数合计：
             </div>
             <div class="input_bottom">
-                {{ computedTotal }}
+                {{ computedTotal }} {{ basicUnitName }}
             </div>
         </el-row>
         <audit-log :table-data="readAudit" />
@@ -179,6 +184,7 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
+    // , compareObject
     import { COMMON_API } from 'common/api/api';
 
 
@@ -203,10 +209,8 @@
         tabChangedState=[0, 0, 0] // 增,删,改
 
 
-        async init(dataGroup) {
-            console.log('ProductInStore带进来的 data')
-            console.log(dataGroup)
-            await COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+        created() {
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
                 data.data.forEach((item) => {
                     if (item.dictValue !== '多班') {
                         this.classesOptions.push({
@@ -216,7 +220,21 @@
                     }
                 })
             });
+        }
+
+        handleCurrentChange(currentRow) {
+            console.log(currentRow)
+        }
+
+
+        init(dataGroup) {
+            console.log('ProductInStore带进来的 data')
+            console.log(dataGroup)
+
             this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup.inStorages))
+            this.currentFormDataGroup.forEach((item) => {
+                item.editedMark = false
+            })
             this.basicUnitName = dataGroup.basicUnitName
             this.ratio = dataGroup.ratio
             this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
@@ -232,7 +250,7 @@
             this.instorageUpdate = [];
             this.currentFormDataGroup.forEach(item => {
                 if (item.id) {
-                    if (item.editeMark === true) {
+                    if (item.editedMark === true) {
                         this.instorageUpdate.push(item)
                     }
                 } else {
@@ -240,13 +258,18 @@
                 }
             })
 
-            return {
-                deleteData: this.instorageDelete,
-                insertData: this.instorageInsert,
-                updateData: this.instorageUpdate,
-                amount: this.computedTotal,
-                unit: this.unitOptions[0].key
-            }
+            console.log('this.instorageUpdate')
+            console.log(this.instorageUpdate)
+            console.log('this.instorageInsert')
+            console.log(this.instorageInsert)
+
+            // return {
+            //     deleteData: this.instorageDelete,
+            //     insertData: this.instorageInsert,
+            //     updateData: this.instorageUpdate,
+            //     amount: this.computedTotal,
+            //     unit: this.unitOptions[0].key
+            // }
         }
 
         removeDataRow(index) {
@@ -283,6 +306,7 @@
                     remark: '',
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                    // created: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
             }
             this.tabChangedState[0] += 1
             this.currentFormDataGroup.push(sole)
@@ -304,8 +328,6 @@
             let total = 0;
             if (this.currentFormDataGroup.length !== 0) {
                 total = this.currentFormDataGroup.map(item => item.output).reduce((prev, next) => {
-                        console.log(prev)
-                        console.log(next)
                         return prev + next;
                     })
             }
@@ -336,7 +358,8 @@ interface CurrentDataTable{
     orderId?: string;
     orderNo?: string;
     id?: string;
-    editeMark?: boolean;
+    editedMark?: boolean;
+    // created?: boolean;
 }
 interface UnitOptions{
     key?: string;

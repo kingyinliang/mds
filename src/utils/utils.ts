@@ -12,7 +12,7 @@ const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('pr
  * @return Function 延迟执行的方法
  */
 export function throttle(fn: Function, delay: number, atleast: number) {
-    let timer: number|undefined;
+    let timer: number | undefined;
     let previous: number | null = null;
     return function() {
         const now = Number(new Date());
@@ -58,14 +58,14 @@ interface MenuList {
     list: MenuList[];
 }
 export class AddRoutes {
-    router: VueRouter
-    mainRoutes: RouteConfig
-    SSRoutes: RouteConfig[]
+    router: VueRouter;
+    mainRoutes: RouteConfig;
+    SSRoutes: RouteConfig[];
 
     constructor(router: VueRouter, mainRoutes: RouteConfig, SSRoutes?: RouteConfig[]) {
-        this.router = router
-        this.mainRoutes = mainRoutes
-        this.SSRoutes = SSRoutes || []
+        this.router = router;
+        this.mainRoutes = mainRoutes;
+        this.SSRoutes = SSRoutes || [];
     }
 
     fnAddDynamicMenuRoutes(menuList: MenuList[] = [], routes: RouteConfig[] = []) {
@@ -114,7 +114,6 @@ export class AddRoutes {
             console.log('%c!<-------------------- 动态(菜单)路由 s -------------------->', 'color:blue');
             console.log(this.mainRoutes.children);
             console.log('%c!<-------------------- 动态(菜单)路由 e -------------------->', 'color:blue');
-
         }
     }
 }
@@ -213,11 +212,11 @@ export function getS3Img(arrData, imgPath) {
         COMMON_API.DOWNLOADFILE_API({
             key: getPath(item)
         }).then(({ data }) => {
-            item.img = data.data.url
+            item.img = data.data.url;
             arrData.splice(arrData.length, 0, {});
             arrData.splice(arrData.length - 1, 1);
-        })
-    })
+        });
+    });
 }
 /**
  * 时间转换
@@ -332,4 +331,73 @@ export function DeepClone(str) {
 }
 export function getUserNameNumber() {
     return sessionStorage.getItem('realName') + `(${sessionStorage.getItem('userName')})`;
+}
+
+// 比对 object 使否相同
+export function compareObject(x, y) {
+    // remember that NaN === NaN returns false
+    // and isNaN(undefined) returns true
+    if (isNaN(x) && isNaN(y) && typeof x === 'number' && typeof y === 'number') {
+        return true;
+    }
+    // If both x and y are null or undefined and exactly the same
+    if (x === y) {
+        return x !== 0 || 1 / x === 1 / y;
+    }
+
+    if (x === null || y === null) return x === y;
+
+    // Works in case when functions are created in constructor.
+    // Comparing dates is a common scenario. Another built-ins?
+    // We can even handle functions ㄋpassed across iframes
+    if ((typeof x === 'function' && typeof y === 'function') || (x instanceof Date && y instanceof Date) || (x instanceof RegExp && y instanceof RegExp) || (x instanceof String && y instanceof String) || (x instanceof Number && y instanceof Number)) {
+        return x.toString() === y.toString();
+    }
+
+    // If they are not strictly equal, they both need to be Objects
+    if (!(x instanceof Object) || !(y instanceof Object)) {
+        return false;
+    }
+
+    if (Object.prototype.isPrototypeOf.call(x, y) || Object.prototype.isPrototypeOf.call(y, x)) {
+        return false;
+    }
+
+    //They must have the exact same prototype chain,the closest we can do is
+    //test the constructor.
+    if (x.constructor !== y.constructor) {
+        return false;
+    }
+
+    if (x.prototype !== y.prototype) {
+        return false;
+    }
+    for (const p in x) {
+        //Inherited properties were tested using x.constructor === y.constructor
+        if (Object.prototype.hasOwnProperty.call(x, p)) {
+            // Allows comparing x[ p ] and y[ p ] when set to undefined
+            if (!Object.prototype.hasOwnProperty.call(y, p)) {
+                return false;
+            }
+            // If they have the same strict value or identity then they are equal
+            if (x[p] === y[p]) {
+                continue;
+            }
+            // Numbers, Strings, Functions, Booleans must be strictly equal
+            if (typeof x[p] !== 'object') {
+                return false;
+            }
+            // Objects and Arrays must be tested recursively
+            // if (!Object.is(x[ p ], y[ p ])) {
+            //     return false;
+            // }
+        }
+    }
+    for (const q in y) {
+        // allows x[ p ] to be set to undefined
+        if (Object.prototype.hasOwnProperty.call(y, q) && !Object.prototype.hasOwnProperty.call(x, q)) {
+            return false;
+        }
+    }
+    return true;
 }

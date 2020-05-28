@@ -203,8 +203,8 @@
             this.initData()
         }
 
-        initData() {
-            // # 生产准备
+        // # 生产准备
+        initReadyTime() {
             PKG_API.PKG_TIMESHEET_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
@@ -217,11 +217,10 @@
                 }
                 this.$refs.readyTime.init(dataTemp)
             })
+        }
 
-            // # 生产人员
-            // # 设备运行
-
-            // # 生产入库
+        // # 生产入库
+        initProductInStorage() {
             PKG_API.PKG_INSTORAGE_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo,
@@ -233,6 +232,33 @@
                     this.$refs.productInStorage.init(data.data)
                 // }
             })
+        }
+
+         // # 文本记录
+        initTextRecord() {
+            PKG_API.PKG_TEXT_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: this.formHeader.orderNo
+            }).then(({ data }) => {
+                console.log('文本记录-查询')
+                console.log(data)
+                let dataTemp = {}
+                if (data.data !== null) {
+                    dataTemp = JSON.parse(JSON.stringify(data.data))
+                }
+                this.$refs.textRecord.init(dataTemp);
+            })
+        }
+
+        initData() {
+            // # 生产准备
+            this.initReadyTime()
+
+            // # 生产人员
+            // # 设备运行
+
+            // # 生产入库
+            this.initProductInStorage()
 
             // # 物料领用
             // PKG_API.PKG_MATERIAL_P_QUERY_API({
@@ -251,31 +277,19 @@
 
 
             // # 文本记录
-            PKG_API.PKG_TEXT_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: this.formHeader.orderNo
-            }).then(({ data }) => {
-                console.log('文本记录-查询')
-                console.log(data)
-                let dataTemp = {}
-                if (data.data !== null) {
-                    dataTemp = JSON.parse(JSON.stringify(data.data))
-                }
-                this.$refs.textRecord.init(dataTemp);
-            })
-
+            this.initTextRecord()
 
         }
 
         sentData() {
             // # pkgOrderUpdate
-            this.pkgDataOrderUpdate();
+            // this.pkgDataOrderUpdate();
             // # pkgTimeSheet
-            this.pkgDataTimeSheet()
+            // this.pkgDataTimeSheet()
             // # pkgInstorage
             this.pkgDataInStorage()
             // # textRecord
-            this.pkgDataText();
+            // this.pkgDataText();
 
 
             return PKG_API.PKG_ALL_SAVE_API(this.dataGroup).then(() => {
@@ -319,24 +333,24 @@
 
         // # pkgInstorage
         pkgDataInStorage() {
+            this.$refs.productInStorage.returnDataGroup()
+            // if (this.$refs.productInStorage.tabChangeState()) {
+            //     const productInStorageTemp = this.$refs.productInStorage.returnDataGroup()
+            //     productInStorageTemp.insertData.forEach(item => {
+            //         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            //         item.orderId = this.formHeader.id;
+            //         item.orderNo = this.formHeader.orderNo;
+            //     });
 
-            if (this.$refs.productInStorage.tabChangeState()) {
-                const productInStorageTemp = this.$refs.productInStorage.returnDataGroup()
-                productInStorageTemp.insertData.forEach(item => {
-                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    item.orderId = this.formHeader.id;
-                    item.orderNo = this.formHeader.orderNo;
-                });
-
-                this.pkgInstorage = {
-                    counOutputUnit: productInStorageTemp.unit,
-                    countOutput: productInStorageTemp.amount,
-                    instorageDelete: productInStorageTemp.deleteData,
-                    instorageInsert: productInStorageTemp.insertData,
-                    instorageUpdate: productInStorageTemp.updateData
-                }
-                this.dataGroup.pkgInstorage = this.pkgInstorage;
-            }
+            //     this.pkgInstorage = {
+            //         counOutputUnit: productInStorageTemp.unit,
+            //         countOutput: productInStorageTemp.amount,
+            //         instorageDelete: productInStorageTemp.deleteData,
+            //         instorageInsert: productInStorageTemp.insertData,
+            //         instorageUpdate: productInStorageTemp.updateData
+            //     }
+            //     this.dataGroup.pkgInstorage = this.pkgInstorage;
+            // }
         }
 
         // 文本记录

@@ -522,7 +522,7 @@
                 })
             },
             getNRList() {
-                 PKG_API.PKG_CHECKDATA_NR_QUERY_API({
+                PKG_API.PKG_CHECKDATA_NR_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     orderNo: this.$store.state.packaging.packCheckData.orderNo
                 }).then(({ data }) => {
@@ -531,7 +531,7 @@
                 })
             },
             getTourqeList() {
-                 PKG_API.PKG_CHECKDATA_TORQUE_QUERY_API({
+                PKG_API.PKG_CHECKDATA_TORQUE_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     orderNo: this.$store.state.packaging.packCheckData.orderNo
                 }).then(({ data }) => {
@@ -541,7 +541,7 @@
             },
             //密封度新增
             sealAddRow() {
-                 if (this.sealList.length) {
+                if (this.sealList.length) {
                     const last = JSON.parse(JSON.stringify(this.sealList[this.sealList.length - 1]));
                     last.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     last.id = '';

@@ -15,38 +15,38 @@
                 </template>
                 <template slot-scope="scope">
                     <el-select v-model="scope.row.classes" size="small">
-                        <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
+                        <el-option v-for="item in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                     </el-select>
                 </template>
             </el-table-column>
             <el-table-column label="线上不良" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.onlineBad" size="small" placeholder="输入数量" />
+                    <el-input v-model.number="scope.row.onlineBad" size="small" placeholder="输入数量" />
                 </template>
             </el-table-column>
             <el-table-column label="挤料" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.pressMaterial" size="small" placeholder="输入数量" />
+                    <el-input v-model.number="scope.row.pressMaterial" size="small" placeholder="输入数量" />
                 </template>
             </el-table-column>
-            <el-table-column label="测密封堵" :show-overflow-tooltip="true" width="100">
+            <el-table-column label="测密封度" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.sealingPlug" size="small" placeholder="输入数量" />
+                    <el-input v-model.number="scope.row.sealingPlug" size="small" placeholder="输入数量" />
                 </template>
             </el-table-column>
             <el-table-column label="废酱" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.wasteSauce" size="small" placeholder="输入数量" />
+                    <el-input v-model.number="scope.row.wasteSauce" size="small" placeholder="输入数量" />
                 </template>
             </el-table-column>
             <el-table-column label="设备残留" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.deviceLoss" size="small" placeholder="输入数量" />
+                    <el-input v-model.number="scope.row.deviceLoss" size="small" placeholder="输入数量" />
                 </template>
             </el-table-column>
             <el-table-column label="其他" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.other" size="small" placeholder="输入数量" />
+                    <el-input v-model.number="scope.row.other" size="small" placeholder="输入数量" />
                 </template>
             </el-table-column>
             <el-table-column label="备注" :show-overflow-tooltip="true" width="100">
@@ -69,19 +69,19 @@
                 带杀菌酱小计：
             </div>
             <div class="input_bottom">
-                {{ computedSoy }}
+                {{ computedSoy }} KG
             </div>
             <div>
                 报废酱小计：
             </div>
             <div class="input_bottom">
-                {{ computedScrap }}
+                {{ computedScrap }} KG
             </div>
             <div>
                 总计：
             </div>
             <div class="input_bottom">
-                {{ computedTotal }}
+                {{ computedTotal }} KG
             </div>
         </el-row>
     </mds-card>
@@ -90,7 +90,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-// import { PKG_API } from 'common/api/api';
+import { COMMON_API } from 'common/api/api';
 import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
 
 @Component({
@@ -99,18 +99,28 @@ import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
 
 export default class PendingNum extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
-    classList: object[] = [
-        {
-            name: '白班'
-        }, {
-            name: '中班'
-        }, {
-            name: '夜班'
-        }
-    ]
 
     currentDataTable: CurrentDataTable[] = [];
-
+    classesOptions: object[]=[];
+    async init(dataGroup) {
+        console.log('ProductInStore带进来的 data')
+        console.log(dataGroup)
+        await COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+            data.data.forEach((item) => {
+                if (item.dictValue !== '多班') {
+                    this.classesOptions.push({
+                        dictValue: item.dictValue,
+                        dictCode: item.dictCode
+                    })
+                }
+            })
+        });
+        // this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup.inStorages))
+        // this.basicUnitName = dataGroup.basicUnitName
+        // this.ratio = dataGroup.ratio
+        // this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
+        // this.unitOptions.push({ key: dataGroup.productUnit, value: dataGroup.productUnitName })
+    }
 
     addNewDataRow() {
         const sole: CurrentDataTable = {

@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="packaging__main__item__main__right">
                                         <el-form-item label="生产订单：">
-                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" :change="orderchange(item)" style="width: 100%;">
+                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" style="width: 100%;" @change="orderchange(item)">
                                                 <el-option v-for="(subItem, subIndex) in item.orderNoList" :key="subIndex" :label="subItem" :value="subItem" />
                                             </el-select>
                                         </el-form-item>
