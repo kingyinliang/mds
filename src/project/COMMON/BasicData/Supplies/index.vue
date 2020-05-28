@@ -1,13 +1,13 @@
 <template>
     <div class="header_main">
-        <mds-card title="物料列表" :name="'sup'" :pack-up="false" style="background: #fff;">
+        <mds-card title="物料列表" :name="'sup'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
             <template slot="titleBtn">
                 <el-row style="float: right;">
                     <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                         <el-form-item>
                             <el-input v-model="controllableForm.param" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.param===''?getItemsList():false" />
                         </el-form-item>
-                        <el-form-item>
+                        <el-form-item style="height: 32px;">
                             <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
                                 查询
                             </el-button>
@@ -18,7 +18,7 @@
                     </el-form>
                 </el-row>
             </template>
-            <el-table ref="targetInfoList" class="newTable" header-row-class-name="tableHead" :height="documentClientHeight - 32 - 40 - 75 - 82 - 155" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%;" size="small">
+            <el-table ref="targetInfoList" class="newTable" header-row-class-name="tableHead" :height="mainClientHeight - 70 - 47" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%;" size="small">
                 <el-table-column :show-overflow-tooltip="true" label="物料" min-width="200">
                     <template slot-scope="scope">
                         <el-button style="padding: 0;" type="text" @click="showDetail(scope.row.id)">
@@ -32,13 +32,11 @@
                         {{ scope.row.materialTypeName }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="basicUnit" label="基本单位" :show-overflow-tooltip="true" width="79" />
-                <el-table-column prop="productUnit" label="生产单位" :show-overflow-tooltip="true" width="79" />
-                <el-table-column prop="syncDate" label="同步日期" width="120" />
+                <el-table-column prop="basicUnit" label="基本单位" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="productUnit" label="生产单位" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="syncDate" label="同步日期" min-width="100" />
             </el-table>
-            <el-row v-if="targetInfoList.length!==0">
-                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </el-row>
+            <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
         <supplies-detail v-if="isDialogShow" ref="suppliesDetail" />
     </div>
@@ -68,8 +66,8 @@ export default {
         };
     },
     computed: {
-        documentClientHeight() {
-            return this.$store.state.common.documentClientHeight;
+        mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
         }
     },
     mounted() {

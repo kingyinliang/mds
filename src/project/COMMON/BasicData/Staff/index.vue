@@ -20,7 +20,7 @@
                         增加
                     </el-button>
                 </div>
-                <el-table ref="targetInfoList" class="newTable" :data="targetInfoList" :height="documentClientHeight - 32 - 40 - 75 - 82 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                <el-table ref="targetInfoList" class="newTable" :data="targetInfoList" :height="mainClientHeight - 52 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" fixed align="center" />
                     <el-table-column type="index" label="序号" :index="indexMethod" width="50" />
                     <el-table-column prop="workNum" label="人员工号" width="120" />
@@ -39,9 +39,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-row v-if="targetInfoList.length!==0">
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </template>
         </org-view>
         <staff-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :org-tree="orgTree" @refreshDataList="getItemsList" />
@@ -75,8 +73,8 @@ export default {
         };
     },
     computed: {
-        documentClientHeight() {
-            return this.$store.state.common.documentClientHeight;
+        mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
         }
     },
     methods: {

@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <mds-card title="角色信息列表" :name="'role'" :pack-up="false" style="background: #fff;">
+        <mds-card title="角色信息列表" :name="'role'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
                     <el-input v-model="controllableForm.username" placeholder="角色名称" size="small" clearable style="width: 180px; margin-right: 16px;" @clear="getItemsList()" />
@@ -12,14 +12,14 @@
                     </el-button>
                 </div>
             </template>
-            <el-table ref="targetInfoList" class="newTable" header-row-class-name="tableHead" :data="targetInfoList" :height="documentClientHeight - 32 - 40 - 75 - 92 - 47" border tooltip-effect="dark" style="width: 100%;">
+            <el-table ref="targetInfoList" class="newTable" header-row-class-name="tableHead" :data="targetInfoList" :height="mainClientHeight - 62 - 47" border tooltip-effect="dark" style="width: 100%;">
                 <el-table-column type="index" label="序号" :index="indexMethod" width="50" align="center" fixed />
                 <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" min-width="300" />
                 <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="150" />
                 <el-table-column prop="created" label="创建时间" width="180" />
                 <el-table-column prop="changer" label="修改人" :show-overflow-tooltip="true" width="150" />
                 <el-table-column prop="changed" label="修改时间" width="180" />
-                <el-table-column label="操作" width="360">
+                <el-table-column label="操作" width="360" fixed="right">
                     <template slot-scope="scope">
                         <el-button type="text" class="role__btn" @click="manageUser(scope.row.id)">
                             人员管理
@@ -84,8 +84,8 @@
             };
         },
         computed: {
-            documentClientHeight() {
-                return this.$store.state.common.documentClientHeight;
+            mainClientHeight() {
+                return this.$store.state.common.mainClientHeight;
             }
         },
         mounted() {
