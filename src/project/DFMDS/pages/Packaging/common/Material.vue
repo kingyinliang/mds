@@ -188,6 +188,10 @@
         spanOneArr: number[] = [];
         spanTwoArr: number[] = [];
 
+        mounted() {
+            console.log('加载了喔!!!!!!!')
+        }
+
         init(dataGroup) {
             PKG_API.PKG_MATERIAL_P_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
