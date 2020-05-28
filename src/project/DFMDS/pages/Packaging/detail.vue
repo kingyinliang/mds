@@ -16,6 +16,9 @@
         <template slot="2" slot-scope="data">
             <product-people ref="productPeople" :is-redact="data.isRedact" />
         </template>
+        <template slot="3" slot-scope="data">
+            <Equipment ref="equipment" :is-redact="data.isRedact" />
+        </template>
         <template slot="4" slot-scope="data">
             <product-in-storage ref="productInStorage" :is-redact="data.isRedact" />
         </template>
@@ -40,6 +43,8 @@
     import PendingNum from './common/PendingNum.vue';
     import TextRecord from './common/TextRecord.vue';
     import ProductInStorage from './common/ProductInStorage.vue';
+    import Equipment from './common/Equipment.vue';
+
     // import { getFactory } from '@/net/validate';
 
     @Component({
@@ -49,7 +54,8 @@
             PendingNum,
             TextRecord,
             Material,
-            ProductInStorage
+            ProductInStorage,
+            Equipment
         }
     })
 
@@ -62,6 +68,7 @@
             material: HTMLFormElement;
             pendingNum: HTMLFormElement;
             textRecord: HTMLFormElement;
+            equipment: HTMLFormElement;
         }
 
         orderStatus = ''
@@ -264,11 +271,11 @@
             // # pkgOrderUpdate
             this.pkgDataOrderUpdate();
             // # pkgTimeSheet
-            //this.pkgDataTimeSheet()
+            this.pkgDataTimeSheet()
             // # pkgInstorage
-            this.pkgDataInstorage()
-            // 文本记录
-            //this.pkgDataText();
+            this.pkgDataInStorage()
+            // # textRecord
+            this.pkgDataText();
 
 
             return PKG_API.PKG_ALL_SAVE_API(this.dataGroup).then(() => {
@@ -285,7 +292,8 @@
                 orderNo: this.formHeader.orderNo,
                 productDate: this.formHeader.productDate,
                 productLine: this.formHeader.productLine,
-                workShop: this.formHeader.workShop
+                workShop: this.formHeader.workShop,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             };
         }
 
@@ -310,37 +318,25 @@
         }
 
         // # pkgInstorage
-        pkgDataInstorage() {
-            const productInStorageTemp = this.$refs.productInStorage.returnDataGroup()
-            console.log(productInStorageTemp)
-            productInStorageTemp.forEach(item => {
-                item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                item.orderId = this.formHeader.id;
-                item.orderNo = this.formHeader.orderNo;
-            });
-            // productInStorageTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            // if (productInStorageTemp.id !== '') {
-            //     this.pkgTimeSheet = {
-            //         pkgTimeSheetInsertDto: {},
-            //         pkgTimeSheetUpdateDto: productInStorageTemp
-            //     }
-            // } else {
-            //     productInStorageTemp.orderId = this.formHeader.id
-            //     productInStorageTemp.orderNo = this.formHeader.orderNo
-            //     this.pkgTimeSheet = {
-            //         pkgTimeSheetInsertDto: productInStorageTemp,
-            //         pkgTimeSheetUpdateDto: {}
-            //     }
-            // }
+        pkgDataInStorage() {
 
-            this.pkgInstorage = {
-                counOutputUnit: 'BOX',
-                countOutput: 240,
-                instorageDelete: [],
-                instorageInsert: productInStorageTemp,
-                instorageUpdate: []
+            if (this.$refs.productInStorage.tabChangeState()) {
+                const productInStorageTemp = this.$refs.productInStorage.returnDataGroup()
+                productInStorageTemp.insertData.forEach(item => {
+                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    item.orderId = this.formHeader.id;
+                    item.orderNo = this.formHeader.orderNo;
+                });
+
+                this.pkgInstorage = {
+                    counOutputUnit: productInStorageTemp.unit,
+                    countOutput: productInStorageTemp.amount,
+                    instorageDelete: productInStorageTemp.deleteData,
+                    instorageInsert: productInStorageTemp.insertData,
+                    instorageUpdate: productInStorageTemp.updateData
+                }
+                this.dataGroup.pkgInstorage = this.pkgInstorage;
             }
-            this.dataGroup.pkgInstorage = this.pkgInstorage;
         }
 
         // 文本记录

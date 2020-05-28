@@ -34,9 +34,9 @@
                         <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
                             <el-option
                                 v-for="item in classesOptions"
-                                :key="item"
-                                :label="item"
-                                :value="item"
+                                :key="item.dictCode"
+                                :label="item.dictValue"
+                                :value="item.dictCode"
                             />
                         </el-select>
                     </template>
@@ -179,7 +179,8 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
-    // import { PKG_API } from 'common/api/api';
+    import { COMMON_API } from 'common/api/api';
+
 
     @Component({
         name: 'ProductInStore',
@@ -191,29 +192,61 @@
         @Prop({ type: Boolean, default: false }) isRedact
         currentFormDataGroup: CurrentDataTable[] = [];
         readAudit= [];
-        instorageDelete= []; // 入库删除集合
-        instorageInsert= []; // 入库新增集合
-        instorageUpdate=[]; // 入库修改集合
+        instorageDelete: string[]= []; // 入库删除集合
+        instorageInsert: CurrentDataTable[] = []; // 入库新增集合
+        instorageUpdate: CurrentDataTable[] =[]; // 入库修改集合
         productInStoreData: [];
-        classesOptions=['白班', '中班', '夜班'];
+        classesOptions: object[]=[];
         unitOptions: UnitOptions[]=[]
         basicUnitName=''
         ratio=1
+        tabChangedState=[0, 0, 0] // 增,删,改
 
-        init(dataGroup) {
+
+        async init(dataGroup) {
             console.log('ProductInStore带进来的 data')
             console.log(dataGroup)
+            await COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+                data.data.forEach((item) => {
+                    if (item.dictValue !== '多班') {
+                        this.classesOptions.push({
+                            dictValue: item.dictValue,
+                            dictCode: item.dictCode
+                        })
+                    }
+                })
+            });
             this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup.inStorages))
             this.basicUnitName = dataGroup.basicUnitName
             this.ratio = dataGroup.ratio
             this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
             this.unitOptions.push({ key: dataGroup.productUnit, value: dataGroup.productUnitName })
-            console.log('this.unitOptions')
-            console.log(this.unitOptions)
+        }
+
+        tabChangeState() {
+            return this.tabChangedState[0] + this.tabChangedState[1] + this.tabChangedState[2] !== 0
         }
 
         returnDataGroup() {
-            return JSON.parse(JSON.stringify(this.currentFormDataGroup))
+            this.instorageInsert = [];
+            this.instorageUpdate = [];
+            this.currentFormDataGroup.forEach(item => {
+                if (item.id) {
+                    if (item.editeMark === true) {
+                        this.instorageUpdate.push(item)
+                    }
+                } else {
+                    this.instorageInsert.push(item)
+                }
+            })
+
+            return {
+                deleteData: this.instorageDelete,
+                insertData: this.instorageInsert,
+                updateData: this.instorageUpdate,
+                amount: this.computedTotal,
+                unit: this.unitOptions[0].key
+            }
         }
 
         removeDataRow(index) {
@@ -222,6 +255,11 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                if (Object.prototype.hasOwnProperty.call(this.currentFormDataGroup[index], 'id')) {
+                    this.tabChangedState[1] += 1
+                    this.instorageDelete.push((this.currentFormDataGroup[index].id) as string)
+                }
+                this.tabChangedState[0] -= 1
                 this.currentFormDataGroup.splice(index, 1);
             });
         }
@@ -246,6 +284,7 @@
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
             }
+            this.tabChangedState[0] += 1
             this.currentFormDataGroup.push(sole)
         }
 
@@ -296,6 +335,8 @@ interface CurrentDataTable{
     factory?: string;
     orderId?: string;
     orderNo?: string;
+    id?: string;
+    editeMark?: boolean;
 }
 interface UnitOptions{
     key?: string;
