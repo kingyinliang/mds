@@ -195,6 +195,7 @@
         methods: {
             tabClick(val) {
                 this.$refs.tabs.setCurrentName(val.name);
+                this.$emit('tab-click', val);
             },
             // 设置tabs的绑定
             setKey(index) {

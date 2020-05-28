@@ -1,23 +1,23 @@
 <template>
     <div class="header_main">
-        <mds-card title="容器管理列表" :name="'raw'" :pack-up="false" style="background: #fff;">
+        <mds-card title="容器管理列表" :name="'raw'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
             <div>
                 <el-form :inline="true" :model="controllableForm" size="small" label-width="70px" class="multi_row" @submit.native.prevent>
                     <el-form-item label="归属车间：">
-                        <el-select v-model="controllableForm.deptID" placeholder="请选择" clearable>
+                        <el-select v-model="controllableForm.deptID" placeholder="请选择" clearable style="width: 120px;">
                             <el-option v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="容器类型：">
-                        <el-select v-model="controllableForm.holderType" placeholder="请选择" clearable>
+                        <el-select v-model="controllableForm.holderType" placeholder="请选择" clearable style="width: 120px;">
                             <el-option v-for="(item, index) in containerTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="容器号：">
-                        <el-input v-model="controllableForm.holderNo" placeholder="手动输入" clearable />
+                        <el-input v-model="controllableForm.holderNo" placeholder="手动输入" clearable style="width: 120px;" />
                     </el-form-item>
                     <el-form-item label="容器量：">
-                        <el-input v-model="controllableForm.holderVolume" placeholder="手动输入" clearable />
+                        <el-input v-model="controllableForm.holderVolume" placeholder="手动输入" clearable style="width: 120px;" />
                     </el-form-item>
                     <el-form-item class="floatr" style="height: 32px;">
                         <el-button
@@ -36,7 +36,7 @@
                     </el-form-item>
                 </el-form>
             </div>
-            <el-table ref="targetInfoList" class="newTable" :height="documentClientHeight - 32 - 40 - 75 - 82 - 47 - 47" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+            <el-table ref="targetInfoList" class="newTable" :height="mainClientHeight - 52 - 39 - 47" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                 <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
                 <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
                 <el-table-column label="容器类型" :show-overflow-tooltip="true" width="100">
@@ -67,9 +67,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-row v-if="targetInfoList.length!==0">
-                <el-pagination :current-page="controllableForm.currPage" :page-sizes="[10, 20, 50]" :page-size="controllableForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="controllableForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </el-row>
+            <el-pagination :current-page="controllableForm.currPage" :page-sizes="[10, 20, 50]" :page-size="controllableForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="controllableForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
         <contaniner-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :workshop-list="workshopList" :container-type-list="containerTypeList" @refreshDataList="getItemsList" />
     </div>
@@ -106,8 +104,8 @@
             };
         },
         computed: {
-            documentClientHeight() {
-                return this.$store.state.common.documentClientHeight;
+            mainClientHeight() {
+                return this.$store.state.common.mainClientHeight;
             }
         },
         mounted() {

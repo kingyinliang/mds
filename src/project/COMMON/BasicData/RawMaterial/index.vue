@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <mds-card title="原料入库记录" :name="'raw'" :pack-up="false" style="background: #fff;">
+        <mds-card title="原料入库记录" :name="'raw'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
             <template slot="titleBtn">
                 <el-row style="float: right;">
                     <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetLocationList(true,'normal')" @submit.native.prevent>
@@ -21,7 +21,7 @@
                     </el-form>
                 </el-row>
             </template>
-            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="targetInfoList" :height="documentClientHeight - 32 - 40 - 75 - 100 - 47" border tooltip-effect="dark" style="width: 100%;">
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="targetInfoList" :height="mainClientHeight - 70 - 47" border tooltip-effect="dark" style="width: 100%;">
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="200" fixed="left">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode }}
@@ -44,9 +44,7 @@
                 <el-table-column label="罐号" :show-overflow-tooltip="true" prop="holderName" width="60" />
                 <el-table-column label="同步日期" :show-overflow-tooltip="true" prop="syncDate" width="120" />
             </el-table>
-            <el-row v-if="targetInfoList.length!==0">
-                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </el-row>
+            <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
         <el-dialog :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow" width="510px" custom-class="dialog__class" @close="closeDialog">
             <div slot="title">
@@ -104,8 +102,8 @@ export default {
         };
     },
     computed: {
-        documentClientHeight() {
-            return this.$store.state.common.documentClientHeight;
+        mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
         }
     },
     mounted() {

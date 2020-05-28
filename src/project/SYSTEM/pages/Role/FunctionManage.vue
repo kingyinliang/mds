@@ -45,7 +45,8 @@ export default {
                 roleId: id
             })
                 .then(({ data }) => {
-                    this.menuList = this.translateTreeData(data.data);
+                    const maenData = data.data.filter(item => item.id !== '0')
+                    this.menuList = this.translateTreeData(maenData);
                 })
                 .then(() => {
                     this.isDialogShow = true;
