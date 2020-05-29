@@ -1,24 +1,24 @@
 <template>
     <el-dialog :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" :visible.sync="visible">
         <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="120px" size="small" @keyup.enter.native="dataFormSubmit()">
-            <el-form-item label="类型" prop="menuType">
+            <el-form-item label="类型：" prop="menuType">
                 <el-radio-group v-model="dataForm.menuType">
                     <el-radio v-for="(subType, index) in typeList" :key="index" :label="subType.key" :value="subType.key">
                         {{ subType.label }}
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="工厂" prop="deptIdList">
+            <el-form-item label="工厂：" prop="deptIdList">
                 <el-checkbox-group v-model="dataForm.deptIdList">
                     <el-checkbox v-for="(item, index) in factory" :key="index" :label="item.id" name="factory">
                         {{ item.deptShort }}
                     </el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
-            <el-form-item :label="'名称'" prop="menuName">
+            <el-form-item :label="'名称：'" prop="menuName">
                 <el-input v-model="dataForm.menuName" :placeholder="'名称'" />
             </el-form-item>
-            <el-form-item label="上级菜单" prop="parentName">
+            <el-form-item label="上级菜单：" prop="parentName">
                 <el-popover ref="menuListPopover" placement="bottom-start" trigger="click" style="height: 100%; overflow: auto;">
                     <el-tree ref="menuListTree" :data="menuList" :props="menuListTreeProps" node-key="id" :default-expand-all="false" :highlight-current="true" :expand-on-click-node="false" @current-change="menuListTreeCurrentChangeHandle" />
                 </el-popover>
@@ -26,7 +26,7 @@
             </el-form-item>
             <el-form-item
                 v-if="dataForm.menuType !== 'B'"
-                label="菜单路由"
+                label="菜单路由："
                 :rules="[
                     {
                         required: true,
@@ -36,15 +36,15 @@
                     },
                 ]"
             >
-                <el-input v-model="dataForm.menuUrl" placeholder="菜单路由" />
+                <el-input v-model="dataForm.menuUrl" placeholder="菜单路由：" />
             </el-form-item>
-            <el-form-item v-if="dataForm.menuType !== 'C'" label="授权标识" prop="perms">
+            <el-form-item v-if="dataForm.menuType !== 'C'" label="授权标识：" prop="perms">
                 <el-input v-model="dataForm.permission" placeholder="多个用逗号分隔, 如: user:list,user:create" />
             </el-form-item>
-            <el-form-item v-if="dataForm.type !== 'B'" label="排序号">
+            <el-form-item v-if="dataForm.type !== 'B'" label="排序号：">
                 <el-input-number v-model="dataForm.menuOrder" controls-position="right" :min="0" label="排序号" />
             </el-form-item>
-            <el-form-item v-if="dataForm.type !== 'B'" label="菜单图标">
+            <el-form-item v-if="dataForm.type !== 'B'" label="菜单图标：">
                 <el-row>
                     <el-col :span="24">
                         <el-popover ref="iconListPopover" placement="bottom-start" trigger="click" popper-class="mod-menu__icon-popover">
@@ -67,7 +67,7 @@
                     </el-col>
                 </el-row>
             </el-form-item>
-            <el-form-item label="备注">
+            <el-form-item label="备注：">
                 <el-input v-model="dataForm.remark" />
             </el-form-item>
         </el-form>
