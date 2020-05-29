@@ -337,13 +337,16 @@ export default class OrgStructure extends Vue {
     }
 
     // 上传图片后
-    addfile(key) {
+    addfile(key, options) {
         if (this.dialogFormVisible1) {
             this.addDep.imgUrl = key;
             this.uploadBtn = true;
         } else {
             this.OrgDetail.imgUrl = key;
         }
+        this.fileList[0] = {};
+        this.fileList[0].name = '';
+        this.fileList[0].url = URL.createObjectURL(options.raw);
     }
 
     DeptAddfile(res) {
