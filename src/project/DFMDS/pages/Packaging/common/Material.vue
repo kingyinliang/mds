@@ -14,7 +14,7 @@
                 <el-table-column label="初始库存" prop="startStocks" width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="订单领料" prop="receiveMaterial" width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.receiveMaterial" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.receiveMaterial" :disabled="!isRedact" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column width="70">
@@ -29,37 +29,37 @@
                         <span class="notNull">* </span>实际用量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.realUseAmount" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.realUseAmount" :disabled="!isRedact" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="批次" prop="batch" width="150">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.batch" size="small" />
+                        <el-input v-model="scope.row.batch" maxlength="10" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
                 <el-table-column label="实际损耗" prop="realLoss" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.realLoss" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.realLoss" :disabled="!isRedact" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="不合格数" prop="unqualified" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.unqualified" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.unqualified" :disabled="!isRedact" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="不良批次" prop="badBatch" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.badBatch" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.badBatch" :disabled="!isRedact" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="厂家" prop="manufactor" width="120">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.manufactor" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.manufactor" :disabled="!isRedact" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="140">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.remark" :disabled="!isRedact" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" prop="changer" width="140">
@@ -74,7 +74,7 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.splitFlag === 'N'" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row)">
+                        <el-button v-if="scope.row.splitFlag !== 'N'" :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -100,23 +100,27 @@
                 </el-table-column>
                 <el-table-column label="入库号" prop="sterilizeStorageNo" width="150" :show-overflow-tooltip="true" />
                 <el-table-column label="锅号" prop="sterilizePotNo" width="150" :show-overflow-tooltip="true" />
-                <el-table-column label="物料" prop="materialCode" width="150" :show-overflow-tooltip="true" />
+                <el-table-column label="物料" prop="potMaterialCode" width="150" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.potMaterialCode + scope.row.potMaterialName }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="批次" prop="batch" width="150" :show-overflow-tooltip="true" />
                 <el-table-column label="实际用量" prop="realUsed" width="150" :show-overflow-tooltip="true" />
-                <el-table-column label="开始使用时间" prop="batch" width="150">
+                <el-table-column label="开始使用时间" prop="batch" width="195">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.startDate" size="small" />
+                        <el-date-picker v-model="scope.row.startDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
 
-                <el-table-column label="用完时间" prop="batch" width="150">
+                <el-table-column label="用完时间" prop="batch" width="195">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.endDate" size="small" />
+                        <el-date-picker v-model="scope.row.endDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="140">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.remark" :disabled="!isRedact" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" prop="changer" width="140">
@@ -131,7 +135,7 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.splitFlag === 'N'" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row)">
+                        <el-button v-if="scope.row.splitFlag !== 'N'" :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -143,7 +147,7 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
     import { PKG_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
 
@@ -153,31 +157,7 @@
         }
     })
     export default class Material extends Vue {
-        ma = [{
-            id: '0',
-            material: 'asdad',
-            amount: '1',
-            list: [
-                {
-                    batch: '11'
-                },
-                {
-                    batch: '22'
-                }
-            ]
-        }, {
-            id: '1',
-            material: 'bbbb',
-            amount: '2',
-            list: [
-                {
-                    batch: '11'
-                },
-                {
-                    batch: '22'
-                }
-            ]
-        }];
+        @Prop({ default: false }) isRedact: boolean;
 
         MaterialAudit = [];
 
@@ -216,9 +196,10 @@
         // 处理数据
         processData(data, dataGroup) {
             const finalData: MaterialMap[] = []
-            data.forEach(item => {
+            data.forEach((item, index) => {
                 item.item.forEach((listitem) => {
                     const materialMap: MaterialMap = {
+                        merge: index,
                         id: item.id,
                         materialCode: item.materialCode,
                         materialName: item.materialName,
@@ -245,7 +226,7 @@
             tableData.forEach((item, index) => {
                 if (index === 0) {
                     spanOneArr.push(1);
-                } else if (item.id === tableData[index - 1].id) {
+                } else if (item.merge === tableData[index - 1].merge) {
                     spanOneArr[concatOne] += 1;
                     spanOneArr.push(0);
                 } else {
@@ -283,7 +264,8 @@
 
         // 拆分
         SplitDate(str, row, index) {
-            this[str].splice(index + this[str].filter(item => item.id === row.id).length, 0, {
+            this[str].splice(index + this[str].filter(item => item.merge === row.merge).length, 0, {
+                merge: row.merge,
                 id: row.id,
                 materialCode: row.materialCode,
                 materialName: row.materialName,
@@ -293,7 +275,15 @@
                 startStocks: row.startStocks,
                 endStocks: row.endStocks,
                 receiveMaterial: row.receiveMaterial,
-                splitFlag: 'N'
+                splitFlag: 'Y',
+                batch: row.batch,
+                endDate: row.endDate,
+                potMaterialCode: row.potMaterialCode,
+                potMaterialName: row.potMaterialName,
+                realUsed: row.realUsed,
+                startDate: row.startDate,
+                sterilizePotNo: row.sterilizePotNo,
+                sterilizeStorageNo: row.sterilizeStorageNo
             });
             this.merge(this[str], str)
         }
@@ -304,6 +294,7 @@
         }
     }
 interface MaterialMap{
+    merge?: number;
     id?: string;
     original?: boolean;
     materialCode?: string;
