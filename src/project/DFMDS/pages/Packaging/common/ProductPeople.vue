@@ -3,8 +3,8 @@
         <mds-card title="人员统计" :name="'productPeople'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" @click="addRow()">
-                        新增 {{ isRedact }}
+                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addRow()">
+                        新增
                     </el-button>
                 </div>
             </template>
@@ -117,7 +117,7 @@
                     标准作业人数：
                 </div>
                 <div class="input_bottom">
-                    123
+                    {{ standardManpower }}
                 </div>
                 <div>
                     实际作业人数：
@@ -174,14 +174,25 @@ export default class ProductPeople extends Vue {
     row: CurrentDataTable = {};
     orgTree = [];
     arrList = [];
+    standardManpower = 0;
 
     mounted() {
-        // 班次下拉
+        this.getClassList();
+        this.getTeamList();
+        this.getUserTypeList();
+        this.getTree();
+        this.getStandardManPower(this.$store.state.packaging.packDetail.productLine)
+    }
+
+    // 班次
+    getClassList() {
         COMMON_API.DICTQUERY_CLASSLIST_API({}).then(({ data }) => {
             this.classList = data.data
         });
+    }
 
-        // 工序
+    // 工序
+    getTeamList() {
         COMMON_API.SYS_CHILDTYPE_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             deptType: ['PRODUCT_TEAM'],
@@ -189,13 +200,13 @@ export default class ProductPeople extends Vue {
         }).then(({ data }) => {
             this.teamList = data.data;
         });
+    }
 
-        // 人员属性
+    // 人员属性
+    getUserTypeList() {
         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_USER_TYPE' }).then(({ data }) => {
             this.userTypeList = data.data
         });
-
-        this.getTree();
     }
 
     addRow() {
@@ -203,6 +214,7 @@ export default class ProductPeople extends Vue {
             classes: '',
             deptId: '',
             userType: '',
+            userList: [],
             startDate: '',
             dinner: '60',
             endDate: '',
@@ -282,10 +294,34 @@ export default class ProductPeople extends Vue {
         }
     }
 
+    // 人员删除
+    delUser(row) {
+        this.$confirm('是否删除?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            this.currentDataTable.splice(this.currentDataTable.indexOf(row), 1);
+        })
+    }
+
+    getStandardManPower(productLine: string) {
+        COMMON_API.CAPACITYLIST_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            deptId: productLine,
+            current: 1,
+            size: 10
+        }).then(({ data }) => {
+            if (data.data.records.length !== 0) {
+                this.standardManpower = data.data.records[0]['standardManpower'];
+            }
+        });
+    }
+
     get ActualNumber() {
-        let ScrapNum = 0;
+        let ScrapNum = 0
         this.currentDataTable.map((item: CurrentDataTable) => {
-            if (item.delFlag === 0 && item.userList) {
+            if (item.delFlag === 0) {
                 ScrapNum = accAdd(ScrapNum, item.userList.length);
             }
         });
