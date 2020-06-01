@@ -1,0 +1,836 @@
+<template>
+    <div class="header_main">
+        <el-card class="searchCard  newCard ferCard">
+            <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform sole_row">
+                <el-form-item label="生产工厂：">
+                    <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 160px;">
+                        <el-option label="请选择" value="" />
+                        <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="生产车间：">
+                    <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 160px;">
+                        <el-option label="请选择" value="" />
+                        <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="半成品罐：">
+                    <el-select v-model="formHeader.holderId" filterable>
+                        <el-option value="">
+                            请选择
+                        </el-option>
+                        <el-option v-for="(item, index) in HolderList" :key="index" :value="item.holderId" :label="item.holderName" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="状态：" label-width="50px">
+                    <el-select v-model="formHeader.holderStatus" placeholder="请选择" style="width: 140px;">
+                        <el-option label="请选择" value="" />
+                        <el-option v-for="(item, index) in holderStatusList" :key="index" :label="item.name" :value="item.value" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item class="floatr">
+                    <el-button v-if="isAuth('ste:semi:list')" type="primary" size="small" @click="GetList(true)">
+                        查询
+                    </el-button>
+                </el-form-item>
+            </el-form>
+        </el-card>
+        <el-card v-show="fastS" class="searchCard  newCard ferCard" style="margin-top: 5px; padding: 0 !important;">
+            <h3 style=" margin-bottom: 8px; color: black;">
+                <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />半成品罐列表
+                <i v-if="isAuth('ste:semi:reportForm')" class="gotop" @click="goPot"><a>杀菌罐区库存情况>></a></i>
+            </h3>
+            <el-row class="dataList" :gutter="10" style="min-height: 150px;">
+                <el-col v-for="(item, index) in DataList" :key="index" :span="4">
+                    <el-card class="dataList_item">
+                        <h3 class="dataList_item_tit">
+                            {{ item.holderNo }} - <span style="color: rgb(51, 51, 51); font-weight: 400; font-size: 14px;">{{ item.holderStatus === '1' ? '入库中' : item.holderStatus === '0' ? '空罐' : item.holderStatus === '2' ? '满罐' : item.holderStatus === '3' ? '领用中' : item.holderStatus === '4' ? '领用完' : '' }}</span>
+                            <span v-if="isAuth('filter:holder:list')" style=" float: right; color: #1890ff; font-size: 12px; cursor: pointer;" @click="godetails(item)">详情>></span>
+                        </h3>
+                        <div class="dataList_item_pot clearfix" style="position: relative;">
+                            <img v-if="item.isRdSign === '1'" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
+                            <img v-if="item.exportMaterial !== ''" src="@/assets/img/CK.png" alt="" style="position: absolute; top: 40px; left: 10px;">
+                            <div class="dataList_item_pot_box">
+                                <div class="dataList_item_pot_box1" style=" position: relative; display: flex; flex-wrap: wrap; align-content: flex-end;">
+                                    <div v-if="item.holderStatus === '1' || item.holderStatus === '3' || item.holderStatus === '4'" class="dataList_item_pot_box_item1" :style="`height:${item.amount <= 0 ? '0' : item.amount / item.holderHold > 1 ? '100' : (item.amount / item.holderHold) * 100}%`" />
+                                    <div v-if="item.holderStatus === '2'" class="dataList_item_pot_box_item2 dataList_item_pot_box_item2s" :style="`height:150%`" />
+                                    <div v-else class="dataList_item_pot_box_item1" :style="`height:0%`">
+                                        <p />
+                                    </div>
+                                    <div v-if="item.holderStatus === '1' || item.holderStatus === '2' || item.holderStatus === '3' || item.holderStatus === '4'" class="dataList_item_pot_detail">
+                                        <p>{{ item.batch }}</p>
+                                        <p>{{ item.materialName }}</p>
+                                        <p>{{ (item.amount / 1000).toFixed(3) }}方</p>
+                                        <p style="font-size: 12px;">
+                                            {{ item.gnEndTime }}
+                                        </p>
+                                        <p>{{ item.timeLength }}<span v-if="item.timeLength !== '' && item.timeLength !== null">H</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <el-row class="bottom">
+                            <el-button class="bottom-item" :disabled="!isAuth('ste:semi:cleanSteHolder') || item.holderStatus !== '4'" @click="ClearPot(item)">
+                                清罐
+                            </el-button>
+                            <div class="bottom-split" />
+                            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus !== '2'" style=" padding: 0; border: none;" @click="GnProp(item)">
+                                GN搅罐
+                            </el-button>
+                            <div class="bottom-split" />
+                            <!-- <el-col :span="12" class="dataList_item_btn_item"><p @click="GnProp(item)">GN搅罐</p></el-col> -->
+                            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" style=" padding: 0; border: none;" @click="JsbProp(item)">
+                                JBS出库
+                            </el-button>
+                            <div class="bottom-split" />
+                            <el-button class="bottom-item" :disabled="!isAuth('ste:semi:dumpSemiMaterial') || item.holderStatus === '0'" style=" padding: 0; border: none;" @click="ZcProp(item)">
+                                转储
+                            </el-button>
+                        </el-row>
+                    </el-card>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-pagination :current-page="formHeader.currPage" :page-sizes="[18, 24, 30]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </el-card>
+        <el-dialog :close-on-click-modal="false" :visible.sync="GnDialogTableVisible" width="500px" custom-class="dialog__class">
+            <div slot="title">
+                GN搅罐
+            </div>
+            <div>
+                <el-form ref="Gnstar" size="small" :model="formGn" :rules="Gnrulestar" label-width="150px">
+                    <el-form-item label="罐号：">
+                        {{ formGn.holderName }}
+                    </el-form-item>
+                    <el-form-item label="搅罐开始时间：" prop="gnStartTime">
+                        <el-date-picker v-model="formGn.gnStartTime" type="datetime" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" />
+                    </el-form-item>
+                    <el-form-item label="搅罐结束时间：" prop="gnEndTime">
+                        <el-date-picker v-model="formGn.gnEndTime" type="datetime" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" />
+                    </el-form-item>
+                    <el-form-item label="备注：">
+                        <el-input v-model="formGn.remark" style="width: 200px;" />
+                    </el-form-item>
+                    <el-form-item label="操作人：" prop="operator">
+                        <el-select v-model="formGn.operator">
+                            <el-option v-for="(item, index) in PeopleList" :key="index" :label="item.realName + `(${item.userName})`" :value="item.realName + `(${item.userName})`" />
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button size="small" @click="GnDialogTableVisible = false">取消</el-button>
+                <el-button type="primary" size="small" @click="GnSave('Gnstar')">确定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog :close-on-click-modal="false" :visible.sync="JsbDialogTableVisible" width="500px" custom-class="dialog__class">
+            <div slot="title">
+                JSB出库
+            </div>
+            <div>
+                <el-form ref="Jsbstar" size="small" :model="formJsb" :rules="Jsbrulestar" label-width="150px">
+                    <el-form-item label="领用罐号：">
+                        {{ formJsb.holderName }}
+                    </el-form-item>
+                    <el-form-item label="物料：">
+                        {{ formJsb.materialCode }} {{ formJsb.materialName }}
+                    </el-form-item>
+                    <el-form-item label="批次：">
+                        {{ formJsb.batch }}
+                    </el-form-item>
+                    <el-form-item label="领用量（方）：" prop="receiveAmount">
+                        <el-input v-model="formJsb.receiveAmount" style="width: 200px;" />
+                    </el-form-item>
+                    <el-form-item label="打入罐类别：" prop="inHolderType">
+                        <el-select v-model="formJsb.inHolderType" filterable>
+                            <el-option v-for="(item, index) in typeList" :key="index" :value="item.code" :label="item.code + ` ${item.name}`" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="打入罐号：" prop="inHolderId">
+                        <el-select v-model="formJsb.inHolderId" filterable>
+                            <el-option v-for="(item, index) in thrwHolderList" :key="index" :value="item.holderId" :label="item.holderName" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="是否满灌：">
+                        <el-select v-model="formJsb.isFull" filterable>
+                            <el-option v-for="(item, index) in isFullList" :key="index" :value="item.value" :label="item.name" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="满灌时间：">
+                        <el-date-picker v-model="formJsb.fullDate" type="datetime" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" />
+                    </el-form-item>
+                    <el-form-item label="备注：">
+                        <el-input v-model="formJsb.remark" style="width: 200px;" />
+                    </el-form-item>
+                </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button size="small" @click="JsbDialogTableVisible = false">取消</el-button>
+                <el-button type="primary" size="small" @click="JsbSave('Jsbstar')">确定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog :close-on-click-modal="false" :visible.sync="ZcDialogTableVisible" width="500px" custom-class="dialog__class">
+            <div slot="title">
+                转储
+            </div>
+            <div>
+                <el-form ref="Zcstar" size="small" :model="formZc" :rules="Zcrulestar" label-width="150px">
+                    <el-form-item label="领用罐号：">
+                        {{ formZc.holderName }}
+                    </el-form-item>
+                    <el-form-item label="物料：">
+                        {{ formZc.materialCode }} {{ formZc.materialName }}
+                    </el-form-item>
+                    <el-form-item label="批次：">
+                        {{ formZc.batch }}
+                    </el-form-item>
+                    <el-form-item label="领用量（方）：" prop="receiveAmount">
+                        <el-input v-model="formZc.receiveAmount" style="width: 200px;" />
+                    </el-form-item>
+                    <el-form-item label="打入罐类别：" prop="inHolderType">
+                        <el-select v-model="formZc.inHolderType" filterable @change="GetZhuanPot($event, formZc)">
+                            <el-option v-for="(item, index) in typeZcList" :key="index" :value="item.code" :label="item.code + ` ${item.name}`" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="打入罐号：" prop="inHolderId">
+                        <el-select v-model="formZc.inHolderId" filterable>
+                            <el-option v-for="(item, index) in zhuanHolderList" :key="index" :value="item.holderId" :label="item.holderName" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="是否满灌：">
+                        <el-select v-model="formZc.isFull" filterable>
+                            <el-option v-for="(item, index) in isFullList" :key="index" :value="item.value" :label="item.name" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="满灌时间：">
+                        <el-date-picker v-model="formZc.fullDate" type="datetime" placeholder="请选择" style="width: 200px;" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" />
+                    </el-form-item>
+                    <el-form-item label="备注：">
+                        <el-input v-model="formZc.remark" style="width: 200px;" />
+                    </el-form-item>
+                </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button size="small" @click="ZcDialogTableVisible = false">取消</el-button>
+                <el-button type="primary" size="small" @click="ZcSave('Zcstar')">确定</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</template>
+
+<script>
+    import { BASICDATA_API, STERILIZED_API, FILTRATION_API } from '@/api/api';
+    export default {
+        name: 'Index',
+        components: {},
+        data() {
+            return {
+                formHeader: {
+                    factory: '',
+                    workShop: '',
+                    holderId: '',
+                    currPage: 1,
+                    pageSize: 18,
+                    totalCount: 0,
+                    holderStatus: ''
+                },
+                holderStatusList: [
+                    {
+                        name: '空罐',
+                        value: '0'
+                    },
+                    {
+                        name: '入库中',
+                        value: '1'
+                    },
+                    {
+                        name: '满罐',
+                        value: '2'
+                    },
+                    {
+                        name: '领用中',
+                        value: '3'
+                    },
+                    {
+                        name: '领用完',
+                        value: '4'
+                    }
+                ],
+                HolderList: [],
+                DataList: [],
+                GnDialogTableVisible: false,
+                formGn: {},
+                Gnrulestar: {
+                    gnStartTime: [{ required: true, message: '请选择搅罐开始时间', trigger: 'change' }],
+                    gnEndTime: [{ required: true, message: '请选择搅罐结束时间', trigger: 'change' }],
+                    operator: [{ required: true, message: '请选择操作人', trigger: 'blur' }]
+                },
+                JsbDialogTableVisible: false,
+                formJsb: {},
+                Jsbrulestar: {
+                    receiveAmount: [{ required: true, message: '请填写领用量', trigger: 'blur' }],
+                    inHolderType: [{ required: true, message: '请选择打入罐类别', trigger: 'blur' }],
+                    inHolderId: [{ required: true, message: '请填写打入罐号', trigger: 'blur' }]
+                },
+                ZcDialogTableVisible: false,
+                formZc: {},
+                Zcrulestar: {
+                    receiveAmount: [{ required: true, message: '请填写领用量', trigger: 'blur' }],
+                    inHolderType: [{ required: true, message: '请选择打入罐类别', trigger: 'blur' }],
+                    inHolderId: [{ required: true, message: '请填写打入罐号', trigger: 'blur' }]
+                },
+                fastS: false,
+                factory: [],
+                workshop: [],
+                typeList: [],
+                thrwHolderList: [],
+                PeopleList: [],
+                isFullList: [
+                    {
+                        name: '是',
+                        value: '1'
+                    },
+                    {
+                        name: '否',
+                        value: '0'
+                    }
+                ],
+                typeZcList: [
+                    {
+                        code: '006',
+                        name: '半成品罐'
+                    },
+                    {
+                        code: '007',
+                        name: '成品罐'
+                    }
+                ],
+                zhuanHolderList: []
+            };
+        },
+        computed: {
+            mainTabs: {
+                get() {
+                    return this.$store.state.common.mainTabs;
+                },
+                set(val) {
+                    this.$store.commit('common/updateMainTabs', val);
+                }
+            }
+        },
+        watch: {
+            'formHeader.factory'(n) {
+                this.formHeader.workShop = '';
+                this.Getdeptbyid(n);
+            },
+            'formHeader.workShop'(n) {
+                this.GetHolder(n);
+                this.GetPeople(n);
+            },
+            'formJsb.inHolderType'(n) {
+                this.getPot(n);
+            }
+            // 'formZc.inHolderType' (n, o) {
+            //   this.getPot(n)
+            // }
+        },
+        mounted() {
+            this.Getdeptcode();
+        },
+        methods: {
+            goPot() {
+                this.$store.state.common.PotReportForms.factory = this.formHeader.factory;
+                this.$store.state.common.PotReportForms.workShop = this.formHeader.workShop;
+                this.$store.state.common.PotReportForms.type = 'steHolder';
+                this.$store.state.common.mainTabs = this.$store.state.common.mainTabs.filter(item => item.name !== 'DataEntry-PotReportForms-index');
+                setTimeout(() => {
+                    this.$router.push({ name: `DataEntry-PotReportForms-index` });
+                }, 100);
+            },
+            // 去详情
+            godetails(item) {
+                this.$store.state.common.sterilized.holderId = item.holderId;
+                this.mainTabs = this.mainTabs.filter(subItem => subItem.name !== 'DataEntry-Sterilized-SemiFinishedProduct-detail');
+                setTimeout(() => {
+                    this.$router.push({ name: `DataEntry-Sterilized-SemiFinishedProduct-detail` });
+                }, 100);
+            },
+            // 获取工厂
+            Getdeptcode() {
+                this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false).then(({ data }) => {
+                    if (data.code === 0) {
+                        this.factory = data.typeList;
+                        this.formHeader.factory = data.typeList[0].deptId;
+                    } else {
+                        this.$errorToast(data.msg);
+                    }
+                });
+            },
+            // 获取车间
+            Getdeptbyid(id) {
+                if (id) {
+                    this.DataList = [];
+                    this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', { deptId: id, deptName: '杀菌' }, false, false, false).then(({ data }) => {
+                        if (data.code === 0) {
+                            this.workshop = data.typeList;
+                            if (data.typeList.length) {
+                                this.formHeader.workShop = data.typeList[0].deptId;
+                            }
+                        } else {
+                            this.$errorToast(data.msg);
+                        }
+                    });
+                }
+            },
+            // 罐
+            GetHolder(id) {
+                this.formHeader.holderId = '';
+                this.DataList = [];
+                if (id) {
+                    this.$http(`${BASICDATA_API.DROPDOWN_HOLDER_LIST}`, 'POST', { factory: this.formHeader.factory, workShop: id, holderType: '006' }).then(({ data }) => {
+                        if (data.code === 0) {
+                            this.HolderList = data.list;
+                        } else {
+                            this.$errorToast(data.msg);
+                        }
+                    });
+                }
+            },
+            GetList(st) {
+                if (!this.formHeader.factory) {
+                    this.$warningToast('请选择工厂');
+                    return false;
+                }
+                if (!this.formHeader.workShop) {
+                    this.$warningToast('请选择车间');
+                    return false;
+                }
+                if (st) {
+                    this.formHeader.currPage = 1;
+                }
+                this.$http(`${STERILIZED_API.SEMIFINISHEDPRODUCTLIST}`, 'POST', this.formHeader).then(({ data }) => {
+                    if (data.code === 0) {
+                        this.DataList = data.list.list;
+                        this.formHeader.totalCount = data.list.totalCount;
+                        this.fastS = true;
+                    } else {
+                        this.$errorToast(data.msg);
+                    }
+                });
+            },
+            // 改变每页条数
+            handleSizeChange(val) {
+                this.formHeader.pageSize = val;
+                this.GetList();
+            },
+            // 跳转页数
+            handleCurrentChange(val) {
+                this.formHeader.currPage = val;
+                this.GetList();
+            },
+            GnProp(row) {
+                if (row.holderStatus === '1' || row.holderStatus === '2') {
+                    this.formGn = {
+                        holderName: row.holderName,
+                        holderId: row.holderId,
+                        holderNo: row.holderNo,
+                        gnStartTime: '',
+                        gnEndTime: '',
+                        remark: ''
+                    };
+                    this.GnDialogTableVisible = true;
+                } else {
+                    this.$warningToast('当前状态不能搅罐');
+                }
+            },
+            GnSave(formName) {
+                this.$refs[formName].validate(valid => {
+                    if (valid) {
+                        this.$http(`${STERILIZED_API.SEMIFINISHEDPRODUCTGNSAVE}`, 'POST', this.formGn).then(({ data }) => {
+                            if (data.code === 0) {
+                                this.$successToast('保存成功');
+                                this.GnDialogTableVisible = false;
+                                this.GetList();
+                                this.$refs[formName].resetFields();
+                            } else {
+                                this.$errorToast(data.msg);
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            // 打入罐类别
+            GetInHolderType() {
+                this.$http(`${FILTRATION_API.FILTER_INHOLDERTYPE_LIST_API}`, 'POST', { factory: this.formHeader.factory }, false, false, false).then(({ data }) => {
+                    if (data.code === 0) {
+                        this.typeList = data.list;
+                    } else {
+                        this.$errorToast(data.msg);
+                    }
+                });
+            },
+            // JBS 打入罐下拉
+            getPot(id) {
+                this.$http(`${BASICDATA_API.DROPDOWN_HOLDER_LIST}`, 'POST', { factory: this.formHeader.factory, holderType: id }, false, false, false).then(({ data }) => {
+                    if (data.code === 0) {
+                        this.thrwHolderList = data.list;
+                    } else {
+                        this.$errorToast(data.msg);
+                    }
+                });
+            },
+            // 转储打入罐下拉
+            GetZhuanPot(event, item) {
+                this.formZc.inHolderId = '';
+                this.$http(`${STERILIZED_API.SEMIFINIS_DROPDOWN_LIST}`, 'POST', { factory: this.formHeader.factory, code: event, materialCode: item.materialCode, batch: item.batch, holderId: item.holderId }, false, false, false).then(({ data }) => {
+                    if (data.code === 0) {
+                        this.zhuanHolderList = data.list;
+                    } else {
+                        this.$errorToast(data.msg);
+                    }
+                });
+            },
+            JsbProp(row) {
+                // 领用中 满灌 入库中
+                if (row.holderStatus === '1' || row.holderStatus === '2' || row.holderStatus === '3' || row.holderStatus === '4') {
+                    this.typeList = [];
+                    this.GetInHolderType();
+                    this.formJsb = {
+                        amount: row.amount,
+                        holderId: row.holderId,
+                        holderName: row.holderName,
+                        receiveHolderId: row.holderId,
+                        materialName: row.materialName,
+                        materialCode: row.materialCode,
+                        batch: row.batch,
+                        receiveAmount: '',
+                        inHolderType: '',
+                        inHolderId: '',
+                        isFull: '0',
+                        fullDate: '',
+                        remark: ''
+                    };
+                    this.JsbDialogTableVisible = true;
+                } else {
+                    this.$warningToast('当前状态不能JBS出库');
+                }
+            },
+            ZcProp(row) {
+                if (row.holderStatus === '1' || row.holderStatus === '2' || row.holderStatus === '3') {
+                    this.typeList = [];
+                    this.GetInHolderType();
+                    this.formZc = {
+                        amount: row.amount,
+                        holderId: row.holderId,
+                        holderName: row.holderName,
+                        receiveHolderId: row.holderId,
+                        materialName: row.materialName,
+                        materialCode: row.materialCode,
+                        batch: row.batch,
+                        receiveAmount: '',
+                        inHolderType: '',
+                        inHolderId: '',
+                        isFull: '0',
+                        fullDate: '',
+                        remark: ''
+                    };
+                    this.ZcDialogTableVisible = true;
+                } else {
+                    this.$warningToast('当前状态不能转储');
+                }
+            },
+            JsbSave(formName) {
+                this.$refs[formName].validate(valid => {
+                    if (valid) {
+                        if (this.formJsb.receiveAmount * 1000 > this.formJsb.amount) {
+                            this.$warningToast('领用量不能大于库存');
+                            return false;
+                        }
+                        if (this.formJsb.isFull === '1' && (this.formJsb.fullDate === '' || !this.formJsb.fullDate)) {
+                            this.$warningToast('满灌时请选择满罐时间');
+                            return false;
+                        }
+                        this.formJsb.factory = this.formHeader.factory;
+                        this.formJsb.workShop = this.formHeader.workShop;
+                        this.$http(`${STERILIZED_API.SEMIFINISHEDPRODUCTJSBSAVE}`, 'POST', this.formJsb).then(({ data }) => {
+                            if (data.code === 0) {
+                                this.$successToast('保存成功');
+                                this.JsbDialogTableVisible = false;
+                                this.GetList();
+                                this.$refs[formName].resetFields();
+                            } else {
+                                this.$errorToast(data.msg);
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            ZcSave(formName) {
+                this.$refs[formName].validate(valid => {
+                    if (valid) {
+                        if (this.formZc.receiveAmount * 1000 > this.formZc.amount) {
+                            this.$warningToast('领用量不能大于库存');
+                            return false;
+                        }
+                        if (this.formZc.isFull === '1' && (this.formZc.fullDate === '' || !this.formZc.fullDate)) {
+                            this.$warningToast('满灌时请选择满罐时间');
+                            return false;
+                        }
+                        this.$http(`${STERILIZED_API.SEMIFINISHEDPRODUCTZCSAVE}`, 'POST', this.formZc).then(({ data }) => {
+                            if (data.code === 0) {
+                                this.$successToast('保存成功');
+                                this.ZcDialogTableVisible = false;
+                                this.GetList();
+                                this.$refs[formName].resetFields();
+                            } else {
+                                this.$errorToast(data.msg);
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            GetPeople(id) {
+                this.PeopleList = [];
+                if (id) {
+                    this.$http(`${STERILIZED_API.SEMIFINISHEDPRODUCTUSERLIST}`, 'POST', { deptId: id }).then(({ data }) => {
+                        if (data.code === 0) {
+                            this.PeopleList = data.list;
+                        } else {
+                            this.$errorToast(data.msg);
+                        }
+                    });
+                }
+            },
+            // 清罐
+            ClearPot(item) {
+                if (item.holderStatus !== '4') {
+                    this.$warningToast('未领用完不能清罐')
+                    return false
+                }
+                this.$confirm('清罐后，账务将清零，请确认实物已空！', '清罐确认', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$http(`${STERILIZED_API.SEMIFINISH_CLEAN_HOLDER}`, 'POST', item).then(({ data }) => {
+                        if (data.code === 0) {
+                            this.$successToast('操作成功');
+                            this.GetList();
+                        } else {
+                            this.$errorToast(data.msg);
+                        }
+                    })
+                }).catch(() => {
+                    // this.$infoToast('已取消删除');
+                });
+            }
+        }
+    };
+</script>
+
+<style lang="scss" scoped>
+    .dataList {
+        margin-top: 10px;
+        &_item {
+            margin-bottom: 10px;
+            &_tit {
+                padding: 0 10px;
+                color: black;
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 45px;
+                border-bottom: 1px solid #e8e8e8;
+            }
+            &_a {
+                float: right;
+                color: #1890ff;
+                cursor: pointer;
+            }
+            &_pot {
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                padding: 17px 10px 10px;
+                overflow: hidden;
+                &_box1 {
+                    width: 102px;
+                    height: 197px;
+                    overflow: hidden;
+                }
+                &_box {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-content: flex-end;
+                    float: left;
+                    width: 120px;
+                    min-width: 120px;
+                    height: 229px;
+                    padding: 25px 9px 9px;
+                    overflow: hidden;
+                    background: url("~@/assets/img/ferPot.png") no-repeat;
+                    background-size: contain;
+                    &_item1,
+                    &_item2 {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 100%;
+                        font-size: 14px;
+                    }
+                    &_item2s,
+                    &_item1 {
+                        position: relative;
+                        height: 50px;
+                        overflow: hidden;
+                        background: #69c0ff;
+                        &::before,
+                        &::after {
+                            position: absolute;
+                            left: 50%;
+                            min-width: 175px;
+                            min-height: 165px;
+                            background: #fff;
+                            animation: roateTwo 10s linear infinite;
+                            content: "";
+                        }
+                        &::before {
+                            top: -158px;
+                            border-radius: 45%;
+                        }
+                        &::after {
+                            top: -152px;
+                            border-radius: 47%;
+                            opacity: 0.5;
+                        }
+                    }
+                    &_item2 {
+                        height: 100px;
+                        background: #69c0ff;
+                    }
+                    &:hover &_item1::before,
+                    &:hover &_item1::after,
+                    &:hover &_item2s::before,
+                    &:hover &_item2s::after {
+                        animation: roateOne 10s linear infinite;
+                    }
+                }
+                &_detail {
+                    position: absolute;
+                    top: 66px;
+                    left: 0;
+                    float: left;
+                    max-width: 112px;
+                    height: auto;
+                    color: #333;
+                    font-size: 14px;
+                    line-height: 18px;
+                    border-radius: 4px;
+                }
+            }
+            .bottom {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                height: 40px;
+                background: rgba(247, 249, 250, 1);
+                .bottom-item {
+                    flex: 1;
+                    height: 40px;
+                    padding: 0;
+                    font-size: 12px;
+                    line-height: 40px;
+                    text-align: center;
+                    background: #f7f9fa;
+                    border: none;
+                    border-radius: 0;
+                    &:hover {
+                        color: #fff;
+                        background: #1890ff;
+                    }
+                    &.is-disabled {
+                        color: #606266;
+                    }
+                    &.is-disabled:hover {
+                        color: #fff;
+                    }
+                }
+                .bottom-split {
+                    width: 1px;
+                    height: 16px;
+                    background: rgba(232, 232, 232, 1);
+                }
+            }
+        }
+    }
+
+    @keyframes roateOne {
+        0% {
+            transform: translate(-50%, -0%) rotateZ(0deg);
+        }
+        50% {
+            transform: translate(-50%, -1%) rotateZ(180deg);
+        }
+        100% {
+            transform: translate(-50%, -0%) rotateZ(360deg);
+        }
+    }
+
+    @keyframes roateTwo {
+        0% {
+            transform: translate(-50%, -0%) rotateZ(0deg);
+        }
+        50% {
+            transform: translate(-50%, -0%) rotateZ(0deg);
+        }
+        100% {
+            transform: translate(-50%, -0%) rotateZ(0deg);
+        }
+    }
+</style>
+<style lang="scss">
+    .ferCard {
+        .el-card__body {
+            padding: 7px;
+        }
+        .cardTit {
+            padding-bottom: 10px;
+            color: black;
+            font-weight: 400;
+            font-size: 16px;
+            border-bottom: 1px solid #e9e9e9;
+        }
+        .gotop {
+            float: right;
+            color: #1890ff;
+            font-size: 14px;
+            cursor: pointer;
+            i {
+                &::before {
+                    color: #1890ff;
+                }
+            }
+        }
+    }
+    .dialog__class {
+        border-radius: 6px !important;
+        .el-dialog__header {
+            height: 59px;
+            color: #fff;
+            font-size: 20px;
+            background: rgba(24, 144, 255, 1);
+            border-radius: 6px 6px 0 0;
+            .el-dialog__headerbtn .el-dialog__close {
+                color: #fff;
+            }
+        }
+    }
+</style>
