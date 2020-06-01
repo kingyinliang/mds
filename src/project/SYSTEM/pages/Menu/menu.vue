@@ -1,12 +1,12 @@
 <template>
     <div class="header_main">
-        <mds-card title="菜单列表" :name="'menu'" :pack-up="false" style="background: white;">
+        <mds-card title="菜单列表" :name="'menu'" :pack-up="false" style="margin-bottom: 0; background: white;">
             <template slot="titleBtn">
                 <el-button type="primary" style="float: right; margin-bottom: 12px;" size="small" @click="addOrUpdateHandle()">
                     新增
                 </el-button>
             </template>
-            <el-table class="newTable" header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" style="width: 100%;">
+            <el-table class="newTable" header-row-class-name="tableHead" :height="mainClientHeight - 64" :data="dataList" border tooltip-effect="dark" style="width: 100%;">
                 <table-tree-column prop="menuName" header-align="left" width="150" :show-overflow-tooltip="true" label="名称" />
                 <el-table-column prop="parentName" header-align="left" align="left" width="100" :show-overflow-tooltip="true" label="上级菜单" />
                 <el-table-column header-align="left" align="left" :show-overflow-tooltip="true" label="图标">
@@ -67,6 +67,10 @@ import { COMMON_API } from 'common/api/api';
     }
 })
 export default class Menu extends Vue {
+    get mainClientHeight() {
+        return this.$store.state.common.mainClientHeight;
+    }
+
     $refs: {addOrUpdate: HTMLFormElement}
     addOrUpdateVisible = false
     dataList: object[] = []

@@ -5,7 +5,7 @@
                 <template v-for="item in queryFormData">
                     <template v-if="!item.hide">
                         <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop">
-                            <el-select :ref="item.prop" v-model="queryForm[item.prop]" style="width: 170px;" :filterable="item.filterable" :clearable="item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
+                            <el-select :ref="item.prop" v-model="queryForm[item.prop]" style="width: 170px;" :filterable="item.filterable" :clearable="!item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
                                 <el-option label="请选择" value="" />
                                 <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="setLabel(opt, item)" :value="opt[item.resVal.value]" />
                             </el-select>

@@ -9,7 +9,7 @@
                 </div>
             </template>
 
-            <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" border tooltip-effect="dark" size="small">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" border tooltip-effect="dark" size="small" @cell-click="compareRow">
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="生产日期" prop="productDate" width="180">
                     <template slot="header">
@@ -31,12 +31,12 @@
                         <span class="notNull">* </span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in classesOptions"
-                                :key="item"
-                                :label="item"
-                                :value="item"
+                                :key="item.dictCode"
+                                :label="item.dictValue"
+                                :value="item.dictCode"
                             />
                         </el-select>
                     </template>
@@ -46,7 +46,7 @@
                         <span class="notNull">* </span>生产批次
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.batch" maxlength="10" placeholder="请输入" size="small" :disabled="!isRedact" />
+                        <el-input v-model.trim="scope.row.batch" maxlength="10" placeholder="输入数量" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="生产入库" prop="inStorageCount" width="100">
@@ -54,7 +54,7 @@
                         <span class="notNull">* </span>生产入库
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="inStorageUnit" width="100">
@@ -62,7 +62,7 @@
                         <span class="notNull">* </span>单位
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -74,12 +74,12 @@
                 </el-table-column>
                 <el-table-column label="入库不良" prop="inStorageBadCount" width="100">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="inStorageBadUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -91,12 +91,12 @@
                 </el-table-column>
                 <el-table-column label="线上不良" prop="onlineBadCount" width="100">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="onlineBadUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -108,12 +108,12 @@
                 </el-table-column>
                 <el-table-column label="样品" prop="sampleCount" width="100">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="sampleUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -130,7 +130,7 @@
                 </el-table-column>
                 <el-table-column label="单位" prop="outputUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -169,7 +169,7 @@
                 产出数合计：
             </div>
             <div class="input_bottom">
-                {{ computedTotal }}
+                {{ computedTotal }} {{ basicUnitName }}
             </div>
         </el-row>
         <audit-log :table-data="readAudit" />
@@ -178,8 +178,9 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { dateFormat, getUserNameNumber } from 'utils/utils';
-    // import { PKG_API } from 'common/api/api';
+    import { dateFormat, getUserNameNumber, compareObject } from 'utils/utils';
+    import { COMMON_API } from 'common/api/api';
+    import _ from 'lodash';
 
     @Component({
         name: 'ProductInStore',
@@ -190,30 +191,102 @@
 
         @Prop({ type: Boolean, default: false }) isRedact
         currentFormDataGroup: CurrentDataTable[] = [];
+        orgFormDataGroup: CurrentDataTable[] = [];
         readAudit= [];
-        instorageDelete= []; // 入库删除集合
-        instorageInsert= []; // 入库新增集合
-        instorageUpdate=[]; // 入库修改集合
+        instorageDelete: string[]= []; // 入库删除集合
+        instorageInsert: CurrentDataTable[] = []; // 入库新增集合
+        instorageUpdate: CurrentDataTable[] =[]; // 入库修改集合
         productInStoreData: [];
-        classesOptions=['白班', '中班', '夜班'];
+        classesOptions: object[]=[];
         unitOptions: UnitOptions[]=[]
         basicUnitName=''
         ratio=1
+        tabChangedState=[0, 0, 0] // 增,删,改
+
+
+        created() {
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+                data.data.forEach((item) => {
+                    if (item.dictValue !== '多班') {
+                        this.classesOptions.push({
+                            dictValue: item.dictValue,
+                            dictCode: item.dictCode
+                        })
+                    }
+                })
+            });
+        }
+
+        compareRow(row) {
+            this.orgFormDataGroup.forEach((item) => {
+                if (row.editedMark === false) {
+                    if (item.id === row.id) {
+                        console.log(item)
+                        console.log(row)
+                        console.log(_.isEqual(row, item))
+                        if (!_.isEqual(row, item)) {
+                            row.editedMark = true
+                            console.log(row.editedMark)
+                        }
+                    }
+                }
+            })
+        }
 
         init(dataGroup) {
             console.log('ProductInStore带进来的 data')
             console.log(dataGroup)
+
             this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup.inStorages))
+            this.currentFormDataGroup.forEach((item) => {
+                item.editedMark = false
+            })
+            console.log('this.currentFormDataGroup')
+            console.log(this.currentFormDataGroup)
+            this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
+            console.log('this.orgFormDataGroup')
+            console.log(this.orgFormDataGroup)
+
             this.basicUnitName = dataGroup.basicUnitName
             this.ratio = dataGroup.ratio
-            this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
-            this.unitOptions.push({ key: dataGroup.productUnit, value: dataGroup.productUnitName })
-            console.log('this.unitOptions')
-            console.log(this.unitOptions)
+            if (this.unitOptions.length === 0) {
+                this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
+                this.unitOptions.push({ key: dataGroup.productUnit, value: dataGroup.productUnitName })
+            }
+
+        }
+
+        tabChangeState() {
+            console.log(this.tabChangedState)
+            return this.tabChangedState[0] + this.tabChangedState[1] + this.tabChangedState[2] !== 0
         }
 
         returnDataGroup() {
-            return JSON.parse(JSON.stringify(this.currentFormDataGroup))
+            this.instorageInsert = [];
+            this.instorageUpdate = [];
+            this.currentFormDataGroup.forEach(item => {
+                if (item.id) {
+                    if (item.editedMark === true) {
+                        delete item.editedMark
+                        this.instorageUpdate.push(item)
+                    }
+                } else {
+                    this.instorageInsert.push(item)
+                }
+            })
+
+            console.log('this.instorageUpdate')
+            console.log(this.instorageUpdate)
+            console.log('this.instorageInsert')
+            console.log(this.instorageInsert)
+
+            return {
+                deleteData: this.instorageDelete,
+                insertData: this.instorageInsert,
+                updateData: this.instorageUpdate,
+                amount: this.computedTotal,
+                unit: this.unitOptions[0].key
+            }
         }
 
         removeDataRow(index) {
@@ -222,7 +295,16 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                if (Object.prototype.hasOwnProperty.call(this.currentFormDataGroup[index], 'id')) {
+                    this.tabChangedState[1] += 1
+                    this.instorageDelete.push((this.currentFormDataGroup[index].id) as string)
+                } else {
+                    this.tabChangedState[0] -= 1
+                }
+
                 this.currentFormDataGroup.splice(index, 1);
+                console.log('this.instorageDelete')
+                console.log(this.instorageDelete)
             });
         }
 
@@ -245,7 +327,9 @@
                     remark: '',
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                    // created: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
             }
+            this.tabChangedState[0] += 1
             this.currentFormDataGroup.push(sole)
         }
 
@@ -255,18 +339,15 @@
             const inStorageBadUnitRatio: number = row.inStorageBadUnit === this.unitOptions[0].key ? 1 : this.ratio
             const sampleUnitRatio: number = row.sampleUnit === this.unitOptions[0].key ? 1 : this.ratio
             const outputUnitRatio: number = row.outputUnit === this.unitOptions[0].key ? 1 : this.ratio
-            const num = Number((((row.inStorageCount * inStorageUnitRatio) + (row.inStorageBadCount * inStorageBadUnitRatio) + (row.sampleCount * sampleUnitRatio)) / outputUnitRatio))
+            const num = Number(_.add(_.add((row.inStorageCount * inStorageUnitRatio), (row.inStorageBadCount * inStorageBadUnitRatio)), (row.sampleCount * sampleUnitRatio)) / outputUnitRatio)
             this.currentFormDataGroup[index].output = num
             return num
-
         }
 
         get computedTotal(): number {
             let total = 0;
             if (this.currentFormDataGroup.length !== 0) {
                 total = this.currentFormDataGroup.map(item => item.output).reduce((prev, next) => {
-                        console.log(prev)
-                        console.log(next)
                         return prev + next;
                     })
             }
@@ -296,6 +377,9 @@ interface CurrentDataTable{
     factory?: string;
     orderId?: string;
     orderNo?: string;
+    id?: string;
+    editedMark?: boolean;
+    // created?: boolean;
 }
 interface UnitOptions{
     key?: string;

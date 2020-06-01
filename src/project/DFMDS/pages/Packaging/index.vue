@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="packaging__main__item__main__right">
                                         <el-form-item label="生产订单：">
-                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" :change="orderchange(item)" style="width: 100%;">
+                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" style="width: 100%;" @change="orderchange(item)">
                                                 <el-option v-for="(subItem, subIndex) in item.orderNoList" :key="subIndex" :label="subItem" :value="subItem" />
                                             </el-select>
                                         </el-form-item>
@@ -94,7 +94,8 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        deptType: ['WORK_SHOP']
+                        deptType: ['WORK_SHOP'],
+                        deptName: '包装'
                     })
                 },
                 resVal: {
@@ -113,6 +114,7 @@
                         parentId: val || ''
                     })
                 },
+                defaultValue: '',
                 resVal: {
                     resData: 'data',
                     label: ['deptName'],
@@ -120,16 +122,16 @@
                 }
             },
             {
-                type: 'input',
-                label: '生产订单',
-                prop: 'orderNo'
-            },
-            {
                 type: 'date-picker',
                 label: '生产日期',
                 prop: 'productDate',
                 valueFormat: 'yyyy-MM-dd hh:mm:ss',
                 defaultValue: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            },
+            {
+                type: 'input',
+                label: '生产订单',
+                prop: 'orderNo'
             }
         ];
 
@@ -143,26 +145,32 @@
         }
 
         setData(data) {
-            const tempData = JSON.parse(JSON.stringify(data.data))
-            tempData.forEach((item, index) => {
-                if (item !== null) {
-                    if (item.orderNoList.length === 1) {
-                        item.activeOrderNo = item.orderNoList[0]
-                        item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
-                    } else {
-                        item.activeOrderNo = ''
-                        item.activeOrderMap = {
-                            planOutput: '',
-                            materialCode: '',
-                            countOutput: ''
+            if (data.data.length !== 0) {
+                const tempData = JSON.parse(JSON.stringify(data.data))
+                tempData.forEach((item, index) => {
+                    if (item !== null) {
+                        if (item.orderNoList.length === 1) {
+                            item.activeOrderNo = item.orderNoList[0]
+                            item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
+                        } else {
+                            item.activeOrderNo = ''
+                            item.activeOrderMap = {
+                                planOutput: '',
+                                materialCode: '',
+                                countOutput: ''
+                            }
                         }
+                    } else {
+                        tempData.splice(index, 1)
                     }
-                } else {
-                    tempData.splice(index, 1)
-                }
-            })
-            getS3Img(tempData, 'productLineImage')
-            this.queryResultList = tempData
+                })
+                getS3Img(tempData, 'productLineImage')
+                this.queryResultList = tempData
+            } else {
+                this.queryResultList = [];
+                this.$infoToast('暂无任何内容');
+            }
+
         }
 
         orderchange(item) {
@@ -179,9 +187,11 @@
         goDataEntry(item) {
             this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
             this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-detail'))
-            this.$router.push({
-                name: `DFMDS-pages-Packaging-detail`
-            });
+            setTimeout(() => {
+                this.$router.push({
+                    name: `DFMDS-pages-Packaging-detail`
+                });
+            }, 100);
         }
 
         goCheckData(item) {

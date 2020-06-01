@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="功能分配" :close-on-click-modal="false" :visible.sync="isDialogShow">
-        <div style="height: 300px; overflow: auto;">
+        <div style="min-height: 53vh; max-height: 53vh; overflow: auto;">
             <el-tree
                 ref="menuListTree"
                 :data="menuList"
@@ -45,7 +45,8 @@ export default {
                 roleId: id
             })
                 .then(({ data }) => {
-                    this.menuList = this.translateTreeData(data.data);
+                    const maenData = data.data.filter(item => item.id !== '0')
+                    this.menuList = this.translateTreeData(maenData);
                 })
                 .then(() => {
                     this.isDialogShow = true;

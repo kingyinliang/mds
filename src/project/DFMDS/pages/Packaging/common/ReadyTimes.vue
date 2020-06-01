@@ -241,6 +241,8 @@ export default class ReadyTimes extends Vue {
         console.log(dataGroup)
         await COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
             this.classList = data.data
+            console.log('this.classList')
+            console.log(this.classList)
         });
 
 

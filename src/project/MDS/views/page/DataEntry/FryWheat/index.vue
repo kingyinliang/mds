@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="normal_bottom">
                                     <el-form-item label="订单号：" class="width50b">
-                                        <el-select v-model="item.orderNo" placeholder="请选择" :change="orderChange(item)" style="width: 150px;">
+                                        <el-select v-model="item.orderNo" placeholder="请选择" style="width: 150px;" @change="orderChange(item)">
                                             <el-option v-for="(subItem, subIndex) in item.order_arr" :key="subIndex" :label="subItem" :value="subItem" />
                                         </el-select>
                                     </el-form-item>
@@ -597,7 +597,7 @@ export default {
                             this.FWproductDate = this.plantList.productDate;
                             this.processStatus = this.plantList.status;
                         } else {
-                            this.$infoToast('该搜寻条件无任何资料！');
+                            this.$infoToast('暂无任何内容');
                         }
                     } else {
                         this.$errorToast(data.msg);
@@ -627,7 +627,7 @@ export default {
                             this.dataList = [];
                             this.isAbnormalDataEditStatus = false;
                             this.processStatus = this.plantList.status;
-                            this.$infoToast('该搜寻条件无任何资料！');
+                            this.$infoToast('暂无任何内容');
                         }
 
                     } else {

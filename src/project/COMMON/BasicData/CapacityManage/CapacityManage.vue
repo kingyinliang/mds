@@ -20,7 +20,7 @@
                         批量删除
                     </el-button>
                 </div>
-                <el-table ref="table1" class="newTable" :data="CapacityList" :height="documentClientHeight - 32 - 40 - 75 - 82 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                <el-table ref="table1" class="newTable" :data="CapacityList" :height="mainClientHeight - 52 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" fixed="left" />
                     <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
                     <el-table-column prop="workNum" :show-overflow-tooltip="true" label="物料">
@@ -73,8 +73,8 @@
         }
     })
     export default class CapacityManage extends Vue {
-        get documentClientHeight() {
-            return this.$store.state.common.documentClientHeight;
+        get mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
         }
 
         $refs: {
@@ -126,7 +126,7 @@
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
                 if (data.data.records.length === 0) {
-                    this.$infoToast('该搜寻条件下无任何资料');
+                    this.$infoToast('暂无任何内容');
                 }
             })
         }
