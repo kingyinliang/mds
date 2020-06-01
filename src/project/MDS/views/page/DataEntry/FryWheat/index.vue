@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="normal_bottom">
                                     <el-form-item label="订单号：" class="width50b">
-                                        <el-select v-model="item.orderNo" placeholder="请选择" :change="orderChange(item)" style="width: 150px;">
+                                        <el-select v-model="item.orderNo" placeholder="请选择" style="width: 150px;" @change="orderChange(item)">
                                             <el-option v-for="(subItem, subIndex) in item.order_arr" :key="subIndex" :label="subItem" :value="subItem" />
                                         </el-select>
                                     </el-form-item>

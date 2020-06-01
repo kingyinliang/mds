@@ -9,6 +9,7 @@
         :form-header="formHeader"
         :tabs="tabs"
         :saved-datas="sentData"
+        @tab-click="tabClick"
     >
         <template slot="1" slot-scope="data">
             <ready-time ref="readyTime" :is-redact="data.isRedact" />
@@ -44,6 +45,7 @@
     import TextRecord from './common/TextRecord.vue';
     import ProductInStorage from './common/ProductInStorage.vue';
     import Equipment from './common/Equipment.vue';
+    // import _ from 'lodash';
 
     // import { getFactory } from '@/net/validate';
 
@@ -64,11 +66,12 @@
         $refs: {
             readyTime: HTMLFormElement;
             productPeople: HTMLFormElement;
+            equipment: HTMLFormElement;
             productInStorage: HTMLFormElement;
             material: HTMLFormElement;
             pendingNum: HTMLFormElement;
             textRecord: HTMLFormElement;
-            equipment: HTMLFormElement;
+            dataEntry: HTMLFormElement;
         }
 
         orderStatus = ''
@@ -78,12 +81,22 @@
         packDetail: OrderData={}
         dataGroup: SendData = {}; // 提交物件
         pkgGerms: PkgGerms = {}
-        pkgInstorage: PkgInstorage ={}
+        pkgInStorage: PkgInstorage ={}
         pkgOrderUpdate: PkgOrderUpdate={}
         pkgPackingMaterial: PkgPackingMaterial={}
         pkgSemiMaterial: PkgSemiMaterial={}
         pkgTimeSheet: PkgTimeSheet = {}
         pkgText: PkgText = {}
+
+        isReadyTimeLoaded = false
+        isProductPeopleLoaded = false
+        isEquipmentLoaded = false
+        isProductInStorageLoaded = false
+        isMaterialLoaded = false
+        isPendingNumLoaded = false
+        isTextLoaded = false
+
+        currentTab='1'
 
         headerBase = [
             {
@@ -203,9 +216,8 @@
             this.initData()
         }
 
-        initData() {
-            this.$refs.material.init(this.formHeader);
-            // # 生产准备
+        // # 生产准备
+        initReadyTime() {
             PKG_API.PKG_TIMESHEET_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
@@ -218,11 +230,20 @@
                 }
                 this.$refs.readyTime.init(dataTemp)
             })
+        }
 
-            // # 生产人员
-            // # 设备运行
+        // # 生产人员
+        initProductPeople() {
+            //
+        }
 
-            // # 生产入库
+        // # 设备运行
+        initEquipment() {
+            //
+        }
+
+        // # 生产入库
+        initProductInStorage() {
             PKG_API.PKG_INSTORAGE_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo,
@@ -234,24 +255,20 @@
                     this.$refs.productInStorage.init(data.data)
                 // }
             })
+        }
 
-            // # 物料领用
-            // PKG_API.PKG_MATERIAL_P_QUERY_API({
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //     orderNo: this.formHeader.orderNo,
-            //     orderStatus: this.orderStatus,
-            //     productLine: this.formHeader.productLine
-            // }).then(({ data }) => {
-            //     console.log('物料领用-查询')
-            //     console.log(data)
-            //     this.$refs.material.init(data.data)
-            // })
-            // this.$refs.material.init(this.formHeader)
+        // # 料领领用
+        initSemiMaterial() {
+            //
+        }
 
-            // # 待处理数量
+        // # 待处理数量
+        initPendingNum() {
+            //
+        }
 
-
-            // # 文本记录
+         // # 文本记录
+        initTextRecord() {
             PKG_API.PKG_TEXT_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
@@ -264,19 +281,98 @@
                 }
                 this.$refs.textRecord.init(dataTemp);
             })
+        }
+
+        initData() {
+            this.isReadyTimeLoaded = false
+            this.isProductPeopleLoaded = false
+            this.isEquipmentLoaded = false
+            this.isProductInStorageLoaded = false
+            this.isMaterialLoaded = false
+            this.isPendingNumLoaded = false
+            this.isTextLoaded = false
+            //this.currentTab = '1'
+            this.$refs.dataEntry.activeName = '1'
+            // # 1生产准备
+            this.initReadyTime()
+
+            // # 2生产人员
+            // # 3设备运行
+
+            // # 4生产入库
+            // this.initProductInStorage()
+
+            // # 5物料领用
+            // PKG_API.PKG_MATERIAL_P_QUERY_API({
+            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            //     orderNo: this.formHeader.orderNo,
+            //     orderStatus: this.orderStatus,
+            //     productLine: this.formHeader.productLine
+            // }).then(({ data }) => {
+            //     console.log('物料领用-查询')
+            //     console.log(data)
+            //     this.$refs.material.init(data.data)
+            // })
+            // this.$refs.material.init(this.formHeader)
+
+            // # 6待处理数量
 
 
+            // # 7文本记录
+            // this.initTextRecord()
+
+        }
+
+        tabClick(val) {
+            if (val.name === '1') {
+                // if (!this.isReadyTimeLoaded) {
+                //     this.isReadyTimeLoaded = true
+                //     this.initReadyTime()
+                // }
+            } else if (val.name === '2') {
+                if (!this.isProductPeopleLoaded) {
+                    this.isProductPeopleLoaded = true
+                    this.initProductPeople()
+                }
+            } else if (val.name === '3') {
+                if (!this.isEquipmentLoaded) {
+                    this.isEquipmentLoaded = true
+                    this.initEquipment()
+                }
+            } else if (val.name === '4') {
+                if (!this.isProductInStorageLoaded) {
+                    this.isProductInStorageLoaded = true
+                    this.initProductInStorage()
+                }
+            } else if (val.name === '5') {
+                if (!this.isMaterialLoaded) {
+                    this.isMaterialLoaded = true
+                    this.initSemiMaterial()
+                }
+            } else if (val.name === '6') {
+                if (!this.isPendingNumLoaded) {
+                    this.isPendingNumLoaded = true
+                    this.initPendingNum()
+                }
+            } else if (val.name === '7') {
+                if (!this.isTextLoaded) {
+                    this.isTextLoaded = true
+                    this.initTextRecord()
+                }
+            } else {
+                //
+            }
         }
 
         sentData() {
             // # pkgOrderUpdate
             this.pkgDataOrderUpdate();
             // # pkgTimeSheet
-            this.pkgDataTimeSheet()
-            // # pkgInstorage
+            // this.pkgDataTimeSheet()
+            // # pkgInStorage
             this.pkgDataInStorage()
             // # textRecord
-            this.pkgDataText();
+            // this.pkgDataText();
 
 
             return PKG_API.PKG_ALL_SAVE_API(this.dataGroup).then(() => {
@@ -318,10 +414,12 @@
             this.dataGroup.pkgTimeSheet = this.pkgTimeSheet;
         }
 
-        // # pkgInstorage
+        // # pkgInStorage
         pkgDataInStorage() {
-
+            console.log('进来了没')
+            // this.$refs.productInStorage.returnDataGroup()
             if (this.$refs.productInStorage.tabChangeState()) {
+                console.log('我进来了')
                 const productInStorageTemp = this.$refs.productInStorage.returnDataGroup()
                 productInStorageTemp.insertData.forEach(item => {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
@@ -329,14 +427,14 @@
                     item.orderNo = this.formHeader.orderNo;
                 });
 
-                this.pkgInstorage = {
+                this.pkgInStorage = {
                     counOutputUnit: productInStorageTemp.unit,
                     countOutput: productInStorageTemp.amount,
                     instorageDelete: productInStorageTemp.deleteData,
                     instorageInsert: productInStorageTemp.insertData,
                     instorageUpdate: productInStorageTemp.updateData
                 }
-                this.dataGroup.pkgInstorage = this.pkgInstorage;
+                this.dataGroup.pkgInstorage = this.pkgInStorage;
             }
         }
 

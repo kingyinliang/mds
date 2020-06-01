@@ -62,7 +62,7 @@
                             </div>
                             <div class="normal_bottom">
                                 <el-form-item label="订单号：" class="width50b">
-                                    <el-select v-model="item.orderNo" placeholder="请选择" filterable :change="orderchange(item)" style="width: 180px;">
+                                    <el-select v-model="item.orderNo" placeholder="请选择" filterable style="width: 180px;" @change="orderchange(item)">
                                         <el-option v-for="(subItem, sunIndex) in item.orderNoList" :key="sunIndex" :label="subItem.orderNo + ' ' + subItem.materialName" :value="subItem.orderNo">
                                             <div
                                                 :style="{
