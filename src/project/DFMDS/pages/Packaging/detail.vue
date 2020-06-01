@@ -75,6 +75,7 @@
         }
 
         orderStatus = ''
+        orderType=''
         currentOrderNo = ''
         formHeader: OrderData = {}
 
@@ -207,6 +208,7 @@
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
                 this.orderStatus = data.data.orderStatus
+                this.orderType = data.data.orderType
                 console.log('訂單查詢結果顯示')
                 console.log(data)
             })
@@ -224,11 +226,7 @@
             }).then(({ data }) => {
                 console.log('生产准备-查询')
                 console.log(data)
-                let dataTemp = {};
-                if (dataTemp !== null) {
-                    dataTemp = JSON.parse(JSON.stringify(data.data))
-                }
-                this.$refs.readyTime.init(dataTemp)
+                this.$refs.readyTime.init(JSON.parse(JSON.stringify(data.data)))
             })
         }
 
@@ -251,9 +249,7 @@
             }).then(({ data }) => {
                 console.log('生产入库-查询')
                 console.log(data)
-                // if (data.data.inStorages.length !== 0) {
-                    this.$refs.productInStorage.init(data.data)
-                // }
+                this.$refs.productInStorage.init(data.data, this.orderType)
             })
         }
 
@@ -364,16 +360,55 @@
             }
         }
 
+        urgentSubmit() {
+
+            console.log('紧急提交进来了')
+            const productInStorageTemp = this.$refs.productInStorage.returnDataGroup()
+            productInStorageTemp.insertData.forEach(item => {
+                item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                item.orderId = this.formHeader.id;
+                item.orderNo = this.formHeader.orderNo;
+            });
+            productInStorageTemp.updateData.forEach(item => {
+                item.orderId = this.formHeader.id;
+            });
+
+            this.pkgInStorage = {
+                counOutputUnit: productInStorageTemp.unit,
+                countOutput: productInStorageTemp.amount,
+                instorageDelete: productInStorageTemp.deleteData,
+                instorageInsert: productInStorageTemp.insertData,
+                instorageUpdate: productInStorageTemp.updateData
+            }
+
+
+            PKG_API.PKG_URGENT_SUBMIT_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                materialCode: this.formHeader.materialCode,
+                orderId: this.formHeader.id,
+                orderNo: this.formHeader.orderNo,
+                orderType: this.orderType,
+                pkgInstorageSaveRequestDto: this.pkgInStorage,
+                productDate: this.formHeader.productDate,
+                productLine: this.formHeader.productLine,
+                workShop: this.formHeader.workShop
+            }).then(({ data }) => {
+                console.log(data)
+            });
+
+
+        }
+
         sentData() {
+            // this.urgentSubmit()
             // # pkgOrderUpdate
             this.pkgDataOrderUpdate();
             // # pkgTimeSheet
-            // this.pkgDataTimeSheet()
+            this.pkgDataTimeSheet()
             // # pkgInStorage
-            this.pkgDataInStorage()
+            //this.pkgDataInStorage()
             // # textRecord
             // this.pkgDataText();
-
 
             return PKG_API.PKG_ALL_SAVE_API(this.dataGroup).then(() => {
                 setTimeout(() => {
@@ -398,14 +433,18 @@
         pkgDataTimeSheet() {
             const timeSheetTemp = this.$refs.readyTime.returnDataGroup()
             timeSheetTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            if (timeSheetTemp.id !== '') {
+            timeSheetTemp.orderId = this.formHeader.id
+            timeSheetTemp.orderNo = this.formHeader.orderNo
+
+            console.log('timeSheetTemp')
+            console.log(timeSheetTemp)
+            if (timeSheetTemp.id) {
                 this.pkgTimeSheet = {
                     pkgTimeSheetInsertDto: {},
                     pkgTimeSheetUpdateDto: timeSheetTemp
                 }
             } else {
-                timeSheetTemp.orderId = this.formHeader.id
-                timeSheetTemp.orderNo = this.formHeader.orderNo
+
                 this.pkgTimeSheet = {
                     pkgTimeSheetInsertDto: timeSheetTemp,
                     pkgTimeSheetUpdateDto: {}
@@ -416,16 +455,20 @@
 
         // # pkgInStorage
         pkgDataInStorage() {
-            console.log('进来了没')
-            // this.$refs.productInStorage.returnDataGroup()
-            if (this.$refs.productInStorage.tabChangeState()) {
-                console.log('我进来了')
+            if (this.$refs.productInStorage.tabChangeState()) { // 判断是否内容有异动
                 const productInStorageTemp = this.$refs.productInStorage.returnDataGroup()
-                productInStorageTemp.insertData.forEach(item => {
-                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    item.orderId = this.formHeader.id;
-                    item.orderNo = this.formHeader.orderNo;
-                });
+                if (productInStorageTemp.insertData.length !== 0) {
+                    productInStorageTemp.insertData.forEach(item => {
+                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                        item.orderId = this.formHeader.id;
+                        item.orderNo = this.formHeader.orderNo;
+                    });
+                }
+                if (productInStorageTemp.updateData.length !== 0) {
+                    productInStorageTemp.updateData.forEach(item => {
+                        item.orderId = this.formHeader.id;
+                    });
+                }
 
                 this.pkgInStorage = {
                     counOutputUnit: productInStorageTemp.unit,

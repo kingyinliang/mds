@@ -119,7 +119,7 @@ export default class PendingNum extends Vue {
     init(dataGroup) {
         console.log('ProductInStore带进来的 data')
         console.log(dataGroup)
-        this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup.inStorages))
+        // this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup.inStorages))
         // this.basicUnitName = dataGroup.basicUnitName
         // this.ratio = dataGroup.ratio
         // this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
