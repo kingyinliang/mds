@@ -28,13 +28,13 @@
                     <template slot-scope="scope">
                         <el-button style="padding: 0;" type="text" @click="updateRole(scope.row)">
                             <span v-for="(item, index) in scope.row.roles" :key="index">{{ item.roleName + ' ' }}</span>
-                            <span v-if="scope.row.roleName.length === 0">点击分配角色</span>
+                            <span v-if="scope.row.roles.length === 0">点击分配角色</span>
                         </el-button>
                     </template>
                 </el-table-column>
                 <el-table-column width="80" label="操作">
                     <template slot-scope="scope">
-                        <el-button v-if="isAuth('sys:user:reset')" style="padding: 0;" type="text" @click="PasswordReset(scope.row.userId)">
+                        <el-button style="padding: 0;" type="text" @click="PasswordReset(scope.row.id)">
                             重置密码
                         </el-button>
                     </template>
@@ -42,7 +42,7 @@
             </el-table>
             <el-pagination :current-page="dataForm.current" :page-sizes="[10, 20, 50]" :page-size="dataForm.size" layout="total, sizes, prev, pager, next, jumper" :total="dataForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
-        <el-dialog :title="`${selctUser.realName}（${selctUser.workNum}）角色选择`" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible" width="740px">
+        <el-dialog :title="`${selctUser.realName}（${selctUser.workNum}）角色选择`" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible" width="540px">
             <div class="uaer-detail">
                 <el-transfer
                     v-model="selctRoleId"
@@ -79,6 +79,10 @@
             return this.$store.state.common.mainClientHeight;
         }
 
+        filterMethod = (query, item) => {
+            return item.roleName.indexOf(query) > -1;
+        };
+
         dataForm = {
             factory: 'common',
             workNum: '',
@@ -88,17 +92,25 @@
             totalCount: 0
         };
 
-        UserList = [];
+        UserList: UserObj[] = [];
+        RoleList: RoleObj[] = [];
 
         visible = false;
-        selctUser = {};
+        selctUser: UserObj = {};
         selctRoleId = [];
 
+        mounted() {
+            this.GetList()
+            this.getRoleList()
+        }
+
+        // 获取人员列表-查询
         GetList(flag?) {
             if (flag) {
                 this.dataForm.current = 1;
             }
             COMMON_API.USER_ROLE_QUERY_API(this.dataForm).then(({ data }) => {
+                console.log(data);
                 if (flag && data.data.records.length === 0) {
                     this.$infoToast('暂无任何内容');
                 }
@@ -106,16 +118,29 @@
             });
         }
 
+        // 获取角色列表
+        getRoleList() {
+            COMMON_API.USER_ROLE_DROPDOWN_API({}).then(({ data }) => {
+                this.RoleList = data.data
+            })
+        }
+
+        // 重置密码
         PasswordReset(id) {
             this.$confirm('确认重置密码, 是否继续?', '重置密码', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                console.log(id);
+                COMMON_API.USER_PASSWORD_RESET_API({
+                    id: id
+                }).then(({ data }) => {
+                    this.$successToast(data.msg)
+                })
             })
         }
 
+        // 修改人员的角色弹窗
         updateRole(row) {
             this.selctUser = row;
             this.selctRoleId = [];
@@ -125,6 +150,18 @@
             this.visible = true;
         }
 
+        // 修改人员的角色信息
+        UpdateUserRole() {
+            COMMON_API.USER_ROLE_UPDATA_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                userId: this.selctUser.id,
+                roleId: this.selctRoleId
+            }).then(({ data }) => {
+                this.$successToast(data.msg)
+            })
+        }
+
+        // 角色穿梭框查询
         indexMethod(index) {
             return index + 1 + (this.dataForm.current - 1) * (Number(this.dataForm.size));
         }
@@ -140,6 +177,18 @@
             this.dataForm.current = val;
             this.GetList();
         }
+    }
+
+    interface UserObj {
+        id?: string;
+        workNum?: string;
+        userName?: string;
+        realName?: string;
+        roles?: RoleObj[];
+    }
+    interface RoleObj {
+        id?: string;
+        roleName?: string;
     }
 </script>
 

@@ -68,7 +68,7 @@ export const COMMON_API = {
     /**
      * @property {string} USER_PASSWORD_RESET_API 系统管理-用户管理-重置密码
      */
-    USER_PASSWORD_RESET_API: params => httpProxy('/sysUser/password/reset', 'POST', params),
+    USER_PASSWORD_RESET_API: params => httpProxy('/sysUser/password/reset', 'GET', params),
     /**
      * @property {string} USER_PASSWORD_UPDATE_API 系统管理-用户管理-修改密码 repeat
      */
@@ -93,6 +93,14 @@ export const COMMON_API = {
      * @property {string} USER_ROLE_QUERY_API 系统管理-用户管理-查询
      */
     USER_ROLE_QUERY_API: params => httpProxy('/sysUser/userRole/query', 'POST', params),
+    /**
+     * @property {string} USER_ROLE_DROPDOWN_API 系统管理-用户管理-角色下拉
+     */
+    USER_ROLE_DROPDOWN_API: params => httpProxy('/sysRole/dropDown', 'POST', params),
+    /**
+     * @property {string} USER_ROLE_UPDATA_API 系统管理-用户管理-分配角色
+     */
+    USER_ROLE_UPDATA_API: params => httpProxy('/sysUserRole/userRole/insert', 'POST', params),
     /**
      * @property {string} ROLE_REMOVE_API 系统管理-角色管理-删除角色
      */
