@@ -171,7 +171,11 @@ export default class ProductPeople extends Vue {
     officialWorkerStatus = false;
     loanedPersonnelStatus = false;
     temporaryWorkerStatus = false;
-    row: CurrentDataTable = {};
+
+    row: CurrentDataTable = {
+        userList: []
+    };
+
     orgTree = [];
     arrList = [];
     standardManpower = 0;
@@ -181,7 +185,7 @@ export default class ProductPeople extends Vue {
         this.getTeamList();
         this.getUserTypeList();
         this.getTree();
-        this.getStandardManPower(this.$store.state.packaging.packDetail.productLine)
+        this.getStandardManPower(this.$store.state.packaging.packDetail)
     }
 
     // 班次
@@ -305,10 +309,11 @@ export default class ProductPeople extends Vue {
         })
     }
 
-    getStandardManPower(productLine: string) {
+    getStandardManPower(formHeader: object) {
         COMMON_API.CAPACITYLIST_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            deptId: productLine,
+            deptId: formHeader['productLine'],
+            queryDate: formHeader['productDate'],
             current: 1,
             size: 10
         }).then(({ data }) => {
