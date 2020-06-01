@@ -113,6 +113,14 @@
                 <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
                 <template v-for="(item, index) in column">
                     <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <span v-if="item.propList">
+                                <i v-for="(sole, soleIndex) in item.propList" :key="soleIndex">
+                                    {{ scope.row[sole] }}
+                                </i>
+                            </span>
+                            <span v-else>{{ scope.row[item.prop] }}</span>
+                        </template>
                         <template v-if="item.child">
                             <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip" :width="chind.width || ''" />
                         </template>
@@ -433,7 +441,7 @@
                 }
                 if (st) {
                     if (this.tabs.length && this.tabs[this.activeName].pages) {
-                        this.tabs[this.activeName].pages.currPage = 1;
+                        this.tabs[this.activeName].pages[this.currpageConfig] = 1;
                     } else {
                         this.queryForm[this.currpageConfig] = 1;
                     }
@@ -533,7 +541,6 @@
                 val.forEach((item) => {
                     this.tabs[index].multipleSelection.push(item);
                 });
-                console.log(this.tabs);
             },
             // 表格选中
             handleSelectionChange(val) {

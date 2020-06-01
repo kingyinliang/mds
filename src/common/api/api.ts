@@ -354,7 +354,15 @@ export const COMMON_API = {
     /**
      * @property {string} OREDER_SYNC_API 计划管理--计划订单-订单同步（增量）
      */
-    OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params)
+    OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params),
+    /**
+     * @property {string} OREDER_SYNC_API 字典表班次下拉
+     */
+    DICTQUERY_CLASSLIST_API: params => httpProxy('/sysDictItem/classes/dropDown', 'GET', params),
+    /**
+     * @property {string} 根据工厂和父级名称模糊查询指定类型的子级
+     */
+    SYS_CHILDTYPE_API: params => httpProxy('/sysDept/childType', 'POST', params)
 };
 
 export const AUDIT_API = {
