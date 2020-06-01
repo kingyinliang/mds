@@ -153,7 +153,6 @@
         // 修改人员的角色信息
         UpdateUserRole() {
             COMMON_API.USER_ROLE_UPDATA_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 userId: this.selctUser.id,
                 roleId: this.selctRoleId
             }).then(({ data }) => {
