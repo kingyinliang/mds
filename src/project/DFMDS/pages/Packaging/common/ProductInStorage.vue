@@ -108,7 +108,7 @@
                 </el-table-column>
                 <el-table-column label="样品" prop="sampleCount" width="100">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!isRedact || !(scope.row.sampleStatus==='S'||scope.row.sampleStatus==='R'||scope.row.sampleStatus==='')" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="sampleUnit" width="100">
@@ -125,7 +125,7 @@
                 </el-table-column>
                 <el-table-column label="产出数" prop="output" width="100">
                     <template slot-scope="scope">
-                        {{ formatter(scope.row,scope.$index) }}
+                        {{ amountProductNum(scope.row,scope.$index) }}
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="outputUnit" width="100">
@@ -157,7 +157,7 @@
                 </el-table-column>
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button v-if="!scope.row.original" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.$index)">
+                        <el-button v-if="!scope.row.original" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || !(scope.row.checkStatus==='S' || scope.row.checkStatus==='R' ||scope.row.checkStatus==='')" @click="removeDataRow(scope.$index)">
                             删除
                         </el-button>
                     </template>
@@ -203,7 +203,6 @@
         ratio=1
         tabChangedState=[0, 0, 0] // 增,删,改
 
-
         created() {
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
                 data.data.forEach((item) => {
@@ -226,11 +225,14 @@
                         console.log(_.isEqual(row, item))
                         if (!_.isEqual(row, item)) {
                             row.editedMark = true
+                            this.tabChangedState[2] += 1
                             console.log(row.editedMark)
                         }
                     }
                 }
             })
+            console.log('增删改状态')
+            console.log(this.tabChangedState)
         }
 
         init(dataGroup) {
@@ -241,24 +243,19 @@
             this.currentFormDataGroup.forEach((item) => {
                 item.editedMark = false
             })
-            console.log('this.currentFormDataGroup')
-            console.log(this.currentFormDataGroup)
             this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
-            console.log('this.orgFormDataGroup')
-            console.log(this.orgFormDataGroup)
-
             this.basicUnitName = dataGroup.basicUnitName
             this.ratio = dataGroup.ratio
             if (this.unitOptions.length === 0) {
                 this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
                 this.unitOptions.push({ key: dataGroup.productUnit, value: dataGroup.productUnitName })
             }
-
         }
 
         tabChangeState() {
+            console.log('查询 instorageInsert 增删改状态')
             console.log(this.tabChangedState)
-            return this.tabChangedState[0] + this.tabChangedState[1] + this.tabChangedState[2] !== 0
+            return !(this.tabChangedState[0] === 0 && this.tabChangedState[1] === 0 && this.tabChangedState[2] === 0)
         }
 
         returnDataGroup() {
@@ -274,11 +271,6 @@
                     this.instorageInsert.push(item)
                 }
             })
-
-            console.log('this.instorageUpdate')
-            console.log(this.instorageUpdate)
-            console.log('this.instorageInsert')
-            console.log(this.instorageInsert)
 
             return {
                 deleteData: this.instorageDelete,
@@ -301,10 +293,7 @@
                 } else {
                     this.tabChangedState[0] -= 1
                 }
-
                 this.currentFormDataGroup.splice(index, 1);
-                console.log('this.instorageDelete')
-                console.log(this.instorageDelete)
             });
         }
 
@@ -321,10 +310,12 @@
                     onlineBadUnit: this.unitOptions[0].key,
                     sampleCount: 0,
                     sampleUnit: this.unitOptions[0].key,
+                    sampleStatus: '',
                     output: 0,
                     outputUnit: this.unitOptions[0].key,
                     emergencyFlag: 'N',
                     remark: '',
+                    checkStatus: '',
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
                     // created: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
@@ -334,7 +325,7 @@
         }
 
 
-        formatter(row, index): number {
+        amountProductNum(row, index): number {
             const inStorageUnitRatio: number = row.inStorageUnit === this.unitOptions[0].key ? 1 : this.ratio
             const inStorageBadUnitRatio: number = row.inStorageBadUnit === this.unitOptions[0].key ? 1 : this.ratio
             const sampleUnitRatio: number = row.sampleUnit === this.unitOptions[0].key ? 1 : this.ratio
@@ -343,6 +334,7 @@
             this.currentFormDataGroup[index].output = num
             return num
         }
+
 
         get computedTotal(): number {
             let total = 0;
@@ -367,6 +359,7 @@ interface CurrentDataTable{
     onlineBadUnit?: string;
     sampleCount?: number;
     sampleUnit?: string;
+    sampleStatus?: string;
     output: number;
     outputUnit?: string;
     remark?: string;
