@@ -9,7 +9,7 @@
                 </div>
             </template>
 
-            <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" border tooltip-effect="dark" size="small" @current-change="handleCurrentChange">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" border tooltip-effect="dark" size="small" @cell-click="compareRow">
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="生产日期" prop="productDate" width="180">
                     <template slot="header">
@@ -31,7 +31,7 @@
                         <span class="notNull">* </span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -62,7 +62,7 @@
                         <span class="notNull">* </span>单位
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact" @select="handleCurrentChange">
+                        <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -79,7 +79,7 @@
                 </el-table-column>
                 <el-table-column label="单位" prop="inStorageBadUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -96,7 +96,7 @@
                 </el-table-column>
                 <el-table-column label="单位" prop="onlineBadUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -113,7 +113,7 @@
                 </el-table-column>
                 <el-table-column label="单位" prop="sampleUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -130,7 +130,7 @@
                 </el-table-column>
                 <el-table-column label="单位" prop="outputUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -153,11 +153,6 @@
                 <el-table-column label="操作时间" prop="changed" width="160">
                     <template slot-scope="scope">
                         {{ scope.row.changed }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="是否修改" prop="editedMark" width="160">
-                    <template slot-scope="scope">
-                        {{ scope.row.editedMark }}
                     </template>
                 </el-table-column>
                 <el-table-column width="70" fixed="right">
@@ -183,10 +178,9 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { dateFormat, getUserNameNumber } from 'utils/utils';
-    // , compareObject
+    import { dateFormat, getUserNameNumber, compareObject } from 'utils/utils';
     import { COMMON_API } from 'common/api/api';
-
+    import _ from 'lodash';
 
     @Component({
         name: 'ProductInStore',
@@ -197,6 +191,7 @@
 
         @Prop({ type: Boolean, default: false }) isRedact
         currentFormDataGroup: CurrentDataTable[] = [];
+        orgFormDataGroup: CurrentDataTable[] = [];
         readAudit= [];
         instorageDelete: string[]= []; // 入库删除集合
         instorageInsert: CurrentDataTable[] = []; // 入库新增集合
@@ -222,10 +217,21 @@
             });
         }
 
-        handleCurrentChange(currentRow) {
-            console.log(currentRow)
+        compareRow(row) {
+            this.orgFormDataGroup.forEach((item) => {
+                if (row.editedMark === false) {
+                    if (item.id === row.id) {
+                        console.log(item)
+                        console.log(row)
+                        console.log(_.isEqual(row, item))
+                        if (!_.isEqual(row, item)) {
+                            row.editedMark = true
+                            console.log(row.editedMark)
+                        }
+                    }
+                }
+            })
         }
-
 
         init(dataGroup) {
             console.log('ProductInStore带进来的 data')
@@ -235,13 +241,23 @@
             this.currentFormDataGroup.forEach((item) => {
                 item.editedMark = false
             })
+            console.log('this.currentFormDataGroup')
+            console.log(this.currentFormDataGroup)
+            this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
+            console.log('this.orgFormDataGroup')
+            console.log(this.orgFormDataGroup)
+
             this.basicUnitName = dataGroup.basicUnitName
             this.ratio = dataGroup.ratio
-            this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
-            this.unitOptions.push({ key: dataGroup.productUnit, value: dataGroup.productUnitName })
+            if (this.unitOptions.length === 0) {
+                this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
+                this.unitOptions.push({ key: dataGroup.productUnit, value: dataGroup.productUnitName })
+            }
+
         }
 
         tabChangeState() {
+            console.log(this.tabChangedState)
             return this.tabChangedState[0] + this.tabChangedState[1] + this.tabChangedState[2] !== 0
         }
 
@@ -251,6 +267,7 @@
             this.currentFormDataGroup.forEach(item => {
                 if (item.id) {
                     if (item.editedMark === true) {
+                        delete item.editedMark
                         this.instorageUpdate.push(item)
                     }
                 } else {
@@ -263,13 +280,13 @@
             console.log('this.instorageInsert')
             console.log(this.instorageInsert)
 
-            // return {
-            //     deleteData: this.instorageDelete,
-            //     insertData: this.instorageInsert,
-            //     updateData: this.instorageUpdate,
-            //     amount: this.computedTotal,
-            //     unit: this.unitOptions[0].key
-            // }
+            return {
+                deleteData: this.instorageDelete,
+                insertData: this.instorageInsert,
+                updateData: this.instorageUpdate,
+                amount: this.computedTotal,
+                unit: this.unitOptions[0].key
+            }
         }
 
         removeDataRow(index) {
@@ -281,9 +298,13 @@
                 if (Object.prototype.hasOwnProperty.call(this.currentFormDataGroup[index], 'id')) {
                     this.tabChangedState[1] += 1
                     this.instorageDelete.push((this.currentFormDataGroup[index].id) as string)
+                } else {
+                    this.tabChangedState[0] -= 1
                 }
-                this.tabChangedState[0] -= 1
+
                 this.currentFormDataGroup.splice(index, 1);
+                console.log('this.instorageDelete')
+                console.log(this.instorageDelete)
             });
         }
 
@@ -318,10 +339,9 @@
             const inStorageBadUnitRatio: number = row.inStorageBadUnit === this.unitOptions[0].key ? 1 : this.ratio
             const sampleUnitRatio: number = row.sampleUnit === this.unitOptions[0].key ? 1 : this.ratio
             const outputUnitRatio: number = row.outputUnit === this.unitOptions[0].key ? 1 : this.ratio
-            const num = Number((((row.inStorageCount * inStorageUnitRatio) + (row.inStorageBadCount * inStorageBadUnitRatio) + (row.sampleCount * sampleUnitRatio)) / outputUnitRatio))
+            const num = Number(_.add(_.add((row.inStorageCount * inStorageUnitRatio), (row.inStorageBadCount * inStorageBadUnitRatio)), (row.sampleCount * sampleUnitRatio)) / outputUnitRatio)
             this.currentFormDataGroup[index].output = num
             return num
-
         }
 
         get computedTotal(): number {

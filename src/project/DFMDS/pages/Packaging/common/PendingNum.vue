@@ -14,7 +14,7 @@
                     <span class="notNull">*</span>班次
                 </template>
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.classes" size="small">
+                    <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
                         <el-option v-for="item in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                     </el-select>
                 </template>
@@ -102,10 +102,9 @@ export default class PendingNum extends Vue {
 
     currentDataTable: CurrentDataTable[] = [];
     classesOptions: object[]=[];
-    async init(dataGroup) {
-        console.log('ProductInStore带进来的 data')
-        console.log(dataGroup)
-        await COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+
+    created() {
+        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
             data.data.forEach((item) => {
                 if (item.dictValue !== '多班') {
                     this.classesOptions.push({
@@ -115,11 +114,32 @@ export default class PendingNum extends Vue {
                 }
             })
         });
-        // this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup.inStorages))
+    }
+
+    init(dataGroup) {
+        console.log('ProductInStore带进来的 data')
+        console.log(dataGroup)
+        this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup.inStorages))
         // this.basicUnitName = dataGroup.basicUnitName
         // this.ratio = dataGroup.ratio
         // this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
         // this.unitOptions.push({ key: dataGroup.productUnit, value: dataGroup.productUnitName })
+    }
+
+    compareRow(row) {
+        // this.orgFormDataGroup.forEach((item) => {
+        //     if (row.editedMark === false) {
+        //         if (item.id === row.id) {
+        //             console.log(item)
+        //             console.log(row)
+        //             console.log(_.isEqual(row, item))
+        //             if (!_.isEqual(row, item)) {
+        //                 row.editedMark = true
+        //                 console.log(row.editedMark)
+        //             }
+        //         }
+        //     }
+        // })
     }
 
     addNewDataRow() {
