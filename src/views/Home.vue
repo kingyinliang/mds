@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <img alt="Vue logo" src="../assets/logo.png">
-        <HelloWorld msg="Welcome to Your Vue.js App"/>
+        <HelloWorld msg="Welcome to Your Vue.js App" />
     </div>
 </template>
 
@@ -14,8 +14,8 @@ export default {
   components: {
     HelloWorld
   },
-  mounted: function () {
-    // var a = 1
+  mounted: function() {
+    // const a = 1
   }
 }
 </script>

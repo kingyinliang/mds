@@ -1,0 +1,7 @@
+/dist/
+/*.js
+/test/unit/coverage/
+/src/project/MDS/assets/icon/iconfont.js
+/src/common/icon/iconfont.js
+/src/shims-tsx.d.ts
+/src/shims-vue.d.ts
