@@ -329,8 +329,39 @@ export function accDiv(arg1, arg2) {
 export function DeepClone(str) {
     return JSON.parse(JSON.stringify(str));
 }
+// 登陆名(工号)
 export function getUserNameNumber() {
     return sessionStorage.getItem('realName') + `(${sessionStorage.getItem('userName')})`;
+}
+
+// 计算时间差
+export function getDateDiff(startTime, endTime, diffType) {
+    const startTimeS = startTime.replace('/\-/g', '/');
+    const endTimeS = endTime.replace('/\-/g', '/');
+    // 将计算间隔类性字符转换为小写
+    const sTime = new Date(startTimeS); // 开始时间
+    const eTime = new Date(endTimeS); // 结束时间
+    // 作为除数的数字
+    let divNum: number;
+    switch (diffType) {
+        case 'second':
+            divNum = 1000;
+            break;
+        case 'minute':
+            divNum = 1000 * 60;
+            break;
+        case 'hour':
+            divNum = 1000 * 3600;
+            break;
+        case 'day':
+            divNum = 1000 * 3600 * 24;
+            break;
+        default:
+            divNum = 1
+            break;
+    }
+    // eslint-disable-next-line
+    return ((eTime.getTime() - sTime.getTime()) / divNum).toFixed(2);
 }
 
 // 比对 object 使否相同
