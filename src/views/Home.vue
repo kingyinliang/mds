@@ -15,7 +15,8 @@ export default {
     HelloWorld
   },
   mounted: function() {
-    const a = 1
+    // const a = 1
+  //
   }
 }
 </script>
