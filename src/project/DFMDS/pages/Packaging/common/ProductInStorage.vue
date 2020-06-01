@@ -178,7 +178,7 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { dateFormat, getUserNameNumber, compareObject } from 'utils/utils';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
     import { COMMON_API } from 'common/api/api';
     import _ from 'lodash';
 

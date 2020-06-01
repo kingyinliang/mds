@@ -101,6 +101,7 @@ export default class PendingNum extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
 
     currentDataTable: CurrentDataTable[] = [];
+    currentFormDataGroup: {};
     classesOptions: object[]=[];
 
     created() {
@@ -127,6 +128,7 @@ export default class PendingNum extends Vue {
     }
 
     compareRow(row) {
+        console.log(row);
         // this.orgFormDataGroup.forEach((item) => {
         //     if (row.editedMark === false) {
         //         if (item.id === row.id) {
