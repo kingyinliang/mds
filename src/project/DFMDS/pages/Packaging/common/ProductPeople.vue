@@ -333,7 +333,7 @@ interface CurrentDataTable {
     classes?: string;
     deptId?: string;
     userType?: string;
-    userList? : string[];
+    userList: string[];
     startDate?: string;
     dinner?: string;
     endDate?: string;
