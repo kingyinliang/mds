@@ -142,6 +142,7 @@
 
         // 修改人员的角色弹窗
         updateRole(row) {
+            var a = 1;
             this.selctUser = row;
             this.selctRoleId = [];
             row.roles.forEach(item => {
