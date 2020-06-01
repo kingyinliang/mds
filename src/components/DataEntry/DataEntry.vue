@@ -43,7 +43,7 @@
         </div>
         <!--tabs-->
         <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
-            <el-tab-pane v-for="(item, index) in tabs" :key="index" :name="setKey(index)">
+            <el-tab-pane v-for="(item, index) in tabs" :key="index" :name="setKey(index)" lazy>
                 <span v-if="item.status !== undefined" slot="label" class="spanview">
                     <el-tooltip class="item" effect="dark" :content="item.status === 'noPass' ? '不通过' : item.status === 'saved' ? '已保存' : item.status === 'submit' ? '已提交' : item.status === 'checked' ? '通过' : '未录入'" placement="top-start">
                         <span
@@ -142,6 +142,10 @@
                 default: () => {
                     return [];
                 }
+            },
+            currentTab: {
+                type: String,
+                default: '1'
             },
             beforeLeave: {
                 type: Function,
