@@ -236,23 +236,71 @@ export default class ReadyTimes extends Vue {
     readAudit= []
     classList: object[]= []
 
-    async init(dataGroup) {
+    created() {
+        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+            this.classList = data.data
+        });
+    }
+
+    init(dataGroup) {
         console.log('ReadyTimes带进来的 data')
         console.log(dataGroup)
-        await COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
-            this.classList = data.data
-            console.log('this.classList')
-            console.log(this.classList)
-        });
-
-
-        this.currentFormDataGroup = dataGroup
-        if (dataGroup.classes === '') {
-            this.currentFormDataGroup.classes = 'M';
+        if (dataGroup !== null) {
+            this.currentFormDataGroup = dataGroup
         }
+        this.currentFormDataGroup.classes = 'M';
     }
 
     returnDataGroup() {
+        if (this.currentFormDataGroup.classes === 'M') {
+            this.currentFormDataGroup.midChange = 0
+            this.currentFormDataGroup.midClear = 0
+            this.currentFormDataGroup.midMeeting = 0
+            this.currentFormDataGroup.midPrepaired = 0
+            this.currentFormDataGroup.midQualiry = 0
+            this.currentFormDataGroup.midShift = 0
+            this.currentFormDataGroup.midUser = 0
+            this.currentFormDataGroup.nightChange = 0
+            this.currentFormDataGroup.nightClear = 0
+            this.currentFormDataGroup.nightMeeting = 0
+            this.currentFormDataGroup.nightPrepaired = 0
+            this.currentFormDataGroup.nightQuality = 0
+            this.currentFormDataGroup.nightShift = 0
+            this.currentFormDataGroup.nightUser = 0
+        } else if (this.currentFormDataGroup.classes === 'A') {
+            this.currentFormDataGroup.dayChange = 0
+            this.currentFormDataGroup.dayClear = 0
+            this.currentFormDataGroup.dayMeeting = 0
+            this.currentFormDataGroup.dayPrepaired = 0
+            this.currentFormDataGroup.dayQuality = 0
+            this.currentFormDataGroup.dayShift = 0
+            this.currentFormDataGroup.dayUser = 0
+            this.currentFormDataGroup.nightChange = 0
+            this.currentFormDataGroup.nightClear = 0
+            this.currentFormDataGroup.nightMeeting = 0
+            this.currentFormDataGroup.nightPrepaired = 0
+            this.currentFormDataGroup.nightQuality = 0
+            this.currentFormDataGroup.nightShift = 0
+            this.currentFormDataGroup.nightUser = 0
+        } else if (this.currentFormDataGroup.classes === 'N') {
+            this.currentFormDataGroup.dayChange = 0
+            this.currentFormDataGroup.dayClear = 0
+            this.currentFormDataGroup.dayMeeting = 0
+            this.currentFormDataGroup.dayPrepaired = 0
+            this.currentFormDataGroup.dayQuality = 0
+            this.currentFormDataGroup.dayShift = 0
+            this.currentFormDataGroup.dayUser = 0
+            this.currentFormDataGroup.midChange = 0
+            this.currentFormDataGroup.midClear = 0
+            this.currentFormDataGroup.midMeeting = 0
+            this.currentFormDataGroup.midPrepaired = 0
+            this.currentFormDataGroup.midQualiry = 0
+            this.currentFormDataGroup.midShift = 0
+            this.currentFormDataGroup.midUser = 0
+        } else {
+            //
+        }
+
         return JSON.parse(JSON.stringify(this.currentFormDataGroup))
     }
 }

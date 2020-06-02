@@ -101,6 +101,7 @@ export default class PendingNum extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
 
     currentDataTable: CurrentDataTable[] = [];
+    currentFormDataGroup: {};
     classesOptions: object[]=[];
 
     created() {
@@ -119,7 +120,7 @@ export default class PendingNum extends Vue {
     init(dataGroup) {
         console.log('ProductInStore带进来的 data')
         console.log(dataGroup)
-        this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup.inStorages))
+        // this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup.inStorages))
         // this.basicUnitName = dataGroup.basicUnitName
         // this.ratio = dataGroup.ratio
         // this.unitOptions.push({ key: dataGroup.basicUnit, value: dataGroup.basicUnitName })
@@ -127,6 +128,7 @@ export default class PendingNum extends Vue {
     }
 
     compareRow(row) {
+        console.log(row);
         // this.orgFormDataGroup.forEach((item) => {
         //     if (row.editedMark === false) {
         //         if (item.id === row.id) {

@@ -68,7 +68,7 @@ export const COMMON_API = {
     /**
      * @property {string} USER_PASSWORD_RESET_API 系统管理-用户管理-重置密码
      */
-    USER_PASSWORD_RESET_API: params => httpProxy('/sysUser/password/reset', 'POST', params),
+    USER_PASSWORD_RESET_API: params => httpProxy('/sysUser/password/reset', 'GET', params),
     /**
      * @property {string} USER_PASSWORD_UPDATE_API 系统管理-用户管理-修改密码 repeat
      */
@@ -93,6 +93,14 @@ export const COMMON_API = {
      * @property {string} USER_ROLE_QUERY_API 系统管理-用户管理-查询
      */
     USER_ROLE_QUERY_API: params => httpProxy('/sysUser/userRole/query', 'POST', params),
+    /**
+     * @property {string} USER_ROLE_DROPDOWN_API 系统管理-用户管理-角色下拉
+     */
+    USER_ROLE_DROPDOWN_API: params => httpProxy('/sysRole/dropDown', 'POST', params),
+    /**
+     * @property {string} USER_ROLE_UPDATA_API 系统管理-用户管理-分配角色
+     */
+    USER_ROLE_UPDATA_API: params => httpProxy('/sysUserRole/userRole/insert', 'POST', params),
     /**
      * @property {string} ROLE_REMOVE_API 系统管理-角色管理-删除角色
      */
@@ -354,7 +362,15 @@ export const COMMON_API = {
     /**
      * @property {string} OREDER_SYNC_API 计划管理--计划订单-订单同步（增量）
      */
-    OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params)
+    OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params),
+    /**
+     * @property {string} OREDER_SYNC_API 字典表班次下拉
+     */
+    DICTQUERY_CLASSLIST_API: params => httpProxy('/sysDictItem/classes/dropDown', 'GET', params),
+    /**
+     * @property {string} 根据工厂和父级名称模糊查询指定类型的子级
+     */
+    SYS_CHILDTYPE_API: params => httpProxy('/sysDept/childType', 'POST', params)
 };
 
 export const AUDIT_API = {
@@ -502,23 +518,27 @@ export const PKG_API = {
      */
     PKG_MATERIALSTOCK_QUERY_API: params => httpProxy('/pkg/packageStorage/query', 'POST', params),
     /**
-    * @property {string}  包材库存-明细
-    */
+     * @property {string}  包材库存-明细
+     */
     PKG_MATERIALSTOCK_STORAGEITEM_API: params => httpProxy('/pkg/pkgPackageStorageItem/query', 'POST', params),
     /**
-    * @property {string}  包材库存-转线保存
-    */
+     * @property {string}  包材库存-转线保存
+     */
     PKG_MATERIALSTOCK_TRANSFER_API: params => httpProxy('/pkg/packageStorage/transfer', 'POST', params),
     /**
-    * @property {string}  包材库存-调整保存
-    */
+     * @property {string}  包材库存-调整保存
+     */
     PKG_MATERIALSTOCK_ADJUST_API: params => httpProxy('/pkg/packageStorage/adjust', 'POST', params),
     /**
      * @property {string}  PKG_MATERIAL_S_QUERY_API 生产数据-物料领用-半成品-查询
      */
     PKG_MATERIAL_S_QUERY_API: params => httpProxy('/pkg/semiMaterial/query', 'POST', params),
     /**
-     * @property {string}  生产数据-物料领用-包材-查询
+     * @property {string}  PKG_MATERIAL_P_QUERY_API 生产数据-物料领用-包材-查询
      */
-    PKG_MATERIAL_P_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params)
+    PKG_MATERIAL_P_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params),
+    /**
+     * @property {string}  PKG_URGENT_SUBMIT_API 生产数据-生产入库-紧急提交
+     */
+    PKG_URGENT_SUBMIT_API: params => httpProxy('/pkgInStorage/urgentSubmit', 'POST', params)
 };

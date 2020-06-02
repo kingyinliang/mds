@@ -85,7 +85,7 @@
                     </el-form-item>
                     <el-form-item label="转入线：" prop="productLineIn">
                         <el-select v-model="transferForm.productLineIn" filterable placeholder="请选择" style="width: 320px;">
-                            <el-option v-for="(item, index) in productlineList" :key="index" :label="item.deptName" :value="item.id" />
+                            <el-option v-for="(item, index) in productlineListFilter" :key="index" :label="item.deptName" :value="item.id" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="备注：">
@@ -243,6 +243,7 @@ export default class MaterialStock extends Vue {
         {
             label: '包材物料',
             prop: 'materialCode',
+            propList: ['materialCode', 'materialName'],
             minwidth: '330'
         },
         {
@@ -294,9 +295,9 @@ export default class MaterialStock extends Vue {
         ]
     };
 
-    unitList = {};
-    productlineList = {};
-    moveTypeList = {};
+    productlineList = [];
+    productlineListFilter = [];
+    moveTypeList = [];
     row = {};
     visibleDetailLog = false; // 明细弹窗
     detaileLogData = [];
@@ -309,16 +310,8 @@ export default class MaterialStock extends Vue {
     adjustForm = {}
 
     mounted() {
-        this.getUnitList();
         this.getProductline();
         this.getMoveType();
-    }
-
-    // 拉取单位
-    getUnitList() {
-        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_UNIT' }).then(({ data }) => {
-            this.unitList = data.data
-        });
     }
 
     // 拉取所有产线
@@ -365,6 +358,8 @@ export default class MaterialStock extends Vue {
 
     // 转线
     changeTransferLine(row: object) {
+        this.productlineListFilter = [];
+        this.productlineListFilter = this.productlineList.filter(n => n['id'] !== row['productLine']);
         this.transferForm = {
             packageStorageId: row['id'],
             productLineOut: row['productLine'],
