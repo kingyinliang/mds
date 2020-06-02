@@ -8,14 +8,14 @@
                 <i
                     class="dataEntry-head-title__status"
                     :class="{
-                        noPass: orderStatus === 'noPass',
-                        saved: orderStatus === 'saved',
-                        submit: orderStatus === 'submit',
-                        checked: orderStatus === 'checked',
-                        '': orderStatus === '已同步',
+                        noPass: orderStatus === 'noPass' || orderStatus === 'R',
+                        saved: orderStatus === 'saved' || orderStatus === 'S',
+                        submit: orderStatus === 'submit' || orderStatus === 'D',
+                        checked: orderStatus === 'checked' || orderStatus === 'C',
+                        '': orderStatus === '已同步' || orderStatus === 'T',
                     }"
                 >
-                    订单状态：{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus === 'toBeAudited' ? '待审核' : orderStatus }}
+                    订单状态：{{ orderStatus === 'noPass' || orderStatus === 'R' ? '审核不通过' : orderStatus === 'saved' || orderStatus === 'S' ? '已保存' : orderStatus === 'submit' || orderStatus === 'D' ? '已提交' : orderStatus === 'checked' || orderStatus === 'C' ? '通过' : orderStatus === '已同步' || orderStatus === 'T' || orderStatus === 'N' ? '未录入' : orderStatus === 'toBeAudited' ? '待审核' : orderStatus }}
                 </i>
             </div>
             <div v-if="headShow" class="dataEntry-head-base">
@@ -63,28 +63,33 @@
         <div class="redactBox">
             <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
                 <div class="redact clearfix">
-                    <div class="redact_tips">
+                    <div v-if="type === 'entry'" class="redact_tips">
                         <i class="el-icon-info" />
                         <span v-if="orderStatus === 'toBeAudited'">请仔细核对数据后再进行提交</span>
-                        <span v-else-if="orderStatus === 'checked'">订单已审核通过</span>
-                        <span v-else-if="orderStatus === 'submit'">订单已提交，请等待审核</span>
-                        <span v-else-if="orderStatus !== 'submit' && orderStatus !== 'checked'">
+                        <span v-else-if="orderStatus === 'checked' || orderStatus === 'C'">订单已审核通过</span>
+                        <span v-else-if="orderStatus === 'submit' || orderStatus === 'D'">订单已提交，请等待审核</span>
+                        <span v-else-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'C' && orderStatus !== 'D' && orderStatus !== 'P'">
                             <span v-if="isRedact">点击提交按钮，当前页面编辑信息将提交系统</span>
                             <span v-else>点击编辑按钮，对当前页面进行编辑</span>
                         </span>
                     </div>
-                    <div class="redact_btn">
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(redactAuth)" type="primary" size="small" @click="isRedact = !isRedact">
+                    <div v-if="type === 'entry'" class="redact_btn">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'C' && orderStatus !== 'D' && orderStatus !== 'P' && isAuth(redactAuth)" type="primary" size="small" @click="isRedact = !isRedact">
                             {{ isRedact ? '取消' : '编辑' }}
                         </el-button>
                         <template v-if="isRedact || onlySubmit">
-                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
+                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== 'C' && orderStatus !== 'D' && orderStatus !== 'P' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
                                 保存
                             </el-button>
                             <el-button v-if="ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
                                 提交
                             </el-button>
                         </template>
+                    </div>
+                    <div v-if="type === 'audit'" class="redact_btn">
+                        <el-button type="primary" size="small" class="sub-red" @click="pass()">
+                            审核不通过
+                        </el-button>
                     </div>
                 </div>
             </div>
@@ -109,6 +114,10 @@
         },
         components: {},
         props: {
+            type: {
+                type: String,
+                default: 'entry'
+            },
             orderStatus: {
                 type: String,
                 default: ''
