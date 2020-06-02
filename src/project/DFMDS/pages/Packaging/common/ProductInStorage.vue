@@ -9,7 +9,7 @@
                 </div>
             </template>
 
-            <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" border tooltip-effect="dark" size="small" @cell-click="compareRow">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" border tooltip-effect="dark" size="small" @cell-click="compareChange">
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="生产日期" prop="productDate" width="180">
                     <template slot="header">
@@ -31,7 +31,7 @@
                         <span class="notNull">* </span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
+                        <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareChange(scope.row)">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -54,7 +54,7 @@
                         <span class="notNull">* </span>生产入库
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="inStorageUnit" width="100">
@@ -62,7 +62,7 @@
                         <span class="notNull">* </span>单位
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
+                        <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareChange(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -74,12 +74,12 @@
                 </el-table-column>
                 <el-table-column label="入库不良" prop="inStorageBadCount" width="100">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="inStorageBadUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
+                        <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareChange(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -91,12 +91,12 @@
                 </el-table-column>
                 <el-table-column label="线上不良" prop="onlineBadCount" width="100">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" />
+                        <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="onlineBadUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
+                        <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareChange(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -108,12 +108,12 @@
                 </el-table-column>
                 <el-table-column label="样品" prop="sampleCount" width="100">
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!isRedact || !(scope.row.sampleStatus==='S'||scope.row.sampleStatus==='R'||scope.row.sampleStatus==='')" />
+                        <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!isRedact || !(scope.row.sampleStatus==='S'||scope.row.sampleStatus==='R'||scope.row.sampleStatus==='')" clearable oninput="value=value.replace(/\D*/g,'')" />
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" prop="sampleUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
+                        <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareChange(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -130,7 +130,7 @@
                 </el-table-column>
                 <el-table-column label="单位" prop="outputUnit" width="100">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareRow(scope.row)">
+                        <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareChange(scope.row)">
                             <el-option
                                 v-for="item in unitOptions"
                                 :key="item.key"
@@ -190,14 +190,14 @@
     export default class ProductInStore extends Vue {
 
         @Prop({ type: Boolean, default: false }) isRedact
-        currentFormDataGroup: CurrentDataTable[] = [];
-        orgFormDataGroup: CurrentDataTable[] = [];
-        readAudit= [];
-        instorageDelete: string[]= []; // 入库删除集合
-        instorageInsert: CurrentDataTable[] = []; // 入库新增集合
-        instorageUpdate: CurrentDataTable[] =[]; // 入库修改集合
-        productInStoreData: [];
-        classesOptions: object[]=[];
+        currentFormDataGroup: CurrentDataTable[] = []
+        orgFormDataGroup: CurrentDataTable[] = []
+        readAudit= []
+        instorageDelete: string[]= [] // 入库删除集合
+        instorageInsert: CurrentDataTable[] = [] // 入库新增集合
+        instorageUpdate: CurrentDataTable[] =[] // 入库修改集合
+        productInStoreData: []
+        classesOptions: object[]=[]
         unitOptions: UnitOptions[]=[]
         basicUnitName=''
         ratio=1
@@ -216,7 +216,7 @@
             });
         }
 
-        compareRow(row) {
+        compareChange(row) {
             this.orgFormDataGroup.forEach((item) => {
                 if (row.editedMark === false) {
                     if (item.id === row.id) {

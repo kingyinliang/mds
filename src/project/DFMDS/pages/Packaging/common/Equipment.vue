@@ -16,7 +16,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
+                            <el-option v-for="(item, index) in classesOptions" :key="index" :value="item.name" :label="item.name" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -81,7 +81,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
+                            <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -91,7 +91,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
+                            <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -101,7 +101,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
+                            <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -140,7 +140,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
+                            <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -150,7 +150,7 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
+                            <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -190,7 +190,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { PKG_API } from 'common/api/api';
+import { COMMON_API, PKG_API } from 'common/api/api';
 import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
 
 @Component({
@@ -203,19 +203,22 @@ import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
 })
 
 export default class PendingNum extends Vue {
-    classList: object[] = [
-        {
-            name: '白班'
-        }, {
-            name: '中班'
-        }, {
-            name: '夜班'
-        }
-    ]
+    classesOptions: object[] = []
 
     dataList: ValueObject[] = [];
     dataStopList: ValueObject[] = [];
     readAudit = []
+
+    created() {
+        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+            data.data.forEach((item) => {
+                this.classesOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
+        });
+    }
 
     getDataList(formHeader: object) {
         PKG_API.PKG_PENDGNUM_QUERY_API({ factory: formHeader['factory'], orderNo: formHeader['orderNo'] }).then(({ data }) => {
