@@ -457,6 +457,7 @@
                 list.forEach(item => {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
                     item.memo = this.ReText
+                    item.verifyType = ''
                 });
                 AUDIT_API.INREFUSE_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -489,9 +490,17 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                const list = this.$refs.queryTable.tabs[0].multipleSelection
+                list.forEach(item => {
+                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                    item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
+                    item.reason = this.BackText
+                    item.headerTxt = this.headText
+                    item.passDate = this.postingDate
+                });
                 AUDIT_API.INWRITEOFFS_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    list: this.$refs.queryTable.multipleSelection
+                    list: list
                 }).then(({ data }) => {
                     this.visibleRefuse = false
                     this.$successToast(data.msg)
