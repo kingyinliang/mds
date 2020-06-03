@@ -396,7 +396,7 @@ export default class Equipment extends Vue {
 
             if (Object.prototype.hasOwnProperty.call(this.firstFormDataGroup[index], 'id')) {
                 this.tabFirstChangedState[1] += 1
-                this.waitedDataDelete.push((this.firstFormDataGroup[index].id) as string)
+                this.waitedFirstDataDelete.push((this.firstFormDataGroup[index].id) as string)
             } else {
                 this.tabFirstChangedState[0] -= 1
             }
@@ -413,7 +413,7 @@ export default class Equipment extends Vue {
         }).then(() => {
             if (Object.prototype.hasOwnProperty.call(this.secondFormDataGroup[index], 'id')) {
                 this.tabFirstChangedState[1] += 1
-                this.waitedDataDelete.push((this.secondFormDataGroup[index].id) as string)
+                this.waitedSecondDataDelete.push((this.secondFormDataGroup[index].id) as string)
             } else {
                 this.tabSecondChangedState[0] -= 1
             }
@@ -422,22 +422,22 @@ export default class Equipment extends Vue {
     }
 
     get computedFirstDataTotal(): number {
-        let total = 0;
-        if (this.firstFormDataGroup.length !== 0) {
-            total = this.firstFormDataGroup.map(item => item.duration).reduce((prev, next) => {
-                return prev + next;
-            })
-        }
+        const total = 0;
+        // if (this.firstFormDataGroup.length !== 0) {
+        //     total = this.firstFormDataGroup.map(item => item.duration).reduce((prev, next) => {
+        //         return prev + next;
+        //     })
+        // }
         return total
     }
 
     get computedSecondDataTotal(): number {
-        let total = 0;
-        if (this.secondFormDataGroup.length !== 0) {
-            total = this.secondFormDataGroup.map(item => item.duration).reduce((prev, next) => {
-                return prev + next;
-            })
-        }
+        const total = 0;
+        // if (this.secondFormDataGroup.length !== 0) {
+        //     total = this.secondFormDataGroup.map(item => item.duration).reduce((prev, next) => {
+        //         return prev + next;
+        //     })
+        // }
         return total
     }
 }
