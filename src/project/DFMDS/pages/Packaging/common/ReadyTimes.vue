@@ -3,7 +3,7 @@
         <mds-card :title="'准备工时(单位：min)'" :name="'readyTimes'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-select v-model="currentFormDataGroup.classes" size="small" style="width: 100px;" :disabled="!isRedact">
+                    <el-select v-model="currentFormDataGroup.classes" size="small" style="width: 100px;" :disabled="!isRedact" clearable>
                         <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                     </el-select>
                 </div>
@@ -208,7 +208,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API } from 'common/api/api';
+// import { COMMON_API } from 'common/api/api';
 import _ from 'lodash';
 
 @Component({
@@ -222,26 +222,16 @@ import _ from 'lodash';
 
 export default class ReadyTimes extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
+    @Prop({ type: Array, default: [] }) classesOptions
 
     currentFormDataGroup: ReadyTimesData= {}
     orgFormDataGroup: ReadyTimesData= {}
     readAudit= []
-    classesOptions: object[]= []
+    // classesOptions: object[]= []
     isChange=false
     isNewForm=false
     $refs: {
         currentFormDataGrou: HTMLFormElement;
-    }
-
-    created() {
-        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
-            data.data.forEach((item) => {
-                this.classesOptions.push({
-                    dictValue: item.dictValue,
-                    dictCode: item.dictCode
-                })
-            })
-        });
     }
 
 
