@@ -18,6 +18,10 @@ export const COMMON_API = {
      */
     SET_FACTORY_API: params => httpProxy('/sysUser/defaultFactory/update', 'GET', params),
     /**
+     * @property {string} SET_FACTORY_API 选择工厂 factoryCode
+     */
+    UPDATE_FACTORY_API: params => httpProxy('/sysUser/factory/update', 'GET', params),
+    /**
      * @property {string} NAV_API 路由获取菜单
      */
     NAV_API: params => httpProxy('/sysUser/userRole/menuQuery', 'GET', params),
