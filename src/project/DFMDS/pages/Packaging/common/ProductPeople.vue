@@ -8,7 +8,7 @@
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="currentDataTable" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+            <el-table class="newTable" :data="currentFormDataGroup" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
                 <el-table-column label="序号" type="index" width="60" />
                 <el-table-column prop="status" min-width="100" :show-overflow-tooltip="true">
                     <template slot="header">
@@ -16,7 +16,12 @@
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.dictCode" :label="item.dictValue" />
+                            <el-option
+                                v-for="item in classesOptions"
+                                :key="item.dictCode"
+                                :label="item.dictValue"
+                                :value="item.dictCode"
+                            />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -156,6 +161,7 @@ import TemporaryWorker from 'components/TemporaryWorker.vue';
 
 export default class ProductPeople extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
+    @Prop({ type: Array, default: [] }) classesOptions
 
     $refs: {
         officialWorker: HTMLFormElement;
@@ -163,10 +169,16 @@ export default class ProductPeople extends Vue {
         temporaryWorker: HTMLFormElement;
     }
 
-    classList = [];
+        // 常有变数
+        currentFormDataGroup: CurrentDataTable[] = [] // 主 data
+        orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
+        waitedDataDelete: string[]= [] // 入库删除集合
+        waitedDataInsert: CurrentDataTable[] = [] // 入库新增集合
+        waitedDataUpdate: CurrentDataTable[] =[] // 入库修改集合
+        tabChangedState=[0, 0, 0] // 增,删,改
+
     teamList = [];
     userTypeList: UserTypeListObject[] = [];
-    currentDataTable: CurrentDataTable[] = [];
     readAudit= [];
     officialWorkerStatus = false;
     loanedPersonnelStatus = false;
@@ -181,19 +193,22 @@ export default class ProductPeople extends Vue {
     standardManpower = 0;
 
     mounted() {
-        this.getClassList();
         this.getTeamList();
         this.getUserTypeList();
         this.getTree();
         this.getStandardManPower(this.$store.state.packaging.packDetail)
     }
 
-    // 班次
-    getClassList() {
-        COMMON_API.DICTQUERY_CLASSLIST_API({}).then(({ data }) => {
-            this.classList = data.data
-        });
+
+    init(dataGroup) {
+        console.log('ProductPeople 带进来的 data')
+        console.log(dataGroup)
+        if (dataGroup !== null) {
+            this.currentFormDataGroup = dataGroup
+            this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
+        }
     }
+
 
     // 工序
     getTeamList() {
@@ -227,7 +242,7 @@ export default class ProductPeople extends Vue {
             changer: getUserNameNumber(),
             delFlag: 0
         }
-        this.currentDataTable.push(sole);
+        this.currentFormDataGroup.push(sole);
     }
 
     workTime(end, start, row) {
@@ -305,7 +320,7 @@ export default class ProductPeople extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.currentDataTable.splice(this.currentDataTable.indexOf(row), 1);
+            this.currentFormDataGroup.splice(this.currentFormDataGroup.indexOf(row), 1);
         })
     }
 
@@ -325,7 +340,7 @@ export default class ProductPeople extends Vue {
 
     get ActualNumber() {
         let ScrapNum = 0
-        this.currentDataTable.map((item: CurrentDataTable) => {
+        this.currentFormDataGroup.map((item: CurrentDataTable) => {
             if (item.delFlag === 0) {
                 ScrapNum = accAdd(ScrapNum, item.userList.length);
             }

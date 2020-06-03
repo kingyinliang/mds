@@ -22,7 +22,12 @@
                     <div style="cursor: pointer;" @click="goFa(item)">
                         <img v-if="item.deptCode === '9999-xn'" src="../assets/img/factory7.png" alt="">
                         <img v-else-if="item.deptCode === '8888-xn'" src="../assets/img/factory8.png" alt="">
-                        <img v-else :src="'../static/img/factory'+ index + '.png'" alt="">
+                        <img v-else-if="item.deptCode === '6010'" src="../assets/img/factory0.png" alt="">
+                        <img v-else-if="item.deptCode === '7100'" src="../assets/img/factory1.png" alt="">
+                        <img v-else-if="item.deptCode === '7101'" src="../assets/img/factory2.png" alt="">
+                        <img v-else-if="item.deptCode === '8500'" src="../assets/img/factory3.png" alt="">
+                        <img v-else-if="item.deptCode === '8300'" src="../assets/img/factory4.png" alt="">
+                        <img v-else src="" alt="">
                     </div>
                 </div>
             </div>
@@ -55,20 +60,26 @@
             }
         }
 
+        jumpTo(factory, href) {
+            COMMON_API.UPDATE_FACTORY_API({
+                factory: factory.id
+            }).then(({ data }) => {
+                console.log(data);
+                sessionStorage.setItem('factory', JSON.stringify(factory || ''));
+                window.location.href = href
+            })
+        }
+
         goFa(item) {
             sessionStorage.setItem('vuex', '');
             if (item.deptCode === '6010' || item.deptCode === '7100' || item.deptCode === '7101') {
-                sessionStorage.setItem('factory', JSON.stringify(item || ''));
-                window.location.href = '/MDS.html'
+                this.jumpTo(item, '/MDS.html')
             } else if (item.deptCode === '9999-xn') {
-                sessionStorage.setItem('factory', JSON.stringify(item || ''));
-                window.location.href = '/SYSTEM.html'
+                this.jumpTo(item, '/SYSTEM.html')
             } else if (item.deptCode === '8888-xn') {
-                sessionStorage.setItem('factory', JSON.stringify(item || ''));
-                window.location.href = '/MDS.html#/DataEcharts/KojiMaking-DataScreening-index'
+                this.jumpTo(item, '/MDS.html#/DataEcharts/KojiMaking-DataScreening-index')
             } else {
-                sessionStorage.setItem('factory', JSON.stringify(item || ''));
-                window.location.href = '/DFMDS.html'
+                this.jumpTo(item, '/DFMDS.html')
             }
         }
 

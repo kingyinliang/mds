@@ -7,6 +7,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 // import { PKG_API } from 'common/api/api';
+import _ from 'lodash';
 
 @Component({
     name: 'TextRecord'
@@ -23,10 +24,37 @@ export default class TextRecord extends Vue {
         orderNo: '' // 订单号
     }
 
+    orgFormDataGroup: TextObj = {}
+    isChange=false
+    isNewForm=false
+
     init(dataGroup) {
         console.log('textRecord 带进来的 data')
         console.log(dataGroup)
-        this.currentFormDataGroup = dataGroup
+        if (dataGroup !== null) {
+            this.currentFormDataGroup = dataGroup
+            this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
+            this.isNewForm = false
+        } else {
+            this.isNewForm = true
+        }
+    }
+
+    executeSave() {
+
+        if (this.isNewForm) {
+            if (this.isChange) {
+                return true
+            }
+            return false
+        }
+
+        this.isChange = _.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)
+        if (this.isChange) {
+            return false
+        }
+            return true
+
     }
 
     returnDataGroup() {

@@ -44,12 +44,12 @@ const mainRoutes: RouteConfig = {
             }
         },
         {
-            path: '/org',
-            component: importTarget('COMMON/BasicData/OrgStructure/index'),
-            name: 'org',
+            path: '/detail',
+            component: importTarget('DFMDS/pages/Packaging/Audit/detail'),
+            name: 'detail',
             meta: {
                 menuId: 1,
-                title: 'org',
+                title: 'detail',
                 isTab: true
             }
         }
