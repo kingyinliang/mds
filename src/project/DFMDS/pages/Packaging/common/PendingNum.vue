@@ -90,7 +90,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API } from 'common/api/api';
+// import { COMMON_API } from 'common/api/api';
 import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
 
 @Component({
@@ -99,23 +99,10 @@ import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
 
 export default class PendingNum extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
+    @Prop({ type: Array, default: [] }) classesOptions
 
     currentDataTable: CurrentDataTable[] = [];
     currentFormDataGroup: {};
-    classesOptions: object[]=[];
-
-    created() {
-        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
-            data.data.forEach((item) => {
-                if (item.dictValue !== '多班') {
-                    this.classesOptions.push({
-                        dictValue: item.dictValue,
-                        dictCode: item.dictCode
-                    })
-                }
-            })
-        });
-    }
 
     init(dataGroup) {
         console.log('ProductInStore带进来的 data')

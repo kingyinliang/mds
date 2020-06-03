@@ -540,5 +540,17 @@ export const PKG_API = {
     /**
      * @property {string}  PKG_URGENT_SUBMIT_API 生产数据-生产入库-紧急提交
      */
-    PKG_URGENT_SUBMIT_API: params => httpProxy('/pkgInStorage/urgentSubmit', 'POST', params)
+    PKG_URGENT_SUBMIT_API: params => httpProxy('/pkgInStorage/urgentSubmit', 'POST', params),
+    /**
+     * @property {string}  PKG_USER_QUERY_API 生包装车间-人员-查询
+     */
+    PKG_USER_QUERY_API: params => httpProxy('/pkg/pkgUser/query', 'POST', params),
+    /**
+     * @property {string}  PKG_EXCEPTION_QUERY_API 包装车间-停机情况-查询
+     */
+    PKG_EXCEPTION_QUERY_API: params => httpProxy('/pkg/pkgException/query', 'POST', params),
+    /**
+     * @property {string}  PKG_DEVICE_QUERY_API 包装车间-运行情况-查询
+     */
+    PKG_DEVICE_QUERY_API: params => httpProxy('/pkg/pkgDevice/query', 'POST', params)
 };
