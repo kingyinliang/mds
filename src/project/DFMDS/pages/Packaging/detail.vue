@@ -214,15 +214,15 @@
                     })
                 })
             });
-
+                this.formHeader = this.$store.state.packaging.packDetail
+                console.log('表头数据顯示')
+                console.log(this.formHeader)
 
             PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
-                this.formHeader = this.$store.state.packaging.packDetail
-                console.log('表头数据顯示')
-                console.log(this.formHeader)
+
                 this.formHeader.orderStatus = data.data.orderStatus
                 this.formHeader.orderType = data.data.orderType
 
@@ -353,7 +353,7 @@
             this.initReadyTime()
 
             // # 2生产人员
-            this.initProductPeople()
+            // this.initProductPeople()
             // # 3设备运行
             // this.initEquipment()
             // # 4生产入库
@@ -455,11 +455,11 @@
             // # pkgOrderUpdate
             this.pkgDataOrderUpdate();
             // # 1 pkgTimeSheet
-            // this.pkgDataTimeSheet();
+            this.pkgDataTimeSheet();
             // # 2 pkgProductPeople
             // this.pkgDataProductPeople();
             // # 3 pkgDataEquipment
-            this.pkgDataEquipment();
+            // this.pkgDataEquipment();
             // # 4 pkgInStorage
             // this.pkgDataInStorage()
             // # 5 pkgMaterial
