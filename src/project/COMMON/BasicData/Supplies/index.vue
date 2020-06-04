@@ -86,6 +86,9 @@ export default {
                 current: this.currPage,
                 size: this.pageSize
             }).then(({ data }) => {
+                if (haveParas && data.data.records.length === 0) {
+                    this.$infoToast('暂无任何内容');
+                }
                 this.targetInfoList = data.data.records;
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
