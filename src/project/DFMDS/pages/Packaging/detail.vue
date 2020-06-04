@@ -4,7 +4,7 @@
         :redact-auth="'pkg:order:update'"
         :save-auth="'pkg:order:update'"
         :submit-auth="'pkg:order:update'"
-        :order-status="orderStatus"
+        :order-status="formHeader.orderStatus"
         :header-base="headerBase"
         :form-header="formHeader"
         :tabs="tabs"
@@ -80,14 +80,11 @@
             dataEntry: HTMLFormElement;
         }
 
-        orderStatus = ''
-        orderType=''
-        currentOrderNo = ''
+        // currentOrderNo = ''
         formHeader: OrderData = {}
 
         classesOptions: object[]=[]
 
-        packDetail: OrderData={}
         dataGroup: SendData = {}; // 提交物件
 
 
@@ -219,16 +216,16 @@
             });
 
 
-            this.formHeader = this.$store.state.packaging.packDetail
-            console.log('表头数据顯示')
-            console.log(this.formHeader)
-
             PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
-                this.orderStatus = data.data.orderStatus
-                this.orderType = data.data.orderType
+                this.formHeader = this.$store.state.packaging.packDetail
+                console.log('表头数据顯示')
+                console.log(this.formHeader)
+                this.formHeader.orderStatus = data.data.orderStatus
+                this.formHeader.orderType = data.data.orderType
+
                 console.log('訂單查詢結果顯示')
                 console.log(data)
             })
@@ -441,7 +438,7 @@
                 materialCode: this.formHeader.materialCode,
                 orderId: this.formHeader.id,
                 orderNo: this.formHeader.orderNo,
-                orderType: this.orderType,
+                orderType: this.formHeader.orderType,
                 pkgInstorageSaveRequestDto: this.pkgInStorage,
                 productDate: this.formHeader.productDate,
                 productLine: this.formHeader.productLine,

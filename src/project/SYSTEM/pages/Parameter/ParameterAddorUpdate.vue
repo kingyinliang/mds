@@ -137,8 +137,7 @@ export default class ParameterAddorUpdate extends Vue {
             this.isParasType = false;
             if (JSON.stringify(targetItem) !== '{}') {
                 this.isAddParas = true;
-                console.log('参数编辑')
-                this.dataForm = targetItem;
+                this.dataForm = JSON.parse(JSON.stringify(targetItem));
                 this.dataForm.parentId = parentItem.id
                 this.dataForm.dictType = parentItem.dictType
                 this.dataForm.dictName = parentItem.dictName
@@ -209,7 +208,7 @@ export default class ParameterAddorUpdate extends Vue {
                             dictCode: this.dataForm.dictCode,
                             dictValue: this.dataForm.dictValue,
                             dictId: this.dataForm.dictId,
-                            id: this.dataForm.parentId
+                            id: this.dataForm.id
                         }).then(() => {
                             this.$emit('refreshChildDataList');
                             this.dataForm = {};
@@ -235,8 +234,8 @@ export default class ParameterAddorUpdate extends Vue {
     closeDialog() {
         const target = document.querySelectorAll('.j_closeBtn')[0] as HTMLElement;
         target.focus(); // bug 优化
-        this.dataForm.factoryName = '';
-        this.$refs.dataForm.resetFields();
+        // this.dataForm.factoryName = '';
+        // this.$refs.dataForm.resetFields();
         this.isDialogShow = false;
     }
 
@@ -258,6 +257,7 @@ interface DataFormObject {
     dictValue?: string;
     parentId?: string;
     dictId?: string;
+    id?: string;
     }
 </script>
 
