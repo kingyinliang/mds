@@ -2,20 +2,22 @@
     <div class="header_main">
         <mds-card title="用户列表" :name="'user'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
             <template slot="titleBtn">
-                <div style="float: right; height: 32px; margin-bottom: 10px;">
-                    <el-input v-model="dataForm.workNum" placeholder="用户名" class="input-with-select" size="small" style="width: 280px; margin-right: 16px;">
-                        <el-select slot="prepend" v-model="dataForm.authorized" placeholder="请选择" style="width: 90px;">
-                            <el-option label="有权限" :value="1" />
-                            <el-option label="无权限" :value="0" />
-                        </el-select>
-                    </el-input>
-                    <el-button type="primary" size="small" @click="GetList(true)">
-                        查询
-                    </el-button>
-                    <el-button type="primary" size="small" @click="outPut()">
-                        导出
-                    </el-button>
-                </div>
+                <el-form :model="dataForm" size="small" label-width="110px" style="float: right; height: 32px; margin-bottom: 10px;" @keyup.enter.native="GetList(true)" @submit.native.prevent>
+                    <el-form-item>
+                        <el-input v-model="dataForm.workNum" placeholder="用户名" class="input-with-select" size="small" style="width: 280px; margin-right: 16px;">
+                            <el-select slot="prepend" v-model="dataForm.authorized" placeholder="请选择" style="width: 90px;">
+                                <el-option label="有权限" :value="1" />
+                                <el-option label="无权限" :value="0" />
+                            </el-select>
+                        </el-input>
+                        <el-button type="primary" size="small" @click="GetList(true)">
+                            查询
+                        </el-button>
+                        <el-button type="primary" size="small" @click="outPut()">
+                            导出
+                        </el-button>
+                    </el-form-item>
+                </el-form>
             </template>
             <el-table ref="table1" class="newTable" :height="mainClientHeight - 72 - 47" border header-row-class-name="tableHead" :data="UserList" tooltip-effect="dark" style="width: 100%;">
                 <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
@@ -157,6 +159,8 @@
                 roleId: this.selctRoleId
             }).then(({ data }) => {
                 this.$successToast(data.msg)
+                this.visible = false;
+                this.GetList()
             })
         }
 

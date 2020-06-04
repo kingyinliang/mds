@@ -18,6 +18,10 @@ export const COMMON_API = {
      */
     SET_FACTORY_API: params => httpProxy('/sysUser/defaultFactory/update', 'GET', params),
     /**
+     * @property {string} SET_FACTORY_API 选择工厂 factoryCode
+     */
+    UPDATE_FACTORY_API: params => httpProxy('/sysUser/factory/update', 'GET', params),
+    /**
      * @property {string} NAV_API 路由获取菜单
      */
     NAV_API: params => httpProxy('/sysUser/userRole/menuQuery', 'GET', params),
@@ -544,5 +548,17 @@ export const PKG_API = {
     /**
      * @property {string}  PKG_USER_LIST_API 生产数据-生产人员-查询
      */
-    PKG_USER_LIST_API: params => httpProxy('/pkg/pkgUser/query', 'POST', params)
+    PKG_USER_LIST_API: params => httpProxy('/pkg/pkgUser/query', 'POST', params),
+    /**
+     * @property {string}  PKG_USER_QUERY_API 生包装车间-人员-查询
+     */
+    PKG_USER_QUERY_API: params => httpProxy('/pkg/pkgUser/query', 'POST', params),
+    /**
+     * @property {string}  PKG_EXCEPTION_QUERY_API 包装车间-停机情况-查询
+     */
+    PKG_EXCEPTION_QUERY_API: params => httpProxy('/pkg/pkgException/query', 'POST', params),
+    /**
+     * @property {string}  PKG_DEVICE_QUERY_API 包装车间-运行情况-查询
+     */
+    PKG_DEVICE_QUERY_API: params => httpProxy('/pkg/pkgDevice/query', 'POST', params)
 };

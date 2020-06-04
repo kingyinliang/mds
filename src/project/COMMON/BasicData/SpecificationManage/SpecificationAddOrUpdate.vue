@@ -21,7 +21,7 @@
                 <el-input v-model="dataForm.boxSpec" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="单位：" prop="boxSpecUnit">
-                <el-select v-model="dataForm.boxSpecUnit" filterable placeholder="请选择" style="width: 100%;">
+                <el-select v-model="dataForm.boxSpecUnit" placeholder="请选择" style="width: 100%;">
                     <el-option v-for="item in unitClass" :key="item.dictCode" :label="item.dictValue" :value="item.dictCode" />
                 </el-select>
             </el-form-item>
@@ -29,7 +29,7 @@
                 <el-input v-model="dataForm.bottleSpec" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="单位：">
-                <el-select v-model="dataForm.bottleSpecUnit" filterable placeholder="请选择" style="width: 100%;">
+                <el-select v-model="dataForm.bottleSpecUnit" placeholder="请选择" style="width: 100%;">
                     <el-option v-for="item in unitClass" :key="item.dictCode" :label="item.dictValue" :value="item.dictCode" />
                 </el-select>
             </el-form-item>
@@ -123,8 +123,8 @@
                 } else {
                     this.targetID = '';
                     this.dataForm = {};
-                    this.dataForm.boxSpecUnit = '001';
-                    this.dataForm.bottleSpecUnit = '002';
+                    // this.dataForm.boxSpecUnit = '001';
+                    // this.dataForm.bottleSpecUnit = '002';
                 }
                 this.isDialogShow = true;
             },

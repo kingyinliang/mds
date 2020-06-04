@@ -67,7 +67,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination :current-page="controllableForm.currPage" :page-sizes="[10, 20, 50]" :page-size="controllableForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="controllableForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
         <contaniner-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :workshop-list="workshopList" :container-type-list="containerTypeList" @refreshDataList="getItemsList" />
     </div>
@@ -88,11 +88,12 @@
                     deptID: '',
                     holderType: '',
                     holderNo: '',
-                    holderHold: '',
-                    currPage: 1,
-                    pageSize: 10,
-                    totalCount: 0
+                    holderHold: ''
+
                 },
+                currPage: 1,
+                pageSize: 10,
+                totalCount: 0,
                 workshopList: [],
                 workshopaObject: {},
                 multipleSelection: [],
@@ -119,30 +120,30 @@
         methods: {
             // 序号
             indexMethod(index) {
-                return index + 1 + (Number(this.controllableForm.currPage) - 1) * Number(this.controllableForm.pageSize);
+                return index + 1 + (Number(this.currPage) - 1) * Number(this.pageSize);
             },
             // 获取容器列表
-            getItemsList(havePars) {
-                if (havePars) {
-                    this.controllableForm.currPage = 1;
+            getItemsList(haveParas) {
+                if (haveParas) {
+                    this.currPage = 1;
                 }
                 COMMON_API.HOLDER_QUERY_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    current: this.controllableForm.currPage,
+                    current: this.currPage,
                     deptId: this.controllableForm.deptID,
-                    size: this.controllableForm.pageSize,
+                    size: this.pageSize,
                     holderType: this.controllableForm.holderType,
                     holderNo: this.controllableForm.holderNo,
                     holderVolume: this.controllableForm.holderVolume
                 }).then(({ data }) => {
-                    if (havePars && data.data.records.length === 0) {
+                    if (haveParas && data.data.records.length === 0) {
                         this.$infoToast('暂无任何内容');
                     }
                     this.multipleSelection = [];
                     this.targetInfoList = data.data.records;
-                    this.controllableForm.currPage = data.data.pages;
-                    this.controllableForm.pageSize = data.data.size;
-                    this.controllableForm.totalCount = data.data.total;
+                    this.currPage = data.data.current;
+                    this.pageSize = data.data.size;
+                    this.totalCount = data.data.total;
                 });
             },
             // #获取归属车间
@@ -207,12 +208,12 @@
             },
             // 改变每页条数
             handleSizeChange(val) {
-                this.controllableForm.pageSize = val;
+                this.pageSize = val;
                 this.getItemsList();
             },
             // 跳转页数
             handleCurrentChange(val) {
-                this.controllableForm.currPage = val;
+                this.currPage = val;
                 this.getItemsList();
             }
         }
