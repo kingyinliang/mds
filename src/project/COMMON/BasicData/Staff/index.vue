@@ -77,6 +77,11 @@ export default {
             return this.$store.state.common.mainClientHeight;
         }
     },
+    mounted() {
+        // 进页面预设根目录内容
+        this.deptID = '1';
+        this.getItemsList();
+    },
     methods: {
         // 序号
         indexMethod(index) {
@@ -110,10 +115,6 @@ export default {
                 this.multipleSelection = [];
                 this.targetInfoList = data.data.records;
                 this.targetInfoList.forEach(item => {
-                    // if (item.tempFlag === 'Y') {
-                    //     item.workNumTemp = item.workNum;
-                    //     item.workNum = '';
-                    // }
                     item.deptName = item.sysDept.deptName;
                 })
                 this.currPage = data.data.current;
