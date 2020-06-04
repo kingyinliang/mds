@@ -340,11 +340,11 @@
                     if (index !== Number(this.$refs.queryTable.activeName)) {
                         const params = this.$refs.queryTable.queryForm
                         params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                        params.passStatus = index;
+                        params.gzStatus = index;
                         params.current = 1;
                         params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
                         params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
-                        AUDIT_API.HOURS_LIST_API(params).then(({ data }) => {
+                        AUDIT_API.INLIST_API(params).then(({ data }) => {
                             this.tabs[index].tableData = data.data.records;
                             this.setRedact(this.tabs[this.$refs.queryTable.activeName].tableData);
                             this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
@@ -423,7 +423,7 @@
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
                         item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
                         item.headerTxt = this.headText
-                        item.passDate = this.postingDate
+                        item.pstngDate = this.postingDate
                     });
                     AUDIT_API.INPASS_API(list).then(({ data }) => {
                         this.$successToast(data.msg)
@@ -490,19 +490,16 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                const list = this.$refs.queryTable.tabs[0].multipleSelection
+                const list = this.$refs.queryTable.tabs[1].multipleSelection
                 list.forEach(item => {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
                     item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
                     item.reason = this.BackText
                     item.headerTxt = this.headText
-                    item.passDate = this.postingDate
+                    item.pstngDate = this.postingDate
                 });
-                AUDIT_API.INWRITEOFFS_API({
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    list: list
-                }).then(({ data }) => {
-                    this.visibleRefuse = false
+                AUDIT_API.INWRITEOFFS_API(list).then(({ data }) => {
+                    this.visibleBack = false
                     this.$successToast(data.msg)
                     this.$refs.queryTable.getDataList()
                 })

@@ -124,7 +124,7 @@ export class AddRoutes {
  * @param {*} pid
  */
 export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
-    const res: object[] = [];
+    const res: MenuBbj[] = [];
     const temp = {};
     for (let i = 0; i < data.length; i++) {
         temp[data[i][id]] = data[i];
@@ -139,11 +139,22 @@ export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
             }
             data[k]['_level'] = temp[data[k][pid]]['_level'] + 1;
             temp[data[k][pid]]['children'].push(data[k]);
+            temp[data[k][pid]]['children'].sort((a, b) => {
+                return a.menuOrder - b.menuOrder
+            })
         } else {
             res.push(data[k]);
+            res.sort((a, b) => {
+                return a.menuOrder - b.menuOrder
+            })
         }
     }
     return res;
+}
+interface MenuBbj {
+    id?: string;
+    menuOrder: number;
+
 }
 /**
  * 是否有权限
