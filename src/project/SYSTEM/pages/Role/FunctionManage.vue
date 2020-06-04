@@ -45,7 +45,12 @@ export default {
                 roleId: id
             })
                 .then(({ data }) => {
+                    console.log('data')
+                    console.log(data)
                     const maenData = data.data.filter(item => item.id !== '0')
+                    maenData.forEach(item => {
+                        item.menuName = item.menuName + ' ' + item.remark
+                    });
                     this.menuList = this.translateTreeData(maenData);
                 })
                 .then(() => {

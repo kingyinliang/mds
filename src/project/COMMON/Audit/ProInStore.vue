@@ -148,21 +148,24 @@
                 redact: true,
                 header: true,
                 prop: 'stgeLoc',
-                label: '入库库位'
+                label: '入库库位',
+                width: '120'
             },
             {
                 type: 'input',
                 redact: true,
                 header: true,
                 prop: 'moveType',
-                label: '移动类型'
+                label: '移动类型',
+                width: '120'
             },
             {
                 type: 'input',
                 redact: true,
                 header: true,
                 prop: 'stckType',
-                label: '库存类型'
+                label: '库存类型',
+                width: '120'
             },
             {
                 type: 'input',
@@ -405,17 +408,24 @@
                 this.$warningToast('请选择过账日期')
                 return false
             }
+            if (!this.headText) {
+                this.$warningToast('请填写抬头文本')
+                return false
+            }
             if (this.$refs.queryTable.tabs[0].multipleSelection && this.$refs.queryTable.tabs[0].multipleSelection.length) {
                 this.$confirm(`确定过账，是否继续？`, '过账确认', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    AUDIT_API.INPASS_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        list: this.$refs.queryTable.multipleSelection,
-                        postingDate: this.postingDate
-                    }).then(({ data }) => {
+                    const list = this.$refs.queryTable.tabs[0].multipleSelection
+                    list.forEach(item => {
+                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                        item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
+                        item.headerTxt = this.headText
+                        item.passDate = this.postingDate
+                    });
+                    AUDIT_API.INPASS_API(list).then(({ data }) => {
                         this.$successToast(data.msg)
                         this.$refs.queryTable.getDataList()
                     })
@@ -443,10 +453,15 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                const list = this.$refs.queryTable.tabs[0].multipleSelection
+                list.forEach(item => {
+                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                    item.memo = this.ReText
+                    item.verifyType = ''
+                });
                 AUDIT_API.INREFUSE_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    list: this.$refs.queryTable.multipleSelection,
-                    reason: this.ReText
+                    refuseList: list
                 }).then(({ data }) => {
                     this.visibleRefuse = false
                     this.$successToast(data.msg)
@@ -475,9 +490,17 @@
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                const list = this.$refs.queryTable.tabs[0].multipleSelection
+                list.forEach(item => {
+                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                    item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
+                    item.reason = this.BackText
+                    item.headerTxt = this.headText
+                    item.passDate = this.postingDate
+                });
                 AUDIT_API.INWRITEOFFS_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    list: this.$refs.queryTable.multipleSelection
+                    list: list
                 }).then(({ data }) => {
                     this.visibleRefuse = false
                     this.$successToast(data.msg)
