@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <mds-card title="角色信息列表" :name="'role'" :pack-up="false" style="background: #fff;">
+        <mds-card title="订单列表" :name="'role'" :pack-up="false" style="background: #fff;">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
                     <el-input v-model.trim="formHeader.orderNo" size="small" placeholder="订单号" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
