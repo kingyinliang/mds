@@ -73,9 +73,9 @@
                         <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 165px;" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="90" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="110" :show-overflow-tooltip="true">
                     <template slot="header">
-                        <span class="notNull">*</span>用餐时间
+                        <span class="notNull">*</span>用餐时间(MIN)
                     </template>
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!isRedact" />
@@ -141,7 +141,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API } from 'common/api/api';
+import { COMMON_API, PKG_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber, getDateDiff, accAdd } from 'utils/utils';
 import OfficialWorker from 'components/OfficialWorker.vue';
 import LoanedPersonnel from 'components/LoanedPersonnel.vue';
@@ -191,14 +191,35 @@ export default class ProductPeople extends Vue {
     orgTree = [];
     arrList = [];
     standardManpower = 0;
+    classList = [];
 
     mounted() {
+        this.getList();
+        this.getClassList();
         this.getTeamList();
         this.getUserTypeList();
         this.getTree();
         this.getStandardManPower(this.$store.state.packaging.packDetail)
     }
 
+    // 查询
+    getList() {
+        PKG_API.PKG_USER_LIST_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: this.$store.state.packaging.packDetail['orderNo']
+        }).then(({ data }) => {
+            if (data.data !== null) {
+                this.currentFormDataGroup = data.data;
+            }
+        });
+    }
+
+    // 班次
+    getClassList() {
+        COMMON_API.DICTQUERY_CLASSLIST_API({}).then(({ data }) => {
+            this.classList = data.data;
+        })
+    }
 
     init(dataGroup) {
         console.log('ProductPeople 带进来的 data')
@@ -229,20 +250,36 @@ export default class ProductPeople extends Vue {
     }
 
     addRow() {
-        const sole: CurrentDataTable = {
-            classes: '',
-            deptId: '',
-            userType: '',
-            userList: [],
-            startDate: '',
-            dinner: '60',
-            endDate: '',
-            remark: '',
-            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-            changer: getUserNameNumber(),
-            delFlag: 0
+        if (this.currentFormDataGroup.length === 0) {
+            const sole: CurrentDataTable = {
+                classes: '',
+                deptId: '',
+                userType: '',
+                userList: [],
+                startDate: '',
+                dinner: '60',
+                endDate: '',
+                remark: '',
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                changer: getUserNameNumber(),
+                delFlag: 0
+            }
+            this.currentFormDataGroup.push(sole);
+        } else {
+            this.currentFormDataGroup.push({
+                classes: '',
+                deptId: '',
+                userType: '',
+                userList: [],
+                startDate: this.currentFormDataGroup[this.currentFormDataGroup.length - 1].startDate,
+                dinner: '60',
+                endDate: this.currentFormDataGroup[this.currentFormDataGroup.length - 1].endDate,
+                remark: '',
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                changer: getUserNameNumber(),
+                delFlag: 0
+            });
         }
-        this.currentFormDataGroup.push(sole);
     }
 
     workTime(end, start, row) {
