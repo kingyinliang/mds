@@ -46,7 +46,7 @@
         <div v-if="type === 'home'">
             <slot name="home" />
         </div>
-        <el-tabs v-else-if="tabs.length" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
+        <el-tabs v-else-if="tabs.length" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" @tab-click="tabClick">
             <el-tab-pane v-for="(tabItem, index) in tabs" :key="index" :name="index.toString()" :label="tabItem.label">
                 <div>
                     <slot :name="'tab-head' + index" />
@@ -73,7 +73,7 @@
                             </template>
                         </el-table-column>
                     </template>
-                    <el-table-column v-if="showOperationColumn" label="操作" fixed="right" :width="operationColumnWidth">
+                    <el-table-column v-if="tabItem.showOperationColumn" label="操作" fixed="right" :width="operationColumnWidth">
                         <template slot-scope="scope">
                             <slot :scope="scope" name="operation_column" />
                         </template>
@@ -568,6 +568,10 @@
             handleCurrentChange(val) {
                 this.queryForm[this.currpageConfig] = val;
                 this.getDataList();
+            },
+            tabClick(tab) {
+                // console.log(tab.name);
+                this.$emit('tab-click', tab);
             }
         }
     };
