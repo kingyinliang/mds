@@ -302,6 +302,7 @@
                     pageSize: 10,
                     totalCount: 0
                 },
+                showOperationColumn: true,
                 column: this.Column // eslint-disable-line
             },
             {
@@ -313,6 +314,7 @@
                     pageSize: 10,
                     totalCount: 0
                 },
+                showOperationColumn: true,
                 column: this.Column // eslint-disable-line
             }
         ];

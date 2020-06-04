@@ -540,5 +540,9 @@ export const PKG_API = {
     /**
      * @property {string}  PKG_URGENT_SUBMIT_API 生产数据-生产入库-紧急提交
      */
-    PKG_URGENT_SUBMIT_API: params => httpProxy('/pkgInStorage/urgentSubmit', 'POST', params)
+    PKG_URGENT_SUBMIT_API: params => httpProxy('/pkgInStorage/urgentSubmit', 'POST', params),
+    /**
+     * @property {string}  PKG_USER_LIST_API 生产数据-生产人员-查询
+     */
+    PKG_USER_LIST_API: params => httpProxy('/pkg/pkgUser/query', 'POST', params)
 };
