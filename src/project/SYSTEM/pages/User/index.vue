@@ -112,11 +112,13 @@
                 this.dataForm.current = 1;
             }
             COMMON_API.USER_ROLE_QUERY_API(this.dataForm).then(({ data }) => {
-                console.log(data);
                 if (flag && data.data.records.length === 0) {
                     this.$infoToast('暂无任何内容');
                 }
                 this.UserList = data.data.records;
+                this.dataForm.current = data.data.current
+                this.dataForm.size = data.data.size
+                this.dataForm.totalCount = data.data.total
             });
         }
 

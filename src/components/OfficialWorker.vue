@@ -18,7 +18,7 @@
 
 <script>
 import { COMMON_API } from 'common/api/api';
-import { setUserList } from '@/net/validate';
+import { setUserList } from 'utils/utils.ts';
 export default {
     name: 'OfficialWorker',
     components: {},
