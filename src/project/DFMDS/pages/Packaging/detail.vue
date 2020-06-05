@@ -9,6 +9,7 @@
         :form-header="formHeader"
         :tabs="tabs"
         :saved-datas="sentData"
+        :submit-urgent="true"
         @tab-click="tabClick"
     >
         <template slot="1" slot-scope="data">
@@ -46,7 +47,6 @@
     import ProductInStorage from './common/ProductInStorage.vue';
     import Equipment from './common/Equipment.vue';
     // import _ from 'lodash';
-
     // import { getFactory } from '@/net/validate';
 
     @Component({
@@ -68,7 +68,6 @@
     })
 
     export default class PackagingDetail extends Vue {
-
         $refs: {
             readyTime: HTMLFormElement; // 1生产准备
             productPeople: HTMLFormElement; // 2生产人员
@@ -80,9 +79,7 @@
             dataEntry: HTMLFormElement;
         }
 
-        // currentOrderNo = ''
         formHeader: OrderData = {}
-
         classesOptions: object[]=[]
 
         dataGroup: SendData = {}; // 提交物件
@@ -109,7 +106,7 @@
         isTextLoaded = false
 
         currentTab='1'
-
+        radio=''
         headerBase = [
             {
                 type: 'p',
@@ -202,8 +199,6 @@
             }
         ];
 
-        // classList = [];
-
         created() {
 
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
@@ -214,9 +209,10 @@
                     })
                 })
             });
-                this.formHeader = this.$store.state.packaging.packDetail
-                console.log('表头数据顯示')
-                console.log(this.formHeader)
+
+            this.formHeader = this.$store.state.packaging.packDetail
+            console.log('表头数据顯示')
+            console.log(this.formHeader)
 
             PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -225,7 +221,6 @@
 
                 this.formHeader.orderStatus = data.data.orderStatus
                 this.formHeader.orderType = data.data.orderType
-
                 console.log('訂單查詢結果顯示')
                 console.log(data)
             })
@@ -233,6 +228,43 @@
 
         mounted() {
             this.initData()
+            // this.open()
+        }
+
+        open() {
+        // const h = this.$createElement;
+        // const self = this;
+            this.$msgbox({
+            title: '消息',
+            message:
+            `<el-radio-group v-model="radio">
+                <el-radio :label="3">备选项</el-radio>
+                <el-radio :label="6">备选项</el-radio>
+            </el-radio-group>`,
+            dangerouslyUseHTMLString: true,
+            showCancelButton: true,
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            beforeClose: (action, instance, done) => {
+                if (action === 'confirm') {
+                instance.confirmButtonLoading = true;
+                instance.confirmButtonText = '执行中...';
+                setTimeout(() => {
+                    done();
+                    setTimeout(() => {
+                    instance.confirmButtonLoading = false;
+                    }, 300);
+                }, 3000);
+                } else {
+                done();
+                }
+            }
+            }).then(action => {
+            this.$message({
+                type: 'info',
+                message: 'action: ' + action
+            });
+            });
         }
 
         // # 1 生产准备
@@ -347,7 +379,6 @@
             this.isMaterialLoaded = false
             this.isPendingNumLoaded = false
             this.isTextLoaded = false
-            //this.currentTab = '1'
             this.$refs.dataEntry.activeName = '1'
             // # 1生产准备
             this.initReadyTime()
@@ -412,50 +443,27 @@
         }
 
         urgentSubmit() {
+            console.log('紧急提交!')
 
-            console.log('紧急提交进来了')
-            const productInStorageTemp = this.$refs.productInStorage.returnDataGroup()
-            productInStorageTemp.insertData.forEach(item => {
-                item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                item.orderId = this.formHeader.id;
-                item.orderNo = this.formHeader.orderNo;
-            });
-            productInStorageTemp.updateData.forEach(item => {
-                item.orderId = this.formHeader.id;
-            });
+            this.dataGroup = {}
+            this.pkgDataOrderUpdate()
+            this.pkgDataInStorage()
 
-            this.pkgInStorage = {
-                counOutputUnit: productInStorageTemp.unit,
-                countOutput: productInStorageTemp.amount,
-                instorageDelete: productInStorageTemp.deleteData,
-                instorageInsert: productInStorageTemp.insertData,
-                instorageUpdate: productInStorageTemp.updateData
-            }
-
-
-            PKG_API.PKG_URGENT_SUBMIT_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                materialCode: this.formHeader.materialCode,
-                orderId: this.formHeader.id,
-                orderNo: this.formHeader.orderNo,
-                orderType: this.formHeader.orderType,
-                pkgInstorageSaveRequestDto: this.pkgInStorage,
-                productDate: this.formHeader.productDate,
-                productLine: this.formHeader.productLine,
-                workShop: this.formHeader.workShop
-            }).then(({ data }) => {
+            PKG_API.PKG_URGENT_SUBMIT_API(
+                this.dataGroup
+            ).then(({ data }) => {
                 console.log(data)
             });
 
-
         }
 
-        sentData() {
+        sentData(str) {
+            console.log(str)
             // this.urgentSubmit()
             // # pkgOrderUpdate
             this.pkgDataOrderUpdate();
             // # 1 pkgTimeSheet
-            this.pkgDataTimeSheet();
+            // this.pkgDataTimeSheet();
             // # 2 pkgProductPeople
             // this.pkgDataProductPeople();
             // # 3 pkgDataEquipment
@@ -484,7 +492,9 @@
                 productDate: this.formHeader.productDate,
                 productLine: this.formHeader.productLine,
                 workShop: this.formHeader.workShop,
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                materialCode: this.formHeader.materialCode,
+                orderType: this.formHeader.orderType
             };
         }
 
@@ -511,6 +521,8 @@
                     }
                 }
                 this.dataGroup.pkgTimeSheet = this.pkgTimeSheet;
+            } else {
+                this.dataGroup.pkgTimeSheet = {}
             }
 
 
@@ -600,6 +612,8 @@
                     instorageUpdate: productInStorageTemp.updateData
                 }
                 this.dataGroup.pkgInstorage = this.pkgInStorage;
+            } else {
+                this.dataGroup.pkgInstorage = {}
             }
         }
 
@@ -633,7 +647,9 @@
                     }
                 }
                 this.dataGroup.pkgText = this.pkgText;
-                }
+            } else {
+                this.dataGroup.pkgText = {}
+            }
         }
     }
 interface OrderData{
