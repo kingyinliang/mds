@@ -3,7 +3,7 @@
         <mds-card title="订单列表" :name="'role'" :pack-up="false" style="background: #fff;">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
-                    <el-input v-model.trim="formHeader.orderNo" size="small" placeholder="订单号" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
+                    <el-input v-model.trim="formHeader.orderNo" size="small" placeholder="订单号" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" clearable @clear="getDataList(true)" @blur="formHeader.orderNo===''?getDataList(true):false" />
                     <el-button type="primary" size="small" @click="getDataList(true)">
                         查询
                     </el-button>
