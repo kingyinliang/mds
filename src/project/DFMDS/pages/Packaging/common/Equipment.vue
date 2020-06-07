@@ -96,23 +96,23 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column min-width="100" :show-overflow-tooltip="true">
+                <el-table-column min-width="140" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>停机类型
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.stopType" size="small" clearable>
-                            <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                        <el-select v-model="scope.row.stopType" size="small" clearable @change="changeStopModeOption(scope.row)">
+                            <el-option v-for="(item) in stopTypeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column min-width="100" :show-overflow-tooltip="true">
+                <el-table-column min-width="140" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>停机方式
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.stopMode" size="small" clearable>
-                            <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                        <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="fzReasonOptions">
+                            <el-option v-for="(item) in stopModeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -143,26 +143,26 @@
                         <span class="notNull">*</span>次数
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="fzExceptionCount" />
                     </template>
                 </el-table-column>
-                <el-table-column width="100" :show-overflow-tooltip="true">
+                <el-table-column width="140" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>停机情况
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.stopSituation" size="small" clearable>
-                            <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                        <el-select v-model="scope.row.stopSituation" size="small" clearable @change="changeStopReasonOption(scope.row)">
+                            <el-option v-for="(item) in stopSituationOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column width="100" :show-overflow-tooltip="true">
+                <el-table-column width="140" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>停机原因
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.stopReason" size="small" clearable>
-                            <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                            <el-option v-for="(item) in stopReasonOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -202,7 +202,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-// import { PKG_API } from 'common/api/api';
+import { COMMON_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber } from 'utils/utils';
 
 @Component({
@@ -217,6 +217,7 @@ import { dateFormat, getUserNameNumber } from 'utils/utils';
 export default class Equipment extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
     @Prop({ type: Array, default: [] }) classesOptions
+    @Prop({ type: String, default: '' }) productLine
 
     // 常有变数
     firstFormDataGroup: FirstDataTable[] = []; // 主 data
@@ -234,11 +235,35 @@ export default class Equipment extends Vue {
     tabSecondChangedState=[0, 0, 0] // 增,删,改
 
     readAudit = []
+    stopTypeOptions: Option[]=[]
+    stopModeOptions: Option[]=[]
+    stopSituationOptions: Option[]=[]
+    planHaltOptions: Option[]=[]
+    abnormalHaltOptions: Option[]=[]
+    stopReasonOptions: Option[]=[]
+    fzReasonOptions=false
+    fzExceptionCount=false
 
-    formDataGroupArray: string[]=['firstFormDataGroup', 'secondFormDataGroup']
+    async init(dataGroup, order) {
 
+        await this.getStopType()
 
-    init(dataGroup, order) {
+        await this.getStopMode()
+
+        await this.getPlanHalt()
+
+        await this.getAbnormalHalt()
+
+        this.waitedFirstDataDelete = [];
+        this.waitedFirstDataInsert = [];
+        this.waitedFirstDataUpdate = [];
+        this.tabFirstChangedState = [0, 0, 0]
+
+        this.waitedSecondDataDelete = [];
+        this.waitedSecondDataInsert = [];
+        this.waitedSecondDataUpdate = [];
+        this.tabSecondChangedState = [0, 0, 0]
+
         console.log('equipment带进来的 data')
         console.log(dataGroup)
 
@@ -263,6 +288,177 @@ export default class Equipment extends Vue {
             }
     }
 
+    getStopType() {
+        COMMON_API.DICTQUERY_API({
+            dictType: 'COMMON_HALT_TYPE'
+        }).then(({ data }) => {
+            console.log('停机类型')
+            console.log(data)
+            this.stopTypeOptions = []
+            data.data.forEach((item) => {
+                this.stopTypeOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
+        });
+    }
+
+    getStopMode() {
+        COMMON_API.DICTQUERY_API({
+            dictType: 'COMMON_HALT_MODE'
+        }).then(({ data }) => {
+            console.log('停机方法')
+            console.log(data)
+            this.stopModeOptions = []
+            data.data.forEach((item) => {
+                this.stopModeOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
+        });
+    }
+
+    changeStopModeOption(row) {
+        console.log(row)
+        if (row.stopType === 'PLAN_HALT') {
+            row.stopMode = 'CONTINUE_HALT'
+            row.exceptionCount = 1
+            this.fzExceptionCount = true
+            this.stopSituationOptions = JSON.parse(JSON.stringify(this.planHaltOptions))
+            row.stopReasonOptions = ''
+            row.stopSituation = ''
+        } else {
+            row.stopMode = ''
+            row.exceptionCount = 0
+            this.fzExceptionCount = false
+            this.stopSituationOptions = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
+            row.stopReasonOptions = ''
+            row.stopSituation = ''
+        }
+    }
+
+
+    getPlanHalt() {
+        COMMON_API.DICTQUERY_API({
+            dictType: 'PLAN_HALT'
+        }).then(({ data }) => {
+            this.planHaltOptions = []
+            console.log('计划停机')
+            console.log(data)
+            data.data.forEach((item) => {
+                this.planHaltOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
+        });
+    }
+
+    getAbnormalHalt() {
+        COMMON_API.DICTQUERY_API({
+            dictType: 'ABNORMAL_HALT'
+        }).then(({ data }) => {
+            this.abnormalHaltOptions = []
+            console.log('异常停机')
+            console.log(data)
+            data.data.forEach((item) => {
+                this.abnormalHaltOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
+        });
+    }
+
+    changeStopReasonOption(row) {
+        console.log(row)
+        if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN') {
+            this.fzReasonOptions = false
+            COMMON_API.DEVICELIST_API({
+                deptId: this.productLine,
+                current: 1,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                size: 100
+            }).then(({ data }) => {
+                console.log('data')
+                console.log(data)
+                data.data.forEach((item) => {
+                    this.stopReasonOptions.push({
+                        dictValue: item.deviceName,
+                        dictCode: item.deviceNo
+                    })
+                })
+            });
+        } else if (row.stopSituation === 'EXPERIMENT') { // 实验
+            this.fzReasonOptions = false
+            COMMON_API.DICTQUERY_API({
+                dictType: 'EXPERIMENT'
+            }).then(({ data }) => {
+                this.stopReasonOptions = []
+                console.log('实验')
+                console.log(data)
+                data.data.forEach((item) => {
+                    this.stopReasonOptions.push({
+                        dictValue: item.dictValue,
+                        dictCode: item.dictCode
+                    })
+                })
+            });
+        } else if (row.stopSituation === 'POOR_PROCESS') { // 制成不良
+            this.fzReasonOptions = false
+            COMMON_API.DICTQUERY_API({
+                dictType: 'POOR_PROCESS'
+            }).then(({ data }) => {
+                this.stopReasonOptions = []
+                console.log('制成不良')
+                console.log(data)
+                data.data.forEach((item) => {
+                    this.stopReasonOptions.push({
+                        dictValue: item.dictValue,
+                        dictCode: item.dictCode
+                    })
+                })
+            });
+        } else if (row.stopSituation === 'WAIT') { // 等待损失
+            this.fzReasonOptions = false
+            COMMON_API.DICTQUERY_API({
+                dictType: 'WAIT'
+            }).then(({ data }) => {
+                this.stopReasonOptions = []
+                console.log('等待损失')
+                console.log(data)
+                data.data.forEach((item) => {
+                    this.stopReasonOptions.push({
+                        dictValue: item.dictValue,
+                        dictCode: item.dictCode
+                    })
+                })
+            });
+        } else if (row.stopSituation === 'ENERGY') { // 能源
+            this.fzReasonOptions = false
+            COMMON_API.DICTQUERY_API({
+                dictType: 'ENERGY'
+            }).then(({ data }) => {
+                this.stopReasonOptions = []
+                console.log('能源')
+                console.log(data)
+                data.data.forEach((item) => {
+                    this.stopReasonOptions.push({
+                        dictValue: item.dictValue,
+                        dictCode: item.dictCode
+                    })
+                })
+            });
+        } else {
+            console.log(1111)
+            this.fzReasonOptions = true
+            row.stopReason = ''
+            this.stopReasonOptions = []
+        }
+    }
+
     returnFirstDataGroup() {
         this.waitedFirstDataInsert = [];
         this.waitedFirstDataUpdate = [];
@@ -278,6 +474,7 @@ export default class Equipment extends Vue {
         })
 
         return {
+            deviceRunTime: this.computedFirstDataTotal,
             deleteData: this.waitedFirstDataDelete,
             insertData: this.waitedFirstDataInsert,
             updateData: this.waitedFirstDataUpdate
@@ -299,6 +496,7 @@ export default class Equipment extends Vue {
         })
 
         return {
+            devicePauseTime: this.computedSecondDataTotal,
             deleteData: this.waitedSecondDataDelete,
             insertData: this.waitedSecondDataInsert,
             updateData: this.waitedSecondDataUpdate
@@ -376,9 +574,9 @@ export default class Equipment extends Vue {
     }
 
     tabFirstChangeState() {
-        console.log('查询 firstFormDataGroup 增删改状态')
-        console.log(this.firstFormDataGroup)
-        return !(this.firstFormDataGroup[0] === 0 && this.firstFormDataGroup[1] === 0 && this.firstFormDataGroup[2] === 0)
+        console.log('查询 tabFirstChangedState 增删改状态')
+        console.log(this.tabFirstChangedState)
+        return !(this.tabFirstChangedState[0] === 0 && this.tabFirstChangedState[1] === 0 && this.tabFirstChangedState[2] === 0)
     }
 
     tabSecondChangeState() {
@@ -473,6 +671,10 @@ interface SecondDataTable{
     editedMark?: boolean;
 }
 
+interface Option{
+    dictValue?: string;
+    dictCode?: string;
+}
 </script>
 
 <style lang="scss" scoped>
