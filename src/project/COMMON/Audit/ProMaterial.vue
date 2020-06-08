@@ -258,7 +258,7 @@
                 defaultValue: '',
                 resVal: {
                     resData: 'data',
-                    label: ['materialName'],
+                    label: ['materialCode', 'materialName'],
                     value: 'materialCode'
                 }
             },
@@ -396,12 +396,14 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    AUDIT_API.PROISSUEPASS_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        list: this.$refs.queryTable.tabs[0].multipleSelection,
-                        pstngDate: this.pstngDate,
-                        headerText: this.headerText
-                    }).then(({ data }) => {
+                    const list = this.$refs.queryTable.tabs[0].multipleSelection
+                    list.forEach(item => {
+                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                        item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
+                        item.pstngDate = this.pstngDate
+                        item.headerText = this.headerText
+                    });
+                    AUDIT_API.PROISSUEPASS_API(list).then(({ data }) => {
                         this.$successToast(data.msg)
                         this.$refs.queryTable.getDataList()
                     });
@@ -454,10 +456,15 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
+                    const list = this.$refs.queryTable.tabs[0].multipleSelection
+                    list.forEach(item => {
+                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                        item.memo = this.refuseOrWriteOffsText
+                        item.verifyType = ''
+                    });
                     AUDIT_API.PROISSUEREFUSE_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        list: this.$refs.queryTable.tabs[0].multipleSelection,
-                        reason: this.refuseOrWriteOffsText
+                        refuseList: list
                     }).then(({ data }) => {
                         this.isRefuseOrWriteOffsDialogShow = false
                         this.$successToast(data.msg)
@@ -474,12 +481,15 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    AUDIT_API.PROISSUEWRITEOFFS_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                        list: this.$refs.queryTable.tabs[1].multipleSelection,
-                        pstngDate: this.pstngDate,
-                        reason: this.refuseOrWriteOffsText
-                    }).then(({ data }) => {
+                    const list = this.$refs.queryTable.tabs[1].multipleSelection
+                    list.forEach(item => {
+                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                        item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
+                        item.reason = this.refuseOrWriteOffsText
+                        item.headerText = this.headerText
+                        item.pstngDate = this.pstngDate
+                    });
+                    AUDIT_API.PROISSUEWRITEOFFS_API(list).then(({ data }) => {
                         this.isRefuseOrWriteOffsDialogShow = false
                         this.$successToast(data.msg);
                         this.$refs.queryTable.getDataList()

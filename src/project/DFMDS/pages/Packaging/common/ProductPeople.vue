@@ -3,19 +3,19 @@
         <mds-card title="人员统计" :name="'productPeople'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addRow()">
+                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
                         新增
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="currentFormDataGroup" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
-                <el-table-column label="序号" type="index" width="60" />
+            <el-table class="newTable" :data="currentFormDataGroup" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;" @cell-click="compareChange">
+                <el-table-column label="序号" type="index" width="60" fixed />
                 <el-table-column prop="status" min-width="100" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small">
+                        <el-select v-model="scope.row.classes" size="small" clearable @change="compareChange(scope.row)">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -30,7 +30,7 @@
                         <span class="notNull">*</span>班组/工序
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.deptId" filterable placeholder="请选择" size="small" :disabled="!isRedact" @change="selectDept(scope.row)">
+                        <el-select v-model="scope.row.deptId" filterable placeholder="请选择" size="small" :disabled="!isRedact" clearable @change="selectDept(scope.row)">
                             <el-option v-for="(iteam, index) in teamList" :key="index" :label="iteam.deptName" :value="iteam.id" />
                         </el-select>
                     </template>
@@ -40,12 +40,12 @@
                         <span class="notNull">*</span>人员属性
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!isRedact">
+                        <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!isRedact" clearable @change="compareChange(scope.row)">
                             <el-option v-for="(iteam, index) in userTypeList" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="110" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="200" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>人员
                     </template>
@@ -65,15 +65,15 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="190" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" width="220" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 165px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="110" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" width="140" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>用餐时间(MIN)
                     </template>
@@ -81,12 +81,12 @@
                         <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="190" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="220" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 165px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="90" label="时长(H)" :show-overflow-tooltip="true">
@@ -94,7 +94,7 @@
                         <p> {{ workTime(scope.row.endDate, scope.row.startDate, scope.row) }}H </p>
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="100" label="备注" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="140" label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" size="small" :disabled="!isRedact" />
                     </template>
@@ -111,7 +111,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="delUser(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="removeDataRow(scope.$index)">
                             删除
                         </el-button>
                     </template>
@@ -128,7 +128,7 @@
                     实际作业人数：
                 </div>
                 <div class="input_bottom">
-                    {{ ActualNumber }}
+                    {{ actualNumber }}
                 </div>
             </el-row>
         </mds-card>
@@ -141,11 +141,12 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API, PKG_API } from 'common/api/api';
+import { COMMON_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber, getDateDiff, accAdd } from 'utils/utils';
 import OfficialWorker from 'components/OfficialWorker.vue';
 import LoanedPersonnel from 'components/LoanedPersonnel.vue';
 import TemporaryWorker from 'components/TemporaryWorker.vue';
+import _ from 'lodash';
 
 @Component({
     name: 'ProductPeople',
@@ -169,13 +170,13 @@ export default class ProductPeople extends Vue {
         temporaryWorker: HTMLFormElement;
     }
 
-        // 常有变数
-        currentFormDataGroup: CurrentDataTable[] = [] // 主 data
-        orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
-        waitedDataDelete: string[]= [] // 入库删除集合
-        waitedDataInsert: CurrentDataTable[] = [] // 入库新增集合
-        waitedDataUpdate: CurrentDataTable[] =[] // 入库修改集合
-        tabChangedState=[0, 0, 0] // 增,删,改
+    // 常有变数
+    currentFormDataGroup: CurrentDataTable[] = [] // 主 data
+    orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
+    waitedDataDelete: string[]= [] // 入库删除集合
+    waitedDataInsert: CurrentDataTable[] = [] // 入库新增集合
+    waitedDataUpdate: CurrentDataTable[] =[] // 入库修改集合
+    tabChangedState=[0, 0, 0] // 增,删,改
 
     teamList = [];
     userTypeList: UserTypeListObject[] = [];
@@ -191,41 +192,30 @@ export default class ProductPeople extends Vue {
     orgTree = [];
     arrList = [];
     standardManpower = 0;
-    classList = [];
 
-    mounted() {
-        this.getList();
-        this.getClassList();
-        this.getTeamList();
-        this.getUserTypeList();
-        this.getTree();
-        this.getStandardManPower(this.$store.state.packaging.packDetail)
-    }
-
-    // 查询
-    getList() {
-        PKG_API.PKG_USER_LIST_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            orderNo: this.$store.state.packaging.packDetail['orderNo']
-        }).then(({ data }) => {
-            if (data.data !== null) {
-                this.currentFormDataGroup = data.data;
-            }
-        });
-    }
-
-    // 班次
-    getClassList() {
-        COMMON_API.DICTQUERY_CLASSLIST_API({}).then(({ data }) => {
-            this.classList = data.data;
-        })
-    }
-
-    init(dataGroup) {
+    async init(dataGroup) {
+        this.waitedDataDelete = [];
+        this.waitedDataInsert = [];
+        this.waitedDataUpdate = [];
+        this.tabChangedState = [0, 0, 0]
         console.log('ProductPeople 带进来的 data')
         console.log(dataGroup)
+        // 工序
+        await this.getTeamList()
+
+        // 人员属性
+        await this.getUserTypeList()
+
+        // 获取组织结构树
+        await this.getTree()
+
+        await this.getStandardManPower(this.$store.state.packaging.packDetail)
+
         if (dataGroup !== null) {
-            this.currentFormDataGroup = dataGroup
+            this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup))
+            this.currentFormDataGroup.forEach((item) => {
+                item.editedMark = false
+            })
             this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
         }
     }
@@ -249,9 +239,10 @@ export default class ProductPeople extends Vue {
         });
     }
 
-    addRow() {
+    addNewDataRow() {
+        let sole: CurrentDataTable
         if (this.currentFormDataGroup.length === 0) {
-            const sole: CurrentDataTable = {
+            sole = {
                 classes: '',
                 deptId: '',
                 userType: '',
@@ -264,9 +255,8 @@ export default class ProductPeople extends Vue {
                 changer: getUserNameNumber(),
                 delFlag: 0
             }
-            this.currentFormDataGroup.push(sole);
         } else {
-            this.currentFormDataGroup.push({
+            sole = {
                 classes: '',
                 deptId: '',
                 userType: '',
@@ -278,8 +268,10 @@ export default class ProductPeople extends Vue {
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber(),
                 delFlag: 0
-            });
+            };
         }
+        this.tabChangedState[0] += 1
+        this.currentFormDataGroup.push(sole)
     }
 
     workTime(end, start, row) {
@@ -292,6 +284,7 @@ export default class ProductPeople extends Vue {
 
     // 班组修改
     selectDept(row: CurrentDataTable) {
+        this.compareChange(row)
         row.userList = [];
     }
 
@@ -351,13 +344,22 @@ export default class ProductPeople extends Vue {
     }
 
     // 人员删除
-    delUser(row) {
+    removeDataRow(index) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.currentFormDataGroup.splice(this.currentFormDataGroup.indexOf(row), 1);
+
+            if (Object.prototype.hasOwnProperty.call(this.currentFormDataGroup[index], 'id')) {
+                this.tabChangedState[1] += 1
+                this.waitedDataDelete.push((this.currentFormDataGroup[index].id) as string)
+            } else {
+                this.tabChangedState[0] -= 1
+            }
+            this.currentFormDataGroup.splice(index, 1);
+
+
         })
     }
 
@@ -375,15 +377,62 @@ export default class ProductPeople extends Vue {
         });
     }
 
-    get ActualNumber() {
-        let ScrapNum = 0
+    get actualNumber() {
+        let scrapNum = 0
         this.currentFormDataGroup.map((item: CurrentDataTable) => {
             if (item.delFlag === 0) {
-                ScrapNum = accAdd(ScrapNum, item.userList.length);
+                scrapNum = accAdd(scrapNum, item.userList.length);
             }
         });
-        return ScrapNum;
+        return scrapNum;
     }
+
+    compareChange(row) {
+        this.orgFormDataGroup.forEach((item) => {
+            if (row.editedMark === false) {
+                if (item.id === row.id) {
+                    console.log(item)
+                    console.log(row)
+                    console.log(_.isEqual(row, item))
+                    if (!_.isEqual(row, item)) {
+                        row.editedMark = true
+                        this.tabChangedState[2] += 1
+                        console.log(row.editedMark)
+                    }
+                }
+            }
+        })
+        console.log('增删改状态')
+        console.log(this.tabChangedState)
+    }
+
+    tabChangeState() {
+        console.log('查询 waitedDataInsert 增删改状态')
+        console.log(this.tabChangedState)
+        return !(this.tabChangedState[0] === 0 && this.tabChangedState[1] === 0 && this.tabChangedState[2] === 0)
+    }
+
+    returnDataGroup() {
+            this.waitedDataInsert = [];
+            this.waitedDataUpdate = [];
+            this.currentFormDataGroup.forEach(item => {
+                if (item.id) {
+                    if (item.editedMark === true) {
+                        delete item.editedMark
+                        this.waitedDataUpdate.push(item)
+                    }
+                } else {
+                    this.waitedDataInsert.push(item)
+                }
+            })
+
+            return {
+                countMan: this.actualNumber,
+                deleteData: this.waitedDataDelete,
+                insertData: this.waitedDataInsert,
+                updateData: this.waitedDataUpdate
+            }
+        }
 
 }
 interface CurrentDataTable {
@@ -398,9 +447,11 @@ interface CurrentDataTable {
     changed?: string;
     changer?: string;
     delFlag?: number;
+    id?: string;
+    editedMark?: boolean;
 }
 interface StringArray {
-  [index: number]: string;
+    [index: number]: string;
 }
 interface UserTypeListObject {
     dictCode?: string;

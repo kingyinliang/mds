@@ -222,34 +222,37 @@ import _ from 'lodash';
 
 export default class ReadyTimes extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
-    @Prop({ type: Array, default: [] }) classesOptions
+    @Prop({
+        type: Array,
+        default: [{
+            dictValue: '',
+            dictCode: ''
+        }]
+        }) classesOptions
 
     currentFormDataGroup: ReadyTimesData= {}
-    orgFormDataGroup: ReadyTimesData= {}
+    orgFormDataGroup: ReadyTimesData= {} // 用于比对的原始 data object
     readAudit= []
-    // classesOptions: object[]= []
-    isChange=false
-    isNewForm=false
+    isChange=false // data 是否有异动
+    isNewForm=false // 是否初次
     $refs: {
         currentFormDataGrou: HTMLFormElement;
     }
 
 
     init(dataGroup) {
-        console.log('ReadyTimes带进来的 data')
-        console.log(dataGroup)
+        // console.log('ReadyTimes带进来的 data')
+        // console.log(dataGroup)
         if (dataGroup !== null) {
             this.currentFormDataGroup = dataGroup
-            this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
+            this.orgFormDataGroup = JSON.parse(JSON.stringify(dataGroup))
             this.isNewForm = false
         } else {
             this.isNewForm = true
         }
-        // this.currentFormDataGroup.classes = 'M';
     }
 
     executeSave() {
-
         if (this.isNewForm) {
             if (this.isChange) {
                 return true
@@ -259,10 +262,11 @@ export default class ReadyTimes extends Vue {
 
         this.isChange = _.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)
         if (this.isChange) {
+            this.$message('文本记录未更异动');
             return false
         }
+            this.$message('文本记录有更新');
             return true
-
     }
 
     returnDataGroup() {
