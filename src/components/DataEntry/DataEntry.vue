@@ -200,7 +200,7 @@
                 if (str === 'saved') {
                     const arr = this.savedRules();
                     for (const rule of arr) {
-                        if (!rule()) {
+                        if (!rule('saved')) {
                             return false;
                         }
                     }
@@ -225,7 +225,7 @@
             submitData() {
                 const arr = this.submitRules();
                 for (const rule of arr) {
-                    if (!rule()) {
+                    if (!rule('submit')) {
                         return false;
                     }
                 }
