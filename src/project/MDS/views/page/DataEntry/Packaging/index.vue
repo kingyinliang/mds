@@ -55,7 +55,7 @@
                                     <img :src="'data:image/gif;base64,' + item.img" alt="">
                                     <div class="itemForm">
                                         <el-form-item label="订单号：" style="margin-bottom: 10px;">
-                                            <el-select v-model="item.orderNo" placeholder="请选择" :change="orderchange(item)">
+                                            <el-select v-model="item.orderNo" placeholder="请选择" @change="orderchange(item)">
                                                 <el-option v-for="(subItem, subIndex) in item.order_arr" :key="subIndex" :label="subItem" :value="subItem" />
                                             </el-select>
                                         </el-form-item>

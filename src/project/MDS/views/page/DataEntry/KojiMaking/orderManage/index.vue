@@ -54,11 +54,12 @@
                 <el-row v-if="searched" :gutter="5" style="margin-top: 5px;">
                     <el-col :span="12">
                         <el-card style="min-height: 730px;">
-                            <el-row style="margin-bottom: 5px;">
-                                <el-col style=" color: #000; font-weight: 500; font-size: 16px;">
-                                    订单管理
-                                </el-col>
-                            </el-row>
+                            <div class="box-card-title clearfix">
+                                <h3>
+                                    <i class="title-icon" />订单管理
+                                </h3>
+                                <slot name="titleBtn" />
+                            </div>
                             <el-row>
                                 <el-col>
                                     <el-table header-row-class-name="tableHead" :data="currentOrderList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="showDetail">
@@ -132,9 +133,14 @@
                         <el-card style="min-height: 730px;">
                             <el-row style="margin-bottom: 5px;">
                                 <el-col :span="12" style=" color: #000; font-weight: 500; font-size: 16px;">
-                                    订单明细
+                                    <div class="box-card-title clearfix">
+                                        <h3>
+                                            <i class="title-icon" :style="{ background: '#FFBF00FF' }" />订单明细
+                                        </h3>
+                                        <slot name="titleBtn" />
+                                    </div>
                                 </el-col>
-                                <el-col :span="12" class="rowButton" style="margin-top: -13px;">
+                                <el-col :span="12" class="rowButton">
                                     <el-button type="primary" size="small" style="float: right;" @click="delDetail">
                                         删除
                                     </el-button>

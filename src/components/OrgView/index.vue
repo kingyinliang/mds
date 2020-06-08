@@ -1,9 +1,9 @@
 <template>
     <div class="header_main">
-        <mds-card :title="title" :name="'org'" :pack-up="false" style="background: #fff;">
+        <mds-card :title="title" :name="'org'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
             <el-row :gutter="20">
                 <el-col :span="8">
-                    <div class="org-card">
+                    <div class="org-card" :style="siteContentViewHeight">
                         <div class="org-card_title">
                             组织架构一览
                         </div>
@@ -28,7 +28,7 @@
                     </div>
                 </el-col>
                 <el-col :span="16">
-                    <div class="org-card">
+                    <div class="org-card" :style="siteContentViewHeight">
                         <div class="org-card_title">
                             {{ rightTile }}
                         </div>
@@ -45,6 +45,9 @@
 <script lang="ts">
     import { Vue, Component, Watch, Prop } from 'vue-property-decorator';
     import { COMMON_API } from 'common/api/api';
+    // import { namespace } from 'vuex-class';
+
+    // const commonModule = namespace('common');
 
     @Component({
         components: {
@@ -53,6 +56,16 @@
     export default class OrgView extends Vue {
         @Prop({ default: '' }) title: string;
         @Prop({ default: '' }) rightTile: string;
+        // @commonModule.state('documentClientHeight') documentClientHeight
+
+        get mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
+        }
+
+        get siteContentViewHeight() {
+            const height = this.mainClientHeight - 52;
+            return { height: height + 'px' };
+        }
 
         $refs: {tree: HTMLFormElement}
         filterText = ''
@@ -70,14 +83,20 @@
 
         // 获取组织结构树
         getTree(type = false) {
+            let id = ''
+            if (JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode === '9999-xn') {
+                id = 'common'
+            } else {
+                id = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            }
             COMMON_API.ORGSTRUCTURE_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                factory: id
             }).then(({ data }) => {
                 if (data.code === 200) {
                     this.OrgTree = data.data;
                     this.arrList = [this.OrgTree[0]['children'][0]['id']];
                     if (type) {
-                        console.log(1)
+                        this.$emit('getTreeSuccess', data.data);
                     }
                 }
             });
@@ -119,6 +138,9 @@
 
         ::v-deep .el-tree-node__expand-icon { /* stylelint-disable-line */
             color: #487bff;
+        }
+        ::v-deep .el-tree-node__expand-icon.is-leaf { /* stylelint-disable-line */
+            color: transparent;
         }
 
         .org-card_title {

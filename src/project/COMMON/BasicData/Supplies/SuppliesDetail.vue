@@ -15,7 +15,7 @@
                     {{ dataForm.materialItemType }}
                 </el-form-item>
                 <el-form-item label="基本单位：">
-                    {{ dataForm.materialProductUnit }}
+                    {{ dataForm.materialBasicUnitName }}
                 </el-form-item>
                 <el-form-item label="物料组：">
                     {{ dataForm.materialGroup }}
@@ -29,7 +29,7 @@
             </h4>
             <div class="sapdetail-dataFormBox">
                 <el-form-item label="生产单位：">
-                    {{ dataForm.materialProductUnit }}
+                    {{ dataForm.materialProductUnitName }}
                 </el-form-item>
                 <el-form-item label="换算比例：">
                     {{ dataForm.ratio }}

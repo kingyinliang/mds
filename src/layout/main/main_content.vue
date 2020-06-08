@@ -23,7 +23,7 @@
                 <iframe v-if="item.type === 'iframe'" :src="item.iframeUrl" width="100%" height="100%" title="" />
                 <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
                     <keep-alive>
-                        <router-view v-if="item.name === mainTabsActiveName" />
+                        <router-view v-if="item.name === mainTabsActiveName" :style="siteContentViewHeight" />
                     </keep-alive>
                 </transition>
             </el-tab-pane>
@@ -31,9 +31,7 @@
         <!-- 主入口标签页 e -->
         <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
             <keep-alive>
-                <div :body-style="siteContentViewHeight">
-                    <router-view />
-                </div>
+                <router-view :style="siteContentViewHeight" />
             </keep-alive>
         </transition>
         <div class="footer">
@@ -43,7 +41,7 @@
 </template>
 
 <script>
-import { isURL } from '@/net/validate';
+import { isURL } from 'utils/utils.ts';
 
 export default {
     data() {
@@ -80,7 +78,7 @@ export default {
             }
         },
         siteContentViewHeight() {
-            let height = this.documentClientHeight - 50 - 30 - 2;
+            let height = this.documentClientHeight - 32 - 75;
             if (this.$route.meta.isTab) {
                 height -= 40;
                 return isURL(this.$route.meta.iframeUrl) ? { height: height + 'px' } : { minHeight: height + 'px' };
@@ -173,20 +171,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.footer {
-    position: absolute;
-    bottom: 55px;
-    width: 100%;
-    color: rgba(0, 0, 0, 0.45);
-    font-size: 12px;
-    line-height: 20px;
-    text-align: center;
-    a {
-        margin: 0 10px;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 14px;
-    }
-}
 
 @keyframes rollin {
     0% {

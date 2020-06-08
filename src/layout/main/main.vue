@@ -1,7 +1,7 @@
 <template>
     <div class="site-wrapper" :class="{ 'site-sidebar--fold': sidebarFold }">
         <template>
-            <main-navbar :update-password="updatePassword" :select-factory="SelectFactory" />
+            <main-navbar ref="mainNavbar" :update-password="updatePassword" :select-factory="SelectFactory" />
             <main-sidebar />
             <div class="site-content__wrapper SelfScrollbar" :style="{ 'min-height': documentClientHeight + 'px' }">
                 <main-content />
@@ -47,9 +47,20 @@ export default {
                 this.$store.commit('common/updateDocumentClientHeight', val);
             }
         },
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            },
+            set(val) {
+                this.$store.commit('common/updateMainClientHeight', val);
+            }
+        },
         sidebarFold: {
             get() {
                 return this.$store.state.common.sidebarFold;
+            },
+            set(val) {
+                this.$store.commit('common/updateSidebarFold', val);
             }
         },
         userId: {
@@ -82,6 +93,7 @@ export default {
     },
     mounted() {
         this.resetDocumentClientHeight();
+        this.setShortcutKey()
     },
     methods: {
         refreshDataList() {
@@ -104,23 +116,37 @@ export default {
         // 重置窗口可视高度
         resetDocumentClientHeight() {
             this.documentClientHeight = document.documentElement['clientHeight'];
+            this.mainClientHeight = document.documentElement['clientHeight'] - 32 - 40 - 56;
             window.onresize = () => {
                 this.documentClientHeight = document.documentElement['clientHeight'];
+                this.mainClientHeight = document.documentElement['clientHeight'] - 32 - 40 - 56;
             };
         },
         // 获取当前管理员信息
         getUserInfo() {
-            // this.$http(`${MAIN_API.USERINFO_API}`, 'GET', {}).then(({ data }) => {
-            //     if (data && data.code === 0) {
-            //         this.loading = false;
-            //         this.userId = data.user.userId;
-            //         this.userName = data.user.userName;
-            //         this.realName = data.user.realName;
-            //     }
-            // });
             this.userId = sessionStorage.getItem('userId');
             this.userName = sessionStorage.getItem('userName');
             this.realName = sessionStorage.getItem('realName');
+        },
+        setShortcutKey() {
+            window.onkeydown = (e) => {
+                const obj = e.srcElement;
+                if (obj !== null) {
+                    if (obj.tagName === 'BODY') {
+                        // 设置快捷键
+                        console.log(e.keyCode);
+                        if (e.keyCode === 77) {
+                            this.sidebarFold = !this.sidebarFold
+                        }
+                        if (e.keyCode === 70) {
+                            this.SelectFactory()
+                        }
+                        if (e.keyCode === 81) {
+                            this.$refs.mainNavbar.logoutHandle()
+                        }
+                    }
+                }
+            }
         }
     }
 };

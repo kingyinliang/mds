@@ -2,8 +2,8 @@
     <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
         <div class="site-navbar__header">
             <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
-                <a class="site-navbar__brand-lg" href="javascript:;"><img src="@/assets/img/logohead1.png" alt="" style="width: 140px;"></a>
-                <a class="site-navbar__brand-mini" href="javascript:;"><img src="@/assets/img/logoHead2.png" alt="" style="width: 47px;"></a>
+                <a class="site-navbar__brand-lg" href="javascript:;"><img src="~common/img/logohead1.png" alt="" style="width: 140px;"></a>
+                <a class="site-navbar__brand-mini" href="javascript:;"><img src="~common/img/logoHead2.png" alt="" style="width: 47px;"></a>
             </h1>
         </div>
         <div class="site-navbar__body clearfix">
@@ -12,20 +12,15 @@
                     <i class="iconfont factory-shouqicaidan switching" :class="{ open: sidebarFold, packup: !sidebarFold }" style="font-size: 25px;" />
                 </el-menu-item>
             </el-menu>
-            <!--<el-menu v-if="menuList.filter(item => item.type === '4').length > 0" class="site-navbar__menu site-navbar__menu&#45;&#45;right" mode="horizontal">-->
-            <!--<el-menu-item class="site-navbar__switch" index="4" style="padding: 8px 0;" @click="goEacharts">-->
-            <!--<span style=" display: block; height: 16px; padding: 0 11px; color: #00a2d4; font-size: 16px; line-height: 16px; border-left: 1px solid #d9d9d9;">数据面板 <i class="iconfont factory-mianban" style="color: #00a2d4;" /></span>-->
-            <!--</el-menu-item>-->
-            <!--</el-menu>-->
             <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
                 <el-menu-item class="site-navbar__switch" index="4" style="padding: 8px 0;" @click.native="selectFactory">
-                    <span style=" display: block; height: 16px; padding: 0 11px; color: #00a2d4; font-size: 16px; line-height: 16px; border-left: 1px solid #d9d9d9;">{{ factoryName }} <i class="iconfont factory-gongchang" style="color: #00a2d4;" /></span>
+                    <span style=" display: block; height: 16px; padding: 0 11px; color: #00a2d4; font-size: 16px; line-height: 16px; border-left: 1px solid #d9d9d9;"><i class="iconfont factory-gongchang" style=" margin-right: 5px; color: #00a2d4;" />{{ factoryName }}</span>
                 </el-menu-item>
             </el-menu>
             <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
                 <el-menu-item class="site-navbar__avatar" index="3" style="padding: 0 4px;">
                     <el-dropdown :show-timeout="0" placement="bottom">
-                        <span class="el-dropdown-link"><img src="@/assets/img/avatar.png" :alt="userName"><span>{{ realName + '（' + userName + '）' }}</span></span>
+                        <span class="el-dropdown-link"><img src="~common/img/avatar.png" :alt="userName"><span>{{ realName + '(' + userName + ')' }}</span></span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="updatePassword">
                                 修改密码
@@ -63,7 +58,7 @@ export default {
         return {
             visible: false,
             factory: JSON.parse(sessionStorage.getItem('userFactory') || '[]'),
-            factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptName
+            factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort
         };
     },
     computed: {

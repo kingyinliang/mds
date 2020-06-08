@@ -106,6 +106,7 @@ export default {
 
         };
         return {
+            // 修改密码校验
             dataRule: {
                 password: [
                     { required: true, message: '原密码必填', trigger: 'blur' },
@@ -133,11 +134,13 @@ export default {
             visible: false,
             factoryVisible: false,
             factory: [],
+            // 修改密码数据
             dataForm: {
                 password: '',
                 newPassword: '',
                 conPassword: ''
             },
+            // 登录用户信息
             ruleForm2: {
                 user: '',
                 pass: ''
@@ -176,7 +179,10 @@ export default {
                         if (data.code === 0) {
                             this.$successToast('操作成功');
                             this.visible = false;
-                            if (this.factory.length > 1) {
+                            if (sessionStorage.getItem('defaultFactory')) {
+                                const dfFa = this.factory.filter(item => item.deptCode === sessionStorage.getItem('defaultFactory'))[0]
+                                this.$refs.selectfactory.goFa(dfFa)
+                            } else if (this.factory.length > 1) {
                                 this.factoryVisible = true;
                                 this.$nextTick(() => {
                                     this.$refs['selectfactory'].init();
@@ -202,9 +208,13 @@ export default {
                             sessionStorage.setItem('userFactory', JSON.stringify(data.data.userFactory || '[]'));
                             sessionStorage.setItem('userName', data.data.userName || '');
                             sessionStorage.setItem('realName', data.data.realName || '');
+                            sessionStorage.setItem('defaultFactory', data.data.defaultFactory || '');
                             if (data.data.firstFlag === '1') {
                                 this.visible = true;
                                 this.factory = data.data.userFactory
+                            } else if (data.data.defaultFactory) {
+                                const dfFa = data.data.userFactory.filter(item => item.deptCode === data.data.defaultFactory)[0]
+                                this.$refs.selectfactory.goFa(dfFa)
                             } else {
                                 this.selectFactory(data.data)
                             }

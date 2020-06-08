@@ -5,7 +5,7 @@
                 <template v-for="item in queryFormData">
                     <template v-if="!item.hide">
                         <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop">
-                            <el-select :ref="item.prop" v-model="queryForm[item.prop]" style="width: 170px;" :filterable="item.filterable" :clearable="item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
+                            <el-select :ref="item.prop" v-model="queryForm[item.prop]" style="width: 170px;" :filterable="item.filterable" :clearable="!item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
                                 <el-option label="请选择" value="" />
                                 <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="setLabel(opt, item)" :value="opt[item.resVal.value]" />
                             </el-select>
@@ -16,11 +16,11 @@
                         <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :prop="item.prop">
                             <el-row>
                                 <el-col :span="12">
-                                    <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 135px;" />
+                                    <el-date-picker :ref="item.prop" v-model="queryForm[item.prop]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 140px;" />
                                     <span style="margin-left: 5px;">-</span>
                                 </el-col>
                                 <el-col :span="12">
-                                    <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 135px;" />
+                                    <el-date-picker :ref="item.propTwo" v-model="queryForm[item.propTwo]" :type="item.dataType ? item.dataType : 'date'" placeholder="选择日期" :value-format="item.valueFormat ? item.valueFormat : 'yyyy-MM-dd'" style="width: 140px;" />
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -39,16 +39,19 @@
                     <slot name="mds-button" />
                 </el-form-item>
             </el-form>
-            <div v-if="!tabs.length" class="toggleSearchBottom">
+            <div v-if="!tabs.length && type !== 'home'" class="toggleSearchBottom">
                 <i class="el-icon-caret-top" />
             </div>
         </el-card>
-        <el-tabs v-if="tabs.length" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
+        <div v-if="type === 'home'">
+            <slot name="home" />
+        </div>
+        <el-tabs v-else-if="tabs.length" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" @tab-click="tabClick">
             <el-tab-pane v-for="(tabItem, index) in tabs" :key="index" :name="index.toString()" :label="tabItem.label">
                 <div>
                     <slot :name="'tab-head' + index" />
                 </div>
-                <el-table ref="table" class="newTable" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                <el-table ref="table" class="newTable" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change=" val => tabHandleSelectionChange(val, index)">
                     <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
                     <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
                     <template v-for="(item, index2) in tabItem.column">
@@ -56,14 +59,21 @@
                             <template v-if="item.child">
                                 <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip || false" :width="chind.width || ''" />
                             </template>
+                            <template v-if="item.header" slot="header">
+                                <i class="reqI">*</i><span>{{ item.label }}</span>
+                            </template>
                             <template slot-scope="scope">
                                 <el-input v-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
                                 <el-date-picker v-else-if="item.redact && item.type === 'date-picker'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" :value-format="item.valueFormat" :style="{width: item.width - 25 + 'px'}" size="small" />
-                                <span v-else>{{ scope.row[item.prop] }}</span>
+                                <el-select v-else-if="item.redact && item.type === 'select'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" :type="item.dataType" placeholder="请选择" size="small">
+                                    <el-option label="请选择" value="" />
+                                    <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="opt[item.resVal.label]" :value="opt[item.resVal.value]" />
+                                </el-select>
+                                <span v-else>{{ item.formatter? item.formatter(scope.row) : scope.row[item.prop] }}</span>
                             </template>
                         </el-table-column>
                     </template>
-                    <el-table-column v-if="showOperationColumn" label="操作" fixed="right" :width="operationColumnWidth">
+                    <el-table-column v-if="tabItem.showOperationColumn" label="操作" fixed="right" :width="operationColumnWidth">
                         <template slot-scope="scope">
                             <slot :scope="scope" name="operation_column" />
                         </template>
@@ -74,20 +84,43 @@
                 </el-row>
             </el-tab-pane>
         </el-tabs>
-        <el-card v-if="!tabs.length" class="tableCard" style="min-height: 400px;">
+        <div v-else class="tableCard box-card" style="min-height: 400px; background: #fff;">
             <div class="toggleSearchTop">
                 <i class="el-icon-caret-bottom" />
+            </div>
+            <div>
+                <slot :name="'tab-head-main'" />
             </div>
             <el-row>
                 <el-col style=" margin-bottom: 10px; text-align: right;">
                     <slot name="mds-button-middle" />
                 </el-col>
             </el-row>
-            <el-table v-if="showTable" ref="table" :data="tableData" :height="tableHeightSet" :span-method="spanMethod" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+            <el-table
+                v-if="showTable"
+                ref="table"
+                class="newTable"
+                :data="tableData"
+                :height="tableHeightSet"
+                :span-method="spanMethod"
+                border
+                tooltip-effect="dark"
+                header-row-class-name="tableHead"
+                style="width: 100%; margin-bottom: 20px;"
+                @selection-change="handleSelectionChange"
+            >
                 <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
                 <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
                 <template v-for="(item, index) in column">
                     <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <span v-if="item.propList">
+                                <i v-for="(sole, soleIndex) in item.propList" :key="soleIndex">
+                                    {{ scope.row[sole] }}
+                                </i>
+                            </span>
+                            <span v-else>{{ scope.row[item.prop] }}</span>
+                        </template>
                         <template v-if="item.child">
                             <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip" :width="chind.width || ''" />
                         </template>
@@ -101,19 +134,27 @@
             </el-table>
             <slot v-if="!showTable" name="card-main" />
             <el-row v-if="showPage === true">
-                <el-pagination :current-page="queryForm.currPage" :page-sizes="[10, 20, 50]" :page-size="queryForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="queryForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="queryForm[currpageConfig]" :page-sizes="[10, 20, 50]" :page-size="queryForm[pagesizeConfig] " layout="total, sizes, prev, pager, next, jumper" :total="queryForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
-        </el-card>
+        </div>
     </div>
 </template>
 
 <script>
-    import { exportFileForm } from '@/net/validate';
-    import { creatGetPath } from '@/utils/index';
+    import { exportFileForm } from 'utils/utils.ts';
+    import { creatGetPath } from 'utils/utils.ts';
     export default {
         name: 'QueryTable',
         components: {},
         props: {
+            factoryType: {
+                type: Number,
+                default: 0
+            },
+            type: {
+                type: String,
+                default: 'queryTable'
+            },
             resData: {
                 type: Object,
                 default: () => {
@@ -240,8 +281,6 @@
         data() {
             return {
                 queryForm: {
-                    currPage: 1,
-                    pageSize: 10,
                     totalCount: 0
                 },
                 activeName: 0,
@@ -249,7 +288,9 @@
                 optionLists: {},
                 tableData: [],
                 multipleSelection: [],
-                tableHeightSet: this.tableHeight
+                tableHeightSet: this.tableHeight,
+                currpageConfig: 'currPage',
+                pagesizeConfig: 'pageSize'
             };
         },
         computed: {},
@@ -281,11 +322,17 @@
             // 初始化
             init() {
                 console.time('组件初始化');
+                if (this.factoryType === 1) {
+                    this.currpageConfig = 'current';
+                    this.pagesizeConfig = 'size';
+                }
+                this.queryForm[this.currpageConfig] = 1;
+                this.queryForm[this.pagesizeConfig] = 10;
                 this.queryFormData.forEach(item => {
                     // 设置查询表单
                     this.$set(this.queryForm, item.prop, item.defaultValue || '');
                     if (item.type === 'date-interval') {
-                        this.$set(this.queryForm, item.propTwo, item.defaultValue || '');
+                        this.$set(this.queryForm, item.propTwo, item.defaultValueTwo || '');
                     }
                     // 下拉框获取下拉
                     if (item.options) {
@@ -374,7 +421,7 @@
             // 清空表格和分页
             clearTableAndPage() {
                 this.tableData = [];
-                this.queryForm.currPage = 1;
+                this.queryForm[this.currpageConfig] = 1;
                 this.queryForm.totalCount = 0;
                 // this.getDataList()
             },
@@ -394,16 +441,16 @@
                 }
                 if (st) {
                     if (this.tabs.length && this.tabs[this.activeName].pages) {
-                        this.tabs[this.activeName].pages.currPage = 1;
+                        this.tabs[this.activeName].pages[this.currpageConfig] = 1;
                     } else {
-                        this.queryForm.currPage = 1;
+                        this.queryForm[this.currpageConfig] = 1;
                     }
                 }
                 if (this.pagePagination.currPage) {
-                    this.queryForm[this.pagePagination.currPage] = this.queryForm.currPage
+                    this.queryForm[this.pagePagination.currPage] = this.queryForm[this.currpageConfig]
                 }
                 if (this.pagePagination.pageSize) {
-                    this.queryForm[this.pagePagination.pageSize] = this.queryForm.pageSize
+                    this.queryForm[this.pagePagination.pageSize] = this.queryForm[this.pagesizeConfig]
                 }
                 if (this.pagePagination.currPage) {
                     this.queryForm[this.pagePagination.totalCount] = this.queryForm.totalCount
@@ -426,15 +473,18 @@
                             this.queryForm.currPage = path.currPage;
                         }
                         if (this.resData.pageSize) {
-                            this.queryForm.pageSize = path[this.resData.pageSize];
+                            this.queryForm[this.pagesizeConfig] = path[this.resData.pageSize];
                         } else {
-                            this.queryForm.pageSize = path.pageSize;
+                            this.queryForm[this.pagesizeConfig] = path.pageSize;
                         }
                         if (this.resData.totalCount) {
                             this.queryForm.totalCount = path[this.resData.totalCount];
                         } else {
                             this.queryForm.totalCount = path.totalCount;
                         }
+                    } else if (this.factoryType === 1) {
+                        this.tableData = data.data.records;
+                        this.queryForm.totalCount = data.data.total;
                     }
                     this.$emit('get-data-success', data, st);
                 });
@@ -483,7 +533,14 @@
              /* eslint-enable no-invalid-this */
             // 序号
             indexMethod(index) {
-                return index + 1 + (Number(this.queryForm.currPage) - 1) * (Number(this.queryForm.pageSize));
+                return index + 1 + (Number(this.queryForm[this.currpageConfig]) - 1) * (Number(this.queryForm[this.pagesizeConfig]));
+            },
+            // tab表格选中
+            tabHandleSelectionChange(val, index) {
+                this.tabs[index].multipleSelection = [];
+                val.forEach((item) => {
+                    this.tabs[index].multipleSelection.push(item);
+                });
             },
             // 表格选中
             handleSelectionChange(val) {
@@ -504,13 +561,17 @@
             },
             // 改变每页条数
             handleSizeChange(val) {
-                this.queryForm.pageSize = val;
+                this.queryForm[this.pagesizeConfig] = val;
                 this.getDataList();
             },
             // 跳转页数
             handleCurrentChange(val) {
-                this.queryForm.currPage = val;
+                this.queryForm[this.currpageConfig] = val;
                 this.getDataList();
+            },
+            tabClick(tab) {
+                // console.log(tab.name);
+                this.$emit('tab-click', tab);
             }
         }
     };
