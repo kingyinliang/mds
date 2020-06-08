@@ -23,22 +23,22 @@
             <el-row>
                 <el-col :span="24">
                     <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="materielDataList" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column label="生产物料" width="220">
+                        <el-table-column min-width="200">
+                            <template slot="header">
+                                <i class="reqI">*</i> 生产物料
+                            </template>
                             <template slot-scope="scope">
-                                <div class="required">
-                                    <i class="reqI">*</i>
-                                    <el-select v-model="scope.row.productCode" value-key="productCode" placeholder="请选择生产物料" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeProduct(scope.row)">
-                                        <el-option v-for="(item, index) in dictListObj['CM_material_prd']" :key="index" :label="item.code + ' ' + item.value" :value="item.code" />
-                                    </el-select>
-                                </div>
+                                <el-select v-model="scope.row.productCode" value-key="productCode" placeholder="请选择生产物料" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeProduct(scope.row)">
+                                    <el-option v-for="(item, index) in dictListObj['CM_material_prd']" :key="index" :label="item.code + ' ' + item.value" :value="item.code" />
+                                </el-select>
                             </template>
                         </el-table-column>
-                        <el-table-column width="140" label="生产数">
+                        <el-table-column min-width="100" label="">
+                            <template slot="header">
+                                <i class="reqI">*</i> 生产数
+                            </template>
                             <template slot-scope="scope">
-                                <div class="required">
-                                    <i class="reqI">*</i>
-                                    <el-input v-model.number="scope.row.productWeight" type="number" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" @input="changeProductWeight(scope.row)" />
-                                </div>
+                                <el-input v-model.number="scope.row.productWeight" type="number" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" @input="changeProductWeight(scope.row)" />
                             </template>
                         </el-table-column>
                         <el-table-column width="60" label="单位">
@@ -46,32 +46,32 @@
                                 {{ (scope.row.productUnit = 'KG') }}
                             </template>
                         </el-table-column>
-                        <el-table-column width="220" label="发料料号">
+                        <el-table-column min-width="200">
+                            <template slot="header">
+                                <i class="reqI">*</i> 发料料号
+                            </template>
                             <template slot-scope="scope">
-                                <div class="required">
-                                    <i class="reqI">*</i>
-                                    <el-select v-model="scope.row.issueCode" value-key="issueCode" placeholder="请选择发料料号" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeIssue(scope.row)">
-                                        <el-option v-for="(item, index) in dictListObj['CM_material']" :key="index" :label="item.code + ' ' + item.value" :value="item.code" />
-                                    </el-select>
-                                </div>
+                                <el-select v-model="scope.row.issueCode" value-key="issueCode" placeholder="请选择发料料号" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeIssue(scope.row)">
+                                    <el-option v-for="(item, index) in dictListObj['CM_material']" :key="index" :label="item.code + ' ' + item.value" :value="item.code" />
+                                </el-select>
                             </template>
                         </el-table-column>
-                        <el-table-column width="140" label="小麦数量">
+                        <el-table-column min-width="90" label="小麦数量">
                             <template slot-scope="scope">
                                 {{ (scope.row.issueWeight = Number(scope.row.branWeight) + Number(scope.row.granuleWeight) + Number(scope.row.scrappedWeight) + Number(scope.row.inStorageWeight)) }}
                             </template>
                         </el-table-column>
-                        <el-table-column width="140" label="麸皮">
+                        <el-table-column min-width="100" label="麸皮">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.branWeight" type="number" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
                             </template>
                         </el-table-column>
-                        <el-table-column width="140" label="小颗粒">
+                        <el-table-column min-width="100" label="小颗粒">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.granuleWeight" type="number" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
                             </template>
                         </el-table-column>
-                        <el-table-column width="140" label="报废小麦">
+                        <el-table-column min-width="100" label="报废小麦">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.scrappedWeight" type="number" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
                             </template>
@@ -81,40 +81,43 @@
                                 {{ scope.row.shengyu }}
                             </template>
                         </el-table-column>
-                        <el-table-column width="180" label="发料批次">
+                        <el-table-column min-width="130">
+                            <template slot="header">
+                                <i class="reqI">*</i> 发料批次
+                            </template>
                             <template slot-scope="scope">
-                                <div class="required">
-                                    <i class="reqI">*</i>
-                                    <el-select v-model="scope.row.issueBatch" placeholder="请选择发料批次" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeBatch(scope.row)">
-                                        <el-option v-for="(item, index) in CangList" :key="index" :label="item.batch" :value="item.batch" />
-                                    </el-select>
-                                </div>
+                                <el-select v-model="scope.row.issueBatch" placeholder="请选择发料批次" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeBatch(scope.row)">
+                                    <el-option v-for="(item, index) in CangList" :key="index" :label="item.batch" :value="item.batch" />
+                                </el-select>
                             </template>
                         </el-table-column>
-                        <el-table-column width="140" label="入库数">
+                        <el-table-column min-width="100">
+                            <template slot="header">
+                                <i class="reqI">*</i> 入库数
+                            </template>
                             <template slot-scope="scope">
-                                <div class="required">
-                                    <i class="reqI">*</i>
-                                    <el-input v-model.number="scope.row.inStorageWeight" type="number" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
-                                </div>
+                                <el-input v-model.number="scope.row.inStorageWeight" type="number" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
                             </template>
                         </el-table-column>
-                        <el-table-column width="140" label="入库批次">
+                        <el-table-column width="140">
+                            <template slot="header">
+                                <i class="reqI">*</i> 入库批次
+                            </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.inStorageBatch" maxlength="10" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
                             </template>
                         </el-table-column>
-                        <el-table-column width="140" label="库存数">
+                        <el-table-column min-width="100" label="库存数">
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.storageWeight" type="number" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
                             </template>
                         </el-table-column>
-                        <el-table-column width="140" label="备注">
+                        <el-table-column min-width="120" label="备注">
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.remark" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
                             </template>
                         </el-table-column>
-                        <el-table-column width="200" label="生产订单">
+                        <el-table-column min-width="120" label="生产订单">
                             <template slot-scope="scope">
                                 {{ scope.row.orderNo }}
                             </template>
@@ -203,7 +206,7 @@ export default {
     },
     methods: {
         // 保存、提交 物料订单号校验
-        saveAndSubmitRule() {
+        saveAndSubmitRule(state) {
             if (this.materielDataList.length === 0) {
                 this.$warningToast('请先新增订单');
                 return false;
@@ -212,6 +215,14 @@ export default {
                 if (!item.orderNo || item.orderNo === '') {
                     this.$warningToast('生产订单号不能为空');
                     return false;
+                }
+            }
+            if (state === 'submit') {
+                for (const item of this.materielDataList) {
+                    if (!item.inStorageBatch || item.inStorageBatch === '') {
+                        this.$warningToast('入库批次不能为空');
+                        return false;
+                    }
                 }
             }
             return true;

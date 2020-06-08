@@ -8,14 +8,14 @@
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="currentFormDataGroup" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;" @cell-click="compareChange">
+            <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
                 <el-table-column label="序号" type="index" width="60" fixed />
                 <el-table-column prop="status" min-width="100" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small" clearable @change="compareChange(scope.row)">
+                        <el-select v-model="scope.row.classes" size="small" clearable>
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -40,7 +40,7 @@
                         <span class="notNull">*</span>人员属性
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!isRedact" clearable @change="compareChange(scope.row)">
+                        <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!isRedact" clearable>
                             <el-option v-for="(iteam, index) in userTypeList" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                         </el-select>
                     </template>
@@ -70,7 +70,7 @@
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" width="140" :show-overflow-tooltip="true">
@@ -86,7 +86,7 @@
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="90" label="时长(H)" :show-overflow-tooltip="true">
@@ -111,7 +111,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="removeDataRow(scope.$index)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="removeDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -141,7 +141,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API } from 'common/api/api';
+import { COMMON_API, PKG_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber, getDateDiff, accAdd } from 'utils/utils';
 import OfficialWorker from 'components/OfficialWorker.vue';
 import LoanedPersonnel from 'components/LoanedPersonnel.vue';
@@ -173,10 +173,6 @@ export default class ProductPeople extends Vue {
     // 常有变数
     currentFormDataGroup: CurrentDataTable[] = [] // 主 data
     orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
-    waitedDataDelete: string[]= [] // 入库删除集合
-    waitedDataInsert: CurrentDataTable[] = [] // 入库新增集合
-    waitedDataUpdate: CurrentDataTable[] =[] // 入库修改集合
-    tabChangedState=[0, 0, 0] // 增,删,改
 
     teamList = [];
     userTypeList: UserTypeListObject[] = [];
@@ -193,33 +189,58 @@ export default class ProductPeople extends Vue {
     arrList = [];
     standardManpower = 0;
 
-    async init(dataGroup) {
-        this.waitedDataDelete = [];
-        this.waitedDataInsert = [];
-        this.waitedDataUpdate = [];
-        this.tabChangedState = [0, 0, 0]
-        console.log('ProductPeople 带进来的 data')
-        console.log(dataGroup)
+    init(formHeader) {
+        PKG_API.PKG_USER_QUERY_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            if (data.data !== null) {
+                this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data));
+                this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data));
+            }
+        });
         // 工序
-        await this.getTeamList()
+        this.getTeamList()
 
         // 人员属性
-        await this.getUserTypeList()
+        this.getUserTypeList()
 
         // 获取组织结构树
-        await this.getTree()
+        this.getTree()
 
-        await this.getStandardManPower(this.$store.state.packaging.packDetail)
-
-        if (dataGroup !== null) {
-            this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup))
-            this.currentFormDataGroup.forEach((item) => {
-                item.editedMark = false
-            })
-            this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
-        }
+        this.getStandardManPower(this.$store.state.packaging.packDetail)
     }
 
+    // 保存
+    savedData(formHeader) {
+        const countMan = this.actualNumber;
+        const ids: string[] = [];
+        const pkgUserInsertDto: CurrentDataTable[] = [];
+        const pkgUserUpdateDto: CurrentDataTable[] = [];
+        this.currentFormDataGroup.forEach((item, index) => {
+            if (item.delFlag === 1) {
+                if (item.id) {
+                    ids.push(item.id)
+                }
+            } else if (item.id) {
+                if (!_.isEqual(this.orgFormDataGroup[index], item)) {
+                    item.orderId = formHeader.id;
+                    pkgUserUpdateDto.push(item)
+                }
+            } else {
+                item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                item.orderId = formHeader.id;
+                item.orderNo = formHeader.orderNo;
+                pkgUserInsertDto.push(item)
+            }
+        })
+        return {
+            countMan,
+            ids,
+            pkgUserInsertDto,
+            pkgUserUpdateDto
+        }
+    }
 
     // 工序
     getTeamList() {
@@ -239,6 +260,32 @@ export default class ProductPeople extends Vue {
         });
     }
 
+    // 获取组织结构树
+    getTree() {
+        COMMON_API.ORGSTRUCTURE_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+        }).then(({ data }) => {
+            this.orgTree = data.data;
+            // this.arrList = [this.OrgTree[0].children[0].id];
+        });
+    }
+
+    // 获取产能
+    getStandardManPower(formHeader: object) {
+        COMMON_API.CAPACITYLIST_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            deptId: formHeader['productLine'],
+            queryDate: formHeader['productDate'],
+            current: 1,
+            size: 10
+        }).then(({ data }) => {
+            if (data.data.records.length !== 0) {
+                this.standardManpower = data.data.records[0]['standardManpower'];
+            }
+        });
+    }
+
+    // 新增
     addNewDataRow() {
         let sole: CurrentDataTable
         if (this.currentFormDataGroup.length === 0) {
@@ -270,13 +317,32 @@ export default class ProductPeople extends Vue {
                 delFlag: 0
             };
         }
-        this.tabChangedState[0] += 1
         this.currentFormDataGroup.push(sole)
+    }
+
+    // 人员删除
+    removeDataRow(row) {
+        this.$confirm('是否删除?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            row.delFlag = 1;
+        })
+    }
+
+    //  RowDelFlag
+    RowDelFlag({ row }) {
+        if (row.delFlag === 1) {
+            return 'rowDel';
+        }
+        return '';
+
     }
 
     workTime(end, start, row) {
         let diff = '0';
-        if (end && start && row.delFlag !== '1') {
+        if (end && start && row.delFlag !== 1) {
             diff = getDateDiff(start, end, 'hour');
         }
         return diff;
@@ -284,7 +350,6 @@ export default class ProductPeople extends Vue {
 
     // 班组修改
     selectDept(row: CurrentDataTable) {
-        this.compareChange(row)
         row.userList = [];
     }
 
@@ -321,16 +386,6 @@ export default class ProductPeople extends Vue {
         this.temporaryWorkerStatus = false;
     }
 
-    // 获取组织结构树
-    getTree() {
-        COMMON_API.ORGSTRUCTURE_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-        }).then(({ data }) => {
-            this.orgTree = data.data;
-            // this.arrList = [this.OrgTree[0].children[0].id];
-        });
-    }
-
     // 临时工
     dayLaborer(row: CurrentDataTable) {
         this.row = row;
@@ -343,40 +398,6 @@ export default class ProductPeople extends Vue {
         }
     }
 
-    // 人员删除
-    removeDataRow(index) {
-        this.$confirm('是否删除?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-
-            if (Object.prototype.hasOwnProperty.call(this.currentFormDataGroup[index], 'id')) {
-                this.tabChangedState[1] += 1
-                this.waitedDataDelete.push((this.currentFormDataGroup[index].id) as string)
-            } else {
-                this.tabChangedState[0] -= 1
-            }
-            this.currentFormDataGroup.splice(index, 1);
-
-
-        })
-    }
-
-    getStandardManPower(formHeader: object) {
-        COMMON_API.CAPACITYLIST_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            deptId: formHeader['productLine'],
-            queryDate: formHeader['productDate'],
-            current: 1,
-            size: 10
-        }).then(({ data }) => {
-            if (data.data.records.length !== 0) {
-                this.standardManpower = data.data.records[0]['standardManpower'];
-            }
-        });
-    }
-
     get actualNumber() {
         let scrapNum = 0
         this.currentFormDataGroup.map((item: CurrentDataTable) => {
@@ -386,56 +407,11 @@ export default class ProductPeople extends Vue {
         });
         return scrapNum;
     }
-
-    compareChange(row) {
-        this.orgFormDataGroup.forEach((item) => {
-            if (row.editedMark === false) {
-                if (item.id === row.id) {
-                    console.log(item)
-                    console.log(row)
-                    console.log(_.isEqual(row, item))
-                    if (!_.isEqual(row, item)) {
-                        row.editedMark = true
-                        this.tabChangedState[2] += 1
-                        console.log(row.editedMark)
-                    }
-                }
-            }
-        })
-        console.log('增删改状态')
-        console.log(this.tabChangedState)
-    }
-
-    tabChangeState() {
-        console.log('查询 waitedDataInsert 增删改状态')
-        console.log(this.tabChangedState)
-        return !(this.tabChangedState[0] === 0 && this.tabChangedState[1] === 0 && this.tabChangedState[2] === 0)
-    }
-
-    returnDataGroup() {
-            this.waitedDataInsert = [];
-            this.waitedDataUpdate = [];
-            this.currentFormDataGroup.forEach(item => {
-                if (item.id) {
-                    if (item.editedMark === true) {
-                        delete item.editedMark
-                        this.waitedDataUpdate.push(item)
-                    }
-                } else {
-                    this.waitedDataInsert.push(item)
-                }
-            })
-
-            return {
-                countMan: this.actualNumber,
-                deleteData: this.waitedDataDelete,
-                insertData: this.waitedDataInsert,
-                updateData: this.waitedDataUpdate
-            }
-        }
-
 }
 interface CurrentDataTable {
+    factory?: string;
+    orderId?: string;
+    orderNo?: string;
     classes?: string;
     deptId?: string;
     userType?: string;

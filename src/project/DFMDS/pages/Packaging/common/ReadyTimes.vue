@@ -208,7 +208,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-// import { COMMON_API } from 'common/api/api';
+import { PKG_API } from 'common/api/api';
 import _ from 'lodash';
 
 @Component({
@@ -235,38 +235,40 @@ export default class ReadyTimes extends Vue {
     readAudit= []
     isChange=false // data 是否有异动
     isNewForm=false // 是否初次
-    $refs: {
-        currentFormDataGrou: HTMLFormElement;
-    }
 
 
-    init(dataGroup) {
-        // console.log('ReadyTimes带进来的 data')
-        // console.log(dataGroup)
-        if (dataGroup !== null) {
-            this.currentFormDataGroup = dataGroup
-            this.orgFormDataGroup = JSON.parse(JSON.stringify(dataGroup))
-            this.isNewForm = false
-        } else {
-            this.isNewForm = true
-        }
-    }
-
-    executeSave() {
-        if (this.isNewForm) {
-            if (this.isChange) {
-                return true
+    init(formHeader) {
+        PKG_API.PKG_TIMESHEET_QUERY_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            if (data.data === null) {
+                this.isNewForm = true
+            } else {
+                this.isNewForm = false
+                this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
+                this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data))
             }
-            return false
-        }
+        })
+    }
 
-        this.isChange = _.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)
-        if (this.isChange) {
-            this.$message('文本记录未更异动');
-            return false
+    savedData(formHeader) {
+        let pkgTimeSheetInsertDto: ReadyTimesData = {};
+        let pkgTimeSheetUpdateDto: ReadyTimesData = {};
+        if (!_.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)) {
+            this.currentFormDataGroup.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            this.currentFormDataGroup.orderId = formHeader.id;
+            this.currentFormDataGroup.orderNo = formHeader.orderNo;
+            if (this.isNewForm) {
+                pkgTimeSheetInsertDto = this.returnDataGroup()
+            } else {
+                pkgTimeSheetUpdateDto = this.returnDataGroup()
+            }
         }
-            this.$message('文本记录有更新');
-            return true
+        return {
+            pkgTimeSheetInsertDto,
+            pkgTimeSheetUpdateDto
+        }
     }
 
     returnDataGroup() {
