@@ -205,11 +205,15 @@
         savedDatas() {
             const pkgTimeSheet = this.$refs.readyTime.savedData(this.formHeader);
             const pkgUserSaveRequestDto = this.$refs.productPeople.savedData(this.formHeader);
+            const { pkgDeviceSaveRequestDto, pkgExceptionSaveRequestDto } = this.$refs.productPeople.savedData(this.formHeader);
             this.formHeader.orderId = this.formHeader.id;
+
             return PKG_API.PKG_ALL_SAVE_API({
                 pkgOrderUpdate: this.formHeader,
                 pkgTimeSheet,
-                pkgUserSaveRequestDto
+                pkgUserSaveRequestDto,
+                pkgDeviceSaveRequestDto,
+                pkgExceptionSaveRequestDto
             })
         }
 
@@ -220,8 +224,9 @@
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 if (data.data.orderStatus !== '已同步') {
-                    this.$refs.readyTime.init(this.formHeader)
-                    this.$refs.productPeople.init(this.formHeader)
+                    this.$refs.readyTime.init(this.formHeader);
+                    this.$refs.productPeople.init(this.formHeader);
+                    this.$refs.equipment.init(this.formHeader);
                 }
             })
         }
@@ -236,17 +241,6 @@
                         dictCode: item.dictCode
                     })
                 })
-            });
-        }
-
-        // # 2 生产人员
-        initProductPeople() {
-            PKG_API.PKG_USER_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: this.formHeader.orderNo
-                }).then(({ data }) => {
-                    this.$refs.productPeople.init(data.data)
-
             });
         }
 
@@ -319,100 +313,20 @@
             })
         }
 
-        urgentSubmit() {
-            console.log('紧急提交!')
-
-            this.dataGroup = {}
-            this.pkgDataOrderUpdate()
-            this.pkgDataInStorage()
-
-            PKG_API.PKG_URGENT_SUBMIT_API(
-                this.dataGroup
-            ).then(({ data }) => {
-                console.log(data)
-            });
-
-        }
-
-        // # pkgOrderUpdate
-        pkgDataOrderUpdate() {
-            this.dataGroup.pkgOrderUpdate = {
-                orderId: this.formHeader.id,
-                orderNo: this.formHeader.orderNo,
-                productDate: this.formHeader.productDate,
-                productLine: this.formHeader.productLine,
-                workShop: this.formHeader.workShop,
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                materialCode: this.formHeader.materialCode,
-                orderType: this.formHeader.orderType
-            };
-            this.dataGroup.pkgUserSaveRequestDto = {}
-            this.dataGroup.pkgTimeSheet = {}
-            this.dataGroup.pkgText = {}
-            this.dataGroup.pkgSemiMaterial = {}
-            this.dataGroup.pkgPackingMaterial = {}
-            this.dataGroup.pkgInstorage = {}
-            this.dataGroup.pkgGerms = {}
-            this.dataGroup.pkgExceptionSaveRequestDto = {}
-            this.dataGroup.pkgDeviceSaveRequestDto = {}
-        }
-
-        // # 1 pkgTimeSheet
-        pkgDataTimeSheet() {
-            if (this.$refs.readyTime.executeSave()) {
-                const timeSheetTemp = this.$refs.readyTime.returnDataGroup()
-                timeSheetTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
-                timeSheetTemp.orderId = this.formHeader.id
-                timeSheetTemp.orderNo = this.formHeader.orderNo
-
-                if (timeSheetTemp.id) {
-                    this.pkgTimeSheet = {
-                        pkgTimeSheetInsertDto: {},
-                        pkgTimeSheetUpdateDto: timeSheetTemp
-                    }
-                } else {
-
-                    this.pkgTimeSheet = {
-                        pkgTimeSheetInsertDto: timeSheetTemp,
-                        pkgTimeSheetUpdateDto: {}
-                    }
-                }
-                this.dataGroup.pkgTimeSheet = this.pkgTimeSheet;
-            } else {
-                this.dataGroup.pkgTimeSheet = {}
-            }
-
-
-        }
-
-        // # 2 pkgProductPeople
-        pkgDataProductPeople() {
-            if (this.isProductPeopleLoaded === true && this.$refs.productPeople.tabChangeState()) { // 判断是否有点击过验签与内容有异动
-                const productPeopleTemp = this.$refs.productPeople.returnDataGroup()
-                if (productPeopleTemp.insertData.length !== 0) {
-                    productPeopleTemp.insertData.forEach(item => {
-                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                        item.orderId = this.formHeader.id;
-                        item.orderNo = this.formHeader.orderNo;
-                    });
-                }
-                if (productPeopleTemp.updateData.length !== 0) {
-                    productPeopleTemp.updateData.forEach(item => {
-                        item.orderId = this.formHeader.id;
-                    });
-                }
-
-                this.pkgUserSaveRequestDto = {
-                    countMan: productPeopleTemp.countMan,
-                    ids: productPeopleTemp.deleteData,
-                    pkgUserInsertDto: productPeopleTemp.insertData,
-                    pkgUserUpdateDto: productPeopleTemp.updateData
-                }
-                this.dataGroup.pkgUserSaveRequestDto = this.pkgUserSaveRequestDto;
-            } else {
-                this.dataGroup.pkgUserSaveRequestDto = {}
-            }
-        }
+        // urgentSubmit() {
+        //     console.log('紧急提交!')
+        //
+        //     this.dataGroup = {}
+        //     this.pkgDataOrderUpdate()
+        //     this.pkgDataInStorage()
+        //
+        //     PKG_API.PKG_URGENT_SUBMIT_API(
+        //         this.dataGroup
+        //     ).then(({ data }) => {
+        //         console.log(data)
+        //     });
+        //
+        // }
 
         // # 3 pkgDataEquipment
         pkgDataEquipment() {

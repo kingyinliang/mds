@@ -202,7 +202,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API } from 'common/api/api';
+import { COMMON_API, PKG_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber } from 'utils/utils';
 import _ from 'lodash';
 
@@ -245,7 +245,25 @@ export default class Equipment extends Vue {
     fzReasonOptions=false
     fzExceptionCount=false
 
-    init(dataGroup, order) {
+    init(formHeader) {
+        PKG_API.PKG_DEVICE_QUERY_API({ // 设备运行-查询
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            if (data.data !== null) {
+                this.firstFormDataGroup = JSON.parse(JSON.stringify(data.data));
+                this.orgFirstFormDataGroup = JSON.parse(JSON.stringify(data.data));
+            }
+        });
+        PKG_API.PKG_EXCEPTION_QUERY_API({ // 停机情况-查询
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            if (data.data !== null) {
+                this.secondFormDataGroup = JSON.parse(JSON.stringify(data.data));
+                this.orgSecondFormDataGroup = JSON.parse(JSON.stringify(data.data));
+            }
+        });
 
         this.getStopType()
 
@@ -264,29 +282,62 @@ export default class Equipment extends Vue {
         this.waitedSecondDataInsert = [];
         this.waitedSecondDataUpdate = [];
         this.tabSecondChangedState = [0, 0, 0]
+    }
 
-        console.log('equipment带进来的 data')
-        console.log(dataGroup)
+    savedData(formHeader) {
+        const pkgDeviceSaveRequestDto: FristObj = {
+            deviceRunTime: this.computedFirstDataTotal,
+            ids: [],
+            pkgDeviceInsertDtos: [],
+            pkgDeviceUpdateDtos: []
+        };
+        const pkgExceptionSaveRequestDto: SecondObj = {
+            devicePauseTime: this.computedSecondDataTotal,
+            ids: [],
+            pkgExceptionInsertDtos: [],
+            pkgExceptionUpdateDtos: []
+        };
 
-        if (order === 'first') {
-            if (dataGroup !== null) {
-                this.firstFormDataGroup = JSON.parse(JSON.stringify(dataGroup))
-                this.firstFormDataGroup.forEach((item) => {
-                    item.editedMark = false
-                })
-                this.orgFirstFormDataGroup = JSON.parse(JSON.stringify(this.firstFormDataGroup))
+        this.firstFormDataGroup.forEach((item, index) => {
+            if (item.delFlag === 1) {
+                if (item.id) {
+                    pkgDeviceSaveRequestDto.ids.push(item.id)
+                }
+            } else if (item.id) {
+                if (!_.isEqual(this.orgFirstFormDataGroup[index], item)) {
+                    item.orderId = formHeader.id;
+                    pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos.push(item)
+                }
             } else {
-                //
+                item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                item.orderId = formHeader.id;
+                item.orderNo = formHeader.orderNo;
+                pkgDeviceSaveRequestDto.pkgDeviceInsertDtos.push(item)
             }
-        } else if (dataGroup !== null) {
-                this.secondFormDataGroup = JSON.parse(JSON.stringify(dataGroup))
-                this.secondFormDataGroup.forEach((item) => {
-                    item.editedMark = false
-                })
-                this.orgSecondFormDataGroup = JSON.parse(JSON.stringify(this.secondFormDataGroup))
+        });
+
+        this.secondFormDataGroup.forEach((item, index) => {
+            if (item.delFlag === 1) {
+                if (item.id) {
+                    pkgExceptionSaveRequestDto.ids.push(item.id)
+                }
+            } else if (item.id) {
+                if (!_.isEqual(this.orgSecondFormDataGroup[index], item)) {
+                    item.orderId = formHeader.id;
+                    pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos.push(item)
+                }
             } else {
-                //
+                item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                item.orderId = formHeader.id;
+                item.orderNo = formHeader.orderNo;
+                pkgExceptionSaveRequestDto.pkgExceptionInsertDtos.push(item)
             }
+        });
+
+        return {
+            pkgDeviceSaveRequestDto,
+            pkgExceptionSaveRequestDto
+        }
     }
 
     getStopType() {
@@ -321,26 +372,6 @@ export default class Equipment extends Vue {
         });
     }
 
-    changeStopModeOption(row) {
-        console.log(row)
-        if (row.stopType === 'PLAN_HALT') {
-            row.stopMode = 'CONTINUE_HALT'
-            row.exceptionCount = 1
-            this.fzExceptionCount = true
-            this.stopSituationOptions = JSON.parse(JSON.stringify(this.planHaltOptions))
-            row.stopReasonOptions = ''
-            row.stopSituation = ''
-        } else {
-            row.stopMode = ''
-            row.exceptionCount = 0
-            this.fzExceptionCount = false
-            this.stopSituationOptions = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
-            row.stopReasonOptions = ''
-            row.stopSituation = ''
-        }
-    }
-
-
     getPlanHalt() {
         COMMON_API.DICTQUERY_API({
             dictType: 'PLAN_HALT'
@@ -371,6 +402,25 @@ export default class Equipment extends Vue {
                 })
             })
         });
+    }
+
+    changeStopModeOption(row) {
+        console.log(row)
+        if (row.stopType === 'PLAN_HALT') {
+            row.stopMode = 'CONTINUE_HALT'
+            row.exceptionCount = 1
+            this.fzExceptionCount = true
+            this.stopSituationOptions = JSON.parse(JSON.stringify(this.planHaltOptions))
+            row.stopReasonOptions = ''
+            row.stopSituation = ''
+        } else {
+            row.stopMode = ''
+            row.exceptionCount = 0
+            this.fzExceptionCount = false
+            this.stopSituationOptions = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
+            row.stopReasonOptions = ''
+            row.stopSituation = ''
+        }
     }
 
     changeStopReasonOption(row) {
@@ -629,7 +679,24 @@ export default class Equipment extends Vue {
     }
 }
 
+interface FristObj {
+    deviceRunTime?: number;
+    ids: string[];
+    pkgDeviceInsertDtos: FirstDataTable[];
+    pkgDeviceUpdateDtos: FirstDataTable[];
+}
+
+interface SecondObj {
+    devicePauseTime?: number;
+    ids: string[];
+    pkgExceptionInsertDtos: SecondDataTable[];
+    pkgExceptionUpdateDtos: SecondDataTable[];
+}
+
 interface FirstDataTable {
+    factory?: string;
+    orderId?: string;
+    orderNo?: string;
     classes?: string;
     startDate?: string;
     endDate?: string;
@@ -642,6 +709,9 @@ interface FirstDataTable {
     editedMark?: boolean;
 }
 interface SecondDataTable{
+    factory?: string;
+    orderId?: string;
+    orderNo?: string;
     classes?: string;
     stopType?: string;
     stopMode?: string;
