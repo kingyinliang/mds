@@ -168,11 +168,19 @@
         spanOneArr: number[] = [];
         spanTwoArr: number[] = [];
 
-        mounted() {
-            console.log('加载了喔!!!!!!!')
-        }
+        packingMaterialDelete: string[]=[];
+        packingMaterialInsert: object[]=[];
+        packingMaterialItemDelete: string[]=[];
+        packingMaterialUpdate: object[]=[];
+        pkgSemiMaterialDelete: string[]=[];
+        pkgSemiMaterialInsert: object[]=[];
+        pkgSemiMaterialItemDelete: string[]=[];
+        pkgSemiMaterialUpdate: object[]=[];
+
 
         init(dataGroup) {
+            console.log('dataGroup')
+            console.log(dataGroup)
             PKG_API.PKG_MATERIAL_P_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: dataGroup.orderNo,
@@ -291,6 +299,20 @@
         // 删除
         delMaterial(row) {
             console.log(row)
+        }
+
+        returnDataGroup() {
+            // todo 加入判断
+            return {
+                packingMaterialDelete: this.packingMaterialDelete,
+                packingMaterialInsert: this.packingMaterialInsert,
+                packingMaterialItemDelete: this.packingMaterialItemDelete,
+                packingMaterialUpdate: this.packingMaterialUpdate,
+                pkgSemiMaterialDelete: this.pkgSemiMaterialDelete,
+                pkgSemiMaterialInsert: this.pkgSemiMaterialInsert,
+                pkgSemiMaterialItemDelete: this.pkgSemiMaterialItemDelete,
+                pkgSemiMaterialUpdate: this.pkgSemiMaterialUpdate
+            }
         }
     }
 interface MaterialMap{

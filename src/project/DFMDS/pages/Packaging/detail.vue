@@ -297,14 +297,14 @@
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
                 }).then(({ data }) => {
-                    this.$refs.equipment.init(data.data, 'first')
+                    this.$refs.equipment.initDevice(data.data)
 
             });
             PKG_API.PKG_EXCEPTION_QUERY_API({ // 停机情况-查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
                 }).then(({ data }) => {
-                    this.$refs.equipment.init(data.data, 'second')
+                    this.$refs.equipment.initException(data.data)
 
             });
         }
@@ -322,17 +322,9 @@
 
         // # 5 料领领用
         initSemiMaterial() {
-            // PKG_API.PKG_MATERIAL_P_QUERY_API({
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //     orderNo: this.formHeader.orderNo,
-            //     orderStatus: this.orderStatus,
-            //     productLine: this.formHeader.productLine
-            // }).then(({ data }) => {
-            //     console.log('物料领用-查询')
-            //     console.log(data)
-            //     this.$refs.material.init(data.data)
-            // })
-            // this.$refs.material.init(this.formHeader)
+            setTimeout(() => {
+                this.$refs.material.init(this.formHeader)
+            }, 1000);
         }
 
         // # 6 待处理数量
@@ -638,7 +630,25 @@
 
         // # 5 pkgMaterial
         pkgDataMaterial() {
-            //
+            if (this.isMaterialLoaded === true) {
+                const materialTemp = this.$refs.productInStorage.returnDataGroup()
+
+                this.dataGroup.pkgPackingMaterial = {
+                    packingMaterialDelete: materialTemp.packingMaterialDelete,
+                    packingMaterialInsert: materialTemp.packingMaterialInsert,
+                    packingMaterialItemDelete: materialTemp.packingMaterialItemDelete,
+                    packingMaterialUpdate: materialTemp.packingMaterialUpdate
+                }
+                this.dataGroup.pkgSemiMaterial = {
+                    pkgSemiMaterialDelete: materialTemp.pkgSemiMaterialDelete,
+                    pkgSemiMaterialInsert: materialTemp.pkgSemiMaterialInsert,
+                    pkgSemiMaterialItemDelete: materialTemp.pkgSemiMaterialItemDelete,
+                    pkgSemiMaterialUpdate: materialTemp.pkgSemiMaterialUpdate
+                }
+            } else {
+                this.dataGroup.pkgPackingMaterial = {}
+                this.dataGroup.pkgSemiMaterial = {}
+            }
         }
 
         // # 6 pkgPendingNum

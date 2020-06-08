@@ -388,8 +388,9 @@ export default class ProductPeople extends Vue {
     }
 
     compareChange(row) {
-        this.orgFormDataGroup.forEach((item) => {
-            if (row.editedMark === false) {
+
+        if (row.id && row.editedMark === false) {
+            this.orgFormDataGroup.forEach((item) => {
                 if (item.id === row.id) {
                     console.log(item)
                     console.log(row)
@@ -400,8 +401,8 @@ export default class ProductPeople extends Vue {
                         console.log(row.editedMark)
                     }
                 }
-            }
-        })
+            })
+        }
         console.log('增删改状态')
         console.log(this.tabChangedState)
     }

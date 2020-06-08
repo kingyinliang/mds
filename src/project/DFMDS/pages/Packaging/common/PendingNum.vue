@@ -156,9 +156,9 @@ export default class PendingNum extends Vue {
 
 
     compareChange(row) {
+        if (row.id && row.editedMark === false) {
         this.orgFormDataGroup.forEach((item) => {
-            if (row.editedMark === false) {
-                if (item.id === row.id) {
+            if (item.id === row.id) {
                     console.log(item)
                     console.log(row)
                     console.log(_.isEqual(row, item))
@@ -168,8 +168,8 @@ export default class PendingNum extends Vue {
                         console.log(row.editedMark)
                     }
                 }
-            }
-        })
+            })
+        }
         console.log('增删改状态')
         console.log(this.tabChangedState)
     }
