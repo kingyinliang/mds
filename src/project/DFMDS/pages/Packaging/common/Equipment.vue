@@ -245,15 +245,15 @@ export default class Equipment extends Vue {
     fzReasonOptions=false
     fzExceptionCount=false
 
-    async init(dataGroup, order) {
+    init(dataGroup, order) {
 
-        await this.getStopType()
+        this.getStopType()
 
-        await this.getStopMode()
+        this.getStopMode()
 
-        await this.getPlanHalt()
+        this.getPlanHalt()
 
-        await this.getAbnormalHalt()
+        this.getAbnormalHalt()
 
         this.waitedFirstDataDelete = [];
         this.waitedFirstDataInsert = [];
