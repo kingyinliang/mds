@@ -8,14 +8,14 @@
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+            <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;" @cell-click="compareFirstFormDataGroupChange">
                 <el-table-column label="序号" type="index" width="55" fixed="left" />
                 <el-table-column min-width="130" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100;">
+                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100;" @change="compareFirstFormDataGroupChange(scope.row)">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -79,14 +79,14 @@
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+            <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;" @cell-click="compareSecondFormDataGroupChange">
                 <el-table-column label="序号" type="index" width="55" fixed="left" />
                 <el-table-column min-width="130" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100px;">
+                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100px;" @change="compareSecondFormDataGroupChange(scope.row)">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -111,7 +111,7 @@
                         <span class="notNull">*</span>停机方式
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="fzReasonOptions">
+                        <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="fzReasonOptions" @change="compareSecondFormDataGroupChange(scope.row)">
                             <el-option v-for="(item) in stopModeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
@@ -161,7 +161,7 @@
                         <span class="notNull">*</span>停机原因
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.stopReason" size="small" clearable>
+                        <el-select v-model="scope.row.stopReason" size="small" clearable @change="compareSecondFormDataGroupChange(scope.row)">
                             <el-option v-for="(item) in stopReasonOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
@@ -204,6 +204,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { COMMON_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber } from 'utils/utils';
+import _ from 'lodash';
 
 @Component({
     name: 'Equipment',
@@ -391,59 +392,12 @@ export default class Equipment extends Vue {
                     })
                 })
             });
-        } else if (row.stopSituation === 'EXPERIMENT') { // 实验
+        } else if (row.stopSituation === 'EXPERIMENT' || row.stopSituation === 'POOR_PROCESS' || row.stopSituation === 'WAIT' || row.stopSituation === 'ENERGY') {
             this.fzReasonOptions = false
             COMMON_API.DICTQUERY_API({
-                dictType: 'EXPERIMENT'
+                dictType: row.stopSituation
             }).then(({ data }) => {
                 this.stopReasonOptions = []
-                console.log('实验')
-                console.log(data)
-                data.data.forEach((item) => {
-                    this.stopReasonOptions.push({
-                        dictValue: item.dictValue,
-                        dictCode: item.dictCode
-                    })
-                })
-            });
-        } else if (row.stopSituation === 'POOR_PROCESS') { // 制成不良
-            this.fzReasonOptions = false
-            COMMON_API.DICTQUERY_API({
-                dictType: 'POOR_PROCESS'
-            }).then(({ data }) => {
-                this.stopReasonOptions = []
-                console.log('制成不良')
-                console.log(data)
-                data.data.forEach((item) => {
-                    this.stopReasonOptions.push({
-                        dictValue: item.dictValue,
-                        dictCode: item.dictCode
-                    })
-                })
-            });
-        } else if (row.stopSituation === 'WAIT') { // 等待损失
-            this.fzReasonOptions = false
-            COMMON_API.DICTQUERY_API({
-                dictType: 'WAIT'
-            }).then(({ data }) => {
-                this.stopReasonOptions = []
-                console.log('等待损失')
-                console.log(data)
-                data.data.forEach((item) => {
-                    this.stopReasonOptions.push({
-                        dictValue: item.dictValue,
-                        dictCode: item.dictCode
-                    })
-                })
-            });
-        } else if (row.stopSituation === 'ENERGY') { // 能源
-            this.fzReasonOptions = false
-            COMMON_API.DICTQUERY_API({
-                dictType: 'ENERGY'
-            }).then(({ data }) => {
-                this.stopReasonOptions = []
-                console.log('能源')
-                console.log(data)
                 data.data.forEach((item) => {
                     this.stopReasonOptions.push({
                         dictValue: item.dictValue,
@@ -452,7 +406,6 @@ export default class Equipment extends Vue {
                 })
             });
         } else {
-            console.log(1111)
             this.fzReasonOptions = true
             row.stopReason = ''
             this.stopReasonOptions = []
@@ -501,6 +454,44 @@ export default class Equipment extends Vue {
             insertData: this.waitedSecondDataInsert,
             updateData: this.waitedSecondDataUpdate
         }
+    }
+
+    compareFirstFormDataGroupChange(row) {
+            this.orgFirstFormDataGroup.forEach((item) => {
+                if (row.editedMark === false) {
+                    if (item.id === row.id) {
+                        console.log(item)
+                        console.log(row)
+                        console.log(_.isEqual(row, item))
+                        if (!_.isEqual(row, item)) {
+                            row.editedMark = true
+                            this.tabFirstChangedState[2] += 1
+                            console.log(row.editedMark)
+                        }
+                    }
+                }
+            })
+            console.log('增删改状态')
+            console.log(this.tabFirstChangedState)
+    }
+
+    compareSecondFormDataGroupChange(row) {
+            this.orgSecondFormDataGroup.forEach((item) => {
+                if (row.editedMark === false) {
+                    if (item.id === row.id) {
+                        console.log(item)
+                        console.log(row)
+                        console.log(_.isEqual(row, item))
+                        if (!_.isEqual(row, item)) {
+                            row.editedMark = true
+                            this.tabSecondChangedState[2] += 1
+                            console.log(row.editedMark)
+                        }
+                    }
+                }
+            })
+            console.log('增删改状态')
+            console.log(this.tabSecondChangedState)
     }
 
     operationHour(row, index): number {
@@ -620,22 +611,20 @@ export default class Equipment extends Vue {
     }
 
     get computedFirstDataTotal(): number {
-        const total = 0;
-        // if (this.firstFormDataGroup.length !== 0) {
-        //     total = this.firstFormDataGroup.map(item => item.duration).reduce((prev, next) => {
-        //         return prev + next;
-        //     })
-        // }
+        let total = 0;
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        if (this.firstFormDataGroup.length !== 0) {
+            total = this.firstFormDataGroup.map(item => item.duration).reduce(reducer) as number
+        }
         return total
     }
 
     get computedSecondDataTotal(): number {
-        const total = 0;
-        // if (this.secondFormDataGroup.length !== 0) {
-        //     total = this.secondFormDataGroup.map(item => item.duration).reduce((prev, next) => {
-        //         return prev + next;
-        //     })
-        // }
+        let total = 0;
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        if (this.secondFormDataGroup.length !== 0) {
+            total = this.firstFormDataGroup.map(item => item.duration).reduce(reducer) as number
+        }
         return total
     }
 }

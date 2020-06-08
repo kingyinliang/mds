@@ -276,8 +276,6 @@
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
-                console.log('生产准备-查询')
-                console.log(data)
                 this.$refs.readyTime.init(JSON.parse(JSON.stringify(data.data)))
             })
         }
@@ -288,8 +286,6 @@
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
                 }).then(({ data }) => {
-                    console.log('生产人员-查询')
-                    console.log(data)
                     this.$refs.productPeople.init(data.data)
 
             });
@@ -297,21 +293,17 @@
 
         // # 3 设备运行
         initEquipment() {
-            PKG_API.PKG_DEVICE_QUERY_API({
+            PKG_API.PKG_DEVICE_QUERY_API({ // 设备运行-查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
                 }).then(({ data }) => {
-                    console.log('设备运行-查询')
-                    console.log(data)
                     this.$refs.equipment.init(data.data, 'first')
 
             });
-            PKG_API.PKG_EXCEPTION_QUERY_API({
+            PKG_API.PKG_EXCEPTION_QUERY_API({ // 停机情况-查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
                 }).then(({ data }) => {
-                    console.log('停机情况-查询')
-                    console.log(data)
                     this.$refs.equipment.init(data.data, 'second')
 
             });
@@ -324,15 +316,13 @@
                 orderNo: this.formHeader.orderNo,
                 materialCode: this.formHeader.materialCode
             }).then(({ data }) => {
-                console.log('生产入库-查询')
-                console.log(data)
                 this.$refs.productInStorage.init(data.data)
             })
         }
 
         // # 5 料领领用
         initSemiMaterial() {
-                   // PKG_API.PKG_MATERIAL_P_QUERY_API({
+            // PKG_API.PKG_MATERIAL_P_QUERY_API({
             //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             //     orderNo: this.formHeader.orderNo,
             //     orderStatus: this.orderStatus,
@@ -347,13 +337,11 @@
 
         // # 6 待处理数量
         initPendingNum() {
-            PKG_API.PKG_PENDGNUM_QUERY_API({
+            PKG_API.PKG_PENDGNUM_QUERY_API({ // 待杀菌检测-查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
                 // materialCode: this.formHeader.materialCode
             }).then(({ data }) => {
-                console.log('待杀菌检测-查询')
-                console.log(data)
                 this.$refs.pendingNum.init(data.data)
             })
         }
@@ -364,8 +352,6 @@
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.formHeader.orderNo
             }).then(({ data }) => {
-                console.log('文本记录-查询')
-                console.log(data)
                 let dataTemp = {}
                 if (data.data !== null) {
                     dataTemp = JSON.parse(JSON.stringify(data.data))
@@ -375,6 +361,7 @@
         }
 
         initData() {
+            // 切换页签时判断是否加载过
             this.isReadyTimeLoaded = false
             this.isProductPeopleLoaded = false
             this.isEquipmentLoaded = false
@@ -385,7 +372,6 @@
             this.$refs.dataEntry.activeName = '1'
             // # 1生产准备
             this.initReadyTime()
-
             // # 2生产人员
             // this.initProductPeople()
             // # 3设备运行
@@ -463,23 +449,22 @@
             // # pkgOrderUpdate
             this.pkgDataOrderUpdate();
             // # v 1 pkgTimeSheet
-            // this.pkgDataTimeSheet();
+            this.pkgDataTimeSheet();
             // # 2 pkgProductPeople
-            // this.pkgDataProductPeople();
+            this.pkgDataProductPeople();
             // # 3 pkgDataEquipment
             this.pkgDataEquipment();
             // # 4 pkgInStorage
-            // this.pkgDataInStorage()
+            this.pkgDataInStorage()
             // # 5 pkgMaterial
-            // this.pkgDataMaterial()
+            this.pkgDataMaterial()
             // # 6 pkgPendingNum
-            // this.pkgPendingNum()
+            this.pkgPendingNum()
             // # v 7 textRecord
-            // this.pkgDataText();
+            this.pkgDataText();
 
             return PKG_API.PKG_ALL_SAVE_API(this.dataGroup).then(() => {
                 setTimeout(() => {
-                    // this.isReadyTimeLoaded = false
                     this.initData() // 刷新
                 }, 1000);
             })
@@ -516,8 +501,6 @@
                 timeSheetTemp.orderId = this.formHeader.id
                 timeSheetTemp.orderNo = this.formHeader.orderNo
 
-                console.log('timeSheetTemp')
-                console.log(timeSheetTemp)
                 if (timeSheetTemp.id) {
                     this.pkgTimeSheet = {
                         pkgTimeSheetInsertDto: {},
@@ -563,7 +546,6 @@
                 }
                 this.dataGroup.pkgUserSaveRequestDto = this.pkgUserSaveRequestDto;
             } else {
-                console.log('我往这1111')
                 this.dataGroup.pkgUserSaveRequestDto = {}
             }
         }
@@ -650,7 +632,6 @@
                 }
                 this.dataGroup.pkgInstorage = this.pkgInStorage;
             } else {
-                console.log('我往这1111')
                 this.dataGroup.pkgInstorage = {}
             }
         }
@@ -684,7 +665,6 @@
                 }
                 this.dataGroup.pkgGerms = this.pkgGerms;
             } else {
-                console.log('我往这1111')
                 this.dataGroup.pkgGerms = {}
             }
         }
