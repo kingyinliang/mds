@@ -12,13 +12,14 @@
             :operation-column-width="90"
             @get-data-success="setData"
             @tab-click="getTabData"
+            @line-click="getLineClick"
         >
             <template slot="operation_column" slot-scope="{ scope }">
                 <el-button class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="getLogList(scope.row)">
                     审核日志
                 </el-button>
             </template>
-        </query-table>
+        </query-table>RDM   MDS
         <el-dialog title="审核日志" width="800px" :close-on-click-modal="false" :visible.sync="visibleDetailLog">
             <div>
                 <el-table header-row-class-name="" :data="logList" border tooltip-effect="dark" class="newTable">
@@ -103,35 +104,44 @@ export default class AuditIndex extends Vue {
     Column = [
         {
             prop: 'orderStatus',
-            label: '状态'
+            label: '状态',
+            minwidth: '50'
         },
         {
             prop: 'workShopName',
-            label: '生产车间'
+            label: '生产车间',
+            minwidth: '50'
         },
         {
             prop: 'productLineName',
-            label: '生产产线'
+            label: '生产产线',
+            minwidth: '90'
         },
         {
             prop: 'orderNo',
-            label: '生产订单'
+            label: '生产订单',
+            minwidth: '70',
+            onclick: true
         },
         {
             prop: 'materialName',
-            label: '生产物料'
+            label: '生产物料',
+            minwidth: '150'
         },
         {
             prop: 'planOutput',
-            label: '订单数量'
+            label: '订单数量',
+            minwidth: '55'
         },
         {
             prop: 'outputUnit',
-            label: '订单单位'
+            label: '订单单位',
+            minwidth: '50'
         },
         {
             prop: 'productDate',
-            label: '生产日期'
+            label: '生产日期',
+            minwidth: '60'
         }
     ]
 
@@ -147,19 +157,24 @@ export default class AuditIndex extends Vue {
             column: [
                 {
                     prop: 'orderStatus',
-                    label: '状态'
+                    label: '状态',
+                    minwidth: '50'
                 },
                 {
                     prop: 'workShopName',
-                    label: '生产车间'
+                    label: '生产车间',
+                    minwidth: '50'
                 },
                 {
                     prop: 'productLineName',
-                    label: '生产产线'
+                    label: '生产产线',
+                    minwidth: '90'
                 },
                 {
                     prop: 'orderNo',
-                    label: '生产订单'
+                    label: '生产订单',
+                    minwidth: '70',
+                    onclick: true
                 },
                 {
                     prop: 'materialName',
@@ -167,23 +182,28 @@ export default class AuditIndex extends Vue {
                 },
                 {
                     prop: 'planOutput',
-                    label: '订单数量'
+                    label: '订单数量',
+                    minwidth: '55'
                 },
                 {
                     prop: 'outputUnit',
-                    label: '订单单位'
+                    label: '订单单位',
+                    minwidth: '50'
                 },
                 {
                     prop: 'productDate',
-                    label: '生产日期'
+                    label: '生产日期',
+                    minwidth: '60'
                 },
                 {
                     prop: 'changer',
-                    label: '提交人'
+                    label: '提交人',
+                    minwidth: '85'
                 },
                 {
                     prop: 'changed',
-                    label: '提交时间'
+                    label: '提交时间',
+                    minwidth: '100'
                 }
             ]
         },
@@ -270,6 +290,18 @@ export default class AuditIndex extends Vue {
             this.logList = data.data;
             this.visibleDetailLog = true;
         })
+    }
+
+    getLineClick(row: object) {
+        console.log(row)
+        this.$store.commit('packaging/Audit', row);
+        this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-Audit-AuditDetail'))
+        setTimeout(() => {
+            this.$router.push({
+                name: `DFMDS-pages-Packaging-Audit-AuditDetail`
+            });
+        }, 100);
+
     }
 }
 </script>
