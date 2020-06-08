@@ -144,8 +144,8 @@
 </template>
 
 <script>
-    import { exportFileForm } from '@/net/validate';
-    import { creatGetPath } from '@/utils/index';
+    import { exportFileForm } from 'utils/utils.ts';
+    import { creatGetPath } from 'utils/utils.ts';
     export default {
         name: 'QueryTable',
         components: {},

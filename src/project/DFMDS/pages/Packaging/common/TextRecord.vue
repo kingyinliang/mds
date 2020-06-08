@@ -29,8 +29,8 @@ export default class TextRecord extends Vue {
     isNewForm=false
 
     init(dataGroup) {
-        console.log('textRecord 带进来的 data')
-        console.log(dataGroup)
+        // console.log('textRecord 带进来的 data')
+        // console.log(dataGroup)
         if (dataGroup !== null) {
             this.currentFormDataGroup = dataGroup
             this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
@@ -51,8 +51,10 @@ export default class TextRecord extends Vue {
 
         this.isChange = _.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)
         if (this.isChange) {
+            this.$message('文本记录未更异动');
             return false
         }
+            this.$message('文本记录有更新');
             return true
 
     }
@@ -60,7 +62,6 @@ export default class TextRecord extends Vue {
     returnDataGroup() {
         return JSON.parse(JSON.stringify(this.currentFormDataGroup))
     }
-
 }
 interface TextObj{
     pkgText?: string ; // 文本

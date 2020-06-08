@@ -3,6 +3,7 @@
         <query-table
             ref="queryTable"
             :type="'home'"
+            :rules="rules"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             :custom-data="true"
@@ -135,6 +136,16 @@
             }
         ];
 
+        rules = [
+            {
+                prop: 'workshop',
+                text: '请选择生产车间'
+            },
+            {
+                prop: 'productLine',
+                text: '请选择生产产线'
+            }
+        ];
 
         // 查询请求
         listInterface = params => {

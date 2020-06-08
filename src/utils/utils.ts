@@ -124,7 +124,7 @@ export class AddRoutes {
  * @param {*} pid
  */
 export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
-    const res: object[] = [];
+    const res: MenuBbj[] = [];
     const temp = {};
     for (let i = 0; i < data.length; i++) {
         temp[data[i][id]] = data[i];
@@ -139,11 +139,29 @@ export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
             }
             data[k]['_level'] = temp[data[k][pid]]['_level'] + 1;
             temp[data[k][pid]]['children'].push(data[k]);
+            temp[data[k][pid]]['children'].sort((a, b) => {
+                return a.menuOrder - b.menuOrder
+            })
         } else {
             res.push(data[k]);
+            res.sort((a, b) => {
+                return a.menuOrder - b.menuOrder
+            })
         }
     }
     return res;
+}
+interface MenuBbj {
+    id?: string;
+    menuOrder: number;
+
+}
+/**
+ * URL地址
+ * @param {*} s
+ */
+export function isURL(s) {
+    return /^http[s]?:\/\/.*/.test(s);
 }
 /**
  * 是否有权限
@@ -183,6 +201,63 @@ export function generateUuid(len: number, radix: number) {
 }
 
 /**
+ * 获取时间
+ * @param {*} null
+ */
+export function getNewDate() {
+    return new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate());
+}
+
+export function exportFile(url, fileName, vue) {
+    vue.$http(url, 'POST', vue.plantList, false, false).then(({ data }) => {
+        if (data.code === 0) {
+            const elink = document.createElement('a');
+            elink.download = `${fileName}${getNewDate()}.xls`;
+            elink.style.display = 'none';
+            elink.href = data.url;
+            document.body.appendChild(elink);
+            elink.click();
+            document.body.removeChild(elink);
+        } else {
+            vue.$notify.error({ title: '错误', message: data.msg });
+        }
+    });
+}
+
+export function exportFileForm(url, fileName, vue) {
+    vue.$http(url, 'POST', vue.queryForm, false, false).then(({ data }) => {
+        if (data.code === 0) {
+            const elink = document.createElement('a');
+            elink.download = `${fileName}${getNewDate()}.xls`;
+            elink.style.display = 'none';
+            elink.href = data.url;
+            document.body.appendChild(elink);
+            elink.click();
+            document.body.removeChild(elink);
+        } else {
+            vue.$notify.error({ title: '错误', message: data.msg });
+        }
+    });
+}
+
+export function setUserList(data) {
+    const res: UserObj[] = [];
+    data.forEach((item) => {
+        res.push({
+            label: item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）',
+            key: item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）',
+            screncon: item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）'
+        });
+    });
+    return res;
+}
+interface UserObj {
+    label?: string;
+    key?: string;
+    screncon?: string;
+}
+
+/**
  * 获取对象的路径 函数柯里化
  * @param path 传入路径返回获取这个路径的方法
  * @param obj 获取哪个对象的参数
@@ -199,8 +274,37 @@ export function creatGetPath(path) {
         return res;
     };
 }
+/**
+ * 展开合并
+ * @param $ this.$
+ * @param 按钮class为showHiddenBtn name是展开div的class
+ */
+export function ShowHiddenNameBox($) {
+    $('.showHiddenBtn')
+        .unbind('click')
+        .click(function(this: any) {
+            const $shiftBox = $('.' + $(this).attr('name') + 'Box');
+            if (
+                $(this)
+                    .find('i')
+                    .hasClass('el-icon-caret-top')
+            ) {
+                $(this).html('展开<i class="el-icon-caret-bottom"></i>');
+                $shiftBox.data('heightData', $shiftBox.height());
+                $shiftBox.css('overflow', 'hidden');
+                $shiftBox.animate({ height: 0 }, 300, function() {
+                    //    empty
+                });
+            } else {
+                $shiftBox.css('overflow', 'inherit');
+                $(this).html('收起<i class="el-icon-caret-top"></i>');
+                $shiftBox.animate({ height: $shiftBox.data('heightData') }, 300, function() {
+                    $shiftBox.css('height', 'auto');
+                });
+            }
+        });
+}
 /* eslint-enable */
-
 /**
  * S3获取文件路径
  * @param {string} arrData 数组形式数据

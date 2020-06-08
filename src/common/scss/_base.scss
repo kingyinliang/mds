@@ -36,7 +36,7 @@
 .loadingGif {
     width: 150px;
     height: 75px;
-    background: url("~@/assets/img/loading.gif") no-repeat;
+    background: url("~common/img/loading.gif") no-repeat;
     background-size: 100% 100%;
     display: block;
     margin: auto;
@@ -1276,19 +1276,19 @@
     .forColor {
         .colorItem:nth-child(3n+1) {
             .colorContainer {
-                background: url("~@/assets/img/ui2.0/yellowCardBg.png") no-repeat;
+                background: url("~common/img/yellowCardBg.png") no-repeat;
                 background-size: 100% 100%;
             }
         }
         .colorItem:nth-child(3n+2) {
             .colorContainer {
-                background: url("~@/assets/img/ui2.0/redCardBg.png") no-repeat;
+                background: url("~common/img/redCardBg.png") no-repeat;
                 background-size: 100% 100%;
             }
         }
         .colorItem:nth-child(3n+3) {
             .colorContainer {
-                background: url("~@/assets/img/ui2.0/greenCardBg.png") no-repeat;
+                background: url("~common/img/greenCardBg.png") no-repeat;
                 background-size: 100% 100%;
             }
         }

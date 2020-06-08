@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { ShowHiddenNameBox } from '@/utils/index';
+import { ShowHiddenNameBox } from 'utils/utils.ts';
 export default {
     name: 'MdsCard',
     components: {},
