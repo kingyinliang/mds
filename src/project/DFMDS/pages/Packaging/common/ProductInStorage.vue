@@ -225,6 +225,11 @@
         }
 
         init(dataGroup) {
+
+            this.waitedDataDelete = [];
+            this.waitedDataInsert = [];
+            this.waitedDataUpdate = [];
+            this.tabChangedState = [0, 0, 0]
             console.log('ProductInStore带进来的 data')
             console.log(dataGroup)
 
@@ -332,8 +337,8 @@
             let total = 0;
             if (this.currentFormDataGroup.length !== 0) {
                 total = this.currentFormDataGroup.map(item => item.output).reduce((prev, next) => {
-                        return prev + next;
-                    })
+                    return prev + next;
+                })
             }
             return total
         }

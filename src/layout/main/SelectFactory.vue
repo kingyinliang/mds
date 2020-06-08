@@ -49,11 +49,20 @@
         defaultFactory = '';
 
         setOther(item) {
+            console.log(item);
             if (this.defaultFactory !== item.deptCode) {
                 COMMON_API.SET_FACTORY_API({
                     factoryCode: item.deptCode
                 }).then(({ data }) => {
                     this.defaultFactory = item.deptCode;
+                    sessionStorage.setItem('defaultFactory', this.defaultFactory || '');
+                    this.$successToast(data.msg)
+                })
+            } else {
+                COMMON_API.SET_FACTORY_API({
+                    factoryCode: ''
+                }).then(({ data }) => {
+                    this.defaultFactory = '';
                     sessionStorage.setItem('defaultFactory', this.defaultFactory || '');
                     this.$successToast(data.msg)
                 })

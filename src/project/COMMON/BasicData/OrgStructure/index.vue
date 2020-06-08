@@ -42,7 +42,7 @@
                                 <el-input v-model="OrgDetail.costCenter" auto-complete="off" :disabled="isRedact" style="width: 250px;" />
                             </el-form-item>
                             <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="产线图片：">
-                                <div v-if="detailImgFile" class="org-img-upload el-upload-list el-upload-list--picture-card">
+                                <div v-if="detailImgFile" class="org-img-upload el-upload-list el-upload-list--picture-card" style="width: 250px; display: block;">
                                     <div class="el-upload-list__item is-success avatar">
                                         <img class="flex-img__image avatar" :src="detailImgFile">
                                         <label class="el-upload-list__item-status-label">
@@ -235,6 +235,7 @@ export default class OrgStructure extends Vue {
         }).then(({ data }) => {
             if (data.code === 200) {
                 this.OrgDetail = data.data;
+                this.$refs.orgImgUpload.clearFiles();
                 if (this.OrgDetail.imgUrl) {
                     COMMON_API.DOWNLOADFILE_API({
                         key: this.OrgDetail.imgUrl
@@ -374,6 +375,7 @@ export default class OrgStructure extends Vue {
 
     // 移出图片
     removeFile() {
+        this.$refs.orgImgUpload.clearFiles();
         this.detailImgFile = ''
         this.addImgFile = ''
         this.OrgDetail.imgUrl = ''
