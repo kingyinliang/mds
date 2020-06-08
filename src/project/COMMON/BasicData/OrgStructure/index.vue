@@ -422,9 +422,9 @@ interface FileObject {
         line-height: 28px;
     }
 }
-.el-form-item {
-    /* float: left; */
-}
+// .el-form-item {
+//     float: left;
+// }
 .el-upload-list {
     .avatar {
         display: block;
