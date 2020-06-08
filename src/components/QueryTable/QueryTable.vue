@@ -55,7 +55,7 @@
                     <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
                     <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
                     <template v-for="(item, index2) in tabItem.column">
-                        <el-table-column v-if="!item.hide" :key="index2" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
+                        <el-table-column v-if="!item.hide" :key="index2" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                             <template v-if="item.child">
                                 <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip || false" :width="chind.width || ''" />
                             </template>
@@ -69,6 +69,9 @@
                                     <el-option label="请选择" value="" />
                                     <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="opt[item.resVal.label]" :value="opt[item.resVal.value]" />
                                 </el-select>
+                                <span v-else-if="item.onclick === true">
+                                    <a @click="lineClick(scope.row)">{{ item.formatter? item.formatter(scope.row) : scope.row[item.prop] }}</a>
+                                </span>
                                 <span v-else>{{ item.formatter? item.formatter(scope.row) : scope.row[item.prop] }}</span>
                             </template>
                         </el-table-column>
@@ -572,6 +575,9 @@
             tabClick(tab) {
                 // console.log(tab.name);
                 this.$emit('tab-click', tab);
+            },
+            lineClick(row) {
+                this.$emit('line-click', row);
             }
         }
     };
