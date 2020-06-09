@@ -75,7 +75,11 @@
             <mds-card title="生产效率" :name="'Productivity'">
                 <el-row :gutter="10">
                     <el-col :span="12">
-                        123
+                        <div class="mod-demo-echarts">
+                            <el-card>
+                                <div id="J_chartLineBox" class="chart-box" />
+                            </el-card>
+                        </div>
                     </el-col>
                     <el-col :span="12">
                         <el-table class="newTable" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
@@ -123,7 +127,11 @@
             <mds-card title="生产领料差异" :name="'ProductionMaterialDifference'">
                 <el-row :gutter="10">
                     <el-col :span="12">
-                        123
+                        <div class="mod-demo-echarts">
+                            <el-card>
+                                <div id="J_chartLineBoxDiff" class="chart-box" />
+                            </el-card>
+                        </div>
                     </el-col>
                     <el-col :span="12">
                         <el-table class="newTable" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
@@ -137,25 +145,180 @@
                     </el-col>
                 </el-row>
             </mds-card>
-            <audit-log :table-data="readAudit" />
+            <!-- <audit-log :table-data="readAudit" /> -->
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import echarts from 'echarts';
 @Component({
-    name: 'ReadyTimes',
-    components: {
-        AuditLog: resolve => {
-            require(['@/views/components/AuditLog'], resolve);
-        }
-    }
+    // name: 'AuditLog',
+    // components: {
+    //     AuditLog: resolve => {
+    //         require(['@/views/components/AuditLog'], resolve);
+    //     }
+    // }
 })
 export default class AuditDetail extends Vue {
-    formHeader: object = {};
+
+    formHeader = {};
     orderStatus = '已同步';
-    dataList: object[] = [];
+    dataList = [];
     readAudit = [];
+    /* eslint-disable */
+    chartLine: any;
+    chartDiffBar: any;
+    /* eslint-enable */
+
+    mounted() {
+        this.initChartLine();
+        this.initDiffChartBar();
+    }
+
+    activated() {
+        // 由于给echart添加了resize事件, 在组件激活时需要重新resize绘画一次, 否则出现空白bug
+        if (this.chartLine) {
+            this.chartLine.resize();
+        }
+        if (this.chartDiffBar) {
+            this.chartDiffBar.resize();
+        }
+    }
+
+    // 折线图
+    initChartLine() {
+        const option = {
+            color: ['#124BBE', '#2372FF', '#3CB5EC', '#78E6FF'],
+            legend: {},
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            dataset: {
+                source: [
+                    ['product', '标准', '白班', '夜班', 'OEE'],
+                    ['可用率', 43.3, 85.8, 93.7, 1],
+                    ['时间移动率', 83.1, 73.4, 55.1, 2],
+                    ['性能稼动率', 86.4, 65.2, 82.5, 50],
+                    ['良品率', 72.4, 53.9, 39.1, 0],
+                    ['综合效率', 86.4, 65.2, 82.5, 50],
+                    ['生产效率', 72.4, 53.9, 39.1, 0]
+                ]
+            },
+            xAxis: { type: 'category' },
+            yAxis: {},
+            series: [
+                {
+                    type: 'bar',
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 30
+                        }
+                    }
+                },
+                {
+                    type: 'bar',
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 30
+                        }
+                    }
+                },
+                {
+                    type: 'bar',
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 30
+                        }
+                    }
+                },
+                {
+                    type: 'bar',
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 30
+                        }
+                    }
+                }
+            ]
+        };
+        this.chartLine = echarts.init(document.getElementById('J_chartLineBox'));
+        this.chartLine.setOption(option);
+        window.addEventListener('resize', () => {
+            this.chartLine.resize();
+        });
+    }
+
+    initDiffChartBar() {
+        const option = {
+            color: ['#EEB919', '#5A88FF'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            legend: {
+                data: ['实际用量', '实际损耗']
+            },
+            // grid: {
+            //     left: '3%',
+            //     right: '4%',
+            //     bottom: '3%',
+            //     containLabel: true
+            // },
+            xAxis: {
+                type: 'value'
+            },
+            yAxis: {
+                type: 'category',
+                data: ['纸箱', '盒盖', '盒底', '脱氧剂', '封口膜', '垫板', '胶带']
+            },
+            series: [
+                {
+                    name: '实际用量',
+                    type: 'bar',
+                    // itemStyle: {
+                    //     normal: {
+                    //         // 柱形图圆角，初始化效果
+                    //         barBorderRadius: [0, 30, 30, 0],
+                    //     }
+                    // },
+                    barWidth: 15,
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [320, 302, 301, 334, 390, 330, 320]
+                },
+                {
+                    name: '实际损耗',
+                    type: 'bar',
+                    // itemStyle: {
+                    //     normal: {
+                    //         // 柱形图圆角，初始化效果
+                    //         barBorderRadius: [0, 30, 30, 0],
+                    //     }
+                    // },
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [120, 132, 101, 134, 90, 230, 0]
+                }
+            ]
+        };
+        this.chartDiffBar = echarts.init(document.getElementById('J_chartLineBoxDiff'));
+        this.chartDiffBar.setOption(option);
+        window.addEventListener('resize', () => {
+            this.chartDiffBar.resize();
+        });
+    }
 }
 </script>

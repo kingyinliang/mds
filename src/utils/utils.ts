@@ -1,6 +1,7 @@
 import { RouteConfig } from 'vue-router';
 import { VueRouter } from 'vue-router/types/router';
 import { COMMON_API } from 'common/api/api';
+import _ from 'lodash';
 
 const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
 
@@ -345,6 +346,26 @@ export function dateFormat(date, fmt) {
         }
     }
     return fmtTemp;
+}
+
+export function dataEntryData(formHeader, data, orgData, delArr, insertArr, updateArr) {
+    data.forEach((item, index) => {
+        if (item.delFlag === 1) {
+            if (item.id) {
+                delArr.push(item.id)
+            }
+        } else if (item.id) {
+            if (!_.isEqual(orgData[index], item)) {
+                item.orderId = formHeader.id;
+                updateArr.push(item)
+            }
+        } else {
+            item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            item.orderId = formHeader.id;
+            item.orderNo = formHeader.orderNo;
+            insertArr.push(item)
+        }
+    });
 }
 // 浮点型加法函数
 export function accAdd(arg1, arg2) {

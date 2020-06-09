@@ -3,19 +3,19 @@
         <mds-card title="运行情况" :name="'equipment'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" @click="addNewDataRow(1)">
+                    <el-button type="primary" size="small" @click="addNewFirstDataRow()">
                         新增
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;" @cell-click="compareFirstFormDataGroupChange">
+            <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
                 <el-table-column label="序号" type="index" width="55" fixed="left" />
                 <el-table-column min-width="130" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100;" @change="compareFirstFormDataGroupChange(scope.row)">
+                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100%;">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -30,7 +30,7 @@
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="结束时间" min-width="200">
@@ -38,7 +38,7 @@
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="运行时长(H)" width="120" :show-overflow-tooltip="true">
@@ -56,7 +56,7 @@
                 <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeFirstDataRow(scope.$index)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeFirstDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -74,19 +74,19 @@
         <mds-card title="停机情况" :name="'equipmentStop'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" @click="addNewDataRow(2)">
+                    <el-button type="primary" size="small" @click="addSecondDataRow()">
                         新增
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;" @cell-click="compareSecondFormDataGroupChange">
+            <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
                 <el-table-column label="序号" type="index" width="55" fixed="left" />
                 <el-table-column min-width="130" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100px;" @change="compareSecondFormDataGroupChange(scope.row)">
+                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100px;">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -111,7 +111,7 @@
                         <span class="notNull">*</span>停机方式
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="fzReasonOptions" @change="compareSecondFormDataGroupChange(scope.row)">
+                        <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="fzReasonOptions">
                             <el-option v-for="(item) in stopModeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
@@ -161,7 +161,7 @@
                         <span class="notNull">*</span>停机原因
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.stopReason" size="small" clearable @change="compareSecondFormDataGroupChange(scope.row)">
+                        <el-select v-model="scope.row.stopReason" size="small" clearable>
                             <el-option v-for="(item) in stopReasonOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
@@ -180,7 +180,7 @@
                 <el-table-column prop="changed" label="操作时间" min-width="180" :show-overflow-tooltip="true" />
                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeSecondDataRow(scope.$index)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeSecondDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -202,9 +202,9 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API } from 'common/api/api';
+import { COMMON_API, PKG_API } from 'common/api/api';
+import { dataEntryData } from 'utils/utils'
 import { dateFormat, getUserNameNumber } from 'utils/utils';
-import _ from 'lodash';
 
 @Component({
     name: 'Equipment',
@@ -216,23 +216,15 @@ import _ from 'lodash';
 })
 
 export default class Equipment extends Vue {
-    @Prop({ type: Boolean, default: false }) isRedact
-    @Prop({ type: Array, default: [] }) classesOptions
-    @Prop({ type: String, default: '' }) productLine
+    @Prop({ type: Boolean, default: false }) isRedact;
+    @Prop({ type: Array, default: [] }) classesOptions;
+    @Prop({ type: String, default: '' }) productLine;
 
     // 常有变数
     firstFormDataGroup: FirstDataTable[] = []; // 主 data
     secondFormDataGroup: SecondDataTable[] = []; // 次 data
     orgFirstFormDataGroup: FirstDataTable[] = []; // 主 data 复制
     orgSecondFormDataGroup: SecondDataTable[] = []; // 次 data 复制
-
-    waitedFirstDataDelete: string[]= [] // 入库删除集合
-    waitedFirstDataInsert: FirstDataTable[] = [] // 入库新增集合
-    waitedFirstDataUpdate: FirstDataTable[] =[] // 入库修改集合
-    waitedSecondDataDelete: string[]= [] // 入库删除集合
-    waitedSecondDataInsert: FirstDataTable[] = [] // 入库新增集合
-    waitedSecondDataUpdate: FirstDataTable[] =[] // 入库修改集合
-    tabChangedState=[[0, 0, 0], [0, 0, 0]] // 增,删,改
 
     readAudit = []
     stopTypeOptions: Option[]=[]
@@ -244,89 +236,120 @@ export default class Equipment extends Vue {
     fzReasonOptions=false
     fzExceptionCount=false
 
-    async initDevice(dataGroup) {
+    init(formHeader) {
+        PKG_API.PKG_DEVICE_QUERY_API({ // 设备运行-查询
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            if (data.data !== null) {
+                this.firstFormDataGroup = JSON.parse(JSON.stringify(data.data));
+                this.orgFirstFormDataGroup = JSON.parse(JSON.stringify(data.data));
+            }
+        });
+        PKG_API.PKG_EXCEPTION_QUERY_API({ // 停机情况-查询
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            if (data.data !== null) {
+                this.secondFormDataGroup = JSON.parse(JSON.stringify(data.data));
+                this.orgSecondFormDataGroup = JSON.parse(JSON.stringify(data.data));
+            }
+        });
 
-        this.waitedFirstDataDelete = [];
-        this.waitedFirstDataInsert = [];
-        this.waitedFirstDataUpdate = [];
-        this.tabChangedState = [[0, 0, 0], [0, 0, 0]]
-        this.waitedSecondDataDelete = [];
-        this.waitedSecondDataInsert = [];
-        this.waitedSecondDataUpdate = [];
+        this.getStopType()
 
-        console.log('equipment带进来的 data')
-        console.log(dataGroup)
+        this.getStopMode()
 
+        this.getPlanHalt()
 
-        if (dataGroup !== null) {
-            this.firstFormDataGroup = JSON.parse(JSON.stringify(dataGroup))
-            this.firstFormDataGroup.forEach((item) => {
-                item.editedMark = false
-            })
-            this.orgFirstFormDataGroup = JSON.parse(JSON.stringify(this.firstFormDataGroup))
-        } else {
-            //
-        }
-
+        this.getAbnormalHalt()
     }
 
-    async initException(dataGroup) {
+    savedData(formHeader) {
+        const pkgDeviceSaveRequestDto: FristObj = {
+            deviceRunTime: this.computedFirstDataTotal,
+            ids: [],
+            pkgDeviceInsertDtos: [],
+            pkgDeviceUpdateDtos: []
+        };
+        const pkgExceptionSaveRequestDto: SecondObj = {
+            devicePauseTime: this.computedSecondDataTotal,
+            ids: [],
+            pkgExceptionInsertDtos: [],
+            pkgExceptionUpdateDtos: []
+        };
 
-        await this.getStopType()
+        dataEntryData(formHeader, this.firstFormDataGroup, this.orgFirstFormDataGroup, pkgDeviceSaveRequestDto.ids, pkgDeviceSaveRequestDto.pkgDeviceInsertDtos, pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos);
+        dataEntryData(formHeader, this.secondFormDataGroup, this.orgSecondFormDataGroup, pkgExceptionSaveRequestDto.ids, pkgExceptionSaveRequestDto.pkgExceptionInsertDtos, pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos);
 
-        await this.getStopMode()
-
-        await this.getPlanHalt()
-
-        await this.getAbnormalHalt()
-
-        console.log('equipment带进来的 data')
-        console.log(dataGroup)
-
-        if (dataGroup !== null) {
-            this.secondFormDataGroup = JSON.parse(JSON.stringify(dataGroup))
-            this.secondFormDataGroup.forEach((item) => {
-                item.editedMark = false
-            })
-            this.orgSecondFormDataGroup = JSON.parse(JSON.stringify(this.secondFormDataGroup))
-        } else {
-            //
+        return {
+            pkgDeviceSaveRequestDto,
+            pkgExceptionSaveRequestDto
         }
     }
 
     getStopType() {
-        if (this.stopTypeOptions.length === 0) {
-            COMMON_API.DICTQUERY_API({
-                dictType: 'COMMON_HALT_TYPE'
-            }).then(({ data }) => {
-                console.log('停机类型')
-                console.log(data)
-                data.data.forEach((item) => {
-                    this.stopTypeOptions.push({
-                        dictValue: item.dictValue,
-                        dictCode: item.dictCode
-                    })
+        COMMON_API.DICTQUERY_API({
+            dictType: 'COMMON_HALT_TYPE'
+        }).then(({ data }) => {
+            console.log('停机类型')
+            console.log(data)
+            this.stopTypeOptions = []
+            data.data.forEach((item) => {
+                this.stopTypeOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
                 })
-            });
-        }
+            })
+        });
     }
 
     getStopMode() {
-        if (this.stopModeOptions.length === 0) {
-            COMMON_API.DICTQUERY_API({
-                dictType: 'COMMON_HALT_MODE'
-            }).then(({ data }) => {
-                console.log('停机方法')
-                console.log(data)
-                data.data.forEach((item) => {
-                    this.stopModeOptions.push({
-                        dictValue: item.dictValue,
-                        dictCode: item.dictCode
-                    })
+        COMMON_API.DICTQUERY_API({
+            dictType: 'COMMON_HALT_MODE'
+        }).then(({ data }) => {
+            console.log('停机方法')
+            console.log(data)
+            this.stopModeOptions = []
+            data.data.forEach((item) => {
+                this.stopModeOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
                 })
-            });
-        }
+            })
+        });
+    }
 
+    getPlanHalt() {
+        COMMON_API.DICTQUERY_API({
+            dictType: 'PLAN_HALT'
+        }).then(({ data }) => {
+            this.planHaltOptions = []
+            console.log('计划停机')
+            console.log(data)
+            data.data.forEach((item) => {
+                this.planHaltOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
+        });
+    }
+
+    getAbnormalHalt() {
+        COMMON_API.DICTQUERY_API({
+            dictType: 'ABNORMAL_HALT'
+        }).then(({ data }) => {
+            this.abnormalHaltOptions = []
+            console.log('异常停机')
+            console.log(data)
+            data.data.forEach((item) => {
+                this.abnormalHaltOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
+        });
     }
 
     changeStopModeOption(row) {
@@ -348,43 +371,8 @@ export default class Equipment extends Vue {
         }
     }
 
-
-    getPlanHalt() {
-        if (this.planHaltOptions.length === 0) {
-            COMMON_API.DICTQUERY_API({
-                dictType: 'PLAN_HALT'
-            }).then(({ data }) => {
-                console.log('计划停机')
-                console.log(data)
-                data.data.forEach((item) => {
-                    this.planHaltOptions.push({
-                        dictValue: item.dictValue,
-                        dictCode: item.dictCode
-                    })
-                })
-            });
-        }
-    }
-
-    getAbnormalHalt() {
-        if (this.abnormalHaltOptions.length === 0) {
-            COMMON_API.DICTQUERY_API({
-                dictType: 'ABNORMAL_HALT'
-            }).then(({ data }) => {
-                console.log('异常停机')
-                console.log(data)
-                data.data.forEach((item) => {
-                    this.abnormalHaltOptions.push({
-                        dictValue: item.dictValue,
-                        dictCode: item.dictCode
-                    })
-                })
-            });
-        }
-
-    }
-
     changeStopReasonOption(row) {
+        console.log(row)
         if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN') {
             this.fzReasonOptions = false
             COMMON_API.DEVICELIST_API({
@@ -393,6 +381,8 @@ export default class Equipment extends Vue {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 size: 100
             }).then(({ data }) => {
+                console.log('data')
+                console.log(data)
                 data.data.forEach((item) => {
                     this.stopReasonOptions.push({
                         dictValue: item.deviceName,
@@ -420,85 +410,6 @@ export default class Equipment extends Vue {
         }
     }
 
-    returnFirstDataGroup() {
-        this.waitedFirstDataInsert = [];
-        this.waitedFirstDataUpdate = [];
-        this.firstFormDataGroup.forEach(item => {
-            if (item.id) {
-                if (item.editedMark === true) {
-                    delete item.editedMark
-                    this.waitedFirstDataUpdate.push(item)
-                }
-            } else {
-                this.waitedFirstDataInsert.push(item)
-            }
-        })
-
-        return {
-            deviceRunTime: this.computedFirstDataTotal,
-            deleteData: this.waitedFirstDataDelete,
-            insertData: this.waitedFirstDataInsert,
-            updateData: this.waitedFirstDataUpdate
-        }
-    }
-
-    returnSecondDataGroup() {
-        this.waitedSecondDataInsert = [];
-        this.waitedSecondDataUpdate = [];
-        this.secondFormDataGroup.forEach(item => {
-            if (item.id) {
-                if (item.editedMark === true) {
-                    delete item.editedMark
-                    this.waitedSecondDataUpdate.push(item)
-                }
-            } else {
-                this.waitedSecondDataInsert.push(item)
-            }
-        })
-
-        return {
-            devicePauseTime: this.computedSecondDataTotal,
-            deleteData: this.waitedSecondDataDelete,
-            insertData: this.waitedSecondDataInsert,
-            updateData: this.waitedSecondDataUpdate
-        }
-    }
-
-    compareFirstFormDataGroupChange(row) {
-        if (row.id && row.editedMark === false) {
-            this.orgFirstFormDataGroup.forEach((item) => {
-                    if (item.id === row.id) {
-                        console.log(_.isEqual(row, item))
-                        if (!_.isEqual(row, item)) {
-                            row.editedMark = true
-                            this.tabChangedState[0][2] += 1
-                            console.log(row.editedMark)
-                        }
-                    }
-            })
-        }
-        console.log('增删改状态')
-        console.log(this.tabChangedState)
-    }
-
-    compareSecondFormDataGroupChange(row) {
-        if (row.id && row.editedMark === false) {
-            this.orgSecondFormDataGroup.forEach((item) => {
-                if (item.id === row.id) {
-                    console.log(_.isEqual(row, item))
-                    if (!_.isEqual(row, item)) {
-                        row.editedMark = true
-                        this.tabChangedState[1][2] += 1
-                        console.log(row.editedMark)
-                    }
-                }
-            })
-
-        }
-        console.log('增删改状态')
-        console.log(this.tabChangedState)
-    }
-
     operationHour(row, index): number {
         let num = 0
         if (row.endDate !== '' && row.startDate !== '') {
@@ -512,102 +423,78 @@ export default class Equipment extends Vue {
     stopMin(row, index): number {
         let num = 0
         if (row.endDate !== '' && row.startDate !== '') {
-        num = (new Date(row.endDate).getTime() - new Date(row.startDate).getTime()) / 60000
+        num = (new Date(row.endDate).getTime() - new Date(row.startDate).getTime()) / 3600000
         }
         this.secondFormDataGroup[index].duration = num
 
         return num
     }
 
-    addNewDataRow(who) {
-        if (who === 1) {
-            const sole: FirstDataTable = {
-                classes: '',
-                startDate: '',
-                endDate: '',
-                duration: 0,
-                remark: '',
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                changer: getUserNameNumber(),
-                delFlag: 0
-            }
-            this.tabChangedState[0][0] += 1
-            this.firstFormDataGroup.push(sole);
-        } else {
-            const sole: SecondDataTable = {
-                classes: '',
-                stopType: '',
-                stopMode: '',
-                startDate: '',
-                endDate: '',
-                duration: 0,
-                delFlag: 0,
-                exceptionCount: 0,
-                stopSituation: '',
-                stopReason: '',
-                exceptionInfo: '',
-                remark: '',
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                changer: getUserNameNumber()
-            }
-            this.tabChangedState[1][0] += 1
-            this.secondFormDataGroup.push(sole);
+    addNewFirstDataRow() {
+        const sole: FirstDataTable = {
+            classes: '',
+            startDate: '',
+            endDate: '',
+            duration: 0,
+            remark: '',
+            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+            changer: getUserNameNumber(),
+            delFlag: 0
         }
+        this.firstFormDataGroup.push(sole);
+    }
 
+    addSecondDataRow() {
+        const sole: SecondDataTable = {
+            classes: '',
+            stopType: '',
+            stopMode: '',
+            startDate: '',
+            endDate: '',
+            duration: 0,
+            delFlag: 0,
+            exceptionCount: 0,
+            stopSituation: '',
+            stopReason: '',
+            exceptionInfo: '',
+            remark: '',
+            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+            changer: getUserNameNumber()
+        }
+        this.secondFormDataGroup.push(sole);
     }
 
     rowDelFlag({ row }) {
-        if (row.delFlag === '1') {
+        if (row.delFlag === 1) {
             return 'rowDel';
         }
         return '';
     }
 
     rowStopDelFlag({ row }) {
-        if (row.delFlag === '1') {
+        if (row.delFlag === 1) {
             return 'rowDel';
         }
         return '';
     }
 
-    tabChangeState() {
-        console.log('查询 tabChangedState 增删改状态')
-        console.log(this.tabChangedState)
-        return !(this.tabChangedState[0][0] === 0 && this.tabChangedState[0][1] === 0 && this.tabChangedState[0][2] === 0 && this.tabChangedState[1][0] === 0 && this.tabChangedState[1][1] === 0 && this.tabChangedState[1][2] === 0)
-    }
-
-
-    removeFirstDataRow(index) {
+    removeFirstDataRow(row) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-
-            if (Object.prototype.hasOwnProperty.call(this.firstFormDataGroup[index], 'id')) {
-                this.tabChangedState[0][1] += 1
-                this.waitedFirstDataDelete.push((this.firstFormDataGroup[index].id) as string)
-            } else {
-                this.tabChangedState[0][0] -= 1
-            }
-
-            this.firstFormDataGroup.splice(index, 1);
+            row.delFlag = 1;
         });
     }
 
-    removeSecondDataRow(index) {
+    removeSecondDataRow(row) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            if (Object.prototype.hasOwnProperty.call(this.secondFormDataGroup[index], 'id')) {
-                this.tabChangedState[1][2] += 1
-                this.waitedSecondDataDelete.push((this.secondFormDataGroup[index].id) as string)
-            } else {
-                this.tabChangedState[1][0] -= 1
-            }
-            this.secondFormDataGroup.splice(index, 1);
+            row.delFlag = 1;
         });
     }
 
@@ -624,13 +511,30 @@ export default class Equipment extends Vue {
         let total = 0;
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
         if (this.secondFormDataGroup.length !== 0) {
-            total = this.secondFormDataGroup.map(item => item.duration).reduce(reducer) as number
+            total = this.firstFormDataGroup.map(item => item.duration).reduce(reducer) as number
         }
         return total
     }
 }
 
+interface FristObj {
+    deviceRunTime?: number;
+    ids: string[];
+    pkgDeviceInsertDtos: FirstDataTable[];
+    pkgDeviceUpdateDtos: FirstDataTable[];
+}
+
+interface SecondObj {
+    devicePauseTime?: number;
+    ids: string[];
+    pkgExceptionInsertDtos: SecondDataTable[];
+    pkgExceptionUpdateDtos: SecondDataTable[];
+}
+
 interface FirstDataTable {
+    factory?: string;
+    orderId?: string;
+    orderNo?: string;
     classes?: string;
     startDate?: string;
     endDate?: string;
@@ -643,6 +547,9 @@ interface FirstDataTable {
     editedMark?: boolean;
 }
 interface SecondDataTable{
+    factory?: string;
+    orderId?: string;
+    orderNo?: string;
     classes?: string;
     stopType?: string;
     stopMode?: string;

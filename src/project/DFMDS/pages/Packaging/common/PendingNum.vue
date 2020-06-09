@@ -7,14 +7,14 @@
                 </el-button>
             </div>
         </template>
-        <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;" @cell-click="compareChange">
+        <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
             <el-table-column label="序号" type="index" width="60" fixed />
             <el-table-column width="100" :show-overflow-tooltip="true">
                 <template slot="header">
                     <span class="notNull">*</span>班次
                 </template>
                 <template slot-scope="scope">
-                    <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact" @change="compareChange(scope.row)">
+                    <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
                         <el-option v-for="item in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                     </el-select>
                 </template>
@@ -58,7 +58,7 @@
             <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" min-width="160" />
             <el-table-column fixed="right" label="操作" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.$index)">
+                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>
@@ -90,9 +90,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-// import { COMMON_API } from 'common/api/api';
-import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
-import _ from 'lodash';
+import { PKG_API } from 'common/api/api';
+import { dateFormat, accAdd, getUserNameNumber, dataEntryData } from 'utils/utils';
 
 @Component({
     name: 'PendingNum'
@@ -105,92 +104,32 @@ export default class PendingNum extends Vue {
     // 常有变数
     currentFormDataGroup: CurrentDataTable[] = [] // 主 data
     orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
-    waitedDataDelete: string[]= [] // 入库删除集合
-    waitedDataInsert: CurrentDataTable[] = [] // 入库新增集合
-    waitedDataUpdate: CurrentDataTable[] =[] // 入库修改集合
-    tabChangedState=[0, 0, 0] // 增,删,改
 
 
-    init(dataGroup) {
-        this.waitedDataDelete = [];
-        this.waitedDataInsert = [];
-        this.waitedDataUpdate = [];
-        this.tabChangedState = [0, 0, 0]
-        console.log('PendingNum带进来的 data')
-        console.log(dataGroup)
-        if (dataGroup !== null) {
-            this.currentFormDataGroup = JSON.parse(JSON.stringify(dataGroup))
-            this.currentFormDataGroup.forEach((item) => {
-                item.editedMark = false
-            })
-            this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
-        }
-    }
-
-    tabChangeState() {
-        console.log('查询 waitedDataInsert 增删改状态')
-        console.log(this.tabChangedState)
-        return !(this.tabChangedState[0] === 0 && this.tabChangedState[1] === 0 && this.tabChangedState[2] === 0)
-    }
-
-    returnDataGroup() {
-        this.waitedDataInsert = [];
-        this.waitedDataUpdate = [];
-        this.currentFormDataGroup.forEach(item => {
-            if (item.id) {
-                if (item.editedMark === true) {
-                    delete item.editedMark
-                    this.waitedDataUpdate.push(item)
-                }
-            } else {
-                this.waitedDataInsert.push(item)
+    init(formHeader) {
+        PKG_API.PKG_PENDGNUM_QUERY_API({ // 待杀菌检测-查询
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            if (data.data !== null) {
+                this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data));
+                this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data));
             }
         })
+    }
+
+    savedData(formHeader) {
+        const germsDelete = [];
+        const germsInsert = [];
+        const germsUpdate = [];
+
+        dataEntryData(formHeader, this.currentFormDataGroup, this.orgFormDataGroup, germsDelete, germsInsert, germsUpdate);
 
         return {
-            deleteData: this.waitedDataDelete,
-            insertData: this.waitedDataInsert,
-            updateData: this.waitedDataUpdate
+            germsDelete,
+            germsInsert,
+            germsUpdate
         }
-    }
-
-
-    compareChange(row) {
-        if (row.id && row.editedMark === false) {
-        this.orgFormDataGroup.forEach((item) => {
-            if (item.id === row.id) {
-                    console.log(item)
-                    console.log(row)
-                    console.log(_.isEqual(row, item))
-                    if (!_.isEqual(row, item)) {
-                        row.editedMark = true
-                        this.tabChangedState[2] += 1
-                        console.log(row.editedMark)
-                    }
-                }
-            })
-        }
-        console.log('增删改状态')
-        console.log(this.tabChangedState)
-    }
-
-    compareRow(row) {
-        this.orgFormDataGroup.forEach((item) => {
-            if (row.editedMark === false) {
-                if (item.id === row.id) {
-                    console.log(item)
-                    console.log(row)
-                    console.log(_.isEqual(row, item))
-                    if (!_.isEqual(row, item)) {
-                        row.editedMark = true
-                        this.tabChangedState[2] += 1
-                        console.log(row.editedMark)
-                    }
-                }
-            }
-        })
-        console.log('增删改状态')
-        console.log(this.tabChangedState)
     }
 
     addNewDataRow() {
@@ -207,31 +146,40 @@ export default class PendingNum extends Vue {
             changer: getUserNameNumber(),
             delFlag: 0
         }
-        this.tabChangedState[0] += 1
         this.currentFormDataGroup.push(sole);
     }
 
     rowDelFlag({ row }) {
-        if (row.delFlag === '1') {
+        if (row.delFlag === 1) {
             return 'rowDel';
         }
         return '';
     }
 
-    removeDataRow(index) {
+    removeDataRow(row) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            if (Object.prototype.hasOwnProperty.call(this.currentFormDataGroup[index], 'id')) {
-                this.tabChangedState[1] += 1
-                this.waitedDataDelete.push((this.currentFormDataGroup[index].id) as string)
-            } else {
-                this.tabChangedState[0] -= 1
-            }
-            this.currentFormDataGroup.splice(index, 1);
+            row.delFlag = 1;
         });
+    }
+
+    ruleSubmit() {
+        let currentFormDataGroupNew: CurrentDataTable[] = [];
+        currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
+        if (currentFormDataGroupNew.length === 0) {
+            this.$warningToast('请录入待处理数');
+            return false
+        }
+        for (const item of currentFormDataGroupNew) {
+            if (!item.classes) {
+                this.$warningToast('请填写待处理数必填项');
+                return false
+            }
+        }
+        return true
     }
 
     get computedSoy() {
