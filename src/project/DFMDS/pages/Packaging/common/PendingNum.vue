@@ -58,7 +58,7 @@
             <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" min-width="160" />
             <el-table-column fixed="right" label="操作" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.$index)">
+                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>
