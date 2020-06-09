@@ -9,6 +9,7 @@
         :form-header="formHeader"
         :tabs="tabs"
         :saved-datas="savedDatas"
+        :submit-rules="submitRules"
         :submit-urgent="false"
         @success="getOrderList"
     >
@@ -469,6 +470,10 @@
             } else {
                 this.dataGroup.pkgText = {}
             }
+        }
+
+        submitRules() {
+            return [this.$refs.readyTime.ruleSubmit, this.$refs.productPeople.ruleSubmit, this.$refs.pendingNum.ruleSubmit];
         }
     }
 interface OrderData{

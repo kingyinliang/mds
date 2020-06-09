@@ -70,7 +70,7 @@
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" width="140" :show-overflow-tooltip="true">
@@ -86,7 +86,7 @@
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="90" label="时长(H)" :show-overflow-tooltip="true">
@@ -288,7 +288,9 @@ export default class ProductPeople extends Vue {
     // 新增
     addNewDataRow() {
         let sole: CurrentDataTable
-        if (this.currentFormDataGroup.length === 0) {
+        let currentFormDataGroupNew: CurrentDataTable[] = [];
+        currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0)
+        if (currentFormDataGroupNew.length === 0) {
             sole = {
                 classes: '',
                 deptId: '',
@@ -308,9 +310,9 @@ export default class ProductPeople extends Vue {
                 deptId: '',
                 userType: '',
                 userList: [],
-                startDate: this.currentFormDataGroup[this.currentFormDataGroup.length - 1].startDate,
+                startDate: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].startDate,
                 dinner: '60',
-                endDate: this.currentFormDataGroup[this.currentFormDataGroup.length - 1].endDate,
+                endDate: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].endDate,
                 remark: '',
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber(),
@@ -396,6 +398,22 @@ export default class ProductPeople extends Vue {
                 this.$refs.temporaryWorker.init(row, userType['dictValue']);
             });
         }
+    }
+
+    ruleSubmit() {
+        let currentFormDataGroupNew: CurrentDataTable[] = [];
+        currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
+        if (currentFormDataGroupNew.length === 0) {
+            this.$warningToast('请录入生产人员');
+            return false
+        }
+        for (const item of currentFormDataGroupNew) {
+            if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || !item.dinner || item.dinner === '' || !item.endDate || item.endDate === '') {
+                this.$warningToast('请填写生产人员必填项');
+                return false
+            }
+        }
+        return true
     }
 
     get actualNumber() {
