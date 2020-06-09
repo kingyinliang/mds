@@ -8,7 +8,9 @@
         :header-base="headerBase"
         :form-header="formHeader"
         :tabs="tabs"
+        :submit-rules="submitRules"
         :saved-datas="savedDatas"
+        :submit-datas="submitDatas"
         :submit-urgent="false"
         @success="getOrderList"
     >
@@ -202,10 +204,19 @@
             }
         ];
 
+        // 提交校验
+        submitRules() {
+            return []
+        }
+
+        // 保存数据
         savedDatas() {
             const pkgTimeSheet = this.$refs.readyTime.savedData(this.formHeader);
             const pkgUserSaveRequestDto = this.$refs.productPeople.savedData(this.formHeader);
-            const { pkgDeviceSaveRequestDto, pkgExceptionSaveRequestDto } = this.$refs.productPeople.savedData(this.formHeader);
+            const pkgInstorage = this.$refs.productInStorage.savedData(this.formHeader);
+            const pkgGerms = this.$refs.pendingNum.savedData(this.formHeader);
+            const pkgText = this.$refs.textRecord.savedData(this.formHeader);
+            const { pkgDeviceSaveRequestDto, pkgExceptionSaveRequestDto } = this.$refs.equipment.savedData(this.formHeader);
             this.formHeader.orderId = this.formHeader.id;
 
             return PKG_API.PKG_ALL_SAVE_API({
@@ -213,10 +224,36 @@
                 pkgTimeSheet,
                 pkgUserSaveRequestDto,
                 pkgDeviceSaveRequestDto,
-                pkgExceptionSaveRequestDto
+                pkgExceptionSaveRequestDto,
+                pkgInstorage,
+                pkgGerms,
+                pkgText
             })
         }
 
+        // 提交数据
+        submitDatas() {
+            const pkgTimeSheet = this.$refs.readyTime.savedData(this.formHeader);
+            const pkgUserSaveRequestDto = this.$refs.productPeople.savedData(this.formHeader);
+            const pkgInstorage = this.$refs.productInStorage.savedData(this.formHeader);
+            const pkgGerms = this.$refs.pendingNum.savedData(this.formHeader);
+            const pkgText = this.$refs.textRecord.savedData(this.formHeader);
+            const { pkgDeviceSaveRequestDto, pkgExceptionSaveRequestDto } = this.$refs.equipment.savedData(this.formHeader);
+            this.formHeader.orderId = this.formHeader.id;
+
+            return PKG_API.PKG_ALL_SUBMIT_API({
+                pkgOrderUpdate: this.formHeader,
+                pkgTimeSheet,
+                pkgUserSaveRequestDto,
+                pkgDeviceSaveRequestDto,
+                pkgExceptionSaveRequestDto,
+                pkgInstorage,
+                pkgGerms,
+                pkgText
+            })
+        }
+
+        // 查询表头
         getOrderList() {
             PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -227,6 +264,9 @@
                     this.$refs.readyTime.init(this.formHeader);
                     this.$refs.productPeople.init(this.formHeader);
                     this.$refs.equipment.init(this.formHeader);
+                    this.$refs.productInStorage.init(this.formHeader);
+                    this.$refs.pendingNum.init(this.formHeader);
+                    this.$refs.textRecord.init(this.formHeader);
                 }
             })
         }
@@ -241,24 +281,6 @@
                         dictCode: item.dictCode
                     })
                 })
-            });
-        }
-
-        // # 3 设备运行
-        initEquipment() {
-            PKG_API.PKG_DEVICE_QUERY_API({ // 设备运行-查询
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: this.formHeader.orderNo
-                }).then(({ data }) => {
-                    this.$refs.equipment.init(data.data, 'first')
-
-            });
-            PKG_API.PKG_EXCEPTION_QUERY_API({ // 停机情况-查询
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: this.formHeader.orderNo
-                }).then(({ data }) => {
-                    this.$refs.equipment.init(data.data, 'second')
-
             });
         }
 
