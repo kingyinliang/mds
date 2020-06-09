@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-// import { PKG_API } from 'common/api/api';
+import { PKG_API } from 'common/api/api';
 import _ from 'lodash';
 
 @Component({
@@ -24,43 +24,49 @@ export default class TextRecord extends Vue {
         orderNo: '' // 订单号
     }
 
-    orgFormDataGroup: TextObj = {}
+    orgFormDataGroup: TextObj = {
+        pkgText: '', // 文本
+        factory: '', // 工厂
+        id: '', // 主键
+        orderId: '', // 订单ID
+        orderNo: '' // 订单号
+    }
+
     isChange=false
     isNewForm=false
 
-    init(dataGroup) {
-        // console.log('textRecord 带进来的 data')
-        // console.log(dataGroup)
-        if (dataGroup !== null) {
-            this.currentFormDataGroup = dataGroup
-            this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
-            this.isNewForm = false
-        } else {
-            this.isNewForm = true
-        }
-    }
-
-    executeSave() {
-
-        if (this.isNewForm) {
-            if (this.isChange) {
-                return true
+    init(formHeader) {
+        PKG_API.PKG_TEXT_QUERY_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            if (data.data !== null) {
+                this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
+                this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data))
+                this.isNewForm = false
+            } else {
+                this.isNewForm = true
             }
-            return false
-        }
-
-        this.isChange = _.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)
-        if (this.isChange) {
-            this.$message('文本记录未更异动');
-            return false
-        }
-            this.$message('文本记录有更新');
-            return true
-
+        })
     }
 
-    returnDataGroup() {
-        return JSON.parse(JSON.stringify(this.currentFormDataGroup))
+    savedData(formHeader) {
+        let pkgTextInsert: TextObj = {};
+        let pkgTextUpdate: TextObj = {};
+        if (!_.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)) {
+            this.currentFormDataGroup.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            this.currentFormDataGroup.orderId = formHeader.id;
+            this.currentFormDataGroup.orderNo = formHeader.orderNo;
+            if (this.isNewForm) {
+                pkgTextInsert = this.currentFormDataGroup
+            } else {
+                pkgTextUpdate = this.currentFormDataGroup
+            }
+        }
+        return {
+            pkgTextInsert,
+            pkgTextUpdate
+        }
     }
 }
 interface TextObj{
