@@ -2,7 +2,7 @@
     <div>
         <mds-card :title="'包材领用'" :name="'materialP'">
             <el-table header-row-class-name="tableHead" class="newTable" :data="currentDataTable" :span-method="spanMethod" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" />
+                <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode + scope.row.materialName }}
@@ -83,7 +83,7 @@
         </mds-card>
         <mds-card :title="'半成品领用'" :name="'materialS'">
             <el-table header-row-class-name="tableHead" class="newTable" :data="materialS" :span-method="spanTwoMethod" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" />
+                <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode + scope.row.materialName }}
@@ -302,7 +302,6 @@
         }
 
         returnDataGroup() {
-            // todo 加入判断
             return {
                 packingMaterialDelete: this.packingMaterialDelete,
                 packingMaterialInsert: this.packingMaterialInsert,

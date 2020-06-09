@@ -9,7 +9,7 @@
                 </div>
             </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="WorkerDate" border tooltip-effect="dark">
-                <el-table-column type="index" width="55" label="序号" />
+                <el-table-column type="index" width="55" label="序号" fixed />
                 <el-table-column label="白/中/夜班" width="100">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classType" placeholder="请选择" size="small" :disabled="!isRedact">

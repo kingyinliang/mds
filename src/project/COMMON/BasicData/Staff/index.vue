@@ -22,7 +22,7 @@
                 </div>
                 <el-table ref="targetInfoList" class="newTable" :data="targetInfoList" :height="mainClientHeight - 52 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" fixed align="center" />
-                    <el-table-column type="index" label="序号" :index="indexMethod" width="50" />
+                    <el-table-column type="index" label="序号" :index="indexMethod" width="50" fixed />
                     <el-table-column prop="workNum" label="人员工号" width="120" />
                     <el-table-column prop="realName" label="人员姓名" width="100" />
                     <el-table-column prop="deptName" label="所属部门" width="100" :show-overflow-tooltip="true" />

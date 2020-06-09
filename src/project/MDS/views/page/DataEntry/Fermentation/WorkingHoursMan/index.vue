@@ -273,7 +273,7 @@
                 <i class="iconfont factory-shouqicaidan" /><span>审核日志</span>
             </div>
             <el-table border :data="LogList" header-row-class-name="tableHead">
-                <el-table-column label="序号" type="index" width="50" />
+                <el-table-column label="序号" type="index" width="50" fixed />
                 <el-table-column label="审核动作">
                     <template slot-scope="scope">
                         {{ scope.row.status === 'checked' ? '审核成功' : scope.row.status === 'noPass' ? '审核失败' : scope.row.status === 'submit' ? '提交' : '' }}

@@ -7,7 +7,7 @@
                 </el-button>
             </el-row>
             <el-table class="newTable" :data="dayLaborerArr" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
-                <el-table-column label="序号" type="index" width="60" />
+                <el-table-column label="序号" type="index" width="60" fixed />
                 <el-table-column prop="status" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>姓名

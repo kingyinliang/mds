@@ -77,7 +77,7 @@
             </h2>
             <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="GetLog">
                 <el-table-column type="selection" :selectable="checkboxT" width="50" />
-                <el-table-column type="index" label="序号" width="55" />
+                <el-table-column type="index" label="序号" width="55" fixed />
                 <el-table-column label="订单号" width="120" prop="ferOrderNo" />
                 <el-table-column label="状态" width="93" prop="approveStatus">
                     <template slot-scope="scope">

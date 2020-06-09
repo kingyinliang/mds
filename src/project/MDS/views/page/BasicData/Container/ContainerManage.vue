@@ -63,12 +63,14 @@
                         <el-table-column
                             type="selection"
                             width="45"
+                            fixed
                         />
                         <el-table-column
                             type="index"
                             :index="indexMethod"
                             label="序号"
                             width="55"
+                            fixed
                         />
                         <el-table-column
                             prop="typeName"

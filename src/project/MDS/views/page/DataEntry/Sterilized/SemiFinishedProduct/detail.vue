@@ -72,7 +72,7 @@
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">历史数据</span>
                 <el-table header-row-class-name="tableHead" :data="dataHistory" border tooltip-effect="dark">
-                    <el-table-column type="index" label="序号" width="55" />
+                    <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="半成品罐号" :show-overflow-tooltip="true" prop="HOLDER_NAME" width="110" />
                     <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" width="160">
                         <template slot-scope="scope">

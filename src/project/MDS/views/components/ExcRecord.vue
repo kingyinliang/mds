@@ -8,7 +8,7 @@
             </div>
         </template>
         <el-table header-row-class-name="tableHead" class="newTable" :data="ExcDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-            <el-table-column type="index" width="55" label="序号" />
+            <el-table-column type="index" width="55" label="序号" fixed />
             <el-table-column label="白/中/夜班" min-width="100">
                 <template slot="header">
                     <i class="reqI">*</i>
