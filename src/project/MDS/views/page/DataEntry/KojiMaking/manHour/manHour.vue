@@ -104,7 +104,7 @@
                     <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
                         <mds-card style=" position: relative; margin-bottom: 10px;" :title="'准备时间（分钟：min）'" :name="'ready'" class="readyCard">
                             <template slot="titleBtn">
-                                <el-form-item label="班次：" style="float: right; margin-right: 60px; margin-bottom: 10px;">
+                                <el-form-item label="班次：" style="float: right; margin-bottom: 10px;">
                                     <el-select v-model="readyTimeDate.classes" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))">
                                         <el-option label="白班" value="白班" />
                                         <el-option label="中班" value="中班" />

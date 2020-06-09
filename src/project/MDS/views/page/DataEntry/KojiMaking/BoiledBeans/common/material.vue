@@ -8,7 +8,7 @@
             </template>
             <el-table ref="materialTable" class="newTable" border max-height="267" style="margin-top: 10px;" header-row-class-name="tableHead" :data="materialList" :row-class-name="rowDelFlag">
                 <el-input type="index" label="序号" />
-                <el-table-column width="125px">
+                <el-table-column min-width="125">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>日期</span>
@@ -17,7 +17,7 @@
                         {{ scope.row.materialDate }}
                     </template>
                 </el-table-column>
-                <el-table-column width="180px">
+                <el-table-column min-width="180">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>种曲</span>
@@ -28,7 +28,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column width="130px">
+                <el-table-column min-width="130">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>生产批次</span>
@@ -37,7 +37,7 @@
                         <el-input v-model="scope.row.productBatch" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="物料批次" width="130px">
+                <el-table-column label="物料批次" min-width="130">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.materialBatch" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" />
                     </template>
@@ -51,7 +51,7 @@
                         <el-input v-model="scope.row.amount" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column width="60px">
+                <el-table-column min-width="60">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>单位</span>
@@ -60,9 +60,9 @@
                         {{ scope.row.unitName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作人" prop="changer" width="140px" />
-                <el-table-column label="操作时间" prop="changed" width="160px" />
-                <el-table-column label="操作" width="70" fixed="right">
+                <el-table-column label="操作人" prop="changer" min-width="140" />
+                <el-table-column label="操作时间" prop="changed" min-width="160" />
+                <el-table-column label="操作" min-width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delrow(scope.row)">
                             删除
@@ -117,14 +117,14 @@
                 </el-col>
             </el-row>
             <el-table ref="wheatTable" class="newTable" max-height="276" border header-row-class-name="tableHead" :data="wheatList" style="margin-top: 10px;" :row-class-name="rowDelFlag" @row-dblclick="editwheat">
-                <el-table-column label="日期" prop="useDate" width="110" />
-                <el-table-column label="物料" prop="materialCode" width="160">
+                <el-table-column label="日期" prop="useDate" min-width="110" />
+                <el-table-column label="物料" prop="materialCode" min-width="160">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode }} {{ scope.row.materialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="麦粉罐" prop="holderName" width="140" />
-                <el-table-column label="批次" align="center" width="180">
+                <el-table-column label="麦粉罐" prop="holderName" min-width="140" />
+                <el-table-column label="批次" align="center" min-width="120">
                     <template slot-scope="scope">
                         <!-- <span style="display: inline-block; text-align: left;" :style="{width: getContextWidth()+'px'}"><em>{{ scope.row.whtBatch }}</em></span> -->
                         {{ scope.row.whtBatch }}
@@ -132,11 +132,11 @@
                 </el-table-column>
                 <el-table-column label="起始" prop="startWeight" />
                 <el-table-column label="结束" prop="endWeight" />
-                <el-table-column label="领用数" prop="userWeight" width="70" />
-                <el-table-column label="单位" prop="unit" width="50" />
-                <el-table-column label="操作人员" prop="changer" width="140" />
-                <el-table-column label="操作时间" prop="changed" width="160" />
-                <el-table-column label="操作" width="70" fixed="right">
+                <el-table-column label="领用数" prop="userWeight" min-width="70" />
+                <el-table-column label="单位" prop="unit" min-width="50" />
+                <el-table-column label="操作人员" prop="changer" min-width="140" />
+                <el-table-column label="操作时间" prop="changed" min-width="160" />
+                <el-table-column label="操作" min-width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delwheatRow(scope.row)">
                             删除
@@ -190,15 +190,15 @@
                 </el-col>
             </el-row>
             <el-table ref="pulpTable" class="newTable" border max-height="275" header-row-class-name="tableHead" :data="soyList" :row-class-name="rowDelFlag" style="margin-top: 10px;" @row-dblclick="editsoy">
-                <el-table-column label="日期" prop="pulpDate" width="110" :show-overflow-tooltip="true" />
-                <el-table-column label="物料" width="160" :show-overflow-tooltip="true">
+                <el-table-column label="日期" prop="pulpDate" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="物料" min-width="190" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode }} {{ scope.row.materialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="领用粮仓" prop="foodHolderName" width="100" :show-overflow-tooltip="true" />
-                <el-table-column label="豆粕仓" prop="pulpHolderName" width="130" :show-overflow-tooltip="true" />
-                <el-table-column label="批次" :show-overflow-tooltip="true" width="180">
+                <el-table-column label="领用粮仓" prop="foodHolderName" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="豆粕仓" prop="pulpHolderName" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="批次" :show-overflow-tooltip="true" min-width="110">
                     <template slot-scope="scope">
                         <div style="text-align: center;">
                             <!-- <span style="display: inline-block; text-align: left;" :style="{width: getContextWidth()+'px'}"><em>{{ scope.row.batch }}</em></span> -->
@@ -206,14 +206,14 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="起始" prop="startWeight" width="70" :show-overflow-tooltip="true" />
-                <el-table-column label="结束" prop="endWeight" width="70" :show-overflow-tooltip="true" />
-                <el-table-column label="数量" prop="useWeight" width="70" :show-overflow-tooltip="true" />
-                <el-table-column label="单位" prop="unit" width="50" :show-overflow-tooltip="true" />
-                <el-table-column label="入罐/出罐" prop="useType" width="90" :show-overflow-tooltip="true" />
-                <el-table-column label="操作人员" prop="changer" width="140" :show-overflow-tooltip="true" />
-                <el-table-column label="操作时间" prop="changed" width="160" :show-overflow-tooltip="true" />
-                <el-table-column label="操作" width="70" fixed="right">
+                <el-table-column label="起始" prop="startWeight" min-width="70" :show-overflow-tooltip="true" />
+                <el-table-column label="结束" prop="endWeight" min-width="70" :show-overflow-tooltip="true" />
+                <el-table-column label="数量" prop="useWeight" min-width="70" :show-overflow-tooltip="true" />
+                <el-table-column label="单位" prop="unit" min-width="50" :show-overflow-tooltip="true" />
+                <el-table-column label="入罐/出罐" prop="useType" min-width="90" :show-overflow-tooltip="true" />
+                <el-table-column label="操作人员" prop="changer" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="操作时间" prop="changed" min-width="160" :show-overflow-tooltip="true" />
+                <el-table-column label="操作" min-width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small" @click="delsoyRow(scope.row)">
                             删除

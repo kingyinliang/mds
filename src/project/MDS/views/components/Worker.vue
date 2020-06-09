@@ -10,21 +10,21 @@
             </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="WorkerDate" border tooltip-effect="dark">
                 <el-table-column type="index" width="55" label="序号" />
-                <el-table-column label="白/中/夜班" width="100">
+                <el-table-column label="白/中/夜班" min-width="100">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classType" placeholder="请选择" size="small" :disabled="!isRedact">
                             <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="班组/工序" width="100">
+                <el-table-column label="班组/工序" min-width="100">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.deptId" filterable placeholder="请选择" size="small" :disabled="!isRedact" @change="SelectDept(scope.row)">
                             <el-option v-for="(iteam, index) in Team" :key="index" :label="iteam.deptName" :value="iteam.deptId" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="人员属性" width="130">
+                <el-table-column label="人员属性" min-width="100">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>人员属性</span>
@@ -37,13 +37,13 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="人员选择" :show-overflow-tooltip="true">
+                <el-table-column label="人员选择" min-width="105" :show-overflow-tooltip="true">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>人员选择</span>
                     </template>
                     <template slot-scope="scope">
-                        <div class="required" style="min-height: 32px;">
+                        <div class="required" style="line-height: 32px;">
                             <span v-if="!isRedact" style="cursor: pointer;">
                                 <i v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</i>
                             </span>
@@ -58,32 +58,32 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column width="241" label="开始时间">
+                <el-table-column min-width="180" label="开始时间">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" style="width: 165px;" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column label="用餐时间" width="100">
+                <el-table-column label="用餐时间" min-width="100">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column width="241" label="结束时间">
+                <el-table-column min-width="180" label="结束时间">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" style="width: 165px;" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column label="工作时长" width="100">
+                <el-table-column label="工作时长" min-width="80">
                     <template slot-scope="scope">
                         <p> {{ workTime(scope.row.endDate, scope.row.startDate, scope.row) }}H </p>
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" width="100">
+                <el-table-column label="备注" min-width="95">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column fixed="right" label="操作" width="70">
+                <el-table-column fixed="right" label="操作" min-width="70">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="delUser(scope.row)">
                             删除
