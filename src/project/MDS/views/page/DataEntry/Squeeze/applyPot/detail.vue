@@ -97,7 +97,7 @@
                     </el-row>
                     <el-row>
                         <el-table header-row-class-name="tableHead" :data="detailList" border tooltip-effect="dark">
-                            <el-table-column type="index" label="序号" width="55" />
+                            <el-table-column type="index" label="序号" width="55" fixed />
                             <el-table-column label="申请编码" width="140">
                                 <template slot-scope="scope">
                                     {{ scope.row.applyNo }}

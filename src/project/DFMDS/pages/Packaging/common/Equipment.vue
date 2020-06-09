@@ -8,14 +8,14 @@
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;" @cell-click="compareFirstFormDataGroupChange">
+            <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
                 <el-table-column label="序号" type="index" width="55" fixed="left" />
                 <el-table-column min-width="130" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100;" @change="compareFirstFormDataGroupChange(scope.row)">
+                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100%;">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -30,7 +30,7 @@
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="结束时间" min-width="200">
@@ -38,7 +38,7 @@
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="运行时长(H)" width="120" :show-overflow-tooltip="true">
@@ -56,7 +56,7 @@
                 <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeFirstDataRow(scope.$index)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeFirstDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -79,14 +79,14 @@
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;" @cell-click="compareSecondFormDataGroupChange">
+            <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
                 <el-table-column label="序号" type="index" width="55" fixed="left" />
                 <el-table-column min-width="130" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100px;" @change="compareSecondFormDataGroupChange(scope.row)">
+                        <el-select v-model="scope.row.classes" size="small" clearable style="width: 100px;">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -111,7 +111,7 @@
                         <span class="notNull">*</span>停机方式
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="fzReasonOptions" @change="compareSecondFormDataGroupChange(scope.row)">
+                        <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="fzReasonOptions">
                             <el-option v-for="(item) in stopModeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
@@ -161,7 +161,7 @@
                         <span class="notNull">*</span>停机原因
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.stopReason" size="small" clearable @change="compareSecondFormDataGroupChange(scope.row)">
+                        <el-select v-model="scope.row.stopReason" size="small" clearable>
                             <el-option v-for="(item) in stopReasonOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                         </el-select>
                     </template>
@@ -180,7 +180,7 @@
                 <el-table-column prop="changed" label="操作时间" min-width="180" :show-overflow-tooltip="true" />
                 <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeSecondDataRow(scope.$index)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeSecondDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -203,8 +203,8 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { COMMON_API, PKG_API } from 'common/api/api';
+import { dataEntryData } from 'utils/utils'
 import { dateFormat, getUserNameNumber } from 'utils/utils';
-import _ from 'lodash';
 
 @Component({
     name: 'Equipment',
@@ -216,24 +216,15 @@ import _ from 'lodash';
 })
 
 export default class Equipment extends Vue {
-    @Prop({ type: Boolean, default: false }) isRedact
-    @Prop({ type: Array, default: [] }) classesOptions
-    @Prop({ type: String, default: '' }) productLine
+    @Prop({ type: Boolean, default: false }) isRedact;
+    @Prop({ type: Array, default: [] }) classesOptions;
+    @Prop({ type: String, default: '' }) productLine;
 
     // 常有变数
     firstFormDataGroup: FirstDataTable[] = []; // 主 data
     secondFormDataGroup: SecondDataTable[] = []; // 次 data
     orgFirstFormDataGroup: FirstDataTable[] = []; // 主 data 复制
     orgSecondFormDataGroup: SecondDataTable[] = []; // 次 data 复制
-
-    waitedFirstDataDelete: string[]= [] // 入库删除集合
-    waitedFirstDataInsert: FirstDataTable[] = [] // 入库新增集合
-    waitedFirstDataUpdate: FirstDataTable[] =[] // 入库修改集合
-    waitedSecondDataDelete: string[]= [] // 入库删除集合
-    waitedSecondDataInsert: FirstDataTable[] = [] // 入库新增集合
-    waitedSecondDataUpdate: FirstDataTable[] =[] // 入库修改集合
-    tabFirstChangedState=[0, 0, 0] // 增,删,改
-    tabSecondChangedState=[0, 0, 0] // 增,删,改
 
     readAudit = []
     stopTypeOptions: Option[]=[]
@@ -272,16 +263,6 @@ export default class Equipment extends Vue {
         this.getPlanHalt()
 
         this.getAbnormalHalt()
-
-        this.waitedFirstDataDelete = [];
-        this.waitedFirstDataInsert = [];
-        this.waitedFirstDataUpdate = [];
-        this.tabFirstChangedState = [0, 0, 0]
-
-        this.waitedSecondDataDelete = [];
-        this.waitedSecondDataInsert = [];
-        this.waitedSecondDataUpdate = [];
-        this.tabSecondChangedState = [0, 0, 0]
     }
 
     savedData(formHeader) {
@@ -298,41 +279,8 @@ export default class Equipment extends Vue {
             pkgExceptionUpdateDtos: []
         };
 
-        this.firstFormDataGroup.forEach((item, index) => {
-            if (item.delFlag === 1) {
-                if (item.id) {
-                    pkgDeviceSaveRequestDto.ids.push(item.id)
-                }
-            } else if (item.id) {
-                if (!_.isEqual(this.orgFirstFormDataGroup[index], item)) {
-                    item.orderId = formHeader.id;
-                    pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos.push(item)
-                }
-            } else {
-                item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                item.orderId = formHeader.id;
-                item.orderNo = formHeader.orderNo;
-                pkgDeviceSaveRequestDto.pkgDeviceInsertDtos.push(item)
-            }
-        });
-
-        this.secondFormDataGroup.forEach((item, index) => {
-            if (item.delFlag === 1) {
-                if (item.id) {
-                    pkgExceptionSaveRequestDto.ids.push(item.id)
-                }
-            } else if (item.id) {
-                if (!_.isEqual(this.orgSecondFormDataGroup[index], item)) {
-                    item.orderId = formHeader.id;
-                    pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos.push(item)
-                }
-            } else {
-                item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                item.orderId = formHeader.id;
-                item.orderNo = formHeader.orderNo;
-                pkgExceptionSaveRequestDto.pkgExceptionInsertDtos.push(item)
-            }
-        });
+        dataEntryData(formHeader, this.firstFormDataGroup, this.orgFirstFormDataGroup, pkgDeviceSaveRequestDto.ids, pkgDeviceSaveRequestDto.pkgDeviceInsertDtos, pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos);
+        dataEntryData(formHeader, this.secondFormDataGroup, this.orgSecondFormDataGroup, pkgExceptionSaveRequestDto.ids, pkgExceptionSaveRequestDto.pkgExceptionInsertDtos, pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos);
 
         return {
             pkgDeviceSaveRequestDto,
@@ -462,88 +410,6 @@ export default class Equipment extends Vue {
         }
     }
 
-    returnFirstDataGroup() {
-        this.waitedFirstDataInsert = [];
-        this.waitedFirstDataUpdate = [];
-        this.firstFormDataGroup.forEach(item => {
-            if (item.id) {
-                if (item.editedMark === true) {
-                    delete item.editedMark
-                    this.waitedFirstDataUpdate.push(item)
-                }
-            } else {
-                this.waitedFirstDataInsert.push(item)
-            }
-        })
-
-        return {
-            deviceRunTime: this.computedFirstDataTotal,
-            deleteData: this.waitedFirstDataDelete,
-            insertData: this.waitedFirstDataInsert,
-            updateData: this.waitedFirstDataUpdate
-        }
-    }
-
-    returnSecondDataGroup() {
-        this.waitedSecondDataInsert = [];
-        this.waitedSecondDataUpdate = [];
-        this.secondFormDataGroup.forEach(item => {
-            if (item.id) {
-                if (item.editedMark === true) {
-                    delete item.editedMark
-                    this.waitedSecondDataUpdate.push(item)
-                }
-            } else {
-                this.waitedSecondDataInsert.push(item)
-            }
-        })
-
-        return {
-            devicePauseTime: this.computedSecondDataTotal,
-            deleteData: this.waitedSecondDataDelete,
-            insertData: this.waitedSecondDataInsert,
-            updateData: this.waitedSecondDataUpdate
-        }
-    }
-
-    compareFirstFormDataGroupChange(row) {
-            this.orgFirstFormDataGroup.forEach((item) => {
-                if (row.editedMark === false) {
-                    if (item.id === row.id) {
-                        console.log(item)
-                        console.log(row)
-                        console.log(_.isEqual(row, item))
-                        if (!_.isEqual(row, item)) {
-                            row.editedMark = true
-                            this.tabFirstChangedState[2] += 1
-                            console.log(row.editedMark)
-                        }
-                    }
-                }
-            })
-            console.log('增删改状态')
-            console.log(this.tabFirstChangedState)
-    }
-
-    compareSecondFormDataGroupChange(row) {
-            this.orgSecondFormDataGroup.forEach((item) => {
-                if (row.editedMark === false) {
-                    if (item.id === row.id) {
-                        console.log(item)
-                        console.log(row)
-                        console.log(_.isEqual(row, item))
-                        if (!_.isEqual(row, item)) {
-                            row.editedMark = true
-                            this.tabSecondChangedState[2] += 1
-                            console.log(row.editedMark)
-                        }
-                    }
-                }
-            })
-            console.log('增删改状态')
-            console.log(this.tabSecondChangedState)
-    }
-
     operationHour(row, index): number {
         let num = 0
         if (row.endDate !== '' && row.startDate !== '') {
@@ -575,7 +441,6 @@ export default class Equipment extends Vue {
             changer: getUserNameNumber(),
             delFlag: 0
         }
-        this.tabFirstChangedState[0] += 1
         this.firstFormDataGroup.push(sole);
     }
 
@@ -596,67 +461,40 @@ export default class Equipment extends Vue {
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             changer: getUserNameNumber()
         }
-        this.tabSecondChangedState[0] += 1
         this.secondFormDataGroup.push(sole);
     }
 
     rowDelFlag({ row }) {
-        if (row.delFlag === '1') {
+        if (row.delFlag === 1) {
             return 'rowDel';
         }
         return '';
     }
 
     rowStopDelFlag({ row }) {
-        if (row.delFlag === '1') {
+        if (row.delFlag === 1) {
             return 'rowDel';
         }
         return '';
     }
 
-    tabFirstChangeState() {
-        console.log('查询 tabFirstChangedState 增删改状态')
-        console.log(this.tabFirstChangedState)
-        return !(this.tabFirstChangedState[0] === 0 && this.tabFirstChangedState[1] === 0 && this.tabFirstChangedState[2] === 0)
-    }
-
-    tabSecondChangeState() {
-        console.log('查询 tabSecondChangedState 增删改状态')
-        console.log(this.tabSecondChangedState)
-        return !(this.tabSecondChangedState[0] === 0 && this.tabSecondChangedState[1] === 0 && this.tabSecondChangedState[2] === 0)
-    }
-
-    removeFirstDataRow(index) {
+    removeFirstDataRow(row) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-
-            if (Object.prototype.hasOwnProperty.call(this.firstFormDataGroup[index], 'id')) {
-                this.tabFirstChangedState[1] += 1
-                this.waitedFirstDataDelete.push((this.firstFormDataGroup[index].id) as string)
-            } else {
-                this.tabFirstChangedState[0] -= 1
-            }
-
-            this.firstFormDataGroup.splice(index, 1);
+            row.delFlag = 1;
         });
     }
 
-    removeSecondDataRow(index) {
+    removeSecondDataRow(row) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            if (Object.prototype.hasOwnProperty.call(this.secondFormDataGroup[index], 'id')) {
-                this.tabFirstChangedState[1] += 1
-                this.waitedSecondDataDelete.push((this.secondFormDataGroup[index].id) as string)
-            } else {
-                this.tabSecondChangedState[0] -= 1
-            }
-            this.secondFormDataGroup.splice(index, 1);
+            row.delFlag = 1;
         });
     }
 

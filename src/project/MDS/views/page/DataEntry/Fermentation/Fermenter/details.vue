@@ -90,7 +90,7 @@
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">当前订单信息</span>
                 <el-table header-row-class-name="tableHead" :data="dataListOrder" border tooltip-effect="dark">
-                    <el-table-column type="index" label="序号" width="55" :index="indexOrderMethod" />
+                    <el-table-column type="index" label="序号" width="55" :index="indexOrderMethod" fixed />
                     <el-table-column label="车间" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="90" />
                     <el-table-column label="生产订单号" :show-overflow-tooltip="true" prop="orderNo" width="120" />
                     <el-table-column label="订单类型" :show-overflow-tooltip="true" prop="orderType" width="80" />
@@ -111,7 +111,7 @@
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">当前领用信息</span>
                 <el-table header-row-class-name="tableHead" :data="dataListUse" border tooltip-effect="dark">
-                    <el-table-column type="index" label="序号" width="55" :index="indexUseMethod" />
+                    <el-table-column type="index" label="序号" width="55" :index="indexUseMethod" fixed />
                     <el-table-column label="领用日期" :show-overflow-tooltip="true" prop="useDate" width="160" />
                     <el-table-column label="领用车间" :show-overflow-tooltip="true" prop="useWorkShopName" width="160" />
                     <el-table-column label="领用量(方)" :show-overflow-tooltip="true" prop="useAmount" width="150" />

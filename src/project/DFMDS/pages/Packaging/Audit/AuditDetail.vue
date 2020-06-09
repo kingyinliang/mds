@@ -106,7 +106,7 @@
                     </el-row>
                 </template>
                 <el-table class="newTable" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
-                    <el-table-column prop="date" label="序号" />
+                    <el-table-column prop="date" label="序号" fixed />
                     <el-table-column prop="date" label="班次" />
                     <el-table-column prop="date" label="停机类型" />
                     <el-table-column prop="date" label="停机方式" />

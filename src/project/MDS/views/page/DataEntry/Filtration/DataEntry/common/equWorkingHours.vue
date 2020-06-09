@@ -46,7 +46,7 @@
                 @row-dblclick="EditInfo"
             >
                 >
-                <el-table-column type="index" label="序号" width="50" />
+                <el-table-column type="index" label="序号" width="50" fixed />
                 <el-table-column label="过滤机号" prop="deviceName" width="120" />
                 <el-table-column label="领用罐号" prop="holderName" width="120" show-overflow-tooltip />
                 <el-table-column label="工作内容" prop="content" />

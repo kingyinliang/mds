@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-table ref="table1" :row-class-name="tableRowClassName" header-row-class-name="tableHead" :data="listbomP" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-            <el-table-column type="index" width="50" label="序号" />
+            <el-table-column type="index" width="50" label="序号" fixed />
             <el-table-column width="240" :show-overflow-tooltip="true" label="物料">
                 <template slot-scope="scope">
                     {{ scope.row.materialCode + ' ' + scope.row.materialName }}
@@ -55,7 +55,7 @@
             </el-table-column>
         </el-table>
         <el-table v-if="order.properties !== '二合一&礼盒产线'" ref="table1" header-row-class-name="tableHead" :data="listbomS" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-            <el-table-column type="index" width="50" label="序号" />
+            <el-table-column type="index" width="50" label="序号" fixed />
             <el-table-column width="120" label="物料（半成品）">
                 <template slot-scope="scope">
                     {{ scope.row.materialCode + ' ' + scope.row.materialName }}

@@ -31,7 +31,7 @@
         <el-dialog title="物料移动明细" width="1300px" :close-on-click-modal="false" :visible.sync="visibleDetailLog">
             <div>
                 <el-table header-row-class-name="" :data="detaileLogData" border tooltip-effect="dark" class="newTable">
-                    <el-table-column type="index" label="序号" width="55" align="center" />
+                    <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="包材物料" show-overflow-tooltip>
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}

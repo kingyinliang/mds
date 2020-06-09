@@ -3,13 +3,13 @@
         <template slot="titleBtn">
             <div style="float: right;">
                 <el-button type="primary" size="small" :disabled="!isRedact" @click="AddExcDate(ExcDate)">
-                    新增
+                    新增1
                 </el-button>
             </div>
         </template>
         <el-table header-row-class-name="tableHead" class="newTable" :data="ExcDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-            <el-table-column type="index" width="55" label="序号" />
-            <el-table-column label="白/中/夜班" width="120">
+            <el-table-column type="index" width="55" label="序号" fixed />
+            <el-table-column label="白/中/夜班" min-width="100">
                 <template slot="header">
                     <i class="reqI">*</i>
                     <span>白/中/夜班</span>
@@ -31,27 +31,27 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="异常描述" :show-overflow-tooltip="true" width="220">
+            <el-table-column label="异常描述" :show-overflow-tooltip="true" min-width="220">
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.expInfo" :disabled="!isRedact" size="small" placeholder="手工录入" />
                 </template>
             </el-table-column>
-            <el-table-column width="241" label="异常开始时间">
+            <el-table-column width="185" label="异常开始时间">
                 <template slot="header">
                     <i class="reqI">*</i>
                     <span>异常开始时间</span>
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.expStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 195px;" />
+                    <el-date-picker v-model="scope.row.expStartDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 160px;" />
                 </template>
             </el-table-column>
-            <el-table-column width="241" label="异常结束时间">
+            <el-table-column width="185" label="异常结束时间">
                 <template slot="header">
                     <i class="reqI">*</i>
                     <span>异常结束时间</span>
                 </template>
                 <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 195px;" />
+                    <el-date-picker v-model="scope.row.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 160px;" />
                 </template>
             </el-table-column>
             <el-table-column label="异常时间" width="80">
@@ -239,6 +239,7 @@ export default {
         // 获取异常数据
         /* eslint-disable @typescript-eslint/camelcase */
         GetExcDate(id) {
+            console.log('this')
             let postdata;
             if (typeof id === 'string') {
                 postdata = {

@@ -54,7 +54,7 @@
                 </el-button>
             </div>
             <el-table ref="runshuiTable" class="newTable" max-height="267" border header-row-class-name="tableHead" :data="lishuiList" :row-class-name="rowDelFlag">
-                <el-table-column label="序号" type="index" width="50" />
+                <el-table-column label="序号" type="index" width="50" fixed />
                 <el-table-column width="205">
                     <template slot="header">
                         <i class="reqI">*</i>

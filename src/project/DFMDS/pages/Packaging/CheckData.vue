@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="sealList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column type="index" label="序号" width="55" />
+                    <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column width="195">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
@@ -115,7 +115,7 @@
                     </div>
                 </div>
                 <el-table ref="table2" class="newTable" header-row-class-name="tableHead" :data="weightList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column type="index" label="序号" width="55" />
+                    <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column width="195">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
@@ -212,7 +212,7 @@
                     </div>
                 </div>
                 <el-table ref="table3" class="newTable borderTable" header-row-class-name="tableHead" :data="NRList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column type="index" label="序号" width="55" />
+                    <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column width="195" :show-overflow-tooltip="true">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>
@@ -323,7 +323,7 @@
                     </div>
                 </div>
                 <el-table ref="table4" class="newTable" header-row-class-name="tableHead" :data="torqueList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column type="index" label="序号" width="55" />
+                    <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column width="195">
                         <template slot="header">
                             <i class="reqI">*</i><span>检测时间</span>

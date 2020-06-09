@@ -52,8 +52,8 @@
                     <slot :name="'tab-head' + index" />
                 </div>
                 <el-table ref="table" class="newTable" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change=" val => tabHandleSelectionChange(val, index)">
-                    <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
-                    <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
+                    <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
+                    <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                     <template v-for="(item, index2) in tabItem.column">
                         <el-table-column v-if="!item.hide" :key="index2" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                             <template v-if="item.child">
@@ -112,8 +112,8 @@
                 style="width: 100%; margin-bottom: 20px;"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
-                <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
+                <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
+                <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                 <template v-for="(item, index) in column">
                     <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                         <template slot-scope="scope">

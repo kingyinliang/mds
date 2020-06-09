@@ -20,7 +20,7 @@
                 </el-form>
             </template>
             <el-table ref="table1" class="newTable" :height="mainClientHeight - 72 - 47" border header-row-class-name="tableHead" :data="UserList" tooltip-effect="dark" style="width: 100%;">
-                <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
+                <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
                 <el-table-column label="用户名" width="200" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ `${scope.row.realName}（${scope.row.workNum}）` }}

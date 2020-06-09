@@ -7,7 +7,7 @@
                 </el-button>
             </template>
             <el-table class="newTable" header-row-class-name="tableHead" :data="MaterielDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" width="50" label="序号" />
+                <el-table-column type="index" width="50" label="序号" fixed />
                 <el-table-column label="盐水" width="200">
                     <template slot="header">
                         <i class="reqI">*</i>

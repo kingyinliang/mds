@@ -23,7 +23,7 @@
         <el-dialog title="审核日志" width="800px" :close-on-click-modal="false" :visible.sync="visibleDetailLog">
             <div>
                 <el-table header-row-class-name="" :data="logList" border tooltip-effect="dark" class="newTable">
-                    <el-table-column type="index" label="序号" width="55" align="center" />
+                    <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="审核动作" show-overflow-tooltip width="160" />
                     <el-table-column label="审核意见" prop="moveUnit" />
                     <el-table-column label="审核人" prop="moveAmount" show-overflow-tooltip width="160" />

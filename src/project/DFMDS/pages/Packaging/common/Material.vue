@@ -2,7 +2,7 @@
     <div>
         <mds-card :title="'包材领用'" :name="'materialP'">
             <el-table header-row-class-name="tableHead" class="newTable" :data="currentDataTable" :span-method="spanMethod" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" />
+                <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode + scope.row.materialName }}
@@ -83,7 +83,7 @@
         </mds-card>
         <mds-card :title="'半成品领用'" :name="'materialS'">
             <el-table header-row-class-name="tableHead" class="newTable" :data="materialS" :span-method="spanTwoMethod" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" />
+                <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode + scope.row.materialName }}
@@ -168,11 +168,19 @@
         spanOneArr: number[] = [];
         spanTwoArr: number[] = [];
 
-        mounted() {
-            console.log('加载了喔!!!!!!!')
-        }
+        packingMaterialDelete: string[]=[];
+        packingMaterialInsert: object[]=[];
+        packingMaterialItemDelete: string[]=[];
+        packingMaterialUpdate: object[]=[];
+        pkgSemiMaterialDelete: string[]=[];
+        pkgSemiMaterialInsert: object[]=[];
+        pkgSemiMaterialItemDelete: string[]=[];
+        pkgSemiMaterialUpdate: object[]=[];
+
 
         init(dataGroup) {
+            console.log('dataGroup')
+            console.log(dataGroup)
             PKG_API.PKG_MATERIAL_P_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: dataGroup.orderNo,
@@ -291,6 +299,19 @@
         // 删除
         delMaterial(row) {
             console.log(row)
+        }
+
+        returnDataGroup() {
+            return {
+                packingMaterialDelete: this.packingMaterialDelete,
+                packingMaterialInsert: this.packingMaterialInsert,
+                packingMaterialItemDelete: this.packingMaterialItemDelete,
+                packingMaterialUpdate: this.packingMaterialUpdate,
+                pkgSemiMaterialDelete: this.pkgSemiMaterialDelete,
+                pkgSemiMaterialInsert: this.pkgSemiMaterialInsert,
+                pkgSemiMaterialItemDelete: this.pkgSemiMaterialItemDelete,
+                pkgSemiMaterialUpdate: this.pkgSemiMaterialUpdate
+            }
         }
     }
 interface MaterialMap{

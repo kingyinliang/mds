@@ -3,7 +3,7 @@
         <mds-card :title="'准备工时(单位：min)'" :name="'readyTimes'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-select v-model="currentFormDataGroup.classes" size="small" style="width: 100px;" :disabled="!isRedact" clearable>
+                    <el-select v-model="currentFormDataGroup.classes" size="small" style="width: 100px;" :disabled="!isRedact">
                         <el-option v-for="(item) in classesOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                     </el-select>
                 </div>
@@ -86,31 +86,31 @@
                     <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull" />参与人数：
+                                <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 参与人数：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.midUser" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull" />交接班：
+                                <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 交接班：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.midShift" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull" />班前会：
+                                <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 班前会：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.midMeeting" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull" />生产前准备：
+                                <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 生产前准备：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.midPrepaired" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
                         <el-form-item label="">
                             <template slot="label">
-                                <span v-if="currentFormDataGroup.classes === '中班'" class="notNull" />生产后清场：
+                                <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 生产后清场：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.midClear" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -136,7 +136,7 @@
                             ]"
                         >
                             <template slot="label">
-                                参与人数：
+                                N参与人数：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightUser" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -195,7 +195,7 @@
             </div>
             <div class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />备注</h3>
+                    <h3><i class="point-icon" />备注{{ currentFormDataGroup.classes }}</h3>
                 </div>
                 <el-row>
                     <el-input v-model="currentFormDataGroup.remark" type="textarea" class="textarea" style="width: 100%; height: 100px;" :disabled="!isRedact" />
@@ -322,6 +322,28 @@ export default class ReadyTimes extends Vue {
         }
 
         return JSON.parse(JSON.stringify(this.currentFormDataGroup))
+    }
+
+    ruleSubmit() {
+        if (this.currentFormDataGroup.classes === 'M' || this.currentFormDataGroup.classes === 'D') { // 早
+            if (!this.currentFormDataGroup.dayUser || !this.currentFormDataGroup.dayShift || !this.currentFormDataGroup.dayMeeting || !this.currentFormDataGroup.dayPrepaired || !this.currentFormDataGroup.dayClear) {
+                this.$warningToast('请填写生产准备必填项')
+                return false
+            }
+        }
+        if (this.currentFormDataGroup.classes === 'A' || this.currentFormDataGroup.classes === 'D') { // 中
+            if (!this.currentFormDataGroup.midUser || !this.currentFormDataGroup.midShift || !this.currentFormDataGroup.midMeeting || !this.currentFormDataGroup.midPrepaired || !this.currentFormDataGroup.midClear) {
+                this.$warningToast('请填写生产准备必填项')
+                return false
+            }
+        }
+        if (this.currentFormDataGroup.classes === 'N' || this.currentFormDataGroup.classes === 'D') { // 晚
+            if (!this.currentFormDataGroup.nightUser || !this.currentFormDataGroup.nightShift || !this.currentFormDataGroup.nightMeeting || !this.currentFormDataGroup.nightPrepaired || !this.currentFormDataGroup.nightClear) {
+                this.$warningToast('请填写生产准备必填项')
+                return false
+            }
+        }
+        return true
     }
 }
 interface ReadyTimesData {
