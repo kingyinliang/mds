@@ -203,7 +203,7 @@
 
         // 提交校验
         submitRules(): Function[] {
-            return []
+            return [this.$refs.readyTime.ruleSubmit, this.$refs.productPeople.ruleSubmit, this.$refs.pendingNum.ruleSubmit]
         }
 
         // 保存数据
