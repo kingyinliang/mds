@@ -367,6 +367,9 @@ export function dataEntryData(formHeader, data, orgData, delArr, insertArr, upda
         }
     });
 }
+export function getIsRedact(status) {
+    return status !== 'C' && status !== 'D' && status !== 'P'
+}
 // 浮点型加法函数
 export function accAdd(arg1, arg2) {
     let r1, r2, argTemp1, argTemp2;

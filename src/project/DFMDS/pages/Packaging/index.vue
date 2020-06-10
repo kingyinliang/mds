@@ -39,12 +39,12 @@
                                         </el-form-item>
                                         <el-form-item label="订单产量：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.activeOrderMap? item.activeOrderMap.countOutput : '' }}</span>
+                                                <span class="el-input__inner">{{ item.activeOrderMap? item.activeOrderMap.planOutput + item.activeOrderMap.outputUnit : '' }}</span>
                                             </div>
                                         </el-form-item>
                                         <el-form-item label="实际产量：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.activeOrderMap? item.activeOrderMap.planOutput : '' }}</span>
+                                                <span class="el-input__inner">{{ item.activeOrderMap? item.activeOrderMap.realOutput + item.activeOrderMap.outputUnit : '' }}</span>
                                             </div>
                                         </el-form-item>
                                         <div class="packaging__main__item__main__right__btn">
@@ -140,10 +140,6 @@
             {
                 prop: 'workshop',
                 text: '请选择生产车间'
-            },
-            {
-                prop: 'productLine',
-                text: '请选择生产产线'
             }
         ];
 
