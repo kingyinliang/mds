@@ -292,8 +292,6 @@ export default class Equipment extends Vue {
         COMMON_API.DICTQUERY_API({
             dictType: 'COMMON_HALT_TYPE'
         }).then(({ data }) => {
-            console.log('停机类型')
-            console.log(data)
             this.stopTypeOptions = []
             data.data.forEach((item) => {
                 this.stopTypeOptions.push({
@@ -308,8 +306,6 @@ export default class Equipment extends Vue {
         COMMON_API.DICTQUERY_API({
             dictType: 'COMMON_HALT_MODE'
         }).then(({ data }) => {
-            console.log('停机方法')
-            console.log(data)
             this.stopModeOptions = []
             data.data.forEach((item) => {
                 this.stopModeOptions.push({
@@ -325,8 +321,6 @@ export default class Equipment extends Vue {
             dictType: 'PLAN_HALT'
         }).then(({ data }) => {
             this.planHaltOptions = []
-            console.log('计划停机')
-            console.log(data)
             data.data.forEach((item) => {
                 this.planHaltOptions.push({
                     dictValue: item.dictValue,
@@ -341,8 +335,6 @@ export default class Equipment extends Vue {
             dictType: 'ABNORMAL_HALT'
         }).then(({ data }) => {
             this.abnormalHaltOptions = []
-            console.log('异常停机')
-            console.log(data)
             data.data.forEach((item) => {
                 this.abnormalHaltOptions.push({
                     dictValue: item.dictValue,
@@ -353,7 +345,6 @@ export default class Equipment extends Vue {
     }
 
     changeStopModeOption(row) {
-        console.log(row)
         if (row.stopType === 'PLAN_HALT') {
             row.stopMode = 'CONTINUE_HALT'
             row.exceptionCount = 1
@@ -372,7 +363,6 @@ export default class Equipment extends Vue {
     }
 
     changeStopReasonOption(row) {
-        console.log(row)
         if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN') {
             this.fzReasonOptions = false
             COMMON_API.DEVICELIST_API({
@@ -381,8 +371,6 @@ export default class Equipment extends Vue {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 size: 100
             }).then(({ data }) => {
-                console.log('data')
-                console.log(data)
                 data.data.forEach((item) => {
                     this.stopReasonOptions.push({
                         dictValue: item.deviceName,

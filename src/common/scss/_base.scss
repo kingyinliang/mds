@@ -494,10 +494,18 @@
         margin-bottom: 20px;
     }
     .el-table .warning-row:hover > td {
+        background: $sys-sub-yellow !important;
+        background-color: $sys-sub-yellow !important;
+    }
+    .el-table .warning-row > td {
+        background: $sys-sub-yellow !important;
+        background-color: $sys-sub-yellow !important;
+    }
+    .el-table .disabled-row:hover > td {
         background: #bbb !important;
         background-color: #bbb !important;
     }
-    .el-table .warning-row > td {
+    .el-table .disabled-row > td {
         background: #bbb !important;
         background-color: #bbb !important;
     }
