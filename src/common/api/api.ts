@@ -470,6 +470,10 @@ export const PKG_API = {
      */
     PKG_HOME_QUERY_BY_NO_API: params => httpProxy('/order/queryByNo', 'GET', params),
     /**
+     * @property {string} PKG_HOME_QUERY_BY_NO_API 包装车间页签状态
+     */
+    PKG_TAG_QUERY_API: params => httpProxy('/pkgTag/query', 'POST', params),
+    /**
      * @property {string} PKG_ALL_SAVE_API 包装车间-生产数据-保存
      */
     PKG_ALL_SAVE_API: params => httpProxy('/pkg/save', 'POST', params),

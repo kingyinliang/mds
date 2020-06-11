@@ -296,21 +296,26 @@
 
         // 查询表头
         getOrderList() {
-            this.visible = false
+            this.visible = false;
+            PKG_API.PKG_TAG_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: this.$store.state.packaging.packDetail.orderNo
+            }).then(({ data }) => {
+                console.log(data);
+            });
             PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.$store.state.packaging.packDetail.orderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
-                if (data.data.orderStatus !== '已同步') {
-                    this.$refs.readyTime.init(this.formHeader);
-                    this.$refs.productPeople.init(this.formHeader);
-                    this.$refs.equipment.init(this.formHeader);
-                    this.$refs.productInStorage.init(this.formHeader);
-                    this.$refs.material.init(this.formHeader);
-                    this.$refs.pendingNum.init(this.formHeader);
-                    this.$refs.textRecord.init(this.formHeader);
-                }
+                this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptName;
+                this.$refs.readyTime.init(this.formHeader);
+                this.$refs.productPeople.init(this.formHeader);
+                this.$refs.equipment.init(this.formHeader);
+                this.$refs.productInStorage.init(this.formHeader);
+                this.$refs.material.init(this.formHeader);
+                this.$refs.pendingNum.init(this.formHeader);
+                this.$refs.textRecord.init(this.formHeader);
             })
         }
 
@@ -328,6 +333,7 @@
         }
     }
 interface OrderData{
+    factoryName?: string;
     changed?: string;
     countMan?: number;
     countOutput?: number;

@@ -1043,6 +1043,8 @@
         }
 
         .el-input.is-disabled .el-input__inner {
+            width: 100%;
+            overflow: hidden;
             background-color: #f5f5f5;
             border: none;
             color: #666 !important;
@@ -1089,6 +1091,8 @@
                 }
             }
             .el-input.is-disabled .el-input__inner {
+                width: 100%;
+                overflow: hidden;
                 background: none;
                 border: none;
                 color: #666 !important;
