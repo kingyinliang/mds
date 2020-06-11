@@ -93,7 +93,7 @@
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column width="70">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="SplitDate('materialS', scope.row, scope.$index)">
+                        <el-button type="text" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDate('materialS', scope.row, scope.$index)">
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
@@ -184,6 +184,8 @@
                 pkgSemiMaterialUpdate: []
             };
             this.currentDataTable.forEach(item => {
+                const filterArr1: (any) = pkgPackingMaterial.packingMaterialUpdate.filter(it => it.id === item.mainId);// eslint-disable-line
+                const filterArr2: (any) = pkgPackingMaterial.packingMaterialInsert.filter(it => it.merge === item.merge);// eslint-disable-line
                 if (item.materialStatus === '3') {
                     pkgPackingMaterial.packingMaterialDelete.push(item.mainId);
                 } else if (item.delFlag === 1) {
@@ -194,8 +196,8 @@
                     const orgObj = this.orgDataTable.filter(it => it.id === item.id)[0];
                     if (!_.isEqual(orgObj, item)) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                        if (pkgPackingMaterial.packingMaterialUpdate.filter(it => it.id === item.mainId)[0]) {
-                            pkgPackingMaterial.packingMaterialUpdate.filter(it => it.id === item.mainId)[0].item.push(item)
+                        if (filterArr1 && filterArr1[0]) {
+                            filterArr1[0].item.push(item)
                         } else {
                             pkgPackingMaterial.packingMaterialUpdate.push({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -219,9 +221,9 @@
                             })
                         }
                     }
-                } else if (pkgPackingMaterial.packingMaterialInsert.filter(it => it.merge === item.merge)[0]) {
+                } else if (filterArr2 && filterArr2[0]) {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    pkgPackingMaterial.packingMaterialInsert.filter(it => it.merge === item.merge)[0].item.push(item)
+                    filterArr2[0].item.push(item)
                 } else {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     pkgPackingMaterial.packingMaterialInsert.push({
@@ -247,6 +249,8 @@
                 }
             });
             this.materialS.forEach(item => {
+                const filterArr1: (any) = pkgSemiMaterial.pkgSemiMaterialUpdate.filter(it => it.id === item.mainId);// eslint-disable-line
+                const filterArr2: (any) = pkgSemiMaterial.pkgSemiMaterialInsert.filter(it => it.merge === item.merge);// eslint-disable-line
                 if (item.materialStatus === '3') {
                     pkgSemiMaterial.pkgSemiMaterialDelete.push(item.mainId);
                 } else if (item.delFlag === 1) {
@@ -257,8 +261,8 @@
                     const orgObj = this.orgMaterialS.filter(it => it.id === item.id)[0];
                     if (!_.isEqual(orgObj, item)) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                        if (pkgSemiMaterial.pkgSemiMaterialUpdate.filter(it => it.id === item.mainId)[0]) {
-                            pkgSemiMaterial.pkgSemiMaterialUpdate.filter(it => it.id === item.mainId)[0].item.push(item)
+                        if (filterArr1 && filterArr1[0]) {
+                            filterArr1.item.push(item)
                         } else {
                             pkgSemiMaterial.pkgSemiMaterialUpdate.push({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -277,9 +281,9 @@
                             })
                         }
                     }
-                } else if (pkgSemiMaterial.pkgSemiMaterialInsert.filter(it => it.merge === item.merge)[0]) {
+                } else if (filterArr2 && filterArr2[0]) {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                    pkgSemiMaterial.pkgSemiMaterialInsert.filter(it => it.id === item.mainId)[0].item.push(item)
+                    filterArr2[0].item.push(item)
                 } else {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     pkgSemiMaterial.pkgSemiMaterialInsert.push({
