@@ -165,7 +165,8 @@
                                 outputUnit: '',
                                 planOutput: '',
                                 realOutput: '',
-                                materialCode: ''
+                                materialCode: '',
+                                materialName: ''
                             }
                         }
                     } else {
