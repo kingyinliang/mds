@@ -34,17 +34,17 @@
                                         </el-form-item>
                                         <el-form-item label="生产物料：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.activeOrderMap? item.activeOrderMap.materialCode : '' }}</span>
+                                                <span class="el-input__inner">{{ item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : '' }}</span>
                                             </div>
                                         </el-form-item>
                                         <el-form-item label="订单产量：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.activeOrderMap? item.activeOrderMap.planOutput + item.activeOrderMap.outputUnit : '' }}</span>
+                                                <span class="el-input__inner">{{ item.activeOrderMap && item.activeOrderMap.planOutput? `${item.activeOrderMap.planOutput} ${item.activeOrderMap.outputUnit}` : `0${item.activeOrderMap.outputUnit}` }}</span>
                                             </div>
                                         </el-form-item>
                                         <el-form-item label="实际产量：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.activeOrderMap? item.activeOrderMap.realOutput + item.activeOrderMap.outputUnit : '' }}</span>
+                                                <span class="el-input__inner">{{ item.activeOrderMap && item.activeOrderMap.realOutput? `${item.activeOrderMap.realOutput} ${item.activeOrderMap.outputUnit}` : `0${item.activeOrderMap.outputUnit}` }}</span>
                                             </div>
                                         </el-form-item>
                                         <div class="packaging__main__item__main__right__btn">
@@ -76,8 +76,8 @@
         }
     })
     export default class PackagingIndex extends Vue {
-        queryResultList: PkgObj[] = []
-        checkStatus: object[]=[]
+        queryResultList: PkgObj[] = [];
+        checkStatus: object[]=[];
 
         // 数据字典 - 取审核列表
         created() {
@@ -162,9 +162,11 @@
                         } else {
                             item.activeOrderNo = ''
                             item.activeOrderMap = {
+                                outputUnit: '',
                                 planOutput: '',
+                                realOutput: '',
                                 materialCode: '',
-                                countOutput: ''
+                                materialName: ''
                             }
                         }
                     } else {
