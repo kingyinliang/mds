@@ -160,6 +160,10 @@
                 type: Function,
                 default: () => []
             },
+            urgentSubmit: {
+                type: Boolean,
+                default: false
+            },
             submitRules: {
                 type: Function,
                 default: () => []
@@ -248,6 +252,10 @@
             },
             // 提交
             submitData() {
+                if (this.urgentSubmit) {
+                    this.$emit('urgentSubmit');
+                    return
+                }
                 const arr = this.submitRules();
                 for (const rule of arr) {
                     if (!rule('submit')) {
