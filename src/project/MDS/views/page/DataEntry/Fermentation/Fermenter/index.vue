@@ -43,11 +43,7 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card v-show="fastS" class="searchCard  newCard ferCard" style="margin-top: 5px; overflow: initial;">
-            <h3 class="cardTit">
-                <i class="iconfont factory-shujuzonglan" style=" margin-right: 10px; color: #666;" />发酵情况总览
-                <i class="gotop" @click="gotop"><span>收起</span><i class="el-icon-caret-top" /></i>
-            </h3>
+        <mds-card v-show="fastS" :title="'发酵情况总览'" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
             <div class="sumbox">
                 <div class="topBox clearfix">
                     <div v-for="(item, index) in topBox" :key="index" class="clearfix" style="float: left;">
@@ -93,89 +89,88 @@
                     </div>
                 </div>
             </div>
-        </el-card>
-        <el-card v-show="fastS" class="searchCard  newCard ferCard" style="margin-top: 5px;">
-            <h3 style=" margin-bottom: 8px; color: black; line-height: 20px;">
-                <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />发酵罐列表
-                <i v-if="isAuth('report:production:fermentation')" class="gotop" @click="goSummary()"><a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a></i>
-            </h3>
-            <el-row class="dataList" :gutter="10" style="min-height: 150px;">
-                <el-col v-for="(item, index) in dataList" :key="index" :span="4">
-                    <el-card class="dataList_item">
-                        <h3 class="dataList_item_tit">
-                            <!--{{item.holderName}}-->
-                            {{ item.holderNo }}
-                            <span style="color: #333; font-weight: 400; font-size: 14px;">
-                                -{{ item.holderStatus === '0' ? '空罐' : item.holderStatus === '1' ? '投料中' : item.holderStatus === '2' ? '发酵中' : item.holderStatus === '3' ? '发酵中' : item.holderStatus === '4' ? '领用中' : item.holderStatus === '5' ? '待清洗' : '' }}
-                            </span>
-                            <span v-if="isAuth('fer:holderManage:detail')" class="dataList_item_a" style="font-size: 14px;" @click="godetails(item)">详情>></span>
-                        </h3>
-                        <div class="dataList_item_pot clearfix" style="position: relative;">
-                            <img v-if="item.ferOrderNo.slice(0, 4) === RDorder" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
-                            <div class="dataList_item_pot_box">
-                                <div class="dataList_item_pot_box1">
-                                    <div v-if="item.holderStatus !== '4'" class="dataList_item_pot_box_item1" :style="`height:${item.reWorkAmount ? (item.reWorkAmount / item.holderAmout) * 100 : 0}%`" />
-                                    <div
-                                        v-if="item.holderAmout"
-                                        class="dataList_item_pot_box_item2"
-                                        :class="`${item.holderStatus === '4' ? 'dataList_item_pot_box_item2s' : item.reWorkAmount ? 'dataList_item_pot_box_item2' : 'dataList_item_pot_box_item2s'}`"
-                                        :style="
-                                            `height:${
-                                                item.holderStatus === '4' ? (item.sumAmout / item.holderAmout) * 100 : item.holderStatus === '3' ? (item.sumAmout / item.holderAmout) * 100 : item.halfAmount ? (item.halfAmount / item.holderAmout) * 100 : (item.ferAmount / item.holderAmout) * 100
-                                            }%`"
-                                    />
-                                    <div v-if="item.sumAmout" class="dataList_item_pot_box_detail">
-                                        <p>{{ item.ferOrderNo }}</p>
-                                        <p>
-                                            {{ item.halfTypeName ? item.halfTypeName : item.ferMaterialName }}
-                                        </p>
-                                        <p>{{ item.ferDays }}天</p>
-                                        <p> {{ (item.sumAmout / 1000).toFixed(2) }}方 </p>
-                                        <p v-if="item.holderStatus === '3'">
-                                            已入库
-                                        </p>
+        </mds-card>
+        <div v-show="fastS" class="box-card">
+            <div class="box-card-title clearfix">
+                <h3> <i class="title-icon" style="background: #ffbf00;" />发酵罐列表 </h3>
+                <i v-if="isAuth('report:production:fermentation')" class="floatR" @click="goSummary()">
+                    <a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a>
+                </i>
+            </div>
+            <div>
+                <el-row class="potList" :gutter="10" style="min-height: 150px;">
+                    <el-col v-for="(item, index) in dataList" :key="index" :span="4">
+                        <div class="box">
+                            <div class="box_title">
+                                {{ item.holderNo }}-{{ item.holderStatus === '0' ? '空罐' : item.holderStatus === '1' ? '投料中' : item.holderStatus === '2' ? '发酵中' : item.holderStatus === '3' ? '已入库' : item.holderStatus === '4' ? '领用中' : item.holderStatus === '5' ? '待清洗' : '' }}
+                                <a v-if="isAuth('fer:holderManage:detail')" @click="godetails(item)">详情>></a>
+                            </div>
+                            <div class="box_content">
+                                <img v-if="item.ferOrderNo.slice(0, 4) === RDorder" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
+                                <div class="box_content_itemPot">
+                                    <div class="pot_border">
+                                        <div class="pot" />
+                                        <div class="pot_water">
+                                            <div
+                                                class="pot_water_sole"
+                                                :style="{'height': (item.holderStatus === '4' ? (item.sumAmout / item.holderAmout) * 100 : item.holderStatus === '3' ? (item.sumAmout / item.holderAmout) * 100 : item.halfAmount ? (item.halfAmount / item.holderAmout) * 100 : (item.ferAmount / item.holderAmout) * 100) + '%', 'background': item.potColor}"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="box_content_itemButton buttonCss">
+                                    <el-button type="primary" size="small" @click="toRouter('1', item)">
+                                        发料
+                                    </el-button>
+                                    <el-button type="primary" size="small" @click="toRouter('2', item)">
+                                        判定
+                                    </el-button>
+                                    <el-button type="primary" size="small" @click="toRouter('3', item)">
+                                        入库
+                                    </el-button>
+                                    <el-button type="primary" size="small" @click="toRouter('4', item)">
+                                        清洗
+                                    </el-button>
+                                </div>
+                            </div>
+                            <div class="box_bottom">
+                                <div v-if="item.sumAmout">
+                                    <div class="box_bottom_sole">
+                                        {{ item.halfTypeName ? item.halfTypeName : item.ferMaterialName }}
+                                    </div>
+                                    <div class="box_bottom_sole">
+                                        {{ item.ferDays }}天
+                                    </div>
+                                    <div class="box_bottom_sole">
+                                        {{ item.ferOrderNo }}
+                                    </div>
+                                    <div class="box_bottom_sole">
+                                        {{ (item.sumAmout / 1000).toFixed(2) }}方
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
+                                    </div>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
+                                    </div>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
+                                    </div>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <el-row class="dataList_item_btn">
-                            <el-col :span="6" class="dataList_item_btn_item">
-                                <p @click="toRouter('1', item)">
-                                    发料
-                                </p>
-                            </el-col>
-                            <el-col
-                                :span="6"
-                                class="dataList_item_btn_item"
-                            >
-                                <p @click="toRouter('2', item)">
-                                    判定
-                                </p>
-                            </el-col>
-                            <el-col
-                                :span="6"
-                                class="dataList_item_btn_item"
-                            >
-                                <p @click="toRouter('3', item)">
-                                    入库
-                                </p>
-                            </el-col>
-                            <el-col
-                                :span="6"
-                                class="dataList_item_btn_item"
-                            >
-                                <p @click="toRouter('4', item)">
-                                    清洗
-                                </p>
-                            </el-col>
-                        </el-row>
-                    </el-card>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-pagination :current-page="formHeader.currPage" :page-sizes="[40, 60, 80]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </el-row>
-        </el-card>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-pagination :current-page="formHeader.currPage" :page-sizes="[40, 60, 80]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                </el-row>
+            </div>
+        </div>
         <el-dialog width="450px" class="ShinHoDialog" :title="dialogData.holderName + '清洗'" :close-on-click-modal="false" :visible.sync="visible">
             <div style="display: flex;">
                 <el-form label-width="100px" class="topform marbottom" style="margin: auto;">
@@ -229,7 +224,9 @@ export default {
                     startColor: '#999999FF',
                     endColor: '#999999FF',
                     text: '空',
-                    ptext: '0个月',
+                    ptext: '',
+                    numNew: 0,
+                    potColor: '#FFF',
                     middleText: '空罐',
                     holderStatus: '0',
                     num: '0'
@@ -239,7 +236,9 @@ export default {
                     startColor: '#E9E9E9FF',
                     endColor: '#D6D2C4FF',
                     text: '1',
-                    ptext: '1个月',
+                    ptext: '30天',
+                    numNew: 30,
+                    potColor: '#999999',
                     middleText: '酿造',
                     search: '1',
                     num: '0'
@@ -249,7 +248,9 @@ export default {
                     startColor: '#D6D2C4FF',
                     endColor: '#CDA786FF',
                     text: '2',
-                    ptext: '2个月',
+                    ptext: '60天',
+                    numNew: 60,
+                    potColor: '#D6D2C4',
                     middleText: '酿造',
                     search: '2',
                     num: '0'
@@ -259,7 +260,9 @@ export default {
                     startColor: '#CDA786FF',
                     endColor: '#B58150FF',
                     text: '3',
-                    ptext: '3个月',
+                    ptext: '90天',
+                    numNew: 90,
+                    potColor: '#CDA786',
                     middleText: '酿造',
                     search: '3',
                     num: '0'
@@ -269,7 +272,9 @@ export default {
                     startColor: '#B58150FF',
                     endColor: '#C67C5AFF',
                     text: '4',
-                    ptext: '4个月',
+                    ptext: '120天',
+                    numNew: 120,
+                    potColor: '#B58150',
                     middleText: '酿造',
                     search: '4',
                     num: '0'
@@ -279,7 +284,9 @@ export default {
                     startColor: '#C67C5AFF',
                     endColor: '#AD592DFF',
                     text: '5',
-                    ptext: '5个月',
+                    ptext: '150天',
+                    numNew: 150,
+                    potColor: '#C67C5A',
                     middleText: '酿造',
                     search: '5',
                     num: '0'
@@ -289,7 +296,9 @@ export default {
                     startColor: '#8A391BFF',
                     endColor: '#8A391BFF',
                     text: '6',
-                    ptext: '6个月',
+                    ptext: '180天',
+                    numNew: 180,
+                    potColor: '#AD592D',
                     middleText: '酿造',
                     search: '6',
                     num: '0'
@@ -299,7 +308,9 @@ export default {
                     startColor: '#8A391BFF',
                     endColor: '#C70909FF',
                     text: '超',
-                    ptext: '6个月以上',
+                    ptext: '180天以上',
+                    numNew: 9999999999999,
+                    potColor: '#8A391B',
                     middleText: '超期',
                     search: '7',
                     num: '0'
@@ -310,6 +321,8 @@ export default {
                     endColor: '#8BC34AFF',
                     text: '压',
                     ptext: ' ',
+                    numNew: 0,
+                    potColor: '#C70909',
                     middleText: '压榨',
                     holderStatus: '4',
                     num: '0'
@@ -319,7 +332,9 @@ export default {
                     startColor: '#999999FF',
                     endColor: '#999999FF',
                     text: '',
-                    ptext: '0个月',
+                    ptext: '',
+                    numNew: 0,
+                    potColor: '#FFF',
                     middleText: '空罐',
                     holderStatus: '0',
                     num: '0'
@@ -426,24 +441,6 @@ export default {
                 }
             );
         },
-        /* eslint-enable no-invalid-this*/
-        gotop() {
-            const $ = this.$;
-            $('.sumbox').stop();
-            const hei = $('.sumbox .topBox').height();
-            if ($('.sumbox').height()) {
-                $('.sumbox').css({ overflow: 'hidden' });
-                $('.gotop span').text('展开');
-                $('.gotop i').attr('class', 'el-icon-caret-bottom');
-                $('.sumbox').animate({ height: 0 }, 300);
-            } else {
-                $('.gotop span').text('收起');
-                $('.gotop i').attr('class', 'el-icon-caret-top');
-                $('.sumbox').animate({ height: `${hei + 35}px` }, 300, function() {
-                    $('.sumbox').css({ overflow: 'initial' });
-                });
-            }
-        },
         // 总览点击
         topClick(item) {
             if (!this.formHeader.factory) {
@@ -485,6 +482,10 @@ export default {
                 if (data.code === 0) {
                     this.fastS = true;
                     this.dataList = data.orderPage.list;
+                    this.dataList.map((item) => {
+                        // item.ferDays
+                        item.potColor = this.topBox.find(sole => item.ferDays < sole.numNew).potColor
+                    })
                     this.formHeader.currPage = data.orderPage.currPage;
                     this.formHeader.totalCount = data.orderPage.totalCount;
                     this.formHeader.pageSize = data.orderPage.pageSize;
@@ -696,17 +697,6 @@ export default {
         font-weight: 400;
         font-size: 16px;
     }
-    .gotop {
-        float: right;
-        color: #1890ff;
-        font-size: 14px;
-        cursor: pointer;
-        i {
-            ::before {
-                color: #1890ff;
-            }
-        }
-    }
 }
 .topBox {
     width: 1260px;
@@ -786,144 +776,6 @@ export default {
         background: #999;
         border-radius: 50%;
         transition: all 0.5s;
-    }
-}
-.dataList {
-    margin-top: 10px;
-    &_item {
-        margin-bottom: 10px;
-        &_tit {
-            padding: 0 10px;
-            color: black;
-            font-weight: 600;
-            font-size: 16px;
-            line-height: 45px;
-            border-bottom: 1px solid #e8e8e8;
-        }
-        &_a {
-            float: right;
-            color: #1890ff;
-            cursor: pointer;
-        }
-        &_pot {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 17px 10px 10px;
-            overflow: hidden;
-            &_box1 {
-                position: relative;
-                display: flex;
-                flex-wrap: wrap;
-                align-content: flex-end;
-                width: 102px;
-                height: 197px;
-                overflow: hidden;
-            }
-            &_box {
-                display: flex;
-                flex-wrap: wrap;
-                align-content: flex-end;
-                float: left;
-                width: 120px;
-                min-width: 120px;
-                height: 229px;
-                padding: 25px 9px 9px;
-                overflow: hidden;
-                color: white;
-                background: url("~@/assets/img/ferPot.png") no-repeat;
-                background-size: contain;
-                &_detail {
-                    position: absolute;
-                    top: 70px;
-                    left: 3px;
-                    width: 100%;
-                    color: black;
-                    font-size: 14px;
-                }
-                &_item1,
-                &_item2 {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 100%;
-                    font-size: 14px;
-                }
-                &_item2s,
-                &_item1 {
-                    position: relative;
-                    height: 50px;
-                    overflow: hidden;
-                    background: #69c0ff;
-                    &::before,
-                    &::after {
-                        position: absolute;
-                        left: 50%;
-                        min-width: 175px;
-                        min-height: 165px;
-                        background: #fff;
-                        animation: roateTwo 10s linear infinite;
-                        content: "";
-                    }
-                    &::before {
-                        top: -158px;
-                        border-radius: 45%;
-                    }
-                    &::after {
-                        top: -152px;
-                        border-radius: 47%;
-                        opacity: 0.5;
-                    }
-                }
-                &_item2 {
-                    height: 100px;
-                    background: #1890ff;
-                }
-                &:hover &_item1::before,
-                &:hover &_item1::after,
-                &:hover &_item2s::before,
-                &:hover &_item2s::after {
-                    animation: roateOne 10s linear infinite;
-                }
-            }
-            &_detail {
-                float: left;
-                max-width: 112px;
-                height: auto;
-                margin-top: 25px;
-                margin-left: 10px;
-                padding: 5px;
-                color: #333;
-                font-size: 14px;
-                line-height: 18px;
-                border: 1px solid #1890ff;
-                border-radius: 4px;
-            }
-        }
-    }
-}
-
-@keyframes roateOne {
-    0% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    50% {
-        transform: translate(-50%, -1%) rotateZ(180deg);
-    }
-    100% {
-        transform: translate(-50%, -0%) rotateZ(360deg);
-    }
-}
-
-@keyframes roateTwo {
-    0% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    50% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    100% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
     }
 }
 </style>
