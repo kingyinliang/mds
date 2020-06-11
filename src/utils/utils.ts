@@ -141,13 +141,13 @@ export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
             data[k]['_level'] = temp[data[k][pid]]['_level'] + 1;
             temp[data[k][pid]]['children'].push(data[k]);
             temp[data[k][pid]]['children'].sort((a, b) => {
-                return a.menuOrder - b.menuOrder
-            })
+                return a.menuOrder - b.menuOrder;
+            });
         } else {
             res.push(data[k]);
             res.sort((a, b) => {
-                return a.menuOrder - b.menuOrder
-            })
+                return a.menuOrder - b.menuOrder;
+            });
         }
     }
     return res;
@@ -155,7 +155,6 @@ export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
 interface MenuBbj {
     id?: string;
     menuOrder: number;
-
 }
 /**
  * URL地址
@@ -243,7 +242,7 @@ export function exportFileForm(url, fileName, vue) {
 
 export function setUserList(data) {
     const res: UserObj[] = [];
-    data.forEach((item) => {
+    data.forEach(item => {
         res.push({
             label: item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）',
             key: item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）',
@@ -352,18 +351,18 @@ export function dataEntryData(formHeader, data, orgData, delArr, insertArr, upda
     data.forEach((item, index) => {
         if (item.delFlag === 1) {
             if (item.id) {
-                delArr.push(item.id)
+                delArr.push(item.id);
             }
         } else if (item.id) {
             if (!_.isEqual(orgData[index], item)) {
                 item.orderId = formHeader.id;
-                updateArr.push(item)
+                updateArr.push(item);
             }
         } else {
             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             item.orderId = formHeader.id;
             item.orderNo = formHeader.orderNo;
-            insertArr.push(item)
+            insertArr.push(item);
         }
     });
 }
@@ -451,18 +450,24 @@ export function accDiv(arg1, arg2) {
     return (r1 / r2) * Math.pow(10, t2 - t1);
 }
 // 深克隆
-export function DeepClone(str) {
-    return JSON.parse(JSON.stringify(str));
+export function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }
 // 登陆名(工号)
 export function getUserNameNumber() {
     return sessionStorage.getItem('realName') + `(${sessionStorage.getItem('userName')})`;
 }
 
-// 计算时间差
+/**
+ * 计算时间差
+ * @param startTime 开始时间
+ * @param endTime 结束时间
+ * @param diffType 产出类型 'second' 'minute' 'hour' 'day'
+ * @return 小数后两位
+ */
 export function getDateDiff(startTime, endTime, diffType) {
-    const startTimeS = startTime.replace('/\-/g', '/');
-    const endTimeS = endTime.replace('/\-/g', '/');
+    const startTimeS = startTime.replace('/-/g', '/');
+    const endTimeS = endTime.replace('/-/g', '/');
     // 将计算间隔类性字符转换为小写
     const sTime = new Date(startTimeS); // 开始时间
     const eTime = new Date(endTimeS); // 结束时间
@@ -482,78 +487,9 @@ export function getDateDiff(startTime, endTime, diffType) {
             divNum = 1000 * 3600 * 24;
             break;
         default:
-            divNum = 1
+            divNum = 1;
             break;
     }
     // eslint-disable-next-line
     return ((eTime.getTime() - sTime.getTime()) / divNum).toFixed(2);
-}
-
-// 比对 object 使否相同
-export function compareObject(x, y) {
-    // remember that NaN === NaN returns false
-    // and isNaN(undefined) returns true
-    if (isNaN(x) && isNaN(y) && typeof x === 'number' && typeof y === 'number') {
-        return true;
-    }
-    // If both x and y are null or undefined and exactly the same
-    if (x === y) {
-        return x !== 0 || 1 / x === 1 / y;
-    }
-
-    if (x === null || y === null) return x === y;
-
-    // Works in case when functions are created in constructor.
-    // Comparing dates is a common scenario. Another built-ins?
-    // We can even handle functions ㄋpassed across iframes
-    if ((typeof x === 'function' && typeof y === 'function') || (x instanceof Date && y instanceof Date) || (x instanceof RegExp && y instanceof RegExp) || (x instanceof String && y instanceof String) || (x instanceof Number && y instanceof Number)) {
-        return x.toString() === y.toString();
-    }
-
-    // If they are not strictly equal, they both need to be Objects
-    if (!(x instanceof Object) || !(y instanceof Object)) {
-        return false;
-    }
-
-    if (Object.prototype.isPrototypeOf.call(x, y) || Object.prototype.isPrototypeOf.call(y, x)) {
-        return false;
-    }
-
-    //They must have the exact same prototype chain,the closest we can do is
-    //test the constructor.
-    if (x.constructor !== y.constructor) {
-        return false;
-    }
-
-    if (x.prototype !== y.prototype) {
-        return false;
-    }
-    for (const p in x) {
-        //Inherited properties were tested using x.constructor === y.constructor
-        if (Object.prototype.hasOwnProperty.call(x, p)) {
-            // Allows comparing x[ p ] and y[ p ] when set to undefined
-            if (!Object.prototype.hasOwnProperty.call(y, p)) {
-                return false;
-            }
-            // If they have the same strict value or identity then they are equal
-            if (x[p] === y[p]) {
-                continue;
-            }
-            // Numbers, Strings, Functions, Booleans must be strictly equal
-            if (typeof x[p] !== 'object') {
-                return false;
-            }
-            // Objects and Arrays must be tested recursively
-            // if (!Object.is(x[ p ], y[ p ])) {
-            //     return false;
-            // }
-        }
-    }
-    for (const q in y) {
-        // allows x[ p ] to be set to undefined
-        if (Object.prototype.hasOwnProperty.call(y, q) && !Object.prototype.hasOwnProperty.call(x, q)) {
-            return false;
-        }
-    }
-    return true;
 }
