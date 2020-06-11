@@ -169,8 +169,7 @@
         spanOneArr: number[] = [];
         spanTwoArr: number[] = [];
 
-        savedData(formHeader) {
-            console.log(formHeader);
+        savedData() {
             const pkgPackingMaterial: PkgMaterialObj = {
                 packingMaterialDelete: [],
                 packingMaterialItemDelete: [],
@@ -320,7 +319,6 @@
                 this.processData(data.data, 'currentDataTable');
                 this.merge(this.currentDataTable, 'currentDataTable');
                 this.orgDataTable = JSON.parse(JSON.stringify(this.currentDataTable));
-                console.log(this.orgDataTable);
             });
             PKG_API.PKG_MATERIAL_S_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -331,7 +329,6 @@
                 this.processData(data.data, 'materialS');
                 this.merge(this.materialS, 'materialS');
                 this.orgMaterialS = JSON.parse(JSON.stringify(this.materialS));
-                console.log(this.orgMaterialS);
             })
         }
 

@@ -15,7 +15,7 @@
                         '': orderStatus === '已同步',
                     }"
                 >
-                    订单状态：{{ orderStatus === 'noPass' || orderStatus === 'R' ? '审核不通过' : orderStatus === 'saved' || orderStatus === 'S' ? '已保存' : orderStatus === 'submit' || orderStatus === 'D' ? '已提交' : orderStatus === 'checked' || orderStatus === 'C' ? '通过' : orderStatus === '已同步' || orderStatus === 'T' || orderStatus === 'N' ? '未录入' : orderStatus === 'toBeAudited' ? '待审核' : orderStatus }}
+                    订单状态：{{ getTagStatus(orderStatus) }}
                 </i>
             </div>
             <div v-if="headShow" class="dataEntry-head-base">
@@ -45,7 +45,7 @@
         <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
             <el-tab-pane v-for="(item, index) in tabs" :key="index" :name="setKey(index)">
                 <span v-if="item.status !== undefined" slot="label" class="spanview">
-                    <el-tooltip class="item" effect="dark" :content="item.status === 'noPass' ? '不通过' : item.status === 'saved' ? '已保存' : item.status === 'submit' ? '已提交' : item.status === 'checked' ? '通过' : '未录入'" placement="top-start">
+                    <el-tooltip class="item" effect="dark" :content="getTagStatus(item.status)" placement="top-start">
                         <span
                             :style="{
                                 color: item.status === 'noPass' ? 'red' : '',
@@ -203,6 +203,54 @@
             };
         },
         computed: {
+            getTagStatus: () => {
+                return (status) => {
+                    let res = '';
+                    switch (status) {
+                        case 'noPass':
+                            res = '不通过';
+                            break;
+                        case 'saved':
+                            res = '已保存';
+                            break;
+                        case 'submit':
+                            res = '已提交';
+                            break;
+                        case 'checked':
+                            res = '通过';
+                            break;
+                        case 'F':
+                            res = '接口失败';
+                            break;
+                        case 'C':
+                            res = '已审核';
+                            break;
+                        case 'T':
+                            res = '已同步';
+                            break;
+                        case 'R':
+                            res = '已退回';
+                            break;
+                        case 'N':
+                            res = '未录入';
+                            break;
+                        case 'D':
+                            res = '待审核';
+                            break;
+                        case 'X':
+                            res = '反审';
+                            break;
+                        case 'S':
+                            res = '已保存';
+                            break;
+                        case 'P':
+                            res = '已过账';
+                            break;
+                        default: res = status
+                    }
+                    return res;
+                }
+            },
             sidebarFold: {
                 get() {
                     return this.$store.state.common.sidebarFold;
