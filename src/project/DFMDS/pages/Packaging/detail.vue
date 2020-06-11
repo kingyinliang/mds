@@ -179,6 +179,7 @@
             },
             {
                 label: '设备运行',
+                status: '未录入',
                 isRedact: false
             },
             {
@@ -295,13 +296,19 @@
         }
 
         // 查询表头
-        getOrderList() {
+        async getOrderList() {
             this.visible = false;
             PKG_API.PKG_TAG_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.$store.state.packaging.packDetail.orderNo
             }).then(({ data }) => {
-                console.log(data);
+                this.tabs[0].status = data.data.readyTagStatus;
+                this.tabs[1].status = data.data.userTagStatus;
+                this.tabs[2].status = data.data.deviceTagStatus;
+                this.tabs[3].status = data.data.storageTagStatus;
+                this.tabs[4].status = data.data.materialTagStatus;
+                console.log(this.tabs);
+                this.$refs.dataEntry.updateTabs();
             });
             PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
