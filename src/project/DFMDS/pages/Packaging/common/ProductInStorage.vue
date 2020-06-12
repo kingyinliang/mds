@@ -8,161 +8,170 @@
                     </el-button>
                 </div>
             </template>
-
-            <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" border tooltip-effect="dark" size="small">
-                <el-table-column type="index" label="序号" width="50px" fixed />
-                <el-table-column label="生产日期" prop="productDate" width="180">
-                    <template slot="header">
-                        <span class="notNull">* </span>生产日期
-                    </template>
-                    <template slot-scope="scope">
-                        <el-date-picker
-                            v-model="scope.row.productDate"
-                            type="date"
-                            placeholder="选择日期"
-                            size="small"
-                            style="width: 140px;"
-                            :disabled="!isRedact"
-                        />
-                    </template>
-                </el-table-column>
-                <el-table-column label="班次" prop="classes" width="120">
-                    <template slot="header">
-                        <span class="notNull">* </span>班次
-                    </template>
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
-                            <el-option
-                                v-for="item in classesOptions"
-                                :key="item.dictCode"
-                                :label="item.dictValue"
-                                :value="item.dictCode"
+            <el-form ref="ruleForm" :model="ruleForm">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" border tooltip-effect="dark" size="small">
+                    <el-table-column type="index" label="序号" width="50px" fixed />
+                    <el-table-column label="生产日期" prop="productDate" width="180">
+                        <template slot="header">
+                            <span class="notNull">* </span>生产日期
+                        </template>
+                        <template slot-scope="scope">
+                            <el-date-picker
+                                v-model="scope.row.productDate"
+                                type="date"
+                                placeholder="选择日期"
+                                size="small"
+                                style="width: 140px;"
+                                :disabled="!isRedact"
                             />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="生产批次" prop="batch" width="160">
-                    <template slot="header">
-                        <span class="notNull">* </span>生产批次
-                    </template>
-                    <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.batch" maxlength="10" placeholder="输入数量" size="small" :disabled="!isRedact" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="生产入库" prop="inStorageCount" width="100">
-                    <template slot="header">
-                        <span class="notNull">* </span>生产入库
-                    </template>
-                    <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="单位" prop="inStorageUnit" width="100">
-                    <template slot="header">
-                        <span class="notNull">* </span>单位
-                    </template>
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact">
-                            <el-option
-                                v-for="item in unitOptions"
-                                :key="item.key"
-                                :label="item.value"
-                                :value="item.key"
-                            />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="入库不良" prop="inStorageBadCount" width="100">
-                    <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="单位" prop="inStorageBadUnit" width="100">
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
-                            <el-option
-                                v-for="item in unitOptions"
-                                :key="item.key"
-                                :label="item.value"
-                                :value="item.key"
-                            />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="线上不良" prop="onlineBadCount" width="100">
-                    <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="单位" prop="onlineBadUnit" width="100">
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
-                            <el-option
-                                v-for="item in unitOptions"
-                                :key="item.key"
-                                :label="item.value"
-                                :value="item.key"
-                            />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="样品" prop="sampleCount" width="100">
-                    <template slot-scope="scope">
-                        <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!isRedact || !(scope.row.sampleStatus==='S'||scope.row.sampleStatus==='R'||scope.row.sampleStatus==='')" clearable oninput="value=value.replace(/\D*/g,'')" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="单位" prop="sampleUnit" width="100">
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact">
-                            <el-option
-                                v-for="item in unitOptions"
-                                :key="item.key"
-                                :label="item.value"
-                                :value="item.key"
-                            />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="产出数" prop="output" width="100">
-                    <template slot-scope="scope">
-                        {{ amountProductNum(scope.row,scope.$index) }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="单位" prop="outputUnit" width="100">
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact">
-                            <el-option
-                                v-for="item in unitOptions"
-                                :key="item.key"
-                                :label="item.value"
-                                :value="item.key"
-                            />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="备注" prop="remark" width="100">
-                    <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="操作人" prop="changer" width="140">
-                    <template slot-scope="scope">
-                        {{ scope.row.changer }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="操作时间" prop="changed" width="160">
-                    <template slot-scope="scope">
-                        {{ scope.row.changed }}
-                    </template>
-                </el-table-column>
-                <el-table-column width="70" fixed="right">
-                    <template slot-scope="scope">
-                        <el-button v-if="!scope.row.original" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || !(scope.row.checkStatus==='S' || scope.row.checkStatus==='R' ||scope.row.checkStatus==='')" @click="removeDataRow(scope.row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="班次" prop="classes" width="120">
+                        <template slot="header">
+                            <span class="notNull">* </span>班次
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.classes'" :rules="dataRules.classes">
+                                <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
+                                    <el-option
+                                        v-for="item in classesOptions"
+                                        :key="item.dictCode"
+                                        :label="item.dictValue"
+                                        :value="item.dictCode"
+                                    />
+                                </el-select>
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="生产批次" prop="batch" width="160">
+                        <template slot="header">
+                            <span class="notNull">* </span>生产批次
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.batch'" :rules="dataRules.batch">
+                                <el-input v-model.trim="scope.row.batch" maxlength="10" placeholder="输入批次" size="small" :disabled="!isRedact" />
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="生产入库" prop="inStorageCount" width="100">
+                        <template slot="header">
+                            <span class="notNull">* </span>生产入库
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.inStorageCount'" :rules="dataRules.inStorageCount">
+                                <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="单位" prop="inStorageUnit" width="100">
+                        <template slot="header">
+                            <span class="notNull">* </span>单位
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.inStorageUnit'" :rules="dataRules.inStorageUnit">
+                                <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                                    <el-option
+                                        v-for="item in unitOptions"
+                                        :key="item.key"
+                                        :label="item.value"
+                                        :value="item.key"
+                                    />
+                                </el-select>
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="入库不良" prop="inStorageBadCount" width="100">
+                        <template slot-scope="scope">
+                            <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="单位" prop="inStorageBadUnit" width="100">
+                        <template slot-scope="scope">
+                            <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                                <el-option
+                                    v-for="item in unitOptions"
+                                    :key="item.key"
+                                    :label="item.value"
+                                    :value="item.key"
+                                />
+                            </el-select>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="线上不良" prop="onlineBadCount" width="100">
+                        <template slot-scope="scope">
+                            <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="单位" prop="onlineBadUnit" width="100">
+                        <template slot-scope="scope">
+                            <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                                <el-option
+                                    v-for="item in unitOptions"
+                                    :key="item.key"
+                                    :label="item.value"
+                                    :value="item.key"
+                                />
+                            </el-select>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="样品" prop="sampleCount" width="100">
+                        <template slot-scope="scope">
+                            <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!isRedact || !(scope.row.sampleStatus==='S'||scope.row.sampleStatus==='R'||scope.row.sampleStatus==='')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="单位" prop="sampleUnit" width="100">
+                        <template slot-scope="scope">
+                            <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                                <el-option
+                                    v-for="item in unitOptions"
+                                    :key="item.key"
+                                    :label="item.value"
+                                    :value="item.key"
+                                />
+                            </el-select>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="产出数" prop="output" width="100">
+                        <template slot-scope="scope">
+                            {{ amountProductNum(scope.row,scope.$index) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="单位" prop="outputUnit" width="100">
+                        <template slot-scope="scope">
+                            <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                                <el-option
+                                    v-for="item in unitOptions"
+                                    :key="item.key"
+                                    :label="item.value"
+                                    :value="item.key"
+                                />
+                            </el-select>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="备注" prop="remark" width="100">
+                        <template slot-scope="scope">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作人" prop="changer" width="140">
+                        <template slot-scope="scope">
+                            {{ scope.row.changer }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作时间" prop="changed" width="160">
+                        <template slot-scope="scope">
+                            {{ scope.row.changed }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="70" fixed="right">
+                        <template slot-scope="scope">
+                            <el-button v-if="!scope.row.original" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || !(scope.row.checkStatus==='S' || scope.row.checkStatus==='R' ||scope.row.checkStatus==='')" @click="removeDataRow(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-form>
         </mds-card>
         <el-row class="solerow">
             <div>
@@ -189,6 +198,10 @@
     })
     export default class ProductInStore extends Vue {
 
+        $refs: {
+            ruleForm: HTMLFormElement;
+        }
+
         @Prop({ type: Boolean, default: false }) isRedact
         @Prop({ type: Array, default: [] }) classesOptions
 
@@ -200,6 +213,23 @@
         basicUnitName=''
         ratio=1
         readAudit= []
+        ruleForm={
+        }
+
+        dataRules= {
+            classes: [
+                { required: true, message: '请输入', trigger: 'change' }
+            ],
+            batch: [
+                { required: true, message: '请输入', trigger: 'blur' }
+            ],
+            inStorageCount: [
+                { required: true, message: '请输入数量', trigger: 'blur' }
+            ],
+            inStorageUnit: [
+                { required: true, message: '请输入', trigger: 'change' }
+            ]
+        }
 
         init(formHeader) {
             PKG_API.PKG_INSTORAGE_QUERY_API({
@@ -210,6 +240,7 @@
                 if (data.data.length !== 0) {
                     this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data.inStorages))
                     this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data.inStorages))
+                    this.setValidate(this.currentFormDataGroup, this.ruleForm)
                 }
                 this.basicUnitName = data.data.basicUnitName
                 this.ratio = data.data.ratio
@@ -217,6 +248,27 @@
                     this.unitOptions.push({ key: data.data.basicUnit, value: data.data.basicUnitName })
                     this.unitOptions.push({ key: data.data.productUnit, value: data.data.productUnitName })
                 }
+
+
+            });
+        }
+
+        // 设置校验
+        setValidate(currentFormDataGroup, ruleForm) {
+            currentFormDataGroup.forEach((item, index) => {
+                this.$set(ruleForm, 'r' + index, item)
+            })
+        }
+
+        // 提交时跑校验
+        submitForm(ruleForm) {
+        this.$refs[ruleForm].validate((valid) => {
+            if (valid) {
+                alert('submit!');
+            } else {
+                console.log('error submit!!');
+                return false;
+            }
             });
         }
 
@@ -250,6 +302,7 @@
                 type: 'warning'
             }).then(() => {
                 row.delFlag = 1;
+                this.setValidate(this.currentFormDataGroup, this.ruleForm)
             });
         }
 
@@ -278,7 +331,10 @@
                     // created: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
             }
             this.currentFormDataGroup.push(sole)
+
+            this.setValidate(this.currentFormDataGroup, this.ruleForm)
         }
+
 
         amountProductNum(row, index): number {
             const inStorageUnitRatio: number = row.inStorageUnit === this.unitOptions[0].key ? 1 : this.ratio
