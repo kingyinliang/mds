@@ -496,3 +496,71 @@ export function getDateDiff(startTime, endTime, diffType) {
     // eslint-disable-next-line
     return ((eTime.getTime() - sTime.getTime()) / divNum).toFixed(2);
 }
+// 比对 object 使否相同
+export function compareObject(x, y) {
+    // remember that NaN === NaN returns false
+    // and isNaN(undefined) returns true
+    if (isNaN(x) && isNaN(y) && typeof x === 'number' && typeof y === 'number') {
+        return true;
+    }
+    // If both x and y are null or undefined and exactly the same
+    if (x === y) {
+        return x !== 0 || 1 / x === 1 / y;
+    }
+
+    if (x === null || y === null) return x === y;
+
+    // Works in case when functions are created in constructor.
+    // Comparing dates is a common scenario. Another built-ins?
+    // We can even handle functions ㄋpassed across iframes
+    if ((typeof x === 'function' && typeof y === 'function') || (x instanceof Date && y instanceof Date) || (x instanceof RegExp && y instanceof RegExp) || (x instanceof String && y instanceof String) || (x instanceof Number && y instanceof Number)) {
+        return x.toString() === y.toString();
+    }
+
+    // If they are not strictly equal, they both need to be Objects
+    if (!(x instanceof Object) || !(y instanceof Object)) {
+        return false;
+    }
+
+    if (Object.prototype.isPrototypeOf.call(x, y) || Object.prototype.isPrototypeOf.call(y, x)) {
+        return false;
+    }
+
+    //They must have the exact same prototype chain,the closest we can do is
+    //test the constructor.
+    if (x.constructor !== y.constructor) {
+        return false;
+    }
+
+    if (x.prototype !== y.prototype) {
+        return false;
+    }
+    for (const p in x) {
+        //Inherited properties were tested using x.constructor === y.constructor
+        if (Object.prototype.hasOwnProperty.call(x, p)) {
+            // Allows comparing x[ p ] and y[ p ] when set to undefined
+            if (!Object.prototype.hasOwnProperty.call(y, p)) {
+                return false;
+            }
+            // If they have the same strict value or identity then they are equal
+            if (x[p] === y[p]) {
+                continue;
+            }
+            // Numbers, Strings, Functions, Booleans must be strictly equal
+            if (typeof x[p] !== 'object') {
+                return false;
+            }
+            // Objects and Arrays must be tested recursively
+            // if (!Object.is(x[ p ], y[ p ])) {
+            //     return false;
+            // }
+        }
+    }
+    for (const q in y) {
+        // allows x[ p ] to be set to undefined
+        if (Object.prototype.hasOwnProperty.call(y, q) && !Object.prototype.hasOwnProperty.call(x, q)) {
+            return false;
+        }
+    }
+    return true;
+}
