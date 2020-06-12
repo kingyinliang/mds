@@ -86,10 +86,8 @@
                             </el-button>
                         </template>
                     </div>
-                    <div v-if="type === 'audit'" class="redact_btn">
-                        <el-button type="primary" size="small" class="sub-red" @click="pass()">
-                            审核不通过
-                        </el-button>
+                    <div v-else class="redact_btn">
+                        <slot name="custom_btn" />
                     </div>
                 </div>
                 <div v-else class="redact clearfix">

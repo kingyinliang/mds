@@ -3,35 +3,41 @@
         type="audit"
         :header-base="headerBase"
         :form-header="formHeader"
+        :order-status="formHeader.orderStatus"
         :tabs="tabs"
     >
         <template slot="1" slot-scope="data">
-            <ready-time ref="readyTime" :is-redact="data.isRedact" />
+            <ready-time ref="readyTime" :is-redact="data.isRedact" :classes-options="classesOptions" />
         </template>
         <template slot="2" slot-scope="data">
-            <product-people ref="productPeople" :is-redact="data.isRedact" />
+            <product-people ref="productPeople" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
         </template>
         <template slot="3" slot-scope="data">
-            <Equipment ref="equipment" :is-redact="data.isRedact" />
+            <Equipment ref="equipment" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :product-line="formHeader.productLine" />
         </template>
         <template slot="4" slot-scope="data">
-            <product-in-storage ref="productInStorage" :is-redact="data.isRedact" />
+            <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
         </template>
         <template slot="5" slot-scope="data">
             <material ref="material" :is-redact="data.isRedact" />
         </template>
         <template slot="6" slot-scope="data">
-            <pending-num ref="pendingNum" :is-redact="data.isRedact" />
+            <pending-num ref="pendingNum" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
         </template>
         <template slot="7" slot-scope="data">
             <text-record ref="textRecord" :is-redact="data.isRedact" />
+        </template>
+        <template slot="custom_btn">
+            <el-button type="primary" size="small" class="sub-red" @click="pass()">
+                审核不通过
+            </el-button>
         </template>
     </data-entry>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { PKG_API } from 'common/api/api';
+    import { COMMON_API, PKG_API } from 'common/api/api';
     import ReadyTime from '../common/ReadyTimes.vue';
     import Material from '../common/Material.vue';
     import ProductPeople from '../common/ProductPeople.vue';
@@ -50,10 +56,25 @@
             Material,
             ProductInStorage,
             Equipment
+        },
+        filters: {
+            classesOptionsFilter: (value) => {
+                return value.filter(item => item.dictValue !== '多班')
+            }
         }
     })
     export default class AuditDetail extends Vue {
-        orderStatus = ''
+        $refs: {
+            readyTime: HTMLFormElement; // 1生产准备
+            productPeople: HTMLFormElement; // 2生产人员
+            equipment: HTMLFormElement; // 3设备运行
+            productInStorage: HTMLFormElement; // 4生产入库
+            material: HTMLFormElement; // 5物料领用
+            pendingNum: HTMLFormElement; // 6待处理数量
+            textRecord: HTMLFormElement; // 7文本记录
+            dataEntry: HTMLFormElement;
+        };
+
         headerBase = [
             {
                 type: 'p',
@@ -111,6 +132,7 @@
             }
         ];
 
+        // tabs data
         tabs = [
             {
                 label: '生产准备',
@@ -124,6 +146,7 @@
             },
             {
                 label: '设备运行',
+                status: '未录入',
                 isRedact: false
             },
             {
@@ -146,24 +169,63 @@
             }
         ];
 
-        formHeader: OrderData = {}
+        formHeader: OrderData = {};
+        classesOptions: object[] = [];
 
         mounted() {
             this.initData()
+            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+                this.classesOptions = []
+                data.data.forEach((item) => {
+                    this.classesOptions.push({
+                        dictValue: item.dictValue,
+                        dictCode: item.dictCode
+                    })
+                })
+            });
         }
 
         initData() {
-            console.log(1);
+            PKG_API.PKG_TAG_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: this.$store.state.packaging.auditDetailDetail.orderNo
+            }).then(({ data }) => {
+                if (data.data !== null) {
+                    this.tabs[0].status = data.data.readyTagStatus;
+                    this.tabs[1].status = data.data.userTagStatus;
+                    this.tabs[2].status = data.data.deviceTagStatus;
+                    this.tabs[3].status = data.data.storageTagStatus;
+                    this.tabs[4].status = data.data.materialTagStatus;
+                    this.$refs.dataEntry.updateTabs();
+                }
+            });
             PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: this.formHeader.orderNo
+                orderNo: this.$store.state.packaging.auditDetailDetail.orderNo
             }).then(({ data }) => {
-                this.orderStatus = data.data.orderStatus
+                this.formHeader = data.data;
+                this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptName;
+                this.formHeader.orderId = this.formHeader.id;
+                this.$refs.readyTime.init(this.formHeader);
+            })
+        }
+
+        pass() {
+            PKG_API.PKG_AUDIT_DETAIL_PASS_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                id: this.formHeader.id,
+                orderId: this.formHeader.orderId,
+                orderNo: this.formHeader.orderNo,
+                memo: '',
+                refuseType: ''
+            }).then(() => {
+                this.$successToast('操作成功');
             })
         }
     }
 
     interface OrderData{
+        factoryName?: string;
         changed?: string;
         countMan?: number;
         countOutput?: number;
@@ -179,6 +241,7 @@
         operator?: string;
         operatorDate?: string;
         orderEndDate?: string;
+        orderId?: string;
         orderNo?: string;
         orderStartDate?: string;
         orderStatus?: string;

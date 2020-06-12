@@ -13,9 +13,6 @@
                         <el-button type="primary" size="small" @click="GetList(true)">
                             查询
                         </el-button>
-                        <el-button type="primary" size="small" @click="outPut()">
-                            导出
-                        </el-button>
                     </el-form-item>
                 </el-form>
             </template>

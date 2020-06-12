@@ -171,7 +171,7 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { dateFormat, getUserNameNumber, accAdd } from 'utils/utils';
-    import { PKG_API } from 'common/api/api';
+    import { PKG_API, AUDIT_API } from 'common/api/api';
     import _ from 'lodash';
 
     @Component({
@@ -349,7 +349,7 @@
             }
         }
 
-        init(formHeader) {
+        async init(formHeader) {
             PKG_API.PKG_MATERIAL_P_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: formHeader.orderNo,
@@ -370,6 +370,16 @@
                 this.merge(this.materialS, 'materialS');
                 this.orgMaterialS = JSON.parse(JSON.stringify(this.materialS));
             })
+            // this.MaterialAudit = await this.getAudit(formHeader, 'verifyType');
+            // console.log(this.MaterialAudit);
+        }
+
+        async getAudit(formHeader, verifyType) {
+            const a = await AUDIT_API.AUDIT_LOG_LIST_API({
+                orderNo: formHeader.id,
+                verifyType: verifyType
+            })
+            return a.data.data
         }
 
         // 处理数据

@@ -564,5 +564,9 @@ export const PKG_API = {
     /**
      * @property {string}  PKG_DEVICE_QUERY_API 包装车间-运行情况-查询
      */
-    PKG_DEVICE_QUERY_API: params => httpProxy('/pkg/pkgDevice/query', 'POST', params)
+    PKG_DEVICE_QUERY_API: params => httpProxy('/pkg/pkgDevice/query', 'POST', params),
+    /**
+     * @property {string}  PKG_AUDIT_DETAIL_PASS_API 审核详情-审核拒绝
+     */
+    PKG_AUDIT_DETAIL_PASS_API: params => httpProxy('/pkg/refuse', 'POST', params)
 };

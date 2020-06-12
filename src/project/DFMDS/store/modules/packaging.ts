@@ -3,7 +3,8 @@ export default {
     state: {
         packDetail: {},
         packCheckData: {},
-        auditDetail: {}
+        auditDetail: {},
+        auditDetailDetail: {}
     },
     mutations: {
         updatePackDetail(state, packDetail) {
@@ -14,6 +15,9 @@ export default {
         },
         Audit(state, auditDetail) {
             state.auditDetail = auditDetail;
+        },
+        updateAuditDetailDetail(state, auditDetail) {
+            state.auditDetailDetail = auditDetail;
         }
     }
 };
