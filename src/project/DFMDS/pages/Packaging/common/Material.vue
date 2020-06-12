@@ -10,7 +10,11 @@
                 </el-table-column>
                 <el-table-column label="单位" prop="materialUnit" width="50" :show-overflow-tooltip="true" />
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
-                <el-table-column label="结算库存" prop="endStocks" width="80" :show-overflow-tooltip="true" />
+                <el-table-column label="结算库存" width="80" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.endStocks = getEndStocks(scope.row) }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="初始库存" prop="startStocks" width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="订单领料" prop="receiveMaterial" width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
@@ -98,21 +102,31 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="入库号" prop="sterilizeStorageNo" width="150" :show-overflow-tooltip="true" />
-                <el-table-column label="锅号" prop="sterilizePotNo" width="150" :show-overflow-tooltip="true" />
-                <el-table-column label="物料" prop="potMaterialCode" width="150" :show-overflow-tooltip="true">
+                <el-table-column label="使用锅序" min-width="140">
+                    <template slot="header">
+                        <span class="notNull">* </span>使用锅序
+                    </template>
                     <template slot-scope="scope">
-                        {{ scope.row.potMaterialCode + scope.row.potMaterialName }}
+                        <el-input v-model="scope.row.sterilizeStorageNo" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
-                <el-table-column label="批次" prop="batch" width="150" :show-overflow-tooltip="true" />
-                <el-table-column label="实际用量" prop="realUsed" width="150" :show-overflow-tooltip="true" />
-                <el-table-column label="开始使用时间" prop="batch" width="195">
+                <el-table-column label="锅号" prop="sterilizePotNo" width="150" :show-overflow-tooltip="true" />
+                <el-table-column label="实际用量" min-width="140">
+                    <template slot="header">
+                        <span class="notNull">* </span>实际用量
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.realUsed" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="开始使用时间" width="195">
+                    <template slot="header">
+                        <span class="notNull">* </span>开始使用时间
+                    </template>
                     <template slot-scope="scope">
                         <el-date-picker v-model="scope.row.startDate" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
-
                 <el-table-column label="用完时间" prop="batch" width="195">
                     <template slot-scope="scope">
                         <el-date-picker v-model="scope.row.endDate" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
@@ -141,6 +155,14 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-row class="solerow">
+                <div>
+                    领用数合计：
+                </div>
+                <div class="input_bottom">
+                    {{ materialCount }}
+                </div>
+            </el-row>
         </mds-card>
         <audit-log :table-data="MaterialAudit" />
     </div>
@@ -148,7 +170,8 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { PKG_API } from 'common/api/api';
+    import { dateFormat, getUserNameNumber, accAdd } from 'utils/utils';
+    import { PKG_API, AUDIT_API } from 'common/api/api';
     import _ from 'lodash';
 
     @Component({
@@ -169,6 +192,22 @@
         spanOneArr: number[] = [];
         spanTwoArr: number[] = [];
 
+        ruleSubmit() {
+            for (const item of this.currentDataTable.filter(it => it.delFlag !== 1)) {
+                if (!item.realUseAmount) {
+                    this.$warningToast('请填写包材领用必填项');
+                    return false
+                }
+            }
+            for (const item of this.materialS.filter(it => it.delFlag !== 1)) {
+                if (!item.sterilizeStorageNo || !item.realUsed || !item.startDate) {
+                    this.$warningToast('请填写半成品领用必填项');
+                    return false
+                }
+            }
+            return true
+        }
+
         savedData() {
             const pkgPackingMaterial: PkgMaterialObj = {
                 packingMaterialDelete: [],
@@ -177,6 +216,7 @@
                 packingMaterialUpdate: []
             };
             const pkgSemiMaterial: PkgMaterialSObj = {
+                materialCount: this.materialCount,
                 pkgSemiMaterialDelete: [],
                 pkgSemiMaterialItemDelete: [],
                 pkgSemiMaterialInsert: [],
@@ -309,7 +349,7 @@
             }
         }
 
-        init(formHeader) {
+        async init(formHeader) {
             PKG_API.PKG_MATERIAL_P_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: formHeader.orderNo,
@@ -330,6 +370,16 @@
                 this.merge(this.materialS, 'materialS');
                 this.orgMaterialS = JSON.parse(JSON.stringify(this.materialS));
             })
+            // this.MaterialAudit = await this.getAudit(formHeader, 'verifyType');
+            // console.log(this.MaterialAudit);
+        }
+
+        async getAudit(formHeader, verifyType) {
+            const a = await AUDIT_API.AUDIT_LOG_LIST_API({
+                orderNo: formHeader.id,
+                verifyType: verifyType
+            })
+            return a.data.data
         }
 
         // 处理数据
@@ -398,7 +448,6 @@
             }
         }
 
-
         spanTwoMethod({ rowIndex, columnIndex }) {
             if (columnIndex <= 4) {
                 return {
@@ -422,45 +471,14 @@
                 materialStatus: row.materialStatus,
                 materialUnit: row.materialUnit,
                 needNum: row.needNum,
-                startStocks: row.startStocks,
                 endStocks: row.endStocks,
+                startStocks: row.startStocks,
                 receiveMaterial: row.receiveMaterial,
                 splitFlag: 'Y',
                 delFlag: 0,
-                batch: row.batch,
-                endDate: row.endDate,
-                potMaterialCode: row.potMaterialCode,
-                potMaterialName: row.potMaterialName,
-                realUsed: row.realUsed,
-                startDate: row.startDate,
-                sterilizePotNo: row.sterilizePotNo,
-                sterilizeStorageNo: row.sterilizeStorageNo
-            });
-            this.merge(this[str], str)
-        }
-
-        SplitDateS(str, row, index) {
-            this[str].splice(index + this[str].filter(item => item.merge === row.merge).length, 0, {
-                merge: row.merge,
-                id: '',
-                mainId: row.mainId,
-                materialCode: row.materialCode,
-                materialName: row.materialName,
-                materialStatus: row.materialStatus,
-                materialUnit: row.materialUnit,
-                needNum: row.needNum,
-                startStocks: row.startStocks,
-                endStocks: row.endStocks,
-                receiveMaterial: row.receiveMaterial,
-                splitFlag: 'Y',
-                batch: row.batch,
-                endDate: row.endDate,
-                potMaterialCode: row.potMaterialCode,
-                potMaterialName: row.potMaterialName,
-                realUsed: row.realUsed,
-                startDate: row.startDate,
-                sterilizePotNo: row.sterilizePotNo,
-                sterilizeStorageNo: row.sterilizeStorageNo
+                sterilizePotNo: '',
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                changer: getUserNameNumber()
             });
             this.merge(this[str], str)
         }
@@ -487,6 +505,26 @@
                 this.merge(this[str], str)
             });
         }
+
+        get getEndStocks() {
+            return (row) => {
+                const dataArr = this.currentDataTable.filter(it => it.merge === row.merge && it.delFlag !== 1);
+                const num = dataArr.reduce((total, currentValue: MaterialMap) => {
+                    return total + Number(currentValue.realUseAmount)
+                }, 0);
+                return Number(row.startStocks) + Number(row.receiveMaterial) - Number(num)
+            }
+        }
+
+        get materialCount() {
+            let scrapNum = 0;
+            this.materialS.map((item: MaterialMap) => {
+                if (item.delFlag !== 1) {
+                    scrapNum = accAdd(scrapNum, Number(item.realUsed));
+                }
+            });
+            return scrapNum;
+        }
     }
 interface MaterialMap{
     merge?: number;
@@ -507,6 +545,10 @@ interface MaterialMap{
     startStocks?: number;
     endStocks?: number;
     receiveMaterial?: string;
+    realUseAmount?: string;
+    sterilizeStorageNo?: string;
+    realUsed?: string;
+    startDate?: string;
     splitFlag?: string;
     changer?: string;
     changed?: string;
@@ -519,6 +561,7 @@ interface PkgMaterialObj {
     packingMaterialUpdate: MaterialMap[];
 }
 interface PkgMaterialSObj {
+    materialCount: number;
     pkgSemiMaterialDelete: string[];
     pkgSemiMaterialItemDelete: string[];
     pkgSemiMaterialInsert: MaterialMap[];
@@ -526,5 +569,15 @@ interface PkgMaterialSObj {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    .solerow {
+        margin-top: 5px;
+        line-height: 33px;
+        div {
+            float: left;
+        }
+        .input_bottom {
+            margin-right: 50px;
+        }
+    }
 </style>

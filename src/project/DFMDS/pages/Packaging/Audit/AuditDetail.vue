@@ -147,6 +147,21 @@
             </mds-card>
             <!-- <audit-log :table-data="readAudit" /> -->
         </div>
+        <div class="redactBox">
+            <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
+                <div class="redact clearfix">
+                    <div class="redact_tips">
+                        <i class="el-icon-info" />
+                        <span>请及时保存数据</span>
+                    </div>
+                    <div class="redact_btn">
+                        <el-button type="primary" size="small" @click="goDetail">
+                            详情
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -175,6 +190,20 @@ export default class AuditDetail extends Vue {
     mounted() {
         this.initChartLine();
         this.initDiffChartBar();
+    }
+
+    get sidebarFold() {
+        return this.$store.state.common.sidebarFold;
+    }
+
+    goDetail() {
+        this.$store.commit('packaging/updateAuditDetailDetail', this.$store.state.packaging.auditDetail);
+        this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-Audit-detail'))
+        setTimeout(() => {
+            this.$router.push({
+                name: `DFMDS-pages-Packaging-Audit-detail`
+            });
+        }, 100);
     }
 
     activated() {

@@ -204,7 +204,7 @@
 
         // 提交校验
         submitRules(): Function[] {
-            return [this.$refs.readyTime.ruleSubmit, this.$refs.productPeople.ruleSubmit, this.$refs.pendingNum.ruleSubmit]
+            return [this.$refs.readyTime.ruleSubmit, this.$refs.productPeople.ruleSubmit, this.$refs.pendingNum.ruleSubmit, this.$refs.material.ruleSubmit]
         }
 
         // 保存数据
@@ -296,19 +296,20 @@
         }
 
         // 查询表头
-        async getOrderList() {
+        getOrderList() {
             this.visible = false;
             PKG_API.PKG_TAG_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.$store.state.packaging.packDetail.orderNo
             }).then(({ data }) => {
-                this.tabs[0].status = data.data.readyTagStatus;
-                this.tabs[1].status = data.data.userTagStatus;
-                this.tabs[2].status = data.data.deviceTagStatus;
-                this.tabs[3].status = data.data.storageTagStatus;
-                this.tabs[4].status = data.data.materialTagStatus;
-                console.log(this.tabs);
-                this.$refs.dataEntry.updateTabs();
+                if (data.data !== null) {
+                    this.tabs[0].status = data.data.readyTagStatus;
+                    this.tabs[1].status = data.data.userTagStatus;
+                    this.tabs[2].status = data.data.deviceTagStatus;
+                    this.tabs[3].status = data.data.storageTagStatus;
+                    this.tabs[4].status = data.data.materialTagStatus;
+                    this.$refs.dataEntry.updateTabs();
+                }
             });
             PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -316,6 +317,7 @@
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptName;
+                this.formHeader.orderId = this.formHeader.id;
                 this.$refs.readyTime.init(this.formHeader);
                 this.$refs.productPeople.init(this.formHeader);
                 this.$refs.equipment.init(this.formHeader);
