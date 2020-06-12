@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <div class="dataEntry-head">
-            <div class="dataEntry-head-title">
+            <div v-if="orderStatusShow" class="dataEntry-head-title">
                 <i class="dataEntry-head-title__icon iconfont factory-gongchang" />
                 <span v-if="headShow" class="dataEntry-head-title__text">{{ formHeader.factoryName }}</span>
                 <span v-else class="dataEntry-head-title__text">基础信息</span>
@@ -62,7 +62,7 @@
         <!--编辑-->
         <div class="redactBox">
             <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
-                <div class="redact clearfix">
+                <div v-if="redactBoxStatus" class="redact clearfix">
                     <div v-if="type === 'entry'" class="redact_tips">
                         <i class="el-icon-info" />
                         <span v-if="orderStatus === 'toBeAudited'">请仔细核对数据后再进行提交</span>
@@ -89,6 +89,21 @@
                     <div v-if="type === 'audit'" class="redact_btn">
                         <el-button type="primary" size="small" class="sub-red" @click="pass()">
                             审核不通过
+                        </el-button>
+                    </div>
+                </div>
+                <div v-else class="redact clearfix">
+                    <div class="redact_tips">
+                        <i class="el-icon-info" />
+                        <span v-if="isRedact">请及时保存数据</span>
+                        <span v-else>点击编辑按钮，对当前页面进行编辑</span>
+                    </div>
+                    <div class="redact_btn">
+                        <el-button v-if="isRedact" type="primary" size="small" @click="cancel">
+                            取消
+                        </el-button>
+                        <el-button type="primary" size="small" @click="save">
+                            {{ isRedact ? '保存' : '编辑' }}
                         </el-button>
                     </div>
                 </div>
@@ -189,6 +204,22 @@
             onlySubmit: {
                 type: Boolean,
                 default: false
+            },
+            cancelDatas: {
+                type: Function,
+                default: () => {
+                    //
+                }
+            },
+             //检测数据订单状态不显示
+            orderStatusShow: {
+                type: Boolean,
+                default: true
+            },
+            //检测数据底部只显示取消和编辑
+            redactBoxStatus: {
+                type: Boolean,
+                default: true
             }
         },
         data() {
@@ -266,6 +297,17 @@
             },
             ifSubmit() {
                 return !this.notPermitSubmitStatus.includes(this.orderStatus);
+            },
+             save() {
+                if (!this.isRedact) {
+                    this.isRedact = !this.isRedact;
+                } else {
+                    this.savedDatas()
+                }
+            },
+            cancel() {
+                this.isRedact = false;
+                this.cancelDatas()
             }
         }
     };
