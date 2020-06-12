@@ -9,7 +9,7 @@
             <div style="margin-top: 10px;">
                 <el-table :data="materialList" border header-row-class-name="tableHead" :row-class-name="rowDelFlag" @selection-change="handleSelectionChange" @row-dblclick="editmaterial">
                     <el-table-column type="selection" width="50" fixed="left" :disabled="!isRedact" />
-                    <el-table-column type="index" label="序号" width="50px" />
+                    <el-table-column type="index" label="序号" width="50px" fixed />
                     <el-table-column width="100px">
                         <template slot="header">
                             <i class="reqI">*</i><span>布浆机</span>

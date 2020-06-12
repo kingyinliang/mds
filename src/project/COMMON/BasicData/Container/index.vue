@@ -37,8 +37,8 @@
                 </el-form>
             </div>
             <el-table ref="targetInfoList" class="newTable" :height="mainClientHeight - 52 - 39 - 47" header-row-class-name="tableHead" :data="targetInfoList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
-                <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
-                <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
+                <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" fixed />
+                <el-table-column type="index" :index="indexMethod" label="序号" width="55" fixed />
                 <el-table-column label="容器类型" :show-overflow-tooltip="true" width="100">
                     <template slot-scope="scope">
                         {{ containerTypeObject[scope.row.holderType] }}

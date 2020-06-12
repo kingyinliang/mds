@@ -73,7 +73,7 @@
                                     type="selection"
                                     width="55"
                                 />
-                                <el-table-column type="index" label="序号" width="55" />
+                                <el-table-column type="index" label="序号" width="55" fixed />
                                 <el-table-column label="容器" :show-overflow-tooltip="true" width="100">
                                     <template slot-scope="scope">
                                         {{ scope.row.holdName }}
@@ -166,7 +166,7 @@
                         </span>
                         <el-row>
                             <el-table header-row-class-name="tableHead" :data="applyedList" border tooltip-effect="dark">
-                                <el-table-column type="index" label="序号" width="55" />
+                                <el-table-column type="index" label="序号" width="55" fixed />
                                 <el-table-column label="订单号" width="120">
                                     <template slot-scope="scope">
                                         {{ scope.row.ferOrderNo }}

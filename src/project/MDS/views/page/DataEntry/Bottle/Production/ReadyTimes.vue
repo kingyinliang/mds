@@ -97,7 +97,7 @@
                 </el-col>
                 <el-col style="max-width: 942px;">
                     <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="dataList" border tooltip-effect="dark" @row-dblclick="updateRow">
-                        <el-table-column type="index" label="序号" width="55" />
+                        <el-table-column type="index" label="序号" width="55" fixed />
                         <el-table-column label="班次" :show-overflow-tooltip="true" prop="classesName" width="70" />
                         <el-table-column label="工作内容" :show-overflow-tooltip="true" prop="content" width="110" />
                         <el-table-column label="开始时间" :show-overflow-tooltip="true" prop="startDate" width="130" />

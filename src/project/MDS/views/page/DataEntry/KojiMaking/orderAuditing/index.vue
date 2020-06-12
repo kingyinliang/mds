@@ -24,7 +24,7 @@
                             </div>
                         </template>
                         <el-table header-row-class-name="tableHead" :data="workHourList" border tooltip-effect="dark">
-                            <el-table-column type="index" width="55" label="序号" />
+                            <el-table-column type="index" width="55" label="序号" fixed />
                             <el-table-column label="工序" width="150">
                                 <template slot-scope="scope">
                                     {{ scope.row.productLineName }}
@@ -99,7 +99,7 @@
                 <div>
                     <mds-card title="生产入库" :name="'shengchanruku'">
                         <el-table header-row-class-name="tableHead" :data="inStockList" border tooltip-effect="dark">
-                            <el-table-column type="index" width="55" label="序号" />
+                            <el-table-column type="index" width="55" label="序号" fixed />
                             <el-table-column label="制曲日期" width="100" prop="inKjmDate" />
                             <el-table-column label="曲房" width="100" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
@@ -181,7 +181,7 @@
                 <div>
                     <mds-card title="物料领用" :name="'shengchanruku'">
                         <el-table header-row-class-name="tableHead" :data="applyMaterieList" border tooltip-effect="dark">
-                            <el-table-column type="index" width="55" label="序号" />
+                            <el-table-column type="index" width="55" label="序号" fixed />
                             <el-table-column label="制曲日期" width="100" prop="inKjmDate" />
                             <el-table-column label="曲房" width="100" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">

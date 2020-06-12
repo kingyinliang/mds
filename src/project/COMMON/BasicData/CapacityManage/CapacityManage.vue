@@ -22,7 +22,7 @@
                 </div>
                 <el-table ref="table1" class="newTable" :data="CapacityList" :height="mainClientHeight - 52 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" fixed="left" />
-                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
+                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
                     <el-table-column prop="workNum" :show-overflow-tooltip="true" label="物料">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}

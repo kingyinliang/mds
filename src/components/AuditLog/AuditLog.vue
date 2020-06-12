@@ -1,7 +1,7 @@
 <template>
     <mds-card :title="'审核日志'" :name="name" :icon-bg="'#f05c4a'" :pack-up="packUp">
         <el-table class="newTable" :data="tableData" header-row-class-name="tableHead" border style="width: 100%;" height="200px">
-            <el-table-column label="序号" type="index" width="60" />
+            <el-table-column label="序号" type="index" width="60" fixed />
             <el-table-column prop="status" label="审核动作" width="100" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                     {{ status? scope.row.status : (scope.row.status === 'noPass' ? '不通过' : scope.row.status === 'checked' ? '通过' : scope.row.status === 'submit' ? '反审' : '') }}

@@ -71,7 +71,7 @@ export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
 export function transfer(data) {
     const res = [];
     const selcedid = [];
-    data.forEach((item) => {
+    data.forEach(item => {
         if (item.del_flag === '0') {
             selcedid.push(item.user_id);
         }
@@ -88,7 +88,7 @@ export function transfer(data) {
 }
 export function setUserList(data) {
     const res = [];
-    data.forEach((item) => {
+    data.forEach(item => {
         res.push({
             label: item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）',
             key: item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）',
@@ -600,6 +600,6 @@ export function accDiv(arg1, arg2) {
     return (r1 / r2) * Math.pow(10, t2 - t1);
 }
 // 深克隆
-export function DeepClone(str) {
+export function deepClone(str) {
     return JSON.parse(JSON.stringify(str));
 }

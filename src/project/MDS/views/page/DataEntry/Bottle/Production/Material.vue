@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="MaterialList" border tooltip-effect="dark">
-            <el-table-column type="index" label="序号" width="55" />
+            <el-table-column type="index" label="序号" width="55" fixed />
             <el-table-column
                 label="物料"
                 :show-overflow-tooltip="true"

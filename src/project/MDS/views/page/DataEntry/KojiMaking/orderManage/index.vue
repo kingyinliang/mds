@@ -63,7 +63,7 @@
                             <el-row>
                                 <el-col>
                                     <el-table header-row-class-name="tableHead" :data="currentOrderList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="showDetail">
-                                        <el-table-column type="index" width="55" label="序号" />
+                                        <el-table-column type="index" width="55" label="序号" fixed />
                                         <el-table-column label="订单状态" width="80">
                                             <template slot-scope="scope">
                                                 <label
@@ -150,7 +150,7 @@
                                 <el-col>
                                     <el-table ref="multipleTable" header-row-class-name="tableHead" :data="orderDetailList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @selection-change="handleChange" @row-dblclick="showModifyDetial">
                                         <el-table-column type="selection" width="50" />
-                                        <el-table-column type="index" width="55" label="序号" />
+                                        <el-table-column type="index" width="55" label="序号" fixed />
                                         <el-table-column label="曲房状态" width="80">
                                             <template slot-scope="scope">
                                                 {{ scope.row.status }}
@@ -199,7 +199,7 @@
                 </div>
                 <div class="orderForm">
                     <el-table header-row-class-name="tableHead" :data="splitDetailList" border tooltip-effect="dark" :row-class-name="rowDelFlag">
-                        <el-table-column type="index" width="55" label="序号" />
+                        <el-table-column type="index" width="55" label="序号" fixed />
                         <el-table-column label="订单号" width="120">
                             <template slot-scope="scope">
                                 {{ scope.row.orderNo }}

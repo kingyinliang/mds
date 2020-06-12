@@ -59,7 +59,7 @@
                     当前库存信息
                 </span>
                 <el-table header-row-class-name="" :data="dataList" border tooltip-effect="dark" class="newTable">
-                    <el-table-column type="index" label="序号" width="55" align="center" />
+                    <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="物料" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}
@@ -97,7 +97,7 @@
                     调整信息记录
                 </span>
                 <el-table header-row-class-name="" :data="adjustList" border tooltip-effect="dark" class="newTable">
-                    <el-table-column type="index" label="序号" width="55" align="center" />
+                    <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="200">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}
@@ -155,7 +155,7 @@
             <el-tabs v-model="activeDialogFormName" type="border-card" class="tabsPages">
                 <el-tab-pane label="入库信息" name="inStorage">
                     <el-table header-row-class-name="" :data="applyInStorageList" border tooltip-effect="dark" class="newTable">
-                        <el-table-column type="index" label="序号" width="55" align="center" />
+                        <el-table-column type="index" label="序号" width="55" align="center" fixed />
                         <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode + ' ' + scope.row.materialName }}
@@ -201,7 +201,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="领用信息" name="receive">
                     <el-table header-row-class-name="" :data="applyReceiveList" border tooltip-effect="dark" class="newTable">
-                        <el-table-column type="index" label="序号" width="55" align="center" />
+                        <el-table-column type="index" label="序号" width="55" align="center" fixed />
                         <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode + ' ' + scope.row.materialName }}

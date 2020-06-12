@@ -84,7 +84,7 @@
                             </el-button>
                         </el-row>
                         <el-table header-row-class-name="tableHead" :data="crafData.result" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-                            <el-table-column width="55" label="序号" type="index" />
+                            <el-table-column width="55" label="序号" type="index" fixed />
                             <el-table-column label="屏显温度(℃)">
                                 <template slot-scope="scope">
                                     <el-input v-model="scope.row.temp" :disabled="!isRedact" placeholder="手工录入" size="small" />

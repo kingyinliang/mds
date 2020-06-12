@@ -21,7 +21,7 @@
             </el-table-column>
             <el-table-column label="第一排" width="120" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(sealList,scope.$index,'pressOne')" />
+                    <el-input v-model="scope.row.pressOne" :disabled="!isRedact" maxlength="12" size="mini" @input="changeInputType(sealList,scope.$index,'pressOne')" />
                 </template>
             </el-table-column>
             <el-table-column label="第二排" width="120" :show-overflow-tooltip="true">
@@ -172,19 +172,16 @@
         }
 
         changeInputType(arr, index, type) {
-            this.$nextTick(() => {
-                console.log(index);
-                // 先把非数字的都替换掉(空)，除了数字和.
-                arr[index][type] = arr[index][type].replace(/[^\d.]/g, '');
-                // 如果第一个字符为.则替换为0.
-                arr[index][type] = arr[index][type].replace(/^\./g, '0.');
-                //保证不能出现..
-                arr[index][type] = arr[index][type].replace(/\.{2,}/g, '.');
-                // 如果第一个数字为0则之后只能输入.
-                arr[index][type] = arr[index][type].replace(/^0[^\.]+/g, '0');
-                //保留两位小数
-                arr[index][type] = arr[index][type].replace(/^(\d+)\.(\d\d).*$/, '$1.$2');
-            });
+            // 先把非数字的都替换掉(空)，除了数字和.
+            arr[index][type] = arr[index][type].replace(/[^\d.]/g, '');
+            // 如果第一个字符为.则替换为0.
+            arr[index][type] = arr[index][type].replace(/^\./g, '0.');
+            //保证不能出现..
+            arr[index][type] = arr[index][type].replace(/\.{2,}/g, '.');
+            // 如果第一个数字为0则之后只能输入.
+            arr[index][type] = arr[index][type].replace(/^0[^\.]+/g, '0');
+            //保留两位小数
+            arr[index][type] = arr[index][type].replace(/^(\d+)\.(\d\d).*$/, '$1.$2');
         }
     }
 

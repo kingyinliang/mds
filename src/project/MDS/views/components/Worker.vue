@@ -9,7 +9,7 @@
                 </div>
             </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="WorkerDate" border tooltip-effect="dark">
-                <el-table-column type="index" width="55" label="序号" />
+                <el-table-column type="index" width="55" label="序号" fixed />
                 <el-table-column label="白/中/夜班" width="100">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.classType" placeholder="请选择" size="small" :disabled="!isRedact">
@@ -37,13 +37,13 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="人员选择" :show-overflow-tooltip="true">
+                <el-table-column label="人员选择" :show-overflow-tooltip="true" min-width="300">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>人员选择</span>
                     </template>
                     <template slot-scope="scope">
-                        <div class="required" style="min-height: 32px;">
+                        <div class="required" style="">
                             <span v-if="!isRedact" style="cursor: pointer;">
                                 <i v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</i>
                             </span>
@@ -58,9 +58,9 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column width="241" label="开始时间">
+                <el-table-column width="200" label="开始时间">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="用餐时间" width="100">
@@ -68,9 +68,9 @@
                         <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column width="241" label="结束时间">
+                <el-table-column width="220" label="结束时间">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="工作时长" width="100">
@@ -78,7 +78,7 @@
                         <p> {{ workTime(scope.row.endDate, scope.row.startDate, scope.row) }}H </p>
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" width="100">
+                <el-table-column label="备注" width="160">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" size="small" :disabled="!isRedact" />
                     </template>
@@ -166,6 +166,7 @@ import { toDate } from '@/net/validate';
 import OfficialWorker from './OfficialWorker';
 import LoanedPersonnel from './LoanedPersonnel';
 import TemporaryWorker from './TemporaryWorker';
+import { accSub } from 'utils/utils';
 export default {
     name: 'Worker',
     components: {
@@ -220,7 +221,8 @@ export default {
         workTime: function() {
             return function(end, start, row) {
                 if (end && start && row.delFlag !== '1') {
-                    return (Number(((toDate(end) - toDate(start)) / 3600000).toFixed(2)) - Number(((Number(row.dinner)) / 60).toFixed(2))).toFixed(2);
+                    //return (Number(((toDate(end) - toDate(start)) / 3600000).toFixed(2)) - Number(((Number(row.dinner)) / 60).toFixed(2))).toFixed(2);
+                    return Number(accSub((toDate(end) - toDate(start)) / 3600000, Number(row.dinner) / 60)).toFixed(2);
                 }
             };
         }

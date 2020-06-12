@@ -19,7 +19,7 @@
                         </div>
                         <div style="padding: 10px;">
                             <el-table ref="targetInfoList" header-row-class-name="tableHead" row-key="index" :data="targetInfoList" highlight-current-row border tooltip-effect="dark" class="newTable" size="small" @row-click="getChildItemList">
-                                <el-table-column type="index" width="50" label="序号" />
+                                <el-table-column type="index" width="50" label="序号" fixed />
                                 <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" />
                                 <el-table-column prop="dictType" :show-overflow-tooltip="true" label="参数类型编码" width="110" />
                                 <el-table-column prop="dictName" :show-overflow-tooltip="true" label="参数类型名称" width="110" />
@@ -51,7 +51,7 @@
                         </h5>
                         <div style="padding: 10px;">
                             <el-table ref="targetParameterList" header-row-class-name="tableHead" :data="targetParameterList" border tooltip-effect="dark" class="newTable" size="small">
-                                <el-table-column type="index" width="50" label="序号" />
+                                <el-table-column type="index" width="50" label="序号" fixed />
                                 <el-table-column prop="factoryName" :show-overflow-tooltip="true" label="工厂" width="100" />
                                 <el-table-column prop="dictType" :show-overflow-tooltip="true" label="参数类型编码">
                                     <template>

@@ -110,7 +110,7 @@
             <el-row v-else-if="processStatus === 'abnormal' && isAbnormalDataEditStatus === true">
                 <div style="min-height: 340px;">
                     <el-table border header-row-class-name="tableHead" :data="dataList">
-                        <el-table-column label="序号" width="50" prop="id" type="index" />
+                        <el-table-column label="序号" width="50" prop="id" type="index" fixed />
                         <el-table-column label="中/白/夜班" prop="classType" width="100">
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="isDisabled" size="small">

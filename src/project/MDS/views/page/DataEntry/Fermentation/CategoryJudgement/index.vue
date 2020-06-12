@@ -174,7 +174,7 @@
 </template>
 
 <script>
-import { dateFormat, DeepClone } from '@/net/validate';
+import { dateFormat, deepClone } from '@/net/validate';
 import { BASICDATA_API, FERMENTATION_API } from '@/api/api';
 export default {
     name: 'CategroyJudgement',
@@ -400,7 +400,7 @@ export default {
             };
             this.beforeHalfId = JSON.parse(JSON.stringify(row.judge.halfId));
             this.beforeFrozenStatus = JSON.parse(JSON.stringify(row.judge.frozenStatus));
-            this.beforeRemark = DeepClone(row.judge.remark);
+            this.beforeRemark = deepClone(row.judge.remark);
             this.GetMaterialTypeListTan();
         },
         SaveJudge(formName) {

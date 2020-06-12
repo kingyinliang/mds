@@ -46,8 +46,8 @@
                         </el-button>
                     </div>
                     <el-table header-row-class-name="tableHead" :data="AddSupDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" @selection-change="handleSelectionChangeAddSup">
-                        <el-table-column type="selection" :selectable="CheckBoxA" width="50" />
-                        <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" />
+                        <el-table-column type="selection" :selectable="CheckBoxA" width="50" fixed />
+                        <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" fixed />
                         <el-table-column label="状态" width="100">
                             <template slot-scope="scope">
                                 <div :class="{ reds: scope.row.status === 'noPass', che: scope.row.status === 'checked' }">
@@ -117,8 +117,8 @@
                         </el-button>
                     </div>
                     <el-table header-row-class-name="tableHead" :data="SupDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" @selection-change="handleSelectionChangeSup">
-                        <el-table-column type="selection" :selectable="CheckBoxA" width="50" />
-                        <el-table-column type="index" width="55" label="序号" />
+                        <el-table-column type="selection" :selectable="CheckBoxA" width="50" fixed />
+                        <el-table-column type="index" width="55" label="序号" fixed />
                         <el-table-column label="状态" width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'noPass' ? '不通过' : scope.row.status === 'saved' ? scope.row.addStatus : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'checked' ? '通过' : scope.row.addStatus }}

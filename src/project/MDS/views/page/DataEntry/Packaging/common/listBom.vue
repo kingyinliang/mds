@@ -681,7 +681,7 @@ export default {
         // tableRowClassName
         tableRowClassName({ row }) {
             if (row.delFlag === '1') {
-                return 'warning-row';
+                return 'disabled-row';
             }
             return '';
         },

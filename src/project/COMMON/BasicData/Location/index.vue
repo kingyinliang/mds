@@ -26,8 +26,8 @@
                     </el-row>
                 </template>
                 <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :height="mainClientHeight - 70 - 47" :data="itemList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange" @row-dblclick="addOrUpdateItem">
-                    <el-table-column type="selection" width="50" align="center" />
-                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" align="center" />
+                    <el-table-column type="selection" width="50" align="center" fixed />
+                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" align="center" fixed />
                     <el-table-column prop="deptName" width="160" :show-overflow-tooltip="true" label="车间" />
                     <el-table-column :show-overflow-tooltip="true" label="物料类型">
                         <template slot-scope="scope">
