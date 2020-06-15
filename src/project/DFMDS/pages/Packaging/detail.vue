@@ -263,6 +263,11 @@
 
         SubmitForm() {
             if (this.submitRadio === '1') {
+                // 入库紧急提交校验
+                // if (!this.$refs.productInStorage.ruleSubmit('submit')) {
+                //     this.visible = false
+                //     return false;
+                // }
                 this.$confirm('确认提交该订单, 是否继续?', '提交订单', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -272,8 +277,7 @@
                     return PKG_API.PKG_URGENT_SUBMIT_API({
                         pkgOrderUpdate: this.formHeader,
                         pkgInstorage
-                    }).then(({ data }) => {
-                        console.log(data);
+                    }).then(() => {
                         this.$successToast('提交成功');
                     })
                 })

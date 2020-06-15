@@ -266,13 +266,23 @@ interface UserObj {
 export function creatGetPath(path) {
     let paths = path.split('.');
     return function getPath(obj) {
+        let orgPaths = paths.concat()
         let res = obj;
         let prop;
-        while ((prop = paths.shift())) {
+        while ((prop = orgPaths.shift())) {
             res = res[prop];
         }
         return res;
     };
+}
+export function getObjPath(obj, path) {
+    let paths = path.split('.');
+    let res = obj;
+    let prop;
+    while ((prop = paths.shift())) {
+        res = res[prop];
+    }
+    return res;
 }
 /**
  * 展开合并
