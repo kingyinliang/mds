@@ -164,7 +164,7 @@
                 </div>
             </el-row>
         </mds-card>
-        <audit-log :table-data="MaterialAudit" />
+        <audit-log :table-data="MaterialAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
     </div>
 </template>
 
@@ -370,8 +370,7 @@
                 this.merge(this.materialS, 'materialS');
                 this.orgMaterialS = JSON.parse(JSON.stringify(this.materialS));
             })
-            // this.MaterialAudit = await this.getAudit(formHeader, 'verifyType');
-            // console.log(this.MaterialAudit);
+            this.MaterialAudit = await this.getAudit(formHeader, 'MATERIAL');
         }
 
         async getAudit(formHeader, verifyType) {

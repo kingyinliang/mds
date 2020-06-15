@@ -272,8 +272,7 @@
                     return PKG_API.PKG_URGENT_SUBMIT_API({
                         pkgOrderUpdate: this.formHeader,
                         pkgInstorage
-                    }).then(({ data }) => {
-                        console.log(data);
+                    }).then(() => {
                         this.$successToast('提交成功');
                     })
                 })

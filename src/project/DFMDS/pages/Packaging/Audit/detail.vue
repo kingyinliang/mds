@@ -1,38 +1,52 @@
 <template>
-    <data-entry
-        type="audit"
-        :header-base="headerBase"
-        :form-header="formHeader"
-        :order-status="formHeader.orderStatus"
-        :tabs="tabs"
-    >
-        <template slot="1" slot-scope="data">
-            <ready-time ref="readyTime" :is-redact="data.isRedact" :classes-options="classesOptions" />
-        </template>
-        <template slot="2" slot-scope="data">
-            <product-people ref="productPeople" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
-        </template>
-        <template slot="3" slot-scope="data">
-            <Equipment ref="equipment" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :product-line="formHeader.productLine" />
-        </template>
-        <template slot="4" slot-scope="data">
-            <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
-        </template>
-        <template slot="5" slot-scope="data">
-            <material ref="material" :is-redact="data.isRedact" />
-        </template>
-        <template slot="6" slot-scope="data">
-            <pending-num ref="pendingNum" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
-        </template>
-        <template slot="7" slot-scope="data">
-            <text-record ref="textRecord" :is-redact="data.isRedact" />
-        </template>
-        <template slot="custom_btn">
-            <el-button type="primary" size="small" class="sub-red" @click="pass()">
-                审核不通过
-            </el-button>
-        </template>
-    </data-entry>
+    <div>
+        <data-entry
+            ref="dataEntry"
+            type="audit"
+            :header-base="headerBase"
+            :form-header="formHeader"
+            :order-status="formHeader.orderStatus"
+            :tabs="tabs"
+        >
+            <template slot="1" slot-scope="data">
+                <ready-time ref="readyTime" :is-redact="data.isRedact" :classes-options="classesOptions" />
+            </template>
+            <template slot="2" slot-scope="data">
+                <product-people ref="productPeople" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
+            </template>
+            <template slot="3" slot-scope="data">
+                <Equipment ref="equipment" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :product-line="formHeader.productLine" />
+            </template>
+            <template slot="4" slot-scope="data">
+                <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
+            </template>
+            <template slot="5" slot-scope="data">
+                <material ref="material" :is-redact="data.isRedact" />
+            </template>
+            <template slot="6" slot-scope="data">
+                <pending-num ref="pendingNum" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
+            </template>
+            <template slot="7" slot-scope="data">
+                <text-record ref="textRecord" :is-redact="data.isRedact" />
+            </template>
+            <template slot="custom_btn">
+                <el-button type="primary" size="small" class="sub-red" @click="pass()">
+                    审核不通过
+                </el-button>
+            </template>
+        </data-entry>
+        <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
+            <el-input v-model="ReText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="visibleRefuse = false">
+                    取消
+                </el-button>
+                <el-button type="primary" @click="refuse()">
+                    确定
+                </el-button>
+            </div>
+        </el-dialog>
+    </div>
 </template>
 
 <script lang="ts">
@@ -171,6 +185,8 @@
 
         formHeader: OrderData = {};
         classesOptions: object[] = [];
+        visibleRefuse = false;
+        ReText = '';
 
         mounted() {
             this.initData()
@@ -211,14 +227,49 @@
         }
 
         pass() {
+            if (this.$refs.dataEntry.activeName === '6' || this.$refs.dataEntry.activeName === '7') {
+                return false
+            }
+            this.visibleRefuse = true;
+
+        }
+
+        refuse() {
+            let refuseType;
+            switch (this.$refs.dataEntry.activeName) {
+                case '1':
+                    refuseType = 'READY';
+                    break;
+                case '2':
+                    refuseType = 'USER';
+                    break;
+                case '3':
+                    refuseType = 'DEVICE';
+                    break;
+                case '4':
+                    refuseType = 'STORAGE';
+                    break;
+                case '5':
+                    refuseType = 'MATERIAL';
+                    break;
+                default: refuseType = ''
+            }
+            if (!refuseType) {
+                return false
+            }
+            if (!this.ReText) {
+                this.$warningToast('请填写原因');
+                return false
+            }
             PKG_API.PKG_AUDIT_DETAIL_PASS_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 id: this.formHeader.id,
                 orderId: this.formHeader.orderId,
                 orderNo: this.formHeader.orderNo,
-                memo: '',
-                refuseType: ''
+                memo: this.ReText,
+                refuseType: refuseType
             }).then(() => {
+                this.visibleRefuse = false;
                 this.$successToast('操作成功');
             })
         }
