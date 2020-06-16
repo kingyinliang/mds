@@ -11,14 +11,17 @@
                 </div>
                 <el-table :data="dataList2" border header-row-class-name="tableHead" style="margin-top: 10px;">
                     <el-table-column label=" " prop="type" />
+                    <el-table-column label="空罐" prop="empty" />
                     <el-table-column label="<30" prop="ltThirty" />
-                    <el-table-column label="30≤N<60" prop="ltSixty" />
-                    <el-table-column label="60≤N<90" prop="ltNinety" />
-                    <el-table-column label="90≤N<130" prop="ltOneHundredAndThree" />
-                    <el-table-column label="130≤N<150" prop="ltOneHundredAndFive" />
-                    <el-table-column label="150≤N<180" prop="ltOneHundredAndEight" />
-                    <el-table-column label="180≤N<200" prop="ltTwoHundred" />
+                    <el-table-column label="30≤N<60" prop="ltSixty" min-width="110" />
+                    <el-table-column label="60≤N<90" prop="ltNinety" min-width="110" />
+                    <el-table-column label="90≤N<130" prop="ltOneHundredAndThree" min-width="110" />
+                    <el-table-column label="130≤N<150" prop="ltOneHundredAndFive" min-width="110" />
+                    <el-table-column label="150≤N<180" prop="ltOneHundredAndEight" min-width="110" />
+                    <el-table-column label="180≤N<200" prop="ltTwoHundred" min-width="110" />
                     <el-table-column label="200≤N" prop="gtTwoHundred" />
+                    <el-table-column label="压榨" prop="used" />
+                    <el-table-column label="占用" prop="otherUsed" />
                 </el-table>
             </el-tab-pane>
             <el-tab-pane name="2">

@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard  newCard" style="margin-bottom: 5px;">
-            <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="topform multi_row">
+            <el-form :inline="true" size="small" :model="formHeader" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
                         <el-option label="请选择" value="" />
@@ -33,6 +33,17 @@
                         <el-option label="请选择" value="" />
                         <el-option v-for="(item, index) in materialList" :key="index" :label="item.MATERIAL_NAME" :value="item.MATERIAL_CODE" />
                     </el-select>
+                </el-form-item>
+                <el-form-item label="操作时间：" label-width="70px" class="dateinput">
+                    <el-row>
+                        <el-col :span="12">
+                            <el-date-picker v-model="formHeader.startDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 140px;" />
+                            <span style="margin-left: 5px;">-</span>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-date-picker v-model="formHeader.endDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 140px;" />
+                        </el-col>
+                    </el-row>
                 </el-form-item>
                 <div class="floatr">
                     <el-button v-if="isAuth('juice:pot:juiceExamine')" type="primary" size="small" @click="getDataList(true)">
@@ -301,4 +312,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.topform .el-form-item__content {
+    border-bottom: none !important;
+}
+</style>
