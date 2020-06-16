@@ -204,7 +204,7 @@
 
         // 提交校验
         submitRules(): Function[] {
-            return [this.$refs.readyTime.ruleSubmit, this.$refs.productPeople.ruleSubmit, this.$refs.pendingNum.ruleSubmit, this.$refs.material.ruleSubmit]
+            return [this.$refs.readyTime.ruleSubmit, this.$refs.productPeople.ruleSubmit, this.$refs.pendingNum.ruleSubmit, this.$refs.material.ruleSubmit, this.$refs.equipment.ruleSubmit, this.$refs.productInStorage.ruleSubmit]
         }
 
         // 保存数据
