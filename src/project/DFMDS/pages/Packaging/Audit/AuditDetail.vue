@@ -152,11 +152,14 @@
                 <div class="redact clearfix">
                     <div class="redact_tips">
                         <i class="el-icon-info" />
-                        <span>请及时保存数据</span>
+                        <span>生管审核</span>
                     </div>
                     <div class="redact_btn">
                         <el-button type="primary" size="small" @click="goDetail">
                             详情
+                        </el-button>
+                        <el-button type="primary" size="small" @click="pass()">
+                            审核通过
                         </el-button>
                     </div>
                 </div>
@@ -167,6 +170,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
+import { PKG_API } from 'common/api/api';
 import echarts from 'echarts';
 @Component({
     // name: 'AuditLog',
@@ -178,7 +182,7 @@ import echarts from 'echarts';
 })
 export default class AuditDetail extends Vue {
 
-    formHeader = {};
+    formHeader: OrderData = {};
     orderStatus = '已同步';
     dataList = [];
     readAudit = [];
@@ -190,6 +194,7 @@ export default class AuditDetail extends Vue {
     mounted() {
         this.initChartLine();
         this.initDiffChartBar();
+        this.getOrderList()
     }
 
     get sidebarFold() {
@@ -204,6 +209,36 @@ export default class AuditDetail extends Vue {
                 name: `DFMDS-pages-Packaging-Audit-detail`
             });
         }, 100);
+    }
+
+    getOrderList() {
+        PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: this.$store.state.packaging.auditDetail.orderNo
+        }).then(({ data }) => {
+            this.formHeader = data.data;
+        });
+    }
+
+    pass() {
+        this.$confirm('确认通过该订单, 是否继续?', '审核通过', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            PKG_API.PKG_AUDIT_DETAIL_PASS_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                materialCode: this.formHeader.materialCode,
+                orderId: this.formHeader.id,
+                orderNo: this.formHeader.orderNo,
+                orderType: this.formHeader.orderType,
+                productDate: this.formHeader.productDate,
+                productLine: this.formHeader.productLine,
+                workShop: this.formHeader.workShop
+            }).then(() => {
+                this.$successToast('操作成功');
+            })
+        })
     }
 
     activated() {
@@ -349,5 +384,38 @@ export default class AuditDetail extends Vue {
             this.chartDiffBar.resize();
         });
     }
+}
+interface OrderData{
+    factoryName?: string;
+    changed?: string;
+    countMan?: number;
+    countOutput?: number;
+    countOutputUnit?: string;
+    dispatchMan?: string;
+    exceptionDateCount?: number;
+    factory?: string;
+    factoryCode?: string;
+    germs?: number;
+    id?: string;
+    materialCode?: string;
+    materialName?: string;
+    operator?: string;
+    operatorDate?: string;
+    orderEndDate?: string;
+    orderId?: string;
+    orderNo?: string;
+    orderStartDate?: string;
+    orderStatus?: string;
+    orderType?: string;
+    outputUnit?: string;
+    planOutput?: number;
+    productDate?: string;
+    productLine?: string;
+    productLineName?: string;
+    realInAmount?: number;
+    realOutput?: number;
+    version?: number;
+    workShop?: string;
+    workShopName?: string;
 }
 </script>

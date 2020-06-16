@@ -34,7 +34,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
-                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeEnd(scope.row,scope.$index,0)" />
+                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeEnd(scope.row,scope.$index,0)" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -48,7 +48,7 @@
                                     v-model="scope.row.endDate"
                                     type="datetime"
                                     size="small"
-                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyy-MM-dd HH:mm"
                                     format="yyyy-MM-dd HH:mm"
                                     :default-value="scope.row.startDate"
                                     placeholder="选择时间"

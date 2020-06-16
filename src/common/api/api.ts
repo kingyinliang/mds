@@ -568,5 +568,9 @@ export const PKG_API = {
     /**
      * @property {string}  PKG_AUDIT_DETAIL_PASS_API 审核详情-审核拒绝
      */
-    PKG_AUDIT_DETAIL_PASS_API: params => httpProxy('/pkg/refuse', 'POST', params)
+    PKG_AUDIT_DETAIL_PASS_API: params => httpProxy('/pkg/check', 'POST', params),
+    /**
+     * @property {string}  PKG_AUDIT_DETAIL_PASS_API 审核详情-审核拒绝
+     */
+    PKG_AUDIT_DETAIL_REFUSE_API: params => httpProxy('/pkg/refuse', 'POST', params)
 };
