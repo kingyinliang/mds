@@ -31,7 +31,7 @@
             <el-col v-for="(item, index) in dataList" :key="index" :span="12">
                 <el-card class="card-item">
                     <div slot="header">
-                        小麦罐号：{{ item.holderName }}
+                        小麦罐号：{{ item.holderName }} - {{ item.graStatus }}
                         <span class="card-item_detail" @click="goTargetDetail(item)">详情</span>
                     </div>
                     <el-row :gutter="20">
