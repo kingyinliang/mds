@@ -202,23 +202,18 @@
                 </el-row>
             </div>
         </mds-card>
-        <audit-log :table-data="readAudit" />
+        <audit-log :table-data="readyTimesAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
     </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { PKG_API } from 'common/api/api';
+import { PKG_API, AUDIT_API } from 'common/api/api';
 import _ from 'lodash';
 
 @Component({
-    name: 'ReadyTimes',
-    components: {
-        AuditLog: resolve => {
-            require(['@/views/components/AuditLog'], resolve);
-        }
-    }
-    })
+    name: 'ReadyTimes'
+})
 
 export default class ReadyTimes extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
@@ -235,9 +230,10 @@ export default class ReadyTimes extends Vue {
     readAudit= []
     isChange=false // data 是否有异动
     isNewForm=false // 是否初次
+    readyTimesAudit = [];
 
 
-    init(formHeader) {
+    async init(formHeader) {
         PKG_API.PKG_TIMESHEET_QUERY_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             orderNo: formHeader.orderNo
@@ -250,6 +246,15 @@ export default class ReadyTimes extends Vue {
                 this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data))
             }
         })
+        this.readyTimesAudit = await this.getAudit(formHeader, 'TIMESHEET');
+    }
+
+    async getAudit(formHeader, verifyType) {
+        const a = await AUDIT_API.AUDIT_LOG_LIST_API({
+            orderNo: formHeader.id,
+            verifyType: verifyType
+        })
+        return a.data.data
     }
 
     savedData(formHeader) {
