@@ -17,7 +17,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.classes'" :rules="dataRules.classes">
-                                <el-select v-model="scope.row.classes" size="small" clearable style="width: 100%;">
+                                <el-select v-model="scope.row.classes" size="small" clearable style="width: 100%;" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <el-option
                                         v-for="item in classesOptions"
                                         :key="item.dictCode"
@@ -34,7 +34,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
-                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" :picker-options="pickerOptionsStart[0][scope.$index]" @change="changeEnd(scope.row,scope.$index,0)" />
+                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeEnd(scope.row,scope.$index,0)" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -54,6 +54,7 @@
                                     placeholder="选择时间"
                                     style="width: 170px;"
                                     :picker-options="pickerOptionsEnd[0][scope.$index]"
+                                    :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
                                     @change="changeStart(scope.row,scope.$index,0)"
                                 />
                             </el-form-item>
@@ -67,14 +68,14 @@
                     </el-table-column>
                     <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
                     <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeFirstDataRow(scope.row)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeFirstDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -107,7 +108,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.classes'" :rules="dataRules.classes">
-                                <el-select v-model="scope.row.classes" size="small" clearable style="width: 100px;">
+                                <el-select v-model="scope.row.classes" size="small" clearable style="width: 100px;" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <el-option
                                         v-for="item in classesOptions"
                                         :key="item.dictCode"
@@ -124,7 +125,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopType'" :rules="dataRules.stopType">
-                                <el-select v-model="scope.row.stopType" size="small" clearable @change="changeStopModeOption(scope.row)">
+                                <el-select v-model="scope.row.stopType" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeStopModeOption(scope.row)">
                                     <el-option v-for="(item) in stopTypeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
@@ -136,7 +137,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopMode'" :rules="dataRules.stopMode">
-                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="fzReasonOptions">
+                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="!(!fzReasonOptions && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <el-option v-for="(item) in stopModeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
@@ -148,7 +149,19 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
-                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" clearable :picker-options="pickerOptionsStart[1][scope.$index]" @change="changeEnd(scope.row,scope.$index,1)" />
+                                <el-date-picker
+                                    v-model="scope.row.startDate"
+                                    type="datetime"
+                                    size="small"
+                                    value-format="yyyy-MM-dd HH:mm"
+                                    format="yyyy-MM-dd HH:mm"
+                                    placeholder="选择时间"
+                                    style="width: 170px;"
+                                    clearable
+                                    :picker-options="pickerOptionsStart[1][scope.$index]"
+                                    :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
+                                    @change="changeEnd(scope.row,scope.$index,1)"
+                                />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -158,7 +171,19 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.endDate'" :rules="dataRules.endDate">
-                                <el-date-picker v-model="scope.row.endDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" clearable :picker-options="pickerOptionsEnd[1][scope.$index]" @change="changeStart(scope.row,scope.$index,1)" />
+                                <el-date-picker
+                                    v-model="scope.row.endDate"
+                                    type="datetime"
+                                    size="small"
+                                    value-format="yyyy-MM-dd HH:mm"
+                                    format="yyyy-MM-dd HH:mm"
+                                    placeholder="选择时间"
+                                    style="width: 170px;"
+                                    clearable
+                                    :picker-options="pickerOptionsEnd[1][scope.$index]"
+                                    :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
+                                    @change="changeStart(scope.row,scope.$index,1)"
+                                />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -173,7 +198,7 @@
                             <span class="notNull">*</span>次数
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="fzExceptionCount" />
+                            <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(!fzExceptionCount &&isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                         </template>
                     </el-table-column>
                     <el-table-column width="140" :show-overflow-tooltip="true">
@@ -182,7 +207,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopSituation'" :rules="dataRules.stopSituation">
-                                <el-select v-model="scope.row.stopSituation" size="small" clearable @change="changeStopReasonOption(scope.row)">
+                                <el-select v-model="scope.row.stopSituation" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeStopReasonOption(scope.row)">
                                     <el-option v-for="(item) in stopSituationOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
@@ -194,7 +219,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopReason'" :rules="dataRules.stopReason">
-                                <el-select v-model="scope.row.stopReason" size="small" clearable>
+                                <el-select v-model="scope.row.stopReason" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <el-option v-for="(item) in stopReasonOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
@@ -202,19 +227,19 @@
                     </el-table-column>
                     <el-table-column label="描述" min-width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" clearable />
+                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="备注" min-width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" clearable />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="changer" label="操作人" min-width="140" :show-overflow-tooltip="true" />
                     <el-table-column prop="changed" label="操作时间" min-width="180" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeSecondDataRow(scope.row)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeSecondDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -230,14 +255,14 @@
                 </div>
             </el-row>
         </mds-card>
-        <audit-log :table-data="readAudit" />
+        <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
     </div>
 </template>
 
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API, PKG_API } from 'common/api/api';
+import { COMMON_API, PKG_API, AUDIT_API } from 'common/api/api';
 import { dataEntryData } from 'utils/utils'
 import { dateFormat, getUserNameNumber, accDiv } from 'utils/utils';
 
@@ -259,6 +284,8 @@ export default class Equipment extends Vue {
         ruleFirstForm: HTMLFormElement;
         ruleSecondForm: HTMLFormElement;
     }
+
+    currentAudit = [];
 
     // 常有变数
     firstFormDataGroup: FirstDataTable[] = []; // 主 data
@@ -347,7 +374,7 @@ export default class Equipment extends Vue {
         console.log(this.pickerOptionsEnd)
     }
 
-    init(formHeader) {
+    async init(formHeader) {
         PKG_API.PKG_DEVICE_QUERY_API({ // 设备运行-查询
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             orderNo: formHeader.orderNo
@@ -377,7 +404,15 @@ export default class Equipment extends Vue {
 
         this.getAbnormalHalt()
 
+        this.currentAudit = await this.getAudit(formHeader, 'TIMESHEET');
+    }
 
+    async getAudit(formHeader, verifyType) {
+        const result = await AUDIT_API.AUDIT_LOG_LIST_API({
+            orderNo: formHeader.id,
+            verifyType: verifyType
+        })
+        return result.data.data
     }
 
     // 设置校验
@@ -388,15 +423,24 @@ export default class Equipment extends Vue {
     }
 
     // 提交时跑校验
-    submitForm(ruleForm) {
-    this.$refs[ruleForm].validate((valid) => {
-        if (valid) {
-            alert('submit!');
-        } else {
-            console.log('error submit!!');
-            return false;
-        }
-        });
+    ruleSubmit() {
+        // let currentFormDataGroupNew: CurrentDataTable[] = [];
+        // currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
+        // if (currentFormDataGroupNew.length === 0) {
+        //     this.$warningToast('请录入待处理数');
+        //     return false
+        // }
+
+        this.$refs['ruleForm'].validate((valid) => {
+            if (valid) {
+                console.log('submit!!');
+                return true
+            }
+                this.$warningToast('请填写设备运行必填项');
+
+                return false;
+
+            });
     }
 
     savedData(formHeader) {
