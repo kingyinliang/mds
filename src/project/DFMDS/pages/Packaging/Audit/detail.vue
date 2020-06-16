@@ -261,7 +261,7 @@
                 this.$warningToast('请填写原因');
                 return false
             }
-            PKG_API.PKG_AUDIT_DETAIL_PASS_API({
+            PKG_API.PKG_AUDIT_DETAIL_REFUSE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 id: this.formHeader.id,
                 orderId: this.formHeader.orderId,
