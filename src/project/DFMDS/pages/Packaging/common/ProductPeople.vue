@@ -132,7 +132,7 @@
                 </div>
             </el-row>
         </mds-card>
-        <audit-log :table-data="readAudit" />
+        <audit-log :table-data="productPeopleAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
         <official-worker v-if="officialWorkerStatus" ref="officialWorker" @changeUser="changeUser" />
         <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :org-tree="orgTree" :arr-list="arrList" @changeUser="changeUser" />
         <temporary-worker v-if="temporaryWorkerStatus" ref="temporaryWorker" @changeUser="changeUser" />
@@ -141,7 +141,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API, PKG_API } from 'common/api/api';
+import { COMMON_API, PKG_API, AUDIT_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber, getDateDiff, accAdd } from 'utils/utils';
 import OfficialWorker from 'components/OfficialWorker.vue';
 import LoanedPersonnel from 'components/LoanedPersonnel.vue';
@@ -153,10 +153,7 @@ import _ from 'lodash';
     components: {
         OfficialWorker,
         LoanedPersonnel,
-        TemporaryWorker,
-        AuditLog: resolve => {
-            require(['@/views/components/AuditLog'], resolve);
-        }
+        TemporaryWorker
     }
 })
 
@@ -180,6 +177,7 @@ export default class ProductPeople extends Vue {
     officialWorkerStatus = false;
     loanedPersonnelStatus = false;
     temporaryWorkerStatus = false;
+    productPeopleAudit = [];
 
     row: CurrentDataTable = {
         userList: []
@@ -189,7 +187,7 @@ export default class ProductPeople extends Vue {
     arrList = [];
     standardManpower = 0;
 
-    init(formHeader) {
+    async init(formHeader) {
         PKG_API.PKG_USER_QUERY_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             orderNo: formHeader.orderNo
@@ -209,6 +207,16 @@ export default class ProductPeople extends Vue {
         this.getTree()
 
         this.getStandardManPower(this.$store.state.packaging.packDetail)
+
+        this.productPeopleAudit = await this.getAudit(formHeader, 'TIMESHEET');
+    }
+
+    async getAudit(formHeader, verifyType) {
+        const a = await AUDIT_API.AUDIT_LOG_LIST_API({
+            orderNo: formHeader.id,
+            verifyType: verifyType
+        })
+        return a.data.data
     }
 
     // 保存
