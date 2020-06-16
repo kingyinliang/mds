@@ -6,6 +6,83 @@
   "description": "味达美工厂后台管理系统",
   "glyphs": [
     {
+      "icon_id": "15357601",
+      "name": "bell",
+      "font_class": "bell",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "7553044",
+      "name": "头像 (女-)",
+      "font_class": "touxiangnv-",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "7553618",
+      "name": "头像 (男-)",
+      "font_class": "touxiangnan-",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "14183050",
+      "name": "15_解封",
+      "font_class": "15_jiefeng",
+      "unicode": "e67f",
+      "unicode_decimal": 59007
+    },
+    {
+      "icon_id": "14183056",
+      "name": "24_发言、对话、留言",
+      "font_class": "24_fayanduihualiuyan",
+      "unicode": "e686",
+      "unicode_decimal": 59014
+    },
+    {
+      "icon_id": "14183096",
+      "name": "37_住宿",
+      "font_class": "37_zhusu",
+      "unicode": "e6ad",
+      "unicode_decimal": 59053
+    },
+    {
+      "icon_id": "14183041",
+      "name": "3_编辑",
+      "font_class": "3_bianji",
+      "unicode": "e676",
+      "unicode_decimal": 58998
+    },
+    {
+      "icon_id": "14183052",
+      "name": "22_日历",
+      "font_class": "22_rili",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
+      "icon_id": "2623809",
+      "name": "审核日志",
+      "font_class": "shenherizhi",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "4286953",
+      "name": "序号",
+      "font_class": "xuhao",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "12872067",
+      "name": "编 辑",
+      "font_class": "bianji",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
       "icon_id": "6650965",
       "name": "11-12ICON修改_车牌号码",
       "font_class": "-ICONxiugai_chepaihaoma",
