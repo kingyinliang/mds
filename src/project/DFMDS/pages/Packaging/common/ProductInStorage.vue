@@ -266,29 +266,25 @@
 
         // 提交时跑校验
         ruleSubmit() {
-            // let currentFormDataGroupTemp: CurrentDataTable[] = [];
-            // currentFormDataGroupTemp = this.currentFormDataGroup.filter(item => item.delFlag === 0);
-            // if (currentFormDataGroupTemp.length === 0) {
-            //     this.$warningToast('请录入待处理数');
-            //     return false
-            // }
-
-            // for (const item of this.currentDataTable.filter(it => it.delFlag !== 1)) {
-            //     if (!item.realUseAmount) {
-            //         this.$warningToast('请填写包材领用必填项');
-            //         return false
-            //     }
-            // }
-
-            this.$refs['ruleForm'].validate((valid) => {
-                if (valid) {
-                    console.log('submit!!');
-                    return true
-                }
+            for (const item of this.currentFormDataGroup.filter(it => it.delFlag !== 1)) {
+                if (!item.productDate || !item.classes || !item.batch || !item.inStorageCount || !item.inStorageUnit) {
                     this.$warningToast('请填写生产入库必填项');
-                    return false;
+                    return false
+                }
+            }
+            return true
+            // }
+            // this.$refs['ruleForm'].validate((valid) => {
+            //     if (valid) {
+            //         console.log('submit!!');
+            //         return true
+            //     }
+            //         this.$warningToast('请填写生产入库必填项');
+            //         return false;
 
-                });
+            //     });
+
+
         }
 
         // 加工校验 ruleForm
@@ -378,12 +374,20 @@
 
         get computedTotal(): number {
             let total = 0;
-            if (this.currentFormDataGroup.length !== 0) {
-                total = this.currentFormDataGroup.map(item => item.output).reduce((prev, next) => {
-                    return prev + next;
-                })
-            }
-            return total
+            // if (this.currentFormDataGroup.length !== 0) {
+            //     total = this.currentFormDataGroup.map(item => item.output).reduce((prev, next) => {
+            //         return prev + next;
+            //     })
+            // }
+            // return total
+
+
+            this.currentFormDataGroup.map((item) => {
+                if (item.delFlag !== 1) {
+                    total = _.add(total, Number(item.output));
+                }
+            });
+            return total;
         }
 
     }

@@ -265,6 +265,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 import { COMMON_API, PKG_API, AUDIT_API } from 'common/api/api';
 import { dataEntryData } from 'utils/utils'
 import { dateFormat, getUserNameNumber, accDiv } from 'utils/utils';
+import _ from 'lodash';
 
 @Component({
     name: 'Equipment',
@@ -424,23 +425,29 @@ export default class Equipment extends Vue {
 
     // 提交时跑校验
     ruleSubmit() {
-        // let currentFormDataGroupNew: CurrentDataTable[] = [];
-        // currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
-        // if (currentFormDataGroupNew.length === 0) {
-        //     this.$warningToast('请录入待处理数');
-        //     return false
-        // }
-
-        this.$refs['ruleForm'].validate((valid) => {
-            if (valid) {
-                console.log('submit!!');
-                return true
+            for (const item of this.firstFormDataGroup.filter(it => it.delFlag !== 1)) {
+                if (!item.classes || !item.startDate || !item.endDate) {
+                    this.$warningToast('请填写运行情况必填项');
+                    return false
+                }
             }
-                this.$warningToast('请填写设备运行必填项');
+            for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1)) {
+                if (!item.classes || !item.stopType || !item.stopMode || !item.startDate || !item.endDate || !item.exceptionCount || !item.stopSituation || !item.stopReason) {
+                    this.$warningToast('请填写停机情况必填项');
+                    return false
+                }
+            }
+        // this.$refs['ruleForm'].validate((valid) => {
+        //     if (valid) {
+        //         console.log('submit!!');
+        //         return true
+        //     }
+        //         this.$warningToast('请填写设备运行必填项');
 
-                return false;
+        //         return false;
 
-            });
+        //     });
+        return true
     }
 
     savedData(formHeader) {
@@ -672,20 +679,36 @@ export default class Equipment extends Vue {
 
     get computedFirstDataTotal(): number {
         let total = 0;
-        const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        if (this.firstFormDataGroup.length !== 0) {
-            total = this.firstFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
-        }
-        return total
+        // const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        // if (this.firstFormDataGroup.length !== 0) {
+        //     total = this.firstFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
+        // }
+
+
+        this.firstFormDataGroup.map((item) => {
+            if (item.delFlag !== 1) {
+                total = _.add(total, Number(item.duration));
+            }
+        });
+        return total;
     }
 
     get computedSecondDataTotal(): number {
         let total = 0;
-        const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        if (this.secondFormDataGroup.length !== 0) {
-            total = this.secondFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
-        }
-        return total
+        // const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        // if (this.secondFormDataGroup.length !== 0) {
+        //     total = this.secondFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
+        // }
+        // return total
+
+        this.secondFormDataGroup.map((item) => {
+            if (item.delFlag !== 1) {
+                total = _.add(total, Number(item.duration));
+            }
+        });
+        return total;
+
+
     }
 }
 
