@@ -226,10 +226,10 @@ export default class AuditDetail extends Vue {
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            PKG_API.PKG_AUDIT_DETAIL_REFUSE_API({
+            PKG_API.PKG_AUDIT_DETAIL_PASS_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 materialCode: this.formHeader.materialCode,
-                orderId: this.formHeader.orderId,
+                orderId: this.formHeader.id,
                 orderNo: this.formHeader.orderNo,
                 orderType: this.formHeader.orderType,
                 productDate: this.formHeader.productDate,
