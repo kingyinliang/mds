@@ -124,12 +124,12 @@
                         <span class="notNull">* </span>开始使用时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.startDate" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="用完时间" prop="batch" width="195">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.endDate" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="140">
