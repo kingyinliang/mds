@@ -9,7 +9,7 @@
                 </div>
             </template>
             <el-form ref="ruleFirstForm" :model="ruleFirstForm">
-                <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+                <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
                     <el-table-column label="序号" type="index" width="55" fixed="left" />
                     <el-table-column min-width="130" :show-overflow-tooltip="true">
                         <template slot="header">
@@ -137,7 +137,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopMode'" :rules="dataRules.stopMode">
-                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="!(!fzReasonOptions && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <el-option v-for="(item) in stopModeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
@@ -219,7 +219,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopReason'" :rules="dataRules.stopReason">
-                                <el-select v-model="scope.row.stopReason" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                                <el-select v-model="scope.row.stopReason" size="small" clearable :disabled="!(!fzReasonOptions && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <el-option v-for="(item) in stopReasonOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
@@ -535,28 +535,34 @@ export default class Equipment extends Vue {
             row.exceptionCount = 1
             this.fzExceptionCount = true
             this.stopSituationOptions = JSON.parse(JSON.stringify(this.planHaltOptions))
-            row.stopReasonOptions = ''
+            this.stopReasonOptions = []
             row.stopSituation = ''
+            row.stopReason = ''
         } else {
             row.stopMode = ''
             row.exceptionCount = 0
             this.fzExceptionCount = false
             this.stopSituationOptions = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
-            row.stopReasonOptions = ''
+            this.stopReasonOptions = []
             row.stopSituation = ''
+            row.stopReason = ''
         }
     }
 
     changeStopReasonOption(row) {
+        this.stopReasonOptions = []
+        row.stopReason = ''
         if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN') {
+            console.log('11111')
             this.fzReasonOptions = false
             COMMON_API.DEVICELIST_API({
                 deptId: this.productLine,
                 current: 1,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                size: 100
+                size: 99999
             }).then(({ data }) => {
-                data.data.forEach((item) => {
+                console.log(data)
+                data.data.records.forEach((item) => {
                     this.stopReasonOptions.push({
                         dictValue: item.deviceName,
                         dictCode: item.deviceNo
@@ -564,11 +570,12 @@ export default class Equipment extends Vue {
                 })
             });
         } else if (row.stopSituation === 'EXPERIMENT' || row.stopSituation === 'POOR_PROCESS' || row.stopSituation === 'WAIT' || row.stopSituation === 'ENERGY') {
+            console.log('22222')
             this.fzReasonOptions = false
             COMMON_API.DICTQUERY_API({
                 dictType: row.stopSituation
             }).then(({ data }) => {
-                this.stopReasonOptions = []
+                console.log(data)
                 data.data.forEach((item) => {
                     this.stopReasonOptions.push({
                         dictValue: item.dictValue,
@@ -577,8 +584,8 @@ export default class Equipment extends Vue {
                 })
             });
         } else {
+            console.log('333333')
             this.fzReasonOptions = true
-            row.stopReason = ''
             this.stopReasonOptions = []
         }
     }
