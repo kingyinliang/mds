@@ -22,7 +22,7 @@
                                 placeholder="选择日期"
                                 size="small"
                                 style="width: 140px;"
-                                :disabled="!isRedact"
+                                :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
                             />
                         </template>
                     </el-table-column>
@@ -32,7 +32,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.classes'" :rules="dataRules.classes">
-                                <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!isRedact">
+                                <el-select v-model="scope.row.classes" placeholder="请选择" size="small" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <el-option
                                         v-for="item in classesOptions"
                                         :key="item.dictCode"
@@ -49,7 +49,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.batch'" :rules="dataRules.batch">
-                                <el-input v-model.trim="scope.row.batch" maxlength="10" placeholder="输入批次" size="small" :disabled="!isRedact" />
+                                <el-input v-model.trim="scope.row.batch" maxlength="10" placeholder="输入批次" size="small" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -59,7 +59,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.inStorageCount'" :rules="dataRules.inStorageCount">
-                                <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
+                                <el-input v-model.number="scope.row.inStorageCount" size="small" placeholder="输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -69,7 +69,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.inStorageUnit'" :rules="dataRules.inStorageUnit">
-                                <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                                <el-select v-model="scope.row.inStorageUnit" placeholder="请选择" size="small" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <el-option
                                         v-for="item in unitOptions"
                                         :key="item.key"
@@ -82,12 +82,12 @@
                     </el-table-column>
                     <el-table-column label="入库不良" prop="inStorageBadCount" width="100">
                         <template slot-scope="scope">
-                            <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
+                            <el-input v-model.number="scope.row.inStorageBadCount" size="small" placeholder="输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="inStorageBadUnit" width="100">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                            <el-select v-model="scope.row.inStorageBadUnit" placeholder="请选择" size="small" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                 <el-option
                                     v-for="item in unitOptions"
                                     :key="item.key"
@@ -99,12 +99,12 @@
                     </el-table-column>
                     <el-table-column label="线上不良" prop="onlineBadCount" width="100">
                         <template slot-scope="scope">
-                            <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="输入数量" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
+                            <el-input v-model.number="scope.row.onlineBadCount" size="small" placeholder="输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="onlineBadUnit" width="100">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                            <el-select v-model="scope.row.onlineBadUnit" placeholder="请选择" size="small" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                 <el-option
                                     v-for="item in unitOptions"
                                     :key="item.key"
@@ -121,7 +121,7 @@
                     </el-table-column>
                     <el-table-column label="单位" prop="sampleUnit" width="100">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                            <el-select v-model="scope.row.sampleUnit" placeholder="请选择" size="small" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                 <el-option
                                     v-for="item in unitOptions"
                                     :key="item.key"
@@ -138,7 +138,7 @@
                     </el-table-column>
                     <el-table-column label="单位" prop="outputUnit" width="100">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!isRedact">
+                            <el-select v-model="scope.row.outputUnit" placeholder="请选择" size="small" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                 <el-option
                                     v-for="item in unitOptions"
                                     :key="item.key"
@@ -150,7 +150,7 @@
                     </el-table-column>
                     <el-table-column label="备注" prop="remark" width="100">
                         <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="操作人" prop="changer" width="140">
@@ -181,13 +181,13 @@
                 {{ computedTotal }} {{ basicUnitName }}
             </div>
         </el-row>
-        <audit-log :table-data="readAudit" />
+        <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { PKG_API } from 'common/api/api';
+    import { PKG_API, AUDIT_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber, dataEntryData } from 'utils/utils';
     import _ from 'lodash';
 
@@ -204,6 +204,8 @@
 
         @Prop({ type: Boolean, default: false }) isRedact
         @Prop({ type: Array, default: [] }) classesOptions
+
+        currentAudit = [];
 
         // 常有变数
         currentFormDataGroup: CurrentDataTable[] = [] // 主 data
@@ -231,7 +233,7 @@
             ]
         }
 
-        init(formHeader) {
+        async init(formHeader) {
             PKG_API.PKG_INSTORAGE_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: formHeader.orderNo,
@@ -251,25 +253,51 @@
 
 
             });
+            this.currentAudit = await this.getAudit(formHeader, 'INSTORAGE');
         }
 
-        // 设置校验
+        async getAudit(formHeader, verifyType) {
+            const result = await AUDIT_API.AUDIT_LOG_LIST_API({
+                orderNo: formHeader.id,
+                verifyType: verifyType
+            })
+            return result.data.data
+        }
+
+        // 提交时跑校验
+        ruleSubmit() {
+            // let currentFormDataGroupTemp: CurrentDataTable[] = [];
+            // currentFormDataGroupTemp = this.currentFormDataGroup.filter(item => item.delFlag === 0);
+            // if (currentFormDataGroupTemp.length === 0) {
+            //     this.$warningToast('请录入待处理数');
+            //     return false
+            // }
+
+            // for (const item of this.currentDataTable.filter(it => it.delFlag !== 1)) {
+            //     if (!item.realUseAmount) {
+            //         this.$warningToast('请填写包材领用必填项');
+            //         return false
+            //     }
+            // }
+
+            this.$refs['ruleForm'].validate((valid) => {
+                if (valid) {
+                    console.log('submit!!');
+                    return true
+                }
+                    this.$warningToast('请填写生产入库必填项');
+                    return false;
+
+                });
+        }
+
+        // 加工校验 ruleForm
         setValidate(currentFormDataGroup, ruleForm) {
             currentFormDataGroup.forEach((item, index) => {
                 this.$set(ruleForm, 'r' + index, item)
             })
-        }
-
-        // 提交时跑校验
-        submitForm(ruleForm) {
-        this.$refs[ruleForm].validate((valid) => {
-            if (valid) {
-                alert('submit!');
-            } else {
-                console.log('error submit!!');
-                return false;
-            }
-            });
+            console.log('ruleForm')
+            console.log(ruleForm)
         }
 
         savedData(formHeader) {
@@ -295,6 +323,7 @@
             return '';
         }
 
+        // 删除行
         removeDataRow(row) {
             this.$confirm('是否删除?', '提示', {
                 confirmButtonText: '确定',
@@ -306,6 +335,7 @@
             });
         }
 
+        // 新增行
         addNewDataRow() {
             const sole: CurrentDataTable = {
                     delFlag: 0,
@@ -394,7 +424,7 @@ interface UnitOptions{
 
 <style lang="scss" scoped>
 .solerow {
-    margin-top: 5px;
+    margin: 5px 0;
     line-height: 33px;
     div {
         float: left;
