@@ -208,6 +208,7 @@ export default {
                             sessionStorage.setItem('userFactory', JSON.stringify(data.data.userFactory || '[]'));
                             sessionStorage.setItem('userName', data.data.userName || '');
                             sessionStorage.setItem('realName', data.data.realName || '');
+                            sessionStorage.setItem('gender', data.data.sex || 'M');
                             sessionStorage.setItem('defaultFactory', data.data.defaultFactory || '');
                             if (data.data.firstFlag === '1') {
                                 this.visible = true;
