@@ -293,8 +293,7 @@ export default class AuditIndex extends Vue {
     }
 
     getLineClick(row: object) {
-        console.log(row)
-        this.$store.commit('packaging/Audit', row);
+        this.$store.commit('packaging/updateAuditDetail', row);
         this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-Audit-AuditDetail'))
         setTimeout(() => {
             this.$router.push({

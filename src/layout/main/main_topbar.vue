@@ -32,7 +32,7 @@
                     </el-dropdown>
                 </el-menu-item>
             </el-menu>
-            <el-button type="text" style="float: right;" @click.native="goMessage">
+            <el-button v-if="factoryName!=='系统设置'" type="text" style="float: right;" @click.native="goMessage">
                 <el-badge :value="200" :max="99" class="item">
                     <i class="iconfont factory-bell" style="font-size: 18px;" />
                 </el-badge>
@@ -55,7 +55,7 @@ export default {
         selectFactory: {
             type: Function,
             default: () => {
-            //    s
+            //
             }
         }
     },
@@ -117,6 +117,10 @@ export default {
                 this.$store.commit('user/gender', val);
             }
         }
+    },
+    mounted() {
+        console.log('factory')
+        console.log(sessionStorage.getItem('factory'))
     },
     methods: {
         goMessage() {
