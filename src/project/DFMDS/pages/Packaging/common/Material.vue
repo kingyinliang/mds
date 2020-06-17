@@ -97,7 +97,7 @@
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column width="70">
                     <template slot-scope="scope">
-                        <el-button type="text" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDate('materialS', scope.row, scope.$index)">
+                        <el-button type="text" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS('materialS', scope.row, scope.$index)">
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
@@ -476,6 +476,38 @@
                 splitFlag: 'Y',
                 delFlag: 0,
                 sterilizePotNo: '',
+                realUseAmount: '',
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                changer: getUserNameNumber()
+            });
+            this.merge(this[str], str)
+        }
+
+        SplitDateS(str, row, index) {
+            let sterilizeStorageNo = ''
+            const dataArr = this.materialS.filter(it => it.merge === row.merge && it.delFlag !== 1);
+            if (dataArr.length) {
+                sterilizeStorageNo = String(Number(dataArr[dataArr.length - 1].sterilizeStorageNo) + 1)
+            }
+            this[str].splice(index + this[str].filter(item => item.merge === row.merge).length, 0, {
+                merge: row.merge,
+                id: '',
+                orderId: row.orderId,
+                orderNo: row.orderNo,
+                posnr: row.posnr,
+                mainId: row.mainId,
+                materialCode: row.materialCode,
+                materialName: row.materialName,
+                materialStatus: row.materialStatus,
+                materialUnit: row.materialUnit,
+                needNum: row.needNum,
+                endStocks: row.endStocks,
+                startStocks: row.startStocks,
+                receiveMaterial: row.receiveMaterial,
+                splitFlag: 'Y',
+                delFlag: 0,
+                sterilizePotNo: '',
+                sterilizeStorageNo: sterilizeStorageNo,
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                 changer: getUserNameNumber()
             });
@@ -511,7 +543,11 @@
                 const num = dataArr.reduce((total, currentValue: MaterialMap) => {
                     return total + Number(currentValue.realUseAmount)
                 }, 0);
-                return Number(row.startStocks) + Number(row.receiveMaterial) - Number(num)
+                const sumnum = Number(row.startStocks) + Number(row.receiveMaterial) - Number(num);
+                dataArr.forEach(item => {
+                    item.endStocks = sumnum
+                })
+                return sumnum
             }
         }
 
