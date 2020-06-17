@@ -22,6 +22,8 @@
                                 placeholder="选择日期"
                                 size="small"
                                 style="width: 140px;"
+                                value-format="yyyy-MM-dd HH:mm"
+                                format="yyyy.MM.dd HH:mm"
                                 :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
                             />
                         </template>
