@@ -32,7 +32,7 @@
                         <div class="org-card_title">
                             {{ rightTile }}
                         </div>
-                        <div class="detail-main">
+                        <div class="detail-main SelfScrollbar">
                             <slot name="view" />
                         </div>
                     </div>
@@ -161,6 +161,7 @@
         }
         .detail-main {
             padding: 16px 10px 0 10px;
+            overflow-y: scroll;
         }
     }
 </style>

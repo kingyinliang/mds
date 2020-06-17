@@ -9,7 +9,7 @@
             @treeNodeContextMenu="showMenu"
         >
             <template slot="view" style="padding-top: 16px;">
-                <div class="detail-main">
+                <div class="detail-main clearfix">
                     <div class="detail-main-form">
                         <el-form :model="OrgDetail" size="small" :inline="true" label-width="90px" class="org-detail-form">
                             <el-form-item label="部门编码：">
@@ -70,7 +70,7 @@
                             </el-form-item>
                         </el-form>
                     </div>
-                    <div class="org-detail-btn">
+                    <div class="org-detail-btn" :class="{'org-detail-btn__fix':mainClientHeight > 500}">
                         <el-button type="primary" size="small" @click="setRedact">
                             {{ isRedact? '编辑' : '取消' }}
                         </el-button>
@@ -178,6 +178,10 @@ export default class OrgStructure extends Vue {
         dataForm: HTMLFormElement;
         orgImgUpload: HTMLFormElement;
     };
+
+    get mainClientHeight() {
+        return this.$store.state.common.mainClientHeight;
+    }
 
     dataRule = {
         deptCode: [
@@ -512,7 +516,7 @@ interface FileObject {
     }
 
     .detail-main {
-        padding-top: 44px;
+        padding-top: 20px;
 
         .detail-main-form {
             margin: auto;
@@ -528,6 +532,10 @@ interface FileObject {
     }
 
     .org-detail-btn {
+        float: right;
+        padding-bottom: 10px;
+    }
+    .org-detail-btn__fix {
         position: absolute;
         right: 10px;
         bottom: 10px;
