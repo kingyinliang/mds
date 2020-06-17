@@ -157,10 +157,11 @@
                 tempData.forEach((item, index) => {
                     if (item !== null) {
                         if (item.orderNoList.length === 1) {
-                            item.activeOrderNo = item.orderNoList[0]
-                            item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]]
+                            item.activeOrderNo = item.orderNoList[0];
+                            item.activeOrderMap = item.pkgOrderMap[item.orderNoList[0]];
+                            this.orderchange(item);
                         } else {
-                            item.activeOrderNo = ''
+                            item.activeOrderNo = '';
                             item.activeOrderMap = {
                                 outputUnit: '',
                                 planOutput: '',
