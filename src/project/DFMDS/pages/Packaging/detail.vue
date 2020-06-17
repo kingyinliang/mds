@@ -21,13 +21,13 @@
                 <ready-time ref="readyTime" :is-redact="data.isRedact" :classes-options="classesOptions" />
             </template>
             <template slot="2" slot-scope="data">
-                <product-people ref="productPeople" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
+                <product-people ref="productPeople" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :status="tabs[1].status" />
             </template>
             <template slot="3" slot-scope="data">
-                <Equipment ref="equipment" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :product-line="formHeader.productLine" />
+                <Equipment ref="equipment" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :product-line="formHeader.productLine" :status="tabs[2].status" />
             </template>
             <template slot="4" slot-scope="data">
-                <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
+                <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :status="tabs[3].status" />
             </template>
             <template slot="5" slot-scope="data">
                 <material ref="material" :is-redact="data.isRedact" />
@@ -264,10 +264,10 @@
         SubmitForm() {
             if (this.submitRadio === '1') {
                 // 入库紧急提交校验
-                // if (!this.$refs.productInStorage.ruleSubmit('submit')) {
-                //     this.visible = false
-                //     return false;
-                // }
+                if (!this.$refs.productInStorage.ruleSubmit('submit')) {
+                    this.visible = false
+                    return false;
+                }
                 this.$confirm('确认提交该订单, 是否继续?', '提交订单', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

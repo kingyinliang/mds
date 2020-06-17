@@ -48,7 +48,7 @@
                     <el-tooltip class="item" effect="dark" :content="getTagStatus(item.status)" placement="top-start">
                         <span
                             :style="{
-                                color: item.status === 'noPass' ? 'red' : '',
+                                color: item.status === 'noPass' ? 'red' : item.status === 'R' ? 'red' : ''
                             }"
                         >{{ item.label }}</span>
                     </el-tooltip>

@@ -20,7 +20,7 @@
             <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
                 <el-menu-item class="site-navbar__avatar" index="3" style="padding: 0 4px;">
                     <el-dropdown :show-timeout="0" placement="bottom">
-                        <span class="el-dropdown-link"><img src="~common/img/avatar.png" :alt="userName"><span>{{ realName + '(' + userName + ')' }}</span></span>
+                        <span class="el-dropdown-link"><img v-if="gender==='M'" src="~common/img/avatarM.png" :alt="userName"><img v-else src="~common/img/avatarF.png" :alt="userName"><span>{{ realName + '(' + userName + ')' }}</span></span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="updatePassword">
                                 修改密码
@@ -32,6 +32,11 @@
                     </el-dropdown>
                 </el-menu-item>
             </el-menu>
+            <el-button type="text" style="float: right;" @click.native="goMessage">
+                <el-badge :value="200" :max="99" class="item">
+                    <i class="iconfont factory-bell" style="font-size: 18px;" />
+                </el-badge>
+            </el-button>
         </div>
     </nav>
 </template>
@@ -103,9 +108,29 @@ export default {
             set(val) {
                 this.$store.commit('user/updaterealName', val);
             }
+        },
+        gender: {
+            get() {
+                return this.$store.state.user.gender;
+            },
+            set(val) {
+                this.$store.commit('user/gender', val);
+            }
         }
     },
     methods: {
+        goMessage() {
+            // this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
+            this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'DFMDS-pages-Message');
+            setTimeout(() => {
+                this.$router.push({
+                    name: `DFMDS-pages-Message`
+                });
+            }, 100);
+
+            console.log(this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Message'))
+
+        },
         goEacharts() {
             this.$router.push({
                 path: `/DataEcharts/${this.menuList
@@ -149,5 +174,9 @@ export default {
 .switching {
     display: block;
     transition: 500ms;
+}
+.item {
+    margin-top: 10px;
+    margin-right: 40px;
 }
 </style>

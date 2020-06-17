@@ -9,7 +9,7 @@
                 </div>
             </template>
             <el-form ref="ruleFirstForm" :model="ruleFirstForm">
-                <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+                <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
                     <el-table-column label="序号" type="index" width="55" fixed="left" />
                     <el-table-column min-width="130" :show-overflow-tooltip="true">
                         <template slot="header">
@@ -34,7 +34,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
-                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeEnd(scope.row,scope.$index,0)" />
+                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeEnd(scope.row,scope.$index,0)" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -48,7 +48,7 @@
                                     v-model="scope.row.endDate"
                                     type="datetime"
                                     size="small"
-                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    value-format="yyyy-MM-dd HH:mm"
                                     format="yyyy-MM-dd HH:mm"
                                     :default-value="scope.row.startDate"
                                     placeholder="选择时间"
@@ -137,7 +137,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopMode'" :rules="dataRules.stopMode">
-                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="!(!fzReasonOptions && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <el-option v-for="(item) in stopModeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
@@ -219,7 +219,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopReason'" :rules="dataRules.stopReason">
-                                <el-select v-model="scope.row.stopReason" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                                <el-select v-model="scope.row.stopReason" size="small" clearable :disabled="!(!fzReasonOptions && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <el-option v-for="(item) in stopReasonOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
@@ -265,6 +265,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator';
 import { COMMON_API, PKG_API, AUDIT_API } from 'common/api/api';
 import { dataEntryData } from 'utils/utils'
 import { dateFormat, getUserNameNumber, accDiv } from 'utils/utils';
+import _ from 'lodash';
 
 @Component({
     name: 'Equipment',
@@ -279,6 +280,7 @@ export default class Equipment extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact;
     @Prop({ type: Array, default: [] }) classesOptions;
     @Prop({ type: String, default: '' }) productLine;
+    @Prop({ type: String, default: '' }) status;
 
     $refs: {
         ruleFirstForm: HTMLFormElement;
@@ -424,23 +426,29 @@ export default class Equipment extends Vue {
 
     // 提交时跑校验
     ruleSubmit() {
-        // let currentFormDataGroupNew: CurrentDataTable[] = [];
-        // currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
-        // if (currentFormDataGroupNew.length === 0) {
-        //     this.$warningToast('请录入待处理数');
-        //     return false
-        // }
-
-        this.$refs['ruleForm'].validate((valid) => {
-            if (valid) {
-                console.log('submit!!');
-                return true
+            for (const item of this.firstFormDataGroup.filter(it => it.delFlag !== 1)) {
+                if (!item.classes || !item.startDate || !item.endDate) {
+                    this.$warningToast('请填写运行情况必填项');
+                    return false
+                }
             }
-                this.$warningToast('请填写设备运行必填项');
+            for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1)) {
+                if (!item.classes || !item.stopType || !item.stopMode || !item.startDate || !item.endDate || !item.exceptionCount || !item.stopSituation || !item.stopReason) {
+                    this.$warningToast('请填写停机情况必填项');
+                    return false
+                }
+            }
+        // this.$refs['ruleForm'].validate((valid) => {
+        //     if (valid) {
+        //         console.log('submit!!');
+        //         return true
+        //     }
+        //         this.$warningToast('请填写设备运行必填项');
 
-                return false;
+        //         return false;
 
-            });
+        //     });
+        return true
     }
 
     savedData(formHeader) {
@@ -528,28 +536,34 @@ export default class Equipment extends Vue {
             row.exceptionCount = 1
             this.fzExceptionCount = true
             this.stopSituationOptions = JSON.parse(JSON.stringify(this.planHaltOptions))
-            row.stopReasonOptions = ''
+            this.stopReasonOptions = []
             row.stopSituation = ''
+            row.stopReason = ''
         } else {
             row.stopMode = ''
             row.exceptionCount = 0
             this.fzExceptionCount = false
             this.stopSituationOptions = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
-            row.stopReasonOptions = ''
+            this.stopReasonOptions = []
             row.stopSituation = ''
+            row.stopReason = ''
         }
     }
 
     changeStopReasonOption(row) {
+        this.stopReasonOptions = []
+        row.stopReason = ''
         if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN') {
+            console.log('11111')
             this.fzReasonOptions = false
             COMMON_API.DEVICELIST_API({
                 deptId: this.productLine,
                 current: 1,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                size: 100
+                size: 99999
             }).then(({ data }) => {
-                data.data.forEach((item) => {
+                console.log(data)
+                data.data.records.forEach((item) => {
                     this.stopReasonOptions.push({
                         dictValue: item.deviceName,
                         dictCode: item.deviceNo
@@ -557,11 +571,12 @@ export default class Equipment extends Vue {
                 })
             });
         } else if (row.stopSituation === 'EXPERIMENT' || row.stopSituation === 'POOR_PROCESS' || row.stopSituation === 'WAIT' || row.stopSituation === 'ENERGY') {
+            console.log('22222')
             this.fzReasonOptions = false
             COMMON_API.DICTQUERY_API({
                 dictType: row.stopSituation
             }).then(({ data }) => {
-                this.stopReasonOptions = []
+                console.log(data)
                 data.data.forEach((item) => {
                     this.stopReasonOptions.push({
                         dictValue: item.dictValue,
@@ -570,8 +585,8 @@ export default class Equipment extends Vue {
                 })
             });
         } else {
+            console.log('333333')
             this.fzReasonOptions = true
-            row.stopReason = ''
             this.stopReasonOptions = []
         }
     }
@@ -672,20 +687,36 @@ export default class Equipment extends Vue {
 
     get computedFirstDataTotal(): number {
         let total = 0;
-        const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        if (this.firstFormDataGroup.length !== 0) {
-            total = this.firstFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
-        }
-        return total
+        // const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        // if (this.firstFormDataGroup.length !== 0) {
+        //     total = this.firstFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
+        // }
+
+
+        this.firstFormDataGroup.map((item) => {
+            if (item.delFlag !== 1) {
+                total = _.add(total, Number(item.duration));
+            }
+        });
+        return total;
     }
 
     get computedSecondDataTotal(): number {
         let total = 0;
-        const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        if (this.secondFormDataGroup.length !== 0) {
-            total = this.secondFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
-        }
-        return total
+        // const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        // if (this.secondFormDataGroup.length !== 0) {
+        //     total = this.secondFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
+        // }
+        // return total
+
+        this.secondFormDataGroup.map((item) => {
+            if (item.delFlag !== 1) {
+                total = _.add(total, Number(item.duration));
+            }
+        });
+        return total;
+
+
     }
 }
 

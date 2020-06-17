@@ -80,9 +80,9 @@
                         <el-pagination v-if="targetParameterList.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalCount" @size-change="handlePageSizeChange" @current-change="handleCurrentPageChange" />
                     </div>
                 </el-col>
-                <parameter-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :factory-list="factoryList" @refreshParentDataList="getreParentItemsList" @refreshChildDataList="getreChildItemList(arguments)" />
             </el-row>
         </mds-card>
+        <parameter-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :factory-list="factoryList" @refreshParentDataList="getreParentItemsList" @refreshChildDataList="getreChildItemList(arguments)" />
     </div>
 </template>
 

@@ -158,8 +158,9 @@ import _ from 'lodash';
 })
 
 export default class ProductPeople extends Vue {
-    @Prop({ type: Boolean, default: false }) isRedact
-    @Prop({ type: Array, default: [] }) classesOptions
+    @Prop({ type: Boolean, default: false }) isRedact;
+    @Prop({ type: Array, default: [] }) classesOptions;
+    @Prop({ type: String, default: '' }) status;
 
     $refs: {
         officialWorker: HTMLFormElement;
