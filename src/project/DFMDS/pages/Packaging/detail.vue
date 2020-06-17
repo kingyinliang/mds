@@ -21,13 +21,13 @@
                 <ready-time ref="readyTime" :is-redact="data.isRedact" :classes-options="classesOptions" />
             </template>
             <template slot="2" slot-scope="data">
-                <product-people ref="productPeople" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
+                <product-people ref="productPeople" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :status="tabs[1].status" />
             </template>
             <template slot="3" slot-scope="data">
-                <Equipment ref="equipment" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :product-line="formHeader.productLine" />
+                <Equipment ref="equipment" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :product-line="formHeader.productLine" :status="tabs[2].status" />
             </template>
             <template slot="4" slot-scope="data">
-                <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
+                <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :status="tabs[3].status" />
             </template>
             <template slot="5" slot-scope="data">
                 <material ref="material" :is-redact="data.isRedact" />
