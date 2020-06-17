@@ -5,31 +5,37 @@
                 <el-col :span="21">
                     <el-form :inline="true" :model="formHeader" label-width="75px" size="small" class="dataEntry-head-base__form">
                         <el-form-item label="生产车间：">
-                            <p>123</p>
+                            <p>{{ formHeader.workShopName }}</p>
                         </el-form-item>
                         <el-form-item label="生产产线：">
-                            <p>123</p>
+                            <p>{{ formHeader.productLineName }}</p>
                         </el-form-item>
                         <el-form-item label="生产物料：">
-                            <p>123</p>
+                            <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top">
+                                <p>{{ formHeader.materialCode }} {{ formHeader.materialName }}</p>
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="生产订单：">
-                            <p>123</p>
+                            <p>{{ formHeader.orderNo }}</p>
                         </el-form-item>
                         <el-form-item label="订单产量：">
-                            <p>123</p>
+                            <p>{{ formHeader.planOutput }} {{ formHeader.reakOutput }}</p>
                         </el-form-item>
                         <el-form-item label="订单日期：">
-                            <p>123</p>
+                            <el-tooltip class="item" effect="dark" :content="formHeader.orderStartDate + ' ' + formHeader.orderEndDate" placement="top">
+                                <p>{{ formHeader.orderStartDate }} {{ formHeader.orderEndDate }}</p>
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="生产日期：">
-                            <p>123</p>
+                            <p>{{ formHeader.productDate }}</p>
                         </el-form-item>
                         <el-form-item label="提交人员：">
-                            <p>123</p>
+                            <p>{{ formHeader.changer }}</p>
                         </el-form-item>
                         <el-form-item label="提交时间：">
-                            <p>123</p>
+                            <el-tooltip class="item" effect="dark" :content="formHeader.changed" placement="top">
+                                <p>{{ formHeader.changed }}</p>
+                            </el-tooltip>
                         </el-form-item>
                     </el-form>
                 </el-col>
@@ -192,6 +198,7 @@ export default class AuditDetail extends Vue {
     /* eslint-enable */
 
     mounted() {
+        this.formHeader = this.$store.state.packaging.auditDetail;
         this.initChartLine();
         this.initDiffChartBar();
         this.getOrderList()

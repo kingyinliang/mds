@@ -66,7 +66,7 @@
         </el-table>
         <el-row class="solerow">
             <div>
-                带杀菌酱小计：
+                待杀菌酱小计：
             </div>
             <div class="input_bottom">
                 {{ computedSoy }} KG
@@ -204,7 +204,13 @@ export default class PendingNum extends Vue {
 
     get computedTotal() {
         let Total = 0;
-        Total = accAdd(this.computedSoy, this.computedScrap)
+        let other = 0;
+        this.currentFormDataGroup.map((item: CurrentDataTable) => {
+            if (item.delFlag === 0) {
+                other = accAdd(other, item.other);
+            }
+        });
+        Total = accAdd(accAdd(this.computedSoy, this.computedScrap), other);
         return Total;
     }
 }
