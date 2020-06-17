@@ -13,7 +13,7 @@ export default {
         updatePackCheckData(state, packCheckData) {
             state.packCheckData = packCheckData;
         },
-        Audit(state, auditDetail) {
+        updateAuditDetail(state, auditDetail) {
             state.auditDetail = auditDetail;
         },
         updateAuditDetailDetail(state, auditDetail) {

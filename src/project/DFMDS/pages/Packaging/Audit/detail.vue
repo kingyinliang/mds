@@ -271,6 +271,7 @@
             }).then(() => {
                 this.visibleRefuse = false;
                 this.$successToast('操作成功');
+                this.initData()
             })
         }
     }

@@ -204,8 +204,9 @@
             ruleForm: HTMLFormElement;
         }
 
-        @Prop({ type: Boolean, default: false }) isRedact
-        @Prop({ type: Array, default: [] }) classesOptions
+        @Prop({ type: Boolean, default: false }) isRedact;
+        @Prop({ type: Array, default: [] }) classesOptions;
+        @Prop({ type: String, default: '' }) status;
 
         currentAudit = [];
 
