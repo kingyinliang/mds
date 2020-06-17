@@ -280,6 +280,7 @@ export default class Equipment extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact;
     @Prop({ type: Array, default: [] }) classesOptions;
     @Prop({ type: String, default: '' }) productLine;
+    @Prop({ type: String, default: '' }) status;
 
     $refs: {
         ruleFirstForm: HTMLFormElement;
