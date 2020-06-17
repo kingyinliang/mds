@@ -406,6 +406,7 @@
                         changed: item.changed
                     };
                     Object.assign(materialMap, listitem);
+                    materialMap.mainId = item.id;
                     finalData.push(materialMap)
                 })
             });
