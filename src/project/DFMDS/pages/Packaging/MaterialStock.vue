@@ -223,7 +223,7 @@ export default class MaterialStock extends Vue {
             defaultOptionsFn: () => {
                 return COMMON_API.SEARCH_MATERIAL_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    materialType: 'ZFZC'
+                    materialType: 'ZVER'
                 })
             },
             resVal: {
