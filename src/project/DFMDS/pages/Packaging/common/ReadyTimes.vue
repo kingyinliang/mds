@@ -251,7 +251,7 @@ export default class ReadyTimes extends Vue {
 
     async getAudit(formHeader, verifyType) {
         const a = await AUDIT_API.AUDIT_LOG_LIST_API({
-            orderNo: formHeader.id,
+            orderNo: formHeader.orderNo,
             verifyType: verifyType
         })
         return a.data.data
