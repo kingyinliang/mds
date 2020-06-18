@@ -621,6 +621,7 @@ export default class Equipment extends Vue {
             startDate: '',
             endDate: '',
             duration: 0,
+            durationUnit: 'H',
             remark: '',
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             changer: getUserNameNumber(),
@@ -639,6 +640,7 @@ export default class Equipment extends Vue {
             endDate: '',
             duration: 0,
             delFlag: 0,
+            durationUnit: 'MIN',
             exceptionCount: 0,
             stopSituation: '',
             stopReason: '',
@@ -743,6 +745,7 @@ interface FirstDataTable {
     endDate?: string;
     duration?: number;
     remark?: string;
+    durationUnit?: string;
     changed?: string;
     changer?: string;
     delFlag?: number; // 删除标记(1：删除，0：正常)
@@ -757,6 +760,7 @@ interface SecondDataTable{
     stopType?: string;
     stopMode?: string;
     startDate?: string;
+    durationUnit?: string;
     endDate?: string;
     duration?: number;
     delFlag?: number;
