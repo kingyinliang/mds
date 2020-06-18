@@ -202,6 +202,7 @@ export default class MaterialStock extends Vue {
             label: '生产产线',
             prop: 'productLine',
             defaultValue: '',
+            filterable: true,
             optionsFn: val => {
                 return COMMON_API.ORG_QUERY_CHILDREN_API({
                     parentId: val || ''
@@ -219,7 +220,6 @@ export default class MaterialStock extends Vue {
             prop: 'material',
             defaultValue: '',
             filterable: true,
-            clearable: true,
             defaultOptionsFn: () => {
                 return COMMON_API.SEARCH_MATERIAL_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,

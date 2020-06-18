@@ -61,6 +61,7 @@ export default {
     },
     data() {
         return {
+            gender: '',
             visible: false,
             factory: JSON.parse(sessionStorage.getItem('userFactory') || '[]'),
             factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort
@@ -108,19 +109,10 @@ export default {
             set(val) {
                 this.$store.commit('user/updaterealName', val);
             }
-        },
-        gender: {
-            get() {
-                return this.$store.state.user.gender;
-            },
-            set(val) {
-                this.$store.commit('user/gender', val);
-            }
         }
     },
     mounted() {
-        console.log('factory')
-        console.log(sessionStorage.getItem('factory'))
+        this.gender = sessionStorage.getItem('gender')
     },
     methods: {
         goMessage() {
