@@ -220,6 +220,8 @@
             arr[index][type] = arr[index][type].replace(/\.{2,}/g, '.');
             // 如果第一个数字为0则之后只能输入.
             arr[index][type] = arr[index][type].replace(/^0[^\.]+/g, '0');
+            //只允许输入一个小数点
+            arr[index][type] = arr[index][type].replace('.', '$#$').replace(/\./g, '').replace('$#$', '.');
             //保留两位小数
             arr[index][type] = arr[index][type].replace(/^(\d+)\.(\d\d).*$/, '$1.$2');
         }
