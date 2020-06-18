@@ -778,4 +778,13 @@ export default {
         transition: all 0.5s;
     }
 }
+.buttonCss .el-button--primary:first-child {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
+}
+.buttonCss .el-button--primary:hover {
+    color: #fff;
+    background-color: #1890ff;
+}
 </style>

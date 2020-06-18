@@ -1,5 +1,5 @@
 <template>
-    <div class="header_main">
+    <div>
         <div class="header_main">
             <el-card class="searchCard">
                 <el-row type="flex">
@@ -57,17 +57,6 @@
                             <template style="float: right; margin-left: 10px;">
                                 <el-button v-if="isAuth('kjm:timeSheet:list')" type="primary" size="small" @click="getTimeList">
                                     查询
-                                </el-button>
-                                <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('kjm:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                                    {{ isRedact ? '取消' : '编辑' }}
-                                </el-button>
-                            </template>
-                            <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
-                                <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                                    保存
-                                </el-button>
-                                <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="submitForm">
-                                    提交
                                 </el-button>
                             </template>
                         </div>
@@ -163,6 +152,33 @@
                 </el-card>
             </div>
         </div>
+        <!--编辑-->
+        <div class="redactBox">
+            <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
+                <div class="redact clearfix">
+                    <div v-if="!isRedact" class="redact_tips">
+                        <i class="el-icon-info" />
+                        <span v-if="searchCard">点击编辑按钮，对当前页面进行编辑</span>
+                        <span v-else>请先查询</span>
+                    </div>
+                    <div class="redact_btn">
+                        <template style="float: right; margin-left: 10px;">
+                            <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('kjm:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                                {{ isRedact ? '取消' : '编辑' }}
+                            </el-button>
+                        </template>
+                        <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
+                            <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                                保存
+                            </el-button>
+                            <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="submitForm">
+                                提交
+                            </el-button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -234,7 +250,13 @@ export default {
             userList: []
         };
     },
-    computed: {},
+    computed: {
+        sidebarFold: {
+            get() {
+                return this.$store.state.common.sidebarFold;
+            }
+        }
+    },
     watch: {
         'formHeader.factory'(n) {
             if (n !== '') {

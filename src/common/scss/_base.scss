@@ -1639,13 +1639,12 @@ body {
                             content: '';
                             position: absolute;
                             width: 300px;
-                            height: 270px;
+                            height: 290px;
                             border-radius: 55% 45%;
                             bottom: 100%;
                             left: 50%;
                             transform: translateX(-50%);
                             background-color: #fff;
-                            animation: rotate 5s linear infinite;
                         }
                         &_sole::after {
                             left: 47%;
@@ -1653,13 +1652,18 @@ body {
                             border-radius: 45% 50%;
                             opacity: 0.3;
                         }
-                        @keyframes rotate {
-                            0% {
-                                transform: translate(-50%) rotateZ(0deg);
-                            }
-                            100% {
-                                transform: translate(-50%) rotateZ(360deg);
-                            }
+                    }
+                    &:hover {
+                        .pot_water_sole::before, .pot_water_sole::after{
+                            animation: rotate 5s linear infinite;
+                        }
+                    }
+                    @keyframes rotate {
+                        0% {
+                            transform: translate(-50%) rotateZ(0deg);
+                        }
+                        100% {
+                            transform: translate(-50%) rotateZ(360deg);
                         }
                     }
                 }
