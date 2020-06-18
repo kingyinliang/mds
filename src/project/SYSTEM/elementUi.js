@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Dialog, Menu, Submenu, MenuItem, Form, Row, Col, Card, Button, Table, TableColumn, DatePicker, Input, FormItem, Dropdown, DropdownMenu, DropdownItem, Tabs, TabPane, Select, Option, Pagination, Tooltip, Popover, Progress, Radio, RadioGroup, Transfer, Tree, Upload, Checkbox, CheckboxGroup, Tag, Message, MessageBox, Loading, Notification, InputNumber, Scrollbar, Switch } from 'element-ui';
+import { Dialog, Menu, Submenu, MenuItem, Form, Row, Col, Card, Badge, Button, Table, TableColumn, DatePicker, Input, FormItem, Dropdown, DropdownMenu, DropdownItem, Tabs, TabPane, Select, Option, Pagination, Tooltip, Popover, Progress, Radio, RadioGroup, Transfer, Tree, Upload, Checkbox, CheckboxGroup, Tag, Message, MessageBox, Loading, Notification, InputNumber, Scrollbar, Switch } from 'element-ui';
 
 export default () => {
     Vue.use(Switch);
@@ -16,6 +16,7 @@ export default () => {
     Vue.use(TableColumn);
     Vue.use(DatePicker);
     Vue.use(Input);
+    Vue.use(Badge);
     Vue.use(FormItem);
     Vue.use(Dropdown);
     Vue.use(DropdownMenu);

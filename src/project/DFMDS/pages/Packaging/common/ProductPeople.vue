@@ -91,7 +91,7 @@
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="90" label="时长(H)" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <p> {{ workTime(scope.row.endDate, scope.row.startDate, scope.row) }}H </p>
+                        <p> {{ scope.row.duration = Number(workTime(scope.row.endDate, scope.row.startDate, scope.row)) }}{{ scope.row.durationUnit = 'H' }} </p>
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="140" label="备注" :show-overflow-tooltip="true">
@@ -306,7 +306,7 @@ export default class ProductPeople extends Vue {
                 userType: '',
                 userList: [],
                 startDate: '',
-                dinner: '60',
+                dinner: 60,
                 endDate: '',
                 remark: '',
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -320,7 +320,7 @@ export default class ProductPeople extends Vue {
                 userType: '',
                 userList: [],
                 startDate: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].startDate,
-                dinner: '60',
+                dinner: 60,
                 endDate: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].endDate,
                 remark: '',
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
@@ -417,7 +417,7 @@ export default class ProductPeople extends Vue {
             return false
         }
         for (const item of currentFormDataGroupNew) {
-            if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || !item.dinner || item.dinner === '' || !item.endDate || item.endDate === '') {
+            if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || !item.dinner || Number(item.dinner) === 0 || !item.endDate || item.endDate === '') {
                 this.$warningToast('请填写生产人员必填项');
                 return false
             }
@@ -444,8 +444,10 @@ interface CurrentDataTable {
     userType?: string;
     userList: string[];
     startDate?: string;
-    dinner?: string;
+    dinner?: number;
     endDate?: string;
+    duration?: number;
+    durationUnit?: string;
     remark?: string;
     changed?: string;
     changer?: string;

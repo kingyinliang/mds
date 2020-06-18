@@ -140,10 +140,10 @@
                 value: ['planOutput', 'realOutput']
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 icon: 'factory-riqi1',
                 label: '订单日期',
-                value: ['orderStartDate', 'orderEndDate']
+                value: 'orderStartDate'
             },
             {
                 type: 'date-picker',
