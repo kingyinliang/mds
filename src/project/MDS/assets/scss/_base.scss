@@ -51,7 +51,6 @@ img {
     margin: auto;
     margin-bottom: 15px;
 }
-
 //bass scss
 .searchCard,
 .tableCard {
@@ -1456,13 +1455,19 @@ $indexlist: (
 .el-dialog {
     border-radius: 6px 6px 6px 6px !important;
     .el-dialog__header {
-        height: 59px;
+        height: 46px;
+        line-height: 46px;
         background: rgba(72, 123, 255, 1);
         border-radius: 6px 6px 0 0;
         color: #fff;
-        font-size: 20px;
+        font-size: 16px;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
+        }
+        .el-dialog__headerbtn {
+            top: 15px !important;
         }
     }
     .el-dialog__title {
