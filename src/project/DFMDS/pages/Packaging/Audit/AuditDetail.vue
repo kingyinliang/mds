@@ -140,13 +140,17 @@
                         </div>
                     </el-col>
                     <el-col :span="12">
-                        <el-table class="newTable" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
-                            <el-table-column prop="date" label="领用物料" />
-                            <el-table-column prop="date" label="单位" />
-                            <el-table-column prop="date" label="领用数量" />
-                            <el-table-column prop="date" label="实际用量" />
-                            <el-table-column prop="date" label="实际损耗" />
-                            <el-table-column prop="date" label="损耗率" />
+                        <el-table class="newTable" :data="proMaterialDiffList" header-row-class-name="tableHead" border tooltip-effect="dark">
+                            <el-table-column label="领用物料" show-overflow-tooltip>
+                                <template slot-scope="scope">
+                                    {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="materialUnit" label="单位" min-width="30" />
+                            <el-table-column prop="useAmount" label="领用数量" min-width="40" />
+                            <el-table-column prop="realUseAmount" label="实际用量" min-width="40" />
+                            <el-table-column prop="realLoss" label="实际损耗" min-width="40" />
+                            <el-table-column prop="lossRate" label="损耗率" min-width="40" />
                         </el-table>
                     </el-col>
                 </el-row>
@@ -196,12 +200,12 @@ export default class AuditDetail extends Vue {
     chartLine: any;
     chartDiffBar: any;
     /* eslint-enable */
+    proMaterialDiffList = []
 
     mounted() {
         this.formHeader = this.$store.state.packaging.auditDetail;
-        this.initChartLine();
-        this.initDiffChartBar();
         this.getOrderList()
+        this.initChartLine();
     }
 
     get sidebarFold() {
@@ -224,6 +228,19 @@ export default class AuditDetail extends Vue {
             orderNo: this.$store.state.packaging.auditDetail.orderNo
         }).then(({ data }) => {
             this.formHeader = data.data;
+            console.log(this.formHeader);
+            this.getProMaterialDiff(this.formHeader);
+        });
+    }
+
+    // 生产领料差异
+    getProMaterialDiff(formHeader) {
+        PKG_API.PKG_AUDIT_DETAIL_PROMATERIALDIFF_API({ // 基础数据-订单管理-根据订单号查询
+            factory: formHeader.id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            this.proMaterialDiffList = data.data
+            this.initDiffChartBar();
         });
     }
 
@@ -325,6 +342,15 @@ export default class AuditDetail extends Vue {
     }
 
     initDiffChartBar() {
+        const yList: string[] = [];
+        const realUseAmountList: string[] = [];
+        const realLossList: string[] = [];
+        this.proMaterialDiffList.map((item: ProMaterialDiff) => {
+            const name: string = item.materialCode + ' ' + item.materialName;
+            yList.push(name);
+            realUseAmountList.push(item.realUseAmount);
+            realLossList.push(item.realLoss);
+        })
         const option = {
             color: ['#EEB919', '#5A88FF'],
             tooltip: {
@@ -336,18 +362,45 @@ export default class AuditDetail extends Vue {
             legend: {
                 data: ['实际用量', '实际损耗']
             },
-            // grid: {
-            //     left: '3%',
-            //     right: '4%',
-            //     bottom: '3%',
-            //     containLabel: true
-            // },
+            grid: {
+                left: '0%',
+                right: '2%',
+                bottom: '3%',
+                containLabel: true
+            },
             xAxis: {
                 type: 'value'
             },
             yAxis: {
                 type: 'category',
-                data: ['纸箱', '盒盖', '盒底', '脱氧剂', '封口膜', '垫板', '胶带']
+                data: yList,
+                axisLabel: {
+                    show: true,
+                    interval: 0,
+                    formatter: function(params) {
+                        let newParamsName = '';
+                        const paramsNameNumber = params.length;
+                        const provideNumber = 10; // 一行显示几个字
+                        const rowNumber = Math.ceil(paramsNameNumber / provideNumber);
+                        if (paramsNameNumber > provideNumber) {
+                            for (let p = 0; p < rowNumber; p++) {
+                                let tempStr = '';
+                                const start = p * provideNumber;
+                                const end = start + provideNumber;
+                                if (p === rowNumber - 1) {
+                                    tempStr = params.substring(start, paramsNameNumber);
+                                } else {
+                                    tempStr = params.substring(start, end) + '\n';
+                                }
+                                newParamsName += tempStr;
+                            }
+
+                        } else {
+                            newParamsName = params;
+                        }
+                        return newParamsName
+                    }
+                }
             },
             series: [
                 {
@@ -359,13 +412,13 @@ export default class AuditDetail extends Vue {
                     //         barBorderRadius: [0, 30, 30, 0],
                     //     }
                     // },
-                    barWidth: 15,
+                    barWidth: 20,
                     stack: '总量',
                     label: {
-                        show: true,
+                        show: false,
                         position: 'insideRight'
                     },
-                    data: [320, 302, 301, 334, 390, 330, 320]
+                    data: realUseAmountList
                 },
                 {
                     name: '实际损耗',
@@ -378,10 +431,10 @@ export default class AuditDetail extends Vue {
                     // },
                     stack: '总量',
                     label: {
-                        show: true,
+                        show: false,
                         position: 'insideRight'
                     },
-                    data: [120, 132, 101, 134, 90, 230, 0]
+                    data: realLossList
                 }
             ]
         };
@@ -424,5 +477,14 @@ interface OrderData{
     version?: number;
     workShop?: string;
     workShopName?: string;
+}
+interface ProMaterialDiff{
+    lossRate: string;
+    materialCode: string;
+    materialName: string;
+    materialUnit: string;
+    realLoss: string;
+    realUseAmount: string;
+    useAmount: string;
 }
 </script>
