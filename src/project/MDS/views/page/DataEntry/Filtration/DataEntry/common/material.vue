@@ -12,7 +12,7 @@
             </div>
             <div style="flex: 1;">
                 <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="updateRow">
-                    <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" />
+                    <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" fixed />
                     <el-table-column label="物料" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}

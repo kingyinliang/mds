@@ -46,16 +46,16 @@
         <div v-if="type === 'home'">
             <slot name="home" />
         </div>
-        <el-tabs v-else-if="tabs.length" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
+        <el-tabs v-else-if="tabs.length" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" @tab-click="tabClick">
             <el-tab-pane v-for="(tabItem, index) in tabs" :key="index" :name="index.toString()" :label="tabItem.label">
                 <div>
                     <slot :name="'tab-head' + index" />
                 </div>
                 <el-table ref="table" class="newTable" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change=" val => tabHandleSelectionChange(val, index)">
-                    <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
-                    <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
+                    <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
+                    <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                     <template v-for="(item, index2) in tabItem.column">
-                        <el-table-column v-if="!item.hide" :key="index2" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
+                        <el-table-column v-if="!item.hide" :key="index2" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                             <template v-if="item.child">
                                 <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip || false" :width="chind.width || ''" />
                             </template>
@@ -69,11 +69,14 @@
                                     <el-option label="请选择" value="" />
                                     <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="opt[item.resVal.label]" :value="opt[item.resVal.value]" />
                                 </el-select>
+                                <span v-else-if="item.onclick === true">
+                                    <a @click="lineClick(scope.row)">{{ item.formatter? item.formatter(scope.row) : scope.row[item.prop] }}</a>
+                                </span>
                                 <span v-else>{{ item.formatter? item.formatter(scope.row) : scope.row[item.prop] }}</span>
                             </template>
                         </el-table-column>
                     </template>
-                    <el-table-column v-if="showOperationColumn" label="操作" fixed="right" :width="operationColumnWidth">
+                    <el-table-column v-if="tabItem.showOperationColumn" label="操作" fixed="right" :width="operationColumnWidth">
                         <template slot-scope="scope">
                             <slot :scope="scope" name="operation_column" />
                         </template>
@@ -109,8 +112,8 @@
                 style="width: 100%; margin-bottom: 20px;"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" />
-                <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" />
+                <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
+                <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                 <template v-for="(item, index) in column">
                     <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
@@ -141,8 +144,8 @@
 </template>
 
 <script>
-    import { exportFileForm } from '@/net/validate';
-    import { creatGetPath } from '@/utils/index';
+    import { exportFileForm } from 'utils/utils.ts';
+    import { creatGetPath } from 'utils/utils.ts';
     export default {
         name: 'QueryTable',
         components: {},
@@ -568,6 +571,13 @@
             handleCurrentChange(val) {
                 this.queryForm[this.currpageConfig] = val;
                 this.getDataList();
+            },
+            tabClick(tab) {
+                // console.log(tab.name);
+                this.$emit('tab-click', tab);
+            },
+            lineClick(row) {
+                this.$emit('line-click', row);
             }
         }
     };

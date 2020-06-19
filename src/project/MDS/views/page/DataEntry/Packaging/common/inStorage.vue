@@ -8,7 +8,7 @@
         <div v-if="order.factoryCode !== '6010'" class="a">
             <div v-if="order.properties && order.properties !== '二合一&礼盒产线'">
                 <el-table v-if="order.properties && order.properties !== '二合一&礼盒产线'" ref="table1" header-row-class-name="tableHead" :data="InDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column type="index" width="55" label="序号" />
+                    <el-table-column type="index" width="55" label="序号" fixed />
                     <el-table-column label="白/中/夜班" width="120">
                         <template slot-scope="scope">
                             <div class="required">
@@ -131,7 +131,7 @@
             </div>
             <div v-if="order.properties && order.properties === '二合一&礼盒产线'">
                 <el-table v-if="order.properties && order.properties === '二合一&礼盒产线'" ref="table1" header-row-class-name="tableHead" :data="InDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column type="index" width="55" label="序号" />
+                    <el-table-column type="index" width="55" label="序号" fixed />
                     <el-table-column label="白/中/夜班" width="120">
                         <template slot-scope="scope">
                             <div class="required">
@@ -222,7 +222,7 @@
         </div>
         <div v-if="order.factoryCode === '6010'" class="b">
             <el-table ref="table1" header-row-class-name="tableHead" :data="InDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                <el-table-column type="index" width="55" label="序号" />
+                <el-table-column type="index" width="55" label="序号" fixed />
                 <el-table-column label="白/中/夜班" width="120">
                     <template slot-scope="scope">
                         <div class="required">
@@ -344,7 +344,7 @@
                 </el-button>
             </div>
             <el-table ref="table1" header-row-class-name="tableHead" :data="InVlist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                <el-table-column type="index" width="55" label="序号" />
+                <el-table-column type="index" width="55" label="序号" fixed />
                 <el-table-column prop="orderNo" label="生产订单号" width="120" />
                 <el-table-column prop="batch" label="生产批次" width="120" />
                 <el-table-column prop="aiShelves" label="自动上架数-立体库" width="120" />

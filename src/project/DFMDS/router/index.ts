@@ -34,22 +34,22 @@ const mainRoutes: RouteConfig = {
             meta: { title: '500' }
         },
         {
-            path: '/ProIn',
-            component: importTarget('COMMON/Audit/ProInStore'),
-            name: 'ProIn',
+            path: '/DFMDS-pages-Message',
+            component: importTarget('DFMDS/pages/Message/index'),
+            name: 'DFMDS-pages-Message',
             meta: {
                 menuId: 2,
-                title: 'ProIn',
+                title: 'Message',
                 isTab: true
             }
         },
         {
-            path: '/org',
-            component: importTarget('COMMON/BasicData/OrgStructure/index'),
-            name: 'org',
+            path: '/detail',
+            component: importTarget('DFMDS/pages/Packaging/Audit/detail'),
+            name: 'detail',
             meta: {
                 menuId: 1,
-                title: 'org',
+                title: 'detail',
                 isTab: true
             }
         }

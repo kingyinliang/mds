@@ -2,7 +2,9 @@ export default {
     namespaced: true,
     state: {
         packDetail: {},
-        packCheckData: {}
+        packCheckData: {},
+        auditDetail: {},
+        auditDetailDetail: {}
     },
     mutations: {
         updatePackDetail(state, packDetail) {
@@ -10,6 +12,12 @@ export default {
         },
         updatePackCheckData(state, packCheckData) {
             state.packCheckData = packCheckData;
+        },
+        updateAuditDetail(state, auditDetail) {
+            state.auditDetail = auditDetail;
+        },
+        updateAuditDetailDetail(state, auditDetail) {
+            state.auditDetailDetail = auditDetail;
         }
     }
 };

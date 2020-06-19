@@ -56,7 +56,7 @@
                     <i class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />原汁总库存列表（单位:方）
                 </div>
                 <el-table header-row-class-name="tableHead" :data="dataLeftListOrder" border tooltip-effect="dark">
-                    <el-table-column type="index" label="序号" width="55" :index="indexOrderMethod" />
+                    <el-table-column type="index" label="序号" width="55" :index="indexOrderMethod" fixed />
                     <el-table-column label="原汁罐号" :show-overflow-tooltip="true" prop="holderName" width="120" />
                     <el-table-column label="状态" :show-overflow-tooltip="true" width="75">
                         <template slot-scope="scope">
@@ -108,7 +108,7 @@
                     <i class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />可用原汁列表（单位:方）
                 </div>
                 <el-table header-row-class-name="tableHead" :data="dataRightListOrder" border tooltip-effect="dark">
-                    <el-table-column type="index" label="序号" width="55" :index="indexOrderMethodRight" />
+                    <el-table-column type="index" label="序号" width="55" :index="indexOrderMethodRight" fixed />
                     <el-table-column label="原汁罐号" :show-overflow-tooltip="true" prop="holderName" width="120" />
                     <el-table-column label="状态" :show-overflow-tooltip="true" width="75">
                         <template slot-scope="scope">

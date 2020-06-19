@@ -74,7 +74,7 @@
                 <el-tab-pane name="1">
                     <span slot="label" class="spanview">当前订单信息</span>
                     <el-table header-row-class-name="tableHead" :data="dataListOrder" border tooltip-effect="dark">
-                        <el-table-column type="index" label="序号" width="55" :index="indexOrderMethod" />
+                        <el-table-column type="index" label="序号" width="55" :index="indexOrderMethod" fixed />
                         <el-table-column label="车间" :show-overflow-tooltip="true" prop="WORK_SHOP" width="90" />
                         <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                             <template slot-scope="scope">
@@ -101,7 +101,7 @@
                 <el-tab-pane name="2">
                     <span slot="label" class="spanview">当前领用信息</span>
                     <el-table header-row-class-name="tableHead" :data="dataListUse" border tooltip-effect="dark">
-                        <el-table-column type="index" label="序号" width="55" :index="indexUseMethod" />
+                        <el-table-column type="index" label="序号" width="55" :index="indexUseMethod" fixed />
                         <el-table-column label="车间" :show-overflow-tooltip="true" prop="WORK_SHOP" width="90" />
                         <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                             <template slot-scope="scope">

@@ -64,8 +64,8 @@
                 </h3>
             </div>
             <el-table ref="multipleTable" header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleSelectionChange" @row-dblclick="Dblckick">
-                <el-table-column type="selection" :selectable="CheckBoxOrder" width="50" align="center" />
-                <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" />
+                <el-table-column type="selection" :selectable="CheckBoxOrder" width="50" align="center" fixed />
+                <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" fixed />
                 <el-table-column label="辅料状态" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <i v-if="scope.row.orderStatus === 'submit'">已提交</i>
@@ -122,7 +122,7 @@
                 </h3>
             </div>
             <el-table header-row-class-name="tableHead" :data="AddSupDate" border tooltip-effect="dark">
-                <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" />
+                <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" fixed />
                 <el-table-column label="添加状态" width="80" prop="addStatus" :show-overflow-tooltip="true" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
@@ -158,7 +158,7 @@
                 <el-button type="primary" icon="el-icon-plus" circle size="mini" :disabled="!isRedact || !ZengDateButton" style="float: right;" @click="addSup()" />
             </div>
             <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="SupDate" border tooltip-effect="dark">
-                <el-table-column type="index" width="55" label="序号" />
+                <el-table-column type="index" width="55" label="序号" fixed />
                 <el-table-column label="添加状态" width="80" prop="addStatus" :show-overflow-tooltip="true" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot="header">

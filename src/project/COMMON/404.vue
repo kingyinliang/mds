@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="error clearfix">
-            <img src="@/assets/img/404.png" alt="">
+            <img src="~common/img/404.png" alt="">
             <div class="errortxt">
                 <h3>404</h3>
                 <p>抱歉，你访问的页面不存在</p>

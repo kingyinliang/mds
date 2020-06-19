@@ -107,7 +107,7 @@
                     </el-col>
                 </el-row>
                 <el-table :data="orderList" border header-row-class-name="tableHead" style="margin-top: 10px;">
-                    <el-table-column label="序号" type="index" width="50" />
+                    <el-table-column label="序号" type="index" width="50" fixed />
                     <el-table-column label="订单号" prop="orderNo" />
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">

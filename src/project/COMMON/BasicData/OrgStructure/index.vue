@@ -9,7 +9,7 @@
             @treeNodeContextMenu="showMenu"
         >
             <template slot="view" style="padding-top: 16px;">
-                <div class="detail-main">
+                <div class="detail-main clearfix">
                     <div class="detail-main-form">
                         <el-form :model="OrgDetail" size="small" :inline="true" label-width="90px" class="org-detail-form">
                             <el-form-item label="部门编码：">
@@ -42,7 +42,7 @@
                                 <el-input v-model="OrgDetail.costCenter" auto-complete="off" :disabled="isRedact" style="width: 250px;" />
                             </el-form-item>
                             <el-form-item v-if="OrgDetail.deptType === 'PRODUCT_LINE'" label="产线图片：">
-                                <div v-if="detailImgFile" class="org-img-upload el-upload-list el-upload-list--picture-card">
+                                <div v-if="detailImgFile" class="org-img-upload el-upload-list el-upload-list--picture-card" style="display: block; width: 250px;">
                                     <div class="el-upload-list__item is-success avatar">
                                         <img class="flex-img__image avatar" :src="detailImgFile">
                                         <label class="el-upload-list__item-status-label">
@@ -70,7 +70,7 @@
                             </el-form-item>
                         </el-form>
                     </div>
-                    <div class="org-detail-btn">
+                    <div class="org-detail-btn" :class="{'org-detail-btn__fix':mainClientHeight > 500}">
                         <el-button type="primary" size="small" @click="setRedact">
                             {{ isRedact? '编辑' : '取消' }}
                         </el-button>
@@ -179,6 +179,10 @@ export default class OrgStructure extends Vue {
         orgImgUpload: HTMLFormElement;
     };
 
+    get mainClientHeight() {
+        return this.$store.state.common.mainClientHeight;
+    }
+
     dataRule = {
         deptCode: [
             {
@@ -236,6 +240,7 @@ export default class OrgStructure extends Vue {
             if (data.code === 200) {
                 this.OrgDetail = data.data;
                 if (this.OrgDetail.imgUrl) {
+                    this.$refs.orgImgUpload.clearFiles();
                     COMMON_API.DOWNLOADFILE_API({
                         key: this.OrgDetail.imgUrl
                     }).then((res) => {
@@ -374,6 +379,7 @@ export default class OrgStructure extends Vue {
 
     // 移出图片
     removeFile() {
+        this.$refs.orgImgUpload.clearFiles();
         this.detailImgFile = ''
         this.addImgFile = ''
         this.OrgDetail.imgUrl = ''
@@ -420,9 +426,9 @@ interface FileObject {
         line-height: 28px;
     }
 }
-.el-form-item {
-    /* float: left; */
-}
+// .el-form-item {
+//     float: left;
+// }
 .el-upload-list {
     .avatar {
         display: block;
@@ -510,7 +516,7 @@ interface FileObject {
     }
 
     .detail-main {
-        padding-top: 44px;
+        padding-top: 20px;
 
         .detail-main-form {
             margin: auto;
@@ -526,6 +532,10 @@ interface FileObject {
     }
 
     .org-detail-btn {
+        float: right;
+        padding-bottom: 10px;
+    }
+    .org-detail-btn__fix {
         position: absolute;
         right: 10px;
         bottom: 10px;

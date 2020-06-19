@@ -18,6 +18,10 @@ export const COMMON_API = {
      */
     SET_FACTORY_API: params => httpProxy('/sysUser/defaultFactory/update', 'GET', params),
     /**
+     * @property {string} SET_FACTORY_API 选择工厂 factoryCode
+     */
+    UPDATE_FACTORY_API: params => httpProxy('/sysUser/factory/update', 'GET', params),
+    /**
      * @property {string} NAV_API 路由获取菜单
      */
     NAV_API: params => httpProxy('/sysUser/userRole/menuQuery', 'GET', params),
@@ -466,6 +470,18 @@ export const PKG_API = {
      */
     PKG_HOME_QUERY_BY_NO_API: params => httpProxy('/order/queryByNo', 'GET', params),
     /**
+     * @property {string} PKG_HOME_QUERY_BY_NO_API 包装车间页签状态
+     */
+    PKG_TAG_QUERY_API: params => httpProxy('/pkgTag/query', 'POST', params),
+    /**
+     * @property {string} PKG_ALL_SAVE_API 包装车间-生产数据-保存
+     */
+    PKG_ALL_SAVE_API: params => httpProxy('/pkg/save', 'POST', params),
+    /**
+     * @property {string} PKG_ALL_SUBMIT_API 包装车间-生产数据-提交
+     */
+    PKG_ALL_SUBMIT_API: params => httpProxy('/pkg/submit', 'POST', params),
+    /**
      * @property {string} PKG_INSTORAGE_QUERY_API 生产数据-生产入库-查询
      */
     PKG_INSTORAGE_QUERY_API: params => httpProxy('/pkgInStorage/query', 'POST', params),
@@ -473,10 +489,6 @@ export const PKG_API = {
      * @property {string} PKG_TEXT_QUERY_API 包装车间-生产数据-文本记录
      */
     PKG_TEXT_QUERY_API: params => httpProxy('/pkgText/query', 'POST', params),
-    /**
-     * @property {string} PKG_ALL_SAVE_API 包装车间-生产数据-提交
-     */
-    PKG_ALL_SAVE_API: params => httpProxy('/pkg/save', 'POST', params),
     /**
      * @property {string} PKG_TIMESHEET_QUERY_API 包装车间-生产准备-查询
      */
@@ -540,5 +552,48 @@ export const PKG_API = {
     /**
      * @property {string}  PKG_URGENT_SUBMIT_API 生产数据-生产入库-紧急提交
      */
-    PKG_URGENT_SUBMIT_API: params => httpProxy('/pkgInStorage/urgentSubmit', 'POST', params)
+    PKG_URGENT_SUBMIT_API: params => httpProxy('/pkgInStorage/urgentSubmit', 'POST', params),
+    /**
+     * @property {string}  PKG_USER_QUERY_API 生包装车间-人员-查询
+     */
+    PKG_USER_QUERY_API: params => httpProxy('/pkg/pkgUser/query', 'POST', params),
+    /**
+     * @property {string}  PKG_EXCEPTION_QUERY_API 包装车间-停机情况-查询
+     */
+    PKG_EXCEPTION_QUERY_API: params => httpProxy('/pkg/pkgException/query', 'POST', params),
+    /**
+     * @property {string}  PKG_DEVICE_QUERY_API 包装车间-运行情况-查询
+     */
+    PKG_DEVICE_QUERY_API: params => httpProxy('/pkg/pkgDevice/query', 'POST', params),
+    /**
+     * @property {string}  PKG_AUDIT_DETAIL_PASS_API 审核详情-审核拒绝
+     */
+    PKG_AUDIT_DETAIL_PASS_API: params => httpProxy('/pkg/check', 'POST', params),
+    /**
+     * @property {string}  PKG_AUDIT_DETAIL_PASS_API 审核详情-审核拒绝
+     */
+    PKG_AUDIT_DETAIL_REFUSE_API: params => httpProxy('/pkg/refuse', 'POST', params),
+    /**
+     * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-生产领料差异
+     */
+    PKG_AUDIT_DETAIL_PROMATERIALDIFF_API: params => httpProxy('/pkg/packageMaterial/pickingDiff/query', 'POST', params),
+    /**
+     * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-产量与人力
+     */
+    PKG_AUDIT_DETAIL_PROMANPOWER_API: params => httpProxy('/pkg/pkgTimeSheet/productionAndManpower', 'POST', params),
+    /**
+     * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-设备运行情况
+     */
+    PKG_AUDIT_DETAIL_DEVICERUN_API: params => httpProxy('/pkg/pkgTimeSheet/deviceRun', 'POST', params)
+};
+
+export const MSG_API = {
+    /**
+     * @property {string}  MSG_QUERY_API 消息管理-消息查询
+     */
+    MSG_QUERY_API: params => httpProxy('/msg/query', 'POST', params),
+    /**
+     * @property {string}  MSG_READ_API 消息管理-标记已读
+     */
+    MSG_READ_API: params => httpProxy('/msg/read', 'POST', params)
 };

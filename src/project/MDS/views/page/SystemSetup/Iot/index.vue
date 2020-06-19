@@ -111,7 +111,7 @@
 import Vue from 'vue';
 import { Loading } from 'element-ui';
 import { SYSTEMSETUP_API } from '@/api/api';
-import { DeepClone } from '@/net/validate.js';
+import { deepClone } from '@/net/validate.js';
 export default {
     name: 'Index',
     components: {},
@@ -287,7 +287,7 @@ export default {
         // 编辑
         editRow(row) {
             this.DialogTableVisible = true;
-            this.form = DeepClone(row);
+            this.form = deepClone(row);
         },
         // 保存
         saveRow() {

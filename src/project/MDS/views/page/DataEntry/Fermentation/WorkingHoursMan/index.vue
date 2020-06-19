@@ -121,12 +121,14 @@
                         </template>
                     </el-table-column>
                     <el-table-column width="150">
-                        <template slot="header">
+                        <template slot="header" slot-scope="scope">
                             执行结束日期&nbsp;
                             <el-tooltip class="item" effect="dark" content="点击批量修改`执行结束时间`" placement="top-start">
-                                <i class="el-input__icon el-icon-date" @click="checkedDateCommonFun()" />
+                                <i class="el-input__icon el-icon-date" @click="checkedDateCommonFun(scope.row)" />
                             </el-tooltip>
-                            <i class="header-date-common"><el-date-picker ref="DateInput" v-model="DateCommon" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" clearable @change="changeDateCommon()" /></i>
+                            <i class="header-date-common">
+                                <el-date-picker ref="DateInput" v-model="DateCommon" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" clearable @change="changeDateCommon()" />
+                            </i>
                         </template>
                         <template slot-scope="scope">
                             <el-date-picker v-model="scope.row.endDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 135px;" />
@@ -271,7 +273,7 @@
                 <i class="iconfont factory-shouqicaidan" /><span>审核日志</span>
             </div>
             <el-table border :data="LogList" header-row-class-name="tableHead">
-                <el-table-column label="序号" type="index" width="50" />
+                <el-table-column label="序号" type="index" width="50" fixed />
                 <el-table-column label="审核动作">
                     <template slot-scope="scope">
                         {{ scope.row.status === 'checked' ? '审核成功' : scope.row.status === 'noPass' ? '审核失败' : scope.row.status === 'submit' ? '提交' : '' }}

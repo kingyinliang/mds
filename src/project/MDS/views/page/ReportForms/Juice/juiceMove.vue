@@ -103,57 +103,57 @@ export default {
                 {
                     prop: 'holderName',
                     label: '罐号',
-                    width: '80'
+                    minwidth: '100'
                 },
                 {
                     prop: 'moveTime',
                     label: '移动日期',
-                    width: '180'
+                    minwidth: '165'
                 },
                 {
                     prop: 'material',
                     label: '物料',
-                    width: '180'
+                    minwidth: '180'
                 },
                 {
                     prop: 'type',
                     label: '原汁类别',
-                    width: '100'
+                    minwidth: '90'
                 },
                 {
                     prop: 'moveType',
                     label: '移动类型',
-                    width: '90'
+                    minwidth: '85'
                 },
                 {
                     prop: 'amount',
                     label: '数量',
-                    width: '120'
+                    minwidth: '90'
                 },
                 {
                     prop: 'unit',
                     label: '单位',
-                    width: '60'
+                    minwidth: '60'
                 },
                 {
                     prop: 'materialBatch',
                     label: '物料批次',
-                    width: '120'
+                    minwidth: '115'
                 },
                 {
                     prop: 'inBatch',
                     label: '转入批次',
-                    width: '120'
+                    minwidth: '115'
                 },
                 {
                     prop: 'inHolderName',
                     label: '罐号',
-                    width: '60'
+                    minwidth: '100'
                 },
                 {
                     prop: 'factory',
                     label: '工厂',
-                    width: '120'
+                    minwidth: '120'
                 }
             ]
         };

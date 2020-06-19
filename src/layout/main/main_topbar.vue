@@ -2,8 +2,8 @@
     <nav class="site-navbar" :class="'site-navbar--' + navbarLayoutType">
         <div class="site-navbar__header">
             <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
-                <a class="site-navbar__brand-lg" href="javascript:;"><img src="@/assets/img/logohead1.png" alt="" style="width: 140px;"></a>
-                <a class="site-navbar__brand-mini" href="javascript:;"><img src="@/assets/img/logoHead2.png" alt="" style="width: 47px;"></a>
+                <a class="site-navbar__brand-lg" href="javascript:;"><img src="~common/img/logohead1.png" alt="" style="width: 140px;"></a>
+                <a class="site-navbar__brand-mini" href="javascript:;"><img src="~common/img/logoHead2.png" alt="" style="width: 47px;"></a>
             </h1>
         </div>
         <div class="site-navbar__body clearfix">
@@ -20,7 +20,7 @@
             <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
                 <el-menu-item class="site-navbar__avatar" index="3" style="padding: 0 4px;">
                     <el-dropdown :show-timeout="0" placement="bottom">
-                        <span class="el-dropdown-link"><img src="@/assets/img/avatar.png" :alt="userName"><span>{{ realName + '(' + userName + ')' }}</span></span>
+                        <span class="el-dropdown-link"><img v-if="gender==='M'" src="~common/img/avatarM.png" :alt="userName"><img v-else src="~common/img/avatarF.png" :alt="userName"><span>{{ realName + '(' + userName + ')' }}</span></span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="updatePassword">
                                 修改密码
@@ -32,6 +32,11 @@
                     </el-dropdown>
                 </el-menu-item>
             </el-menu>
+            <el-button v-if="factoryName!=='系统设置'" type="text" style="float: right;" @click.native="goMessage">
+                <el-badge :value="200" :max="99" class="item">
+                    <i class="iconfont factory-bell" style="font-size: 18px;" />
+                </el-badge>
+            </el-button>
         </div>
     </nav>
 </template>
@@ -50,7 +55,7 @@ export default {
         selectFactory: {
             type: Function,
             default: () => {
-            //    s
+            //
             }
         }
     },
@@ -96,6 +101,11 @@ export default {
                 return this.$store.state.user.name;
             }
         },
+        gender: {
+            get() {
+                return this.$store.state.user.gender;
+            }
+        },
         realName: {
             get() {
                 return this.$store.state.user.realName;
@@ -106,6 +116,18 @@ export default {
         }
     },
     methods: {
+        goMessage() {
+            // this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
+            this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'DFMDS-pages-Message');
+            setTimeout(() => {
+                this.$router.push({
+                    name: `DFMDS-pages-Message`
+                });
+            }, 100);
+
+            console.log(this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Message'))
+
+        },
         goEacharts() {
             this.$router.push({
                 path: `/DataEcharts/${this.menuList
@@ -149,5 +171,9 @@ export default {
 .switching {
     display: block;
     transition: 500ms;
+}
+.item {
+    margin-top: 10px;
+    margin-right: 40px;
 }
 </style>

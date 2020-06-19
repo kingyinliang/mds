@@ -23,47 +23,47 @@
                                 </el-button>
                             </div>
                         </template>
-                        <el-table header-row-class-name="tableHead" :data="workHourList" border tooltip-effect="dark">
-                            <el-table-column type="index" width="55" label="序号" />
-                            <el-table-column label="工序" width="150">
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="workHourList" border tooltip-effect="dark">
+                            <el-table-column type="index" width="55" label="序号" fixed />
+                            <el-table-column label="工序" min-width="150">
                                 <template slot-scope="scope">
                                     {{ scope.row.productLineName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="曲房" width="150">
+                            <el-table-column label="曲房" min-width="150">
                                 <template slot-scope="scope">
                                     {{ scope.row.houseName }}
                                 </template>
                             </el-table-column>
                             <el-table-column
                                 label="准备工时"
-                                width="100"
+                                min-width="100"
                             >
                                 <template slot-scope="scope">
                                     {{ scope.row.confActivity1 }}
                                 </template>
                             </el-table-column>
-                            <el-table-column width="60" label="单位">
+                            <el-table-column min-width="60" label="单位">
                                 <template slot-scope="scope">
                                     {{ scope.row.confActiUnit1 }}
                                 </template>
                             </el-table-column>
-                            <el-table-column width="140" label="人工工时">
+                            <el-table-column min-width="140" label="人工工时">
                                 <template slot-scope="scope">
                                     {{ scope.row.confActivity3 }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="单位" width="60">
+                            <el-table-column label="单位" min-width="60">
                                 <template slot-scope="scope">
                                     <span>{{ scope.row.confActiUnit3 }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="机器工时" width="140">
+                            <el-table-column label="机器工时" min-width="140">
                                 <template slot-scope="scope">
                                     <el-input v-model.number="scope.row.confActivity2" size="small" type="number" placeholder="手工录入" :disabled="scope.row.disabled" />
                                 </template>
                             </el-table-column>
-                            <el-table-column label="单位" width="60">
+                            <el-table-column label="单位" min-width="60">
                                 <template slot-scope="scope">
                                     <span>{{ scope.row.confActiUnit2 }}</span>
                                 </template>
@@ -76,7 +76,7 @@
                             <el-table-column
                                 fixed="right"
                                 label="操作"
-                                width="145"
+                                min-width="145"
                             >
                                 <template slot-scope="scope">
                                     <el-button v-if="scope.row.disabled && isAuth('sys:midTimeSheet:udpate')" style="float: left;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" @click="enbaleEdit(scope.row)">
@@ -98,58 +98,58 @@
             <template slot="2">
                 <div>
                     <mds-card title="生产入库" :name="'shengchanruku'">
-                        <el-table header-row-class-name="tableHead" :data="inStockList" border tooltip-effect="dark">
-                            <el-table-column type="index" width="55" label="序号" />
-                            <el-table-column label="制曲日期" width="100" prop="inKjmDate" />
-                            <el-table-column label="曲房" width="100" :show-overflow-tooltip="true">
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="inStockList" border tooltip-effect="dark">
+                            <el-table-column type="index" min-width="55" label="序号" fixed />
+                            <el-table-column label="制曲日期" min-width="100" prop="inKjmDate" />
+                            <el-table-column label="曲房" min-width="100" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.houseName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="豆粕量(KG)" width="100">
+                            <el-table-column label="豆粕量(KG)" min-width="100">
                                 <template slot-scope="scope">
                                     {{ scope.row.pulpWeight }}
                                 </template>
                             </el-table-column>
                             <el-table-column
                                 label="麦粉量(KG)"
-                                width="100"
+                                min-width="100"
                             >
                                 <template slot-scope="scope">
                                     {{ scope.row.wheatWeight }}
                                 </template>
                             </el-table-column>
-                            <el-table-column width="90" label="盐水量">
+                            <el-table-column min-width="90" label="盐水量">
                                 <template slot-scope="scope">
                                     {{ scope.row.saltWaterWeight }}
                                 </template>
                             </el-table-column>
-                            <el-table-column width="180" label="入库物料">
+                            <el-table-column min-width="180" label="入库物料">
                                 <template slot-scope="scope">
                                     {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="入库量" width="90">
+                            <el-table-column label="入库量" min-width="90">
                                 <template slot-scope="scope">
                                     <span>{{ scope.row.sauceWeight }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="入库批次" width="120">
+                            <el-table-column label="入库批次" min-width="120">
                                 <template slot-scope="scope">
                                     <span>{{ scope.row.batch }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="单位" width="60">
+                            <el-table-column label="单位" min-width="60">
                                 <template slot-scope="scope">
                                     <span>{{ scope.row.unit }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作人" width="145">
+                            <el-table-column label="操作人" min-width="145">
                                 <template slot-scope="scope">
                                     {{ scope.row.changer }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作时间" width="160">
+                            <el-table-column label="操作时间" min-width="160">
                                 <template slot-scope="scope">
                                     {{ scope.row.changed }}
                                 </template>
@@ -180,54 +180,54 @@
             <template slot="3">
                 <div>
                     <mds-card title="物料领用" :name="'shengchanruku'">
-                        <el-table header-row-class-name="tableHead" :data="applyMaterieList" border tooltip-effect="dark">
-                            <el-table-column type="index" width="55" label="序号" />
-                            <el-table-column label="制曲日期" width="100" prop="inKjmDate" />
-                            <el-table-column label="曲房" width="100" :show-overflow-tooltip="true">
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="applyMaterieList" border tooltip-effect="dark">
+                            <el-table-column type="index" width="55" label="序号" fixed />
+                            <el-table-column label="制曲日期" min-width="100" prop="inKjmDate" />
+                            <el-table-column label="曲房" min-width="90" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.houseName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="物料" show-overflow-tooltip width="150">
+                            <el-table-column label="物料" show-overflow-tooltip min-width="150">
                                 <template slot-scope="scope">
                                     {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                 </template>
                             </el-table-column>
                             <el-table-column
                                 label="领用容器"
-                                width="150"
+                                min-width="120"
                                 :show-overflow-tooltip="true"
                             >
                                 <template slot-scope="scope">
                                     {{ scope.row.holderName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column width="140" label="批次">
+                            <el-table-column min-width="140" label="批次">
                                 <template slot-scope="scope">
                                     <el-input v-model.number="scope.row.batch" size="small" maxlength="10" placeholder="手工录入" :disabled="scope.row.disabled" />
                                 </template>
                             </el-table-column>
-                            <el-table-column width="90" label="数量">
+                            <el-table-column min-width="90" label="数量">
                                 <template slot-scope="scope">
                                     {{ scope.row.entryQnt }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="单位" width="60">
+                            <el-table-column label="单位" min-width="60">
                                 <template slot-scope="scope">
                                     <span>{{ scope.row.entryUom ? (scope.row.entryUom === 'box' ? '盒' : scope.row.entryUom === 'L' ? '升' : scope.row.entryUom === 'KG' ? '千克' : scope.row.entryUom) : '' }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作人" width="145">
+                            <el-table-column label="操作人" min-width="145">
                                 <template slot-scope="scope">
                                     <span>{{ scope.row.changer }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作时间" width="160">
+                            <el-table-column label="操作时间" min-width="160">
                                 <template slot-scope="scope">
                                     <span>{{ scope.row.changed }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column fixed="right" label="操作" width="80">
+                            <el-table-column fixed="right" label="操作" min-width="80">
                                 <template slot-scope="scope">
                                     <i v-if="scope.row.materialCode === 'M040000001'">
                                         <el-button v-if="scope.row.disabled" style="float: right;" type="primary" size="small" :disabled="!(scope.row.materialCode === 'M040000001' && (scope.row.status === 'saved' || scope.row.status === 'noPass'))" @click="materialEnbaleEdit(scope.row)">编辑</el-button>

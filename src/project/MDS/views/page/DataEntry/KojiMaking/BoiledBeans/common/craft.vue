@@ -54,8 +54,8 @@
                 </el-button>
             </div>
             <el-table ref="runshuiTable" class="newTable" max-height="267" border header-row-class-name="tableHead" :data="lishuiList" :row-class-name="rowDelFlag">
-                <el-table-column label="序号" type="index" width="50" />
-                <el-table-column width="205">
+                <el-table-column label="序号" type="index" width="50" fixed />
+                <el-table-column min-width="180">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>观察时间</span>
@@ -64,7 +64,7 @@
                         <el-date-picker v-model="scope.row.guardDate" type="datetime" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" placeholder="选择时间" size="small" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" style="width: 171px;" />
                     </template>
                 </el-table-column>
-                <el-table-column width="90">
+                <el-table-column min-width="90">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>润水/°C</span>
@@ -73,7 +73,7 @@
                         <el-input v-model="scope.row.runWaterTemp" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column width="90">
+                <el-table-column min-width="90">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>预热/°C</span>
@@ -91,7 +91,7 @@
                         <el-input v-model="scope.row.unloadingWeight" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column width="120">
+                <el-table-column min-width="120">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>润水速度L/h</span>
@@ -105,9 +105,9 @@
                         <el-input v-model="scope.row.remark" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="操作人" prop="changer" width="140" />
-                <el-table-column label="操作时间" prop="changed" width="160" />
-                <el-table-column width="70" fixed="right">
+                <el-table-column label="操作人" prop="changer" min-width="140" />
+                <el-table-column label="操作时间" prop="changed" min-width="160" />
+                <el-table-column min-width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" size="small" @click="delrow(scope.row)">
                             删除
@@ -139,7 +139,7 @@
                 </el-button>
             </div>
             <el-table ref="zhengzhuTable" class="newTable borderTable" max-height="267" border header-row-class-name="tableHead" :data="zhengzhuList" :row-class-name="rowDelFlag">
-                <el-table-column width="195">
+                <el-table-column min-width="175">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>观察时间</span>
@@ -149,12 +149,12 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="压力/Mpa">
-                    <el-table-column width="110" label="蒸煮数显">
+                    <el-table-column min-width="95" label="蒸煮数显">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.cookingPress" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column width="110">
+                    <el-table-column min-width="95">
                         <template slot="header">
                             <i class="reqI">*</i>
                             <span>蒸煮机械</span>
@@ -163,7 +163,7 @@
                             <el-input v-model="scope.row.cookingMachinePress" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column width="110">
+                    <el-table-column min-width="95">
                         <template slot="header">
                             <i class="reqI">*</i>
                             <span>分汽包</span>
@@ -174,12 +174,12 @@
                     </el-table-column>
                 </el-table-column>
                 <el-table-column label="温度/°C">
-                    <el-table-column width="110" label="蒸煮数显">
+                    <el-table-column min-width="95" label="蒸煮数显">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.cookingTemp" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column width="110">
+                    <el-table-column min-width="95">
                         <template slot="header">
                             <i class="reqI">*</i>
                             <span>蒸煮机械</span>
@@ -188,12 +188,12 @@
                             <el-input v-model="scope.row.cookingMachineTemp" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column width="110" label="上转阀冷却">
+                    <el-table-column min-width="100" label="上转阀冷却">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.upCooling" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column width="110">
+                    <el-table-column min-width="100">
                         <template slot="header">
                             <i class="reqI">*</i>
                             <span>下转阀冷却</span>
@@ -203,9 +203,9 @@
                         </template>
                     </el-table-column>
                 </el-table-column>
-                <el-table-column label="操作人" prop="changer" width="140" />
-                <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
-                <el-table-column width="70" fixed="right">
+                <el-table-column label="操作人" prop="changer" min-width="135" />
+                <el-table-column label="操作时间" prop="changed" min-width="100" :show-overflow-tooltip="true" />
+                <el-table-column min-width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" icon="el-icon-delete" size="small" @click="delrow(scope.row)">
                             删除

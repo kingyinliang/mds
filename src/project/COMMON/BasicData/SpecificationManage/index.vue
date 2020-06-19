@@ -25,8 +25,8 @@
                 </el-row>
             </template>
             <el-table ref="targetInfoList" class="newTable" border header-row-class-name="tableHead" :data="targetInfoList" :height="mainClientHeight - 70 - 47" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
-                <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" />
-                <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
+                <el-table-column v-if="targetInfoList.length!==0" type="selection" width="50" fixed />
+                <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
                 <el-table-column label="物料" :show-overflow-tooltip="true" min-width="200">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode }} {{ scope.row.materialName }}

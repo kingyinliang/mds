@@ -19,7 +19,7 @@
                         </div>
                         <div style="padding: 10px;">
                             <el-table ref="targetInfoList" header-row-class-name="tableHead" row-key="index" :data="targetInfoList" highlight-current-row border tooltip-effect="dark" class="newTable" size="small" @row-click="getChildItemList">
-                                <el-table-column type="index" width="50" label="序号" />
+                                <el-table-column type="index" width="50" label="序号" fixed />
                                 <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" />
                                 <el-table-column prop="dictType" :show-overflow-tooltip="true" label="参数类型编码" width="110" />
                                 <el-table-column prop="dictName" :show-overflow-tooltip="true" label="参数类型名称" width="110" />
@@ -51,7 +51,7 @@
                         </h5>
                         <div style="padding: 10px;">
                             <el-table ref="targetParameterList" header-row-class-name="tableHead" :data="targetParameterList" border tooltip-effect="dark" class="newTable" size="small">
-                                <el-table-column type="index" width="50" label="序号" />
+                                <el-table-column type="index" width="50" label="序号" fixed />
                                 <el-table-column prop="factoryName" :show-overflow-tooltip="true" label="工厂" width="100" />
                                 <el-table-column prop="dictType" :show-overflow-tooltip="true" label="参数类型编码">
                                     <template>
@@ -80,9 +80,9 @@
                         <el-pagination v-if="targetParameterList.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalCount" @size-change="handlePageSizeChange" @current-change="handleCurrentPageChange" />
                     </div>
                 </el-col>
-                <parameter-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :factory-list="factoryList" @refreshParentDataList="getreParentItemsList" @refreshChildDataList="getreChildItemList(arguments)" />
             </el-row>
         </mds-card>
+        <parameter-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :factory-list="factoryList" @refreshParentDataList="getreParentItemsList" @refreshChildDataList="getreChildItemList(arguments)" />
     </div>
 </template>
 

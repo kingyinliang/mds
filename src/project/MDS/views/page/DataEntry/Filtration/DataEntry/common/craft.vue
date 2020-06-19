@@ -28,7 +28,7 @@
                 </el-col>
             </el-row>
             <el-table :data="techList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;" @row-dblclick="EditTechInfo">
-                <el-table-column type="index" label="序号" width="50" />
+                <el-table-column type="index" label="序号" width="50" fixed />
                 <el-table-column label="过滤机号" show-overflow-tooltip width="120" prop="deviceName" />
                 <el-table-column label="过滤前温度(°C)" prop="filterBefTem" />
                 <el-table-column label="过滤前压力(Mpa)" prop="filterBefPre" />
@@ -54,7 +54,7 @@
                 <i class="iconfont factory-shouqicaidan" /><span>辅料领用</span>
             </div>
             <el-table :data="supMaterialList" border header-row-class-name="tableHead" style="margin-top: 10px;">
-                <el-table-column type="index" label="序号" width="50" />
+                <el-table-column type="index" label="序号" width="50" fixed />
                 <el-table-column label="过滤机号" show-overflow-tooltip width="120" prop="deviceName" />
                 <el-table-column label="物料" show-overflow-tooltip width="200">
                     <template slot-scope="scope">

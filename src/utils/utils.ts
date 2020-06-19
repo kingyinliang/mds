@@ -1,6 +1,7 @@
 import { RouteConfig } from 'vue-router';
 import { VueRouter } from 'vue-router/types/router';
 import { COMMON_API } from 'common/api/api';
+import _ from 'lodash';
 
 const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
 
@@ -124,7 +125,7 @@ export class AddRoutes {
  * @param {*} pid
  */
 export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
-    const res: object[] = [];
+    const res: MenuBbj[] = [];
     const temp = {};
     for (let i = 0; i < data.length; i++) {
         temp[data[i][id]] = data[i];
@@ -139,11 +140,28 @@ export function treeDataTranslate(data, id = 'id', pid = 'parentId') {
             }
             data[k]['_level'] = temp[data[k][pid]]['_level'] + 1;
             temp[data[k][pid]]['children'].push(data[k]);
+            temp[data[k][pid]]['children'].sort((a, b) => {
+                return a.menuOrder - b.menuOrder;
+            });
         } else {
             res.push(data[k]);
+            res.sort((a, b) => {
+                return a.menuOrder - b.menuOrder;
+            });
         }
     }
     return res;
+}
+interface MenuBbj {
+    id?: string;
+    menuOrder: number;
+}
+/**
+ * URL地址
+ * @param {*} s
+ */
+export function isURL(s) {
+    return /^http[s]?:\/\/.*/.test(s);
 }
 /**
  * 是否有权限
@@ -183,6 +201,63 @@ export function generateUuid(len: number, radix: number) {
 }
 
 /**
+ * 获取时间
+ * @param {*} null
+ */
+export function getNewDate() {
+    return new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate());
+}
+
+export function exportFile(url, fileName, vue) {
+    vue.$http(url, 'POST', vue.plantList, false, false).then(({ data }) => {
+        if (data.code === 0) {
+            const elink = document.createElement('a');
+            elink.download = `${fileName}${getNewDate()}.xls`;
+            elink.style.display = 'none';
+            elink.href = data.url;
+            document.body.appendChild(elink);
+            elink.click();
+            document.body.removeChild(elink);
+        } else {
+            vue.$notify.error({ title: '错误', message: data.msg });
+        }
+    });
+}
+
+export function exportFileForm(url, fileName, vue) {
+    vue.$http(url, 'POST', vue.queryForm, false, false).then(({ data }) => {
+        if (data.code === 0) {
+            const elink = document.createElement('a');
+            elink.download = `${fileName}${getNewDate()}.xls`;
+            elink.style.display = 'none';
+            elink.href = data.url;
+            document.body.appendChild(elink);
+            elink.click();
+            document.body.removeChild(elink);
+        } else {
+            vue.$notify.error({ title: '错误', message: data.msg });
+        }
+    });
+}
+
+export function setUserList(data) {
+    const res: UserObj[] = [];
+    data.forEach(item => {
+        res.push({
+            label: item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）',
+            key: item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）',
+            screncon: item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）'
+        });
+    });
+    return res;
+}
+interface UserObj {
+    label?: string;
+    key?: string;
+    screncon?: string;
+}
+
+/**
  * 获取对象的路径 函数柯里化
  * @param path 传入路径返回获取这个路径的方法
  * @param obj 获取哪个对象的参数
@@ -191,16 +266,55 @@ export function generateUuid(len: number, radix: number) {
 export function creatGetPath(path) {
     let paths = path.split('.');
     return function getPath(obj) {
+        let orgPaths = paths.concat()
         let res = obj;
         let prop;
-        while ((prop = paths.shift())) {
+        while ((prop = orgPaths.shift())) {
             res = res[prop];
         }
         return res;
     };
 }
+export function getObjPath(obj, path) {
+    let paths = path.split('.');
+    let res = obj;
+    let prop;
+    while ((prop = paths.shift())) {
+        res = res[prop];
+    }
+    return res;
+}
+/**
+ * 展开合并
+ * @param $ this.$
+ * @param 按钮class为showHiddenBtn name是展开div的class
+ */
+export function ShowHiddenNameBox($) {
+    $('.showHiddenBtn')
+        .unbind('click')
+        .click(function(this: any) {
+            const $shiftBox = $('.' + $(this).attr('name') + 'Box');
+            if (
+                $(this)
+                    .find('i')
+                    .hasClass('el-icon-caret-top')
+            ) {
+                $(this).html('展开<i class="el-icon-caret-bottom"></i>');
+                $shiftBox.data('heightData', $shiftBox.height());
+                $shiftBox.css('overflow', 'hidden');
+                $shiftBox.animate({ height: 0 }, 300, function() {
+                    //    empty
+                });
+            } else {
+                $shiftBox.css('overflow', 'inherit');
+                $(this).html('收起<i class="el-icon-caret-top"></i>');
+                $shiftBox.animate({ height: $shiftBox.data('heightData') }, 300, function() {
+                    $shiftBox.css('height', 'auto');
+                });
+            }
+        });
+}
 /* eslint-enable */
-
 /**
  * S3获取文件路径
  * @param {string} arrData 数组形式数据
@@ -241,6 +355,29 @@ export function dateFormat(date, fmt) {
         }
     }
     return fmtTemp;
+}
+
+export function dataEntryData(formHeader, data, orgData, delArr, insertArr, updateArr) {
+    data.forEach((item, index) => {
+        if (item.delFlag === 1) {
+            if (item.id) {
+                delArr.push(item.id);
+            }
+        } else if (item.id) {
+            if (!_.isEqual(orgData[index], item)) {
+                item.orderId = formHeader.id;
+                updateArr.push(item);
+            }
+        } else {
+            item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            item.orderId = formHeader.id;
+            item.orderNo = formHeader.orderNo;
+            insertArr.push(item);
+        }
+    });
+}
+export function getIsRedact(status) {
+    return status !== 'C' && status !== 'D' && status !== 'P'
 }
 // 浮点型加法函数
 export function accAdd(arg1, arg2) {
@@ -326,18 +463,24 @@ export function accDiv(arg1, arg2) {
     return (r1 / r2) * Math.pow(10, t2 - t1);
 }
 // 深克隆
-export function DeepClone(str) {
-    return JSON.parse(JSON.stringify(str));
+export function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }
 // 登陆名(工号)
 export function getUserNameNumber() {
     return sessionStorage.getItem('realName') + `(${sessionStorage.getItem('userName')})`;
 }
 
-// 计算时间差
+/**
+ * 计算时间差
+ * @param startTime 开始时间
+ * @param endTime 结束时间
+ * @param diffType 产出类型 'second' 'minute' 'hour' 'day'
+ * @return 小数后两位
+ */
 export function getDateDiff(startTime, endTime, diffType) {
-    const startTimeS = startTime.replace('/\-/g', '/');
-    const endTimeS = endTime.replace('/\-/g', '/');
+    const startTimeS = startTime.replace('/-/g', '/');
+    const endTimeS = endTime.replace('/-/g', '/');
     // 将计算间隔类性字符转换为小写
     const sTime = new Date(startTimeS); // 开始时间
     const eTime = new Date(endTimeS); // 结束时间
@@ -357,13 +500,12 @@ export function getDateDiff(startTime, endTime, diffType) {
             divNum = 1000 * 3600 * 24;
             break;
         default:
-            divNum = 1
+            divNum = 1;
             break;
     }
     // eslint-disable-next-line
     return ((eTime.getTime() - sTime.getTime()) / divNum).toFixed(2);
 }
-
 // 比对 object 使否相同
 export function compareObject(x, y) {
     // remember that NaN === NaN returns false

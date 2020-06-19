@@ -21,8 +21,8 @@
                 </el-row>
                 <el-row>
                     <el-table ref="userlist" header-row-class-name="tableHead" :data="role" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column type="selection" width="50" />
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
+                        <el-table-column type="selection" width="50" fixed />
+                        <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
                         <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
                         <el-table-column label="操作" width="320">
                             <template slot-scope="scope">

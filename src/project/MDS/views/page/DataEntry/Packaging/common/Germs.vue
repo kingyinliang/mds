@@ -6,7 +6,7 @@
             </el-button>
         </div>
         <el-table ref="table1" header-row-class-name="tableHead" :data="GermsDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-            <el-table-column type="index" width="55" label="序号" />
+            <el-table-column type="index" width="55" label="序号" fixed />
             <el-table-column label="白/中/夜班">
                 <template slot-scope="scope">
                     <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="!isRedact" size="small">

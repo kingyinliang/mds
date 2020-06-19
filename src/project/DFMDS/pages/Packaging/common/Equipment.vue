@@ -3,310 +3,781 @@
         <mds-card title="运行情况" :name="'equipment'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" @click="addRow(dataList)">
+                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewFirstDataRow()">
                         新增
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="dataList" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
-                <el-table-column label="序号" type="index" width="55" />
-                <el-table-column min-width="100" :show-overflow-tooltip="true">
-                    <template slot="header">
-                        <span class="notNull">*</span>班次
-                    </template>
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="开始时间" min-width="160">
-                    <template slot="header">
-                        <span class="notNull">*</span>开始时间
-                    </template>
-                    <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.timestart" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 175px;" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="结束时间" min-width="160">
-                    <template slot="header">
-                        <span class="notNull">*</span>结束时间
-                    </template>
-                    <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.timesend" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 175px;" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="运行时长(H)" min-width="90" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.sealingPlug" size="small" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="备注" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="changer" min-width="120" label="操作人" :show-overflow-tooltip="true" />
-                <el-table-column prop="changed" min-width="140" label="操作时间" :show-overflow-tooltip="true" />
-                <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delRow(scope.row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+            <el-form ref="ruleFirstForm" :model="ruleFirstForm">
+                <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
+                    <el-table-column label="序号" type="index" width="55" fixed="left" />
+                    <el-table-column min-width="130" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <span class="notNull">*</span>班次
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.classes'" :rules="dataRules.classes">
+                                <el-select v-model="scope.row.classes" size="small" clearable style="width: 100%;" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                                    <el-option
+                                        v-for="item in classesOptions"
+                                        :key="item.dictCode"
+                                        :label="item.dictValue"
+                                        :value="item.dictCode"
+                                    />
+                                </el-select>
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="开始时间" min-width="200">
+                        <template slot="header">
+                            <span class="notNull">*</span>开始时间
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
+                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeEnd(scope.row,scope.$index,0)" />
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="结束时间" min-width="200">
+                        <template slot="header">
+                            <span class="notNull">*</span>结束时间
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.endDate'" :rules="dataRules.endDate">
+                                <el-date-picker
+                                    v-model="scope.row.endDate"
+                                    type="datetime"
+                                    size="small"
+                                    value-format="yyyy-MM-dd HH:mm"
+                                    format="yyyy-MM-dd HH:mm"
+                                    :default-value="scope.row.startDate"
+                                    placeholder="选择时间"
+                                    style="width: 170px;"
+                                    :picker-options="pickerOptionsEnd[0][scope.$index]"
+                                    :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
+                                    @change="changeStart(scope.row,scope.$index,0)"
+                                />
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="运行时长(H)" width="120" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <!-- <el-input v-model.trim="scope.row.duration" size="small" /> -->
+                            {{ operationHour(scope.row,scope.$index) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="备注" :show-overflow-tooltip="true" min-width="200">
+                        <template slot-scope="scope">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true" />
+                    <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
+                    <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeFirstDataRow(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-form>
             <el-row class="solerow">
                 <div>
                     总运行时间：
                 </div>
                 <div class="input_bottom">
-                    {{ computedSoy }}
+                    {{ computedFirstDataTotal }} H
                 </div>
             </el-row>
         </mds-card>
         <mds-card title="停机情况" :name="'equipmentStop'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" @click="addStopRow(dataStopList)">
+                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addSecondDataRow()">
                         新增
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="dataStopList" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
-                <el-table-column label="序号" type="index" width="55" />
-                <el-table-column min-width="100" :show-overflow-tooltip="true">
-                    <template slot="header">
-                        <span class="notNull">*</span>班次
-                    </template>
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column min-width="100" :show-overflow-tooltip="true">
-                    <template slot="header">
-                        <span class="notNull">*</span>停机类型
-                    </template>
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column min-width="100" :show-overflow-tooltip="true">
-                    <template slot="header">
-                        <span class="notNull">*</span>停机方式
-                    </template>
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column min-width="160" :show-overflow-tooltip="true">
-                    <template slot="header">
-                        <span class="notNull">*</span>开始时间
-                    </template>
-                    <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.timestart" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" />
-                    </template>
-                </el-table-column>
-                <el-table-column min-width="160" :show-overflow-tooltip="true">
-                    <template slot="header">
-                        <span class="notNull">*</span>结束时间
-                    </template>
-                    <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.timesend" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="时长(MIN)" min-width="90" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.sealingPlug" size="small" />
-                    </template>
-                </el-table-column>
-                <el-table-column min-width="90" :show-overflow-tooltip="true">
-                    <template slot="header">
-                        <span class="notNull">*</span>次数
-                    </template>
-                    <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.sealingPlug" size="small" placeholder="输入次数" />
-                    </template>
-                </el-table-column>
-                <el-table-column min-width="100" :show-overflow-tooltip="true">
-                    <template slot="header">
-                        <span class="notNull">*</span>停机情况
-                    </template>
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column min-width="100" :show-overflow-tooltip="true">
-                    <template slot="header">
-                        <span class="notNull">*</span>停机原因
-                    </template>
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small">
-                            <el-option v-for="(item, index) in classList" :key="index" :value="item.name" :label="item.name" />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="描述" min-width="100" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入数量" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="备注" min-width="100" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入数量" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="changer" label="操作人" min-width="120" :show-overflow-tooltip="true" />
-                <el-table-column prop="changed" label="操作时间" min-width="140" :show-overflow-tooltip="true" />
-                <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delStopRow(scope.row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+            <el-form ref="ruleSecondForm" :model="ruleSecondForm">
+                <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+                    <el-table-column label="序号" type="index" width="55" fixed="left" />
+                    <el-table-column min-width="130" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <span class="notNull">*</span>班次
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.classes'" :rules="dataRules.classes">
+                                <el-select v-model="scope.row.classes" size="small" clearable style="width: 100px;" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                                    <el-option
+                                        v-for="item in classesOptions"
+                                        :key="item.dictCode"
+                                        :label="item.dictValue"
+                                        :value="item.dictCode"
+                                    />
+                                </el-select>
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column min-width="140" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <span class="notNull">*</span>停机类型
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.stopType'" :rules="dataRules.stopType">
+                                <el-select v-model="scope.row.stopType" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeStopModeOption(scope.row)">
+                                    <el-option v-for="(item) in stopTypeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                                </el-select>
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column min-width="140" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <span class="notNull">*</span>停机方式
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.stopMode'" :rules="dataRules.stopMode">
+                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                                    <el-option v-for="(item) in stopModeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                                </el-select>
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column min-width="200" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <span class="notNull">*</span>开始时间
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
+                                <el-date-picker
+                                    v-model="scope.row.startDate"
+                                    type="datetime"
+                                    size="small"
+                                    value-format="yyyy-MM-dd HH:mm"
+                                    format="yyyy-MM-dd HH:mm"
+                                    placeholder="选择时间"
+                                    style="width: 170px;"
+                                    clearable
+                                    :picker-options="pickerOptionsStart[1][scope.$index]"
+                                    :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
+                                    @change="changeEnd(scope.row,scope.$index,1)"
+                                />
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column min-width="200" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <span class="notNull">*</span>结束时间
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.endDate'" :rules="dataRules.endDate">
+                                <el-date-picker
+                                    v-model="scope.row.endDate"
+                                    type="datetime"
+                                    size="small"
+                                    value-format="yyyy-MM-dd HH:mm"
+                                    format="yyyy-MM-dd HH:mm"
+                                    placeholder="选择时间"
+                                    style="width: 170px;"
+                                    clearable
+                                    :picker-options="pickerOptionsEnd[1][scope.$index]"
+                                    :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
+                                    @change="changeStart(scope.row,scope.$index,1)"
+                                />
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="时长(MIN)" width="120" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <!-- <el-input v-model.number="scope.row.duration" size="small" clearable /> -->
+                            {{ stopMin(scope.row,scope.$index) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="80" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <span class="notNull">*</span>次数
+                        </template>
+                        <template slot-scope="scope">
+                            <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(!fzExceptionCount &&isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="140" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <span class="notNull">*</span>停机情况
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.stopSituation'" :rules="dataRules.stopSituation">
+                                <el-select v-model="scope.row.stopSituation" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeStopReasonOption(scope.row)">
+                                    <el-option v-for="(item) in stopSituationOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                                </el-select>
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="140" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <span class="notNull">*</span>停机原因
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.stopReason'" :rules="dataRules.stopReason">
+                                <el-select v-model="scope.row.stopReason" size="small" clearable :disabled="!(!fzReasonOptions && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                                    <el-option v-for="(item) in stopReasonOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                                </el-select>
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="描述" min-width="180" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="备注" min-width="180" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="changer" label="操作人" min-width="140" :show-overflow-tooltip="true" />
+                    <el-table-column prop="changed" label="操作时间" min-width="180" :show-overflow-tooltip="true" />
+                    <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeSecondDataRow(scope.row)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-form>
             <el-row class="solerow">
                 <div>
                     总停线时间：
                 </div>
                 <div class="input_bottom">
-                    {{ computedSoy }} MIN
+                    {{ computedSecondDataTotal }} MIN
                 </div>
             </el-row>
         </mds-card>
-        <audit-log :table-data="readAudit" />
+        <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
     </div>
 </template>
 
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { PKG_API } from 'common/api/api';
-import { dateFormat, accAdd, getUserNameNumber } from 'utils/utils';
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { COMMON_API, PKG_API, AUDIT_API } from 'common/api/api';
+import { dataEntryData } from 'utils/utils'
+import { dateFormat, getUserNameNumber, accDiv } from 'utils/utils';
+import _ from 'lodash';
 
 @Component({
     name: 'Equipment',
     components: {
-        AuditLog: resolve => {
-            require(['@/views/components/AuditLog'], resolve);
-        }
+        // AuditLog: resolve => {
+        //     require(['@/views/components/AuditLog'], resolve);
+        // }
     }
 })
 
-export default class PendingNum extends Vue {
-    classList: object[] = [
-        {
-            name: '白班'
-        }, {
-            name: '中班'
-        }, {
-            name: '夜班'
-        }
-    ]
+export default class Equipment extends Vue {
+    @Prop({ type: Boolean, default: false }) isRedact;
+    @Prop({ type: Array, default: [] }) classesOptions;
+    @Prop({ type: String, default: '' }) productLine;
+    @Prop({ type: String, default: '' }) status;
 
-    dataList: ValueObject[] = [];
-    dataStopList: ValueObject[] = [];
+    $refs: {
+        ruleFirstForm: HTMLFormElement;
+        ruleSecondForm: HTMLFormElement;
+    }
+
+    currentAudit = [];
+
+    // 常有变数
+    firstFormDataGroup: FirstDataTable[] = []; // 主 data
+    secondFormDataGroup: SecondDataTable[] = []; // 次 data
+    orgFirstFormDataGroup: FirstDataTable[] = []; // 主 data 复制
+    orgSecondFormDataGroup: SecondDataTable[] = []; // 次 data 复制
+
     readAudit = []
+    stopTypeOptions: Option[]=[]
+    stopModeOptions: Option[]=[]
+    stopSituationOptions: Option[]=[]
+    planHaltOptions: Option[]=[]
+    abnormalHaltOptions: Option[]=[]
+    stopReasonOptions: Option[]=[]
+    fzReasonOptions=false
+    fzExceptionCount=false
+    ruleFirstForm={
+    }
 
-    getDataList(formHeader: object) {
-        PKG_API.PKG_PENDGNUM_QUERY_API({ factory: formHeader['factory'], orderNo: formHeader['orderNo'] }).then(({ data }) => {
-            if (data.code === 200) {
-                this.dataList = data.data
+    ruleSecondForm={
+    }
+
+    pickerOptionsStart=[[], []]
+    pickerOptionsEnd=[[], []]
+
+    dataRules= {
+        classes: [
+            { required: true, message: '请输入', trigger: 'change' }
+        ],
+        startDate: [
+            { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        endDate: [
+            { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        stopType: [
+            { required: true, message: '请输入', trigger: 'change' }
+        ],
+        stopMode: [
+            { required: true, message: '请输入', trigger: 'change' }
+        ],
+        stopSituation: [
+            { required: true, message: '请输入', trigger: 'change' }
+        ],
+        stopReason: [
+            { required: true, message: '请输入', trigger: 'change' }
+        ]
+    }
+
+
+    changeStart(value, index, order) {
+        console.log('value')
+        console.log(value)
+        if (!value.endDate) {
+            this.pickerOptionsStart[order][index] = Object.assign({}, this.pickerOptionsStart[order][index], {
+            disabledDate: () => {
+                return false
             }
+            })
+        } else {
+            this.pickerOptionsStart[order][index] = Object.assign({}, this.pickerOptionsStart[order][index], {
+            disabledDate: (time) => {
+                return time.getTime() > new Date(value.endDate).getTime()
+            }
+            })
+        }
+        console.log(this.pickerOptionsStart)
+    }
+
+    changeEnd(value, index, order) {
+        console.log('value')
+        console.log(value)
+        if (!value.startDate) {
+            this.pickerOptionsEnd[order][index] = Object.assign({}, this.pickerOptionsEnd[order][index], {
+            disabledDate: () => {
+                return false
+                }
+            })
+        } else {
+            this.pickerOptionsEnd[order][index] = Object.assign({}, this.pickerOptionsEnd[order][index], {
+            disabledDate: (time) => {
+                return time.getTime() < new Date(value.startDate).getTime()
+                }
+            })
+        }
+        console.log(this.pickerOptionsEnd)
+    }
+
+    async init(formHeader) {
+        PKG_API.PKG_DEVICE_QUERY_API({ // 设备运行-查询
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            if (data.data !== null) {
+                this.firstFormDataGroup = JSON.parse(JSON.stringify(data.data));
+                this.orgFirstFormDataGroup = JSON.parse(JSON.stringify(data.data));
+                this.setValidate(this.firstFormDataGroup, this.ruleFirstForm)
+            }
+        });
+        PKG_API.PKG_EXCEPTION_QUERY_API({ // 停机情况-查询
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            orderNo: formHeader.orderNo
+        }).then(({ data }) => {
+            if (data.data !== null) {
+                this.secondFormDataGroup = JSON.parse(JSON.stringify(data.data));
+                this.orgSecondFormDataGroup = JSON.parse(JSON.stringify(data.data));
+                this.setValidate(this.secondFormDataGroup, this.ruleSecondForm)
+            }
+        });
+
+        this.getStopType()
+
+        this.getStopMode()
+
+        this.getPlanHalt()
+
+        this.getAbnormalHalt()
+
+        this.currentAudit = await this.getAudit(formHeader, 'TIMESHEET');
+    }
+
+    async getAudit(formHeader, verifyType) {
+        const result = await AUDIT_API.AUDIT_LOG_LIST_API({
+            orderNo: formHeader.orderNo,
+            verifyType: verifyType
+        })
+        return result.data.data
+    }
+
+    // 设置校验
+    setValidate(currentFormDataGroup, ruleFirstForm) {
+        currentFormDataGroup.forEach((item, index) => {
+            this.$set(ruleFirstForm, 'r' + index, item)
+        })
+    }
+
+    // 提交时跑校验
+    ruleSubmit() {
+            for (const item of this.firstFormDataGroup.filter(it => it.delFlag !== 1)) {
+                if (!item.classes || !item.startDate || !item.endDate) {
+                    this.$warningToast('请填写运行情况必填项');
+                    return false
+                }
+            }
+            for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1)) {
+                if (!item.classes || !item.stopType || !item.stopMode || !item.startDate || !item.endDate || !item.exceptionCount || !item.stopSituation || !item.stopReason) {
+                    this.$warningToast('请填写停机情况必填项');
+                    return false
+                }
+            }
+        // this.$refs['ruleForm'].validate((valid) => {
+        //     if (valid) {
+        //         console.log('submit!!');
+        //         return true
+        //     }
+        //         this.$warningToast('请填写设备运行必填项');
+
+        //         return false;
+
+        //     });
+        return true
+    }
+
+    savedData(formHeader) {
+        const pkgDeviceSaveRequestDto: FristObj = {
+            deviceRunTime: this.computedFirstDataTotal,
+            ids: [],
+            pkgDeviceInsertDtos: [],
+            pkgDeviceUpdateDtos: []
+        };
+        const pkgExceptionSaveRequestDto: SecondObj = {
+            devicePauseTime: this.computedSecondDataTotal,
+            ids: [],
+            pkgExceptionInsertDtos: [],
+            pkgExceptionUpdateDtos: []
+        };
+
+        dataEntryData(formHeader, this.firstFormDataGroup, this.orgFirstFormDataGroup, pkgDeviceSaveRequestDto.ids, pkgDeviceSaveRequestDto.pkgDeviceInsertDtos, pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos);
+        dataEntryData(formHeader, this.secondFormDataGroup, this.orgSecondFormDataGroup, pkgExceptionSaveRequestDto.ids, pkgExceptionSaveRequestDto.pkgExceptionInsertDtos, pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos);
+
+        return {
+            pkgDeviceSaveRequestDto,
+            pkgExceptionSaveRequestDto
+        }
+    }
+
+    getStopType() {
+        COMMON_API.DICTQUERY_API({
+            dictType: 'COMMON_HALT_TYPE'
+        }).then(({ data }) => {
+            this.stopTypeOptions = []
+            data.data.forEach((item) => {
+                this.stopTypeOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
         });
     }
 
-    addRow() {
-        const sole: ValueObject = {
+    getStopMode() {
+        COMMON_API.DICTQUERY_API({
+            dictType: 'COMMON_HALT_MODE'
+        }).then(({ data }) => {
+            this.stopModeOptions = []
+            data.data.forEach((item) => {
+                this.stopModeOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
+        });
+    }
+
+    getPlanHalt() {
+        COMMON_API.DICTQUERY_API({
+            dictType: 'PLAN_HALT'
+        }).then(({ data }) => {
+            this.planHaltOptions = []
+            data.data.forEach((item) => {
+                this.planHaltOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
+        });
+    }
+
+    getAbnormalHalt() {
+        COMMON_API.DICTQUERY_API({
+            dictType: 'ABNORMAL_HALT'
+        }).then(({ data }) => {
+            this.abnormalHaltOptions = []
+            data.data.forEach((item) => {
+                this.abnormalHaltOptions.push({
+                    dictValue: item.dictValue,
+                    dictCode: item.dictCode
+                })
+            })
+        });
+    }
+
+    changeStopModeOption(row) {
+        if (row.stopType === 'PLAN_HALT') {
+            row.stopMode = 'CONTINUE_HALT'
+            row.exceptionCount = 1
+            this.fzExceptionCount = true
+            this.stopSituationOptions = JSON.parse(JSON.stringify(this.planHaltOptions))
+            this.stopReasonOptions = []
+            row.stopSituation = ''
+            row.stopReason = ''
+        } else {
+            row.stopMode = ''
+            row.exceptionCount = 0
+            this.fzExceptionCount = false
+            this.stopSituationOptions = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
+            this.stopReasonOptions = []
+            row.stopSituation = ''
+            row.stopReason = ''
+        }
+    }
+
+    changeStopReasonOption(row) {
+        this.stopReasonOptions = []
+        row.stopReason = ''
+        if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN') {
+            console.log('11111')
+            this.fzReasonOptions = false
+            COMMON_API.DEVICELIST_API({
+                deptId: this.productLine,
+                current: 1,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                size: 99999
+            }).then(({ data }) => {
+                console.log(data)
+                data.data.records.forEach((item) => {
+                    this.stopReasonOptions.push({
+                        dictValue: item.deviceName,
+                        dictCode: item.deviceNo
+                    })
+                })
+            });
+        } else if (row.stopSituation === 'EXPERIMENT' || row.stopSituation === 'POOR_PROCESS' || row.stopSituation === 'WAIT' || row.stopSituation === 'ENERGY') {
+            console.log('22222')
+            this.fzReasonOptions = false
+            COMMON_API.DICTQUERY_API({
+                dictType: row.stopSituation
+            }).then(({ data }) => {
+                console.log(data)
+                data.data.forEach((item) => {
+                    this.stopReasonOptions.push({
+                        dictValue: item.dictValue,
+                        dictCode: item.dictCode
+                    })
+                })
+            });
+        } else {
+            console.log('333333')
+            this.fzReasonOptions = true
+            this.stopReasonOptions = []
+        }
+    }
+
+    operationHour(row, index): number {
+        let num
+        if (row.endDate !== '' && row.startDate !== '') {
+            num = accDiv((new Date(row.endDate).getTime() - new Date(row.startDate).getTime()), 3600000).toFixed(2)
+        } else {
+            num = 0
+        }
+        this.firstFormDataGroup[index].duration = num
+
+        return num
+    }
+
+    stopMin(row, index): number {
+        let num
+        if (row.endDate !== '' && row.startDate !== '') {
+            num = accDiv((new Date(row.endDate).getTime() - new Date(row.startDate).getTime()), 60000).toFixed(2)
+        } else {
+            num = 0
+        }
+        this.secondFormDataGroup[index].duration = num
+
+        return num
+    }
+
+    addNewFirstDataRow() {
+        const sole: FirstDataTable = {
             classes: '',
-            onlineBad: '',
-            pressMaterial: '',
-            sealingPlug: '',
-            wasteSauce: '',
-            deviceLoss: '',
-            other: '',
+            startDate: '',
+            endDate: '',
+            duration: 0,
+            durationUnit: 'H',
             remark: '',
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             changer: getUserNameNumber(),
             delFlag: 0
         }
-        this.dataList.push(sole);
+        this.firstFormDataGroup.push(sole);
+        this.setValidate(this.firstFormDataGroup, this.ruleFirstForm)
     }
 
-    addStopRow() {
-        const sole = {
-             classes: ''
+    addSecondDataRow() {
+        const sole: SecondDataTable = {
+            classes: '',
+            stopType: '',
+            stopMode: '',
+            startDate: '',
+            endDate: '',
+            duration: 0,
+            delFlag: 0,
+            durationUnit: 'MIN',
+            exceptionCount: 0,
+            stopSituation: '',
+            stopReason: '',
+            exceptionInfo: '',
+            remark: '',
+            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+            changer: getUserNameNumber()
         }
-        this.dataStopList.push(sole);
+        this.secondFormDataGroup.push(sole);
+        this.setValidate(this.secondFormDataGroup, this.ruleSecondForm)
     }
 
     rowDelFlag({ row }) {
-        if (row.delFlag === '1') {
+        if (row.delFlag === 1) {
             return 'rowDel';
         }
         return '';
     }
 
     rowStopDelFlag({ row }) {
-        if (row.delFlag === '1') {
+        if (row.delFlag === 1) {
             return 'rowDel';
         }
         return '';
     }
 
-    delRow(row) {
+    removeFirstDataRow(row) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.dataList.splice(this.dataList.indexOf(row), 1);
+            row.delFlag = 1;
         });
     }
 
-    delStopRow(row) {
+    removeSecondDataRow(row) {
         this.$confirm('是否删除?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
         }).then(() => {
-            this.dataStopList.splice(this.dataStopList.indexOf(row), 1);
+            row.delFlag = 1;
         });
     }
 
-    get computedSoy() {
-        let Soynum = 0;
-        this.dataList.map((item: ValueObject) => {
-            if (item.delFlag === 0) {
-                Soynum = accAdd(Soynum, accAdd(accAdd(item.onlineBad, item.pressMaterial), item.sealingPlug));
+    get computedFirstDataTotal(): number {
+        let total = 0;
+        // const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        // if (this.firstFormDataGroup.length !== 0) {
+        //     total = this.firstFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
+        // }
+
+
+        this.firstFormDataGroup.map((item) => {
+            if (item.delFlag !== 1) {
+                total = _.add(total, Number(item.duration));
             }
         });
-        return Soynum;
+        return total;
     }
 
+    get computedSecondDataTotal(): number {
+        let total = 0;
+        // const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        // if (this.secondFormDataGroup.length !== 0) {
+        //     total = this.secondFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
+        // }
+        // return total
+
+        this.secondFormDataGroup.map((item) => {
+            if (item.delFlag !== 1) {
+                total = _.add(total, Number(item.duration));
+            }
+        });
+        return total;
+
+
+    }
 }
 
-interface ValueObject {
+interface FristObj {
+    deviceRunTime?: number;
+    ids: string[];
+    pkgDeviceInsertDtos: FirstDataTable[];
+    pkgDeviceUpdateDtos: FirstDataTable[];
+}
+
+interface SecondObj {
+    devicePauseTime?: number;
+    ids: string[];
+    pkgExceptionInsertDtos: SecondDataTable[];
+    pkgExceptionUpdateDtos: SecondDataTable[];
+}
+
+interface FirstDataTable {
+    factory?: string;
+    orderId?: string;
+    orderNo?: string;
     classes?: string;
-    onlineBad?: string;
-    pressMaterial?: string;
-    sealingPlug?: string;
-    wasteSauce?: string;
-    deviceLoss?: string;
-    other?: string;
+    startDate?: string;
+    endDate?: string;
+    duration?: number;
+    remark?: string;
+    durationUnit?: string;
+    changed?: string;
+    changer?: string;
+    delFlag?: number; // 删除标记(1：删除，0：正常)
+    id?: string;
+    editedMark?: boolean;
+}
+interface SecondDataTable{
+    factory?: string;
+    orderId?: string;
+    orderNo?: string;
+    classes?: string;
+    stopType?: string;
+    stopMode?: string;
+    startDate?: string;
+    durationUnit?: string;
+    endDate?: string;
+    duration?: number;
+    delFlag?: number;
+    exceptionCount?: number;
+    stopSituation?: string;
+    stopReason?: string;
+    exceptionInfo?: string;
     remark?: string;
     changed?: string;
     changer?: string;
-    delFlag?: number;
+    id?: string;
+    editedMark?: boolean;
+}
+
+interface Option{
+    dictValue?: string;
+    dictCode?: string;
 }
 </script>
 

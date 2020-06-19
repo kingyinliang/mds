@@ -79,11 +79,11 @@
                             </el-button>
                             <div class="bottom-split" />
                             <!-- <el-col :span="12" class="dataList_item_btn_item"><p @click="GnProp(item)">GN搅罐</p></el-col> -->
-                            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0'" style=" padding: 0; border: none;" @click="JsbProp(item)">
+                            <el-button class="bottom-item" :disabled="!isAuth('ste:gn:save') || item.holderStatus === '0' || item.holderStatus === '1'" style=" padding: 0; border: none;" @click="JsbProp(item)">
                                 JBS出库
                             </el-button>
                             <div class="bottom-split" />
-                            <el-button class="bottom-item" :disabled="!isAuth('ste:semi:dumpSemiMaterial') || item.holderStatus === '0'" style=" padding: 0; border: none;" @click="ZcProp(item)">
+                            <el-button class="bottom-item" :disabled="!isAuth('ste:semi:dumpSemiMaterial') || item.holderStatus === '0' || item.holderStatus === '1'" style=" padding: 0; border: none;" @click="ZcProp(item)">
                                 转储
                             </el-button>
                         </el-row>

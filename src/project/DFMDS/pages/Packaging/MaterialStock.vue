@@ -31,7 +31,7 @@
         <el-dialog title="物料移动明细" width="1300px" :close-on-click-modal="false" :visible.sync="visibleDetailLog">
             <div>
                 <el-table header-row-class-name="" :data="detaileLogData" border tooltip-effect="dark" class="newTable">
-                    <el-table-column type="index" label="序号" width="55" align="center" />
+                    <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="包材物料" show-overflow-tooltip>
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}
@@ -202,6 +202,7 @@ export default class MaterialStock extends Vue {
             label: '生产产线',
             prop: 'productLine',
             defaultValue: '',
+            filterable: true,
             optionsFn: val => {
                 return COMMON_API.ORG_QUERY_CHILDREN_API({
                     parentId: val || ''
@@ -219,11 +220,10 @@ export default class MaterialStock extends Vue {
             prop: 'material',
             defaultValue: '',
             filterable: true,
-            clearable: true,
             defaultOptionsFn: () => {
                 return COMMON_API.SEARCH_MATERIAL_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    materialType: 'ZFZC'
+                    materialType: 'ZVER'
                 })
             },
             resVal: {

@@ -22,7 +22,7 @@
                 </div>
                 <el-table ref="targetInfoList" class="newTable" :data="targetInfoList" :height="mainClientHeight - 52 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" fixed align="center" />
-                    <el-table-column type="index" label="序号" :index="indexMethod" width="50" />
+                    <el-table-column type="index" label="序号" :index="indexMethod" width="50" fixed />
                     <el-table-column prop="workNum" label="人员工号" width="120" />
                     <el-table-column prop="realName" label="人员姓名" width="100" />
                     <el-table-column prop="deptName" label="所属部门" width="100" :show-overflow-tooltip="true" />
@@ -77,6 +77,11 @@ export default {
             return this.$store.state.common.mainClientHeight;
         }
     },
+    mounted() {
+        // 进页面预设根目录内容
+        this.deptID = '1';
+        this.getItemsList();
+    },
     methods: {
         // 序号
         indexMethod(index) {
@@ -110,10 +115,6 @@ export default {
                 this.multipleSelection = [];
                 this.targetInfoList = data.data.records;
                 this.targetInfoList.forEach(item => {
-                    // if (item.tempFlag === 'Y') {
-                    //     item.workNumTemp = item.workNum;
-                    //     item.workNum = '';
-                    // }
                     item.deptName = item.sysDept.deptName;
                 })
                 this.currPage = data.data.current;

@@ -17,7 +17,7 @@
             </div>
             <div style="flex: 1;">
                 <el-table header-row-class-name="tableHead" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow">
-                    <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" />
+                    <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" fixed />
                     <el-table-column label="日期" width="80" prop="created" :show-overflow-tooltip="true" />
                     <el-table-column label="罐号" width="80" prop="holderName" :show-overflow-tooltip="true" />
                     <el-table-column label="批次" width="80" prop="batch" :show-overflow-tooltip="true" />

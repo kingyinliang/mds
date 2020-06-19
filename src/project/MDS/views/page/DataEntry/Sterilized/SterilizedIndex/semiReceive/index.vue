@@ -43,7 +43,7 @@
                     原汁领用
                 </span>
                 <el-table header-row-class-name="tableHead" :data="MaterialDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-                    <el-table-column type="index" width="55" label="序号" />
+                    <el-table-column type="index" width="55" label="序号" fixed />
                     <el-table-column label="领用物料" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}

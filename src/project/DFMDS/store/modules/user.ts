@@ -3,7 +3,8 @@ export default {
     state: {
         id: 0,
         name: '',
-        realName: ''
+        realName: '',
+        gender: 'M'
     },
     mutations: {
         updateId(state, id) {
@@ -11,6 +12,9 @@ export default {
         },
         updateName(state, name) {
             state.name = name;
+        },
+        updateGender(state, gender) {
+            state.gender = gender;
         },
         updaterealName(state, realName) {
             state.realName = realName;

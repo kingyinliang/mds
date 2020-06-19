@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="error clearfix">
-            <img src="@/assets/img/500.png" alt="">
+            <img src="~common/img/500.png" alt="">
             <div class="errortxt">
                 <h3>500</h3>
                 <p>抱歉，服务器出错了</p>
