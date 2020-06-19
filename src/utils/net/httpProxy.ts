@@ -92,8 +92,7 @@ http.interceptors.response.use(
  * @param {string} url{string} api地址 data{object} 参数 ContentType{boole} post拼接路径 responseType{boole}下载文件流 londingstatus{boole}加载遮罩
  * @param {string} [method] {@link module:constants/http method}
  * */
-export default (url: string, method: any = HTTP_METHOD.GET, data = {}, londingstatus = true) => {
-    // eslint-disable-line
+export default (url: string, method: any = HTTP_METHOD.GET, data = {}, londingstatus = true) => { // eslint-disable-line
     const options = {
         url: HOST + url,
         method,

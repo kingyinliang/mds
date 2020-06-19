@@ -437,7 +437,9 @@
 .site-content > .el-tabs > .el-tabs__header {
     left: 64px;
 }
-
+.notNull {
+    color: red;
+}
 /* pkg or fry
 ------------------------------ */
 #DaatTtabs,
@@ -1106,6 +1108,7 @@
             border: 1px solid rgba(171, 171, 171, 0.5);
             padding: 12px 16px 6px 16px !important;
             margin-bottom: 10px;
+            background: #fff;
             &-title {
                 h3 {
                     line-height: 32px;
@@ -1141,6 +1144,14 @@
                     font-size: 12px;
                     float: right;
                     color: #487bff;
+                }
+            }
+            .floatR {
+                float: right;
+                line-height: 32px;
+                a {
+                    color: #487bff;
+                    font-size: 14px;
                 }
             }
         }
@@ -1492,13 +1503,19 @@ $indexlist: (1: 11, 2: 10, 3: 9, 4: 8, 5: 7, 6: 6, 7: 5, 8: 4, 9: 3, 10: 2, 11: 
 .el-dialog {
     border-radius: 6px 6px 6px 6px !important;
     .el-dialog__header {
-        height: 59px;
+        height: 46px !important;
+        line-height: 46px;
         background: rgba(72, 123, 255, 1);
         border-radius: 6px 6px 0 0;
         color: #fff;
-        font-size: 20px;
+        font-size: 16px;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
+        }
+        .el-dialog__headerbtn {
+            top: 15px !important;
         }
     }
     .el-dialog__title {
@@ -1548,10 +1565,6 @@ $indexlist: (1: 11, 2: 10, 3: 9, 4: 8, 5: 7, 6: 6, 7: 5, 8: 4, 9: 3, 10: 2, 11: 
             right: 26px;
         }
     }
-    .dialog__bottom__btn{
-        padding-bottom: 10px;
-        text-align: right;
-    }
 }
 
 .bg_dialog.el-dialog {
@@ -1579,3 +1592,122 @@ body {
 .el-table .el-table-column--selection {
     text-align: center;
 }
+/* pot list start */
+.potList {
+    .box {
+        box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        border: 1px solid rgba(171, 171, 171, 0.5);
+        padding: 0!important;
+        margin-bottom: 10px;
+        background: #fff;
+        &_title {
+            padding: 10px;
+            color: #333333;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            border-bottom: 1px solid #e8e8e8;
+            a {
+                font-size: 12px;
+                float: right;
+                color: #666666;
+            }
+        }
+        &_content {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            margin-top: 20px;
+            &_itemPot {
+                flex: 2;
+                display: flex;
+                justify-content: center;
+                .pot_border {
+                    width: 115px;
+                    position: relative;
+                    .pot {
+                        width: 115px;
+                        height: 200px;
+                        background: url("~@/assets/img/ferPotNew.png") no-repeat;
+                        background-size: contain;
+                        position: absolute;
+                        z-index: 99;
+                    }
+                    .pot_water{
+                        height: 178px;
+                        width: 114px;
+                        position: absolute;
+                        bottom: 20px;
+                        &_sole {
+                            bottom: 0;
+                            width: 100%;
+                            border-top: none;
+                            position: absolute;
+                            background-color: skyblue;
+                            overflow: hidden;
+                        }
+                        &_sole::before,
+                        &_sole::after {
+                            content: '';
+                            position: absolute;
+                            width: 300px;
+                            height: 290px;
+                            border-radius: 55% 45%;
+                            bottom: 100%;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            background-color: #fff;
+                        }
+                        &_sole::after {
+                            left: 47%;
+                            bottom: 100%;
+                            border-radius: 45% 50%;
+                            opacity: 0.3;
+                        }
+                    }
+                    &:hover {
+                        .pot_water_sole::before, .pot_water_sole::after{
+                            animation: rotate 5s linear infinite;
+                        }
+                    }
+                    @keyframes rotate {
+                        0% {
+                            transform: translate(-50%) rotateZ(0deg);
+                        }
+                        100% {
+                            transform: translate(-50%) rotateZ(360deg);
+                        }
+                    }
+                }
+            }
+            &_itemButton {
+                flex: 1;
+                padding-top: 17px;
+                .el-button--primary{
+                    margin-left: 0!important;
+                    margin-bottom: 15px;
+                }
+            }
+        }
+        &_bottom {
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 23px;
+            padding: 10px;
+            overflow: hidden;
+            .colorGray {
+                color: #999999;
+            }
+            &_sole {
+                width: 50%;
+                float: left;
+            }
+            &_sole:nth-child(2n) {
+                text-align: right
+            }
+        }
+    }
+}
+/* pot list end */

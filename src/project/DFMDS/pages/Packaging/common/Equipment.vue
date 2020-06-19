@@ -411,7 +411,7 @@ export default class Equipment extends Vue {
 
     async getAudit(formHeader, verifyType) {
         const result = await AUDIT_API.AUDIT_LOG_LIST_API({
-            orderNo: formHeader.id,
+            orderNo: formHeader.orderNo,
             verifyType: verifyType
         })
         return result.data.data

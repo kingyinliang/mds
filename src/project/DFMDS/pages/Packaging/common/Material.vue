@@ -301,7 +301,7 @@
                     if (!_.isEqual(orgObj, item)) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                         if (filterArr1 && filterArr1[0]) {
-                            filterArr1.item.push(item)
+                            filterArr1[0].item.push(item)
                         } else {
                             pkgSemiMaterial.pkgSemiMaterialUpdate.push({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -375,7 +375,7 @@
 
         async getAudit(formHeader, verifyType) {
             const a = await AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: formHeader.id,
+                orderNo: formHeader.orderNo,
                 verifyType: verifyType
             })
             return a.data.data
