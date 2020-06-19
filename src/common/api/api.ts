@@ -576,5 +576,13 @@ export const PKG_API = {
     /**
      * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-生产领料差异
      */
-    PKG_AUDIT_DETAIL_PROMATERIALDIFF_API: params => httpProxy('/pkg/packageMaterial/pickingDiff/query', 'POST', params)
+    PKG_AUDIT_DETAIL_PROMATERIALDIFF_API: params => httpProxy('/pkg/packageMaterial/pickingDiff/query', 'POST', params),
+    /**
+     * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-产量与人力
+     */
+    PKG_AUDIT_DETAIL_PROMANPOWER_API: params => httpProxy('/pkg/pkgTimeSheet/productionAndManpower', 'POST', params),
+    /**
+     * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-设备运行情况
+     */
+    PKG_AUDIT_DETAIL_DEVICERUN_API: params => httpProxy('/pkg/pkgTimeSheet/deviceRun', 'POST', params)
 };
