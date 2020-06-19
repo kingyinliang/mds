@@ -116,7 +116,7 @@
                         <span>批次</span>
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.batch" size="mini" placeholder="手工录入" :disabled="!(isRedact && (scope.row.approveStatus === 'noPass' || scope.row.approveStatus === 'saved' || scope.row.approveStatus === ''))" />
+                        <el-input v-model="scope.row.batch" size="mini" maxlength="10" placeholder="手工录入" :disabled="!(isRedact && (scope.row.approveStatus === 'noPass' || scope.row.approveStatus === 'saved' || scope.row.approveStatus === ''))" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" min-width="80" prop="remark">
