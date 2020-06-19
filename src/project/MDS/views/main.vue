@@ -98,6 +98,8 @@ export default {
         },
         // 修改密码
         updatePassword() {
+            const a = 1;
+            console.log(a)
             this.pasVisible = true;
             this.$nextTick(() => {
                 this.$refs['upPass'].init();
