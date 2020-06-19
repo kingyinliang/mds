@@ -1,139 +1,135 @@
 <template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row>
-                    <el-col :span="24">
-                        <el-form :inline="true" :model="form" size="small" label-width="70px" class="multi_row">
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="form.factory" placeholder="请选择" class="width160px">
-                                    <el-option value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) in factory" :key="index" :value="item.deptId" :label="item.deptName" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="form.workShop" placeholder="请选择" class="width160px">
-                                    <el-option value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) in workshop" :key="index" :value="item.deptId" :label="item.deptName" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="状态：">
-                                <el-select v-model="form.frozenStatus" class="width160px">
-                                    <el-option value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) of statusList" :key="index" :label="item.name" :value="item.value" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="发酵罐号：">
-                                <el-select v-model="form.holderId" filterable class="width160px">
-                                    <el-option value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) of holderList" :key="index" :label="item.holderName" :value="item.holderId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="订单编号：">
-                                <el-input v-model="form.orderNo" style="width: 160px;" />
-                            </el-form-item>
-                            <el-form-item label="物料：">
-                                <el-select v-model="form.materialCode" filterable class="width160px">
-                                    <el-option value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) of materialList" :key="index" :value="item.materialCode" :label="item.materialCode + item.materialName" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="发酵天数：">
-                                <el-input v-model="form.ferDays" class="width160px" style="width: 160px;" />
-                            </el-form-item>
-                            <el-form-item label="物料类别：">
-                                <el-select v-model="form.halfId" filterable class="width160px">
-                                    <el-option value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) of materialTypeList" :key="index" :value="item.id" :label="item.halfName" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item class="floatr">
-                                <el-button v-if="isAuth('fer:judge:list')" type="primary" size="small" style="float: right;" @click="GetList()">
-                                    查询
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-            </el-card>
-        </div>
-        <div class="main">
-            <el-card>
-                <el-table :data="dataList" border header-row-class-name="tableHead">
-                    <el-table-column label="状态" width="50">
-                        <template slot-scope="scope">
-                            <!-- {{scope.row.judge}} -->
-                            {{ scope.row.judge ? (scope.row.judge.frozenStatus === '0' ? '正常' : '冻结') : '' }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="发酵罐" width="100" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            {{ scope.row.order.holderName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="订单号" width="130">
-                        <template slot-scope="scope">
-                            {{ scope.row.order.ferOrderNo }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="物料" width="180" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            {{ scope.row.order.ferMaterialCode }}{{ scope.row.order.ferMaterialName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="订单数量">
-                        <template slot-scope="scope">
-                            {{ scope.row.order.ferAmount }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="满灌日期" width="170">
-                        <template slot-scope="scope">
-                            {{ scope.row.order.fullDate }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="发酵天数">
-                        <template slot-scope="scope">
-                            {{ scope.row.order.ferDays }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="物料类别">
-                        <template slot-scope="scope">
-                            {{ scope.row.judge ? scope.row.judge.halfName : '' }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="判定人员" width="140">
-                        <template slot-scope="scope">
-                            {{ scope.row.judge ? scope.row.judge.creator : '' }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="判定时间" width="170">
-                        <template slot-scope="scope">
-                            {{ scope.row.judge ? scope.row.judge.created : '' }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" fixed="right">
-                        <template slot-scope="scope">
-                            <el-button type="primary" size="small" :disabled="!isAuth('fer:judge:judge')" @click="JudgeDo(scope.row)">
-                                调整
+    <div class="header_main">
+        <el-card class="searchCard">
+            <el-row>
+                <el-col :span="24">
+                    <el-form :inline="true" :model="form" size="small" label-width="70px" class="multi_row">
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="form.factory" placeholder="请选择" class="width160px">
+                                <el-option value="">
+                                    请选择
+                                </el-option>
+                                <el-option v-for="(item, index) in factory" :key="index" :value="item.deptId" :label="item.deptName" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="form.workShop" placeholder="请选择" class="width160px">
+                                <el-option value="">
+                                    请选择
+                                </el-option>
+                                <el-option v-for="(item, index) in workshop" :key="index" :value="item.deptId" :label="item.deptName" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="状态：">
+                            <el-select v-model="form.frozenStatus" class="width160px">
+                                <el-option value="">
+                                    请选择
+                                </el-option>
+                                <el-option v-for="(item, index) of statusList" :key="index" :label="item.name" :value="item.value" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="发酵罐号：">
+                            <el-select v-model="form.holderId" filterable class="width160px">
+                                <el-option value="">
+                                    请选择
+                                </el-option>
+                                <el-option v-for="(item, index) of holderList" :key="index" :label="item.holderName" :value="item.holderId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单编号：">
+                            <el-input v-model="form.orderNo" style="width: 160px;" />
+                        </el-form-item>
+                        <el-form-item label="物料：">
+                            <el-select v-model="form.materialCode" filterable class="width160px">
+                                <el-option value="">
+                                    请选择
+                                </el-option>
+                                <el-option v-for="(item, index) of materialList" :key="index" :value="item.materialCode" :label="item.materialCode + item.materialName" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="发酵天数：">
+                            <el-input v-model="form.ferDays" class="width160px" style="width: 160px;" />
+                        </el-form-item>
+                        <el-form-item label="物料类别：">
+                            <el-select v-model="form.halfId" filterable class="width160px">
+                                <el-option value="">
+                                    请选择
+                                </el-option>
+                                <el-option v-for="(item, index) of materialTypeList" :key="index" :value="item.id" :label="item.halfName" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item class="floatr">
+                            <el-button v-if="isAuth('fer:judge:list')" type="primary" size="small" style="float: right;" @click="GetList()">
+                                查询
                             </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </el-card>
-        </div>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </el-card>
+        <mds-card title="类别判断" :name="'categoryjudgement'" style="margin-top: 5px;">
+            <el-table :data="dataList" class="newTable" border header-row-class-name="tableHead">
+                <el-table-column label="状态" min-width="55">
+                    <template slot-scope="scope">
+                        <!-- {{scope.row.judge}} -->
+                        {{ scope.row.judge ? (scope.row.judge.frozenStatus === '0' ? '正常' : '冻结') : '' }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="发酵罐" min-width="100" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        {{ scope.row.order.holderName }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单号" min-width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.order.ferOrderNo }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="物料" min-width="180" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        {{ scope.row.order.ferMaterialCode }}{{ scope.row.order.ferMaterialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单数量">
+                    <template slot-scope="scope">
+                        {{ scope.row.order.ferAmount }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="满灌日期" min-width="165">
+                    <template slot-scope="scope">
+                        {{ scope.row.order.fullDate }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="发酵天数">
+                    <template slot-scope="scope">
+                        {{ scope.row.order.ferDays }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="物料类别">
+                    <template slot-scope="scope">
+                        {{ scope.row.judge ? scope.row.judge.halfName : '' }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="判定人员" min-width="140">
+                    <template slot-scope="scope">
+                        {{ scope.row.judge ? scope.row.judge.creator : '' }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="判定时间" min-width="165">
+                    <template slot-scope="scope">
+                        {{ scope.row.judge ? scope.row.judge.created : '' }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="small" :disabled="!isAuth('fer:judge:judge')" @click="JudgeDo(scope.row)">
+                            调整
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+        </mds-card>
         <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" custom-class="dialog__class">
             <div slot="title">
                 类别判定

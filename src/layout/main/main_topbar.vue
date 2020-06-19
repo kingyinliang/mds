@@ -42,138 +42,137 @@
 </template>
 
 <script>
-import { COMMON_API } from 'common/api/api';
+    import { COMMON_API } from 'common/api/api';
 
-export default {
-    name: 'MainTopbar',
-    components: {},
-    props: {
-        updatePassword: {
-            type: Function,
-            default: () => 1
-        },
-        selectFactory: {
-            type: Function,
-            default: () => {
-            //
-            }
-        }
-    },
-    data() {
-        return {
-            visible: false,
-            factory: JSON.parse(sessionStorage.getItem('userFactory') || '[]'),
-            factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort
-        };
-    },
-    computed: {
-        navbarLayoutType: {
-            get() {
-                return this.$store.state.common.navbarLayoutType;
-            }
-        },
-        sidebarFold: {
-            get() {
-                return this.$store.state.common.sidebarFold;
+    export default {
+        name: 'MainTopbar',
+        components: {},
+        props: {
+            updatePassword: {
+                type: Function,
+                default: () => 1
             },
-            set(val) {
-                this.$store.commit('common/updateSidebarFold', val);
+            selectFactory: {
+                type: Function,
+                default: () => {
+                    //
+                }
             }
         },
-        menuList: {
-            get() {
-                return this.$store.state.common.menuList;
+        data() {
+            return {
+                gender: '',
+                visible: false,
+                factory: JSON.parse(sessionStorage.getItem('userFactory') || '[]'),
+                factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort
+            };
+        },
+        computed: {
+            navbarLayoutType: {
+                get() {
+                    return this.$store.state.common.navbarLayoutType;
+                }
             },
-            set(val) {
-                this.$store.commit('common/updateMenuList', val);
-            }
-        },
-        mainTabs: {
-            get() {
-                return this.$store.state.common.mainTabs;
+            sidebarFold: {
+                get() {
+                    return this.$store.state.common.sidebarFold;
+                },
+                set(val) {
+                    this.$store.commit('common/updateSidebarFold', val);
+                }
             },
-            set(val) {
-                this.$store.commit('common/updateMainTabs', val);
-            }
-        },
-        userName: {
-            get() {
-                return this.$store.state.user.name;
-            }
-        },
-        gender: {
-            get() {
-                return this.$store.state.user.gender;
-            }
-        },
-        realName: {
-            get() {
-                return this.$store.state.user.realName;
+            menuList: {
+                get() {
+                    return this.$store.state.common.menuList;
+                },
+                set(val) {
+                    this.$store.commit('common/updateMenuList', val);
+                }
             },
-            set(val) {
-                this.$store.commit('user/updaterealName', val);
+            mainTabs: {
+                get() {
+                    return this.$store.state.common.mainTabs;
+                },
+                set(val) {
+                    this.$store.commit('common/updateMainTabs', val);
+                }
+            },
+            userName: {
+                get() {
+                    return this.$store.state.user.name;
+                }
+            },
+            realName: {
+                get() {
+                    return this.$store.state.user.realName;
+                },
+                set(val) {
+                    this.$store.commit('user/updaterealName', val);
+                }
             }
-        }
-    },
-    methods: {
-        goMessage() {
-            // this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
-            this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'DFMDS-pages-Message');
-            setTimeout(() => {
-                this.$router.push({
-                    name: `DFMDS-pages-Message`
-                });
-            }, 100);
-
-            console.log(this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Message'))
-
         },
-        goEacharts() {
-            this.$router.push({
-                path: `/DataEcharts/${this.menuList
-                    .filter(item => item.type === '4')[0]
-                    .list[0].url.slice(12)
-                    .replace(/\//g, '-')}`
-            });
+        mounted() {
+            this.gender = sessionStorage.getItem('gender')
         },
-        // 退出
-        logoutHandle() {
-            this.$confirm(`确定进行[退出]操作?`, '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            })
-                .then(() => {
-                    COMMON_API.LOGOUT_API({}).then(({ data }) => {
-                        if (data && data.code === 200) {
-                            this.$cookie.delete('token');
-                            this.$router.options.isAddDynamicMenuRoutes = false;
-                            window.location.href = `${process.env.VUE_APP_HOST}`;
-                        }
+        methods: {
+            goMessage() {
+                // this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
+                this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'DFMDS-pages-Message');
+                setTimeout(() => {
+                    this.$router.push({
+                        name: `DFMDS-pages-Message`
                     });
+                }, 100);
+
+                console.log(this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Message'))
+
+            },
+            goEacharts() {
+                this.$router.push({
+                    path: `/DataEcharts/${this.menuList
+                        .filter(item => item.type === '4')[0]
+                        .list[0].url.slice(12)
+                        .replace(/\//g, '-')}`
+                });
+            },
+            // 退出
+            logoutHandle() {
+                this.$confirm(`确定进行[退出]操作?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
                 })
-                .catch();
+                    .then(() => {
+                        COMMON_API.LOGOUT_API({}).then(({ data }) => {
+                            if (data && data.code === 200) {
+                                this.$cookie.delete('token');
+                                this.$router.options.isAddDynamicMenuRoutes = false;
+                                window.location.href = `${process.env.VUE_APP_HOST}`;
+                            }
+                        });
+                    })
+                    .catch();
+            }
         }
-    }
-};
+    };
 </script>
 
 <style lang="scss" scoped>
-.site-navbar {
-    background: #002140 !important;
-}
-.packup {
-    transform: rotate(0deg);
-}
-.open {
-    transform: rotate(180deg);
-}
-.switching {
-    display: block;
-    transition: 500ms;
-}
-.item {
-    margin-top: 10px;
-    margin-right: 40px;
-}
+    .site-navbar {
+        background: #002140 !important;
+    }
+    .packup {
+        transform: rotate(0deg);
+    }
+    .open {
+        transform: rotate(180deg);
+    }
+    .switching {
+        display: block;
+        transition: 500ms;
+    }
+    .item {
+        margin-top: 10px;
+        margin-right: 40px;
+    }
 </style>

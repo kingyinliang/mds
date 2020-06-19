@@ -1,197 +1,193 @@
 <template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row type="flex">
-                    <el-col>
-                        <el-form :model="form" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="form.factory" placeholder="请选择" class="width160px">
-                                    <el-option value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) in factory" :key="index" :value="item.deptId" :label="item.deptName" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="form.workShop" placeholder="请选择" class="width160px">
-                                    <el-option v-for="(item, index) in workshop" :key="index" :value="item.deptId" :label="item.deptName" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="罐号：">
-                                <el-select v-model="form.holderId" class="selectwpx" filterable style="width: 140px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in potList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产物料：">
-                                <el-select v-model="form.materialCode" class="selectwpx" filterable style="width: 140px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="订单日期：">
-                                <el-date-picker v-model="form.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
-                                -
-                                <el-date-picker v-model="form.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
-                            </el-form-item>
-                            <el-form-item class="floatr">
-                                <el-button v-if="isAuth('fer:judge:isSapList')" type="primary" size="small" @click="GetList(true)">
-                                    查询
-                                </el-button>
-                                <el-button v-if="isAuth('report:form:exportWorkshopWHoursM')" type="primary" size="small" @click="ExportExcel(true)">
-                                    导出
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <div class="tableCard">
-                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-                <el-tabs id="DaatTtabs" ref="multipleTable" v-model="activeName" class="NewDaatTtabs" type="border-card" style=" overflow: hidden; border-radius: 15px;" @tab-click="handleClick">
-                    <el-tab-pane name="0" label="未修改">
-                        <el-row>
-                            <el-col>
-                                <el-button v-if="isAuth('fer:judge:isSapUpdate')" type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="ModifyOrder()">
-                                    订单修改
-                                </el-button>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-table ref="multipleTables" header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleSelectionChange">
-                                <el-table-column type="selection" width="50" />
-                                <el-table-column label="罐号" width="55" prop="holderNo" />
-                                <el-table-column label="订单号" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.orderNo }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="开始日期" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.startDate }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="结束日期">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.orderEndDate }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="判定时发酵天数" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.judgeDays }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="判定前">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.oldCategory }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="判定后">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.halfName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="发酵成熟天数" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.ferDays }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="修改后结束日期" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.endDate }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="接口返回" width="100px" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.sapContent }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="判定时间" width="100px" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.changed }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="判定人" width="100px" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.changer }}
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-row>
-                    </el-tab-pane>
-                    <el-tab-pane name="1" label="已修改">
-                        <el-row>
-                            <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark">
-                                <el-table-column label="罐号" width="55" prop="holderNo" />
-                                <el-table-column label="订单号" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.orderNo }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="开始日期" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.startDate }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="结束日期">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.orderEndDate }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="判定时发酵天数" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.judgeDays }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="判定前">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.oldCategory }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="判定后">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.halfName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="发酵成熟天数">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.ferDays }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="修改后结束日期" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.endDate }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="接口返回" width="100px" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.sapContent }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="判定时间" width="100px" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.changed }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="判定人" width="100px" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.changer }}
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-row>
-                    </el-tab-pane>
-                    <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-tabs>
+    <div class="header_main">
+        <el-card class="searchCard">
+            <el-row type="flex">
+                <el-col>
+                    <el-form :model="form" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="form.factory" placeholder="请选择" class="width160px">
+                                <el-option value="">
+                                    请选择
+                                </el-option>
+                                <el-option v-for="(item, index) in factory" :key="index" :value="item.deptId" :label="item.deptName" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="form.workShop" placeholder="请选择" class="width160px">
+                                <el-option v-for="(item, index) in workshop" :key="index" :value="item.deptId" :label="item.deptName" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="罐号：">
+                            <el-select v-model="form.holderId" class="selectwpx" filterable style="width: 140px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in potList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产物料：">
+                            <el-select v-model="form.materialCode" class="selectwpx" filterable style="width: 140px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单日期：">
+                            <el-date-picker v-model="form.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
+                            -
+                            <el-date-picker v-model="form.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
+                        </el-form-item>
+                        <el-form-item class="floatr">
+                            <el-button v-if="isAuth('fer:judge:isSapList')" type="primary" size="small" @click="GetList(true)">
+                                查询
+                            </el-button>
+                            <el-button v-if="isAuth('report:form:exportWorkshopWHoursM')" type="primary" size="small" @click="ExportExcel(true)">
+                                导出
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+            <div class="toggleSearchBottom">
+                <i class="el-icon-caret-top" />
             </div>
+        </el-card>
+        <div class="tableCard">
+            <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
+                <i class="el-icon-caret-bottom" />
+            </div>
+            <el-tabs id="DaatTtabs" ref="multipleTable" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" style=" overflow: hidden; border-radius: 15px;" @tab-click="handleClick">
+                <el-tab-pane name="0" label="未修改">
+                    <el-row>
+                        <el-col>
+                            <el-button v-if="isAuth('fer:judge:isSapUpdate')" type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="ModifyOrder()">
+                                订单修改
+                            </el-button>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-table ref="multipleTables" header-row-class-name="tableHead" class="newTable" :data="dataList" border tooltip-effect="dark" @selection-change="handleSelectionChange">
+                            <el-table-column type="selection" width="50" fixed />
+                            <el-table-column label="罐号" min-width="55" prop="holderNo" />
+                            <el-table-column label="订单号" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.orderNo }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="开始日期" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.startDate }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="结束日期">
+                                <template slot-scope="scope">
+                                    {{ scope.row.orderEndDate }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="判定时发酵天数" min-width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.judgeDays }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="判定前">
+                                <template slot-scope="scope">
+                                    {{ scope.row.oldCategory }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="判定后">
+                                <template slot-scope="scope">
+                                    {{ scope.row.halfName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="发酵成熟天数" min-width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.ferDays }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="修改后结束日期" min-width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.endDate }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="接口返回" min-width="100px" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.sapContent }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="判定时间" min-width="100px" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.changed }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="判定人" min-width="100px" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.changer }}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-row>
+                </el-tab-pane>
+                <el-tab-pane name="1" label="已修改">
+                    <el-row>
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="dataList" border tooltip-effect="dark">
+                            <el-table-column label="罐号" width="55" prop="holderNo" />
+                            <el-table-column label="订单号" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.orderNo }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="开始日期" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.startDate }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="结束日期">
+                                <template slot-scope="scope">
+                                    {{ scope.row.orderEndDate }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="判定时发酵天数" min-width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.judgeDays }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="判定前">
+                                <template slot-scope="scope">
+                                    {{ scope.row.oldCategory }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="判定后">
+                                <template slot-scope="scope">
+                                    {{ scope.row.halfName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="发酵成熟天数">
+                                <template slot-scope="scope">
+                                    {{ scope.row.ferDays }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="修改后结束日期" min-width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.endDate }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="接口返回" min-width="100px" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.sapContent }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="判定时间" min-width="100px" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.changed }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="判定人" min-width="100px" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.changer }}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-row>
+                </el-tab-pane>
+                <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-tabs>
         </div>
     </div>
 </template>

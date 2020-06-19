@@ -59,22 +59,22 @@
             <mds-card title="产量与人力" :name="'outputworker'">
                 <el-form :inline="true" :model="formHeader" label-width="75px" size="small" class="dataEntry-head-base__form">
                     <el-form-item label="订单产量：">
-                        <p>123</p>
+                        <p>{{ prodPower.planOutput }}</p>
                     </el-form-item>
                     <el-form-item label="实际产量：">
-                        <p>123</p>
+                        <p>{{ prodPower.countOutput }}</p>
                     </el-form-item>
                     <el-form-item label="紧急入库产量：" label-width="100px">
-                        <p>123</p>
+                        <p>{{ prodPower.urgencyCountOutput }}</p>
                     </el-form-item>
                     <el-form-item label="差异数量：">
-                        <p>123</p>
+                        <p>{{ prodPower.differences }}</p>
                     </el-form-item>
                     <el-form-item label="标准人力：">
-                        <p>123</p>
+                        <p>{{ prodPower.standardMan }}</p>
                     </el-form-item>
                     <el-form-item label="作业人力：">
-                        <p>123</p>
+                        <p>{{ prodPower.countMan }}</p>
                     </el-form-item>
                 </el-form>
             </mds-card>
@@ -103,30 +103,30 @@
                     <el-row style="float: right;">
                         <el-form style="float: right;" :inline="true" :model="formHeader" label-width="90px" size="small" class="dataEntry-head-base__form">
                             <el-form-item label="开始时间：">
-                                <p>123</p>
+                                <p>{{ deviceRun.startDate }}</p>
                             </el-form-item>
                             <el-form-item label="结束时间：">
-                                <p>123</p>
+                                <p>{{ deviceRun.endDate }}</p>
                             </el-form-item>
                         </el-form>
                     </el-row>
                 </template>
-                <el-table class="newTable" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
-                    <el-table-column prop="date" label="序号" fixed />
-                    <el-table-column prop="date" label="班次" />
-                    <el-table-column prop="date" label="停机类型" />
-                    <el-table-column prop="date" label="停机方式" />
-                    <el-table-column prop="date" label="异常情况" />
-                    <el-table-column prop="date" label="时长" />
-                    <el-table-column prop="date" label="单位" />
-                    <el-table-column prop="date" label="次数" />
+                <el-table class="newTable" :data="deviceRun.exceptionInfo" header-row-class-name="tableHead" border tooltip-effect="dark">
+                    <el-table-column type="index" label="序号" fixed />
+                    <el-table-column prop="classes" label="班次" />
+                    <el-table-column prop="stopTypeName" label="停机类型" />
+                    <el-table-column prop="stopMode" label="停机方式" />
+                    <el-table-column prop="stopSituation" label="异常情况" />
+                    <el-table-column prop="duration" label="时长" />
+                    <el-table-column prop="durationUnit" label="单位" />
+                    <el-table-column prop="exceptionCount" label="次数" />
                 </el-table>
                 <el-form :inline="true" :model="formHeader" label-width="90px" size="small" class="dataEntry-head-base__form">
                     <el-form-item label="总运行时间：">
-                        <p>123(H)</p>
+                        <p>{{ deviceRun.deviceRunTime }}(H)</p>
                     </el-form-item>
                     <el-form-item label="总停线时间：">
-                        <p>123(MIN)</p>
+                        <p>{{ deviceRun.devicePauseTime }}(MIN)</p>
                     </el-form-item>
                 </el-form>
             </mds-card>
@@ -155,7 +155,7 @@
                     </el-col>
                 </el-row>
             </mds-card>
-            <!-- <audit-log :table-data="readAudit" /> -->
+            <audit-log :table-data="currentAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
         </div>
         <div class="redactBox">
             <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
@@ -180,7 +180,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { PKG_API } from 'common/api/api';
+import { PKG_API, AUDIT_API } from 'common/api/api';
 import echarts from 'echarts';
 @Component({
     // name: 'AuditLog',
@@ -192,24 +192,51 @@ import echarts from 'echarts';
 })
 export default class AuditDetail extends Vue {
 
+    auditDetail: {};
     formHeader: OrderData = {};
     orderStatus = '已同步';
     dataList = [];
-    readAudit = [];
+    currentAudit = [];
     /* eslint-disable */
     chartLine: any;
     chartDiffBar: any;
     /* eslint-enable */
-    proMaterialDiffList = []
+    proMaterialDiffList = [];
+    prodPower = {};
+    deviceRun = {};
 
     mounted() {
-        this.formHeader = this.$store.state.packaging.auditDetail;
-        this.getOrderList()
+        this.auditDetail = this.$store.state.packaging.auditDetail;
+        this.getOrderList();
+        this.getProdPower(this.auditDetail);
+        this.getDeviceRun(this.auditDetail);
+        this.getAudit(this.auditDetail);
         this.initChartLine();
     }
 
     get sidebarFold() {
         return this.$store.state.common.sidebarFold;
+    }
+
+    // 产量与力量
+    getProdPower(auditDetail) {
+        PKG_API.PKG_AUDIT_DETAIL_PROMANPOWER_API(auditDetail).then(({ data }) => {
+            this.prodPower = data.data;
+        })
+    }
+
+    // 设备运行情况
+    getDeviceRun(auditDetail) {
+        PKG_API.PKG_AUDIT_DETAIL_DEVICERUN_API(auditDetail).then(({ data }) => {
+            this.deviceRun = data.data;
+        })
+    }
+
+    // 审核日志
+    getAudit(auditDetail) {
+        AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: auditDetail.orderNo, verifyType: '' }).then(({ data }) => {
+            this.currentAudit = data.data
+        })
     }
 
     goDetail() {
@@ -222,13 +249,13 @@ export default class AuditDetail extends Vue {
         }, 100);
     }
 
+    // 头部信息
     getOrderList() {
         PKG_API.PKG_HOME_QUERY_BY_NO_API({ // 基础数据-订单管理-根据订单号查询
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             orderNo: this.$store.state.packaging.auditDetail.orderNo
         }).then(({ data }) => {
             this.formHeader = data.data;
-            console.log(this.formHeader);
             this.getProMaterialDiff(this.formHeader);
         });
     }
