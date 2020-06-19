@@ -130,7 +130,7 @@
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
                         <i class="iconfont factory-15_jiefeng" style=" color: #3889ff; font-size: 20px;" /><span>已读消息</span>
-                        <el-button style="float: right; margin-left: 7px; padding: 3px 0;" type="text">
+                        <el-button style="float: right; margin-left: 7px; padding: 3px 0;" type="text" @click="getMsgDataList()">
                             近30天
                         </el-button>
                         <el-button style="float: right; padding: 3px 0;" type="text">
@@ -197,8 +197,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    // import { COMMON_API, PKG_API } from 'common/api/api';
-    // import { getS3Img, dateFormat } from 'utils/utils';
+    import { MSG_API } from 'common/api/api';
 
     @Component({
         components: {
@@ -212,9 +211,16 @@
         currPage = 1
         pageSize = 10
 
-        unreadNum=156
-        readNum=8111
-        totalNum=2223
+        unreadNum=0
+        readNum=0
+        totalNum=0
+
+        daysFlag=[0, 0, 0]
+        readList: object[]=[]
+        unreadList: object[]=[]
+        mounted() {
+            // this.getMsgDataList()
+        }
 
         //  设置类型參數
         getChildItemListFromChange(): void {
@@ -237,6 +243,34 @@
                     //     this.currPage = data.data.current;
                     //     this.pageSize = data.data.size;
                     // });
+        }
+
+        getMsgDataList(current, size, read, daysFlag): void {
+
+            let daysFlagTemp = [0, 0, 0]
+            if (read === 1) {
+                daysFlagTemp = JSON.parse(JSON.stringify(daysFlag))
+            }
+
+            MSG_API.MSG_QUERY_API({
+                current: current,
+                size: size,
+                read: 1, // 已读标记,1:已读，0:未读
+                threeDaysFlag: daysFlagTemp[0], // 3天标记，1:选中，0:未选中
+                sevenDaysFlag: daysFlagTemp[1], // 7天标记，1:选中，0:未选中
+                thirtyDaysFlag: daysFlagTemp[2], //30天标记，1:选中，0:未选中
+                user: sessionStorage.getItem('userId')// 登录用户id
+            }).then(({ data }) => {
+                console.log('data')
+                console.log(data)
+                if (read === 1) {
+                    this.readList = data.data.records
+                    this.readNum = data.data.searchCount
+                } else {
+                    this.unreadList = data.data.records
+                    this.unreadNum = data.data.searchCount
+                }
+            });
         }
 
         // 获取类型
