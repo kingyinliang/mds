@@ -234,7 +234,7 @@ export default class AuditDetail extends Vue {
 
     // 审核日志
     getAudit(auditDetail) {
-        AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: auditDetail.orderNo }).then(({ data }) => {
+        AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: auditDetail.orderNo, verifyType: '' }).then(({ data }) => {
             this.currentAudit = data.data
         })
     }
