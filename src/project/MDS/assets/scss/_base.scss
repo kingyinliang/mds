@@ -1455,7 +1455,7 @@ $indexlist: (
 .el-dialog {
     border-radius: 6px 6px 6px 6px !important;
     .el-dialog__header {
-        height: 46px;
+        height: 46px !important;
         line-height: 46px;
         background: rgba(72, 123, 255, 1);
         border-radius: 6px 6px 0 0;

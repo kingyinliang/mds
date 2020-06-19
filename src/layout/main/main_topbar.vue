@@ -61,7 +61,6 @@ export default {
     },
     data() {
         return {
-            gender: '',
             visible: false,
             factory: JSON.parse(sessionStorage.getItem('userFactory') || '[]'),
             factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort
@@ -102,6 +101,11 @@ export default {
                 return this.$store.state.user.name;
             }
         },
+        gender: {
+            get() {
+                return this.$store.state.user.gender;
+            }
+        },
         realName: {
             get() {
                 return this.$store.state.user.realName;
@@ -110,9 +114,6 @@ export default {
                 this.$store.commit('user/updaterealName', val);
             }
         }
-    },
-    mounted() {
-        this.gender = sessionStorage.getItem('gender')
     },
     methods: {
         goMessage() {

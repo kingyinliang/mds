@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="header_main" style="padding: 0;">
         <div class="header_main">
             <el-card class="searchCard">
                 <el-row type="flex">
@@ -153,7 +153,7 @@
             </div>
         </div>
         <!--编辑-->
-        <div class="redactBox">
+        <div v-if="searchCard" class="redactBox">
             <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
                 <div class="redact clearfix">
                     <div v-if="!isRedact" class="redact_tips">
