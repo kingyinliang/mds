@@ -399,7 +399,8 @@
         // 审核日志
         AuditLog(row) {
             AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: row.orderNo
+                orderNo: row.orderNo,
+                verifyType: 'TIMESHEET'
             }).then(({ data }) => {
                 this.auditLogData = data.data
                 this.visibleAuditLog = true

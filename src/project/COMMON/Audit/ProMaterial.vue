@@ -539,7 +539,8 @@
         getAuditLog(row) {
             console.log(this.$refs.queryTable.activeName)
             AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: row.orderNo
+                orderNo: row.orderNo,
+                verifyType: 'MATERIAL'
             }).then(({ data }) => {
                 this.auditLogData = data.data
                 this.isAuditLogDialogShow = true
