@@ -102,7 +102,14 @@ export default {
                 this.$notify.error({ title: '错误', message: '请选择组织层级' });
                 return;
             }
-            COMMON_API.USER_ROLE_QUERY_API({
+            let net;
+            switch (JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode) {
+                case '9999-xn':
+                    net = COMMON_API.USER_QUERY_API;
+                    break;
+                default: net = COMMON_API.USER_ROLE_QUERY_API;
+            }
+            net({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.deptID,
                 workNum: this.controllableForm.param,
