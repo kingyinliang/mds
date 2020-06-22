@@ -10,7 +10,7 @@
             <sub-menu v-if="item.menuType !== 'P'" :key="item.id" :menu="item" :dynamic-menu-routes="dynamicMenuRoutes" />
         </template>
     </el-submenu>
-    <el-menu-item v-else :index="menu.id + ''" @click="gotoRouteHandle(menu)">
+    <el-menu-item v-else-if="menu.menuType !== 'P'" :index="menu.id + ''" @click="gotoRouteHandle(menu)">
         <i :class="menu.menuIcon || ''" class="site-sidebar__menu-icon iconfont" />
         <span>{{ menu.menuName }}</span>
     </el-menu-item>
