@@ -462,6 +462,7 @@
             this[str].splice(index + this[str].filter(item => item.merge === row.merge).length, 0, {
                 merge: row.merge,
                 id: '',
+                batch: '',
                 orderId: row.orderId,
                 orderNo: row.orderNo,
                 posnr: row.posnr,
@@ -493,6 +494,7 @@
             this[str].splice(index + this[str].filter(item => item.merge === row.merge).length, 0, {
                 merge: row.merge,
                 id: '',
+                batch: '',
                 orderId: row.orderId,
                 orderNo: row.orderNo,
                 posnr: row.posnr,

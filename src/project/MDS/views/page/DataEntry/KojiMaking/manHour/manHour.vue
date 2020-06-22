@@ -76,13 +76,10 @@
             <div v-show="searchCard">
                 <el-card class="box-cards NewDaatTtabs">
                     <el-card style=" position: relative; margin-bottom: 10px;">
-                        <h3 style=" font-weight: 600; font-size: 14px; line-height: 32px;">
+                        <h3 style="font-weight: 600; font-size: 14px; line-height: 32px;">
                             产量（单位：批）
                         </h3>
-                        <el-button type="text" class="readyshiftBtn manHour" name="yield">
-                            收起<i class="el-icon-caret-top" />
-                        </el-button>
-                        <div class="yieldBox">
+                        <div class="yieldBox" style="height: 32px;">
                             <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
                                 <el-form-item label="入曲批数：">
                                     <el-input v-model="inKjmBatch" placeholder="手工录入" disabled />

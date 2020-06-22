@@ -3,7 +3,7 @@
         <template slot="titleBtn">
             <div style="float: right;">
                 <el-button type="primary" size="small" :disabled="!isRedact" @click="AddExcDate(ExcDate)">
-                    新增1
+                    新增
                 </el-button>
             </div>
         </template>

@@ -40,9 +40,9 @@
                 </el-col>
             </el-row>
         </el-card>
-        <el-tabs v-model="activeName" type="border-card" style="margin-top: 5px;" @tab-click="tabClick">
+        <el-tabs v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" style="margin-top: 5px;" @tab-click="tabClick">
             <el-tab-pane name="0" label="未确认">
-                <el-table :data="dataList" border header-row-class-name="tableHead">
+                <el-table :data="dataList" class="newTable" border header-row-class-name="tableHead">
                     <el-table-column label="车间" prop="workShopName" />
                     <el-table-column label="申请编码" prop="applyNo" width="140">
                         <template slot-scope="scope">
@@ -72,7 +72,7 @@
                 <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-tab-pane>
             <el-tab-pane name="1" label="已确认">
-                <el-table :data="dataList" border header-row-class-name="tableHead">
+                <el-table :data="dataList" border class="newTable" header-row-class-name="tableHead">
                     <el-table-column label="车间" prop="workShopName" />
                     <el-table-column label="申请编码" width="140">
                         <template slot-scope="scope">
