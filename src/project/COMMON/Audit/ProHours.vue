@@ -247,7 +247,7 @@
             {
                 type: 'input',
                 label: '生产订单',
-                prop: 'orderId'
+                prop: 'orderNo'
             },
             {
                 type: 'select',
