@@ -1,6 +1,6 @@
 <template>
-    <div class="header_main">
-        <el-tabs v-model="activeName" class="NewDaatTtabs" type="border-card">
+    <div class="header_main" style="padding-top: 0;">
+        <el-tabs v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">发酵一览表</span>
                 <div class="titleLeft">
@@ -159,10 +159,12 @@ export default {
         // 导出
         ExportExcelA() {
             this.plantList.workShop = this.$store.state.common.Fermentation.workShop;
+            this.plantList.factory = this.$store.state.common.Fermentation.factory;
             exportFile(`${FERMENTATION_API.FER_REPORT_EXPORTLIST}`, '发酵罐一览表', this);
         },
         GetList2() {
-            this.$http(`${REP_API.FERMENTATION_LIST_API}`, 'POST', {}).then(({ data }) => {
+            console.log(this.$store.state.common.Fermentation)
+            this.$http(`${REP_API.FERMENTATION_LIST_API}`, 'POST', { factory: this.$store.state.common.Fermentation.factory }).then(({ data }) => {
                 if (data.code === 0) {
                     this.dataList2 = data.fermentationStatus;
                 } else {

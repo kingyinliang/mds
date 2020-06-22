@@ -607,6 +607,7 @@ export default {
         // 发酵罐一览表
         goSummary() {
             this.$store.state.common.Fermentation.workShop = this.formHeader.workShop;
+            this.$store.state.common.Fermentation.factory = this.formHeader.factory;
             this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Fermentation-Fermenter-summary');
             setTimeout(() => {
                 this.$router.push({
