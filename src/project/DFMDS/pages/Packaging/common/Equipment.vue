@@ -350,7 +350,7 @@ export default class Equipment extends Vue {
         } else {
             this.pickerOptionsStart[order][index] = Object.assign({}, this.pickerOptionsStart[order][index], {
             disabledDate: (time) => {
-                return time.getTime() > new Date(value.endDate).getTime()
+                return time.getTime() > new Date(value.endDate).getTime() - 8.64e6
             }
             })
         }
@@ -369,7 +369,7 @@ export default class Equipment extends Vue {
         } else {
             this.pickerOptionsEnd[order][index] = Object.assign({}, this.pickerOptionsEnd[order][index], {
             disabledDate: (time) => {
-                return time.getTime() < new Date(value.startDate).getTime()
+                return time.getTime() < new Date(value.startDate).getTime() - 8.64e7
                 }
             })
         }
@@ -394,6 +394,7 @@ export default class Equipment extends Vue {
             if (data.data !== null) {
                 this.secondFormDataGroup = JSON.parse(JSON.stringify(data.data));
                 this.orgSecondFormDataGroup = JSON.parse(JSON.stringify(data.data));
+
                 this.setValidate(this.secondFormDataGroup, this.ruleSecondForm)
             }
         });
@@ -433,7 +434,9 @@ export default class Equipment extends Vue {
                 }
             }
             for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1)) {
-                if (!item.classes || !item.stopType || !item.stopMode || !item.startDate || !item.endDate || !item.exceptionCount || !item.stopSituation || !item.stopReason) {
+                console.log('this.fzReasonOptions')
+                console.log(this.fzReasonOptions)
+                if (!item.classes || !item.stopType || !item.stopMode || !item.startDate || !item.endDate || !item.exceptionCount || !item.stopSituation || (!item.stopReason && !this.fzReasonOptions)) {
                     this.$warningToast('请填写停机情况必填项');
                     return false
                 }
@@ -554,7 +557,6 @@ export default class Equipment extends Vue {
         this.stopReasonOptions = []
         row.stopReason = ''
         if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN') {
-            console.log('11111')
             this.fzReasonOptions = false
             COMMON_API.DEVICELIST_API({
                 deptId: this.productLine,
@@ -571,7 +573,6 @@ export default class Equipment extends Vue {
                 })
             });
         } else if (row.stopSituation === 'EXPERIMENT' || row.stopSituation === 'POOR_PROCESS' || row.stopSituation === 'WAIT' || row.stopSituation === 'ENERGY') {
-            console.log('22222')
             this.fzReasonOptions = false
             COMMON_API.DICTQUERY_API({
                 dictType: row.stopSituation
@@ -585,7 +586,6 @@ export default class Equipment extends Vue {
                 })
             });
         } else {
-            console.log('333333')
             this.fzReasonOptions = true
             this.stopReasonOptions = []
         }
@@ -598,6 +598,9 @@ export default class Equipment extends Vue {
         } else {
             num = 0
         }
+        if (num <= 0) {
+            num = 0
+        }
         this.firstFormDataGroup[index].duration = num
 
         return num
@@ -608,6 +611,9 @@ export default class Equipment extends Vue {
         if (row.endDate !== '' && row.startDate !== '') {
             num = accDiv((new Date(row.endDate).getTime() - new Date(row.startDate).getTime()), 60000).toFixed(2)
         } else {
+            num = 0
+        }
+        if (num <= 0) {
             num = 0
         }
         this.secondFormDataGroup[index].duration = num
