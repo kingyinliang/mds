@@ -10,23 +10,23 @@
             @get-data-success="setData"
         >
             <template slot="home">
-                <el-row class="packaging__main" :gutter="10">
+                <el-row class="home_card__main" :gutter="10">
                     <el-col v-for="(item, index) in queryResultList" :key="index" :span="8" style="margin-bottom: 10px;">
                         <el-form :model="item" size="small" label-position="right" label-width="85px">
-                            <div class="packaging__main__item">
-                                <div class="packaging__main__item__title clearfix">
-                                    <p class="packaging__main__item__title__left">
-                                        产线：<span class="packaging__main__item__title__left__proLine">{{ item.productLineName }}</span>产线
+                            <div class="home_card__main__item">
+                                <div class="home_card__main__item__title clearfix">
+                                    <p class="home_card__main__item__title__left">
+                                        产线：<span class="home_card__main__item__title__left__proLine">{{ item.productLineName }}</span>产线
                                     </p>
-                                    <p v-if="item.activeOrderNo!==''" class="packaging__main__item__title__right">
+                                    <p v-if="item.activeOrderNo!==''" class="home_card__main__item__title__right">
                                         <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatusValue : '' }}</span>
                                     </p>
                                 </div>
-                                <div class="packaging__main__item__main">
-                                    <div class="packaging__main__item__main__left">
+                                <div class="home_card__main__item__main">
+                                    <div class="home_card__main__item__main__left">
                                         <img :src="item.img" alt="">
                                     </div>
-                                    <div class="packaging__main__item__main__right">
+                                    <div class="home_card__main__item__main__right">
                                         <el-form-item label="生产订单：">
                                             <el-select v-model="item.activeOrderNo" placeholder="请选择" style="width: 100%;" @change="orderchange(item)">
                                                 <el-option v-for="(subItem, subIndex) in item.orderNoList" :key="subIndex" :label="subItem" :value="subItem" />
@@ -47,7 +47,7 @@
                                                 <span class="el-input__inner">{{ item.activeOrderMap && item.activeOrderMap.realOutput? `${item.activeOrderMap.realOutput} ${item.activeOrderMap.outputUnit}` : `0${item.activeOrderMap.outputUnit}` }}</span>
                                             </div>
                                         </el-form-item>
-                                        <div class="packaging__main__item__main__right__btn">
+                                        <div class="home_card__main__item__main__right__btn">
                                             <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goDataEntry(item)">
                                                 生产数据
                                             </el-button>
@@ -232,82 +232,4 @@
 </script>
 
 <style lang="scss" scoped>
-@import "common/scss/_variables.scss";
-.packaging__main {
-    &__item {
-        padding: 10px;
-        background: rgba(255, 255, 255, 1);
-        border: 1px solid rgba(232, 232, 232, 1);
-        border-radius: 8px;
-        box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
-        &__title {
-            margin-bottom: 20px;
-            &__left {
-                float: left;
-                &::before {
-                    display: inline-block;
-                    width: 4px;
-                    height: 12px;
-                    background-color: $main-color;
-                    border-radius: 2px;
-                    box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
-                    content: "";
-                }
-                &__proLine {
-                    color: #f05c4a;
-                }
-            }
-            &__right {
-                position: relative;
-                float: right;
-                padding-left: 10px;
-                font-size: 12px;
-                line-height: 18px;
-                &::before {
-                    position: absolute;
-                    top: 6px;
-                    left: 0;
-                    width: 6px;
-                    height: 6px;
-                    background: rgba(126, 211, 33, 1);
-                    border-radius: 50%;
-                    box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
-                    content: "";
-                }
-            }
-        }
-        &__main {
-            display: flex;
-            &__left {
-                width: 160px;
-                min-width: 140px;
-                height: 200px;
-                overflow: hidden;
-                border-radius: 8px;
-                img {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-            &__right {
-                flex: 1;
-                &__btn {
-                    text-align: right;
-                }
-
-                ::v-deep .el-form-item__content { /* stylelint-disable-line */
-                    height: 32px;
-                }
-                ::v-deep .el-form-item { /* stylelint-disable-line */
-                    margin-bottom: 10px;
-                }
-                ::v-deep .el-button--primary{ /* stylelint-disable-line */
-                    padding: 5px 8px;
-                    font-size: 14px;
-                    line-height: 20px;
-                }
-            }
-        }
-    }
-}
 </style>
