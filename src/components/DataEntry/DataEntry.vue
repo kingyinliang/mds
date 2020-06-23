@@ -275,6 +275,9 @@
                         case 'P':
                             res = '已过账';
                             break;
+                        case 'toBeAudited':
+                            res = '待审核';
+                            break;
                         default: res = status
                     }
                     return res;
