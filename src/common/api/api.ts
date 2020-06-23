@@ -1,5 +1,9 @@
 import httpProxy from 'utils/net/httpProxy';
 
+import auditApi from './audit'
+import pkgApi from './pkg'
+import steApi from './ste'
+
 export const COMMON_API = {
     /**
      * @property {string} LOGIN_API 登录接口
@@ -377,216 +381,6 @@ export const COMMON_API = {
     SYS_CHILDTYPE_API: params => httpProxy('/sysDept/childType', 'POST', params)
 };
 
-export const AUDIT_API = {
-    /**
-     * @property {string} INLIST_API 订单号查询审核日志  orderNo
-     */
-    AUDIT_LOG_LIST_API: params => httpProxy('/verifyRecord/queryByNo', 'GET', params),
-    /**
-     * @property {string} INLIST_API 入库审核列表
-     */
-    INLIST_API: params => httpProxy('/verifyInStorage/query', 'POST', params),
-    /**
-     * @property {string} INADD_API 入库审核新增
-     */
-    INADD_API: params => httpProxy('/verifyInStorage/insert', 'POST', params),
-    /**
-     * @property {string} INUPDATE_API 入库审核修改
-     */
-    INUPDATE_API: params => httpProxy('/verifyInStorage/upate', 'POST', params),
-    /**
-     * @property {string} INPASS_API 入库审核过账
-     */
-    INPASS_API: params => httpProxy('/verifyInStorage/pass', 'POST', params),
-    /**
-     * @property {string} INREFUSE_API 入库审核退回
-     */
-    INREFUSE_API: params => httpProxy('/verifyInStorage/refuse', 'POST', params),
-    /**
-     * @property {string} INWRITEOFFS_API 入库审核反审
-     */
-    INWRITEOFFS_API: params => httpProxy('/verifyInStorage/writeOffs', 'POST', params),
-    /**
-     * @property {string} PROISSUEQUERY_API 生产发料列表
-     */
-    PROISSUEQUERY_API: params => httpProxy('/verifyMaterial/query', 'POST', params),
-    /**
-     * @property {string} PROISSUEPASS_API 生产发料过账
-     */
-    PROISSUEPASS_API: params => httpProxy('/verifyMaterial/pass', 'POST', params),
-    /**
-     * @property {string} PROISSUEREFUSE_API 生产发料退回
-     */
-    PROISSUEREFUSE_API: params => httpProxy('/verifyMaterial/refuse', 'POST', params),
-    /**
-     * @property {string} PROISSUEWRITEOFFS_API 生产发料反审
-     */
-    PROISSUEWRITEOFFS_API: params => httpProxy('/verifyMaterial/writeOffs', 'POST', params),
-    /**
-     * @property {string} PROISSUEUPDATE_API 生产发料修改
-     */
-    PROISSUEUPDATE_API: params => httpProxy('/verifyMaterial/update', 'POST', params),
-    /**
-     * @property {string} PROISSUEDROPDOWN_API 生产发料组件物料下拉
-     */
-    PROISSUEDROPDOWN_API: params => httpProxy('/verifyMaterial/dropDown', 'POST', params),
-    /**
-     * @property {string} PROISSUEQUERYBYNO_API 生产发料审核日志
-     */
-    PROISSUEQUERYBYNO_API: params => httpProxy('/verifyRecord/queryByNo', 'GET', params),
-    /**
-     * @property {string} HOURS_LIST_API 报工审核列表
-     */
-    HOURS_LIST_API: params => httpProxy('/verifyTimeSheet/query', 'POST', params),
-    /**
-     * @property {string} HOURS_ADD_API 报工审核新增
-     */
-    HOURS_ADD_API: params => httpProxy('/verifyTimeSheet/insert', 'POST', params),
-    /**
-     * @property {string} HOURS_UPDATE_API 报工审核修改
-     */
-    HOURS_UPDATE_API: params => httpProxy('/verifyTimeSheet/update', 'POST', params),
-    /**
-     * @property {string} HOURS_PASS_API 报工审核过账
-     */
-    HOURS_PASS_API: params => httpProxy('/verifyTimeSheet/pass', 'POST', params),
-    /**
-     * @property {string} HOURS_REFUSE_API 报工审核退回
-     */
-    HOURS_REFUSE_API: params => httpProxy('/verifyTimeSheet/refuse', 'POST', params),
-    /**
-     * @property {string} HOURS_WRITEOFFS_API 报工审核反审
-     */
-    HOURS_WRITEOFFS_API: params => httpProxy('/verifyTimeSheet/reset', 'POST', params)
-};
-
-export const PKG_API = {
-    /**
-     * @property {string} PKG_HOME_LIST_API 包装车间首页
-     */
-    PKG_HOME_LIST_API: params => httpProxy('/order/queryListPkg', 'POST', params),
-    /**
-     * @property {string} PKG_HOME_QUERY_BY_NO_API 包装车间首页
-     */
-    PKG_HOME_QUERY_BY_NO_API: params => httpProxy('/order/queryByNo', 'GET', params),
-    /**
-     * @property {string} PKG_HOME_QUERY_BY_NO_API 包装车间页签状态
-     */
-    PKG_TAG_QUERY_API: params => httpProxy('/pkgTag/query', 'POST', params),
-    /**
-     * @property {string} PKG_ALL_SAVE_API 包装车间-生产数据-保存
-     */
-    PKG_ALL_SAVE_API: params => httpProxy('/pkg/save', 'POST', params),
-    /**
-     * @property {string} PKG_ALL_SUBMIT_API 包装车间-生产数据-提交
-     */
-    PKG_ALL_SUBMIT_API: params => httpProxy('/pkg/submit', 'POST', params),
-    /**
-     * @property {string} PKG_INSTORAGE_QUERY_API 生产数据-生产入库-查询
-     */
-    PKG_INSTORAGE_QUERY_API: params => httpProxy('/pkgInStorage/query', 'POST', params),
-    /**
-     * @property {string} PKG_TEXT_QUERY_API 包装车间-生产数据-文本记录
-     */
-    PKG_TEXT_QUERY_API: params => httpProxy('/pkgText/query', 'POST', params),
-    /**
-     * @property {string} PKG_TIMESHEET_QUERY_API 包装车间-生产准备-查询
-     */
-    PKG_TIMESHEET_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params),
-    /**
-     * @property {string} PKG_PACKAGEMATERIAL_QUERY_API 包装车间-物料领用-包材领用查询
-     */
-    PKG_PACKAGEMATERIAL_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params),
-    /**
-     * @property {string} PKG_CHECKDATA_SEAL_QUERY_API 检查数据-密封度检测-查询
-     */
-    PKG_CHECKDATA_SEAL_QUERY_API: params => httpProxy('/pkgSealData/query', 'POST', params),
-    /**
-     * @property {string} PKG_CHECKDATA_WEIGHT_QUERY_API 检查数据-称重记录-查询
-     */
-    PKG_CHECKDATA_WEIGHT_QUERY_API: params => httpProxy('/pkgWeight/query', 'POST', params),
-    /**
-     * @property {string} PKG_CHECKDATA_NR_QUERY_API 检查数据-NR检测-查询
-     */
-    PKG_CHECKDATA_NR_QUERY_API: params => httpProxy('/pkgNr/query', 'POST', params),
-    /**
-     * @property {string} PKG_CHECKDATA_TORQUE_QUERY_API 检查数据-扭力矩检测-查询
-     */
-    PKG_CHECKDATA_TORQUE_QUERY_API: params => httpProxy('/pkgTorque/query', 'POST', params),
-    /**
-     * @property {string} PKG_CHECKDATA_SAVE_API 检查数据-保存
-     */
-    PKG_CHECKDATA_SAVE_API: params => httpProxy('/pkg/checkData/save', 'POST', params),
-    /**
-     * @property {string}  PKG_READYTIME_QUERY_API 生产数据-生产准备-查询
-     */
-    PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params),
-    /**
-     * @property {string}  PKG_PENDGNUM_QUERY_API 生产数据-待杀菌检测-查询
-     */
-    PKG_PENDGNUM_QUERY_API: params => httpProxy('/pkgGerms/query', 'POST', params),
-    /**
-     * @property {string}  PKG_MATERIALSTOCK_QUERY_API 包材库存-查询
-     */
-    PKG_MATERIALSTOCK_QUERY_API: params => httpProxy('/pkg/packageStorage/query', 'POST', params),
-    /**
-     * @property {string}  包材库存-明细
-     */
-    PKG_MATERIALSTOCK_STORAGEITEM_API: params => httpProxy('/pkg/pkgPackageStorageItem/query', 'POST', params),
-    /**
-     * @property {string}  包材库存-转线保存
-     */
-    PKG_MATERIALSTOCK_TRANSFER_API: params => httpProxy('/pkg/packageStorage/transfer', 'POST', params),
-    /**
-     * @property {string}  包材库存-调整保存
-     */
-    PKG_MATERIALSTOCK_ADJUST_API: params => httpProxy('/pkg/packageStorage/adjust', 'POST', params),
-    /**
-     * @property {string}  PKG_MATERIAL_S_QUERY_API 生产数据-物料领用-半成品-查询
-     */
-    PKG_MATERIAL_S_QUERY_API: params => httpProxy('/pkg/semiMaterial/query', 'POST', params),
-    /**
-     * @property {string}  PKG_MATERIAL_P_QUERY_API 生产数据-物料领用-包材-查询
-     */
-    PKG_MATERIAL_P_QUERY_API: params => httpProxy('/pkg/packageMaterial/query', 'POST', params),
-    /**
-     * @property {string}  PKG_URGENT_SUBMIT_API 生产数据-生产入库-紧急提交
-     */
-    PKG_URGENT_SUBMIT_API: params => httpProxy('/pkgInStorage/urgentSubmit', 'POST', params),
-    /**
-     * @property {string}  PKG_USER_QUERY_API 生包装车间-人员-查询
-     */
-    PKG_USER_QUERY_API: params => httpProxy('/pkg/pkgUser/query', 'POST', params),
-    /**
-     * @property {string}  PKG_EXCEPTION_QUERY_API 包装车间-停机情况-查询
-     */
-    PKG_EXCEPTION_QUERY_API: params => httpProxy('/pkg/pkgException/query', 'POST', params),
-    /**
-     * @property {string}  PKG_DEVICE_QUERY_API 包装车间-运行情况-查询
-     */
-    PKG_DEVICE_QUERY_API: params => httpProxy('/pkg/pkgDevice/query', 'POST', params),
-    /**
-     * @property {string}  PKG_AUDIT_DETAIL_PASS_API 审核详情-审核拒绝
-     */
-    PKG_AUDIT_DETAIL_PASS_API: params => httpProxy('/pkg/check', 'POST', params),
-    /**
-     * @property {string}  PKG_AUDIT_DETAIL_PASS_API 审核详情-审核拒绝
-     */
-    PKG_AUDIT_DETAIL_REFUSE_API: params => httpProxy('/pkg/refuse', 'POST', params),
-    /**
-     * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-生产领料差异
-     */
-    PKG_AUDIT_DETAIL_PROMATERIALDIFF_API: params => httpProxy('/pkg/packageMaterial/pickingDiff/query', 'POST', params),
-    /**
-     * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-产量与人力
-     */
-    PKG_AUDIT_DETAIL_PROMANPOWER_API: params => httpProxy('/pkg/pkgTimeSheet/productionAndManpower', 'POST', params),
-    /**
-     * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-设备运行情况
-     */
-    PKG_AUDIT_DETAIL_DEVICERUN_API: params => httpProxy('/pkg/pkgTimeSheet/deviceRun', 'POST', params)
-};
-
 export const MSG_API = {
     /**
      * @property {string}  MSG_QUERY_API 消息管理-消息查询
@@ -597,3 +391,7 @@ export const MSG_API = {
      */
     MSG_READ_API: params => httpProxy('/msg/read', 'POST', params)
 };
+
+export const AUDIT_API = auditApi;
+export const PKG_API = pkgApi;
+export const STE_API = steApi;
