@@ -87,6 +87,7 @@
 
 <script>
 import { BASICDATA_API, PACKAGING_API } from '@/api/api';
+import { orderList } from '@/net/validate';
 export default {
     name: 'Index',
     components: {},
@@ -224,7 +225,8 @@ export default {
                         this.Pkgfactoryid = this.plantList.factoryid;
                         this.PkgworkShop = this.plantList.workShop;
                         this.PkgproductDate = this.plantList.productDate;
-                        this.list = this.orderList(data.list);
+                        this.list = orderList(data.list);
+                        console.log(this.list);
                         this.workShop = this.plantList.workShop;
                         this.productDate = this.plantList.productDate;
                         this.factoryid = this.plantList.factoryid;
@@ -270,40 +272,40 @@ export default {
         },
         // 数据处理
         /* eslint-disable @typescript-eslint/camelcase */
-        orderList(data) {
-            const result = [];
-            for (let i = 0; i < data.length; i++) {
-                const orderNo = [data[i].orderNo];
-                for (let j = i + 1; j < data.length; j++) {
-                    if (data[i].productLine === data[j].productLine) {
-                        j = ++i;
-                        orderNo.push(data[j].orderNo);
-                    }
-                }
-                let orderNos = '';
-                if (orderNo.length === 1) {
-                    orderNos = orderNo[0];
-                } else {
-                    orderNos = '';
-                }
-                result.push({
-                    img: data[i].img,
-                    productLine: data[i].productLine,
-                    productLineName: data[i].productLineName,
-                    orderNo: orderNos,
-                    orderNo2: '',
-                    order_arr: orderNo,
-                    realOutput: '',
-                    materialCode: '',
-                    materialName: '',
-                    orderStatus: '',
-                    planOutput: '',
-                    outputUnit: '',
-                    properties: ''
-                });
-            }
-            return result;
-        },
+        // orderList(data) {
+        //     const result = [];
+        //     for (let i = 0; i < data.length; i++) {
+        //         const orderNo = [data[i].orderNo];
+        //         for (let j = i + 1; j < data.length; j++) {
+        //             if (data[i].productLine === data[j].productLine) {
+        //                 j = ++i;
+        //                 orderNo.push(data[j].orderNo);
+        //             }
+        //         }
+        //         let orderNos = '';
+        //         if (orderNo.length === 1) {
+        //             orderNos = orderNo[0];
+        //         } else {
+        //             orderNos = '';
+        //         }
+        //         result.push({
+        //             img: data[i].img,
+        //             productLine: data[i].productLine,
+        //             productLineName: data[i].productLineName,
+        //             orderNo: orderNos,
+        //             orderNo2: '',
+        //             order_arr: orderNo,
+        //             realOutput: '',
+        //             materialCode: '',
+        //             materialName: '',
+        //             orderStatus: '',
+        //             planOutput: '',
+        //             outputUnit: '',
+        //             properties: ''
+        //         });
+        //     }
+        //     return result;
+        // },
         /* eslint-enable @typescript-eslint/camelcase */
         setworkShopname(val) {
             this.workShopname = val;
