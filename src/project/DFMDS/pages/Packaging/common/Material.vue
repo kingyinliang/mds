@@ -235,7 +235,10 @@
                     const orgObj = this.orgDataTable.filter(it => it.id === item.id)[0];
                     if (!_.isEqual(orgObj, item)) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                        item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                         if (filterArr1 && filterArr1[0]) {
+                            item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                            item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                             filterArr1[0].item.push(item)
                         } else {
                             pkgPackingMaterial.packingMaterialUpdate.push({
@@ -262,9 +265,11 @@
                     }
                 } else if (filterArr2 && filterArr2[0]) {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                     filterArr2[0].item.push(item)
                 } else {
                     item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    item.realLoss = (item.realLoss === '' || item.realLoss === null ? 0 : item.realLoss);
                     pkgPackingMaterial.packingMaterialInsert.push({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         merge: item.merge,
@@ -574,6 +579,7 @@ interface MaterialMap{
     orderNo?: string;
     posnr?: string;
     factory?: string;
+    realLoss?: string | number;
     checkStatus?: string;
     materialCode?: string;
     materialName?: string;
