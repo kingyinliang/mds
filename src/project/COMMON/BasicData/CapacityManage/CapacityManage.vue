@@ -5,6 +5,7 @@
             :right-tile="'产能信息'"
             :type="'table'"
             @treeNodeClick="getData"
+            @getTreeSuccess="setDeptId"
         >
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
@@ -19,9 +20,9 @@
                         批量删除
                     </el-button>
                 </div>
-                <el-table ref="table1" class="newTable" :data="CapacityList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                <el-table ref="table1" class="newTable" :data="CapacityList" :height="mainClientHeight - 52 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" fixed="left" />
-                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
+                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
                     <el-table-column prop="workNum" :show-overflow-tooltip="true" label="物料">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}
@@ -72,13 +73,17 @@
         }
     })
     export default class CapacityManage extends Vue {
+        get mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
+        }
+
         $refs: {
             capaaddupdate: HTMLFormElement;
         };
 
         deptId = ''
         materialCode = ''
-        totalCount = 1
+        totalCount = 0
         currPage = 1
         pageSize = 10
         visible = false
@@ -97,6 +102,10 @@
             })
         }
 
+        setDeptId(data) {
+            this.deptId = data[0].id
+        }
+
         getData(row = false, first = false) {
             if (row) {
                 this.deptId = row['id'];
@@ -111,12 +120,13 @@
                 size: this.pageSize,
                 current: this.currPage
             }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.multipleSelection = [];
-                    this.CapacityList = data.data.records;
-                    this.currPage = data.data.current;
-                    this.pageSize = data.data.size;
-                    this.totalCount = data.data.total;
+                this.multipleSelection = [];
+                this.CapacityList = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+                if (data.data.records.length === 0) {
+                    this.$infoToast('暂无任何内容');
                 }
             })
         }

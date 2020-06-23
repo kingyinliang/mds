@@ -5,10 +5,11 @@
             :right-tile="'设备信息'"
             :type="'table'"
             @treeNodeClick="getData"
+            @getTreeSuccess="setDeptId"
         >
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
-                    <el-input v-model="deviceNo" size="small" placeholder="设备号" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
+                    <el-input v-model="deviceNo" size="small" placeholder="设备编号/设备描述" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
                     <el-button type="primary" size="small" @click="getData(false, true)">
                         查询
                     </el-button>
@@ -19,13 +20,13 @@
                         批量删除
                     </el-button>
                 </div>
-                <el-table ref="table1" class="newTable" border header-row-class-name="tableHead" :data="deviceList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="50" />
-                    <el-table-column type="index" :index="indexMethod" label="序号" width="55" />
+                <el-table ref="table1" class="newTable" border header-row-class-name="tableHead" :height="mainClientHeight - 52 - 155" :data="deviceList" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="50" fixed="left" />
+                    <el-table-column type="index" :index="indexMethod" label="序号" width="55" fixed />
                     <el-table-column prop="deptName" width="120" :show-overflow-tooltip="true" label="所属部门" />
                     <el-table-column prop="deviceNo" width="120" :show-overflow-tooltip="true" label="设备编号" />
                     <el-table-column prop="deviceName" label="设备描述" :show-overflow-tooltip="true" />
-                    <el-table-column fixed="right" label="操作" width="100">
+                    <el-table-column fixed="right" label="操作" width="120">
                         <template slot-scope="scope">
                             <el-button type="text" @click="addOrupdate(scope.row)">
                                 编辑
@@ -36,11 +37,14 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-row>
+                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                </el-row>
             </template>
         </org-view>
-        <el-dialog title="配置" :close-on-click-modal="false" :visible.sync="configVisible">
-            <div :class="{'limit-upload': ImageUrl}">
-                <el-upload class="org-img-upload" list-type="picture-card" :action="FILE_API" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
+        <el-dialog title="配置" width="400px" :close-on-click-modal="false" :visible.sync="configVisible">
+            <div :class="{'limit-upload': ImageUrl}" style="text-align: center;">
+                <el-upload ref="upload" class="org-img-upload" list-type="picture-card" :action="FILE_API" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
                     <i class="el-icon-plus" />
                 </el-upload>
             </div>
@@ -72,25 +76,34 @@
         }
     })
     export default class CapacityManage extends Vue {
+        get mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
+        }
+
         $refs: {
             addOrupdate: HTMLFormElement;
+            upload: HTMLFormElement;
         };
 
-        FILE_API = ''
-        ImageUrl = ''
-        configId = ''
-        fileList = []
-        dialogVisible = false
-        dialogImageUrl = ''
-        deptId = ''
-        deviceNo = ''
-        totalCount = 0
-        currPage = 1
-        pageSize = 10
-        configVisible = false
-        visible = false
-        deviceList: object[] = []
-        multipleSelection: string[] = []
+        FILE_API = '';
+        ImageUrl = '';
+        configId = '';
+        fileList = [];
+        dialogVisible = false;
+        dialogImageUrl = '';
+        deptId = '';
+        deviceNo = '';
+        totalCount = 0;
+        currPage = 1;
+        pageSize = 10;
+        configVisible = false;
+        visible = false;
+        deviceList: object[] = [];
+        multipleSelection: string[] = [];
+
+        setDeptId(data) {
+            this.deptId = data[0].id
+        }
 
         getData(row = false, first = false) {
             if (row) {
@@ -106,12 +119,13 @@
                 size: this.pageSize,
                 current: this.currPage
             }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.multipleSelection = [];
-                    this.deviceList = data.data.records;
-                    this.currPage = data.data.current;
-                    this.pageSize = data.data.size;
-                    this.totalCount = data.data.total;
+                this.multipleSelection = [];
+                this.deviceList = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+                if (data.data.records.length === 0) {
+                    this.$infoToast('暂无任何内容');
                 }
             })
         }
@@ -179,6 +193,10 @@
             } else {
                 this.configId = row.id;
                 this.configVisible = true
+                this.$nextTick(() => {
+                    this.ImageUrl = '';
+                    this.$refs.upload.clearFiles();
+                })
             }
         }
 

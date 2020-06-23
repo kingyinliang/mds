@@ -56,30 +56,27 @@
                         <el-button v-if="isAuth('fer:shoot:list')" type="primary" size="small" @click="GetDataList()">
                             查 询
                         </el-button>
-                        <el-button v-if="isAuth('fer:shoot:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                        <!-- <el-button v-if="isAuth('fer:shoot:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                             {{ isRedact ? '取消' : '编辑' }}
-                        </el-button>
+                        </el-button> -->
                     </template>
-                    <template v-if="isRedact" style="float: right; margin-left: 10px;">
+                    <!-- <template v-if="isRedact" style="float: right; margin-left: 10px;">
                         <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')">
                             保存
                         </el-button>
                         <el-button type="primary" size="small" @click="SubmitForm">
                             提交
                         </el-button>
-                    </template>
+                    </template> -->
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card class="searchCard  newCard" style="margin-top: 5px;">
-            <h2 style=" margin-bottom: 10px; font-weight: 600; font-size: 16px;">
-                <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />发料列表
-            </h2>
-            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="GetLog">
-                <el-table-column type="selection" :selectable="checkboxT" width="50" />
+        <mds-card title="发料列表" style="margin-top: 5px;">
+            <el-table :data="dataList" border class="newTable" tooltip-effect="dark" header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="GetLog">
+                <el-table-column type="selection" :selectable="checkboxT" width="50" fixed />
                 <el-table-column type="index" label="序号" width="55" />
-                <el-table-column label="订单号" width="120" prop="ferOrderNo" />
-                <el-table-column label="状态" width="93" prop="approveStatus">
+                <el-table-column label="订单号" min-width="120" prop="ferOrderNo" />
+                <el-table-column label="状态" min-width="93" prop="approveStatus">
                     <template slot-scope="scope">
                         <p
                             :style="{
@@ -90,20 +87,20 @@
                         </p>
                     </template>
                 </el-table-column>
-                <el-table-column label="容器" width="110" prop="holderName" :show-overflow-tooltip="true" />
-                <el-table-column label="物料" width="180" :show-overflow-tooltip="true">
+                <el-table-column label="容器" min-width="110" prop="holderName" :show-overflow-tooltip="true" />
+                <el-table-column label="物料" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.ferMaterialCode + ' ' + scope.row.ferMaterialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="订单量" width="80" prop="ferAmount" :show-overflow-tooltip="true" />
-                <el-table-column label="单位" width="50" prop="ferUnit" />
-                <el-table-column label="领用物料" width="180" :show-overflow-tooltip="true">
+                <el-table-column label="订单量" min-width="80" prop="ferAmount" :show-overflow-tooltip="true" />
+                <el-table-column label="单位" min-width="50" prop="ferUnit" />
+                <el-table-column label="领用物料" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.kjmMaterialCode + ' ' + scope.row.kjmMaterialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="数量" width="100" prop="kjmAmount">
+                <el-table-column label="数量" min-width="100" prop="kjmAmount">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>数量</span>
@@ -112,23 +109,23 @@
                         <el-input v-model="scope.row.kjmAmount" size="mini" placeholder="手工录入" :disabled="!(isRedact && (scope.row.approveStatus === 'noPass' || scope.row.approveStatus === 'saved' || scope.row.approveStatus === ''))" />
                     </template>
                 </el-table-column>
-                <el-table-column label="单位" width="50" prop="kjmUnit" />
-                <el-table-column label="批次" width="120" prop="batch">
+                <el-table-column label="单位" min-width="50" prop="kjmUnit" />
+                <el-table-column label="批次" min-width="120" prop="batch">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>批次</span>
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.batch" size="mini" placeholder="手工录入" :disabled="!(isRedact && (scope.row.approveStatus === 'noPass' || scope.row.approveStatus === 'saved' || scope.row.approveStatus === ''))" />
+                        <el-input v-model="scope.row.batch" size="mini" maxlength="10" placeholder="手工录入" :disabled="!(isRedact && (scope.row.approveStatus === 'noPass' || scope.row.approveStatus === 'saved' || scope.row.approveStatus === ''))" />
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" width="80" prop="remark">
+                <el-table-column label="备注" min-width="80" prop="remark">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" size="mini" placeholder="手工录入" :disabled="!(isRedact && (scope.row.approveStatus === 'noPass' || scope.row.approveStatus === 'saved' || scope.row.approveStatus === ''))" />
                     </template>
                 </el-table-column>
-                <el-table-column label="提交人员" width="120" prop="changer" :show-overflow-tooltip="true" />
-                <el-table-column label="提交时间" width="120" prop="changed" :show-overflow-tooltip="true" />
+                <el-table-column label="提交人员" min-width="120" prop="changer" :show-overflow-tooltip="true" />
+                <el-table-column label="提交时间" min-width="120" prop="changed" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" width="112" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.approveStatus !== 'submit' && scope.row.approveStatus !== 'checked'" type="text" style="" size="mini" :disabled="!isRedact" @click="AddData(scope.row, scope.$index)">
@@ -143,10 +140,28 @@
             <el-row>
                 <el-pagination :current-page="currPage" :page-sizes="[20, 30, 40]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
-        </el-card>
-        <el-card class="searchCard  newCard" style="margin-top: 10px;">
-            <audit-log :table-data="Audit" />
-        </el-card>
+        </mds-card>
+        <audit-log :table-data="Audit" />
+        <!--编辑-->
+        <div class="redactBox">
+            <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
+                <div class="redact clearfix">
+                    <div class="redact_btn">
+                        <el-button v-if="isAuth('fer:shoot:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                            {{ isRedact ? '取消' : '编辑' }}
+                        </el-button>
+                        <template v-if="isRedact" style="float: right; margin-left: 10px;">
+                            <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                                保存
+                            </el-button>
+                            <el-button type="primary" size="small" @click="SubmitForm">
+                                提交
+                            </el-button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -178,7 +193,13 @@ export default {
             orderTypeList: []
         };
     },
-    computed: {},
+    computed: {
+        sidebarFold: {
+            get() {
+                return this.$store.state.common.sidebarFold;
+            }
+        }
+    },
     watch: {
         'formHeader.factory'(n) {
             this.formHeader.workShop = '';

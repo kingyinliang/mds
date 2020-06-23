@@ -1,6 +1,6 @@
 <template>
-    <div class="header_main">
-        <el-tabs v-model="activeName" class="NewDaatTtabs" type="border-card">
+    <div class="header_main" style="padding-top: 0;">
+        <el-tabs v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">发酵一览表</span>
                 <div class="titleLeft">
@@ -11,14 +11,17 @@
                 </div>
                 <el-table :data="dataList2" border header-row-class-name="tableHead" style="margin-top: 10px;">
                     <el-table-column label=" " prop="type" />
+                    <el-table-column label="空罐" prop="empty" />
                     <el-table-column label="<30" prop="ltThirty" />
-                    <el-table-column label="30≤N<60" prop="ltSixty" />
-                    <el-table-column label="60≤N<90" prop="ltNinety" />
-                    <el-table-column label="90≤N<130" prop="ltOneHundredAndThree" />
-                    <el-table-column label="130≤N<150" prop="ltOneHundredAndFive" />
-                    <el-table-column label="150≤N<180" prop="ltOneHundredAndEight" />
-                    <el-table-column label="180≤N<200" prop="ltTwoHundred" />
+                    <el-table-column label="30≤N<60" prop="ltSixty" min-width="110" />
+                    <el-table-column label="60≤N<90" prop="ltNinety" min-width="110" />
+                    <el-table-column label="90≤N<130" prop="ltOneHundredAndThree" min-width="110" />
+                    <el-table-column label="130≤N<150" prop="ltOneHundredAndFive" min-width="110" />
+                    <el-table-column label="150≤N<180" prop="ltOneHundredAndEight" min-width="110" />
+                    <el-table-column label="180≤N<200" prop="ltTwoHundred" min-width="110" />
                     <el-table-column label="200≤N" prop="gtTwoHundred" />
+                    <el-table-column label="压榨" prop="used" />
+                    <el-table-column label="占用" prop="otherUsed" />
                 </el-table>
             </el-tab-pane>
             <el-tab-pane name="2">
@@ -156,10 +159,12 @@ export default {
         // 导出
         ExportExcelA() {
             this.plantList.workShop = this.$store.state.common.Fermentation.workShop;
+            this.plantList.factory = this.$store.state.common.Fermentation.factory;
             exportFile(`${FERMENTATION_API.FER_REPORT_EXPORTLIST}`, '发酵罐一览表', this);
         },
         GetList2() {
-            this.$http(`${REP_API.FERMENTATION_LIST_API}`, 'POST', {}).then(({ data }) => {
+            console.log(this.$store.state.common.Fermentation)
+            this.$http(`${REP_API.FERMENTATION_LIST_API}`, 'POST', { factory: this.$store.state.common.Fermentation.factory }).then(({ data }) => {
                 if (data.code === 0) {
                     this.dataList2 = data.fermentationStatus;
                 } else {

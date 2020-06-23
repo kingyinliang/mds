@@ -38,8 +38,8 @@
                                     增加
                                 </el-button>
                                 <el-table ref="table1" :data="userArr" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                                    <el-table-column type="selection" width="50" />
-                                    <el-table-column type="index" :index="indexMethod" width="55" />
+                                    <el-table-column type="selection" width="50" fixed />
+                                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
                                     <el-table-column prop="workNum" label="人员工号" width="87" />
                                     <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
                                     <el-table-column prop="realName" label="人员姓名" width="87" />

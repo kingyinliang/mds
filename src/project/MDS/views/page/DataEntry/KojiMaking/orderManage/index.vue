@@ -54,15 +54,16 @@
                 <el-row v-if="searched" :gutter="5" style="margin-top: 5px;">
                     <el-col :span="12">
                         <el-card style="min-height: 730px;">
-                            <el-row style="margin-bottom: 5px;">
-                                <el-col style=" color: #000; font-weight: 500; font-size: 16px;">
-                                    订单管理
-                                </el-col>
-                            </el-row>
+                            <div class="box-card-title clearfix">
+                                <h3>
+                                    <i class="title-icon" />订单管理
+                                </h3>
+                                <slot name="titleBtn" />
+                            </div>
                             <el-row>
                                 <el-col>
-                                    <el-table header-row-class-name="tableHead" :data="currentOrderList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="showDetail">
-                                        <el-table-column type="index" width="55" label="序号" />
+                                    <el-table header-row-class-name="tableHead" class="newTable" :data="currentOrderList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="showDetail">
+                                        <el-table-column type="index" width="55" label="序号" fixed />
                                         <el-table-column label="订单状态" width="80">
                                             <template slot-scope="scope">
                                                 <label
@@ -82,7 +83,7 @@
                                                 {{ scope.row.orderNo }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column width="180" label="品项">
+                                        <el-table-column min-width="180" label="品项">
                                             <template slot-scope="scope">
                                                 {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                             </template>
@@ -97,7 +98,7 @@
                                                 <span>{{ scope.row.outputUnit }}</span>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column label="备注" width="100" show-overflow-tooltip>
+                                        <el-table-column label="备注" min-width="100" show-overflow-tooltip>
                                             <template slot-scope="scope">
                                                 <span>{{ scope.row.remark }}</span>
                                             </template>
@@ -132,9 +133,14 @@
                         <el-card style="min-height: 730px;">
                             <el-row style="margin-bottom: 5px;">
                                 <el-col :span="12" style=" color: #000; font-weight: 500; font-size: 16px;">
-                                    订单明细
+                                    <div class="box-card-title clearfix">
+                                        <h3>
+                                            <i class="title-icon" :style="{ background: '#FFBF00FF' }" />订单明细
+                                        </h3>
+                                        <slot name="titleBtn" />
+                                    </div>
                                 </el-col>
-                                <el-col :span="12" class="rowButton" style="margin-top: -13px;">
+                                <el-col :span="12" class="rowButton">
                                     <el-button type="primary" size="small" style="float: right;" @click="delDetail">
                                         删除
                                     </el-button>
@@ -142,15 +148,15 @@
                             </el-row>
                             <el-row>
                                 <el-col>
-                                    <el-table ref="multipleTable" header-row-class-name="tableHead" :data="orderDetailList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @selection-change="handleChange" @row-dblclick="showModifyDetial">
+                                    <el-table ref="multipleTable" class="newTable" header-row-class-name="tableHead" :data="orderDetailList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @selection-change="handleChange" @row-dblclick="showModifyDetial">
                                         <el-table-column type="selection" width="50" />
-                                        <el-table-column type="index" width="55" label="序号" />
+                                        <el-table-column type="index" width="55" label="序号" fixed />
                                         <el-table-column label="曲房状态" width="80">
                                             <template slot-scope="scope">
                                                 {{ scope.row.status }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column label="订单号" width="120">
+                                        <el-table-column min-label="订单号" width="120">
                                             <template slot-scope="scope">
                                                 {{ scope.row.orderNo }}
                                             </template>
@@ -160,12 +166,12 @@
                                                 {{ scope.row.inPotName }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column width="100" label="曲房">
+                                        <el-table-column min-width="100" label="曲房">
                                             <template slot-scope="scope">
                                                 {{ scope.row.houseName }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column width="120" label="连续蒸煮">
+                                        <el-table-column min-width="120" label="连续蒸煮">
                                             <template slot-scope="scope">
                                                 {{ scope.row.cookingName }}
                                             </template>
@@ -192,8 +198,8 @@
                     <span>订单分配</span>
                 </div>
                 <div class="orderForm">
-                    <el-table header-row-class-name="tableHead" :data="splitDetailList" border tooltip-effect="dark" :row-class-name="rowDelFlag">
-                        <el-table-column type="index" width="55" label="序号" />
+                    <el-table header-row-class-name="tableHead" class="newTable" :data="splitDetailList" border tooltip-effect="dark" :row-class-name="rowDelFlag">
+                        <el-table-column type="index" width="55" label="序号" fixed />
                         <el-table-column label="订单号" width="120">
                             <template slot-scope="scope">
                                 {{ scope.row.orderNo }}

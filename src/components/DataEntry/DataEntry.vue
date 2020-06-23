@@ -1,28 +1,28 @@
 <template>
     <div class="header_main">
         <div class="dataEntry-head">
-            <div class="dataEntry-head-title">
+            <div v-if="orderStatusShow" class="dataEntry-head-title">
                 <i class="dataEntry-head-title__icon iconfont factory-gongchang" />
                 <span v-if="headShow" class="dataEntry-head-title__text">{{ formHeader.factoryName }}</span>
                 <span v-else class="dataEntry-head-title__text">基础信息</span>
                 <i
                     class="dataEntry-head-title__status"
                     :class="{
-                        noPass: orderStatus === 'noPass',
-                        saved: orderStatus === 'saved',
-                        submit: orderStatus === 'submit',
-                        checked: orderStatus === 'checked',
+                        noPass: orderStatus === 'noPass' || orderStatus === '已退回',
+                        saved: orderStatus === 'saved' || orderStatus === '已保存',
+                        submit: orderStatus === 'submit' || orderStatus === '待审核',
+                        checked: orderStatus === 'checked' || orderStatus === '已审核',
                         '': orderStatus === '已同步',
                     }"
                 >
-                    订单状态：{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus }}
+                    订单状态：{{ getTagStatus(orderStatus) }}
                 </i>
             </div>
             <div v-if="headShow" class="dataEntry-head-base">
                 <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form">
                     <el-form-item v-for="(item, index) in headerBase" :key="index">
                         <template slot="label">
-                            <i class="iconfont" :class="item.icon" style="margin-left: 8px;" />
+                            <i class="iconfont" :class="item.icon" style="margin-right: 5px; margin-left: 2px;" />
                             <span>{{ item.label }}：</span>
                         </template>
                         <p v-if="item.type === 'p'">
@@ -45,10 +45,10 @@
         <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
             <el-tab-pane v-for="(item, index) in tabs" :key="index" :name="setKey(index)">
                 <span v-if="item.status !== undefined" slot="label" class="spanview">
-                    <el-tooltip class="item" effect="dark" :content="item.status === 'noPass' ? '不通过' : item.status === 'saved' ? '已保存' : item.status === 'submit' ? '已提交' : item.status === 'checked' ? '通过' : '未录入'" placement="top-start">
+                    <el-tooltip class="item" effect="dark" :content="getTagStatus(item.status)" placement="top-start">
                         <span
                             :style="{
-                                color: item.status === 'noPass' ? 'red' : '',
+                                color: item.status === 'noPass' ? 'red' : item.status === 'R' ? 'red' : ''
                             }"
                         >{{ item.label }}</span>
                     </el-tooltip>
@@ -62,28 +62,47 @@
         <!--编辑-->
         <div class="redactBox">
             <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
-                <div class="redact clearfix">
-                    <div class="redact_tips">
+                <div v-if="redactBoxStatus" class="redact clearfix">
+                    <div v-if="type === 'entry'" class="redact_tips">
                         <i class="el-icon-info" />
-                        <span v-if="orderStatus === 'submit'">订单已提交，请等待审核</span>
-                        <span v-if="orderStatus === 'checked'">订单已审核通过</span>
-                        <span v-if="orderStatus !== 'submit' && orderStatus !== 'checked'">
+                        <span v-if="orderStatus === 'toBeAudited'">请仔细核对数据后再进行提交</span>
+                        <span v-else-if="orderStatus === 'checked' || orderStatus === '已审核'">订单已审核通过</span>
+                        <span v-else-if="orderStatus === 'submit' || orderStatus === '待审核'">订单已提交，请等待审核</span>
+                        <span v-else-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账'">
                             <span v-if="isRedact">点击提交按钮，当前页面编辑信息将提交系统</span>
                             <span v-else>点击编辑按钮，对当前页面进行编辑</span>
                         </span>
                     </div>
-                    <div class="redact_btn">
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(redactAuth)" type="primary" size="small" @click="isRedact = !isRedact">
+                    <div v-if="type === 'entry'" class="redact_btn">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="isRedact = !isRedact">
                             {{ isRedact ? '取消' : '编辑' }}
                         </el-button>
-                        <template v-if="isRedact">
-                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
+                        <template v-if="isRedact || onlySubmit">
+                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
                                 保存
                             </el-button>
-                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
+                            <el-button v-if="ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
                                 提交
                             </el-button>
                         </template>
+                    </div>
+                    <div v-else class="redact_btn">
+                        <slot name="custom_btn" />
+                    </div>
+                </div>
+                <div v-else class="redact clearfix">
+                    <div class="redact_tips">
+                        <i class="el-icon-info" />
+                        <span v-if="isRedact">请及时保存数据</span>
+                        <span v-else>点击编辑按钮，对当前页面进行编辑</span>
+                    </div>
+                    <div class="redact_btn">
+                        <el-button v-if="isRedact" type="primary" size="small" @click="cancel">
+                            取消
+                        </el-button>
+                        <el-button type="primary" size="small" @click="save">
+                            {{ isRedact ? '保存' : '编辑' }}
+                        </el-button>
                     </div>
                 </div>
             </div>
@@ -108,6 +127,10 @@
         },
         components: {},
         props: {
+            type: {
+                type: String,
+                default: 'entry'
+            },
             orderStatus: {
                 type: String,
                 default: ''
@@ -142,9 +165,17 @@
                     return [];
                 }
             },
+            currentTab: {
+                type: String,
+                default: '1'
+            },
             beforeLeave: {
                 type: Function,
                 default: () => []
+            },
+            urgentSubmit: {
+                type: Boolean,
+                default: false
             },
             submitRules: {
                 type: Function,
@@ -165,6 +196,32 @@
                 default: () => {
                     //    emoty
                 }
+            },
+            notPermitSubmitStatus: {
+                type: Array,
+                default: () => {
+                    return ['submit', 'checked'];
+                }
+            },
+            onlySubmit: {
+                type: Boolean,
+                default: false
+            },
+            cancelDatas: {
+                type: Function,
+                default: () => {
+                    //
+                }
+            },
+             //检测数据订单状态不显示
+            orderStatusShow: {
+                type: Boolean,
+                default: true
+            },
+            //检测数据底部只显示取消和编辑
+            redactBoxStatus: {
+                type: Boolean,
+                default: true
             }
         },
         data() {
@@ -175,6 +232,57 @@
             };
         },
         computed: {
+            getTagStatus: () => {
+                return (status) => {
+                    let res = '';
+                    switch (status) {
+                        case 'noPass':
+                            res = '不通过';
+                            break;
+                        case 'saved':
+                            res = '已保存';
+                            break;
+                        case 'submit':
+                            res = '已提交';
+                            break;
+                        case 'checked':
+                            res = '通过';
+                            break;
+                        case 'F':
+                            res = '接口失败';
+                            break;
+                        case 'C':
+                            res = '已审核';
+                            break;
+                        case 'T':
+                            res = '已同步';
+                            break;
+                        case 'R':
+                            res = '已退回';
+                            break;
+                        case 'N':
+                            res = '未录入';
+                            break;
+                        case 'D':
+                            res = '待审核';
+                            break;
+                        case 'X':
+                            res = '反审';
+                            break;
+                        case 'S':
+                            res = '已保存';
+                            break;
+                        case 'P':
+                            res = '已过账';
+                            break;
+                        case 'toBeAudited':
+                            res = '待审核';
+                            break;
+                        default: res = status
+                    }
+                    return res;
+                }
+            },
             sidebarFold: {
                 get() {
                     return this.$store.state.common.sidebarFold;
@@ -184,6 +292,7 @@
         methods: {
             tabClick(val) {
                 this.$refs.tabs.setCurrentName(val.name);
+                this.$emit('tab-click', val);
             },
             // 设置tabs的绑定
             setKey(index) {
@@ -200,7 +309,7 @@
                 if (str === 'saved') {
                     const arr = this.savedRules();
                     for (const rule of arr) {
-                        if (!rule()) {
+                        if (!rule('saved')) {
                             return false;
                         }
                     }
@@ -223,9 +332,13 @@
             },
             // 提交
             submitData() {
+                if (this.urgentSubmit) {
+                    this.$emit('urgentSubmit');
+                    return
+                }
                 const arr = this.submitRules();
                 for (const rule of arr) {
-                    if (!rule()) {
+                    if (!rule('submit')) {
                         return false;
                     }
                 }
@@ -238,6 +351,20 @@
                 }).catch(() => {
                 // this.$infoToast('已取消删除');
                 });
+            },
+            ifSubmit() {
+                return !this.notPermitSubmitStatus.includes(this.orderStatus);
+            },
+             save() {
+                if (!this.isRedact) {
+                    this.isRedact = !this.isRedact;
+                } else {
+                    this.savedDatas()
+                }
+            },
+            cancel() {
+                this.isRedact = false;
+                this.cancelDatas()
             }
         }
     };

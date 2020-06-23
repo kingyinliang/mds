@@ -1,272 +1,265 @@
 <template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row type="flex">
-                    <el-col>
-                        <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
-                            <el-row type="flex" class="row-bg">
-                                <el-form-item label="生产工厂：">
-                                    <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="生产车间：">
-                                    <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px;" @change="changeOptions('workshop')">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="罐号：">
-                                    <el-select v-model="params.potId" class="selectwpx" filterable style="width: 140px;" @change="changeOptions('pot')">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="sole in potList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="物料：">
-                                    <el-select v-model="params.materialCode" class="selectwpx" filterable style="width: 140px;" @change="changeOptions('material')">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
-                                    </el-select>
-                                </el-form-item>
-                            </el-row>
-                            <el-row type="flex" class="row-bg" justify="space-between">
-                                <el-form-item label="订单日期：">
-                                    <el-date-picker v-model="params.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
-                                    - <el-date-picker v-model="params.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
-                                </el-form-item>
-                                <el-form-item>
-                                    <el-button v-if="isAuth('fer:order:list')" type="primary" size="small" style="float: right;" @click="getOrderList()">
-                                        查询
-                                    </el-button>
-                                </el-form-item>
-                            </el-row>
-                        </el-form>
-                    </el-col>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <div class="tableCard">
-                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-                <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card" style=" overflow: hidden; border-radius: 15px;">
-                    <el-tab-pane name="1">
-                        <span slot="label" class="spanview">
-                            <el-button>未申请</el-button>
-                        </span>
-                        <el-row>
-                            <el-col>
-                                <el-button v-if="isAuth('fer:order:applyFerOrder')" type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="applyOrder()">
-                                    申请订单
+    <div class="header_main">
+        <el-card class="searchCard">
+            <el-row type="flex">
+                <el-col>
+                    <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
+                        <el-row type="flex" class="row-bg">
+                            <el-form-item label="生产工厂：">
+                                <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
+                                    <el-option label="请选择" value="" />
+                                    <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="生产车间：">
+                                <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px;" @change="changeOptions('workshop')">
+                                    <el-option label="请选择" value="" />
+                                    <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="罐号：">
+                                <el-select v-model="params.potId" class="selectwpx" filterable style="width: 140px;" @change="changeOptions('pot')">
+                                    <el-option label="请选择" value="" />
+                                    <el-option v-for="sole in potList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="物料：">
+                                <el-select v-model="params.materialCode" class="selectwpx" filterable style="width: 140px;" @change="changeOptions('material')">
+                                    <el-option label="请选择" value="" />
+                                    <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
+                                </el-select>
+                            </el-form-item>
+                        </el-row>
+                        <el-row type="flex" class="row-bg" justify="space-between">
+                            <el-form-item label="订单日期：">
+                                <el-date-picker v-model="params.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
+                                - <el-date-picker v-model="params.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button v-if="isAuth('fer:order:list')" type="primary" size="small" style="float: right;" @click="getOrderList()">
+                                    查询
                                 </el-button>
-                            </el-col>
+                            </el-form-item>
                         </el-row>
-                        <el-row>
-                            <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleChange">
-                                <el-table-column
-                                    type="selection"
-                                    width="55"
-                                />
-                                <el-table-column type="index" label="序号" width="55" />
-                                <el-table-column label="容器" :show-overflow-tooltip="true" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.holdName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="物料" :show-overflow-tooltip="true" width="140">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.ferMaterialCode + ' ' + scope.row.ferMaterialName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="订单量" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.ferAmount }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="单位" width="60">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.ferUnit }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="订单类型" width="120">
-                                    <template slot-scope="scope">
-                                        <el-select v-model="scope.row.ferOrderType" placeholder="请选择" size="mini" style="width: 100px;">
-                                            <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.value" :value="item.code" />
-                                        </el-select>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="版本" width="120">
-                                    <template slot-scope="scope">
-                                        <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px;">
-                                            <el-option value="">
-                                                请选择
-                                            </el-option>
-                                            <el-option v-for="(item, index) in versionsList" :key="index" :label="item.value" :value="item.code" />
-                                        </el-select>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="开始日期" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.startDate }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="结束日期" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.endDate }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="制曲工单" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.kjmOrderNo }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="制曲物料" :show-overflow-tooltip="true" width="140">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.kjmMaterialCode + ' ' + scope.row.kjmMaterialName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="数量" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.kjmAmount }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="单位" width="60">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.kjmUnit }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="批次" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.batch }}
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-row>
-                        <el-row>
-                            <el-pagination
-                                :current-page="currPage"
-                                :page-sizes="[10, 20, 50]"
-                                :page-size="pageSize"
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="totalCount"
-                                @size-change="handleSizeChange"
-                                @current-change="handleCurrentChange"
-                            />
-                        </el-row>
-                    </el-tab-pane>
-                    <el-tab-pane name="2">
-                        <span slot="label" class="spanview">
-                            <el-button>已申请</el-button>
-                        </span>
-                        <el-row>
-                            <el-table header-row-class-name="tableHead" :data="applyedList" border tooltip-effect="dark">
-                                <el-table-column type="index" label="序号" width="55" />
-                                <el-table-column label="订单号" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.ferOrderNo }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="容器" :show-overflow-tooltip="true" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.holdName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="物料" :show-overflow-tooltip="true" width="140">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.ferMaterialCode + ' ' + scope.row.ferMaterialName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="订单量" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.ferAmount }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="单位" width="60">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.ferUnit }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="订单类型" width="120">
-                                    <template slot-scope="scope">
-                                        <el-select v-model="scope.row.ferOrderType" placeholder="请选择" size="mini" style="width: 100px;" :disabled="true">
-                                            <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.value" :value="item.code" />
-                                        </el-select>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="版本" width="120">
-                                    <template slot-scope="scope">
-                                        <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px;" :disabled="true">
-                                            <el-option v-for="(item, index) in versionsList" :key="index" :label="item.value" :value="item.code" />
-                                        </el-select>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="开始日期" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.startDate }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="结束日期" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.endDate }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="制曲工单" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.kjmOrderNo }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="制曲物料" :show-overflow-tooltip="true" width="140">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.kjmMaterialCode + ' ' + scope.row.kjmMaterialName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="数量" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.kjmAmount }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="单位" width="60">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.kjmUnit }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="批次" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.batch }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="申请人员" width="140">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.applyUser }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="申请时间" width="160">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.applyDate }}
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-row>
-                        <el-row>
-                            <el-pagination
-                                :current-page="applyCurrPage"
-                                :page-sizes="[10, 20, 50]"
-                                :page-size="applyPageSize"
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="applyTotalCount"
-                                @size-change="handleApplySizeChange"
-                                @current-change="handleApplyCurrentChange"
-                            />
-                        </el-row>
-                    </el-tab-pane>
-                </el-tabs>
+                    </el-form>
+                </el-col>
+            </el-row>
+            <div class="toggleSearchBottom">
+                <i class="el-icon-caret-top" />
             </div>
+        </el-card>
+        <div class="tableCard">
+            <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
+                <i class="el-icon-caret-bottom" />
+            </div>
+            <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" style=" overflow: hidden; border-radius: 15px;">
+                <el-tab-pane name="1">
+                    <span slot="label" class="spanview">
+                        <el-button>未申请</el-button>
+                    </span>
+                    <el-row>
+                        <el-col>
+                            <el-button v-if="isAuth('fer:order:applyFerOrder')" type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="applyOrder()">
+                                申请订单
+                            </el-button>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="dataList" border tooltip-effect="dark" @selection-change="handleChange">
+                            <el-table-column type="selection" width="55" fixed />
+                            <el-table-column type="index" label="序号" width="55" />
+                            <el-table-column label="容器" :show-overflow-tooltip="true" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.holdName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="物料" :show-overflow-tooltip="true" min-width="140">
+                                <template slot-scope="scope">
+                                    {{ scope.row.ferMaterialCode + ' ' + scope.row.ferMaterialName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="订单量" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.ferAmount }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="单位" min-width="60">
+                                <template slot-scope="scope">
+                                    {{ scope.row.ferUnit }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="订单类型" min-width="120">
+                                <template slot-scope="scope">
+                                    <el-select v-model="scope.row.ferOrderType" placeholder="请选择" size="mini" style="width: 100px;">
+                                        <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.value" :value="item.code" />
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="版本" min-width="120">
+                                <template slot-scope="scope">
+                                    <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px;">
+                                        <el-option value="">
+                                            请选择
+                                        </el-option>
+                                        <el-option v-for="(item, index) in versionsList" :key="index" :label="item.value" :value="item.code" />
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="开始日期" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.startDate }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="结束日期" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.endDate }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="制曲工单" min-width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.kjmOrderNo }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="制曲物料" :show-overflow-tooltip="true" min-width="140">
+                                <template slot-scope="scope">
+                                    {{ scope.row.kjmMaterialCode + ' ' + scope.row.kjmMaterialName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="数量" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.kjmAmount }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="单位" min-width="60">
+                                <template slot-scope="scope">
+                                    {{ scope.row.kjmUnit }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="批次" min-width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.batch }}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-row>
+                    <el-row>
+                        <el-pagination
+                            :current-page="currPage"
+                            :page-sizes="[10, 20, 50]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="totalCount"
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                        />
+                    </el-row>
+                </el-tab-pane>
+                <el-tab-pane name="2">
+                    <span slot="label" class="spanview">
+                        <el-button>已申请</el-button>
+                    </span>
+                    <el-row>
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="applyedList" border tooltip-effect="dark">
+                            <el-table-column type="index" label="序号" width="55" fixed />
+                            <el-table-column label="订单号" min-width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.ferOrderNo }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="容器" :show-overflow-tooltip="true" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.holdName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="物料" :show-overflow-tooltip="true" min-width="140">
+                                <template slot-scope="scope">
+                                    {{ scope.row.ferMaterialCode + ' ' + scope.row.ferMaterialName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="订单量" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.ferAmount }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="单位" min-width="60">
+                                <template slot-scope="scope">
+                                    {{ scope.row.ferUnit }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="订单类型" min-width="120">
+                                <template slot-scope="scope">
+                                    <el-select v-model="scope.row.ferOrderType" placeholder="请选择" size="mini" style="width: 100px;" :disabled="true">
+                                        <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.value" :value="item.code" />
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="版本" min-width="120">
+                                <template slot-scope="scope">
+                                    <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px;" :disabled="true">
+                                        <el-option v-for="(item, index) in versionsList" :key="index" :label="item.value" :value="item.code" />
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="开始日期" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.startDate }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="结束日期" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.endDate }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="制曲工单" min-width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.kjmOrderNo }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="制曲物料" :show-overflow-tooltip="true" min-width="140">
+                                <template slot-scope="scope">
+                                    {{ scope.row.kjmMaterialCode + ' ' + scope.row.kjmMaterialName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="数量" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.kjmAmount }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="单位" min-width="60">
+                                <template slot-scope="scope">
+                                    {{ scope.row.kjmUnit }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="批次" min-width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.batch }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="申请人员" min-width="140">
+                                <template slot-scope="scope">
+                                    {{ scope.row.applyUser }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="申请时间" min-width="160">
+                                <template slot-scope="scope">
+                                    {{ scope.row.applyDate }}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-row>
+                    <el-row>
+                        <el-pagination
+                            :current-page="applyCurrPage"
+                            :page-sizes="[10, 20, 50]"
+                            :page-size="applyPageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="applyTotalCount"
+                            @size-change="handleApplySizeChange"
+                            @current-change="handleApplyCurrentChange"
+                        />
+                    </el-row>
+                </el-tab-pane>
+            </el-tabs>
         </div>
     </div>
 </template>

@@ -59,7 +59,7 @@
                     当前库存信息
                 </span>
                 <el-table header-row-class-name="" :data="dataList" border tooltip-effect="dark" class="newTable">
-                    <el-table-column type="index" label="序号" width="55" />
+                    <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="物料" :show-overflow-tooltip="true">
                         <template slot-scope="scope" width="120">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}
@@ -105,7 +105,7 @@
                     调整信息记录
                 </span>
                 <el-table header-row-class-name="" :data="adjustList" border tooltip-effect="dark" class="newTable">
-                    <el-table-column type="index" label="序号" width="55" />
+                    <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="200">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}
@@ -153,7 +153,7 @@
             </div>
             <div>
                 <el-table header-row-class-name="" :data="applyList" border tooltip-effect="dark" class="newTable">
-                    <el-table-column type="index" label="序号" width="55" align="center" />
+                    <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}

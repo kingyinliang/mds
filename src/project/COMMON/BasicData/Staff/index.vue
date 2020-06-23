@@ -1,72 +1,49 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <el-row class="clearfix">
-                    <div style="float: right;">
-                        <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2">
-                            <el-form-item>
-                                <el-input v-model="controllableForm.param" placeholder="工号" suffix-icon="el-icon-search" clearable @clear="getItemsList()" />
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
-                                    查询
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                </el-row>
-                <el-row type="flex" :gutter="20">
-                    <el-col :span="8">
-                        <el-card>
-                            <div slot="header" class="clearfix">
-                                <span>组织架构</span>
-                            </div>
-                            <el-tree :data="orgTree" node-key="id" :default-expanded-keys="arrList" :expand-on-click-node="false" :props="{label: 'deptName',children:'children'}" @node-click="showOrgDetail" />
-                        </el-card>
-                    </el-col>
-                    <el-col :span="16">
-                        <el-card>
-                            <div slot="header" class="clearfix">
-                                人员
-                            </div>
-                            <div>
-                                <el-button type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
-                                    批量删除
-                                </el-button>
-                                <el-button type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrUpdateItem()">
-                                    增加
-                                </el-button>
-                                <el-table ref="targetInfoList" :data="targetInfoList" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                                    <el-table-column type="selection" width="50" />
-                                    <el-table-column type="index" :index="indexMethod" width="40" />
-                                    <el-table-column prop="workNum" label="人员工号" width="100" />
-                                    <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
-                                    <el-table-column prop="realName" label="人员姓名" width="87" />
-                                    <el-table-column prop="deptName" label="所属部门" width="87" :show-overflow-tooltip="true" />
-                                    <el-table-column prop="post" label="职务" :show-overflow-tooltip="true" width="150" />
-                                    <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="true" width="250" />
-                                    <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true" width="112" />
-                                    <el-table-column prop="created" label="创建日期" width="160" />
-                                    <el-table-column v-if="targetInfoList.length!==0" label="操作" fixed="right" width="65">
-                                        <template slot-scope="scope">
-                                            <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
-                                                编辑
-                                            </el-button>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                            </div>
-                            <el-row v-if="targetInfoList.length!==0">
-                                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                            </el-row>
-                        </el-card>
-                    </el-col>
-                </el-row>
-            </el-card>
-        </div>
+    <div>
+        <org-view
+            ref="orgView"
+            :title="'人员管理'"
+            :right-tile="'人员'"
+            :type="'table'"
+            @treeNodeClick="showOrgDetail"
+        >
+            <template slot="view" style="padding-top: 16px;">
+                <div class="view-btn">
+                    <el-input v-model="controllableForm.param" placeholder="工号/姓名" size="small" suffix-icon="el-icon-search" clearable style="width: 180px; margin-right: 16px;" @clear="getItemsList()" />
+                    <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
+                        查询
+                    </el-button>
+                    <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
+                        批量删除
+                    </el-button>
+                    <el-button type="primary" size="small" @click="addOrUpdateItem()">
+                        增加
+                    </el-button>
+                </div>
+                <el-table ref="targetInfoList" class="newTable" :data="targetInfoList" :height="mainClientHeight - 52 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="50" fixed align="center" />
+                    <el-table-column type="index" label="序号" :index="indexMethod" width="50" fixed />
+                    <el-table-column prop="workNum" label="人员工号" width="120" />
+                    <el-table-column prop="realName" label="人员姓名" width="100" />
+                    <el-table-column prop="deptName" label="所属部门" width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="sex" label="性别" :show-overflow-tooltip="true" width="60" :formatter="sexFormatter" />
+                    <el-table-column prop="post" label="职务" :show-overflow-tooltip="true" width="160" />
+                    <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="true" width="260" />
+                    <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true" width="120" />
+                    <el-table-column prop="created" label="创建日期" width="180" />
+                    <el-table-column v-if="targetInfoList.length!==0" label="操作" fixed="right" width="65">
+                        <template slot-scope="scope">
+                            <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
+                                编辑
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </template>
+        </org-view>
         <staff-add-or-update v-if="isDialogShow" ref="addOrUpdateItem" :org-tree="orgTree" @refreshDataList="getItemsList" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -95,23 +72,20 @@ export default {
             pageSize: 10
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
+        }
+    },
     mounted() {
-        this.getTree();
+        // 进页面预设根目录内容
+        this.deptID = '1';
+        this.getItemsList();
     },
     methods: {
         // 序号
         indexMethod(index) {
             return index + 1 + (Number(this.currPage) - 1) * (Number(this.pageSize));
-        },
-        // 获取组织结构树
-        getTree() {
-            COMMON_API.ORGSTRUCTURE_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            }).then(({ data }) => {
-                this.orgTree = data.data;
-                this.arrList = this.orgTree[0].children.length !== 0 ? [this.orgTree[0].children[0].id] : [];
-            });
         },
         // 根据deptId查询用户
         showOrgDetail(data) {
@@ -128,7 +102,14 @@ export default {
                 this.$notify.error({ title: '错误', message: '请选择组织层级' });
                 return;
             }
-            COMMON_API.USER_ROLE_QUERY_API({
+            let net;
+            switch (JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode) {
+                case '9999-xn':
+                    net = COMMON_API.USER_QUERY_API;
+                    break;
+                default: net = COMMON_API.USER_ROLE_QUERY_API;
+            }
+            net({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.deptID,
                 workNum: this.controllableForm.param,
@@ -136,15 +117,11 @@ export default {
                 size: this.pageSize
             }).then(({ data }) => {
                 if (hasParas && data.data.records.length === 0) {
-                        this.$infoToast('该搜寻条件无任何资料！');
+                        this.$infoToast('暂无任何内容');
                 }
                 this.multipleSelection = [];
                 this.targetInfoList = data.data.records;
                 this.targetInfoList.forEach(item => {
-                    if (item.tempFlag === 'Y') {
-                        item.workNumTemp = item.workNum;
-                        item.workNum = '';
-                    }
                     item.deptName = item.sysDept.deptName;
                 })
                 this.currPage = data.data.current;
@@ -227,9 +204,24 @@ export default {
         handleCurrentChange(val) {
             this.currPage = val;
             this.getItemsList();
+        },
+        sexFormatter(row) {
+            if (row.sex === 'M') {
+                return '男'
+            } else if (row.sex === 'F') {
+                return '女'
+            }
+                return ''
+
+
         }
     }
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+    .view-btn {
+        float: right;
+        margin-bottom: 10px;
+    }
+</style>

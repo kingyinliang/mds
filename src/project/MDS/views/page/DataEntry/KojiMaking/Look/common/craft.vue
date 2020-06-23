@@ -78,7 +78,7 @@
                     </el-col>
                 </el-row>
                 <el-table ref="recordTable" class="newTable borderTable" border max-height="315" header-row-class-name="tableHead" :data="lookList" :row-class-name="rowDelFlag" tooltip-effect="dark">
-                    <el-table-column label="序号" type="index" width="50px" />
+                    <el-table-column label="序号" type="index" width="50px" fixed />
                     <el-table-column label="" width="205">
                         <template slot="header">
                             <i class="reqI">*</i>

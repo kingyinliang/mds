@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="部门分配" :close-on-click-modal="false" :visible.sync="isDialogShow">
-        <div style="height: 300px; overflow: auto;">
+        <div style="max-height: 53vh; overflow: auto;">
             <el-tree
                 ref="deptListTree"
                 :data="orgTree"

@@ -17,7 +17,7 @@ const mainRoutes: RouteConfig = {
         { path: '/', redirect: '/home' },
         {
             path: '/home',
-            component: importTarget('MDS/views/common/home'),
+            component: importTarget('COMMON/home'),
             name: 'home',
             meta: { title: '首页' }
         },
@@ -32,6 +32,26 @@ const mainRoutes: RouteConfig = {
             component: importTarget('COMMON/500'),
             name: '500',
             meta: { title: '500' }
+        },
+        {
+            path: '/DFMDS-pages-Message',
+            component: importTarget('DFMDS/pages/Message/index'),
+            name: 'DFMDS-pages-Message',
+            meta: {
+                menuId: 2,
+                title: 'Message',
+                isTab: true
+            }
+        },
+        {
+            path: '/detail',
+            component: importTarget('DFMDS/pages/Packaging/Audit/detail'),
+            name: 'detail',
+            meta: {
+                menuId: 1,
+                title: 'detail',
+                isTab: true
+            }
         }
     ],
     beforeEnter(to, from, next) {

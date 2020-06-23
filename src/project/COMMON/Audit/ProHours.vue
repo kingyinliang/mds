@@ -10,7 +10,7 @@
             :show-index-column="true"
             :show-select-column="true"
             :show-operation-column="true"
-            :operation-column-width="70"
+            :operation-column-width="140"
             @get-data-success="setData"
         >
             <template slot="tab-head0">
@@ -22,7 +22,7 @@
                         <el-button type="primary" size="small" @click="pass">
                             过账
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-red" @click="visibleRefuse = true">
+                        <el-button type="primary" size="small" class="sub-red" @click="refuseDialog">
                             退回
                         </el-button>
                     </div>
@@ -34,7 +34,7 @@
                     <span>报工列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 120px; margin-right: 10px;" />
-                        <el-button type="primary" size="small" class="sub-yellow" @click="visibleBack = true">
+                        <el-button type="primary" size="small" class="sub-yellow" @click="writeOffsDialog">
                             反审
                         </el-button>
                     </div>
@@ -44,21 +44,36 @@
                 <el-button class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
                     {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
+                <el-button class="ra_btn" type="text" round size="mini" @click="AuditLog(scope.row)">
+                    审核日志
+                </el-button>
             </template>
         </query-table>
         <el-dialog title="退回原因" :close-on-click-modal="false" :visible.sync="visibleRefuse">
             <el-input v-model="ReText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="visibleRefuse = false">取消</el-button>
-                <el-button type="primary" @click="refuse()">确定</el-button>
-            </span>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="visibleRefuse = false">
+                    取消
+                </el-button>
+                <el-button type="primary" @click="refuse()">
+                    确定
+                </el-button>
+            </div>
         </el-dialog>
         <el-dialog title="反审原因" :close-on-click-modal="false" :visible.sync="visibleBack">
             <el-input v-model="BackText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="visibleWriteOffs = false">取消</el-button>
-                <el-button type="primary" @click="writeOffs()">确定</el-button>
-            </span>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="visibleWriteOffs = false">
+                    取消
+                </el-button>
+                <el-button type="primary" @click="writeOffs()">
+                    确定
+                </el-button>
+            </div>
+        </el-dialog>
+        <el-dialog title="审核日志" width="600px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
+            <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
+            <div slot="footer" class="dialog-footer" />
         </el-dialog>
     </div>
 </template>
@@ -66,121 +81,136 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, AUDIT_API } from 'common/api/api';
-
-    const Column = [
-        {
-            prop: 'status',
-            label: '过账状态'
-        },
-        {
-            prop: 'orderProductDate',
-            label: '生产日期'
-        },
-        {
-            prop: 'orderNo',
-            label: '生产订单'
-        },
-        {
-            prop: 'materialCode',
-            label: '生产物料 '
-        },
-        {
-            prop: 'planOutput',
-            label: '计划数量'
-        },
-        {
-            prop: 'outputUnit',
-            label: '单位'
-        },
-        {
-            prop: 'countOutput',
-            label: '入库数量'
-        },
-        {
-            prop: 'countOutputUnit',
-            label: '单位'
-        },
-        {
-            prop: 'confActivity1',
-            label: '准备工时'
-        },
-        {
-            prop: 'confActiUnit1',
-            label: '单位'
-        },
-        {
-            prop: 'confActivity2',
-            label: '机器工时'
-        },
-        {
-            prop: 'confActiUnit2',
-            label: '单位'
-        },
-        {
-            prop: 'confActivity3',
-            label: '人工工时'
-        },
-        {
-            prop: 'confActiUnit3',
-            label: '单位'
-        },
-        {
-            type: 'date-picker',
-            redact: true,
-            valueFormat: 'yyyy-MM-dd',
-            prop: 'execStartDate',
-            label: '开始日期',
-            width: '130'
-        },
-        {
-            type: 'date-picker',
-            redact: true,
-            valueFormat: 'yyyy-MM-dd',
-            prop: 'execStartTime',
-            label: '完成日期',
-            width: '130'
-        },
-        {
-            width: '120',
-            prop: 'operation',
-            label: '操作活动编号',
-            type: 'input',
-            redact: true
-        },
-        {
-            type: 'input',
-            redact: true,
-            prop: 'finConf',
-            label: '部分/最后确认',
-            width: '120'
-        },
-        {
-            type: 'input',
-            redact: true,
-            prop: 'remark',
-            label: '备注'
-        },
-        {
-            prop: 'interfaceReturn',
-            label: '接口回写'
-        }
-    ]
+    import { dateFormat } from 'utils/utils';
 
     @Component({
         components: {
         }
     })
     export default class ProInStore extends Vue {
+        //表格数据
+        Column = [
+            {
+                prop: 'status',
+                label: '过账状态'
+            },
+            {
+                prop: 'orderProductDate',
+                label: '生产日期',
+                width: '120'
+            },
+            {
+                prop: 'orderNo',
+                label: '生产订单',
+                width: '120'
+            },
+            {
+                prop: 'materialCode',
+                label: '生产物料 ',
+                width: '120',
+                formatter: (row) => {
+                    return row.materialCode + ' ' + row.materialName;
+                }
+            },
+            {
+                prop: 'planOutput',
+                label: '计划数量'
+            },
+            {
+                prop: 'outputUnit',
+                label: '单位'
+            },
+            {
+                prop: 'countOutput',
+                label: '入库数量'
+            },
+            {
+                prop: 'countOutputUnit',
+                label: '单位'
+            },
+            {
+                prop: 'confActivity1',
+                label: '准备工时'
+            },
+            {
+                prop: 'confActiUnit1',
+                label: '单位'
+            },
+            {
+                prop: 'confActivity2',
+                label: '机器工时'
+            },
+            {
+                prop: 'confActiUnit2',
+                label: '单位'
+            },
+            {
+                prop: 'confActivity3',
+                label: '人工工时'
+            },
+            {
+                prop: 'confActiUnit3',
+                label: '单位'
+            },
+            {
+                type: 'date-picker',
+                redact: true,
+                header: true,
+                valueFormat: 'yyyy-MM-dd',
+                prop: 'execStartDate',
+                label: '开始日期',
+                width: '158'
+            },
+            {
+                type: 'date-picker',
+                redact: true,
+                header: true,
+                valueFormat: 'yyyy-MM-dd',
+                prop: 'setupFinDate',
+                label: '完成日期',
+                width: '158'
+            },
+            {
+                width: '120',
+                prop: 'operation',
+                label: '操作活动编号',
+                type: 'input',
+                header: true,
+                redact: true
+            },
+            {
+                type: 'input',
+                redact: true,
+                header: true,
+                prop: 'finConf',
+                label: '部分/最后确认',
+                width: '120'
+            },
+            {
+                type: 'input',
+                redact: true,
+                prop: 'remark',
+                label: '备注'
+            },
+            {
+                prop: 'interfaceReturn',
+                label: '接口回写'
+            }
+        ]
+
         $refs: {
             queryTable: HTMLFormElement;
         };
 
-        ReText = ''
-        BackText = ''
-        postingDate = ''
-        visibleRefuse = false
-        visibleBack = false
+        auditLogData = [] // 审核日志
+        ReText = '' // 退回原因
+        BackText = '' // 反审原因
+        postingDate = '' // 过账日期
+        visibleAuditLog = false // 审核日志弹窗
+        visibleRefuse = false // 退回原因弹窗
+        visibleBack = false // 反审原因弹窗
 
+        // 查询表头
         queryFormData = [
             {
                 type: 'select',
@@ -217,12 +247,7 @@
             {
                 type: 'input',
                 label: '生产订单',
-                prop: 'orderId'
-            },
-            {
-                type: 'input',
-                label: '组件物料',
-                prop: 'materialCode'
+                prop: 'orderNo'
             },
             {
                 type: 'select',
@@ -230,7 +255,8 @@
                 prop: 'orderType',
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
-                        dictType: 'COMMON_CHECK_STATUS'
+                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        dictType: 'ORDER_TYPE'
                     })
                 },
                 defaultValue: '',
@@ -243,7 +269,7 @@
             {
                 type: 'select',
                 label: '过账状态',
-                prop: 'orderStatus',
+                prop: 'postingStatus',
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_CHECK_STATUS'
@@ -259,34 +285,41 @@
             {
                 type: 'date-interval',
                 label: '生产日期',
+                defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
                 prop: 'produceStart',
                 propTwo: 'produceEnd'
             }
         ];
 
+        // tab页签
         tabs = [
             {
                 label: '未过账',
                 tableData: [],
+                multipleSelection: [],
                 pages: {
                     currPage: 1,
                     pageSize: 10,
                     totalCount: 0
                 },
-                column: Column
+                showOperationColumn: true,
+                column: this.Column // eslint-disable-line
             },
             {
                 label: '已过账',
                 tableData: [],
+                multipleSelection: [],
                 pages: {
                     currPage: 1,
                     pageSize: 10,
                     totalCount: 0
                 },
-                column: Column
+                showOperationColumn: true,
+                column: this.Column // eslint-disable-line
             }
         ];
 
+        // 查询请求
         listInterface = params => {
             params.passStatus = this.$refs.queryTable.activeName * 1;// eslint-disable-line
             params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
@@ -296,6 +329,7 @@
             return AUDIT_API.HOURS_LIST_API(params);
         };
 
+        // 表格复选框
         selectableFn = row => {
             if (row.status === '已退回') {
                 return 0;
@@ -303,6 +337,7 @@
             return 1;
         };
 
+        // 设置数据
         setData(datas, st) {
             if (st) {
                 this.tabs.forEach((item, index) => {
@@ -337,16 +372,22 @@
             }
         }
 
+        // 设置编辑
         setRedact(data) {
             data.forEach(item => {
                 item.redact = false
             })
         }
 
+        // 保存修改
         addOrupdate(row) {
             if (!row.redact) {
                 row.redact = true;
             } else {
+                if (!row.execStartDate || !row.setupFinDate || !row.operation || !row.finConf) {
+                    this.$warningToast('请填写必填项')
+                    return false
+                }
                 row.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                 AUDIT_API.HOURS_UPDATE_API(row).then(({ data }) => {
                     this.$successToast(data.msg);
@@ -355,24 +396,62 @@
             }
         }
 
-        pass() {
-            this.$confirm(`确定过账，是否继续？`, '过账确认', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                AUDIT_API.HOURS_PASS_API({
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    list: this.$refs.queryTable.multipleSelection,
-                    postingDate: this.postingDate
-                }).then(({ data }) => {
-                    this.$successToast(data.msg)
-                    this.$refs.queryTable.getDataList()
-                })
+        // 审核日志
+        AuditLog(row) {
+            AUDIT_API.AUDIT_LOG_LIST_API({
+                orderNo: row.orderNo,
+                verifyType: 'TIMESHEET'
+            }).then(({ data }) => {
+                this.auditLogData = data.data
+                this.visibleAuditLog = true
             })
         }
 
+        // 过账
+        pass() {
+            if (!this.postingDate) {
+                this.$warningToast('请选择过账日期')
+                return false
+            }
+            if (this.$refs.queryTable.tabs[0].multipleSelection && this.$refs.queryTable.tabs[0].multipleSelection.length) {
+                this.$confirm(`确定过账，是否继续？`, '过账确认', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    AUDIT_API.HOURS_PASS_API({
+                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                        list: this.$refs.queryTable.tabs[0].multipleSelection,
+                        postingDate: this.postingDate
+                    }).then(({ data }) => {
+                        this.$successToast(data.msg)
+                        this.$refs.queryTable.getDataList()
+                    })
+                })
+            } else {
+                this.$warningToast('请勾选数据')
+            }
+        }
+
+        // 退回弹窗
+        refuseDialog() {
+            if (this.$refs.queryTable.tabs[0].multipleSelection && this.$refs.queryTable.tabs[0].multipleSelection.length) {
+                if (this.postingDate) {
+                    this.visibleRefuse = true
+                } else {
+                    this.$warningToast('请选择过账日期')
+                }
+            } else {
+                this.$warningToast('请勾选数据')
+            }
+        }
+
+        // 退回确认
         refuse() {
+            if (!this.ReText) {
+                this.$warningToast('请填写原因')
+                return false
+            }
             this.$confirm(`确定退回，是否继续？`, '退回确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -380,17 +459,36 @@
             }).then(() => {
                 AUDIT_API.HOURS_REFUSE_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    list: this.$refs.queryTable.multipleSelection,
+                    list: this.$refs.queryTable.tabs[0].multipleSelection,
                     reason: this.ReText
                 }).then(({ data }) => {
                     this.visibleRefuse = false
+                    this.ReText = ''
                     this.$successToast(data.msg)
                     this.$refs.queryTable.getDataList()
                 })
             })
         }
 
+        // 反审弹窗
+        writeOffsDialog() {
+            if (this.$refs.queryTable.tabs[1].multipleSelection && this.$refs.queryTable.tabs[1].multipleSelection.length) {
+                if (this.postingDate) {
+                    this.visibleBack = true
+                } else {
+                    this.$warningToast('请选择过账日期')
+                }
+            } else {
+                this.$warningToast('请勾选数据')
+            }
+        }
+
+        // 反审确认
         writeOffs() {
+            if (!this.BackText) {
+                this.$warningToast('请填写原因')
+                return false
+            }
             this.$confirm(`确定反审，是否继续？`, '反审确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -398,9 +496,12 @@
             }).then(() => {
                 AUDIT_API.HOURS_WRITEOFFS_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    list: this.$refs.queryTable.multipleSelection
+                    list: this.$refs.queryTable.tabs[1].multipleSelection,
+                    postingDate: this.postingDate,
+                    reason: this.BackText
                 }).then(({ data }) => {
-                    this.visibleRefuse = false
+                    this.visibleBack = false
+                    this.BackText = ''
                     this.$successToast(data.msg)
                     this.$refs.queryTable.getDataList()
                 })

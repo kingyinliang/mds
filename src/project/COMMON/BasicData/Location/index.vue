@@ -1,14 +1,14 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <div class="clearfix">
+    <div>
+        <div class="header_main">
+            <mds-card title="库位列表" :name="'location'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
+                <template slot="titleBtn">
                     <el-row style="float: right;">
                         <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
                             <el-form-item>
                                 <el-input v-model="form.deptName" placeholder="车间" suffix-icon="el-icon-search" clearable @clear="getQueryItemList()" @keyup.enter.native="getQueryItemList()" />
                             </el-form-item>
-                            <el-form-item>
+                            <el-form-item style="height: 32px;">
                                 <el-button type="primary" size="small" :disabled="form.deptName.trim() === ''" @click="getQueryItemList()">
                                     查询
                                 </el-button>
@@ -18,52 +18,50 @@
                                 <el-button type="primary" size="small" @click="addOrUpdateItem()">
                                     新增
                                 </el-button>
-                                <el-button type="danger" size="small" :disabled="itemList.length === 0" @click="removeItems()">
+                                <el-button type="danger" size="small" :disabled="itemList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
                         </el-form>
                     </el-row>
-                </div>
+                </template>
+                <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :height="mainClientHeight - 70 - 47" :data="itemList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange" @row-dblclick="addOrUpdateItem">
+                    <el-table-column type="selection" width="50" align="center" fixed />
+                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" align="center" fixed />
+                    <el-table-column prop="deptName" width="160" :show-overflow-tooltip="true" label="车间" />
+                    <el-table-column :show-overflow-tooltip="true" label="物料类型">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialTypeCode + ' ' + scope.row.materialTypeName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column :show-overflow-tooltip="true" label="物料编码">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialCode }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="80" prop="storageLocation" label="库位" />
+                    <el-table-column width="91" label="是否样品库">
+                        <template slot-scope="scope">
+                            {{ scope.row.sampleFlag === 0 ? '否' : '是' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="84" label="发料/入库">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialUse === 'F' ? '发料' : '入库' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="54" label="操作">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" @click="addOrUpdateItem(scope.row)">
+                                编辑
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
                 <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="itemList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange" @row-dblclick="addOrUpdateItem">
-                        <el-table-column type="selection" width="34" />
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="55" />
-                        <el-table-column prop="deptName" width="160" :show-overflow-tooltip="true" label="车间" />
-                        <el-table-column :show-overflow-tooltip="true" label="物料类型">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialTypeCode + ' ' + scope.row.materialTypeName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column :show-overflow-tooltip="true" label="物料编码">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialCode }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="80" prop="storageLocation" label="库位" />
-                        <el-table-column width="91" label="是否样品库">
-                            <template slot-scope="scope">
-                                {{ scope.row.sampleFlag === 0 ? '否' : '是' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="84" label="发料/入库">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialUse === 'F' ? '发料' : '入库' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="84" label="操作">
-                            <template slot-scope="scope">
-                                <el-button type="primary" size="small" @click="addOrUpdateItem(scope.row)">
-                                    编辑
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-row>
-                <el-row v-if="itemList.length !== 0">
                     <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
-            </el-card>
+            </mds-card>
         </div>
         <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDialogShow" @close="closeSearchDialog()">
             <el-form ref="searchDialog" :model="form" size="small" label-width="110px" class="locationdialog">
@@ -97,7 +95,7 @@
             </span>
         </el-dialog>
         <location-add v-if="isAddOrUpdateDialogShow" ref="locationAdd" :work-shop="workShop" :material-list="materialList" @refreshDataList="getItemList()" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -132,7 +130,11 @@
                 currentQueryStatus: 0
             };
         },
-        computed: {},
+        computed: {
+            mainClientHeight() {
+                return this.$store.state.common.mainClientHeight;
+            }
+        },
         mounted() {
             this.getItemList();
             this.getDeptByFactoryId();
@@ -155,18 +157,14 @@
                 }).then(({ data }) => {
                     this.isAddOrUpdateDialogShow = false;
                     this.isAdvanceSearchDialogShow = false;
-                    if (data.code === 200) {
-                        if (st && data.data.records.length === 0) {
-                            this.$infoToast('该搜寻条件无任何库位数据！');
+                    if (st && data.data.records.length === 0) {
+                            this.$infoToast('暂无任何内容');
                         }
-                        this.multipleSelection = [];
-                        this.itemList = data.data.records;
-                        this.currPage = data.data.current;
-                        this.pageSize = data.data.size;
-                        this.totalCount = data.data.total;
-                    } else {
-                        this.$errorToast(data.msg);
-                    }
+                    this.multipleSelection = [];
+                    this.itemList = data.data.records;
+                    this.currPage = data.data.current;
+                    this.pageSize = data.data.size;
+                    this.totalCount = data.data.total;
                 });
             },
             //模糊查询
@@ -201,15 +199,11 @@
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         ids: this.multipleSelection
                     }).then(({ data }) => {
-                        if (data.code === 200) {
-                            this.$successToast('删除成功!');
-                            this.multipleSelection = [];
-                            this.$nextTick(() => {
-                                this.getItemList()
-                            });
-                        } else {
-                            this.$errorTost(data.msg);
-                        }
+                        this.$successToast((data.msg));
+                        this.multipleSelection = [];
+                        this.$nextTick(() => {
+                            this.getItemList()
+                        });
                     });
                 });
             },
@@ -226,11 +220,7 @@
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     deptType: ['WORK_SHOP']
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.workShop = data.data;
-                    } else {
-                        this.$errorTost(data.msg);
-                    }
+                    this.workShop = data.data;
                 });
             },
             // 获取物料
@@ -238,11 +228,7 @@
                 COMMON_API.DICTQUERY_API({
                     dictType: 'COMMON_MATERIAL_TYPE'
                 }).then(({ data }) => {
-                    if (data.code === 200) {
-                        this.materialList = data.data;
-                    } else {
-                        this.$errorTost(data.msg);
-                    }
+                    this.materialList = data.data;
                 });
             },
             // 表格选中

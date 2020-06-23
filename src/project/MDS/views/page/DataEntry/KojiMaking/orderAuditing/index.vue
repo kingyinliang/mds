@@ -1,248 +1,171 @@
 <template>
-    <el-col>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row type="flex">
-                    <el-col :span="20">
-                        <el-form :inline="true" size="small" label-width="70px">
-                            <el-form-item label="生产车间：">
-                                <p class="input_bommom">
-                                    {{ formHeader.workShopName }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="订单号：">
-                                <p class="input_bommom">
-                                    {{ formHeader.orderNo }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="订单日期：">
-                                <p class="input_bommom">
-                                    {{ formHeader.orderDate }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="品项：">
-                                <p class="input_bommom">
-                                    {{ formHeader.materialCode + ' ' + formHeader.materialName }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="计划产量：">
-                                <p class="input_bommom">
-                                    {{ formHeader.planOutput }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="入罐号：">
-                                <p class="input_bommom">
-                                    {{ formHeader.inPotNoName }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="生产日期：">
-                                <p class="input_bommom">
-                                    {{ formHeader.productDate }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="提交人员：">
-                                <p class="input_bommom">
-                                    {{ formHeader.changer }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="提交时间：">
-                                <p class="input_bommom">
-                                    {{ formHeader.changed }}
-                                </p>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                    <el-col :span="4">
-                        <div style="float: right; font-size: 14px; line-height: 31px;">
-                            <div style="float: left;">
-                                <span class="point" :style="{'background': formHeader.orderStatus === 'noPass'? 'red' : formHeader.orderStatus === 'saved'? '#1890f' : formHeader.orderStatus === 'submit' ? '#1890ff' : formHeader.orderStatus === '已拆分' ? '#f5f7fa' : 'rgb(103, 194, 58)'}" />订单状态：
+    <div class="header_main">
+        <data-entry
+            ref="dataEntry"
+            :header-base="headerBase"
+            :form-header="formHeader"
+            :order-status="formHeader.orderStatus"
+            :tabs="tabs"
+            submit-auth="sys:midTimeSheet:udpate"
+            :not-permit-submit-status="notPermitSubmitStatus"
+            :submit-rules="submitRules"
+            :submit-datas="submitDatas"
+            :only-submit="true"
+            @success="getList"
+        >
+            <template slot="1">
+                <div>
+                    <mds-card title="报工工时" :name="'baogonggognshi'">
+                        <template slot="titleBtn">
+                            <div style="float: right;">
+                                <el-button v-if="formHeader.orderStatus !== 'submit' && formHeader.orderStatus !== 'checked'&& isAuth('sys:midTimeSheet:udpate')" type="primary" style="float: right;" size="small" @click="GetTime">
+                                    获取工时
+                                </el-button>
                             </div>
-                            <span :style="{'color': formHeader.orderStatus === 'noPass'? 'red' : '' }">{{ formHeader.orderStatus === 'noPass'? '审核不通过' : formHeader.orderStatus === 'saved' ? '已保存' : formHeader.orderStatus === 'submit' ? '已提交' : formHeader.orderStatus === 'checked' ? '通过':formHeader.orderStatus === '已同步' ? '已同步' : formHeader.orderStatus === '已拆分' ? '未录入' : formHeader.orderStatus === 'toBeAudited' ? '待审核' : formHeader.orderStatus }}</span>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row style="text-align: right;" class="button_three_goup">
-                    <template style="float: right; margin-left: 10px;">
-                        <el-button type="primary" size="small" @click="$router.push({ path: '/DataEntry-KojiMaking-orderManage-index'})">
-                            返回
-                        </el-button>
-                        <el-button :disabled="!(formHeader.orderStatus === 'toBeAudited' || formHeader.orderStatus === 'noPass') && isAuth('sys:midTimeSheet:udpate')" type="primary" size="small" @click="submitForm">
-                            提交
-                        </el-button>
-                    </template>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
+                        </template>
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="workHourList" border tooltip-effect="dark">
+                            <el-table-column type="index" width="55" label="序号" fixed />
+                            <el-table-column label="工序" min-width="150">
+                                <template slot-scope="scope">
+                                    {{ scope.row.productLineName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="曲房" min-width="150">
+                                <template slot-scope="scope">
+                                    {{ scope.row.houseName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                label="准备工时"
+                                min-width="100"
+                            >
+                                <template slot-scope="scope">
+                                    {{ scope.row.confActivity1 }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column min-width="60" label="单位">
+                                <template slot-scope="scope">
+                                    {{ scope.row.confActiUnit1 }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column min-width="140" label="人工工时">
+                                <template slot-scope="scope">
+                                    {{ scope.row.confActivity3 }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="单位" min-width="60">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.confActiUnit3 }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="机器工时" min-width="140">
+                                <template slot-scope="scope">
+                                    <el-input v-model.number="scope.row.confActivity2" size="small" type="number" placeholder="手工录入" :disabled="scope.row.disabled" />
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="单位" min-width="60">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.confActiUnit2 }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="备注">
+                                <template slot-scope="scope">
+                                    {{ scope.row.remark }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                fixed="right"
+                                label="操作"
+                                min-width="145"
+                            >
+                                <template slot-scope="scope">
+                                    <el-button v-if="scope.row.disabled && isAuth('sys:midTimeSheet:udpate')" style="float: left;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" @click="enbaleEdit(scope.row)">
+                                        编辑
+                                    </el-button>
+                                    <el-button v-if="!scope.row.disabled && isAuth('sys:midTimeSheet:udpate')" style="float: left;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" @click="saveWorkHour(scope.row)">
+                                        保存
+                                    </el-button>
+                                    <el-button v-if="isAuth('sys:midTimeSheet:udpate')" style="float: right;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" @click="goBack('报工工时', scope.row)">
+                                        退回
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </mds-card>
+                    <auditLog :table-data="workHourAuditList" />
                 </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <div class="tableCard">
-                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-                <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card" style=" overflow: hidden; border-radius: 15px;" @tab-click="tabClick">
-                    <el-tab-pane name="1">
-                        <span slot="label" class="spanview">
-                            <el-tooltip class="item" effect="dark" :content="readyState === 'noPass'? '不通过':readyState === 'saved'? '已保存':readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过': readyState === 'toBeAudited' ? '待审核' : '未录入'" placement="top-start">
-                                <el-button :style="{'color': readyState === 'noPass'? 'red' : ''}">报工工时</el-button>
-                            </el-tooltip>
-                        </span>
-                        <el-row>
-                            <el-button v-if="formHeader.orderStatus !== 'submit' && formHeader.orderStatus !== 'checked'&& isAuth('sys:midTimeSheet:udpate')" type="primary" style="float: right;" size="small" @click="GetTime">
-                                获取工时
-                            </el-button>
-                            <el-table header-row-class-name="tableHead" :data="workHourList" border tooltip-effect="dark">
-                                <el-table-column type="index" width="55" label="序号" />
-                                <el-table-column label="工序" width="150">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.productLineName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="曲房" width="150">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.houseName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    label="准备工时"
-                                    width="100"
-                                >
-                                    <template slot-scope="scope">
-                                        {{ scope.row.confActivity1 }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column width="60" label="单位">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.confActiUnit1 }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column width="140" label="人工工时">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.confActivity3 }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="单位" width="60">
-                                    <template slot-scope="scope">
-                                        <span>{{ scope.row.confActiUnit3 }}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="机器工时" width="140">
-                                    <template slot-scope="scope">
-                                        <el-input v-model.number="scope.row.confActivity2" size="small" type="number" placeholder="手工录入" :disabled="scope.row.disabled" />
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="单位" width="60">
-                                    <template slot-scope="scope">
-                                        <span>{{ scope.row.confActiUnit2 }}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="备注">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.remark }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    fixed="right"
-                                    label="操作"
-                                    width="145"
-                                >
-                                    <template slot-scope="scope">
-                                        <el-button v-if="scope.row.disabled && isAuth('sys:midTimeSheet:udpate')" style="float: left;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" @click="enbaleEdit(scope.row)">
-                                            编辑
-                                        </el-button>
-                                        <el-button v-if="!scope.row.disabled && isAuth('sys:midTimeSheet:udpate')" style="float: left;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit'" @click="saveWorkHour(scope.row)">
-                                            保存
-                                        </el-button>
-                                        <el-button v-if="isAuth('sys:midTimeSheet:udpate')" style="float: right;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" @click="goBack('报工工时', scope.row)">
-                                            退回
-                                        </el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <auditLog :table-data="workHourAuditList" />
-                            </el-col>
-                        </el-row>
-                    </el-tab-pane>
-                    <el-tab-pane name="2">
-                        <span slot="label" class="spanview">
-                            <el-tooltip class="item" effect="dark" :content="inStorageState === 'noPass'? '不通过':inStorageState === 'saved'? '已保存':inStorageState === 'submit' ? '已提交' : inStorageState === 'checked'? '通过':inStorageState === 'toBeAudited'?'待审核':'未录入'" placement="top-start">
-                                <el-button :style="{'color': inStorageState === 'noPass'? 'red' : ''}">生产入库</el-button>
-                            </el-tooltip>
-                        </span>
-                        <el-row>
-                            <el-table header-row-class-name="tableHead" :data="inStockList" border tooltip-effect="dark">
-                                <el-table-column type="index" width="55" label="序号" />
-                                <el-table-column label="制曲日期" width="100" prop="inKjmDate" />
-                                <el-table-column label="曲房" width="100" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.houseName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="豆粕量(KG)" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.pulpWeight }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    label="麦粉量(KG)"
-                                    width="100"
-                                >
-                                    <template slot-scope="scope">
-                                        {{ scope.row.wheatWeight }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column width="90" label="盐水量">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.saltWaterWeight }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column width="180" label="入库物料">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="入库量" width="90">
-                                    <template slot-scope="scope">
-                                        <span>{{ scope.row.sauceWeight }}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="入库批次" width="120">
-                                    <template slot-scope="scope">
-                                        <span>{{ scope.row.batch }}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="单位" width="60">
-                                    <template slot-scope="scope">
-                                        <span>{{ scope.row.unit }}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="操作人" width="145">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.changer }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="操作时间" width="160">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.changed }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    fixed="right"
-                                    label="操作"
-                                    width="80"
-                                >
-                                    <template slot-scope="scope">
-                                        <el-button v-if="isAuth('sys:midTimeSheet:udpate')" style="float: right;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" @click="goBack('生产入库', scope.row)">
-                                            退回
-                                        </el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-row>
+            </template>
+            <template slot="2">
+                <div>
+                    <mds-card title="生产入库" :name="'shengchanruku'">
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="inStockList" border tooltip-effect="dark">
+                            <el-table-column type="index" min-width="55" label="序号" fixed />
+                            <el-table-column label="制曲日期" min-width="100" prop="inKjmDate" />
+                            <el-table-column label="曲房" min-width="100" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.houseName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="豆粕量(KG)" min-width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.pulpWeight }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                label="麦粉量(KG)"
+                                min-width="100"
+                            >
+                                <template slot-scope="scope">
+                                    {{ scope.row.wheatWeight }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column min-width="90" label="盐水量">
+                                <template slot-scope="scope">
+                                    {{ scope.row.saltWaterWeight }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column min-width="180" label="入库物料">
+                                <template slot-scope="scope">
+                                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="入库量" min-width="90">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.sauceWeight }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="入库批次" min-width="120">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.batch }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="单位" min-width="60">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.unit }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作人" min-width="145">
+                                <template slot-scope="scope">
+                                    {{ scope.row.changer }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作时间" min-width="160">
+                                <template slot-scope="scope">
+                                    {{ scope.row.changed }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                fixed="right"
+                                label="操作"
+                                width="80"
+                            >
+                                <template slot-scope="scope">
+                                    <el-button v-if="isAuth('sys:midTimeSheet:udpate')" style="float: right;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" @click="goBack('生产入库', scope.row)">
+                                        退回
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
                         <el-row style="margin-top: 20px;">
                             <el-col>
                                 <div>
@@ -251,100 +174,84 @@
                                 </div>
                             </el-col>
                         </el-row>
-                        <!-- <el-row style="margin-top:20px;">
-              <el-col>
-                <span>实际入库数：</span><el-input size="small" type="number" v-model.number='realInAmount' style="display:inline-block; width:150px;"></el-input> L
-              </el-col>
-            </el-row> -->
-                        <el-row>
-                            <el-col :span="24">
-                                <auditLog :table-data="inStockAuditList" />
-                            </el-col>
-                        </el-row>
-                    </el-tab-pane>
-                    <el-tab-pane name="3">
-                        <span slot="label" class="spanview">
-                            <el-tooltip class="item" effect="dark" :content="applyMaterielState === 'noPass'? '不通过':applyMaterielState === 'saved'? '已保存':applyMaterielState === 'submit' ? '已提交' : applyMaterielState === 'checked'? '通过':applyMaterielState === 'toBeAudited'? '待审核' : '未录入'" placement="top-start">
-                                <el-button :style="{'color': applyMaterielState === 'noPass'? 'red' : ''}">物料领用</el-button>
-                            </el-tooltip>
-                        </span>
-                        <el-row>
-                            <el-table header-row-class-name="tableHead" :data="applyMaterieList" border tooltip-effect="dark">
-                                <el-table-column type="index" width="55" label="序号" />
-                                <el-table-column label="制曲日期" width="100" prop="inKjmDate" />
-                                <el-table-column label="曲房" width="100" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.houseName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="物料" show-overflow-tooltip width="150">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    label="领用容器"
-                                    width="150"
-                                    :show-overflow-tooltip="true"
-                                >
-                                    <template slot-scope="scope">
-                                        {{ scope.row.holderName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column width="140" label="批次">
-                                    <template slot-scope="scope">
-                                        <el-input v-model.number="scope.row.batch" size="small" maxlength="10" placeholder="手工录入" :disabled="scope.row.disabled" />
-                                    </template>
-                                </el-table-column>
-                                <el-table-column width="90" label="数量">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.entryQnt }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="单位" width="60">
-                                    <template slot-scope="scope">
-                                        <span>{{ scope.row.entryUom ? (scope.row.entryUom === 'box' ? '盒' : scope.row.entryUom === 'L' ? '升' : scope.row.entryUom === 'KG' ? '千克' : scope.row.entryUom) : '' }}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="操作人" width="145">
-                                    <template slot-scope="scope">
-                                        <span>{{ scope.row.changer }}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="操作时间" width="160">
-                                    <template slot-scope="scope">
-                                        <span>{{ scope.row.changed }}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column fixed="right" label="操作" width="80">
-                                    <template slot-scope="scope">
-                                        <i v-if="scope.row.materialCode === 'M040000001'">
-                                            <el-button v-if="scope.row.disabled" style="float: right;" type="primary" size="small" :disabled="!(scope.row.materialCode === 'M040000001' && (scope.row.status === 'saved' || scope.row.status === 'noPass'))" @click="materialEnbaleEdit(scope.row)">编辑</el-button>
-                                            <el-button v-if="!scope.row.disabled" style="float: right;" type="primary" size="small" @click="materialSaveWorkHour(scope.row)">保存</el-button>
-                                        </i>
-                                        <i v-else>
-                                            <el-button v-if="isAuth('sys:midTimeSheet:udpate')" style="float: right;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" @click="goBack('物料领用', scope.row)">退回</el-button>
-                                        </i>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="24">
-                                <auditLog :table-data="applyMaterieAuditList" />
-                            </el-col>
-                        </el-row>
-                    </el-tab-pane>
-                    <el-tab-pane name="4">
-                        <span slot="label" class="spanview">
-                            <el-button>文本记录</el-button>
-                        </span>
-                        <text-record ref="textrecord" is-redact="true" />
-                    </el-tab-pane>
-                </el-tabs>
-            </div>
-        </div>
-    </el-col>
+                    </mds-card>
+                </div>
+            </template>
+            <template slot="3">
+                <div>
+                    <mds-card title="物料领用" :name="'shengchanruku'">
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="applyMaterieList" border tooltip-effect="dark">
+                            <el-table-column type="index" width="55" label="序号" fixed />
+                            <el-table-column label="制曲日期" min-width="100" prop="inKjmDate" />
+                            <el-table-column label="曲房" min-width="90" :show-overflow-tooltip="true">
+                                <template slot-scope="scope">
+                                    {{ scope.row.houseName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="物料" show-overflow-tooltip min-width="150">
+                                <template slot-scope="scope">
+                                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                label="领用容器"
+                                min-width="120"
+                                :show-overflow-tooltip="true"
+                            >
+                                <template slot-scope="scope">
+                                    {{ scope.row.holderName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column min-width="140" label="批次">
+                                <template slot-scope="scope">
+                                    <el-input v-model.number="scope.row.batch" size="small" maxlength="10" placeholder="手工录入" :disabled="scope.row.disabled" />
+                                </template>
+                            </el-table-column>
+                            <el-table-column min-width="90" label="数量">
+                                <template slot-scope="scope">
+                                    {{ scope.row.entryQnt }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="单位" min-width="60">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.entryUom ? (scope.row.entryUom === 'box' ? '盒' : scope.row.entryUom === 'L' ? '升' : scope.row.entryUom === 'KG' ? '千克' : scope.row.entryUom) : '' }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作人" min-width="145">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.changer }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作时间" min-width="160">
+                                <template slot-scope="scope">
+                                    <span>{{ scope.row.changed }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column fixed="right" label="操作" min-width="80">
+                                <template slot-scope="scope">
+                                    <i v-if="scope.row.materialCode === 'M040000001'">
+                                        <el-button v-if="scope.row.disabled" style="float: right;" type="primary" size="small" :disabled="!(scope.row.materialCode === 'M040000001' && (scope.row.status === 'saved' || scope.row.status === 'noPass'))" @click="materialEnbaleEdit(scope.row)">编辑</el-button>
+                                        <el-button v-if="!scope.row.disabled" style="float: right;" type="primary" size="small" @click="materialSaveWorkHour(scope.row)">保存</el-button>
+                                    </i>
+                                    <i v-else>
+                                        <el-button v-if="isAuth('sys:midTimeSheet:udpate')" style="float: right;" type="primary" size="small" :disabled="scope.row.status === 'checked' || scope.row.status === 'submit' || (scope.row.status === 'noPass' && scope.row.isVerBack === '1')" @click="goBack('物料领用', scope.row)">退回</el-button>
+                                    </i>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </mds-card>
+                    <auditLog :table-data="applyMaterieAuditList" />
+                </div>
+            </template>
+            <template slot="4">
+                <div>
+                    <mds-card title="文本记录" :name="'shengchanruku'">
+                        <text-record ref="textrecord" :is-redact="true" />
+                    </mds-card>
+                </div>
+            </template>
+        </data-entry>
+    </div>
 </template>
 
 <script lang="ts">
@@ -353,13 +260,97 @@ import { KJM_API } from '@/api/api';
 import TextRecord from '@/views/components/TextRecord.vue';
 import AuditLog from '@/views/components/AuditLog.vue';
 import { WorkHour, InStock, Material } from '../entity/WorkHour';
+import { AsyncHook } from '@/utils/index.js';
 @Component({
     components: {
         TextRecord,
         AuditLog
     }
 })
-export default class Index extends Vue {
+export default class OrderAuditing extends Vue {
+
+    $refs: {
+        dataEntry: HTMLFormElement;
+        tabs: HTMLFormElement;
+    }
+
+    headerBase = [
+        {
+            type: 'p',
+            icon: 'factory-shengchanchejian',
+            label: '生产车间',
+            value: 'workShopName'
+        },
+        {
+            type: 'p',
+            icon: 'factory-bianhao',
+            label: '订单编号',
+            value: 'orderNo'
+        },
+        {
+            type: 'p',
+            icon: 'factory-dingdan',
+            label: '订单日期',
+            value: 'orderDate'
+        },
+        {
+            type: 'tooltip',
+            icon: 'factory-pinleiguanli',
+            label: '品项',
+            value: ['materialCode', 'materialName']
+        },
+        {
+            type: 'p',
+            icon: 'factory-dingdan',
+            label: '计划产量',
+            value: 'planOutput'
+        },
+        {
+            type: 'p',
+            icon: 'factory-riqi',
+            label: '入 罐 号 ',
+            value: 'inPotNoName'
+        },
+        {
+            type: 'p',
+            icon: 'factory-dingdan',
+            label: '生产日期',
+            value: 'productDate'
+        },
+        {
+            type: 'p',
+            icon: 'factory-xianchangrenyuan',
+            label: '提交人员',
+            value: 'changer'
+        },
+        {
+            type: 'tooltip',
+            icon: 'factory-riqi',
+            label: '提交时间',
+            value: 'changed'
+        }
+    ]
+
+    tabs = [
+        {
+            label: '报工工时',
+            status: '未录入'
+        },
+        {
+            label: '生产入库',
+            status: '未录入'
+        },
+        {
+            label: '物料领用',
+            status: '未录入'
+        },
+        {
+            label: '文本记录'
+        }
+    ]
+
+    notPermitSubmitStatus = ['已同步', '已拆分', 'saved', 'submit', 'checked']
+
     formHeader = {
         orderId: '',
         workShop: '',
@@ -377,7 +368,7 @@ export default class Index extends Vue {
         inKjmDate: '',
         // 实际入库值
         realInAmount: 0
-    };
+    }
 
     newForHeader = [];
     workHourList: WorkHour[] = [];
@@ -396,6 +387,7 @@ export default class Index extends Vue {
     // 物料申请状态
     applyMaterielState = '';
     // inStockBatch = 0
+
     mounted() {
         this.getList();
     }
@@ -434,8 +426,8 @@ export default class Index extends Vue {
                 this.realInAmount = this.totalInstock;
             }
             console.log('realInAmount: ' + this.realInAmount);
-            const tabs: any = this.$refs.tabs;
-            tabs.handleTabClick(tabs.panes[parseInt(tabs.currentName, 10) - 1]);
+            // const tabs: any = this.$refs.tabs;
+            // tabs.handleTabClick(tabs.panes[parseInt(tabs.currentName, 10) - 1]);
         });
     }
     /* eslint-enable @typescript-eslint/no-explicit-any*/
@@ -515,6 +507,8 @@ export default class Index extends Vue {
                         inState = 'checked';
                     }
                     this.readyState = inState;
+                    this.tabs[0].status = this.readyState;
+                    this.$refs.dataEntry.updateTabs();
                 } else {
                     this.$notify.error({ title: '错误', message: res.data.msg });
                 }
@@ -567,6 +561,8 @@ export default class Index extends Vue {
                         inState = 'checked';
                     }
                     this.inStorageState = inState;
+                    this.tabs[1].status = inState;
+                    this.$refs.dataEntry.updateTabs();
                 } else {
                     this.$notify.error({ title: '错误', message: res.data.msg });
                 }
@@ -625,6 +621,8 @@ export default class Index extends Vue {
                         inState = 'checked';
                     }
                     this.applyMaterielState = inState;
+                    this.tabs[2].status = inState;
+                    this.$refs.dataEntry.updateTabs();
                 } else {
                     this.$notify.error({ title: '错误', message: res.data.msg });
                 }
@@ -769,17 +767,16 @@ export default class Index extends Vue {
                 Vue.prototype.$errorToast('请确认实际入库数');
                 return false;
             }
-                Promise.all([this.timeSubmit(), this.storageSubmit(), this.materialSubmit()]).then(() => {
-                    Promise.all([this.headSubmit()]).then(() => {
-                        this.$notify({
-                            title: '成功',
-                            message: '提交成功',
-                            type: 'success'
-                        });
-                        this.getList();
-                    });
-                });
-
+            // Promise.all([this.timeSubmit(), this.storageSubmit(), this.materialSubmit()]).then(() => {
+            //     Promise.all([this.headSubmit()]).then(() => {
+            //         this.$notify({
+            //             title: '成功',
+            //             message: '提交成功',
+            //             type: 'success'
+            //         });
+            //         this.getList();
+            //     });
+            // });
         }).catch(() => {
             // this.$infoToast('已取消删除');
         });
@@ -830,7 +827,33 @@ export default class Index extends Vue {
         return true;
     }
 
-    async timeSubmit() {
+    validateTimes() {
+        let ty = true;
+        if (!this.workHourList || this.workHourList.length === 0) {
+            Vue.prototype.$warningToast('报工工时无数据，不可提交');
+            ty = false;
+            return false;
+        }
+        let sum = 0;
+        // let iskong = 0
+        for (const item of this.workHourList) {
+            let sole;
+            if (item.confActivity2 === null || item.confActivity2 === '') {
+                sole = 0;
+            } else {
+                sole = item.confActivity2;
+            }
+            sum += sole;
+        }
+        if (sum <= 0) {
+            Vue.prototype.$warningToast('机器工时之和不能小于0');
+            ty = false;
+            return false;
+        }
+        return ty;
+    }
+
+    async timeSubmit(resolve) {
         let realTotal;
         if (this.realInAmount > 0) {
             realTotal = this.realInAmount;
@@ -853,6 +876,9 @@ export default class Index extends Vue {
                         message: '报工工时提交失败：' + res.data.msg
                     });
                 }
+                if (resolve) {
+                    resolve('resolve');
+                }
             })
             .catch(err => {
                 console.log('catch data::', err);
@@ -860,7 +886,7 @@ export default class Index extends Vue {
         return '';
     }
 
-    async headSubmit() {
+    async headSubmit(resolve) {
         await Vue.prototype
             .$http(`${KJM_API.KJMAKINGCHECKHEADSUBMIT_API}`, 'POST', {
                 orderId: this.formHeader.orderId,
@@ -876,6 +902,9 @@ export default class Index extends Vue {
                         message: '表头提交失败：' + res.data.msg
                     });
                 }
+                if (resolve) {
+                    resolve('resolve');
+                }
             })
             .catch(err => {
                 console.log('catch data::', err);
@@ -883,7 +912,7 @@ export default class Index extends Vue {
         return '';
     }
 
-    async storageSubmit() {
+    async storageSubmit(resolve) {
         const total = this.totalInstock;
         // let realTotal = this.realInAmount
         let realTotal;
@@ -907,6 +936,9 @@ export default class Index extends Vue {
                         message: '生产入库提交失败：' + res.data.msg
                     });
                 }
+                if (resolve) {
+                    resolve('resolve');
+                }
             })
             .catch(err => {
                 console.log('catch data::', err);
@@ -914,7 +946,7 @@ export default class Index extends Vue {
         return '';
     }
 
-    async materialSubmit() {
+    async materialSubmit(resolve) {
         this.applyMaterieList.forEach(function(item) {
             item.status = 'submit';
         });
@@ -927,6 +959,9 @@ export default class Index extends Vue {
                         message: '物料领用提交失败：' + res.data.msg
                     });
                 }
+                if (resolve) {
+                    resolve('resolve');
+                }
             })
             .catch(err => {
                 console.log('catch data::', err);
@@ -934,33 +969,40 @@ export default class Index extends Vue {
         return '';
     }
 
-    // 报工工时
-    setReadyStatus(status) {
-        this.readyState = status;
+    submitRules() {
+        return [this.validateTimes];
     }
 
-    // 入库状态
-    setInStorageState(status) {
-        this.inStorageState = status;
+    submitDatas() {
+        if (this.realInAmount === 0 || !this.realInAmount) {
+            Vue.prototype.$errorToast('请确认实际入库数');
+            return false;
+        }
+        return AsyncHook(
+            [
+                [this.timeSubmit, []],
+                [this.storageSubmit, []],
+                [this.materialSubmit, []]
+            ],
+            [
+                [this.headSubmit, []]
+            ]
+        );
     }
 
-    // 物料状态
-    setApplyMaterielState(status) {
-        this.applyMaterielState = status;
-    }
+    // // 报工工时
+    // setReadyStatus(status) {
+    //     this.readyState = status;
+    // }
+
+    // // 入库状态
+    // setInStorageState(status) {
+    //     this.inStorageState = status;
+    // }
+
+    // // 物料状态
+    // setApplyMaterielState(status) {
+    //     this.applyMaterielState = status;
+    // }
 }
 </script>
-<style lang="scss" scoped>
-.input_bommom {
-    width: 147px;
-    overflow: hidden;
-    line-height: 32px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    border-bottom: solid 1px #d8d8d8;
-}
-.el-form-item--mini.el-form-item,
-.el-form-item--small.el-form-item {
-    margin-bottom: 8px;
-}
-</style>

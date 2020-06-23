@@ -51,7 +51,6 @@ img {
     margin: auto;
     margin-bottom: 15px;
 }
-
 //bass scss
 .searchCard,
 .tableCard {
@@ -383,7 +382,7 @@ img {
 .site-content {
     position: relative;
     padding-bottom: 30px;
-    min-height: 610px;
+    min-height: 576px;
     overflow: hidden;
     //padding: 15px;
 
@@ -1005,6 +1004,8 @@ img {
                 padding: 2px 0;
             }
             .el-input.is-disabled .el-input__inner {
+                width: 100%;
+                overflow: hidden;
                 background-color: #f5f5f5;
                 border: none;
                 color: #666 !important;
@@ -1052,6 +1053,8 @@ img {
                 }
             }
             .el-input.is-disabled .el-input__inner {
+                width: 100%;
+                overflow: hidden;
                 background: none;
                 border: none;
                 color: #666 !important;
@@ -1452,13 +1455,19 @@ $indexlist: (
 .el-dialog {
     border-radius: 6px 6px 6px 6px !important;
     .el-dialog__header {
-        height: 59px;
+        height: 46px !important;
+        line-height: 46px;
         background: rgba(72, 123, 255, 1);
         border-radius: 6px 6px 0 0;
         color: #fff;
-        font-size: 20px;
+        font-size: 16px;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
         .el-dialog__headerbtn .el-dialog__close {
             color: #fff;
+        }
+        .el-dialog__headerbtn {
+            top: 15px !important;
         }
     }
     .el-dialog__title {

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="人员管理" :close-on-click-modal="false" :visible.sync="isDaologShow">
+    <el-dialog title="人员管理" width="540px" :close-on-click-modal="false" :visible.sync="isDaologShow">
         <div>
             <el-row>
                 <el-transfer v-model="selectedUserID" filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" :data="userList" />
@@ -52,9 +52,9 @@
                         selectedID.push(item.userId);
                     }
                     res.push({
-                        label: item.userName,
+                        label: item.userName + '(' + item.workNum + ')',
                         key: item.userId,
-                        screncon: item.userName
+                        screncon: item.userName + ' ' + item.workNum
                     });
                 });
                 return {

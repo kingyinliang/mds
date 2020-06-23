@@ -23,7 +23,7 @@
                             </div>
                             <div>
                                 <el-table header-row-class-name="tableHead" :data="parameterType" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @row-click="setTypeDetail">
-                                    <el-table-column type="index" width="50" label="序号" />
+                                    <el-table-column type="index" width="50" label="序号" fixed />
                                     <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" />
                                     <el-table-column prop="type" :show-overflow-tooltip="true" label="参数类型编码" width="110" />
                                     <el-table-column prop="name" :show-overflow-tooltip="true" label="参数类型名称" width="110" />
@@ -40,7 +40,7 @@
                             </div>
                             <div>
                                 <el-table ref="table1" header-row-class-name="tableHead" :data="parameter" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                                    <el-table-column type="index" width="50" label="序号" />
+                                    <el-table-column type="index" width="50" label="序号" fixed />
                                     <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" width="100" />
                                     <el-table-column prop="type" :show-overflow-tooltip="true" label="参数类型编码" />
                                     <el-table-column prop="name" :show-overflow-tooltip="true" label="参数类型名称" />

@@ -10,5 +10,6 @@ declare module 'vue/types/vue' {
         $warningToast: Function;
         $errorToast: Function;
         $successToast: Function;
+        $infoToast: Function;
     }
 }

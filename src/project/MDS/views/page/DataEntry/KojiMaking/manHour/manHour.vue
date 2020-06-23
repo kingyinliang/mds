@@ -1,5 +1,5 @@
 <template>
-    <div class="header_main">
+    <div class="header_main" style="padding: 0;">
         <div class="header_main">
             <el-card class="searchCard">
                 <el-row type="flex">
@@ -58,17 +58,6 @@
                                 <el-button v-if="isAuth('kjm:timeSheet:list')" type="primary" size="small" @click="getTimeList">
                                     查询
                                 </el-button>
-                                <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('kjm:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                                    {{ isRedact ? '取消' : '编辑' }}
-                                </el-button>
-                            </template>
-                            <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
-                                <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                                    保存
-                                </el-button>
-                                <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="submitForm">
-                                    提交
-                                </el-button>
                             </template>
                         </div>
                     </el-col>
@@ -87,13 +76,10 @@
             <div v-show="searchCard">
                 <el-card class="box-cards NewDaatTtabs">
                     <el-card style=" position: relative; margin-bottom: 10px;">
-                        <h3 style=" font-weight: 600; font-size: 14px; line-height: 32px;">
+                        <h3 style="font-weight: 600; font-size: 14px; line-height: 32px;">
                             产量（单位：批）
                         </h3>
-                        <el-button type="text" class="readyshiftBtn manHour" name="yield">
-                            收起<i class="el-icon-caret-top" />
-                        </el-button>
-                        <div class="yieldBox">
+                        <div class="yieldBox" style="height: 32px;">
                             <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
                                 <el-form-item label="入曲批数：">
                                     <el-input v-model="inKjmBatch" placeholder="手工录入" disabled />
@@ -104,7 +90,7 @@
                     <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
                         <mds-card style=" position: relative; margin-bottom: 10px;" :title="'准备时间（分钟：min）'" :name="'ready'" class="readyCard">
                             <template slot="titleBtn">
-                                <el-form-item label="班次：" style="float: right; margin-right: 60px; margin-bottom: 10px;">
+                                <el-form-item label="班次：" style="float: right; margin-bottom: 10px;">
                                     <el-select v-model="readyTimeDate.classes" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))">
                                         <el-option label="白班" value="白班" />
                                         <el-option label="中班" value="中班" />
@@ -161,6 +147,33 @@
                     </el-form>
                     <worker ref="workerref" :is-redact="isRedact" :order="userOrder" />
                 </el-card>
+            </div>
+        </div>
+        <!--编辑-->
+        <div v-if="searchCard" class="redactBox">
+            <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
+                <div class="redact clearfix">
+                    <div v-if="!isRedact" class="redact_tips">
+                        <i class="el-icon-info" />
+                        <span v-if="searchCard">点击编辑按钮，对当前页面进行编辑</span>
+                        <span v-else>请先查询</span>
+                    </div>
+                    <div class="redact_btn">
+                        <template style="float: right; margin-left: 10px;">
+                            <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('kjm:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                                {{ isRedact ? '取消' : '编辑' }}
+                            </el-button>
+                        </template>
+                        <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
+                            <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                                保存
+                            </el-button>
+                            <el-button v-if="isAuth('kjm:timeSheet:update')" type="primary" size="small" @click="submitForm">
+                                提交
+                            </el-button>
+                        </template>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -234,7 +247,13 @@ export default {
             userList: []
         };
     },
-    computed: {},
+    computed: {
+        sidebarFold: {
+            get() {
+                return this.$store.state.common.sidebarFold;
+            }
+        }
+    },
     watch: {
         'formHeader.factory'(n) {
             if (n !== '') {

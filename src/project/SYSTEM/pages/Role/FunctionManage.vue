@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="功能分配" :close-on-click-modal="false" :visible.sync="isDialogShow">
-        <div style="height: 300px; overflow: auto;">
+        <div style="min-height: 53vh; max-height: 53vh; overflow: auto;">
             <el-tree
                 ref="menuListTree"
                 :data="menuList"
@@ -9,7 +9,7 @@
                     children: 'children'
                 }"
                 node-key="id"
-                :default-expand-all="true"
+                :default-expand-all="false"
                 :expand-on-click-node="false"
                 show-checkbox
             />
@@ -45,7 +45,13 @@ export default {
                 roleId: id
             })
                 .then(({ data }) => {
-                    this.menuList = this.translateTreeData(data.data);
+                    console.log('data')
+                    console.log(data)
+                    const maenData = data.data.filter(item => item.id !== '0')
+                    maenData.forEach(item => {
+                        item.menuName = item.menuName + ' ' + item.remark
+                    });
+                    this.menuList = this.translateTreeData(maenData);
                 })
                 .then(() => {
                     this.isDialogShow = true;

@@ -41,11 +41,11 @@
                                 <el-button v-if="isAuth('fer:report:selectReports')" type="primary" size="small" @click="SearchList(true)">
                                     查询
                                 </el-button>
-                                <el-button v-if="isAuth('fer:report:workingSaveAndSubmit')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                                <!-- <el-button v-if="isAuth('fer:report:workingSaveAndSubmit')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                                     {{ isRedact ? '取消' : '编辑' }}
-                                </el-button>
+                                </el-button> -->
                             </template>
-                            <template v-if="isRedact" style="float: right; margin-left: 10px;">
+                            <!-- <template v-if="isRedact" style="float: right; margin-left: 10px;">
                                 <el-button type="primary" size="small" @click="SaveForm()">
                                     保存
                                 </el-button>
@@ -57,142 +57,133 @@
                                 <el-button v-if="isAuth('fer:report:workingSaveAndSubmit')" type="primary" size="small" @click="DataSynchronism()">
                                     报工同步
                                 </el-button>
-                            </template>
+                            </template> -->
                         </el-form-item>
                     </el-form>
                 </el-col>
             </el-row>
-            <!-- <el-row style="text-align:right">
-        <template style="float:right; margin-left: 10px;">
-          <el-button type="primary" size="small" @click="SearchList(true)" v-if="isAuth('fer:report:selectReports')">查询</el-button>
-          <el-button type="primary" class="button" size="small" v-if="isAuth('fer:report:workingSaveAndSubmit')" @click="isRedact = !isRedact">{{isRedact?'取消':'编辑'}}</el-button>
-        </template>
-        <template v-if="isRedact" style="float:right; margin-left: 10px;">
-          <el-button type="primary" size="small" @click="SaveForm()">保存</el-button>
-          <el-button type="primary" size="small" @click="SubmitForm()">提交</el-button>
-        </template>
-        <template style="float:right; margin-left: 10px;"><el-button type="primary" @click="DataSynchronism()" v-if="isAuth('fer:report:workingSaveAndSubmit')" size="small">报工同步</el-button></template>
-      </el-row> -->
         </el-card>
-        <el-tabs v-model="activeName" type="border-card" style="margin-top: 15px;" @tab-click="tabClick">
+        <el-tabs v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" @tab-click="tabClick">
             <el-tab-pane name="noMatureReport" label="未成熟">
-                <el-table :data="dataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
+                <el-table :data="dataList" border class="newTable" header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
                     <el-table-column type="selection" :selectable="CheckBoxInit" fixed="left" align="center" width="50" />
-                    <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
+                    <el-table-column label="状态" :show-overflow-tooltip="true" min-width="100">
                         <template slot-scope="scope">
                             <label :style="{ color: scope.row.status === 'fail' ? 'red' : scope.row.status === 'success' ? '#7ED321' : '' }">{{ scope.row.status === 'success' ? '已审核' : scope.row.status === 'fail' ? '审核不通过' : scope.row.status === 'init' ? '已保存' : scope.row.status === 'submit' ? '已提交' : '' }}</label>
                         </template>
                     </el-table-column>
                     <el-table-column label="容器" :show-overflow-tooltip="true" prop="holderNo" />
-                    <el-table-column label="订单号" :show-overflow-tooltip="true" width="120" prop="orderNo" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="210">
+                    <el-table-column label="订单号" :show-overflow-tooltip="true" min-width="120" prop="orderNo" />
+                    <el-table-column label="物料" :show-overflow-tooltip="true" min-width="210">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}{{ scope.row.materialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="订单量(L)" :show-overflow-tooltip="true" width="90" prop="amount" />
-                    <el-table-column label="实际生产数量" :show-overflow-tooltip="true" width="120">
+                    <el-table-column label="订单量(L)" :show-overflow-tooltip="true" min-width="90" prop="amount" />
+                    <el-table-column label="实际生产数量" :show-overflow-tooltip="true" min-width="120">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.actAmount" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" width="50" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" min-width="50" />
                     <el-table-column label="准备工时" :show-overflow-tooltip="true" prop="created">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.prepareTimes" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="prepareTimesUnit" width="50" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="prepareTimesUnit" min-width="50" />
                     <el-table-column label="机器工时" :show-overflow-tooltip="true" prop="created">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.machineTimes" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="machineTimesUnit" width="50" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="machineTimesUnit" min-width="50" />
                     <el-table-column label="人工工时" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.humanTimes" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="humanTimesUnit" width="50" />
-                    <el-table-column label="执行开始日期" width="150">
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="humanTimesUnit" min-width="50" />
+                    <el-table-column label="执行开始日期" min-width="150">
                         <template slot-scope="scope">
                             <el-date-picker v-model="scope.row.startDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 135px;" />
                         </template>
                     </el-table-column>
                     <el-table-column width="150">
-                        <template slot="header">
+                        <template slot="header" slot-scope="scope">
                             执行结束日期&nbsp;
                             <el-tooltip class="item" effect="dark" content="点击批量修改`执行结束时间`" placement="top-start">
-                                <i class="el-input__icon el-icon-date" @click="checkedDateCommonFun()" />
+                                <i class="el-input__icon el-icon-date" style="line-height: 20px;" @click="checkedDateCommonFun(scope.row)" />
                             </el-tooltip>
-                            <i class="header-date-common"><el-date-picker ref="DateInput" v-model="DateCommon" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" clearable @change="changeDateCommon()" /></i>
+                            <i class="header-date-common">
+                                <el-date-picker ref="DateInput" v-model="DateCommon" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" clearable @change="changeDateCommon()" />
+                            </i>
                         </template>
                         <template slot-scope="scope">
                             <el-date-picker v-model="scope.row.endDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 135px;" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="部分/完全报工" :show-overflow-tooltip="true" width="150">
+                    <el-table-column label="部分/完全报工" :show-overflow-tooltip="true" min-width="150">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.reportType" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作人员" :show-overflow-tooltip="true" prop="creator" width="100" />
-                    <el-table-column label="操作时间" :show-overflow-tooltip="true" width="170" prop="changed" />
+                    <el-table-column label="操作人员" :show-overflow-tooltip="true" prop="creator" min-width="100" />
+                    <el-table-column label="操作时间" :show-overflow-tooltip="true" min-width="170" prop="changed" />
                 </el-table>
                 <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-tab-pane>
             <el-tab-pane name="maturedReport" label="已成熟">
-                <el-table :data="dataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
-                    <el-table-column type="selection" :selectable="CheckBoxInit" width="50" />
-                    <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
+                <el-table :data="dataList" border class="newTable" header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
+                    <el-table-column type="selection" :selectable="CheckBoxInit" width="50" fixed />
+                    <el-table-column label="状态" :show-overflow-tooltip="true" min-width="100">
                         <template slot-scope="scope">
                             <label :style="{ color: scope.row.status === 'fail' ? 'red' : scope.row.status === 'success' ? '#7ED321' : '' }">{{ scope.row.status === 'success' ? '已审核' : scope.row.status === 'fail' ? '审核不通过' : scope.row.status === 'init' ? '已保存' : scope.row.status === 'submit' ? '已提交' : '' }}</label>
                         </template>
                     </el-table-column>
                     <el-table-column label="容器" :show-overflow-tooltip="true" prop="holderNo" />
-                    <el-table-column label="订单号" :show-overflow-tooltip="true" width="120" prop="orderNo" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="200">
+                    <el-table-column label="订单号" :show-overflow-tooltip="true" min-width="120" prop="orderNo" />
+                    <el-table-column label="物料" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}{{ scope.row.materialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="订单量(L)" :show-overflow-tooltip="true" width="90" prop="amount" />
-                    <el-table-column label="实际生产数量" :show-overflow-tooltip="true" width="120">
+                    <el-table-column label="订单量(L)" :show-overflow-tooltip="true" min-width="90" prop="amount" />
+                    <el-table-column label="实际生产数量" :show-overflow-tooltip="true" min-width="120">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.actAmount" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" width="50" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" min-width="50" />
                     <el-table-column label="准备工时" :show-overflow-tooltip="true" prop="created">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.prepareTimes" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="prepareTimesUnit" width="50" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="prepareTimesUnit" min-width="50" />
                     <el-table-column label="机器工时" :show-overflow-tooltip="true" prop="created">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.machineTimes" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="machineTimesUnit" width="50" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="machineTimesUnit" min-width="50" />
                     <el-table-column label="人工工时" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.humanTimes" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="humanTimesUnit" width="50" />
-                    <el-table-column label="执行开始日期" width="150">
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="humanTimesUnit" min-width="50" />
+                    <el-table-column label="执行开始日期" min-width="150">
                         <template slot-scope="scope">
                             <el-date-picker v-model="scope.row.startDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="执行结束日期" prop="amount" width="150">
+                    <el-table-column label="执行结束日期" prop="amount" min-width="150">
                         <template slot-scope="scope">
                             <el-date-picker v-model="scope.row.endDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="部分/完全报工" :show-overflow-tooltip="true" width="130">
+                    <el-table-column label="部分/完全报工" :show-overflow-tooltip="true" min-width="130">
                         <template slot-scope="scope">
                             <!-- <el-select v-model="scope.row.reportType" :disabled="GetCheck(scope.row)" size="small">
                 <el-option v-for="(item, index) in reportTypeList" :key="index" :label="item.name" :value="item.value"></el-option>
@@ -200,78 +191,75 @@
                             <el-input v-model="scope.row.reportType" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作人员" :show-overflow-tooltip="true" prop="creator" width="100" />
-                    <el-table-column label="操作时间" :show-overflow-tooltip="true" width="170" prop="changed" />
+                    <el-table-column label="操作人员" :show-overflow-tooltip="true" prop="creator" min-width="100" />
+                    <el-table-column label="操作时间" :show-overflow-tooltip="true" min-width="170" prop="changed" />
                 </el-table>
                 <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-tab-pane>
             <el-tab-pane name="rework" label="返工订单">
-                <el-table :data="dataList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
-                    <el-table-column type="selection" :selectable="CheckBoxInit" width="50" />
-                    <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
+                <el-table :data="dataList" border class="newTable" header-row-class-name="tableHead" @selection-change="handleSelectionChange" @row-dblclick="editRow">
+                    <el-table-column type="selection" :selectable="CheckBoxInit" width="50" fixed />
+                    <el-table-column label="状态" :show-overflow-tooltip="true" min-width="100">
                         <template slot-scope="scope">
                             <label :style="{ color: scope.row.status === 'fail' ? 'red' : scope.row.status === 'success' ? '#7ED321' : '' }">{{ scope.row.status === 'success' ? '已审核' : scope.row.status === 'fail' ? '审核不通过' : scope.row.status === 'init' ? '已保存' : scope.row.status === 'submit' ? '已提交' : '' }}</label>
                         </template>
                     </el-table-column>
                     <el-table-column label="容器" :show-overflow-tooltip="true" prop="holderNo" />
-                    <el-table-column label="订单号" :show-overflow-tooltip="true" width="120" prop="orderNo" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="200">
+                    <el-table-column label="订单号" :show-overflow-tooltip="true" min-width="120" prop="orderNo" />
+                    <el-table-column label="物料" :show-overflow-tooltip="true" min-width="200">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}{{ scope.row.materialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="订单量(L)" :show-overflow-tooltip="true" width="90" prop="amount" />
-                    <el-table-column label="实际生产数量" :show-overflow-tooltip="true" width="120">
+                    <el-table-column label="订单量(L)" :show-overflow-tooltip="true" min-width="90" prop="amount" />
+                    <el-table-column label="实际生产数量" :show-overflow-tooltip="true" min-width="120">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.actAmount" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" width="50" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" min-width="50" />
                     <el-table-column label="准备工时" :show-overflow-tooltip="true" prop="created">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.prepareTimes" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="prepareTimesUnit" width="50" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="prepareTimesUnit" min-width="50" />
                     <el-table-column label="机器工时" :show-overflow-tooltip="true" prop="created">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.machineTimes" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="machineTimesUnit" width="50" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="machineTimesUnit" min-width="50" />
                     <el-table-column label="人工工时" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.humanTimes" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="humanTimesUnit" width="50" />
-                    <el-table-column label="执行开始日期" width="150">
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="humanTimesUnit" min-width="50" />
+                    <el-table-column label="执行开始日期" min-width="150">
                         <template slot-scope="scope">
                             <el-date-picker v-model="scope.row.startDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="执行结束日期" prop="amount" width="150">
+                    <el-table-column label="执行结束日期" prop="amount" min-width="150">
                         <template slot-scope="scope">
                             <el-date-picker v-model="scope.row.endDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :disabled="GetCheck(scope.row)" size="small" style="width: 140px;" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="部分/完全报工" :show-overflow-tooltip="true" width="130">
+                    <el-table-column label="部分/完全报工" :show-overflow-tooltip="true" min-width="130">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.reportType" :disabled="GetCheck(scope.row)" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作人员" :show-overflow-tooltip="true" prop="creator" width="100" />
-                    <el-table-column label="操作时间" :show-overflow-tooltip="true" width="180" prop="changed" />
+                    <el-table-column label="操作人员" :show-overflow-tooltip="true" prop="creator" min-width="100" />
+                    <el-table-column label="操作时间" :show-overflow-tooltip="true" min-width="180" prop="changed" />
                 </el-table>
                 <el-pagination :current-page="form.currPage" :page-sizes="[10, 20, 50]" :page-size="form.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="form.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-tab-pane>
         </el-tabs>
-        <el-card style="margin-top: 15px;">
-            <div class="audit">
-                <i class="iconfont factory-shouqicaidan" /><span>审核日志</span>
-            </div>
-            <el-table border :data="LogList" header-row-class-name="tableHead">
-                <el-table-column label="序号" type="index" width="50" />
+        <mds-card title="审核日志" :name="'auditlog'" :icon-bg="'#f05c4a'" style="margin-top: 10px;">
+            <el-table border :data="LogList" class="newTable" header-row-class-name="tableHead">
+                <el-table-column label="序号" type="index" width="50" fixed />
                 <el-table-column label="审核动作">
                     <template slot-scope="scope">
                         {{ scope.row.status === 'checked' ? '审核成功' : scope.row.status === 'noPass' ? '审核失败' : scope.row.status === 'submit' ? '提交' : '' }}
@@ -281,7 +269,32 @@
                 <el-table-column label="审核人" prop="verifyMan" />
                 <el-table-column label="审核时间" prop="verifyDate" />
             </el-table>
-        </el-card>
+        </mds-card>
+        <!--编辑-->
+        <div class="redactBox">
+            <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
+                <div class="redact clearfix">
+                    <div class="redact_btn">
+                        <el-button v-if="isAuth('fer:report:workingSaveAndSubmit')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                            {{ isRedact ? '取消' : '编辑' }}
+                        </el-button>
+                        <template v-if="isRedact" style="float: right; margin-left: 10px;">
+                            <el-button type="primary" size="small" @click="SaveForm()">
+                                保存
+                            </el-button>
+                            <el-button type="primary" size="small" @click="SubmitForm()">
+                                提交
+                            </el-button>
+                        </template>
+                        <template style="float: right; margin-left: 10px;">
+                            <el-button v-if="isAuth('fer:report:workingSaveAndSubmit')" type="primary" size="small" @click="DataSynchronism()">
+                                报工同步
+                            </el-button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -337,6 +350,13 @@
                 LogList: [],
                 DateCommon: ''
             };
+        },
+        computed: {
+            sidebarFold: {
+                get() {
+                    return this.$store.state.common.sidebarFold;
+                }
+            }
         },
         watch: {
             'form.factory'(n) {

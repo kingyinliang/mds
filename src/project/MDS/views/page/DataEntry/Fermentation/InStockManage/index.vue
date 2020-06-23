@@ -1,186 +1,190 @@
 <template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row type="flex">
-                    <el-col>
-                        <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px;" @change="changeOptions('workshop')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="罐号：">
-                                <el-select v-model="params.holderList" class="selectwpx" style="width: 140px;" filterable multiple @change="changeOptions('pot')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in potList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="订单日期：">
-                                <el-date-picker v-model="params.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
-                                -
-                                <el-date-picker v-model="params.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
-                            </el-form-item>
-                            <el-form-item label="订单号：" style="height: 32px !important;">
-                                <el-select v-model="params.orderList" class="selectwpx" style="width: 140px;" filterable multiple allow-create @change="changeOptions('order')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in orderDataList" :key="sole.orderNo" :label="sole.orderNo" :value="sole.orderNo" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="状态：">
-                                <el-select v-model="params.status" class="selectwpx" style="width: 140px;" @change="changeOptions('status')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option label="未录入" value="未录入" />
-                                    <el-option label="已保存" value="saved" />
-                                    <el-option label="已提交" value="submit" />
-                                    <el-option label="审核不通过" value="noPass" />
-                                    <el-option label="已审核" value="checked" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="订单类型：">
-                                <el-select v-model="params.orderType" placeholder="请选择" style="width: 140px;" @change="changeOptions('orderType')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.value" :value="item.code" />
-                                </el-select>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
+    <div class="header_main">
+        <el-card class="searchCard">
+            <el-row type="flex">
+                <el-col>
+                    <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px;" @change="changeOptions('workshop')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="罐号：">
+                            <el-select v-model="params.holderList" class="selectwpx" style="width: 140px;" filterable multiple @change="changeOptions('pot')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in potList" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单日期：">
+                            <el-date-picker v-model="params.startDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
+                            -
+                            <el-date-picker v-model="params.endDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
+                        </el-form-item>
+                        <el-form-item label="订单号：" style="height: 32px !important;">
+                            <el-select v-model="params.orderList" class="selectwpx" style="width: 140px;" filterable multiple allow-create @change="changeOptions('order')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in orderDataList" :key="sole.orderNo" :label="sole.orderNo" :value="sole.orderNo" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="状态：">
+                            <el-select v-model="params.status" class="selectwpx" style="width: 140px;" @change="changeOptions('status')">
+                                <el-option label="请选择" value="" />
+                                <el-option label="未录入" value="未录入" />
+                                <el-option label="已保存" value="saved" />
+                                <el-option label="已提交" value="submit" />
+                                <el-option label="审核不通过" value="noPass" />
+                                <el-option label="已审核" value="checked" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单类型：">
+                            <el-select v-model="params.orderType" placeholder="请选择" style="width: 140px;" @change="changeOptions('orderType')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.value" :value="item.code" />
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+            <el-row style=" position: absolute; top: 49px; right: 8px; text-align: right;">
+                <template style="float: right; margin-left: 10px;">
+                    <el-button v-if="isAuth('fer:inStore:list')" type="primary" size="small" @click="getOrderList()">
+                        查询
+                    </el-button>
+                    <!-- <el-button v-if="isAuth('fer:inStore:mySaveOrUpdate') || isAuth('fer:inStore:submit')" type="primary" class="button" size="small" @click="isEdit = !isEdit">
+                        {{ isEdit ? '取消' : '编辑' }}
+                    </el-button> -->
+                </template>
+                <!-- <template v-if="isEdit" style="float: right; margin-left: 10px;">
+                    <el-button v-if="isAuth('fer:inStore:mySaveOrUpdate')" type="primary" size="small" @click="save()">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('fer:inStore:submit')" type="primary" size="small" @click="submit()">
+                        提交
+                    </el-button>
+                    <el-button type="danger" size="small" @click="remove">
+                        批量删除
+                    </el-button>
+                </template> -->
+            </el-row>
+            <div class="toggleSearchBottom">
+                <i class="el-icon-caret-top" />
+            </div>
+        </el-card>
+        <div class="tableCard">
+            <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
+                <i class="el-icon-caret-bottom" />
+            </div>
+            <mds-card title="入库列表" :name="'instockList'" style="margin-top: 5px;">
+                <el-row>
+                    <el-table header-row-class-name="tableHead" class="newTable" :data="dataList" border tooltip-effect="dark" @selection-change="handleChange" @row-dblclick="showDetail">
+                        <el-table-column type="selection" :selectable="selectable" width="50" fixed />
+                        <el-table-column type="index" label="序号" width="55" />
+                        <el-table-column label="状态" :show-overflow-tooltip="true" min-width="100">
+                            <template slot-scope="scope">
+                                <label
+                                    :style="{
+                                        color: scope.row.status === 'noPass' ? 'red' : scope.row.status === 'checked' ? '#7ED321' : '',
+                                    }"
+                                >{{ scope.row.status === 'checked' ? '已审核' : scope.row.status == 'noPass' ? '审核不通过' : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'saved' ? '已保存' : '未录入' }}</label>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="订单号" :show-overflow-tooltip="true" min-width="120">
+                            <template slot-scope="scope">
+                                {{ scope.row.orderNo }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="容器" :show-overflow-tooltip="true" min-width="100">
+                            <template slot-scope="scope">
+                                {{ scope.row.holderName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="物料" :show-overflow-tooltip="true" min-width="120">
+                            <template slot-scope="scope">
+                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="订单量" min-width="100">
+                            <template slot-scope="scope">
+                                {{ scope.row.orderAmount }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="单位" min-width="60">
+                            <template slot-scope="scope">
+                                {{ scope.row.orderUnit }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="120">
+                            <template slot="header">
+                                <span class="notNull">*</span>入库数量
+                            </template>
+                            <template slot-scope="scope">
+                                <el-input v-model.number="scope.row.inAmount" type="number" :disabled="!isEdit || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" style="display: inline-block;" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="单位" min-width="60">
+                            <template slot-scope="scope">
+                                {{ scope.row.inUnit }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="140">
+                            <template slot="header">
+                                <span class="notNull">*</span>批次
+                            </template>
+                            <template slot-scope="scope">
+                                <el-input v-model.trim="scope.row.batch" type="text" :disabled="!isEdit || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="备注" min-width="150">
+                            <template slot-scope="scope">
+                                <el-input v-model.trim="scope.row.remark" type="text" :disabled="!isEdit || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="提交人员" min-width="140">
+                            <template slot-scope="scope">
+                                {{ scope.row.changer }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="提交时间" min-width="160">
+                            <template slot-scope="scope">
+                                {{ scope.row.changed }}
+                            </template>
+                        </el-table-column>
+                    </el-table>
                 </el-row>
-                <el-row style=" position: absolute; top: 49px; right: 8px; text-align: right;">
-                    <template style="float: right; margin-left: 10px;">
-                        <el-button v-if="isAuth('fer:inStore:list')" type="primary" size="small" @click="getOrderList()">
-                            查询
-                        </el-button>
+                <el-row>
+                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                </el-row>
+            </mds-card>
+        </div>
+        <audit-log :table-data="readAudit" />
+        <!--编辑-->
+        <div class="redactBox">
+            <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
+                <div class="redact clearfix">
+                    <div class="redact_btn">
                         <el-button v-if="isAuth('fer:inStore:mySaveOrUpdate') || isAuth('fer:inStore:submit')" type="primary" class="button" size="small" @click="isEdit = !isEdit">
                             {{ isEdit ? '取消' : '编辑' }}
                         </el-button>
-                    </template>
-                    <template v-if="isEdit" style="float: right; margin-left: 10px;">
-                        <el-button v-if="isAuth('fer:inStore:mySaveOrUpdate')" type="primary" size="small" @click="save()">
-                            保存
-                        </el-button>
-                        <el-button v-if="isAuth('fer:inStore:submit')" type="primary" size="small" @click="submit()">
-                            提交
-                        </el-button>
-                        <el-button type="danger" size="small" @click="remove">
-                            批量删除
-                        </el-button>
-                    </template>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
+                        <template v-if="isEdit">
+                            <el-button v-if="isAuth('fer:inStore:mySaveOrUpdate')" type="primary" size="small" @click="save()">
+                                保存
+                            </el-button>
+                            <el-button v-if="isAuth('fer:inStore:submit')" type="primary" size="small" @click="submit()">
+                                提交
+                            </el-button>
+                            <el-button type="danger" size="small" @click="remove">
+                                批量删除
+                            </el-button>
+                        </template>
+                    </div>
                 </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <div class="tableCard">
-                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-                <el-card>
-                    <el-row>
-                        <div style="line-height: 40px;">
-                            <i style=" float: left; font-size: 22px;" class="iconfont factory-shouqicaidan" /><span style=" margin-left: 12px; font-weight: 600; font-size: 16px;">入库列表</span>
-                        </div>
-                    </el-row>
-                    <el-row>
-                        <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleChange" @row-dblclick="showDetail">
-                            <el-table-column type="selection" :selectable="selectable" width="50" />
-                            <el-table-column type="index" label="序号" width="55" />
-                            <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
-                                <template slot-scope="scope">
-                                    <label
-                                        :style="{
-                                            color: scope.row.status === 'noPass' ? 'red' : scope.row.status === 'checked' ? '#7ED321' : '',
-                                        }"
-                                    >{{ scope.row.status === 'checked' ? '已审核' : scope.row.status == 'noPass' ? '审核不通过' : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'saved' ? '已保存' : '未录入' }}</label>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="订单号" :show-overflow-tooltip="true" width="120">
-                                <template slot-scope="scope">
-                                    {{ scope.row.orderNo }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="容器" :show-overflow-tooltip="true" width="100">
-                                <template slot-scope="scope">
-                                    {{ scope.row.holderName }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="物料" :show-overflow-tooltip="true" width="120">
-                                <template slot-scope="scope">
-                                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="订单量" width="100">
-                                <template slot-scope="scope">
-                                    {{ scope.row.orderAmount }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="单位" width="60">
-                                <template slot-scope="scope">
-                                    {{ scope.row.orderUnit }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="入库数量" width="160">
-                                <template slot-scope="scope">
-                                    <div class="required">
-                                        <i class="reqI">*</i>
-                                        <el-input v-model.number="scope.row.inAmount" type="number" :disabled="!isEdit || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" style="display: inline-block;" />
-                                    </div>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="单位" width="60">
-                                <template slot-scope="scope">
-                                    {{ scope.row.inUnit }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="批次" width="160">
-                                <template slot-scope="scope">
-                                    <div class="required">
-                                        <i class="reqI">*</i>
-                                        <el-input v-model.trim="scope.row.batch" type="text" :disabled="!isEdit || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
-                                    </div>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="备注" width="180">
-                                <template slot-scope="scope">
-                                    <el-input v-model.trim="scope.row.remark" type="text" :disabled="!isEdit || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="提交人员" width="140">
-                                <template slot-scope="scope">
-                                    {{ scope.row.changer }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="提交时间" width="160">
-                                <template slot-scope="scope">
-                                    {{ scope.row.changed }}
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </el-row>
-                    <el-row>
-                        <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                    </el-row>
-                </el-card>
-            </div>
-        </div>
-        <div class="main" style="padding-top: 0;">
-            <div class="tableCard">
-                <el-card>
-                    <el-row>
-                        <el-col :span="24">
-                            <audit-log :table-data="readAudit" />
-                        </el-col>
-                    </el-row>
-                </el-card>
             </div>
         </div>
     </div>
@@ -228,6 +232,10 @@ export default class Index extends Vue {
             this.getOrderList();
             this.getDictList(this.params.factoryId);
         }
+    }
+
+    get sidebarFold() {
+        return this.$store.state.common.sidebarFold;
     }
 
     get mainTabs() {

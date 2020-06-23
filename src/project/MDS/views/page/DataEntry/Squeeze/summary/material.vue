@@ -96,7 +96,7 @@
                         <el-input
                             v-model="scope.row.material.childUsedAmount"
                             size="small"
-                            placeholder="手工录入1"
+                            placeholder="手工录入"
                             :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')"
                             @focus="GetOldAmount(scope.row)"
                             @blur="PostAmount(scope.row)"
@@ -134,7 +134,7 @@
 
 <script>
 import { SQU_API } from '@/api/api';
-import { accAdd, accSub, DeepClone } from '@/net/validate.js';
+import { accAdd, accSub, deepClone } from '@/net/validate.js';
 export default {
     name: 'Material',
     components: {
@@ -331,20 +331,20 @@ export default {
         PotChange(event, row) {
             if (event !== '') {
                 if (event === true) {
-                    this.oldHolderId = DeepClone(row.material.childPotNo);
+                    this.oldHolderId = deepClone(row.material.childPotNo);
                 } else if (event === false) {
                     if (this.oldHolderId === '' && row.material.childUsedAmount !== 0) {
                         // 拆分
                         const PotsumAmount = this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount;
-                        const newAmount = DeepClone(accSub(PotsumAmount, row.material.childUsedAmount));
+                        const newAmount = deepClone(accSub(PotsumAmount, row.material.childUsedAmount));
                         this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = newAmount;
                         this.ChangeDataListFullAmount(row.material.childPotNo, newAmount);
                     } else if (this.oldHolderId !== '' && this.oldHolderId !== row.material.childPotNo) {
                         // 变更
                         const OldAmountAdd = accAdd(this.potList.find(item => item.holderId === this.oldHolderId).sumAmount, row.material.childUsedAmount);
                         const NewAmountSub = accSub(this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount, row.material.childUsedAmount);
-                        this.potList.find(item => item.holderId === this.oldHolderId).sumAmount = DeepClone(OldAmountAdd);
-                        this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = DeepClone(NewAmountSub);
+                        this.potList.find(item => item.holderId === this.oldHolderId).sumAmount = deepClone(OldAmountAdd);
+                        this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = deepClone(NewAmountSub);
                         this.ChangeDataListFullAmount(row.material.childPotNo, NewAmountSub, this.oldHolderId, OldAmountAdd);
                     }
                 }
@@ -473,7 +473,7 @@ export default {
                     this.SumDate.splice(this.SumDate.length - 1, 1);
                     // 更改库存余量
                     const PotsumAmount = this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount;
-                    const newAmount = DeepClone(accAdd(PotsumAmount, row.material.childUsedAmount));
+                    const newAmount = deepClone(accAdd(PotsumAmount, row.material.childUsedAmount));
                     this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = newAmount;
                     this.ChangeDataListFullAmount(row.material.childPotNo, newAmount);
                 } else {
@@ -584,7 +584,7 @@ export default {
         PostAmount(row) {
             if (this.oldChildUsedAmount !== row.material.childUsedAmount && row.material.childPotNo !== '') {
                 const PotsumAmount = this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount;
-                const newAmount = DeepClone(accSub(accAdd(PotsumAmount, this.oldChildUsedAmount), row.material.childUsedAmount));
+                const newAmount = deepClone(accSub(accAdd(PotsumAmount, this.oldChildUsedAmount), row.material.childUsedAmount));
                 this.potList.find(item => item.holderId === row.material.childPotNo).sumAmount = newAmount;
                 this.ChangeDataListFullAmount(row.material.childPotNo, newAmount);
             }

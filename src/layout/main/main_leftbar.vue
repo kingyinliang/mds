@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { isURL } from '@/net/validate';
+import { isURL } from 'utils/utils.ts';
 export default {
     name: 'MainLeftbar',
     components: {

@@ -166,7 +166,7 @@
                     </el-col>
                 </el-row>
                 <el-table :data="equipmentList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
-                    <el-table-column type="index" label="序号" width="50" />
+                    <el-table-column type="index" label="序号" width="50" fixed />
                     <el-table-column label="时间">
                         <template slot-scope="scope">
                             <el-date-picker v-model="scope.row.date" type="datetime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />
@@ -220,7 +220,7 @@
                     </el-col>
                 </el-row>
                 <el-table :data="warmingList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
-                    <el-table-column type="index" label="序号" width="50" />
+                    <el-table-column type="index" label="序号" width="50" fixed />
                     <el-table-column label="时间" width="200">
                         <template slot-scope="scope">
                             <el-date-picker v-model="scope.row.date" type="datetime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />

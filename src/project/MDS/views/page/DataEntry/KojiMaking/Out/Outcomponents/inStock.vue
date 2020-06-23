@@ -2,7 +2,7 @@
     <div>
         <mds-card :title="'生产入库'" :name="'instock'">
             <el-table class="newTable" header-row-class-name="tableHead" :data="InStock" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" width="50" label="序号" />
+                <el-table-column type="index" width="50" label="序号" fixed />
                 <el-table-column width="130" label="豆粕量（KG）">
                     <template slot-scope="scope">
                         {{ (scope.row.pulpWeight = ThreeNum.allP) }}

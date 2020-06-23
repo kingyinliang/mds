@@ -263,7 +263,7 @@
                 this.$http(`${AUDIT_API.AUDITHOURSLIST_API}`, 'POST', this.plantList).then(({ data }) => {
                     if (data.code === 0) {
                         if (data.page.list.length === 0) {
-                            this.$infoToast('该搜寻条件下无任何资料');
+                            this.$infoToast('暂无任何内容');
                         } else {
                             this.AuditList = data.page.list;
                             this.plantList.currPage = data.page.currPage;
