@@ -10,7 +10,11 @@
             @get-data-success="setData"
         >
             <template slot="home">
-                <span>12</span>
+                <el-row class="ste__main" :gutter="10">
+                    <el-col v-for="(item, index) in queryResultList" :key="index" :span="8" style="margin-bottom: 10px;">
+                        a
+                    </el-col>
+                </el-row>
             </template>
         </query-table>
     </div>

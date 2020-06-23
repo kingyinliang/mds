@@ -272,20 +272,17 @@ export default class AuditIndex extends Vue {
         if (st) {
             this.tabs.map((item, index) => {
                 if (index !== Number(this.$refs.queryTable.activeName)) {
-                    const params = this.$refs.queryTable.queryForm
+                    const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
                     params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     if (index === 0) {
                         console.log(0)
                         params['orderStatus'] = 'D';
-                        // this.paramsFunction(params, index);
                     } else if (index === 1) {
                         console.log(1)
                         params.orderStatus = 'C';
-                        // this.paramsFunction(params, index);
                     } else {
                         console.log(2)
                         params['orderStatus'] = 'R';
-                        // this.paramsFunction(params, index);
                     }
                     console.log(params)
                     params.current = 1;
