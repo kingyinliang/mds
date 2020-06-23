@@ -11,7 +11,6 @@
             :custom-data="true"
             :operation-column-width="90"
             @get-data-success="setData"
-            @tab-click="getTabData"
             @line-click="getLineClick"
         >
             <template slot="operation_column" slot-scope="{ scope }">
@@ -244,44 +243,81 @@ export default class AuditIndex extends Vue {
     // 查询请求
     listInterface(params) {
         params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        params.orderStatus = 'D'; // eslint-disable-line
-        return COMMON_API.ORDER_QUERY_API(params);
-    }
-
-    setData(datas) {
-        this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
-    }
-
-    getTabData(tab) {
         let orderStatus = ''
-        if (tab.name === '0') {
+        if (this.$refs.queryTable.activeName === '0') {
             orderStatus = 'D';
-        } else if (tab.name === '1') {
+        } else if (this.$refs.queryTable.activeName === '1') {
             orderStatus = 'C';
         } else {
             orderStatus = 'R';
         }
-        this.getList(orderStatus, tab.name);
+        params.orderStatus = orderStatus; // eslint-disable-line
+        params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
+        params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
+        params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
+        return COMMON_API.ORDER_QUERY_API(params);
     }
 
-    getList(orderStatus, tabNumber) {
-        if (!this.$refs.queryTable.queryForm.workshop) {
-            this.$infoToast('请选择车间');
-            return false
+    // paramsFunction(params, index) {
+    //     COMMON_API.ORDER_QUERY_API(params).then(({ data }) => {
+    //         this.tabs[index].tableData = data.data.records;
+    //         this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
+    //         this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
+    //         this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
+    //     });
+    // }
+
+    // 设置数据
+    setData(datas, st) {
+        if (st) {
+            this.tabs.map((item, index) => {
+                if (index !== Number(this.$refs.queryTable.activeName)) {
+                    const params = this.$refs.queryTable.queryForm
+                    params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    if (index === 0) {
+                        console.log(0)
+                        params['orderStatus'] = 'D';
+                        // this.paramsFunction(params, index);
+                    } else if (index === 1) {
+                        console.log(1)
+                        params.orderStatus = 'C';
+                        // this.paramsFunction(params, index);
+                    } else {
+                        console.log(2)
+                        params['orderStatus'] = 'R';
+                        // this.paramsFunction(params, index);
+                    }
+                    console.log(params)
+                    params.current = 1;
+                    params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
+                    params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
+                    COMMON_API.ORDER_QUERY_API(params).then(({ data }) => {
+                        this.tabs[index].tableData = data.data.records;
+                        this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
+                        this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
+                        this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
+                    });
+                } else {
+                    this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                    this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                    this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                    this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+                }
+            })
+        } else {
+            this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
         }
-        const params = {
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            orderStatus: orderStatus,
-            current: 1,
-            size: this.$refs.queryTable.tabs[tabNumber].pages.pageSize,
-            total: this.$refs.queryTable.tabs[tabNumber].pages.totalCount
-        };
-        COMMON_API.ORDER_QUERY_API(params).then(({ data }) => {
-            this.tabs[tabNumber].tableData = data.data.records;
-            this.$refs.queryTable.tabs[tabNumber].pages.currPage = data.data.current;
-            this.$refs.queryTable.tabs[tabNumber].pages.pageSize = data.data.size;
-            this.$refs.queryTable.tabs[tabNumber].pages.totalCount = data.data.total;
-        });
+    }
+
+    sleep(millisecond) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve()
+            }, millisecond)
+        })
     }
 
     // 审核日志
