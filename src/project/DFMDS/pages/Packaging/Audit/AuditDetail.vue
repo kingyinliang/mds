@@ -202,12 +202,14 @@ export default class AuditDetail extends Vue {
     chartDiffBar: any;
     /* eslint-enable */
     proMaterialDiffList = [];
+    oeeList = [];
     prodPower = {};
     deviceRun = {};
 
     mounted() {
         this.auditDetail = this.$store.state.packaging.auditDetail;
         this.getOrderList();
+        this.getOee(this.auditDetail);
         this.getProdPower(this.auditDetail);
         this.getDeviceRun(this.auditDetail);
         this.getAudit(this.auditDetail);
@@ -216,6 +218,13 @@ export default class AuditDetail extends Vue {
 
     get sidebarFold() {
         return this.$store.state.common.sidebarFold;
+    }
+
+    // 生产效率
+    getOee(auditDetail) {
+        PKG_API.PKG_AUDIT_DETAIL_OEE_API({ orderNo: auditDetail.orderNo }).then(({ data }) => {
+            this.oeeList = data.data
+        })
     }
 
     // 产量与力量

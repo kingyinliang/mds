@@ -200,7 +200,8 @@ export default {
                 if (valid) {
                     COMMON_API.LOGIN_API({
                         userName: this.ruleForm2.user,
-                        password: this.ruleForm2.pass
+                        password: this.ruleForm2.pass,
+                        loginSystem: 'MDS'
                     }).then(({ data }) => {
                         if (data.code === 200) {
                             this.$cookie.set('token', data.data.token);
