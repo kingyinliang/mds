@@ -14,10 +14,10 @@
                                 </div>
                             </el-col>
                             <el-col :span="14">
-                                <img src="@/assets/img/Filtration.png" alt="" style="width: 92%; margin-top: 19px;">
+                                <img src="@/assets/img/Filtration.png" alt="" style="width: 92%; margin-top: 19px; margin-bottom: 10px;">
                             </el-col>
                         </el-row>
-                        <el-row class="footer">
+                        <el-row class="bottom">
                             <el-col :span="8">
                                 <el-button class="button" :disabled="!isRedact" @click="ShowDialog(item, '清洗')">
                                     清洗
@@ -334,7 +334,6 @@ export default {
 .grid-content {
     display: flex;
     flex-direction: column;
-    height: 176px;
     margin-bottom: 15px;
     border: 1px solid rgba(233, 233, 233, 1);
     border-radius: 2px;
@@ -352,9 +351,11 @@ export default {
         font-size: 12px;
         line-height: 22px;
     }
-    .footer {
+    .bottom {
+        width: 100%;
         background: rgba(247, 249, 250, 1);
         border-top: 1px solid rgba(233, 233, 233, 1);
+        border-bottom: none;
         .button {
             width: 100%;
             margin: 10px 0;
