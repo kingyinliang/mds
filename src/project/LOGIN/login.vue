@@ -161,6 +161,9 @@ export default {
             }
         };
     },
+    created() {
+        console.log(window.location.href);
+    },
     mounted() {
         const canvas = new LoginAnimation(this.$);
         canvas.init();
@@ -204,28 +207,31 @@ export default {
                         loginSystem: 'MDS'
                     }).then(({ data }) => {
                         if (data.code === 200) {
-                            this.$cookie.set('token', data.data.token);
-                            sessionStorage.setItem('userId', data.data.uid || '');
-                            sessionStorage.setItem('userFactory', JSON.stringify(data.data.userFactory || '[]'));
-                            sessionStorage.setItem('userName', data.data.userName || '');
-                            sessionStorage.setItem('realName', data.data.realName || '');
-                            sessionStorage.setItem('gender', data.data.sex || 'M');
-                            sessionStorage.setItem('defaultFactory', data.data.defaultFactory || '');
-                            if (data.data.firstFlag === '1') {
-                                this.visible = true;
-                                this.factory = data.data.userFactory
-                            } else if (data.data.defaultFactory) {
-                                const dfFa = data.data.userFactory.filter(item => item.deptCode === data.data.defaultFactory)[0]
-                                this.$refs.selectfactory.goFa(dfFa)
-                            } else {
-                                this.selectFactory(data.data)
-                            }
+                            this.loginSuccess(data.data);
                         }
                     });
                 } else {
                     return false;
                 }
             });
+        },
+        loginSuccess(data) {
+            this.$cookie.set('token', data.token);
+            sessionStorage.setItem('userId', data.uid || '');
+            sessionStorage.setItem('userFactory', JSON.stringify(data.userFactory || '[]'));
+            sessionStorage.setItem('userName', data.userName || '');
+            sessionStorage.setItem('realName', data.realName || '');
+            sessionStorage.setItem('gender', data.sex || 'M');
+            sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
+            if (data.firstFlag === '1') {
+                this.visible = true;
+                this.factory = data.userFactory
+            } else if (data.defaultFactory) {
+                const dfFa = data.userFactory.filter(item => item.deptCode === data.defaultFactory)[0]
+                this.$refs.selectfactory.goFa(dfFa)
+            } else {
+                this.selectFactory(data)
+            }
         },
         selectFactory(data) {
             this.factory = data.userFactory
