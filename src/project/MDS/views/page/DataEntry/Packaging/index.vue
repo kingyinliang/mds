@@ -226,7 +226,6 @@ export default {
                         this.PkgworkShop = this.plantList.workShop;
                         this.PkgproductDate = this.plantList.productDate;
                         this.list = orderList(data.list);
-                        console.log(this.list);
                         this.workShop = this.plantList.workShop;
                         this.productDate = this.plantList.productDate;
                         this.factoryid = this.plantList.factoryid;
