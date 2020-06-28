@@ -11,7 +11,7 @@
             <el-form ref="ruleForm" :model="ruleForm">
                 <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" border tooltip-effect="dark" size="small">
                     <el-table-column type="index" label="序号" width="50px" fixed />
-                    <el-table-column label="生产日期" prop="productDate" width="180">
+                    <el-table-column label="生产日期" prop="productDate" width="200">
                         <template slot="header">
                             <span class="notNull">* </span>生产日期
                         </template>
@@ -21,7 +21,7 @@
                                 type="date"
                                 placeholder="选择日期"
                                 size="small"
-                                style="width: 140px;"
+                                style="width: 200px;"
                                 value-format="yyyy-MM-dd HH:mm"
                                 format="yyyy.MM.dd HH:mm"
                                 :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
