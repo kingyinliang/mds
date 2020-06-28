@@ -7,6 +7,8 @@ import DataEntry from './DataEntry/DataEntry.vue';
 import Audit from './Audit/Audit.vue';
 import AuditLog from './AuditLog/AuditLog.vue';
 import QueryEntry from './QueryEntry/QueryEntry.vue'
+import TextRecord from './TextRecord/index.vue'
+import ExcRecord from './ExcRecord/index.vue'
 
 export default function(Vue) {
     Vue.component('ScrollTop', ScrollToTop);
@@ -18,4 +20,6 @@ export default function(Vue) {
     Vue.component('Audit', Audit);
     Vue.component('AuditLog', AuditLog);
     Vue.component('QueryEntry', QueryEntry);
+    Vue.component('TextRecord', TextRecord);
+    Vue.component('ExcRecord', ExcRecord);
 }

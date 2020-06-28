@@ -56,7 +56,6 @@
     import Material from '../common/Material.vue';
     import ProductPeople from '../common/ProductPeople.vue';
     import PendingNum from '../common/PendingNum.vue';
-    import TextRecord from '../common/TextRecord.vue';
     import ProductInStorage from '../common/ProductInStorage.vue';
     import Equipment from '../common/Equipment.vue';
 
@@ -66,7 +65,6 @@
             ReadyTime,
             ProductPeople,
             PendingNum,
-            TextRecord,
             Material,
             ProductInStorage,
             Equipment
