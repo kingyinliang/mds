@@ -110,7 +110,7 @@
 
         // 组织架构点击
         treeNodeClick(row: DeptObject) {
-            this.$emit('treeNodeClick', row)
+            this.$emit('treeNodeClick', row, true)
         }
 
         // 组织架构右击
