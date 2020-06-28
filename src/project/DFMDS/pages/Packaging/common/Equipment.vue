@@ -256,24 +256,27 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <el-table-column width="140" :show-overflow-tooltip="true">
+                    <el-table-column width="200" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>停机原因
                         </template>
                         <template slot-scope="scope">
-                            <el-form-item :prop="'r'+scope.$index+'.stopReason'" :rules="dataRules.stopReason">
+                            <el-form-item v-if="scope.row.fzReasonOptions===false" :prop="'r'+scope.$index+'.stopReason'" :rules="dataRules.stopReason">
                                 <el-select v-model="scope.row.stopReason" size="small" clearable :disabled="!(!scope.row.fzReasonOptions && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <!-- <el-option v-for="(item) in stopReasonOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" /> -->
                                     <el-option v-for="(item) in scope.row.stopReasonArray" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
+                            <el-form-item v-if="scope.row.fzReasonOptions===true" :prop="'r'+scope.$index+'.exceptionInfo'" :rules="dataRules.exceptionInfo">
+                                <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                            </el-form-item>
                         </template>
                     </el-table-column>
-                    <el-table-column label="描述" min-width="180" :show-overflow-tooltip="true">
+                    <!-- <el-table-column label="描述" min-width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                         </template>
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column label="备注" min-width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
@@ -374,6 +377,9 @@ export default class Equipment extends Vue {
             { required: true, message: '请输入', trigger: 'change' }
         ],
         stopReason: [
+            { required: true, message: '请输入', trigger: 'change' }
+        ],
+        exceptionInfo: [
             { required: true, message: '请输入', trigger: 'change' }
         ]
     }
@@ -490,7 +496,7 @@ export default class Equipment extends Vue {
             for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1)) {
                 // console.log('this.fzReasonOptions')
                 // console.log(this.fzReasonOptions)
-                if (!item.classes || !item.stopType || !item.stopMode || !item.date || !item.exceptionCount || !item.stopSituation || (!item.stopReason && !item.fzReasonOptions)) {
+                if (!item.classes || !item.stopType || !item.stopMode || !item.date || !item.exceptionCount || !item.stopSituation || (!item.stopReason && !item.fzReasonOptions) || (!item.exceptionInfo && item.fzReasonOptions)) {
                     this.$warningToast('请填写停机情况必填项');
                     return false
                 }
@@ -630,7 +636,7 @@ export default class Equipment extends Vue {
     changeStopReasonOption(row) {
         row.stopReasonArray = []
         row.stopReason = ''
-        if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN') {
+        if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN' || row.stopSituation === 'FAULT') {
             row.fzReasonOptions = false
             COMMON_API.DEVICELIST_API({
                 deptId: this.productLine,
@@ -646,6 +652,7 @@ export default class Equipment extends Vue {
                     })
                 })
             });
+            row.exceptionInfo = ''
         } else if (row.stopSituation === 'EXPERIMENT' || row.stopSituation === 'POOR_PROCESS' || row.stopSituation === 'WAIT' || row.stopSituation === 'ENERGY') {
             row.fzReasonOptions = false
             COMMON_API.DICTQUERY_API({
@@ -659,6 +666,7 @@ export default class Equipment extends Vue {
                     })
                 })
             });
+            row.exceptionInfo = ''
         } else {
             row.fzReasonOptions = true
             row.stopReasonArray = []
@@ -666,8 +674,10 @@ export default class Equipment extends Vue {
     }
 
     changeStopReasonDefaultOption(row) {
+        console.log('row')
+        console.log(row)
         row.stopReasonArray = []
-        if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN') {
+        if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN' || row.stopSituation === 'FAULT') {
             row.fzReasonOptions = false
             COMMON_API.DEVICELIST_API({
                 deptId: this.productLine,
