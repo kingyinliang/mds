@@ -6,7 +6,8 @@ import QueryTable from './QueryTable/QueryTable.vue';
 import DataEntry from './DataEntry/DataEntry.vue';
 import Audit from './Audit/Audit.vue';
 import AuditLog from './AuditLog/AuditLog.vue';
-import QueryEntry from './QueryEntry/QueryEntry.vue'
+import QueryEntry from './QueryEntry/QueryEntry.vue';
+import RedactBox from './RedactBox/RedactBox.vue';
 
 export default function(Vue) {
     Vue.component('ScrollTop', ScrollToTop);
@@ -18,4 +19,5 @@ export default function(Vue) {
     Vue.component('Audit', Audit);
     Vue.component('AuditLog', AuditLog);
     Vue.component('QueryEntry', QueryEntry);
+    Vue.component('RedactBox', RedactBox);
 }

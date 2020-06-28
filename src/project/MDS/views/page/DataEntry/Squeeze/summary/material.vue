@@ -1,133 +1,137 @@
 <template>
     <div>
-        <el-row class="clearfix">
-            <p style="float: left; font-size: 14px;">
-                布浆总量：
-            </p>
-            <el-button type="primary" style="float: right;" size="small" :disabled="true">
-                酱醪领用
-            </el-button>
-        </el-row>
-        <el-table ref="table1" header-row-class-name="tableHead" :data="SumDate" :row-class-name="RowDelFlag" @row-dblclick="GetLog">
-            <el-table-column label="原汁信息">
-                <el-table-column label="状态" width="95">
+        <mds-card title="步浆信息" name="SumDate">
+            <template slot="titleBtn">
+                <el-button type="primary" style="float: right;" size="small" :disabled="true">
+                    酱醪领用
+                </el-button>
+            </template>
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="SumDate" :row-class-name="RowDelFlag" @row-dblclick="GetLog">
+                <el-table-column label="原汁信息">
+                    <el-table-column label="状态" width="95">
+                        <template slot-scope="scope">
+                            <span
+                                :style="{
+                                    color: scope.row.material.childStatus === 'noPass' ? 'red' : scope.row.material.childStatus === 'checked' ? '#67C23A' : '',
+                                }"
+                            >{{
+                                scope.row.material.childStatus === 'noPass'
+                                    ? '审核不通过'
+                                    : scope.row.material.childStatus === 'saved'
+                                        ? '已保存'
+                                        : scope.row.material.childStatus === 'submit'
+                                            ? '已提交'
+                                            : scope.row.material.childStatus === 'checked'
+                                                ? '通过'
+                                                : scope.row.material.childStatus === '已同步'
+                                                    ? '未录入'
+                                                    : '未录入'
+                            }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="110">
+                        <template slot="header">
+                            <i class="reqI">*</i><span>原汁罐号</span>
+                        </template>
+                        <template slot-scope="scope">
+                            {{ scope.row.fumet.potNoName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="是否混合罐" width="95" prop="fumet.fullPort" />
+                    <el-table-column label="物料" width="220">
+                        <template slot-scope="scope">
+                            {{ scope.row.fumet.material }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="入罐数量" width="80" :show-overflow-tooltip="true" prop="fumet.inPotAmount" />
+                    <el-table-column label="满罐数量" width="80" :show-overflow-tooltip="true" prop="fumet.fullPotAmount" />
+                    <el-table-column label="单位" width="50" prop="fumet.unit" />
+                    <el-table-column label="满罐日期" width="90" :show-overflow-tooltip="true" prop="fumet.fullPotDate" />
+                    <el-table-column label="原汁批次" width="110" :show-overflow-tooltip="true" prop="fumet.batch" />
+                    <el-table-column label="生产订单" width="110" :show-overflow-tooltip="true" prop="fumet.orderNo" />
+                </el-table-column>
+                <el-table-column label="操作" width="80">
                     <template slot-scope="scope">
-                        <span
-                            :style="{
-                                color: scope.row.material.childStatus === 'noPass' ? 'red' : scope.row.material.childStatus === 'checked' ? '#67C23A' : '',
-                            }"
-                        >{{
-                            scope.row.material.childStatus === 'noPass'
-                                ? '审核不通过'
-                                : scope.row.material.childStatus === 'saved'
-                                    ? '已保存'
-                                    : scope.row.material.childStatus === 'submit'
-                                        ? '已提交'
-                                        : scope.row.material.childStatus === 'checked'
-                                            ? '通过'
-                                            : scope.row.material.childStatus === '已同步'
-                                                ? '未录入'
-                                                : '未录入'
-                        }}</span>
+                        <el-button
+                            v-if="scope.row.fumet.fullPort !== '正常'"
+                            type="text"
+                            :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked')"
+                            @click="splitDate(scope.row.fumet, scope.$index)"
+                        >
+                            <i class="icons iconfont factory-chaifen" />拆分
+                        </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column width="110">
-                    <template slot="header">
-                        <i class="reqI">*</i><span>原汁罐号</span>
-                    </template>
+                <el-table-column label="发酵罐号">
+                    <el-table-column width="120">
+                        <template slot="header">
+                            <i class="reqI">*</i><span>发酵罐号</span>
+                        </template>
+                        <template slot-scope="scope">
+                            <el-select v-model="scope.row.material.childPotNo" filterable placeholder="请选择" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')" size="small" @visible-change="PotChange($event, scope.row)">
+                                <el-option v-for="item in potList" :key="item.holderId" :label="item.holderName" :value="item.holderId" />
+                                <el-option v-if="potSelect(scope.row.material)" :key="scope.row.material.childPotNo" :label="scope.row.material.holderName" :value="scope.row.material.childPotNo" :disabled="true" />
+                            </el-select>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="类别" width="80">
+                        <template slot-scope="scope">
+                            {{ scope.row.material.type }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="物料" width="220">
+                        <template slot-scope="scope">
+                            {{ scope.row.material.childMaterial }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="120">
+                        <template slot="header">
+                            <i class="reqI">*</i><span>当日用量</span>
+                        </template>
+                        <template
+                            slot-scope="scope"
+                        >
+                            <el-input
+                                v-model="scope.row.material.childUsedAmount"
+                                size="small"
+                                placeholder="手工录入"
+                                :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')"
+                                @focus="GetOldAmount(scope.row)"
+                                @blur="PostAmount(scope.row)"
+                            />
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="单位" width="50">
+                        <template slot-scope="scope">
+                            {{ (scope.row.material.childUnit = 'L') }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="物料批次" width="120">
+                        <template slot-scope="scope">
+                            {{ scope.row.material.childBatch }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="剩余数量" width="120">
+                        <template slot-scope="scope">
+                            {{ scope.row.material.childFullPotAmount }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="记录人" width="120" prop="material.childRecordMan" />
+                </el-table-column>
+                <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        {{ scope.row.fumet.potNoName }}
+                        <el-button v-if="dangerIf(scope.row)" class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked')" @click="dellist(scope.row)">
+                            删除
+                        </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="是否混合罐" width="95" prop="fumet.fullPort" />
-                <el-table-column label="物料" width="220">
-                    <template slot-scope="scope">
-                        {{ scope.row.fumet.material }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="入罐数量" width="80" :show-overflow-tooltip="true" prop="fumet.inPotAmount" />
-                <el-table-column label="满罐数量" width="80" :show-overflow-tooltip="true" prop="fumet.fullPotAmount" />
-                <el-table-column label="单位" width="50" prop="fumet.unit" />
-                <el-table-column label="满罐日期" width="90" :show-overflow-tooltip="true" prop="fumet.fullPotDate" />
-                <el-table-column label="原汁批次" width="110" :show-overflow-tooltip="true" prop="fumet.batch" />
-                <el-table-column label="生产订单" width="110" :show-overflow-tooltip="true" prop="fumet.orderNo" />
-            </el-table-column>
-            <el-table-column label="操作" width="80">
-                <template slot-scope="scope">
-                    <el-button
-                        v-if="scope.row.fumet.fullPort !== '正常'"
-                        type="text"
-                        :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked')"
-                        @click="splitDate(scope.row.fumet, scope.$index)"
-                    >
-                        <i class="icons iconfont factory-chaifen" />拆分
-                    </el-button>
-                </template>
-            </el-table-column>
-            <el-table-column label="发酵罐号">
-                <el-table-column width="120">
-                    <template slot="header">
-                        <i class="reqI">*</i><span>发酵罐号</span>
-                    </template>
-                    <template slot-scope="scope">
-                        <el-select v-model="scope.row.material.childPotNo" filterable placeholder="请选择" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')" size="small" @visible-change="PotChange($event, scope.row)">
-                            <el-option v-for="item in potList" :key="item.holderId" :label="item.holderName" :value="item.holderId" />
-                            <el-option v-if="potSelect(scope.row.material)" :key="scope.row.material.childPotNo" :label="scope.row.material.holderName" :value="scope.row.material.childPotNo" :disabled="true" />
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="类别" width="80">
-                    <template slot-scope="scope">
-                        {{ scope.row.material.type }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="物料" width="220">
-                    <template slot-scope="scope">
-                        {{ scope.row.material.childMaterial }}
-                    </template>
-                </el-table-column>
-                <el-table-column width="120">
-                    <template slot="header">
-                        <i class="reqI">*</i><span>当日用量</span>
-                    </template>
-                    <template
-                        slot-scope="scope"
-                    >
-                        <el-input
-                            v-model="scope.row.material.childUsedAmount"
-                            size="small"
-                            placeholder="手工录入"
-                            :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')"
-                            @focus="GetOldAmount(scope.row)"
-                            @blur="PostAmount(scope.row)"
-                        />
-                    </template>
-                </el-table-column>
-                <el-table-column label="单位" width="50">
-                    <template slot-scope="scope">
-                        {{ (scope.row.material.childUnit = 'L') }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="物料批次" width="120">
-                    <template slot-scope="scope">
-                        {{ scope.row.material.childBatch }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="剩余数量" width="120">
-                    <template slot-scope="scope">
-                        {{ scope.row.material.childFullPotAmount }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="记录人" width="120" prop="material.childRecordMan" />
-            </el-table-column>
-            <el-table-column label="操作" fixed="right" width="70">
-                <template slot-scope="scope">
-                    <el-button v-if="dangerIf(scope.row)" class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked')" @click="dellist(scope.row)">
-                        删除
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+            </el-table>
+            <el-row class="clearfix">
+                <p style="float: left; font-size: 14px;">
+                    布浆总量：
+                </p>
+            </el-row>
+        </mds-card>
         <audit-log :table-data="MaterialAudit" />
     </div>
 </template>
