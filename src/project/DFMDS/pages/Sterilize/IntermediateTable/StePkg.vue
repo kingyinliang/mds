@@ -63,7 +63,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import StePkgAddOrUpdate from './StePkgAddOrUpdate'
+    import StePkgAddOrUpdate from './StePkgAddOrUpdate.vue'
 
     @Component({
         name: 'StePkg',
