@@ -28,7 +28,9 @@
     @Component
     export default class StePkgAddOrUpdate extends Vue {
         visible = false;
-        dataForm = {}
+        dataForm = {
+            material: ''
+        }
     }
 </script>
 
