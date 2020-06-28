@@ -161,12 +161,14 @@ export default {
             }
         };
     },
-    created() {
-        console.log(window.location.href);
-    },
     mounted() {
         const canvas = new LoginAnimation(this.$);
         canvas.init();
+        if (window.location.href.indexOf('?') !== -1) {
+            const url = decodeURIComponent(window.location.href.split('#')[0].split('?')[1].split('=')[1]);
+            const urlData = JSON.parse(url);
+            this.loginSuccess(urlData)
+        }
     },
     methods: {
         play() {
