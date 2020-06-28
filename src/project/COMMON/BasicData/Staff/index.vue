@@ -6,6 +6,7 @@
             :right-tile="'人员'"
             :type="'table'"
             @treeNodeClick="showOrgDetail"
+            @getTreeSuccess="setDeptId"
         >
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
@@ -77,12 +78,12 @@ export default {
             return this.$store.state.common.mainClientHeight;
         }
     },
-    mounted() {
-        // 进页面预设根目录内容
-        this.deptID = '1';
-        this.getItemsList();
-    },
     methods: {
+        setDeptId(data) {
+            this.deptID = data[0].id;
+            this.deptName = data[0].deptName;
+            this.getItemsList()
+        },
         // 序号
         indexMethod(index) {
             return index + 1 + (Number(this.currPage) - 1) * (Number(this.pageSize));

@@ -169,36 +169,29 @@
         tabs = [
             {
                 label: '生产准备',
-                status: '未录入',
-                isRedact: false
+                status: '未录入'
             },
             {
                 label: '生产人员',
-                status: '未录入',
-                isRedact: false
+                status: '未录入'
             },
             {
                 label: '设备运行',
-                status: '未录入',
-                isRedact: false
+                status: '未录入'
             },
             {
                 label: '生产入库',
-                status: '未录入',
-                isRedact: false
+                status: '未录入'
             },
             {
                 label: '物料领用',
-                status: '未录入',
-                isRedact: false
+                status: '未录入'
             },
             {
-                label: '待处理数量',
-                isRedact: false
+                label: '待处理数量'
             },
             {
-                label: '文本记录',
-                isRedact: false
+                label: '文本记录'
             }
         ];
 

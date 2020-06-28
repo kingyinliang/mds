@@ -11,7 +11,6 @@
             :custom-data="true"
             :operation-column-width="90"
             @get-data-success="setData"
-            @tab-click="getTabData"
             @line-click="getLineClick"
         >
             <template slot="operation_column" slot-scope="{ scope }">
@@ -19,15 +18,15 @@
                     审核日志
                 </el-button>
             </template>
-        </query-table>RDM   MDS
+        </query-table>
         <el-dialog title="审核日志" width="800px" :close-on-click-modal="false" :visible.sync="visibleDetailLog">
             <div>
                 <el-table header-row-class-name="" :data="logList" border tooltip-effect="dark" class="newTable">
                     <el-table-column type="index" label="序号" width="55" align="center" fixed />
-                    <el-table-column label="审核动作" show-overflow-tooltip width="160" />
-                    <el-table-column label="审核意见" prop="moveUnit" />
-                    <el-table-column label="审核人" prop="moveAmount" show-overflow-tooltip width="160" />
-                    <el-table-column label="审核时间" prop="changed" width="160" />
+                    <el-table-column label="审核动作" prop="status" show-overflow-tooltip width="160" />
+                    <el-table-column label="审核意见" prop="memo" />
+                    <el-table-column label="审核人" prop="verifyMan" show-overflow-tooltip width="140" />
+                    <el-table-column label="审核时间" prop="verifyDate" width="180" />
                 </el-table>
             </div>
             <div slot="footer" class="dialog-footer">
@@ -85,7 +84,8 @@ export default class AuditIndex extends Vue {
                 resData: 'data',
                 label: ['deptName'],
                 value: 'id'
-            }
+            },
+            defaultValue: ''
         },
         {
             type: 'input',
@@ -244,49 +244,79 @@ export default class AuditIndex extends Vue {
     // 查询请求
     listInterface(params) {
         params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        params.orderStatus = 'D'; // eslint-disable-line
-        return COMMON_API.ORDER_QUERY_API(params);
-    }
-
-    setData(datas) {
-        this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
-    }
-
-    getTabData(tab) {
         let orderStatus = ''
-        if (tab.name === '0') {
+        if (this.$refs.queryTable.activeName === '0') {
             orderStatus = 'D';
-        } else if (tab.name === '1') {
+        } else if (this.$refs.queryTable.activeName === '1') {
             orderStatus = 'C';
         } else {
             orderStatus = 'R';
         }
-        this.getList(orderStatus, tab.name);
+        params.orderStatus = orderStatus; // eslint-disable-line
+        params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
+        params.size = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize;// eslint-disable-line
+        params.total = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount;// eslint-disable-line
+        return COMMON_API.ORDER_QUERY_API(params);
     }
 
-    getList(orderStatus, tabNumber) {
-        if (!this.$refs.queryTable.queryForm.workshop) {
-            this.$infoToast('请选择车间');
-            return false
+    // paramsFunction(params, index) {
+    //     COMMON_API.ORDER_QUERY_API(params).then(({ data }) => {
+    //         this.tabs[index].tableData = data.data.records;
+    //         this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
+    //         this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
+    //         this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
+    //     });
+    // }
+
+    // 设置数据
+    setData(datas, st) {
+        if (st) {
+            this.tabs.map((item, index) => {
+                if (index !== Number(this.$refs.queryTable.activeName)) {
+                    const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
+                    params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                    if (index === 0) {
+                        params['orderStatus'] = 'D';
+                    } else if (index === 1) {
+                        params.orderStatus = 'C';
+                    } else {
+                        params['orderStatus'] = 'R';
+                    }
+                    params.current = 1;
+                    params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
+                    params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
+                    COMMON_API.ORDER_QUERY_API(params).then(({ data }) => {
+                        this.tabs[index].tableData = data.data.records;
+                        this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
+                        this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
+                        this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
+                    });
+                } else {
+                    this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                    this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+                    this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+                    this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
+                }
+            })
+        } else {
+            this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
+            this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
         }
-        const params = {
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            orderStatus: orderStatus,
-            current: 1,
-            size: this.$refs.queryTable.tabs[tabNumber].pages.pageSize,
-            total: this.$refs.queryTable.tabs[tabNumber].pages.totalCount
-        };
-        COMMON_API.ORDER_QUERY_API(params).then(({ data }) => {
-            this.tabs[tabNumber].tableData = data.data.records;
-            this.$refs.queryTable.tabs[tabNumber].pages.currPage = data.data.current;
-            this.$refs.queryTable.tabs[tabNumber].pages.pageSize = data.data.size;
-            this.$refs.queryTable.tabs[tabNumber].pages.totalCount = data.data.total;
-        });
+    }
+
+    sleep(millisecond) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve()
+            }, millisecond)
+        })
     }
 
     // 审核日志
     getLogList(row: object) {
-        AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: row['orderNo'] }).then(({ data }) => {
+        AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: row['orderNo'], verifyType: '' }).then(({ data }) => {
             this.logList = data.data;
             this.visibleDetailLog = true;
         })

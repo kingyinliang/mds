@@ -341,7 +341,7 @@ export function orderList(data) {
             realOutput: orderNo.length === 1 ? data[i].realOutput : '',
             materialCode: orderNo.length === 1 ? data[i].materialCode : '',
             materialName: orderNo.length === 1 ? data[i].materialName : '',
-            orderStatus: '',
+            orderStatus: orderNo.length === 1 ? data[i].orderStatus : '',
             planOutput: orderNo.length === 1 ? data[i].planOutput : '',
             outputUnit: orderNo.length === 1 ? data[i].outputUnit : '',
             properties: orderNo.length === 1 ? data[i].properties : '',
