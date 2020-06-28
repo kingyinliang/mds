@@ -66,7 +66,7 @@
                                         <el-button size="small">
                                             辅料添加
                                         </el-button>
-                                        <el-button size="small">
+                                        <el-button size="small" @click="goCraft">
                                             工艺控制
                                         </el-button>
                                         <el-button size="small">
@@ -146,6 +146,16 @@
 
         setData(data) {
             console.log(data);
+        }
+
+        goCraft() {
+            this.$store.commit('sterilize/updateCraft', {});
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Craft'));
+            setTimeout(() => {
+                this.$router.push({
+                    name: `DFMDS-pages-Sterilize-Craft`
+                });
+            }, 100);
         }
     }
     interface SteObj{
