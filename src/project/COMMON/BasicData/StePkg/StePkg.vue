@@ -80,7 +80,7 @@
         }
 
         currPage = 1;
-        currPage = 10;
+        pageSize = 10;
         totalCount = 0;
         queryForm = {
             material: ''
