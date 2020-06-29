@@ -221,6 +221,12 @@
                 this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptName;
                 this.formHeader.orderId = this.formHeader.id;
                 this.$refs.readyTime.init(this.formHeader);
+                this.$refs.productPeople.init(this.formHeader);
+                this.$refs.equipment.init(this.formHeader);
+                this.$refs.productInStorage.init(this.formHeader);
+                this.$refs.material.init(this.formHeader);
+                this.$refs.pendingNum.init(this.formHeader);
+                this.$refs.textRecord.init(this.formHeader);
             })
         }
 

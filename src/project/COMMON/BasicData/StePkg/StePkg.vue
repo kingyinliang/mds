@@ -38,7 +38,7 @@
                     </el-button>
                 </div>
             </template>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="tableData" border tooltip-effect="dark">
+            <el-table header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 72 - 47" :data="tableData" border tooltip-effect="dark">
                 <el-table-column type="selection" width="50" fixed="left" align="center" />
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="杀菌车间" prop="classType" />
@@ -56,6 +56,9 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-row>
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
         </mds-card>
         <ste-pkg-add-or-update />
     </div>
@@ -72,6 +75,13 @@
         }
     })
     export default class StePkg extends Vue {
+        get mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
+        }
+
+        currPage = 1;
+        pageSize = 10;
+        totalCount = 0;
         queryForm = {
             material: ''
         };
