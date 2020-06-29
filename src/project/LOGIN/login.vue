@@ -161,12 +161,14 @@ export default {
             }
         };
     },
-    created() {
-        console.log(window.location.href);
-    },
     mounted() {
         const canvas = new LoginAnimation(this.$);
         canvas.init();
+        if (window.location.href.indexOf('?') !== -1) {
+            const url = decodeURIComponent(window.location.href.split('#')[0].split('?')[1].split('=')[1]);
+            const urlData = JSON.parse(url);
+            this.loginSuccess(urlData)
+        }
     },
     methods: {
         play() {
@@ -221,7 +223,9 @@ export default {
             sessionStorage.setItem('userFactory', JSON.stringify(data.userFactory || '[]'));
             sessionStorage.setItem('userName', data.userName || '');
             sessionStorage.setItem('realName', data.realName || '');
+            sessionStorage.setItem('loginUserId', data.id || '');
             sessionStorage.setItem('gender', data.sex || 'M');
+            sessionStorage.setItem('deptId', data.deptId || '');
             sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
             if (data.firstFlag === '1') {
                 this.visible = true;

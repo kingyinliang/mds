@@ -8,7 +8,7 @@
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="工厂：" prop="deptIdList">
+            <el-form-item label="工厂：">
                 <el-checkbox-group v-model="dataForm.deptIdList">
                     <el-checkbox v-for="(item, index) in factory" :key="index" :label="item.id" name="factory">
                         {{ item.deptShort }}
@@ -153,13 +153,6 @@ export default class MenuAdd extends Vue {
     }
 
     dataRule = {
-        deptIdList: [
-            {
-                required: true,
-                message: '工厂不能为空',
-                trigger: 'blur'
-            }
-        ],
         menuName: [
             {
                 required: true,

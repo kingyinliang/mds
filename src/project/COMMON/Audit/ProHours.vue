@@ -179,9 +179,13 @@
                 redact: true
             },
             {
-                type: 'input',
+                type: 'select',
                 redact: true,
                 header: true,
+                resVal: {
+                    label: 'label',
+                    value: 'value'
+                },
                 prop: 'finConf',
                 label: '部分/最后确认',
                 width: '120'
@@ -319,6 +323,16 @@
             }
         ];
 
+        mounted() {
+            this.$refs.queryTable.optionLists.finConf = [{
+                label: '完全报工',
+                value: 'X'
+            }, {
+                label: '部分报工',
+                value: ''
+            }]
+        }
+
         // 查询请求
         listInterface = params => {
             params.passStatus = this.$refs.queryTable.activeName * 1;// eslint-disable-line
@@ -384,7 +398,7 @@
             if (!row.redact) {
                 row.redact = true;
             } else {
-                if (!row.execStartDate || !row.setupFinDate || !row.operation || !row.finConf) {
+                if (!row.execStartDate || !row.setupFinDate || !row.operation) {
                     this.$warningToast('请填写必填项')
                     return false
                 }

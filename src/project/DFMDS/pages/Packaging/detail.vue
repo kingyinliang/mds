@@ -64,11 +64,8 @@
     import Material from './common/Material.vue';
     import ProductPeople from './common/ProductPeople.vue';
     import PendingNum from './common/PendingNum.vue';
-    import TextRecord from './common/TextRecord.vue';
     import ProductInStorage from './common/ProductInStorage.vue';
     import Equipment from './common/Equipment.vue';
-    // import _ from 'lodash';
-    // import { getFactory } from '@/net/validate';
 
     @Component({
         name: 'PackagingDetail',
@@ -76,7 +73,6 @@
             ReadyTime,
             ProductPeople,
             PendingNum,
-            TextRecord,
             Material,
             ProductInStorage,
             Equipment
@@ -169,36 +165,29 @@
         tabs = [
             {
                 label: '生产准备',
-                status: '未录入',
-                isRedact: false
+                status: '未录入'
             },
             {
                 label: '生产人员',
-                status: '未录入',
-                isRedact: false
+                status: '未录入'
             },
             {
                 label: '设备运行',
-                status: '未录入',
-                isRedact: false
+                status: '未录入'
             },
             {
                 label: '生产入库',
-                status: '未录入',
-                isRedact: false
+                status: '未录入'
             },
             {
                 label: '物料领用',
-                status: '未录入',
-                isRedact: false
+                status: '未录入'
             },
             {
-                label: '待处理数量',
-                isRedact: false
+                label: '待处理数量'
             },
             {
-                label: '文本记录',
-                isRedact: false
+                label: '文本记录'
             }
         ];
 

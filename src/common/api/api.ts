@@ -1,8 +1,9 @@
 import httpProxy from 'utils/net/httpProxy';
 
-import auditApi from './audit'
-import pkgApi from './pkg'
-import steApi from './ste'
+import auditApi from './audit';
+import pkgApi from './pkg';
+import steApi from './ste';
+import messageApi from './message';
 
 export const COMMON_API = {
     /**
@@ -413,17 +414,7 @@ export const COMMON_API = {
     SPECIAL_MATERIAL_REMOVE_API: params => httpProxy('/ste/steSpeAccessories/remove', 'POST', params)
 };
 
-export const MSG_API = {
-    /**
-     * @property {string}  MSG_QUERY_API 消息管理-消息查询
-     */
-    MSG_QUERY_API: params => httpProxy('/msg/query', 'POST', params),
-    /**
-     * @property {string}  MSG_READ_API 消息管理-标记已读
-     */
-    MSG_READ_API: params => httpProxy('/msg/read', 'POST', params)
-};
-
+export const MSG_API = messageApi;
 export const AUDIT_API = auditApi;
 export const PKG_API = pkgApi;
 export const STE_API = steApi;
