@@ -391,18 +391,24 @@
                 return false
             }
             if (this.$refs.queryTable.tabs[0].multipleSelection && this.$refs.queryTable.tabs[0].multipleSelection.length) {
+                const list = this.$refs.queryTable.tabs[0].multipleSelection
+                for (const item of list) {
+                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                    item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
+                    item.pstngDate = this.pstngDate
+                    item.headerText = this.headerText
+                    if (item.batch !== '' && item.batch !== null) {
+                        if (item.batch.length !== 10) {
+                            this.$warningToast('物料批次长度为10位')
+                            return false;
+                        }
+                    }
+                }
                 this.$confirm('确认过账，是否继续', '过账确认', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    const list = this.$refs.queryTable.tabs[0].multipleSelection
-                    list.forEach(item => {
-                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
-                        item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
-                        item.pstngDate = this.pstngDate
-                        item.headerText = this.headerText
-                    });
                     AUDIT_API.PROISSUEPASS_API(list).then(({ data }) => {
                         this.$successToast(data.msg)
                         this.$refs.queryTable.getDataList()
@@ -482,13 +488,19 @@
                     type: 'warning'
                 }).then(() => {
                     const list = this.$refs.queryTable.tabs[1].multipleSelection
-                    list.forEach(item => {
+                    for (const item of list) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
                         item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
                         item.reason = this.refuseOrWriteOffsText
                         item.headerText = this.headerText
                         item.pstngDate = this.pstngDate
-                    });
+                        if (item.batch !== '' && item.batch !== null) {
+                            if (item.batch.length !== 10) {
+                                this.$warningToast('物料批次长度为10位')
+                                return false;
+                            }
+                        }
+                    }
                     AUDIT_API.PROISSUEWRITEOFFS_API(list).then(({ data }) => {
                         this.isRefuseOrWriteOffsDialogShow = false
                         this.$successToast(data.msg);
@@ -509,8 +521,8 @@
                     this.$warningToast('请填写必填项')
                     return false;
                 }
-                if (row.batch.length > 10) {
-                    this.$warningToast('物料批次最大长度为10位')
+                if (row.batch.length !== 10) {
+                    this.$warningToast('物料批次长度为10位')
                     return false;
                 }
                 if (row.stgeLoc.length > 4) {
