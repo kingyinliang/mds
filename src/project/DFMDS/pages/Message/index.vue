@@ -197,7 +197,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, MSG_API } from 'common/api/api';
+    import { MSG_API } from 'common/api/api';
 
     @Component({
         components: {
@@ -222,28 +222,28 @@
         realName= sessionStorage.getItem('userName')
         post=''
         mounted() {
-            // this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
+            this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
             // this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
-            COMMON_API.ORGSTRUCTURE_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            }).then(({ data }) => {
-                console.log('33333')
-                console.log(data)
-            });
+            // COMMON_API.ORGSTRUCTURE_API({
+            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            // }).then(({ data }) => {
+            //     console.log('33333')
+            //     console.log(data)
+            // });
 
 
-        COMMON_API.USER_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                //deptId: '9592E58E61A7A8FEE7',
-                deptId: sessionStorage.getItem('deptId'),
-                workNum: sessionStorage.getItem('userName'),
-                current: 1,
-                size: 10
-            }).then(({ data }) => {
-                console.log('2222')
-                console.log(data)
-                this.post = data.data.records[0].post
-            });
+            // COMMON_API.USER_QUERY_API({
+            //         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            //         deptId: '9592E58E61A7A8FEE7',
+            //         // deptId: sessionStorage.getItem('deptId'),
+            //         workNum: sessionStorage.getItem('userName'),
+            //         current: 1,
+            //         size: 10
+            //     }).then(({ data }) => {
+            //         console.log('2222')
+            //         console.log(data)
+            //         this.post = data.data.records[0].post
+            //     });
         }
 
         //  设置类型參數
