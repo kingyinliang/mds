@@ -107,7 +107,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, STE_API } from 'common/api/api';
+    import { COMMON_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
 
     @Component
@@ -129,11 +129,11 @@
             potNo: ''
         }
 
-        queryResultList: SteObj[] = [{}];
-        splitTable: SteObj[] = [{}];
+        queryResultList: SteObj[] = [];
+        splitTable: SteObj[] = [];
         rules = [
             {
-                prop: 'workshop',
+                prop: 'workShop',
                 text: '请选择生产车间'
             }
         ];
@@ -142,7 +142,7 @@
             {
                 type: 'select',
                 label: '生产车间',
-                prop: 'workshop',
+                prop: 'workShop',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -171,20 +171,23 @@
             {
                 type: 'input',
                 label: '状态',
-                prop: 'status'
+                prop: 'orderStatus'
             }
         ];
 
         // 查询请求
         listInterface = params => {
-            params.current = 1;
-            params.size = 10;
+            params.current = this.currPage; // eslint-disable-line
+            params.size = this.pageSize; // eslint-disable-line
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return STE_API.STE_HOME_LIST_API(params);
+            return COMMON_API.ORDER_QUERY_API(params);
         };
 
         setData(data) {
-            console.log(data);
+            this.queryResultList = data.data.records;
+            this.currPage = data.data.current;
+            this.pageSize = data.data.size;
+            this.totalCount = data.data.total;
         }
 
         orderSplit(row) {

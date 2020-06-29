@@ -1,5 +1,6 @@
 import httpProxy from 'utils/net/httpProxy';
 
+import basicApi from './basic';
 import auditApi from './audit';
 import pkgApi from './pkg';
 import steApi from './ste';
@@ -414,6 +415,7 @@ export const COMMON_API = {
     SPECIAL_MATERIAL_REMOVE_API: params => httpProxy('/ste/steSpeAccessories/remove', 'POST', params)
 };
 
+export const BASIC_API = basicApi;
 export const MSG_API = messageApi;
 export const AUDIT_API = auditApi;
 export const PKG_API = pkgApi;

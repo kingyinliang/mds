@@ -1,15 +1,15 @@
 <template>
-    <div>
+    <div class="message-area">
         <el-row style="padding: 0 11px;">
             <el-col :span="24">
                 <el-card class="box-card" style="margin: 10px 0;">
                     <div class="hello-box">
                         <div><img src="~common/img/man.png" alt="" style="width: 66px;"></div>
                         <div>
-                            <div style="color: rgba(0, 0, 0, 0.85); font-weight: 600; font-size: 1.2rem;">
+                            <div style=" height: 28px; margin-top: 2px; color: rgba(0, 0, 0, 0.85); font-weight: 600; font-size: 16px; line-height: 28px;">
                                 {{ realName }}, 祝你开心每一天
                             </div>
-                            <div style="justify-content: flex-end; padding-top: 5px; color: rgba(0, 0, 0, 0.45); font-size: 0.8rem;">
+                            <div style=" height: 22px; padding-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px; line-height: 22px;">
                                 {{ post }} | 数字化产品研发组(对内)-系统运维组
                             </div>
                         </div>
@@ -27,13 +27,16 @@
             </el-col>
         </el-row>
         <el-row :gutter="11" style="padding: 0 11px;">
-            <el-col :span="12">
+            <el-col :span="12" class="message-content">
                 <el-card class="box-card">
-                    <div slot="header" class="clearfix">
-                        <i class="iconfont factory-24_fayanduihualiuyan" style=" color: #3889ff; font-size: 20px;" /><span>未读消息</span>
+                    <div slot="header" class="clearfix" style=" height: 24px; line-height: 24px;">
+                        <i class="iconfont factory-24_fayanduihualiuyan" style=" margin-top: 2px; color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">未读消息</span>
+                        <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text">
+                            全部已读
+                        </el-button>
                     </div>
 
-                    <div :style="{minHeight:mainClientHeight-300 + 'px'}">
+                    <div :style="{minHeight:mainClientHeight-100 + 'px'}">
                         <template class="">
                             <ul>
                                 <li class="message-item">
@@ -123,24 +126,24 @@
                             </ul>
                         </template>
                     </div>
-                    <el-pagination :current-page="currPageFromUnread" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromUnread" layout="total, prev, pager, next, jumper" :total="totalCountFromUnread" @size-change="handlePageSizeChangeFromUnread" @current-change="handleCurrentPageChangeFromUnread" />
+                    <el-pagination :current-page="currPageFromUnread" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromUnread" layout="prev, pager, next,sizes, jumper" :total="totalCountFromUnread" @size-change="handlePageSizeChangeFromUnread" @current-change="handleCurrentPageChangeFromUnread" />
                 </el-card>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="12" class="message-content">
                 <el-card class="box-card">
-                    <div slot="header" class="clearfix">
-                        <i class="iconfont factory-15_jiefeng" style=" color: #3889ff; font-size: 20px;" /><span>已读消息</span>
-                        <el-button style="float: right; margin-left: 7px; padding: 3px 0;" type="text" @click="totalCountFromRead = 1;currPageFromRead = 1;daysFlag=[0,0,1]; getMsgDataList(currPageFromRead, totalCountFromRead, 1)">
+                    <div slot="header" class="clearfix" style=" height: 24px; line-height: 24px;">
+                        <i class="iconfont factory-15_jiefeng" style=" color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">已读消息</span>
+                        <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text" @click="totalCountFromRead = 1;currPageFromRead = 1;daysFlag=[0,0,1]; getMsgDataList(currPageFromRead, totalCountFromRead, 1)">
                             近30天
                         </el-button>
-                        <el-button style="float: right; padding: 3px 0;" type="text">
+                        <el-button style="float: right; padding: 3px 0; font-size: 14px;" type="text">
                             近7天
                         </el-button>
-                        <el-button style="float: right; padding: 3px 0;" type="text">
+                        <el-button style="float: right; padding: 3px 0; font-size: 14px;" type="text">
                             近2天
                         </el-button>
                     </div>
-                    <div :style="{minHeight:mainClientHeight-300 + 'px'}">
+                    <div :style="{minHeight:mainClientHeight-100 + 'px'}">
                         <template class="">
                             <ul>
                                 <li class="message-item">
@@ -188,7 +191,7 @@
                             </ul>
                         </template>
                     </div>
-                    <el-pagination :current-page="currPageFromRead" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromRead" layout="total, prev, pager, next, jumper" :total="totalCountFromRead" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
+                    <el-pagination :current-page="currPageFromRead" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromRead" layout="prev, pager, next,sizes, jumper" :total="totalCountFromRead" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
                 </el-card>
             </el-col>
         </el-row>
@@ -197,7 +200,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { MSG_API } from 'common/api/api';
+    import { COMMON_API, MSG_API } from 'common/api/api';
 
     @Component({
         components: {
@@ -222,7 +225,7 @@
         realName= sessionStorage.getItem('userName')
         post=''
         mounted() {
-            this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
+            //this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
             // this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
             // COMMON_API.ORGSTRUCTURE_API({
             //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
@@ -232,18 +235,18 @@
             // });
 
 
-            // COMMON_API.USER_QUERY_API({
-            //         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //         deptId: '9592E58E61A7A8FEE7',
-            //         // deptId: sessionStorage.getItem('deptId'),
-            //         workNum: sessionStorage.getItem('userName'),
-            //         current: 1,
-            //         size: 10
-            //     }).then(({ data }) => {
-            //         console.log('2222')
-            //         console.log(data)
-            //         this.post = data.data.records[0].post
-            //     });
+            COMMON_API.USER_QUERY_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    deptId: '9592E58E61A7A8FEE7',
+                    // deptId: sessionStorage.getItem('deptId'),
+                    workNum: sessionStorage.getItem('userName'),
+                    current: 1,
+                    size: 10
+                }).then(({ data }) => {
+                    console.log('2222')
+                    console.log(data)
+                    this.post = data.data.records[0].post
+                });
         }
 
         //  设置类型參數
@@ -356,18 +359,41 @@
 
 </script>
 
+<style scoped>
+.el-card >>> .el-card__body {
+    padding: 17px 25px;
+}
+
+.message-content >>> .el-card__header {
+    padding: 8px 10px;
+}
+
+.message-content >>> .el-card__body {
+    padding: 1px 17px 5px 20px;
+}
+
+.message-content >>> .el-pagination__editor.el-input .el-input__inner {
+    height: 24px;
+    font-size: 14px;
+}
+.message-content >>> .el-pagination .el-select .el-input .el-input__inner {
+    height: 24px;
+    font-size: 14px;
+}
+</style>
+
 <style lang="scss" scoped>
+// @import "common/scss/temp.scss";
 @import "common/scss/_variables.scss";
-$icon-bg-color:#f05c4a,#333,#147fe7,#5bd171,#ffbf00;
+$icon-bg-color:#1b1717,#333,#147fe7,#5bd171,#ffbf00;
 $repeat: length($icon-bg-color);  // How often you want the pattern to repeat.
 
-.el-card__header {
-    padding: 10px;
-}
 
 .hello-box {
     display: flex;
     flex-direction: row;
+
+
     div:nth-child(1) {
         flex-grow: 1;
     }
@@ -383,7 +409,7 @@ $repeat: length($icon-bg-color);  // How often you want the pattern to repeat.
         align-items: flex-end;
         &::after {
             position: absolute;
-            top: 0;
+            top: 10px;
             right: -2rem;
             height: 40px;
             border-right: 1px #e9e9e9 solid;
@@ -396,7 +422,7 @@ $repeat: length($icon-bg-color);  // How often you want the pattern to repeat.
         align-items: flex-end;
         &::after {
             position: absolute;
-            top: 0;
+            top: 10px;
             right: -2rem;
             height: 40px;
             border-right: 1px #e9e9e9 solid;
@@ -411,15 +437,21 @@ $repeat: length($icon-bg-color);  // How often you want the pattern to repeat.
 .info-number {
     display: flex;
     flex-direction: column;
+    height: 22px;
+    font-size: 14px;
+    line-height: 22px;
     span:nth-child(1) {
         align-items: flex-end;
-        margin-bottom: 10px;
+        margin-bottom: 4px;
         color: #999;
         font-size: 0.7rem;
     }
     span:nth-child(2) {
         align-items: flex-end;
+        height: 38px;
         font-size: 1.7rem;
+        font-size: 30px;
+        line-height: 38px;
     }
 }
 
@@ -448,13 +480,19 @@ h4 {
     .message-item__infomation {
         flex-grow: 9;
         .message-item__topic {
-            margin-bottom: 7px;
+            height: 22px;
+            margin-bottom: 5px;
+            color: rgba(51, 51, 51, 1);
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 14px;
+            line-height: 22px;
         }
         .message-item__content {
             display: flex;
             justify-content: space-between;
+            height: 22px;
+            font-size: 14px;
+            line-height: 22px;
         }
     }
 }
@@ -464,5 +502,6 @@ h4 {
         background: nth($icon-bg-color, $i);
     }
 }
+
 
 </style>
