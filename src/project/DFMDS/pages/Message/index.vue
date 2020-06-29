@@ -7,10 +7,10 @@
                         <div><img src="~common/img/man.png" alt="" style="width: 66px;"></div>
                         <div>
                             <div style="color: rgba(0, 0, 0, 0.85); font-weight: 600; font-size: 1.2rem;">
-                                曲丽丽,祝你开心每一天
+                                {{ realName }}, 祝你开心每一天
                             </div>
                             <div style="justify-content: flex-end; padding-top: 5px; color: rgba(0, 0, 0, 0.45); font-size: 0.8rem;">
-                                UI/UX设计工程师 | 数字化产品研发组(对内)-系统运维组
+                                {{ post }} | 数字化产品研发组(对内)-系统运维组
                             </div>
                         </div>
                         <div class="info-number">
@@ -123,14 +123,14 @@
                             </ul>
                         </template>
                     </div>
-                    <el-pagination :current-page="currPageFromParent" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromParent" layout="total, prev, pager, next, jumper" :total="totalCountFromParent" @size-change="handlePageSizeChangeFromMain" @current-change="handleCurrentPageChangeFromMain" />
+                    <el-pagination :current-page="currPageFromUnread" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromUnread" layout="total, prev, pager, next, jumper" :total="totalCountFromUnread" @size-change="handlePageSizeChangeFromUnread" @current-change="handleCurrentPageChangeFromUnread" />
                 </el-card>
             </el-col>
             <el-col :span="12">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
                         <i class="iconfont factory-15_jiefeng" style=" color: #3889ff; font-size: 20px;" /><span>已读消息</span>
-                        <el-button style="float: right; margin-left: 7px; padding: 3px 0;" type="text" @click="getMsgDataList()">
+                        <el-button style="float: right; margin-left: 7px; padding: 3px 0;" type="text" @click="totalCountFromRead = 1;currPageFromRead = 1;daysFlag=[0,0,1]; getMsgDataList(currPageFromRead, totalCountFromRead, 1)">
                             近30天
                         </el-button>
                         <el-button style="float: right; padding: 3px 0;" type="text">
@@ -188,7 +188,7 @@
                             </ul>
                         </template>
                     </div>
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalCount" @size-change="handlePageSizeChange" @current-change="handleCurrentPageChange" />
+                    <el-pagination :current-page="currPageFromRead" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromRead" layout="total, prev, pager, next, jumper" :total="totalCountFromRead" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
                 </el-card>
             </el-col>
         </el-row>
@@ -197,19 +197,19 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { MSG_API } from 'common/api/api';
+    import { COMMON_API, MSG_API } from 'common/api/api';
 
     @Component({
         components: {
         }
     })
     export default class PackagingIndex extends Vue {
-        totalCountFromParent = 1
-        currPageFromParent = 1
-        pageSizeFromParent = 10
-        totalCount = 1
-        currPage = 1
-        pageSize = 10
+        totalCountFromRead = 1
+        currPageFromRead = 1
+        pageSizeFromRead = 10
+        totalCountFromUnread = 1
+        currPageFromUnread = 1
+        pageSizeFromUnread = 10
 
         unreadNum=0
         readNum=0
@@ -218,8 +218,32 @@
         daysFlag=[0, 0, 0]
         readList: object[]=[]
         unreadList: object[]=[]
+        loginUserId= sessionStorage.getItem('loginUserId');
+        realName= sessionStorage.getItem('userName')
+        post=''
         mounted() {
-            // this.getMsgDataList()
+            // this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
+            // this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
+            COMMON_API.ORGSTRUCTURE_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            }).then(({ data }) => {
+                console.log('33333')
+                console.log(data)
+            });
+
+
+        COMMON_API.USER_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                //deptId: '9592E58E61A7A8FEE7',
+                deptId: sessionStorage.getItem('deptId'),
+                workNum: sessionStorage.getItem('userName'),
+                current: 1,
+                size: 10
+            }).then(({ data }) => {
+                console.log('2222')
+                console.log(data)
+                this.post = data.data.records[0].post
+            });
         }
 
         //  设置类型參數
@@ -245,21 +269,21 @@
                     // });
         }
 
-        getMsgDataList(current, size, read, daysFlag): void {
+        getMsgDataList(current, size, read): void {
 
             let daysFlagTemp = [0, 0, 0]
             if (read === 1) {
-                daysFlagTemp = JSON.parse(JSON.stringify(daysFlag))
+                daysFlagTemp = JSON.parse(JSON.stringify(this.daysFlag))
             }
 
             MSG_API.MSG_QUERY_API({
                 current: current,
                 size: size,
-                read: 1, // 已读标记,1:已读，0:未读
+                read: read, // 已读标记,1:已读，0:未读
                 threeDaysFlag: daysFlagTemp[0], // 3天标记，1:选中，0:未选中
                 sevenDaysFlag: daysFlagTemp[1], // 7天标记，1:选中，0:未选中
                 thirtyDaysFlag: daysFlagTemp[2], //30天标记，1:选中，0:未选中
-                user: sessionStorage.getItem('userId')// 登录用户id
+                user: this.loginUserId // 登录用户id
             }).then(({ data }) => {
                 console.log('data')
                 console.log(data)
@@ -276,49 +300,49 @@
         // 获取类型
         getParentItemsList(): void {
             // if (haveParas) {
-            //     this.currPageFromParent = 1;
+            //     this.currPageFromRead = 1;
             // }
             // const parasObj = {
             //     factory: this.factoryForSearch,
             //     typeOrName: this.stringForSearch,
-            //     current: this.currPageFromParent,
-            //     size: this.pageSizeFromParent
+            //     current: this.currPageFromRead,
+            //     size: this.pageSizeFromRead
             // }
             // COMMON_API.DICTIONARY_QUERY_API(parasObj).then(({ data }) => {
             //     this.isFocusChild = false; // 判断左右边 focus
             //     this.targetInfoList = data.data.records; // parent table data
             //     this.targetParameterList = []; // child table data
             //     // this.preDaraArray = parasObj;
-            //     this.totalCountFromParent = data.data.total;
-            //     this.currPageFromParent = data.data.current;
-            //     this.pageSizeFromParent = data.data.size;
+            //     this.totalCountFromRead = data.data.total;
+            //     this.currPageFromRead = data.data.current;
+            //     this.pageSizeFromRead = data.data.size;
 
             // });
         }
 
 
         // 改变每页条数
-        handlePageSizeChangeFromMain(val: number): void {
-            this.pageSizeFromParent = val;
-            this.getParentItemsList();
+        handlePageSizeChangeFromRead(val: number): void {
+            this.pageSizeFromRead = val;
+            this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1);
         }
 
         // 跳转页数
-        handleCurrentPageChangeFromMain(val: number): void {
-            this.currPageFromParent = val;
-            this.getParentItemsList();
+        handleCurrentPageChangeFromRead(val: number): void {
+            this.currPageFromRead = val;
+            this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1);
         }
 
         // 改变每页条数
-        handlePageSizeChange(val: number): void {
-            this.pageSize = val;
-            this.getChildItemListFromChange();
+        handlePageSizeChangeFromUnread(val: number): void {
+            this.pageSizeFromUnread = val;
+            this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0);
         }
 
         // 跳转页数
-        handleCurrentPageChange(val: number): void {
-            this.currPage = val;
-            this.getChildItemListFromChange();
+        handleCurrentPageChangeFromUnread(val: number): void {
+            this.currPageFromUnread = val;
+            this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0);
         }
 
         get mainClientHeight() {

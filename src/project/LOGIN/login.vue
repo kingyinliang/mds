@@ -223,7 +223,9 @@ export default {
             sessionStorage.setItem('userFactory', JSON.stringify(data.userFactory || '[]'));
             sessionStorage.setItem('userName', data.userName || '');
             sessionStorage.setItem('realName', data.realName || '');
+            sessionStorage.setItem('loginUserId', data.id || '');
             sessionStorage.setItem('gender', data.sex || 'M');
+            sessionStorage.setItem('deptId', data.deptId || '');
             sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
             if (data.firstFlag === '1') {
                 this.visible = true;
