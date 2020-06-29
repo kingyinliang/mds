@@ -31,9 +31,9 @@
                         {{ scope.row.useMaterial }} {{ scope.row.useMaterialName }}
                     </template>
                 </el-table-column>
-                <el-table-column min-width="100" prop="preStageName" label="是否增补料" />
-                <el-table-column min-width="90" prop="potDisplay" label="是否受限" />
-                <el-table-column min-width="90" prop="potDisplay" label="是否复合" />
+                <el-table-column min-width="100" prop="supplyFlagName" label="是否增补料" />
+                <el-table-column min-width="90" prop="limitFlagName" label="是否受限" />
+                <el-table-column min-width="90" prop="complexFlagName" label="是否复合" />
                 <el-table-column min-width="90" show-overflow-tooltip prop="remark" label="备注" />
                 <el-table-column min-width="130" label="操作人" prop="changer" />
                 <el-table-column min-width="150" label="操作时间" prop="changed" />
@@ -99,17 +99,17 @@
                             <el-option v-for="(item, index) in useMaterialList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode + ' ' + item.materialName" />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="是否增补料：">
+                    <el-form-item label="是否增补料：" prop="supplyFlag">
                         <el-select v-model="formatData.supplyFlag">
                             <el-option v-for="(item, index) in yesOrNoList" :key="index" :label="item.name" :value="item.value" />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="是否受限：">
+                    <el-form-item label="是否受限：" prop="limitFlag">
                         <el-select v-model="formatData.limitFlag">
                             <el-option v-for="(item, index) in yesOrNoList" :key="index" :label="item.name" :value="item.value" />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="是否复合：">
+                    <el-form-item label="是否复合：" prop="complexFlag">
                         <el-select v-model="formatData.complexFlag">
                             <el-option v-for="(item, index) in yesOrNoList" :key="index" :label="item.name" :value="item.value" />
                         </el-select>
@@ -174,6 +174,15 @@ export default class SpecialMaterialAttr extends Vue {
         ],
         useMaterialString: [
             { required: true, message: '请选择领用物料', trigger: 'change' }
+        ],
+        supplyFlag: [
+            { required: true, message: '请选择是否增补', trigger: 'change' }
+        ],
+        limitFlag: [
+            { required: true, message: '请选择是否受限', trigger: 'change' }
+        ],
+        complexFlag: [
+            { required: true, message: '请选择是否复合', trigger: 'change' }
         ]
     }
 
