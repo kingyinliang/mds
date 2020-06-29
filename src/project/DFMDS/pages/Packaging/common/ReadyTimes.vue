@@ -16,9 +16,6 @@
                     <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
                         <el-form-item
                             prop="dayUser"
-                            :rules="[
-                                { required: true, message: '请输入人数'}
-                            ]"
                         >
                             <template slot="label">
                                 参与人数：
@@ -27,9 +24,6 @@
                         </el-form-item>
                         <el-form-item
                             prop="dayShift"
-                            :rules="[
-                                { required: true, message: '请输入'},
-                            ]"
                         >
                             <template slot="label">
                                 交接班：
@@ -38,9 +32,6 @@
                         </el-form-item>
                         <el-form-item
                             prop="dayMeeting"
-                            :rules="[
-                                { required: true, message: '请输入'},
-                            ]"
                         >
                             <template slot="label">
                                 班前会：
@@ -49,9 +40,6 @@
                         </el-form-item>
                         <el-form-item
                             prop="dayPrepaired"
-                            :rules="[
-                                { required: true, message: '请输入'},
-                            ]"
                         >
                             <template slot="label">
                                 生产前准备：
@@ -60,9 +48,6 @@
                         </el-form-item>
                         <el-form-item
                             prop="dayClear"
-                            :rules="[
-                                { required: true, message: '请输入'},
-                            ]"
                         >
                             <template slot="label">
                                 生产后清场：
@@ -131,20 +116,14 @@
                     <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
                         <el-form-item
                             prop="nightUser"
-                            :rules="[
-                                { required: true, message: '请输入人数'}
-                            ]"
                         >
                             <template slot="label">
-                                N参与人数：
+                                参与人数：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightUser" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
                         <el-form-item
                             prop="nightUser"
-                            :rules="[
-                                { required: true, message: '请输入人数'}
-                            ]"
                         >
                             <template slot="label">
                                 交接班：
@@ -153,9 +132,6 @@
                         </el-form-item>
                         <el-form-item
                             prop="nightMeeting"
-                            :rules="[
-                                { required: true, message: '请输入'},
-                            ]"
                         >
                             <template slot="label">
                                 班前会：
@@ -164,9 +140,6 @@
                         </el-form-item>
                         <el-form-item
                             prop="nightPrepaired"
-                            :rules="[
-                                { required: true, message: '请输入'},
-                            ]"
                         >
                             <template slot="label">
                                 生产前准备：
@@ -175,9 +148,6 @@
                         </el-form-item>
                         <el-form-item
                             prop="nightClear"
-                            :rules="[
-                                { required: true, message: '请输入'},
-                            ]"
                         >
                             <template slot="label">
                                 生产后清场：
@@ -195,7 +165,7 @@
             </div>
             <div class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />备注{{ currentFormDataGroup.classes }}</h3>
+                    <h3><i class="point-icon" />备注</h3>
                 </div>
                 <el-row>
                     <el-input v-model="currentFormDataGroup.remark" type="textarea" class="textarea" style="width: 100%; height: 100px;" :disabled="!isRedact" />
