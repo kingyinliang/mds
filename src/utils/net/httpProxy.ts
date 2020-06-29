@@ -61,7 +61,7 @@ http.interceptors.request.use(
 http.interceptors.response.use(
     response => {
         if (response.data && response.data.code === HTTP_RESPONSE_STATE.SUCCESS) {
-            //    成功
+            // 成功
             tryHideFullScreenLoading(); // 关闭遮罩
             return Promise.resolve(response);
         } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.EXPIRED_TOKEN) {
@@ -92,7 +92,8 @@ http.interceptors.response.use(
  * @param {string} url{string} api地址 data{object} 参数 ContentType{boole} post拼接路径 responseType{boole}下载文件流 londingstatus{boole}加载遮罩
  * @param {string} [method] {@link module:constants/http method}
  * */
-export default (url: string, method: any = HTTP_METHOD.GET, data = {}, londingstatus = true) => { // eslint-disable-line
+export default (url: string, method: string = HTTP_METHOD.GET, data = {}, londingstatus = true) => {
+    // eslint-disable-line
     const options = {
         url: HOST + url,
         method,
@@ -108,5 +109,5 @@ export default (url: string, method: any = HTTP_METHOD.GET, data = {}, londingst
         options['params'] = data;
     }
 
-    return http(options);
+    return http(options as object);
 };
