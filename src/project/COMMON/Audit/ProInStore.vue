@@ -18,7 +18,7 @@
                     <i class="title-icon" />
                     <span>入库列表</span>
                     <div style="float: right;">
-                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 120px; margin-right: 10px;" />
+                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input v-model="headText" size="small" style="width: 190px; margin-right: 10px;" />
                         <el-button type="primary" size="small" @click="pass">
                             过账
@@ -34,7 +34,7 @@
                     <i class="title-icon" />
                     <span>入库列表</span>
                     <div style="float: right;">
-                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 120px; margin-right: 10px;" />
+                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input v-model="headText" size="small" style="width: 190px; margin-right: 10px;" />
                         <el-button type="primary" size="small" class="sub-yellow" @click="writeOffsDialog">
                             反审
@@ -192,20 +192,20 @@
                 prop: 'interfaceReturn',
                 label: '接口回写'
             }
-        ]
+        ];
 
         $refs: {
             queryTable: HTMLFormElement;
         };
 
-        auditLogData = [] // 审核日志
-        ReText = '' // 退回原因
-        BackText = '' // 反审原因
-        postingDate = '' // 过账日期
-        headText = '' // 抬头文本
-        visibleAuditLog = false // 审核日志弹窗
-        visibleRefuse = false // 退回原因弹窗
-        visibleBack = false // 反审原因弹窗
+        auditLogData = []; // 审核日志
+        ReText = ''; // 退回原因
+        BackText = ''; // 反审原因
+        postingDate = dateFormat(new Date(), 'yyyy-MM-dd'); // 过账日期
+        headText = ''; // 抬头文本
+        visibleAuditLog = false; // 审核日志弹窗
+        visibleRefuse = false; // 退回原因弹窗
+        visibleBack = false; // 反审原因弹窗
 
         // 查询表头
         queryFormData = [
@@ -411,10 +411,10 @@
                 this.$warningToast('请选择过账日期')
                 return false
             }
-            if (!this.headText) {
-                this.$warningToast('请填写抬头文本')
-                return false
-            }
+            // if (!this.headText) {
+            //     this.$warningToast('请填写抬头文本')
+            //     return false
+            // }
             if (this.$refs.queryTable.tabs[0].multipleSelection && this.$refs.queryTable.tabs[0].multipleSelection.length) {
                 this.$confirm(`确定过账，是否继续？`, '过账确认', {
                     confirmButtonText: '确定',
