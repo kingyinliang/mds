@@ -105,6 +105,8 @@
             } else {
                 net = BASIC_API.CRAFT_ADD_API
             }
+            const filterArr: (any) = this.serchSapList.filter(it => it.materialCode === this.dataForm.productMaterial);// eslint-disable-line
+            this.dataForm.productMaterialName = filterArr[0].materialName;
             net(this.dataForm).then(({ data }) => {
                 this.visible = false;
                 this.$successToast(data.msg);

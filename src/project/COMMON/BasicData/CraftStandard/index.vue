@@ -47,7 +47,7 @@
                                 </el-row>
                             </el-form-item>
                         </el-form>
-                        <el-button slot="reference" type="primary" size="small" @click="AddDate()">
+                        <el-button slot="reference" type="primary" size="small">
                             高级查询
                         </el-button>
                     </el-popover>
@@ -62,20 +62,20 @@
             <el-table header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 72 - 47" :data="tableData" border tooltip-effect="dark" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed="left" align="center" />
                 <el-table-column type="index" :index="index => index + 1 + (Number(queryForm.current) - 1) * (Number(queryForm.size))" label="序号" width="50px" fixed />
-                <el-table-column label="生产物料" min-width="180">
+                <el-table-column label="生产物料" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="标准保温时间下限(min)" prop="warmTimeLower" min-width="180" />
-                <el-table-column label="标准保温时间上限(min)" prop="warmTimeFloor" min-width="180" />
-                <el-table-column label="标准保温温度下限(℃)" prop="warmTempLower" min-width="170" />
-                <el-table-column label="标准保温温度上限(℃)" prop="warmTempFloor" min-width="170" />
-                <el-table-column label="有效开始日期" prop="startDate" min-width="140" />
-                <el-table-column label="有效结束日期" prop="endDate" min-width="140" />
-                <el-table-column label="备注" prop="remark" />
-                <el-table-column label="操作人" prop="changer" />
-                <el-table-column label="操作时间" prop="changed" />
+                <el-table-column label="标准保温时间下限(min)" prop="warmTimeLower" min-width="180" :show-overflow-tooltip="true" />
+                <el-table-column label="标准保温时间上限(min)" prop="warmTimeFloor" min-width="180" :show-overflow-tooltip="true" />
+                <el-table-column label="标准保温温度下限(℃)" prop="warmTempLower" min-width="170" :show-overflow-tooltip="true" />
+                <el-table-column label="标准保温温度上限(℃)" prop="warmTempFloor" min-width="170" :show-overflow-tooltip="true" />
+                <el-table-column label="有效开始日期" prop="startDate" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="有效结束日期" prop="endDate" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
+                <el-table-column label="操作人" prop="changer" :show-overflow-tooltip="true" />
+                <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)">
