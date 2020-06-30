@@ -138,7 +138,7 @@
 
         rules = [
             {
-                prop: 'workshop',
+                prop: 'workShop',
                 text: '请选择生产车间'
             }
         ];
