@@ -28,7 +28,7 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="计划数量" width="120" prop="planOutput" />
-                                <el-table-column label="单位" width="70" prop="planOutput" />
+                                <el-table-column label="单位" width="70" prop="outputUnit" />
                                 <el-table-column label="备注" width="70" prop="planOutput" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
@@ -92,12 +92,12 @@
                 </el-row>
             </template>
         </query-table>
-        <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible1" width="1200px" custom-class="dialog__class">
+        <el-dialog title="订单拆分" :close-on-click-modal="false" :visible.sync="dialogFormVisible1" width="1200px" custom-class="dialog__class">
             <div>
                 p
             </div>
         </el-dialog>
-        <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible2" width="1200px" custom-class="dialog__class">
+        <el-dialog title="拆分详情" :close-on-click-modal="false" :visible.sync="dialogFormVisible2" width="1200px" custom-class="dialog__class">
             <div>
                 p
             </div>

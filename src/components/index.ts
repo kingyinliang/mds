@@ -9,6 +9,7 @@ import AuditLog from './AuditLog/AuditLog.vue';
 import QueryEntry from './QueryEntry/QueryEntry.vue'
 import TextRecord from './TextRecord/index.vue'
 import ExcRecord from './ExcRecord/index.vue'
+import RedactBox from './RedactBox/RedactBox.vue';
 
 export default function(Vue) {
     Vue.component('ScrollTop', ScrollToTop);
@@ -22,4 +23,5 @@ export default function(Vue) {
     Vue.component('QueryEntry', QueryEntry);
     Vue.component('TextRecord', TextRecord);
     Vue.component('ExcRecord', ExcRecord);
+    Vue.component('RedactBox', RedactBox);
 }

@@ -193,14 +193,14 @@
                 prop: 'interfaceReturn',
                 label: '接口回写'
             }
-        ]
+        ];
 
         $refs: {
             queryTable: HTMLFormElement;
         };
 
         // 过账日期
-        pstngDate = new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate())
+        pstngDate = dateFormat(new Date(), 'yyyy-MM-dd');
         headerText = '' //抬头文本
         dialogTitle = '' //退回或反审弹窗title
         refuseOrWriteOffsText = ''//退回或反审原因

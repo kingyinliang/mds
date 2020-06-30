@@ -16,22 +16,22 @@
                             <el-form-item label="保温时间：">
                                 <el-row style="width: 314px;">
                                     <el-col :span="12">
-                                        <el-date-picker v-model="queryForm.warmTimeFloor" type="date" style="width: 140px;" value-format="yyyy-MM-dd" clearable />
+                                        <el-input v-model.trim="queryForm.warmTimeFloor" style="width: 140px;" clearable />
                                         <span style="margin-left: 5px;">-</span>
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-date-picker v-model="queryForm.warmTimeLower" type="date" style="width: 140px;" value-format="yyyy-MM-dd" clearable />
+                                        <el-input v-model.trim="queryForm.warmTimeLower" style="width: 140px;" clearable />
                                     </el-col>
                                 </el-row>
                             </el-form-item>
                             <el-form-item label="保温温度：">
                                 <el-row style="width: 314px;">
                                     <el-col :span="12">
-                                        <el-date-picker v-model="queryForm.warmTempFloor" type="date" style="width: 140px;" value-format="yyyy-MM-dd" clearable />
+                                        <el-input v-model.trim="queryForm.warmTempFloor" style="width: 140px;" clearable />
                                         <span style="margin-left: 5px;">-</span>
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-date-picker v-model="queryForm.warmTempLower" type="date" style="width: 140px;" value-format="yyyy-MM-dd" clearable />
+                                        <el-input v-model.trim="queryForm.warmTempLower" style="width: 140px;" clearable />
                                     </el-col>
                                 </el-row>
                             </el-form-item>
@@ -88,13 +88,13 @@
                 <el-pagination :current-page="queryForm.current" :page-sizes="[10, 20, 50]" :page-size="queryForm.size" layout="total, sizes, prev, pager, next, jumper" :total="queryForm.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </mds-card>
-        <craft-add-or-update v-if="addOrUpdate" ref="addOrUpdate" @refreshDataList="GetData" />
+        <craft-add-or-update v-if="addOrUpdate" ref="addOrUpdate" :serch-sap-list="SerchSapList" @refreshDataList="GetData" />
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { BASIC_API } from 'common/api/api';
+    import { COMMON_API, BASIC_API } from 'common/api/api';
     import CraftAddOrUpdate from './CraftAddOrUpdate.vue'
 
     @Component({
@@ -127,7 +127,18 @@
 
         addOrUpdate = false;
         tableData = [];
+        SerchSapList = [];
         multipleSelection: string[] = [];
+
+        mounted() {
+            COMMON_API.ALLMATERIAL_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            }).then(({ data }) => {
+                if (data.code === 200) {
+                    this.SerchSapList = data.data
+                }
+            })
+        }
 
         remove() {
             if (this.multipleSelection.length === 0) {
