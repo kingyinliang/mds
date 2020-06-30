@@ -21,44 +21,44 @@
             </el-table-column>
             <el-table-column label="线上不良" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.number="scope.row.onlineBad" size="small" placeholder="输入数量" oninput="value=value.replace(/\D*/g,'')" />
+                    <el-input v-model.number="scope.row.onlineBad" size="small" placeholder="输入数量" :disabled="!isRedact" oninput="value=value.replace(/\D*/g,'')" />
                 </template>
             </el-table-column>
             <el-table-column label="挤料" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.number="scope.row.pressMaterial" size="small" placeholder="输入数量" oninput="value=value.replace(/\D*/g,'')" />
+                    <el-input v-model.number="scope.row.pressMaterial" size="small" placeholder="输入数量" :disabled="!isRedact" oninput="value=value.replace(/\D*/g,'')" />
                 </template>
             </el-table-column>
             <el-table-column label="测密封度" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.number="scope.row.sealingPlug" size="small" placeholder="输入数量" oninput="value=value.replace(/\D*/g,'')" />
+                    <el-input v-model.number="scope.row.sealingPlug" size="small" placeholder="输入数量" :disabled="!isRedact" oninput="value=value.replace(/\D*/g,'')" />
                 </template>
             </el-table-column>
             <el-table-column label="废酱" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.number="scope.row.wasteSauce" size="small" placeholder="输入数量" oninput="value=value.replace(/\D*/g,'')" />
+                    <el-input v-model.number="scope.row.wasteSauce" size="small" placeholder="输入数量" :disabled="!isRedact" oninput="value=value.replace(/\D*/g,'')" />
                 </template>
             </el-table-column>
             <el-table-column label="设备残留" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.number="scope.row.deviceLoss" size="small" placeholder="输入数量" oninput="value=value.replace(/\D*/g,'')" />
+                    <el-input v-model.number="scope.row.deviceLoss" size="small" placeholder="输入数量" :disabled="!isRedact" oninput="value=value.replace(/\D*/g,'')" />
                 </template>
             </el-table-column>
             <el-table-column label="其他" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-input v-model.number="scope.row.other" size="small" placeholder="输入数量" oninput="value=value.replace(/\D*/g,'')" />
+                    <el-input v-model.number="scope.row.other" size="small" placeholder="输入数量" :disabled="!isRedact" oninput="value=value.replace(/\D*/g,'')" />
                 </template>
             </el-table-column>
             <el-table-column label="备注" :show-overflow-tooltip="true" width="160">
                 <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" />
+                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="输入备注" :disabled="!isRedact" />
                 </template>
             </el-table-column>
             <el-table-column prop="changer" label="操作人" :show-overflow-tooltip="true" min-width="160" />
             <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" min-width="160" />
             <el-table-column fixed="right" label="操作" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.row)">
+                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>
