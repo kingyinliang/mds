@@ -169,9 +169,20 @@
                 prop: 'orderNo'
             },
             {
-                type: 'input',
+                type: 'select',
                 label: '状态',
-                prop: 'orderStatus'
+                prop: 'orderStatus',
+                defaultOptionsFn: () => {
+                    return COMMON_API.DICTQUERY_API({
+                        dictType: 'COMMON_CHECK_STATUS'
+                    })
+                },
+                defaultValue: '',
+                resVal: {
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
+                }
             }
         ];
 
