@@ -127,7 +127,7 @@
 
         addOrUpdate = false;
         tableData = [];
-        multipleSelection = [];
+        multipleSelection: string[] = [];
 
         remove() {
             if (this.multipleSelection.length === 0) {

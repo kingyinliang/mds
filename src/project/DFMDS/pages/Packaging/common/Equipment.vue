@@ -487,30 +487,24 @@ export default class Equipment extends Vue {
 
     // 提交时跑校验
     ruleSubmit() {
-            for (const item of this.firstFormDataGroup.filter(it => it.delFlag !== 1)) {
-                if (!item.classes || !item.date) {
-                    this.$warningToast('请填写运行情况必填项');
-                    return false
-                }
+        if (this.firstFormDataGroup.filter(it => it.delFlag !== 1).length === 0) {
+            this.$warningToast('请录入设备运行运行情况');
+            return false
+        }
+        for (const item of this.firstFormDataGroup.filter(it => it.delFlag !== 1)) {
+            if (!item.classes || !item.date) {
+                this.$warningToast('请填写运行情况必填项');
+                return false
             }
-            for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1)) {
-                // console.log('this.fzReasonOptions')
-                // console.log(this.fzReasonOptions)
-                if (!item.classes || !item.stopType || !item.stopMode || !item.date || !item.exceptionCount || !item.stopSituation || (!item.stopReason && !item.fzReasonOptions) || (!item.exceptionInfo && item.fzReasonOptions)) {
-                    this.$warningToast('请填写停机情况必填项');
-                    return false
-                }
+        }
+        for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1)) {
+            // console.log('this.fzReasonOptions')
+            // console.log(this.fzReasonOptions)
+            if (!item.classes || !item.stopType || !item.stopMode || !item.date || !item.exceptionCount || !item.stopSituation || (!item.stopReason && !item.fzReasonOptions) || (!item.exceptionInfo && item.fzReasonOptions)) {
+                this.$warningToast('请填写停机情况必填项');
+                return false
             }
-        // this.$refs['ruleForm'].validate((valid) => {
-        //     if (valid) {
-        //         console.log('submit!!');
-        //         return true
-        //     }
-        //         this.$warningToast('请填写设备运行必填项');
-
-        //         return false;
-
-        //     });
+        }
         return true
     }
 
