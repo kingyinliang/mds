@@ -109,7 +109,10 @@
             {
                 prop: 'materialName',
                 label: '生产物料 ',
-                width: '120'
+                width: '120',
+                formatter: (row) => {
+                    return row.productMaterialCode + ' ' + row.productMaterialName;
+                }
             },
             {
                 prop: 'planOutput',
