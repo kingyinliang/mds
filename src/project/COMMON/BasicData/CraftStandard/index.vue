@@ -138,7 +138,9 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    BASIC_API.CRAFT_DEL_API(this.multipleSelection).then(() => {
+                    BASIC_API.CRAFT_DEL_API({
+                        ids: this.multipleSelection
+                    }).then(() => {
                         this.$successToast('删除成功!');
                         this.multipleSelection = [];
                         this.GetData();
