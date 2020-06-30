@@ -169,10 +169,6 @@ export default class PendingNum extends Vue {
     ruleSubmit() {
         let currentFormDataGroupNew: CurrentDataTable[] = [];
         currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
-        if (currentFormDataGroupNew.length === 0) {
-            this.$warningToast('请录入待处理数');
-            return false
-        }
         for (const item of currentFormDataGroupNew) {
             if (!item.classes) {
                 this.$warningToast('请填写待处理数必填项');
