@@ -390,6 +390,7 @@
                     this.multipleSelection.map(item => {
                         item.endDate = this.DateCommon;
                     });
+                    this.DateCommon = '';
                 }
             },
             // 获取工厂
