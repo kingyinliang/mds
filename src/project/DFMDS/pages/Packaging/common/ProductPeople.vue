@@ -15,7 +15,7 @@
                         <span class="notNull">*</span>班次
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.classes" size="small" clearable>
+                        <el-select v-model="scope.row.classes" size="small" clearable :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')">
                             <el-option
                                 v-for="item in classesOptions"
                                 :key="item.dictCode"
@@ -30,7 +30,7 @@
                         <span class="notNull">*</span>班组/工序
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.deptId" filterable placeholder="请选择" size="small" :disabled="!isRedact" clearable @change="selectDept(scope.row)">
+                        <el-select v-model="scope.row.deptId" filterable placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable @change="selectDept(scope.row)">
                             <el-option v-for="(iteam, index) in teamList" :key="index" :label="iteam.deptName" :value="iteam.id" />
                         </el-select>
                     </template>
@@ -40,7 +40,7 @@
                         <span class="notNull">*</span>人员属性
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!isRedact" clearable>
+                        <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable>
                             <el-option v-for="(iteam, index) in userTypeList" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                         </el-select>
                     </template>
@@ -70,7 +70,7 @@
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" width="140" :show-overflow-tooltip="true">
@@ -78,7 +78,7 @@
                         <span class="notNull">*</span>用餐时间(MIN)
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!isRedact" />
+                        <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="220" :show-overflow-tooltip="true">
@@ -86,7 +86,7 @@
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="90" label="时长(H)" :show-overflow-tooltip="true">
@@ -96,7 +96,7 @@
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="140" label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" size="small" :disabled="!isRedact" />
+                        <el-input v-model="scope.row.remark" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="150" label="操作人" :show-overflow-tooltip="true">
@@ -111,7 +111,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="removeDataRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="removeDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
