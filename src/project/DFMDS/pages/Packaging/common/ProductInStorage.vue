@@ -269,6 +269,10 @@
 
         // 提交时跑校验
         ruleSubmit() {
+            if (this.currentFormDataGroup.filter(it => it.delFlag !== 1).length === 0) {
+                this.$warningToast('请录入生产入库');
+                return false
+            }
             for (const item of this.currentFormDataGroup.filter(it => it.delFlag !== 1)) {
                 if (!item.productDate || !item.classes || !item.batch || !item.inStorageCount || !item.inStorageUnit) {
                     this.$warningToast('请填写生产入库必填项');

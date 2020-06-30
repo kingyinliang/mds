@@ -18,7 +18,7 @@
                             prop="dayUser"
                         >
                             <template slot="label">
-                                参与人数：
+                                <span class="notNull">*</span>参与人数：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.dayUser" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -26,7 +26,7 @@
                             prop="dayShift"
                         >
                             <template slot="label">
-                                交接班：
+                                <span class="notNull">*</span>交接班：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.dayShift" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -34,7 +34,7 @@
                             prop="dayMeeting"
                         >
                             <template slot="label">
-                                班前会：
+                                <span class="notNull">*</span>班前会：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.dayMeeting" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -42,7 +42,7 @@
                             prop="dayPrepaired"
                         >
                             <template slot="label">
-                                生产前准备：
+                                <span class="notNull">*</span>生产前准备：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.dayPrepaired" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -50,7 +50,7 @@
                             prop="dayClear"
                         >
                             <template slot="label">
-                                生产后清场：
+                                <span class="notNull">*</span>生产后清场：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.dayClear" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -118,7 +118,7 @@
                             prop="nightUser"
                         >
                             <template slot="label">
-                                参与人数：
+                                <span class="notNull">*</span>参与人数：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightUser" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -126,7 +126,7 @@
                             prop="nightUser"
                         >
                             <template slot="label">
-                                交接班：
+                                <span class="notNull">*</span>交接班：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightShift" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -134,7 +134,7 @@
                             prop="nightMeeting"
                         >
                             <template slot="label">
-                                班前会：
+                                <span class="notNull">*</span>班前会：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightMeeting" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -142,7 +142,7 @@
                             prop="nightPrepaired"
                         >
                             <template slot="label">
-                                生产前准备：
+                                <span class="notNull">*</span>生产前准备：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightPrepaired" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
@@ -150,7 +150,7 @@
                             prop="nightClear"
                         >
                             <template slot="label">
-                                生产后清场：
+                                <span class="notNull">*</span>生产后清场：
                             </template>
                             <el-input v-model.number="currentFormDataGroup.nightClear" placeholder="请输入" size="small" :disabled="!isRedact" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </el-form-item>
