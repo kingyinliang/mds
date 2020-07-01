@@ -200,7 +200,7 @@
                 prop: 'interfaceReturn',
                 label: '接口回写'
             }
-        ]
+        ];
 
         $refs: {
             queryTable: HTMLFormElement;
@@ -219,7 +219,7 @@
             {
                 type: 'select',
                 label: '生产车间',
-                prop: 'workshop',
+                prop: 'workShop',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
