@@ -13,23 +13,23 @@
                 <el-row class="home_card__main" :gutter="10">
                     <el-col :span="10">
                         <mds-card title="订单查询" name="ste" :pack-up="false" style="margin-bottom: 0; background: #fff;">
-                            <el-table :data="queryResultList" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 52 - 47" border tooltip-effect="dark">
+                            <el-table :data="queryResultList" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 52 - 47" border tooltip-effect="dark" @row-dblclick="showSplitTable">
                                 <el-table-column type="index" width="55" label="序号" fixed />
-                                <el-table-column label="订单状态" width="80">
+                                <el-table-column label="订单状态" width="80" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         <label :style="{ color: scope.row.orderStatus === '不通过' ? 'red' : scope.row.orderStatus === '通过' ? 'rgb(103, 194, 58)' : '',}">{{ scope.row.orderStatus }}</label>
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="订单日期" width="100" prop="orderDate" />
-                                <el-table-column label="生产订单" width="120" prop="orderNo" />
-                                <el-table-column min-width="180" label="生产物料">
+                                <el-table-column label="订单日期" width="100" prop="orderStartDate" :show-overflow-tooltip="true" />
+                                <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
+                                <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="计划数量" width="120" prop="planOutput" />
                                 <el-table-column label="单位" width="70" prop="outputUnit" />
-                                <el-table-column label="备注" width="70" prop="planOutput" />
+                                <el-table-column label="备注" width="70" prop="remark" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
                                         <el-button type="text" @click="orderSplit(scope.row)">
@@ -107,7 +107,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, STE_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
 
     @Component
@@ -193,6 +193,21 @@
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return COMMON_API.ORDER_QUERY_API(params);
         };
+
+        // 表格双击
+        showSplitTable(row) {
+            STE_API.STE_SPLIT_LIST_API({
+                current: this.currPage1,
+                size: this.pageSize1,
+                orderNo: row.orderNo,
+                potNo: this.splitForm.potNo
+            }).then(({ data }) => {
+                this.splitTable = data.data.records
+                this.currPage1 = data.data.current;
+                this.pageSize1 = data.data.size;
+                this.totalCount1 = data.data.total;
+            })
+        }
 
         setData(data) {
             this.queryResultList = data.data.records;
