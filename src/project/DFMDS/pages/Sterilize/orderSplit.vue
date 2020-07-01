@@ -51,7 +51,7 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item style="margin-bottom: 10px;">
-                                        <el-button type="primary" size="small">
+                                        <el-button type="primary" size="small" @click="getSplitTable">
                                             查询
                                         </el-button>
                                     </el-form-item>
@@ -59,49 +59,41 @@
                             </template>
                             <el-table :data="splitTable" header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 61 - 62 - 47" border tooltip-effect="dark">
                                 <el-table-column type="index" width="55" label="序号" fixed />
-                                <el-table-column label="生产订单" width="120" prop="orderNo" />
-                                <el-table-column min-width="180" label="生产物料">
+                                <el-table-column label="生产订单" width="120" prop="orderNo" :show-overflow-tooltip="true" />
+                                <el-table-column min-width="180" label="生产物料" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
                                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="计划数量" width="120" prop="planOutput" />
-                                <el-table-column label="单位" width="70" prop="planOutput" />
-                                <el-table-column label="生产日期" width="100" prop="orderDate" />
-                                <el-table-column label="锅号" width="100" prop="orderDate" />
-                                <el-table-column label="锅数" width="100" prop="orderDate" />
-                                <el-table-column label="每锅数量" width="100" prop="orderDate" />
-                                <el-table-column label="备注" width="100" prop="orderDate" />
-                                <el-table-column label="操作人" width="100" prop="orderDate" />
-                                <el-table-column label="操作时间" width="100" prop="orderDate" />
+                                <el-table-column label="计划数量" width="120" prop="planOutput" :show-overflow-tooltip="true" />
+                                <el-table-column label="单位" width="70" prop="outputUnit" :show-overflow-tooltip="true" />
+                                <el-table-column label="生产日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
+                                <el-table-column label="锅号" width="100" prop="potNo" :show-overflow-tooltip="true" />
+                                <el-table-column label="锅数" width="100" prop="potCount" :show-overflow-tooltip="true" />
+                                <el-table-column label="每锅数量" width="100" prop="potAmount" :show-overflow-tooltip="true" />
+                                <el-table-column label="备注" width="100" prop="remark" />
+                                <el-table-column label="操作人" width="100" prop="changer" :show-overflow-tooltip="true" />
+                                <el-table-column label="操作时间" width="100" prop="changed" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" fixed="right" align="center" width="140">
                                     <template slot-scope="scope">
-                                        <el-button type="text" icon="el-icon-delete" @click="orderSplit(scope.row)">
+                                        <el-button type="text" icon="el-icon-delete" @click="delSplitRow(scope.row)">
                                             删除
                                         </el-button>
-                                        <el-button type="text" @click="orderSplit(scope.row)">
+                                        <el-button type="text" @click="orderSplitDetail(scope.row)">
                                             <i class="iconfont factory-liebiao" />
                                             <span style="margin-left: 5px;">详情</span>
                                         </el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <el-pagination :current-page="currPage1" :page-sizes="[10, 20, 50]" :page-size="pageSize1" layout="total, sizes, prev, pager, next, jumper" :total="totalCount1" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                            <el-pagination :current-page="splitForm.current" :page-sizes="[10, 20, 50]" :page-size="splitForm.size" layout="total, sizes, prev, pager, next, jumper" :total="splitForm.total" @size-change="handleSizeChange1" @current-change="handleCurrentChange1" />
                         </mds-card>
                     </el-col>
                 </el-row>
             </template>
         </query-table>
-        <el-dialog title="订单拆分" :close-on-click-modal="false" :visible.sync="dialogFormVisible1" width="1200px" custom-class="dialog__class">
-            <div>
-                p
-            </div>
-        </el-dialog>
-        <el-dialog title="拆分详情" :close-on-click-modal="false" :visible.sync="dialogFormVisible2" width="1200px" custom-class="dialog__class">
-            <div>
-                p
-            </div>
-        </el-dialog>
+        <order-split-dialog v-if="dialogFormVisible1" ref="orderSplitDialog" />
+        <order-split-dialog v-if="dialogFormVisible2" ref="orderSplitDetailDialog" />
     </div>
 </template>
 
@@ -109,25 +101,40 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, STE_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
+    import OrderSplitDialog from './common/OrderSplitDialog.vue'
+    import OrderSplitDetailDialog from './common/OrderSplitDetailDialog.vue'
 
-    @Component
+    @Component({
+        name: 'OrderSplit',
+        components: {
+            OrderSplitDialog,
+            OrderSplitDetailDialog
+        }
+    })
     export default class OrderSplit extends Vue {
         get mainClientHeight() {
             return this.$store.state.common.mainClientHeight;
         }
 
+        $refs: {
+            queryTable: HTMLFormElement;
+            orderSplitDialog: HTMLFormElement;
+            orderSplitDetailDialog: HTMLFormElement;
+        };
+
         currPage = 1;
         pageSize = 10;
         totalCount = 0;
-        currPage1 = 1;
-        pageSize1 = 10;
-        totalCount1 = 0;
         dialogFormVisible1 = false;
         dialogFormVisible2 = false;
 
         splitForm = {
+            current: 1,
+            size: 10,
+            total: 0,
+            orderNo: '',
             potNo: ''
-        }
+        };
 
         queryResultList: SteObj[] = [];
         splitTable: SteObj[] = [];
@@ -194,21 +201,6 @@
             return COMMON_API.ORDER_QUERY_API(params);
         };
 
-        // 表格双击
-        showSplitTable(row) {
-            STE_API.STE_SPLIT_LIST_API({
-                current: this.currPage1,
-                size: this.pageSize1,
-                orderNo: row.orderNo,
-                potNo: this.splitForm.potNo
-            }).then(({ data }) => {
-                this.splitTable = data.data.records
-                this.currPage1 = data.data.current;
-                this.pageSize1 = data.data.size;
-                this.totalCount1 = data.data.total;
-            })
-        }
-
         setData(data) {
             this.queryResultList = data.data.records;
             this.currPage = data.data.current;
@@ -216,8 +208,78 @@
             this.totalCount = data.data.total;
         }
 
+        // 表格双击
+        showSplitTable(row) {
+            this.splitForm.orderNo = row.orderNo;
+            this.getSplitTable()
+        }
+
+        // 获取拆分表格
+        getSplitTable() {
+            if (!this.splitForm.orderNo) {
+                this.$warningToast('请双击订单后操作')
+                return false
+            }
+            STE_API.STE_SPLIT_LIST_API(this.splitForm).then(({ data }) => {
+                this.splitTable = data.data.records
+                this.splitForm.current = data.data.current;
+                this.splitForm.size = data.data.size;
+                this.splitForm.total = data.data.total;
+            })
+        }
+
+        // 拆分
         orderSplit(row) {
-            console.log(row);
+            this.dialogFormVisible1 = true;
+            this.$nextTick(() => {
+                this.$refs.orderSplitDialog.init(row);
+            });
+        }
+
+        // 拆分详情
+        orderSplitDetail(row) {
+            this.dialogFormVisible2 = true;
+            this.$nextTick(() => {
+                this.$refs.orderSplitDetailDialog.init(row);
+            });
+        }
+
+        // 删除订单
+        delSplitRow(row) {
+            this.$confirm('是否删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                STE_API.STE_SPLIT_SAVE_API({
+                    deletes: [row.id]
+                }).then(({ data }) => {
+                    this.$successToast(data.msg);
+                    this.getSplitTable();
+                })
+            });
+        }
+
+        // 改变每页条数
+        handleSizeChange(val: number) {
+            this.pageSize = val;
+            this.$refs.queryTable.getDataList();
+        }
+
+        handleCurrentChange(val: number) {
+            this.currPage = val;
+            this.$refs.queryTable.getDataList();
+        }
+
+        // 改变每页条数
+        handleSizeChange1(val: number) {
+            this.splitForm.size = val;
+            this.getSplitTable()
+        }
+
+        handleCurrentChange1(val: number) {
+            this.splitForm.current = val;
+            this.getSplitTable()
         }
     }
     interface SteObj{
