@@ -204,7 +204,7 @@
                     });
                     this.$http(WHT_API.APPLYMATERIELSAVE_API, 'POST', this.materielDataList)
                         .then(({ data }) => {
-                            if (data.code !== 0) {
+                            if (data.code === 0) {
                                 //
                             } else {
                                 this.$errorToast(data.msg);

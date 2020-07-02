@@ -18,7 +18,7 @@
             @urgentSubmit="urgentSubmit"
         >
             <template slot="1" slot-scope="data">
-                <ready-time ref="readyTime" :is-redact="data.isRedact" :classes-options="classesOptions" />
+                <ready-time ref="readyTime" :is-redact="data.isRedact" :classes-options="classesOptions" :status="tabs[0].status" />
             </template>
             <template slot="2" slot-scope="data">
                 <product-people ref="productPeople" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :status="tabs[1].status" />

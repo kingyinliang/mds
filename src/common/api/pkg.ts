@@ -62,7 +62,7 @@ const PKG_API = {
      */
     PKG_READYTIME_QUERY_API: params => httpProxy('/pkg/pkgTimeSheet/query', 'POST', params),
     /**
-     * @property {string}  PKG_PENDGNUM_QUERY_API 生产数据-待杀菌检测-查询
+     * @property {string}  PKG_PENDGNUM_QUERY_API 生产数据-待处理-查询
      */
     PKG_PENDGNUM_QUERY_API: params => httpProxy('/pkgGerms/query', 'POST', params),
     /**
@@ -94,7 +94,7 @@ const PKG_API = {
      */
     PKG_URGENT_SUBMIT_API: params => httpProxy('/pkgInStorage/urgentSubmit', 'POST', params),
     /**
-     * @property {string}  PKG_USER_QUERY_API 生包装车间-人员-查询
+     * @property {string}  PKG_USER_QUERY_API 生包装车间-生产人员-查询
      */
     PKG_USER_QUERY_API: params => httpProxy('/pkg/pkgUser/query', 'POST', params),
     /**

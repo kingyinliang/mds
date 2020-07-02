@@ -16,22 +16,22 @@
                             <el-form-item label="保温时间：">
                                 <el-row style="width: 314px;">
                                     <el-col :span="12">
-                                        <el-date-picker v-model="queryForm.warmTimeFloor" type="date" style="width: 140px;" value-format="yyyy-MM-dd" clearable />
+                                        <el-input v-model.trim="queryForm.warmTimeFloor" style="width: 140px;" clearable />
                                         <span style="margin-left: 5px;">-</span>
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-date-picker v-model="queryForm.warmTimeLower" type="date" style="width: 140px;" value-format="yyyy-MM-dd" clearable />
+                                        <el-input v-model.trim="queryForm.warmTimeLower" style="width: 140px;" clearable />
                                     </el-col>
                                 </el-row>
                             </el-form-item>
                             <el-form-item label="保温温度：">
                                 <el-row style="width: 314px;">
                                     <el-col :span="12">
-                                        <el-date-picker v-model="queryForm.warmTempFloor" type="date" style="width: 140px;" value-format="yyyy-MM-dd" clearable />
+                                        <el-input v-model.trim="queryForm.warmTempFloor" style="width: 140px;" clearable />
                                         <span style="margin-left: 5px;">-</span>
                                     </el-col>
                                     <el-col :span="12">
-                                        <el-date-picker v-model="queryForm.warmTempLower" type="date" style="width: 140px;" value-format="yyyy-MM-dd" clearable />
+                                        <el-input v-model.trim="queryForm.warmTempLower" style="width: 140px;" clearable />
                                     </el-col>
                                 </el-row>
                             </el-form-item>
@@ -47,7 +47,7 @@
                                 </el-row>
                             </el-form-item>
                         </el-form>
-                        <el-button slot="reference" type="primary" size="small" @click="AddDate()">
+                        <el-button slot="reference" type="primary" size="small">
                             高级查询
                         </el-button>
                     </el-popover>
@@ -62,20 +62,20 @@
             <el-table header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 72 - 47" :data="tableData" border tooltip-effect="dark" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed="left" align="center" />
                 <el-table-column type="index" :index="index => index + 1 + (Number(queryForm.current) - 1) * (Number(queryForm.size))" label="序号" width="50px" fixed />
-                <el-table-column label="生产物料" min-width="180">
+                <el-table-column label="生产物料" min-width="180" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="标准保温时间下限(min)" prop="warmTimeLower" min-width="180" />
-                <el-table-column label="标准保温时间上限(min)" prop="warmTimeFloor" min-width="180" />
-                <el-table-column label="标准保温温度下限(℃)" prop="warmTempLower" min-width="170" />
-                <el-table-column label="标准保温温度上限(℃)" prop="warmTempFloor" min-width="170" />
-                <el-table-column label="有效开始日期" prop="startDate" min-width="140" />
-                <el-table-column label="有效结束日期" prop="endDate" min-width="140" />
-                <el-table-column label="备注" prop="remark" />
-                <el-table-column label="操作人" prop="changer" />
-                <el-table-column label="操作时间" prop="changed" />
+                <el-table-column label="标准保温时间下限(min)" prop="warmTimeLower" min-width="180" :show-overflow-tooltip="true" />
+                <el-table-column label="标准保温时间上限(min)" prop="warmTimeFloor" min-width="180" :show-overflow-tooltip="true" />
+                <el-table-column label="标准保温温度下限(℃)" prop="warmTempLower" min-width="170" :show-overflow-tooltip="true" />
+                <el-table-column label="标准保温温度上限(℃)" prop="warmTempFloor" min-width="170" :show-overflow-tooltip="true" />
+                <el-table-column label="有效开始日期" prop="startDate" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="有效结束日期" prop="endDate" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
+                <el-table-column label="操作人" prop="changer" :show-overflow-tooltip="true" />
+                <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)">
@@ -88,13 +88,13 @@
                 <el-pagination :current-page="queryForm.current" :page-sizes="[10, 20, 50]" :page-size="queryForm.size" layout="total, sizes, prev, pager, next, jumper" :total="queryForm.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </mds-card>
-        <craft-add-or-update v-if="addOrUpdate" ref="addOrUpdate" @refreshDataList="GetData" />
+        <craft-add-or-update v-if="addOrUpdate" ref="addOrUpdate" :serch-sap-list="SerchSapList" @refreshDataList="GetData" />
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { BASIC_API } from 'common/api/api';
+    import { COMMON_API, BASIC_API } from 'common/api/api';
     import CraftAddOrUpdate from './CraftAddOrUpdate.vue'
 
     @Component({
@@ -127,7 +127,18 @@
 
         addOrUpdate = false;
         tableData = [];
-        multipleSelection = [];
+        SerchSapList = [];
+        multipleSelection: string[] = [];
+
+        mounted() {
+            COMMON_API.ALLMATERIAL_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            }).then(({ data }) => {
+                if (data.code === 200) {
+                    this.SerchSapList = data.data
+                }
+            })
+        }
 
         remove() {
             if (this.multipleSelection.length === 0) {
@@ -138,7 +149,9 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    BASIC_API.CRAFT_DEL_API(this.multipleSelection).then(() => {
+                    BASIC_API.CRAFT_DEL_API({
+                        ids: this.multipleSelection
+                    }).then(() => {
                         this.$successToast('删除成功!');
                         this.multipleSelection = [];
                         this.GetData();
