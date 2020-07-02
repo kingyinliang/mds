@@ -31,7 +31,7 @@
                 <el-card class="box-card">
                     <div slot="header" class="clearfix" style=" height: 24px; line-height: 24px;">
                         <i class="iconfont factory-24_fayanduihualiuyan" style=" margin-top: 2px; color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">未读消息</span>
-                        <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text">
+                        <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text" :disabled="unreadList.length===0" @click="markReaded">
                             全部已读
                         </el-button>
                     </div>
@@ -39,86 +39,16 @@
                     <div :style="{minHeight:mainClientHeight-100 + 'px'}">
                         <template class="">
                             <ul>
-                                <li class="message-item">
+                                <li v-for="item in unreadList" :key="item.id" class="message-item" @click="seeMessage(item.msgUrl)">
                                     <div class="message-item__img">
-                                        <span class="round-bg"><i class="el-icon-edit" /></span>
+                                        <span class="round-bg"><i class="iconfont" :class="item.icon" /></span>
                                     </div>
                                     <div class="message-item__infomation">
                                         <div class="message-item__topic">
-                                            杀菌车间消息
+                                            {{ item.workShopName }}
                                         </div>
                                         <div class="message-item__content">
-                                            <span>71100000234213生产数</span>
-                                            <span class="message-item__date">2020-12-01 12:23</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="message-item">
-                                    <div class="message-item__img">
-                                        <span class="round-bg"><i class="el-icon-edit" /></span>
-                                    </div>
-                                    <div class="message-item__infomation">
-                                        <div class="message-item__topic">
-                                            杀菌车间消息
-                                        </div>
-                                        <div class="message-item__content">
-                                            <span>71100000234213生产数</span>
-                                            <span class="message-item__date">2020-12-01 12:23</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="message-item">
-                                    <div class="message-item__img">
-                                        <span class="round-bg"><i class="el-icon-edit" /></span>
-                                    </div>
-                                    <div class="message-item__infomation">
-                                        <div class="message-item__topic">
-                                            杀菌车间消息
-                                        </div>
-                                        <div class="message-item__content">
-                                            <span>71100000234213生产数</span>
-                                            <span class="message-item__date">2020-12-01 12:23</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="message-item">
-                                    <div class="message-item__img">
-                                        <span class="round-bg"><i class="el-icon-edit" /></span>
-                                    </div>
-                                    <div class="message-item__infomation">
-                                        <div class="message-item__topic">
-                                            杀菌车间消息
-                                        </div>
-                                        <div class="message-item__content">
-                                            <span>71100000234213生产数</span>
-                                            <span class="message-item__date">2020-12-01 12:23</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="message-item">
-                                    <div class="message-item__img">
-                                        <span class="round-bg"><i class="el-icon-edit" /></span>
-                                    </div>
-                                    <div class="message-item__infomation">
-                                        <div class="message-item__topic">
-                                            杀菌车间消息
-                                        </div>
-                                        <div class="message-item__content">
-                                            <span>71100000234213生产数</span>
-                                            <span class="message-item__date">2020-12-01 12:23</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="message-item">
-                                    <div class="message-item__img">
-                                        <span class="round-bg"><i class="el-icon-edit" /></span>
-                                    </div>
-                                    <div class="message-item__infomation">
-                                        <div class="message-item__topic">
-                                            杀菌车间消息
-                                        </div>
-                                        <div class="message-item__content">
-                                            <span>71100000234213生产数</span>
+                                            <span>{{ item.msgContent }}</span>
                                             <span class="message-item__date">2020-12-01 12:23</span>
                                         </div>
                                     </div>
@@ -126,72 +56,42 @@
                             </ul>
                         </template>
                     </div>
-                    <el-pagination :current-page="currPageFromUnread" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromUnread" layout="prev, pager, next,sizes, jumper" :total="totalCountFromUnread" @size-change="handlePageSizeChangeFromUnread" @current-change="handleCurrentPageChangeFromUnread" />
+                    <el-pagination v-if="unreadList.length!==0" :current-page="currPageFromUnread" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromUnread" layout="prev, pager, next,sizes, jumper" :total="totalCountFromUnread" @size-change="handlePageSizeChangeFromUnread" @current-change="handleCurrentPageChangeFromUnread" />
                 </el-card>
             </el-col>
             <el-col :span="12" class="message-content">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix" style=" height: 24px; line-height: 24px;">
                         <i class="iconfont factory-15_jiefeng" style=" color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">已读消息</span>
-                        <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text" @click="totalCountFromRead = 1;currPageFromRead = 1;daysFlag=[0,0,1]; getMsgDataList(currPageFromRead, totalCountFromRead, 1)">
+                        <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text" :disabled="readList.length===0|| readNumStyle===30" @click="readNumStyle=30;pageSizeFromRead = 10;currPageFromRead = 1;daysFlag=[0,0,1]; getMsgDataList(currPageFromRead, pageSizeFromRead, 1)">
                             近30天
                         </el-button>
-                        <el-button style="float: right; padding: 3px 0; font-size: 14px;" type="text">
+                        <el-button style="float: right; padding: 3px 0; font-size: 14px;" type="text" :disabled="readList.length===0 || readNumStyle===7" @click="readNumStyle=7;pageSizeFromRead = 10;currPageFromRead = 1;daysFlag=[0,1,0]; getMsgDataList(currPageFromRead, pageSizeFromRead, 1)">
                             近7天
                         </el-button>
-                        <el-button style="float: right; padding: 3px 0; font-size: 14px;" type="text">
-                            近2天
+                        <el-button style="float: right; padding: 3px 0; font-size: 14px;" type="text" :disabled="readList.length===0 || readNumStyle===3" @click="readNumStyle=3;pageSizeFromRead = 10;currPageFromRead = 1;daysFlag=[1,0,0]; getMsgDataList(currPageFromRead, pageSizeFromRead, 1)">
+                            近3天
                         </el-button>
                     </div>
                     <div :style="{minHeight:mainClientHeight-100 + 'px'}">
-                        <template class="">
-                            <ul>
-                                <li class="message-item">
-                                    <div class="message-item__img">
-                                        <span class="round-bg"><i class="el-icon-edit" /></span>
+                        <ul>
+                            <li v-for="item in readList" :key="item.id" class="message-item" @click="seeMessage(item.msgUrl)">
+                                <div class="message-item__img">
+                                    <span class="round-bg"><i class="iconfont" :class="item.icon" /></span>
+                                </div>
+                                <div class="message-item__infomation">
+                                    <div class="message-item__topic">
+                                        {{ item.workShopName }}
                                     </div>
-                                    <div class="message-item__infomation">
-                                        <div class="message-item__topic">
-                                            杀菌车间消息
-                                        </div>
-                                        <div class="message-item__content">
-                                            <span>71100000234213生产数</span>
-                                            <span class="message-item__date">2020-12-01 12:23</span>
-                                        </div>
+                                    <div class="message-item__content">
+                                        <span>{{ item.msgContent }}</span>
+                                        <span class="message-item__date">2020-12-01 12:23</span>
                                     </div>
-                                </li>
-                                <li class="message-item">
-                                    <div class="message-item__img">
-                                        <span class="round-bg"><i class="el-icon-edit" /></span>
-                                    </div>
-                                    <div class="message-item__infomation">
-                                        <div class="message-item__topic">
-                                            杀菌车间消息
-                                        </div>
-                                        <div class="message-item__content">
-                                            <span>71100000234213生产数</span>
-                                            <span class="message-item__date">2020-12-01 12:23</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="message-item">
-                                    <div class="message-item__img">
-                                        <span class="round-bg"><i class="el-icon-edit" /></span>
-                                    </div>
-                                    <div class="message-item__infomation">
-                                        <div class="message-item__topic">
-                                            杀菌车间消息
-                                        </div>
-                                        <div class="message-item__content">
-                                            <span>71100000234213生产数</span>
-                                            <span class="message-item__date">2020-12-01 12:23</span>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </template>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <el-pagination :current-page="currPageFromRead" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromRead" layout="prev, pager, next,sizes, jumper" :total="totalCountFromRead" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
+                    <el-pagination v-if="readList.length!==0" :current-page="currPageFromRead" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromRead" layout="prev, pager, next,sizes, jumper" :total="totalCountFromRead" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
                 </el-card>
             </el-col>
         </el-row>
@@ -216,7 +116,8 @@
 
         unreadNum=0
         readNum=0
-        totalNum=0
+
+        readNumStyle=3
 
         daysFlag=[0, 0, 0]
         readList: object[]=[]
@@ -225,8 +126,8 @@
         realName= sessionStorage.getItem('userName')
         post=''
         mounted() {
-            //this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
-            // this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
+            this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
+            this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
             // COMMON_API.ORGSTRUCTURE_API({
             //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             // }).then(({ data }) => {
@@ -245,7 +146,7 @@
                 }).then(({ data }) => {
                     console.log('2222')
                     console.log(data)
-                    this.post = data.data.records[0].post
+                    this.post = data.data.records[0].post || '暂无'
                 });
         }
 
@@ -288,14 +189,16 @@
                 thirtyDaysFlag: daysFlagTemp[2], //30天标记，1:选中，0:未选中
                 user: this.loginUserId // 登录用户id
             }).then(({ data }) => {
-                console.log('data')
+                console.log('1111data')
                 console.log(data)
                 if (read === 1) {
                     this.readList = data.data.records
-                    this.readNum = data.data.searchCount
+                    this.readNum = data.data.total
+                    this.totalCountFromRead = data.data.total
                 } else {
                     this.unreadList = data.data.records
-                    this.unreadNum = data.data.searchCount
+                    this.unreadNum = data.data.total
+                    this.totalCountFromUnread = data.data.total
                 }
             });
         }
@@ -323,6 +226,45 @@
             // });
         }
 
+        seeMessage(url) {
+            console.log(url)
+            setTimeout(() => {
+                this.$router.push({
+                    path: url
+                });
+            }, 100);
+        }
+
+        async markReaded() {
+            const unreadTemp: string[] = []
+
+            await MSG_API.MSG_QUERY_API({
+                current: 1,
+                size: 9999999,
+                read: 0, // 已读标记,1:已读，0:未读
+                user: this.loginUserId // 登录用户id
+            }).then(({ data }) => {
+                console.log('v1')
+                console.log(data)
+                data.data.records.forEach(item => {
+                    unreadTemp.push(item.id)
+                });
+            });
+
+            if (unreadTemp.length !== 0) {
+                MSG_API.MSG_READ_API({
+                    ids: unreadTemp // 用户消息id列表
+                }).then(({ data }) => {
+                    console.log('v2')
+                    console.log(data)
+                    this.readNumStyle = 3
+                    this.currPageFromRead = 1
+                    this.pageSizeFromRead = 10
+                    this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
+                });
+            }
+
+        }
 
         // 改变每页条数
         handlePageSizeChangeFromRead(val: number): void {
@@ -355,8 +297,27 @@
         get gender() {
             return this.$store.state.user.gender
         }
+
+        get totalNum() {
+            return this.unreadNum + this.readNum
+        }
     }
 
+interface MessageObject{
+        icon?: string;
+        id?: string;
+        msgContent?: string;
+        msgStatus?: number;
+        msgUrl?: string;
+        operation?: string;
+        orderNo?: string;
+        productLine?: string;
+        productLineName?: string;
+        productTeam?: string;
+        productTeamName?: string;
+        workShop?: string;
+        workShopName?: string;
+}
 </script>
 
 <style scoped>
