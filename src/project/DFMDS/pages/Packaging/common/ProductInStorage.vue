@@ -280,18 +280,6 @@
                 }
             }
             return true
-            // }
-            // this.$refs['ruleForm'].validate((valid) => {
-            //     if (valid) {
-            //         console.log('submit!!');
-            //         return true
-            //     }
-            //         this.$warningToast('请填写生产入库必填项');
-            //         return false;
-
-            //     });
-
-
         }
 
         // 加工校验 ruleForm
@@ -299,8 +287,6 @@
             currentFormDataGroup.forEach((item, index) => {
                 this.$set(ruleForm, 'r' + index, item)
             })
-            console.log('ruleForm')
-            console.log(ruleForm)
         }
 
         savedData(formHeader) {
@@ -374,9 +360,18 @@
             const inStorageBadUnitRatio: number = row.inStorageBadUnit === this.unitOptions[0].key ? 1 : this.ratio
             const sampleUnitRatio: number = row.sampleUnit === this.unitOptions[0].key ? 1 : this.ratio
             const outputUnitRatio: number = row.outputUnit === this.unitOptions[0].key ? 1 : this.ratio
-            const num = Number(_.add(_.add((row.inStorageCount * inStorageUnitRatio), (row.inStorageBadCount * inStorageBadUnitRatio)), (row.sampleCount * sampleUnitRatio)) / outputUnitRatio)
+            const num = Number(_.add(_.add((row.inStorageCount * inStorageUnitRatio), (row.inStorageBadCount * inStorageBadUnitRatio)), (row.sampleCount * sampleUnitRatio)))
+
             this.currentFormDataGroup[index].output = num
-            return num
+
+            let finalNum = 0
+            if (num % outputUnitRatio === 0) {
+                finalNum = _.divide(num / outputUnitRatio)
+            } else {
+                finalNum = _.divide(num / outputUnitRatio).toFixed(2)
+            }
+
+            return finalNum
         }
 
         get computedTotal(): number {
