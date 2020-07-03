@@ -3,19 +3,19 @@
         <query-table
             ref="queryTable"
             :type="'home'"
-            :rules="rules"
-            :query-form-data="queryFormData"
-            :list-interface="listInterface"
+            :rules="queryTableRules"
+            :query-form-data="queryTableFormData"
+            :list-interface="queryTableListInterface"
             :custom-data="true"
             @get-data-success="setData"
         >
             <template slot="home">
                 <mds-card :title="'溶解罐列表'" :pack-up="false" :name="'fermenterTotal'" style="margin-top: 10px; overflow: initial;">
                     <el-row class="home_card__main" :gutter="10">
-                        <el-col v-for="o in 10" :key="o" :span="4" style="min-width: 203px;">
+                        <el-col v-for="item in bucketDataList" :key="item.id" :span="4" style="min-width: 203px;">
                             <div class="card-bucket">
                                 <div class="card-bucket__head">
-                                    <span>4#-领用中</span>
+                                    <span>{{ item.bucketNo }} - {{ item.bucketStatus }}</span>
                                     <el-button type="text" @click="goTargetDetail(item)">
                                         详情
                                     </el-button>
@@ -33,15 +33,18 @@
                                         </div>
                                     </div>
                                     <div class="btn-group">
-                                        <button class="button" @click="toRouter('1', item)">
+                                        <el-button size="small" plain :disabled="!(item.bucketStatus==='空罐'||item.bucketStatus==='入罐')" @click="openImportBucketDialog">
                                             入罐
-                                        </button>
-                                        <button class="button" @click="toRouter('2', item)">
+                                        </el-button>
+                                        <el-button v-if="item.bucketStatus!=='满罐'" size="small" plain :disabled="item.bucketStatus!=='入料中'" @click="fillBucket">
                                             满罐
-                                        </button>
-                                        <button class="button" @click="toRouter('3', item)">
+                                        </el-button>
+                                        <el-button v-else size="small" plain @click="item.bucketStatus==='入料中'">
+                                            取消满罐
+                                        </el-button>
+                                        <el-button size="small" plain :disabled="!(item.bucketStatus==='领用中')" @click="clearBucket">
                                             清罐
-                                        </button>
+                                        </el-button>
                                     </div>
                                 </div>
                                 <div class="card-bucket__fotter">
@@ -51,11 +54,12 @@
                             </div>
                         </el-col>
                     </el-row>
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="prev, pager, next,sizes, jumper" :total="totalCount" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
+                    <el-pagination v-if="bucketDataList.length===0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="prev, pager, next,sizes, jumper" :total="totalCount" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
                 </mds-card>
             </template>
         </query-table>
-        <el-dialog :title="dialogForm[dialogType].title" width="500px" :close-on-click-modal="false" :visible.sync="dialogVisible">
+        <!-- 溶解罐清洗/满罐 -->
+        <el-dialog :title="dialogForm[dialogType].title" width="50%" :close-on-click-modal="false" :visible.sync="isBucketDialogVisible">
             <el-form :model="dialogForm[dialogType].form" size="small" label-width="110px" class="orderMangedialog">
                 <el-form-item label="溶解罐号：">
                     <span class="default">{{ dialogForm[dialogType].form.number }}</span>
@@ -78,14 +82,14 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" size="small" @click="getDataList(true)">确定</el-button>
+                <el-button size="small" @click="clearBucketStatus">取消</el-button>
+                <el-button type="primary" size="small" @click="comfirmBucketStatus(true)">确定</el-button>
             </span>
         </el-dialog>
-
-        <el-dialog title="入罐" :close-on-click-modal="false" :visible.sync="dialogTableVisible">
+        <!-- 溶解罐入罐 -->
+        <el-dialog title="入罐" :close-on-click-modal="false" :visible.sync="isTableDialogVisible" width="70%">
             <el-form ref="importBucketForm" :model="importBucketForm">
-                <el-table class="newTable" :data="importBucketDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
+                <el-table class="newTable" :data="bucketDataList[nowBucketNo]" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
                     <el-table-column label="序号" type="index" width="55" fixed="left" />
                     <el-table-column min-width="130" :show-overflow-tooltip="true">
                         <template slot="header">
@@ -216,16 +220,20 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-form-item label="满罐选项: ">
+                    <el-switch v-model="importBucketForm.filled" />
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="dialogTableVisible = false">取消</el-button>
-                <el-button type="primary" size="small" @click="getDataList(true)">确定</el-button>
+                <el-button size="small" @click="clearImportBucket">取消</el-button>
+                <el-button type="primary" size="small" @click="comfirmImportBucket">确定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="投料人员" width="700px" :close-on-click-modal="false" :visible.sync="loanedPersonnelStatus">
+        <!-- 投料人员 -->
+        <el-dialog title="投料人员" width="60%" :close-on-click-modal="false" :visible.sync="isLoanedPersonnelStatusDialogVisible">
             <loaned-personnel ref="loanedPersonnel" :org-tree="orgTree" :arr-list="arrList" @changeUser="changeUser" />
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="loanedPersonnelStatus = false">取消</el-button>
+                <el-button size="small" @click="isLoanedPersonnelStatusDialogVisible = false">取消</el-button>
                 <el-button type="primary" size="small">确定</el-button>
             </span>
         </el-dialog>
@@ -250,14 +258,48 @@
             loanedPersonnel: HTMLFormElement;
         }
 
+        // 当前处理的 bucket index
+        nowBucketNo=0
+
+        holderStatus=[
+            {
+                value: 'E',
+                label: '空罐'
+            },
+            {
+                value: '选项1',
+                label: '入料中'
+            },
+            {
+                value: '选项1',
+                label: '满罐'
+            },
+            {
+                value: 'U',
+                label: '领用中'
+            }
+        ]
+
         dataList: []
         totalCount = 1
         currPage = 1
         pageSize = 10
         dissolveBucketCode = ''
 
-        dialogVisible = false;
-        dialogTableVisible = false;
+        bucketDataList=[
+            {
+                id: 1,
+                bucketNo: 4,
+                bucketStatus: '入料中',
+                filled: false,
+                cleared: false
+            }
+        ]
+
+        orgArrList: string[] = []
+
+        isBucketDialogVisible = false;
+        isTableDialogVisible = false;
         dialogType='filled'
         dialogForm = {
             filled: {
@@ -293,9 +335,9 @@
             }
         ]
 
+        // 入罐表单数据
         importBucketForm= {}
-        importBucketDataGroup=[]
-        queryFormData = [
+        queryTableFormData = [
             {
                 type: 'select',
                 label: '生产车间',
@@ -324,7 +366,7 @@
                         deptId: val,
                         current: 1,
                         size: 9999,
-                        holderType: '019'
+                        holderType: '019' // 溶解罐参数编码
                         // holderType: this.dissolveBucketCode
                     })
                 },
@@ -339,11 +381,7 @@
                 label: '状态',
                 prop: 'status',
                 defaultOptionsFn: () => {
-                    // return COMMON_API.ORG_QUERY_WORKSHOP_API({
-                    //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    //     deptType: ['WORK_SHOP'],
-                    //     deptName: '杀菌'
-                    // })
+                    return COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' })
                 },
                 resVal: {
                     resData: 'data',
@@ -353,23 +391,25 @@
             }
         ]
 
-        rules = [
+        queryTableRules = [
             {
                 prop: 'workShop',
                 text: '请选择生产车间'
             }
         ]
 
-        loanedPersonnelStatus = false;
-        orgTree = [];
-        arrList = [];
+        isLoanedPersonnelStatusDialogVisible = false;
+        orgTree: object[] = [];
+        arrList: string[] = [];
 
         mounted() {
-            this.getContainerTypeList();
+
+            this.isLoanedPersonnelStatusDialogVisible = true;
+            this.getTree()
         }
 
         // 查询请求
-        listInterface = params => {
+        queryTableListInterface = params => {
             params.current = 1;
             params.size = 10;
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
@@ -401,33 +441,24 @@
             COMMON_API.ORGSTRUCTURE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             }).then(({ data }) => {
+                console.log('22222')
+                console.log(data)
                 this.orgTree = data.data;
-                // this.arrList = [this.OrgTree[0].children[0].id];
+               // this.arrList = [(this.orgTree[0].children[0].id)];
             });
         }
+
 
         // 员工确认
-        changeUser(userId) {
+        changeUser() {
             // this.row.userList = userId;
-            this.loanedPersonnelStatus = false;
+            this.isLoanedPersonnelStatusDialogVisible = false;
 
         }
 
-        // 容器类型下拉
-        getContainerTypeList() {
-            COMMON_API.DICTQUERY_API({
-                dictType: 'COMMON_HOLDER_TYPE'
-            }).then(({ data }) => {
-                data.data.forEach(item => {
-                    if (item.dictValue === '溶解罐') {
-                        this.dissolveBucketCode = item.dictCode
-                    }
-                })
-            });
-        }
 
         // 去详请
-        goTargetDetail(item) {
+        goTargetDetail() {
             // if (!isAuth('gra:material:list')) {
             //     this.$notify.error({
             //         title: MSG.AUTH.noAuthority.title,
@@ -448,7 +479,88 @@
                 });
             }, 100);
         }
+
+        openImportBucketDialog() {
+            this.isTableDialogVisible = true
+        }
+
+        //  RowDelFlag
+        rowDelFlag({ row }) {
+            if (row.delFlag === 1) {
+                return 'rowDel';
+            }
+            return '';
+
+        }
+
+        // 满罐
+        fillBucket() {
+            this.dialogType = 'filled'
+            this.isBucketDialogVisible = true;
+        }
+
+        // 取消溶解罐状态
+        clearBucketStatus() {
+            this.isBucketDialogVisible = false
+        }
+
+        // 溶解罐状态确认
+        comfirmBucketStatus() {
+            if (this.dialogType === 'filled') {
+                if (this.bucketDataList[this.nowBucketNo].filled === true) {
+                    this.bucketDataList[this.nowBucketNo].bucketStatus = '满罐'
+                } else {
+                    this.bucketDataList[this.nowBucketNo].bucketStatus = '入料中'
+                }
+            } else if (this.bucketDataList[this.nowBucketNo].cleared === true) {
+                    this.bucketDataList[this.nowBucketNo].bucketStatus = '空罐'
+                }
+
+        }
+
+        // 取消入罐
+        clearImportBucket() {
+            this.bucketDataList[this.nowBucketNo].filled = false
+            this.isTableDialogVisible = false
+        }
+
+        // 入罐确认
+        comfirmImportBucket() {
+            if (this.bucketDataList[this.nowBucketNo].filled === true) {
+                this.bucketDataList[this.nowBucketNo].bucketStatus = '满罐'
+            } else {
+                this.bucketDataList[this.nowBucketNo].bucketStatus = '入料中'
+            }
+
+        }
+
+        // 清罐
+        clearBucket(item) {
+            this.$confirm('是否清罐?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.dialogType = 'clear'
+                this.isBucketDialogVisible = true;
+            });
+        }
+
+        // 搜索
+        filterNode(value, data) {
+            if (!value) return true;
+            return data.deptName.indexOf(value) !== -1;
+        }
+
+        // 组织架构点击
+        treeNodeClick(row: DeptObject) {
+            this.$emit('treeNodeClick', row, true)
+        }
     }
+
+interface DeptObject {
+    id?: string;
+}
 
 </script>
 <style scoped>
@@ -571,27 +683,16 @@
             flex: 1;
             flex-flow: column;
             justify-content: center;
-            .button {
+            .el-button {
                 display: inline-block;
                 -webkit-box-sizing: border-box;
                 box-sizing: border-box;
                 margin: 0;
                 margin-bottom: 14px;
                 padding: 8px 16px;
-                color: #606266;
                 font-weight: 500;
                 font-size: 14px;
                 line-height: 1;
-                white-space: nowrap;
-                text-align: center;
-                background: #fff;
-                border: 1px solid #dcdfe6;
-                border-radius: 4px;
-                outline: 0;
-                cursor: pointer;
-                -webkit-transition: 0.1s;
-                transition: 0.1s;
-                -webkit-appearance: none;
             }
         }
     }
