@@ -38,7 +38,9 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                            <el-row style="overflow: hidden;">
+                                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                            </el-row>
                         </mds-card>
                     </el-col>
                     <el-col :span="14">
@@ -86,14 +88,16 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <el-pagination :current-page="splitForm.current" :page-sizes="[10, 20, 50]" :page-size="splitForm.size" layout="total, sizes, prev, pager, next, jumper" :total="splitForm.total" @size-change="handleSizeChange1" @current-change="handleCurrentChange1" />
+                            <el-row style="overflow: hidden;">
+                                <el-pagination :current-page="splitForm.current" :page-sizes="[10, 20, 50]" :page-size="splitForm.size" layout="total, sizes, prev, pager, next, jumper" :total="splitForm.total" @size-change="handleSizeChange1" @current-change="handleCurrentChange1" />
+                            </el-row>
                         </mds-card>
                     </el-col>
                 </el-row>
             </template>
         </query-table>
-        <order-split-dialog v-if="dialogFormVisible1" ref="orderSplitDialog" />
-        <order-split-dialog v-if="dialogFormVisible2" ref="orderSplitDetailDialog" />
+        <order-split-dialog v-if="dialogFormVisible1" ref="orderSplitDialog" @getList="getData" />
+        <order-split-detail-dialog v-if="dialogFormVisible2" ref="orderSplitDetailDialog" @getList="getSplitTable" />
     </div>
 </template>
 
@@ -200,6 +204,10 @@
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return COMMON_API.ORDER_QUERY_API(params);
         };
+
+        getData() {
+            this.$refs.queryTable.getDataList();
+        }
 
         setData(data) {
             this.queryResultList = data.data.records;

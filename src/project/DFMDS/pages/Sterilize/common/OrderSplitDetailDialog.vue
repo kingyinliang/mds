@@ -59,7 +59,7 @@
             STE_API.STE_SPLIT_DETAIL_LIST_API({
                 current: 1,
                 size: 999,
-                splitId: row.orderId
+                splitId: row.id
             }).then(({ data }) => {
                 this.orderObj = row;
                 this.dialogFormVisible = true;
@@ -91,7 +91,11 @@
                 }
             })
             STE_API.STE_SPLIT_DETAIL_SAVE_API(submitObj).then(({ data }) => {
-                console.log(data);
+                this.$successToast(data.msg);
+                this.dialogFormVisible = false;
+                this.$emit('getList')
+            }).catch(() => {
+                this.dialogFormVisible = false;
             })
         }
 
