@@ -11,7 +11,7 @@
         >
             <template slot="home">
                 <el-row class="home_card__main" :gutter="10">
-                    <el-col v-for="(item, index) in queryResultList" :key="index" :span="8" style="margin-bottom: 10px;">
+                    <el-col v-for="(item, index) in queryResultList" :key="index" :span="8" style=" min-width: 396px; margin-bottom: 10px;">
                         <el-form :model="item" size="small" label-position="right" label-width="85px">
                             <div class="home_card__main__item">
                                 <div class="home_card__main__item__title clearfix">
@@ -33,17 +33,21 @@
                                     <div class="home_card__main__item__main__right">
                                         <el-form-item label="生产订单：">
                                             <el-select v-model="item.orderNo" placeholder="请选择" style="width: 100%;" @change="orderchange(item)">
-                                                <el-option v-for="(subItem, subIndex) in item.splitOrders" :key="subIndex" :label="subItem.orderNo" :value="subItem" />
+                                                <el-option v-for="(subItem, subIndex) in item.splitOrders" :key="subIndex" :label="subItem.orderNo" :value="subItem.id" />
                                             </el-select>
                                         </el-form-item>
                                         <el-form-item label="生产物料：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.orderNoMap? `${item.orderNoMap.materialCode} ${item.orderNoMap.materialName}` : '' }}</span>
+                                                <el-tooltip class="item" effect="dark" :content=" item.orderNoMap? `${item.orderNoMap.materialCode} ${item.orderNoMap.materialName}` : ''" placement="top">
+                                                    <span class="el-input__inner">{{ item.orderNoMap? `${item.orderNoMap.materialCode} ${item.orderNoMap.materialName}` : '' }}</span>
+                                                </el-tooltip>
                                             </div>
                                         </el-form-item>
                                         <el-form-item label="生产锅序：">
-                                            <el-select v-model="item.potOrder" placeholder="请选择" style="width: 100%;">
-                                                <el-option v-for="(subItem, subIndex) in item.orderNoMap.potOrders" :key="subIndex" :label="subItem.potOrder" :value="subItem" />
+                                            <el-select v-model="item.potOrder" placeholder="请选择" style="width: 100%;" @change="potOrderChange(item)">
+                                                <span v-if="item.orderNoMap">
+                                                    <el-option v-for="(subItem, subIndex) in item.orderNoMap['potOrders']" :key="subIndex" :label="subItem.potOrder" :value="subItem.id" />
+                                                </span>
                                             </el-select>
                                         </el-form-item>
                                         <el-form-item label="计划锅数：">
@@ -91,7 +95,7 @@
 
     @Component
     export default class Sterilize extends Vue {
-        queryResultList: SteObj[] = [{}];
+        queryResultList: SteObj[] = [];
         rules = [
             {
                 prop: 'workShop',
@@ -153,8 +157,13 @@
         }
 
         orderchange(item) {
-            const filterArr: (any) = item.splitOrders.filter(it => it.orderNo === item.orderNo);// eslint-disable-line
-            item.orderNoMap = filterArr[0]
+            const filterArr: (any) = item.splitOrders.filter(it => it.id === item.orderNo);// eslint-disable-line
+            item.orderNoMap = filterArr[0];
+        }
+
+        potOrderChange(item) {
+            const filterArr: (any) = item.orderNoMap.potOrders.filter(it => it.id === item.potOrder);// eslint-disable-line
+            item.potOrderMap = filterArr[0];
         }
 
         goCraft() {
