@@ -49,41 +49,8 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column label="开始时间" min-width="200">
-                        <template slot="header">
-                            <span class="notNull">*</span>开始时间
-                        </template>
-                        <template slot-scope="scope">
-                            <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
-                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 170px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeEnd(scope.row,scope.$index,0)" />
-                            </el-form-item>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="结束时间" min-width="200">
-                        <template slot="header">
-                            <span class="notNull">*</span>结束时间
-                        </template>
-                        <template slot-scope="scope">
-                            <el-form-item :prop="'r'+scope.$index+'.endDate'" :rules="dataRules.endDate">
-                                <el-date-picker
-                                    v-model="scope.row.endDate"
-                                    type="datetime"
-                                    size="small"
-                                    value-format="yyyy-MM-dd HH:mm"
-                                    format="yyyy-MM-dd HH:mm"
-                                    :default-value="scope.row.startDate"
-                                    placeholder="选择时间"
-                                    style="width: 170px;"
-                                    :picker-options="pickerOptionsEnd[0][scope.$index]"
-                                    :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
-                                    @change="changeStart(scope.row,scope.$index,0)"
-                                />
-                            </el-form-item>
-                        </template>
-                    </el-table-column> -->
                     <el-table-column label="运行时长(H)" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <!-- <el-input v-model.trim="scope.row.duration" size="small" /> -->
                             {{ operationHour(scope.row,scope.$index) }}
                         </template>
                     </el-table-column>
@@ -146,7 +113,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopType'" :rules="dataRules.stopType">
-                                <el-select v-model="scope.row.stopType" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeStopModeOption(scope.row)">
+                                <el-select v-model="scope.row.stopType" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeStopTypeOption(scope.row)">
                                     <el-option v-for="(item) in stopTypeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
@@ -158,7 +125,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopMode'" :rules="dataRules.stopMode">
-                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeStopModeOption(scope.row)">
                                     <el-option v-for="(item) in stopModeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
@@ -185,54 +152,10 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column min-width="200" :show-overflow-tooltip="true">
-                        <template slot="header">
-                            <span class="notNull">*</span>开始时间
-                        </template>
-                        <template slot-scope="scope">
-                            <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
-                                <el-date-picker
-                                    v-model="scope.row.startDate"
-                                    type="datetime"
-                                    size="small"
-                                    value-format="yyyy-MM-dd HH:mm"
-                                    format="yyyy-MM-dd HH:mm"
-                                    placeholder="选择时间"
-                                    style="width: 170px;"
-                                    clearable
-                                    :picker-options="pickerOptionsStart[1][scope.$index]"
-                                    :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
-                                    @change="changeEnd(scope.row,scope.$index,1)"
-                                />
-                            </el-form-item>
-                        </template>
-                    </el-table-column>
-                    <el-table-column min-width="200" :show-overflow-tooltip="true">
-                        <template slot="header">
-                            <span class="notNull">*</span>结束时间
-                        </template>
-                        <template slot-scope="scope">
-                            <el-form-item :prop="'r'+scope.$index+'.endDate'" :rules="dataRules.endDate">
-                                <el-date-picker
-                                    v-model="scope.row.endDate"
-                                    type="datetime"
-                                    size="small"
-                                    value-format="yyyy-MM-dd HH:mm"
-                                    format="yyyy-MM-dd HH:mm"
-                                    placeholder="选择时间"
-                                    style="width: 170px;"
-                                    clearable
-                                    :picker-options="pickerOptionsEnd[1][scope.$index]"
-                                    :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
-                                    @change="changeStart(scope.row,scope.$index,1)"
-                                />
-                            </el-form-item>
-                        </template>
-                    </el-table-column> -->
                     <el-table-column label="时长(MIN)" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <!-- <el-input v-model.number="scope.row.duration" size="small" clearable /> -->
-                            {{ stopMin(scope.row,scope.$index) }}
+                            <el-input v-if="scope.row.stopMode!=='CONTINUE_HALT'" v-model.number="scope.row.duration" size="small" clearable :disabled="!isRedact" />
+                            <span v-else>{{ stopMin(scope.row,scope.$index) }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column width="80" :show-overflow-tooltip="true">
@@ -240,7 +163,8 @@
                             <span class="notNull">*</span>次数
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(!scope.row.fzExceptionCount &&isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                            <!-- <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(!scope.row.fzExceptionCount)" /> -->
+                            <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(scope.row.stopMode!=='CONTINUE_HALT' && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                         </template>
                     </el-table-column>
                     <el-table-column width="140" :show-overflow-tooltip="true">
@@ -450,8 +374,6 @@ export default class Equipment extends Vue {
         }).then(({ data }) => {
             if (data.data !== null) {
                 this.secondFormDataGroup = JSON.parse(JSON.stringify(data.data));
-                console.log(data.data)
-
                 this.secondFormDataGroup.forEach(item => {
                     item.fzExceptionCount = false
                     item.fzReasonOptions = false
@@ -498,8 +420,6 @@ export default class Equipment extends Vue {
             }
         }
         for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1)) {
-            // console.log('this.fzReasonOptions')
-            // console.log(this.fzReasonOptions)
             if (!item.classes || !item.stopType || !item.stopMode || !item.date || !item.exceptionCount || !item.stopSituation || (!item.stopReason && !item.fzReasonOptions) || (!item.exceptionInfo && item.fzReasonOptions)) {
                 this.$warningToast('请填写停机情况必填项');
                 return false
@@ -596,7 +516,7 @@ export default class Equipment extends Vue {
         });
     }
 
-    changeStopModeOption(row) {
+    changeStopTypeOption(row) {
         if (row.stopType === 'PLAN_HALT') {
             row.stopMode = 'CONTINUE_HALT'
             row.exceptionCount = 1
@@ -616,6 +536,7 @@ export default class Equipment extends Vue {
         }
     }
 
+
     changeStopModeDefaultOption(row) {
         if (row.stopType === 'PLAN_HALT') {
             row.stopMode = 'CONTINUE_HALT'
@@ -624,6 +545,16 @@ export default class Equipment extends Vue {
         } else {
             row.fzExceptionCount = false
             row.stopSituationArray = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
+        }
+    }
+
+    changeStopModeOption(row) {
+        if (row.stopMode === 'CONTINUE_HALT') {
+            row.exceptionCount = 1
+
+        } else {
+            row.exceptionCount = 0
+            row.duration = 0
         }
     }
 
@@ -638,7 +569,6 @@ export default class Equipment extends Vue {
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 size: 99999
             }).then(({ data }) => {
-                console.log(data)
                 data.data.records.forEach((item) => {
                     row.stopReasonArray.push({
                         dictValue: item.deviceName,
@@ -652,7 +582,6 @@ export default class Equipment extends Vue {
             COMMON_API.DICTQUERY_API({
                 dictType: row.stopSituation
             }).then(({ data }) => {
-                console.log(data)
                 data.data.forEach((item) => {
                     row.stopReasonArray.push({
                         dictValue: item.dictValue,
@@ -668,8 +597,6 @@ export default class Equipment extends Vue {
     }
 
     changeStopReasonDefaultOption(row) {
-        console.log('row')
-        console.log(row)
         row.stopReasonArray = []
         if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN' || row.stopSituation === 'FAULT') {
             row.fzReasonOptions = false

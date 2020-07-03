@@ -164,8 +164,12 @@ export default {
     mounted() {
         const canvas = new LoginAnimation(this.$);
         canvas.init();
+        // RDM 跳转用
         if (window.location.href.indexOf('?') !== -1) {
-            const url = decodeURIComponent(window.location.href.split('#')[0].split('?')[1].split('=')[1]);
+            console.log(window.location.href.split('?')[1].split('=')[1])
+            const url = decodeURIComponent(window.location.href.split('?')[1].split('=')[1]);
+            // const url = decodeURIComponent(window.location.href.split('#')[0].split('?')[1].split('=')[1]);
+            console.log(url)
             const urlData = JSON.parse(url);
             this.loginSuccess(urlData)
         }
