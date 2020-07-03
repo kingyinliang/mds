@@ -280,7 +280,7 @@
             }
         ]
 
-        dataList: []
+        dataList = []
         totalCount = 1
         currPage = 1
         pageSize = 10
