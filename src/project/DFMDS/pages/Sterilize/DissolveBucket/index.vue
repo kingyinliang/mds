@@ -535,7 +535,7 @@
         }
 
         // 清罐
-        clearBucket(item) {
+        clearBucket() {
             this.$confirm('是否清罐?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
