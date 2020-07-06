@@ -66,7 +66,7 @@
 import { COMMON_API } from 'common/api/api';
 import { LoginAnimation } from './loginCanvas';
 import SelectFactory from 'src/layout/main/SelectFactory';
-
+import { Loading } from 'element-ui';
 export default {
     name: 'Login',
     components: {
@@ -169,9 +169,18 @@ export default {
             console.log(window.location.href.split('?')[1].split('=')[1])
             const url = decodeURIComponent(window.location.href.split('?')[1].split('=')[1]);
             // const url = decodeURIComponent(window.location.href.split('#')[0].split('?')[1].split('=')[1]);
-            console.log(url)
             const urlData = JSON.parse(url);
-            this.loginSuccess(urlData)
+
+            const loading = Loading.service({
+                lock: true,
+                text: '加载中……',
+                background: 'rgba(255, 255, 255, 0.7)'
+            });
+            setTimeout(() => {
+                this.loginSuccess(urlData)
+                loading.close();
+            }, 3000);
+
         }
     },
     methods: {
