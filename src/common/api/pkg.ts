@@ -124,7 +124,11 @@ const PKG_API = {
     /**
      * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-设备运行情况
      */
-    PKG_AUDIT_DETAIL_DEVICERUN_API: params => httpProxy('/pkg/pkgTimeSheet/deviceRun', 'POST', params)
+    PKG_AUDIT_DETAIL_DEVICERUN_API: params => httpProxy('/pkg/pkgTimeSheet/deviceRun', 'POST', params),
+    /**
+     * @property {string}  PKG_AUDIT_DETAIL_PROMATERIALDIFF_API 审核详情-生产效率
+     */
+    PKG_AUDIT_DETAIL_OEE_API: params => httpProxy('/pkgOeeOrOpe/query', 'GET', params)
 };
 
 export default PKG_API;

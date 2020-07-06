@@ -23,22 +23,9 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item class="floatr">
-                            <template style="float: right;">
-                                <el-button v-if="isAuth('prs:drench:drenchList')" type="primary" size="small" @click="SearchList">
-                                    查询
-                                </el-button>
-                                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('prs:dernchUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                                    {{ isRedact?'取消':'编辑' }}
-                                </el-button>
-                            </template>
-                            <template v-if="isRedact" style="float: right;">
-                                <el-button v-if="isAuth('prs:dernchUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                                    保存
-                                </el-button>
-                                <el-button v-if="isAuth('prs:dernchUpdate')" type="primary" size="small" @click="SubmitForm">
-                                    提交
-                                </el-button>
-                            </template>
+                            <el-button v-if="isAuth('prs:drench:drenchList')" type="primary" size="small" @click="SearchList">
+                                查询
+                            </el-button>
                         </el-form-item>
                     </el-form>
                 </el-col>
@@ -51,13 +38,13 @@
             <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                 <i class="el-icon-caret-bottom" />
             </div>
-            <el-card style="margin-top: 5px;">
-                <el-table :data="waterList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
+            <mds-card title="自淋信息" name="waterInfo" style="margin-top: 5px;" :pack-tp="false">
+                <el-table class="newTable" :data="waterList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" />
-                    <el-table-column label="工序" width="50">
+                    <el-table-column label="工序" min-width="50">
                         自淋
                     </el-table-column>
-                    <el-table-column label="气垫车号" prop="gx" :show-overflow-tooltip="true">
+                    <el-table-column label="气垫车号" min-width="100" prop="gx" :show-overflow-tooltip="true">
                         <template slot="header">
                             <i class="reqI">*</i><span>气垫车号</span>
                         </template>
@@ -66,14 +53,14 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="布浆线" :show-overflow-tooltip="true" prop="deptName" />
-                    <el-table-column label="布浆结束时间" prop="pulpEndDate" width="150" />
-                    <el-table-column label="自淋结束时间" prop="drenchEndDate" width="200">
+                    <el-table-column label="布浆结束时间" prop="pulpEndDate" min-width="120" />
+                    <el-table-column label="自淋结束时间" prop="drenchEndDate" min-width="150">
                         <template slot-scope="scope">
                             <el-date-picker v-model="scope.row.drenchEndDate" type="datetime" :disabled="!isRedact" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 172px;" @input="changedDranch(scope.row)" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="自淋时间(H)" width="100" prop="drenchTime" />
-                    <el-table-column label="挪笼操作员" :show-overflow-tooltip="true">
+                    <el-table-column label="自淋时间(H)" min-width="100" prop="drenchTime" />
+                    <el-table-column label="挪笼操作员" min-width="120" :show-overflow-tooltip="true">
                         <template slot="header">
                             <i class="reqI">*</i><span>挪笼操作员</span>
                         </template>
@@ -87,9 +74,9 @@
                             <span v-else :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">{{ scope.row.moveOperator }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="布浆操作员" prop="drenchOperator" width="150" />
+                    <el-table-column label="布浆操作员" prop="drenchOperator" min-width="150" />
                 </el-table>
-            </el-card>
+            </mds-card>
         </div>
         <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
             <el-row>
@@ -109,6 +96,21 @@
                 <el-button type="primary" @click="updatauser(row)">确定</el-button>
             </span>
         </el-dialog>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('prs:dernchUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact?'取消':'编辑' }}
+                </el-button>
+                <template v-if="isRedact" style="float: right;">
+                    <el-button v-if="isAuth('prs:dernchUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('prs:dernchUpdate')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 

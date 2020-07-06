@@ -18,15 +18,15 @@
                     审核日志
                 </el-button>
             </template>
-        </query-table>RDM   MDS
+        </query-table>
         <el-dialog title="审核日志" width="800px" :close-on-click-modal="false" :visible.sync="visibleDetailLog">
             <div>
                 <el-table header-row-class-name="" :data="logList" border tooltip-effect="dark" class="newTable">
                     <el-table-column type="index" label="序号" width="55" align="center" fixed />
-                    <el-table-column label="审核动作" show-overflow-tooltip width="160" />
-                    <el-table-column label="审核意见" prop="moveUnit" />
-                    <el-table-column label="审核人" prop="moveAmount" show-overflow-tooltip width="160" />
-                    <el-table-column label="审核时间" prop="changed" width="160" />
+                    <el-table-column label="审核动作" prop="status" show-overflow-tooltip width="160" />
+                    <el-table-column label="审核意见" prop="memo" />
+                    <el-table-column label="审核人" prop="verifyMan" show-overflow-tooltip width="140" />
+                    <el-table-column label="审核时间" prop="verifyDate" width="180" />
                 </el-table>
             </div>
             <div slot="footer" class="dialog-footer">
@@ -84,7 +84,8 @@ export default class AuditIndex extends Vue {
                 resData: 'data',
                 label: ['deptName'],
                 value: 'id'
-            }
+            },
+            defaultValue: ''
         },
         {
             type: 'input',
@@ -275,16 +276,12 @@ export default class AuditIndex extends Vue {
                     const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
                     params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     if (index === 0) {
-                        console.log(0)
                         params['orderStatus'] = 'D';
                     } else if (index === 1) {
-                        console.log(1)
                         params.orderStatus = 'C';
                     } else {
-                        console.log(2)
                         params['orderStatus'] = 'R';
                     }
-                    console.log(params)
                     params.current = 1;
                     params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
                     params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
@@ -319,7 +316,7 @@ export default class AuditIndex extends Vue {
 
     // 审核日志
     getLogList(row: object) {
-        AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: row['orderNo'] }).then(({ data }) => {
+        AUDIT_API.AUDIT_LOG_LIST_API({ orderNo: row['orderNo'], verifyType: '' }).then(({ data }) => {
             this.logList = data.data;
             this.visibleDetailLog = true;
         })

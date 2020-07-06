@@ -1,185 +1,161 @@
 <template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row type="flex">
-                    <el-col>
-                        <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px;" @change="changeOptions('workshop')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="订单日期：">
-                                <el-date-picker v-model="params.orderDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                    <el-col style="width: 140px;">
-                        <el-button v-if="isAuth('fer:openHolder:list')" type="primary" size="small" @click="getOrderList()">
-                            查询
-                        </el-button>
-                        <el-button type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="pushPage('')">
-                            新增
-                        </el-button>
-                    </el-col>
+    <div class="header_main">
+        <el-card class="searchCard">
+            <el-row type="flex">
+                <el-col>
+                    <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="params.workshopId" class="selectwpx" style="width: 140px;" @change="changeOptions('workshop')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单日期：">
+                            <el-date-picker v-model="params.orderDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" />
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+                <el-col style="width: 140px;">
+                    <el-button v-if="isAuth('fer:openHolder:list')" type="primary" size="small" @click="getOrderList()">
+                        查询
+                    </el-button>
+                    <el-button type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="pushPage('')">
+                        新增
+                    </el-button>
+                </el-col>
+            </el-row>
+            <div class="toggleSearchBottom">
+                <i class="el-icon-caret-top" />
+            </div>
+        </el-card>
+        <div class="tableCard">
+            <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
+                <i class="el-icon-caret-bottom" />
+            </div>
+            <mds-card title="申请列表" :name="'applylist'" style="margin-top: 5px;">
+                <el-table class="newTable" header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @row-dblclick="showDetail">
+                    <el-table-column type="index" label="序号" width="55" fixed />
+                    <el-table-column label="车间" :show-overflow-tooltip="true" min-width="110">
+                        <template slot-scope="scope">
+                            {{ scope.row.workShopName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="申请编码" :show-overflow-tooltip="true" min-width="140">
+                        <template slot-scope="scope">
+                            {{ scope.row.applyNo }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="状态" min-width="65">
+                        <template slot-scope="scope">
+                            {{ scope.row.confirmFlag === '1' ? '已确认' : scope.row.status === 'saved' ? '已保存' : scope.row.status === 'submit' ? '已提交' : '' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="物料" :show-overflow-tooltip="true" min-width="180">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="半成品类别" :show-overflow-tooltip="true" min-width="100">
+                        <template slot-scope="scope">
+                            {{ scope.row.halfName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="申请数量" min-width="80">
+                        <template slot-scope="scope">
+                            {{ scope.row.amount }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="生产日期" min-width="105">
+                        <template slot-scope="scope">
+                            {{ scope.row.productDate }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="申请人员" min-width="140">
+                        <template slot-scope="scope">
+                            {{ scope.row.changer }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="申请时间" min-width="165">
+                        <template slot-scope="scope">
+                            {{ scope.row.changed }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column fixed="right" label="操作" width="90">
+                        <template slot-scope="scope">
+                            <el-button v-if="isAuth('fer:openHolder:list')" type="text" size="small" @click="pushPage(scope.row.id)">
+                                详情
+                            </el-button>
+                            <el-button v-if="isAuth('fer:openHolder:delete') && scope.row.status === 'saved'" type="text" size="small" @click="deleteRow(scope.row.id)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-row>
+                    <el-pagination :current-page="currPage" :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <div class="tableCard">
-                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-                <el-card>
-                    <el-row>
-                        <el-col>
-                            <div style="line-height: 40px;">
-                                <i style=" float: left; font-size: 22px;" class="iconfont factory-shouqicaidan" /><span style=" margin-left: 12px; font-weight: 600; font-size: 16px;">申请列表</span>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @row-dblclick="showDetail">
-                            <el-table-column type="index" label="序号" width="55" fixed />
-                            <el-table-column label="车间" :show-overflow-tooltip="true" width="120">
-                                <template slot-scope="scope">
-                                    {{ scope.row.workShopName }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="申请编码" :show-overflow-tooltip="true" width="140">
-                                <template slot-scope="scope">
-                                    {{ scope.row.applyNo }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="状态" width="80">
-                                <template slot-scope="scope">
-                                    {{ scope.row.confirmFlag === '1' ? '已确认' : scope.row.status === 'saved' ? '已保存' : scope.row.status === 'submit' ? '已提交' : '' }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
-                                <template slot-scope="scope">
-                                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="半成品类别" :show-overflow-tooltip="true" width="100">
-                                <template slot-scope="scope">
-                                    {{ scope.row.halfName }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="申请数量" width="100">
-                                <template slot-scope="scope">
-                                    {{ scope.row.amount }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="生产日期" width="120">
-                                <template slot-scope="scope">
-                                    {{ scope.row.productDate }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="申请人员" width="170">
-                                <template slot-scope="scope">
-                                    {{ scope.row.changer }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="申请时间" width="170">
-                                <template slot-scope="scope">
-                                    {{ scope.row.changed }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column fixed="right" label="操作" width="90">
-                                <template slot-scope="scope">
-                                    <el-button v-if="isAuth('fer:openHolder:list')" type="text" size="small" @click="pushPage(scope.row.id)">
-                                        详情
-                                    </el-button>
-                                    <el-button v-if="isAuth('fer:openHolder:delete') && scope.row.status === 'saved'" type="text" size="small" @click="deleteRow(scope.row.id)">
-                                        删除
-                                    </el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </el-row>
-                    <el-row>
-                        <el-pagination :current-page="currPage" :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                    </el-row>
-                </el-card>
-            </div>
-        </div>
-        <div class="main" style="padding-top: 0;">
-            <div class="tableCard">
-                <el-card>
-                    <el-row>
-                        <div style="line-height: 40px;">
-                            <i style=" float: left; font-size: 22px;" class="iconfont factory-shouqicaidan" /><span style=" margin-left: 12px; font-weight: 600; font-size: 16px;">开罐明细</span>
-                        </div>
-                    </el-row>
-                    <el-row>
-                        <el-table header-row-class-name="tableHead" :data="detailList" border tooltip-effect="dark">
-                            <el-table-column type="index" label="序号" width="55" fixed />
-                            <el-table-column label="申请编码" width="140">
-                                <template slot-scope="scope">
-                                    {{ scope.row.applyNo }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="罐号" :show-overflow-tooltip="true" width="130">
-                                <template slot-scope="scope">
-                                    {{ scope.row.holderName }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="订单类型" :show-overflow-tooltip="true" width="120">
-                                <template slot-scope="scope">
-                                    {{ scope.row.orderTypeName }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="发酵天数/天" :show-overflow-tooltip="true" width="100">
-                                <template slot-scope="scope">
-                                    {{ scope.row.ferDays }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="半成品类别" :show-overflow-tooltip="true" width="130">
-                                <template slot-scope="scope">
-                                    {{ scope.row.halfType }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="数量（方）" width="100">
-                                <template slot-scope="scope">
-                                    {{ (scope.row.amount * 1) / 1000 }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="批次" width="110">
-                                <template slot-scope="scope">
-                                    {{ scope.row.batch }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="备注" :show-overflow-tooltip="true" width="140">
-                                <template slot-scope="scope">
-                                    {{ scope.row.remark }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="确认人员" width="150">
-                                <template slot-scope="scope">
-                                    {{ scope.row.changer }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="确认时间" :show-overflow-tooltip="true">
-                                <template slot-scope="scope">
-                                    {{ scope.row.changed }}
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </el-row>
-                </el-card>
-            </div>
+            </mds-card>
+            <mds-card title="开罐明细" :name="'openDetail'">
+                <el-table class="newTable" header-row-class-name="tableHead" :data="detailList" border tooltip-effect="dark">
+                    <el-table-column type="index" label="序号" width="55" fixed />
+                    <el-table-column label="申请编码" width="140">
+                        <template slot-scope="scope">
+                            {{ scope.row.applyNo }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="罐号" :show-overflow-tooltip="true" min-width="110">
+                        <template slot-scope="scope">
+                            {{ scope.row.holderName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="订单类型" :show-overflow-tooltip="true" min-width="110">
+                        <template slot-scope="scope">
+                            {{ scope.row.orderTypeName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="发酵天数/天" :show-overflow-tooltip="true" min-width="95">
+                        <template slot-scope="scope">
+                            {{ scope.row.ferDays }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="半成品类别" :show-overflow-tooltip="true" min-width="130">
+                        <template slot-scope="scope">
+                            {{ scope.row.halfType }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="数量（方）" min-width="100">
+                        <template slot-scope="scope">
+                            {{ (scope.row.amount * 1) / 1000 }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="批次" width="110">
+                        <template slot-scope="scope">
+                            {{ scope.row.batch }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="备注" :show-overflow-tooltip="true" min-width="80">
+                        <template slot-scope="scope">
+                            {{ scope.row.remark }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="确认人员" show-overflow-tooltip min-width="120">
+                        <template slot-scope="scope">
+                            {{ scope.row.changer }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="确认时间" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.changed }}
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </mds-card>
         </div>
     </div>
 </template>
