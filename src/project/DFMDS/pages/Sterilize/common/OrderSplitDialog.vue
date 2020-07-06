@@ -16,7 +16,7 @@
             <el-table-column label="订单日期" width="100" prop="orderDate" :show-overflow-tooltip="true" />
             <el-table-column label="计划数量" width="100" prop="planOutput" />
             <el-table-column label="单位" width="70" prop="outputUnit" />
-            <el-table-column label="生产日期" width="140" prop="productDate" :show-overflow-tooltip="true">
+            <el-table-column label="生产日期" width="160" prop="productDate" :show-overflow-tooltip="true">
                 <template slot="header">
                     <span class="notNull">* </span>生产日期
                 </template>
@@ -97,9 +97,10 @@
             this.splitTable.push({
                 id: '',
                 delFlag: 0,
+                potUnit: this.orderObj.countOutputUnit,
                 workShop: this.orderObj.workShop,
                 productLine: this.orderObj.productLine,
-                orderId: this.orderObj.orderId,
+                orderId: this.orderObj.id,
                 orderNo: this.orderObj.orderNo,
                 orderDate: this.orderObj.orderDate,
                 materialCode: this.orderObj.materialCode,
@@ -127,7 +128,7 @@
                 deletes: [],
                 inserts: [],
                 updates: []
-            }
+            };
             this.splitTable.forEach((item, index) => {
                 if (item.delFlag === 1) {
                     if (item.id) {
@@ -142,7 +143,8 @@
                 }
             })
             STE_API.STE_SPLIT_SAVE_API(submitObj).then(({ data }) => {
-                console.log(data);
+                this.$successToast(data.msg);
+                this.dialogFormVisible = false;
             })
         }
 
@@ -166,6 +168,8 @@
     interface SplitObj {
         id?: string;
         delFlag?: number;
+        countOutputUnit?: string;
+        potUnit?: string;
         workShop?: string;
         productLine?: string;
         orderId?: string;
