@@ -82,7 +82,7 @@
                 <el-form-item label="结束时间：" prop="endTime">
                     <el-date-picker v-model="workInfo.endTime" type="datetime" placeholder="选择时间" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" />
                 </el-form-item>
-                <el-form-item v-if="workInfo.content === '过滤'" label="领用罐号：">
+                <el-form-item v-if="workInfo.content === '过滤' || workInfo.content === '脱盐'" label="领用罐号：">
                     <el-select v-model="workInfo.holderId" filterable style="width: 220px;">
                         <el-option v-for="(sole, index) in holderList" :key="index" :value="sole.holderId" :label="sole.holderName" />
                     </el-select>
@@ -92,8 +92,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="SaveDialog()">确 定</el-button>
+                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" size="small" @click="SaveDialog()">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -227,13 +227,13 @@ export default {
                 this.$warningToast('请选择结束时间');
                 return false;
             }
-            if (this.workInfo.content === '过滤' && !this.workInfo.holderId) {
+            if ((this.workInfo.content === '过滤' || this.workInfo.content === '脱盐') && !this.workInfo.holderId) {
                 this.$warningToast('请选择领用罐');
                 return false;
             }
             // this.$refs[formName].validate(valid => {
             //     if (valid) {
-            if (this.workInfo.content === '过滤') {
+            if (this.workInfo.content === '过滤' || this.workInfo.content === '脱盐') {
                 this.workInfo.holderName = this.holderList.find((item) => item.holderId === this.workInfo.holderId).holderName;
             }
             this.workInfo.timeLength = ((new Date(this.workInfo.endTime) - new Date(this.workInfo.startTime)) / 3600000).toFixed(2);
