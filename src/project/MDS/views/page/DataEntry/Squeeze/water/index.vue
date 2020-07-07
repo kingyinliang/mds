@@ -38,7 +38,7 @@
             <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                 <i class="el-icon-caret-bottom" />
             </div>
-            <mds-card title="自淋信息" name="waterInfo" style="margin-top: 5px;" :pack-tp="false">
+            <mds-card title="自淋信息" name="waterInfo" style="margin-top: 5px;" :pack-up="false">
                 <el-table class="newTable" :data="waterList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" />
                     <el-table-column label="工序" min-width="50">

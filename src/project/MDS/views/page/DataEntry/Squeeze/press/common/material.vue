@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-card>
+        <mds-card title="物料领用" :pack-up="false">
             <el-table v-if="formHeader.pressure === 1" class="newTable" :data="materialList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
                 <el-table-column fixed="left" type="selection" width="50" />
                 <el-table-column label="工序" min-width="50">
@@ -134,7 +134,7 @@
                     <el-input v-model="formInline.destoryNumWest" :disabled="!isRedact" size="small" />
                 </el-form-item>
             </el-form>
-        </el-card>
+        </mds-card>
         <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
             <el-row>
                 <el-col style="width: 500px;">
