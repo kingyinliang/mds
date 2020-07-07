@@ -195,13 +195,21 @@
         ruleSubmit() {
             for (const item of this.currentDataTable.filter(it => it.delFlag !== 1)) {
                 if (!item.realUseAmount) {
-                    this.$warningToast('请填写包材领用必填项');
+                    this.$warningToast('请填写包材领用实际用量');
                     return false
                 }
             }
             for (const item of this.materialS.filter(it => it.delFlag !== 1)) {
-                if (!item.sterilizeStorageNo || !item.realUsed || !item.startDate) {
-                    this.$warningToast('请填写半成品领用必填项');
+                if (!item.sterilizeStorageNo) {
+                    this.$warningToast('请填写半成品领用使用锅序');
+                    return false
+                }
+                if (!item.realUsed) {
+                    this.$warningToast('请填写半成品领用实际用量');
+                    return false
+                }
+                if (!item.startDate) {
+                    this.$warningToast('请填写半成品领用开始使用时间');
                     return false
                 }
             }
