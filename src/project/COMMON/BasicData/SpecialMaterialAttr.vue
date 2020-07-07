@@ -90,7 +90,7 @@
             <div style="width: 400px; margin: auto;">
                 <el-form ref="formatData" :model="formatData" :rules="rules" size="small" label-width="110px" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
                     <el-form-item label="生产物料：" prop="productMaterialString">
-                        <el-select v-model="formatData.productMaterialString" filterable>
+                        <el-select v-model="formatData.productMaterialString" filterable :disabled="formatData.id ? true: false">
                             <el-option v-for="(item, index) in prodMaterialList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode + ' ' + item.materialName" />
                         </el-select>
                     </el-form-item>

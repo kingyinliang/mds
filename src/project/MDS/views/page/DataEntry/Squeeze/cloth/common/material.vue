@@ -7,10 +7,10 @@
                 </el-button>
             </div>
             <div style="margin-top: 10px;">
-                <el-table :data="materialList" border header-row-class-name="tableHead" :row-class-name="rowDelFlag" @selection-change="handleSelectionChange" @row-dblclick="editmaterial">
+                <el-table class="newTable" :data="materialList" border header-row-class-name="tableHead" :row-class-name="rowDelFlag" @selection-change="handleSelectionChange" @row-dblclick="editmaterial">
                     <el-table-column type="selection" width="50" fixed="left" :disabled="!isRedact" />
                     <el-table-column type="index" label="序号" width="50px" fixed />
-                    <el-table-column width="100px">
+                    <el-table-column min-width="100px">
                         <template slot="header">
                             <i class="reqI">*</i><span>布浆机</span>
                         </template>
@@ -18,7 +18,7 @@
                             {{ scope.row.pulpMachineName }}
                         </template>
                     </el-table-column>
-                    <el-table-column width="180px" show-overflow-tooltip>
+                    <el-table-column min-width="180px" show-overflow-tooltip>
                         <template slot="header">
                             <i class="reqI">*</i><span>气垫小车号</span>
                         </template>
@@ -27,7 +27,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="pulpNum" label="布浆张数" />
-                    <el-table-column width="150px">
+                    <el-table-column min-width="150px">
                         <template slot="header">
                             <i class="reqI">*</i><span>布浆开始时间</span>
                         </template>
@@ -35,7 +35,7 @@
                             {{ scope.row.pulpStartDate }}
                         </template>
                     </el-table-column>
-                    <el-table-column width="150px">
+                    <el-table-column min-width="150px">
                         <template slot="header">
                             <i class="reqI">*</i><span>布浆结束时间</span>
                         </template>
@@ -53,7 +53,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="unit" label="单位" />
-                    <el-table-column show-overflow-tooltip width="100px">
+                    <el-table-column show-overflow-tooltip min-width="100px">
                         <template slot="header">
                             布号
                         </template>
@@ -61,7 +61,7 @@
                             {{ scope.row.clothNo }}
                         </template>
                     </el-table-column>
-                    <el-table-column show-overflow-tooltip width="210px">
+                    <el-table-column show-overflow-tooltip min-width="210px">
                         <template slot="header">
                             <i class="reqI">*</i><span>原汁分类</span>
                         </template>
@@ -69,7 +69,7 @@
                             {{ scope.row.sauceClass }}
                         </template>
                     </el-table-column>
-                    <el-table-column width="160px">
+                    <el-table-column min-width="160px">
                         <template slot="header">
                             <i class="reqI">*</i><span>布浆自淋时间(MIN)</span>
                         </template>
@@ -77,7 +77,7 @@
                             {{ scope.row.selfDrenchTime }}
                         </template>
                     </el-table-column>
-                    <el-table-column width="150px">
+                    <el-table-column min-width="150px">
                         <template slot="header">
                             <i class="reqI">*</i><span>发酵罐号1</span>
                         </template>
@@ -85,7 +85,7 @@
                             {{ scope.row.potOne }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="potTwo" label="发酵罐号2" width="150px" />
+                    <el-table-column prop="potTwo" label="发酵罐号2" min-width="150px" />
                     <el-table-column prop="classes" width="100px">
                         <template slot="header">
                             <i class="reqI">*</i><span>白/中/夜班</span>
@@ -94,7 +94,7 @@
                             {{ scope.row.classes }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="man" show-overflow-tooltip width="210px">
+                    <el-table-column prop="man" show-overflow-tooltip min-width="210px">
                         <template slot="header">
                             <i class="reqI">*</i><span>人员</span>
                         </template>
@@ -102,8 +102,8 @@
                             {{ scope.row.man }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作时间" prop="changed" show-overflow-tooltip width="170px" />
-                    <el-table-column label="操作人" prop="changer" show-overflow-tooltip width="160px" />
+                    <el-table-column label="操作时间" prop="changed" show-overflow-tooltip min-width="170px" />
+                    <el-table-column label="操作人" prop="changer" show-overflow-tooltip min-width="160px" />
                     <el-table-column prop="remark" label="操作" fixed="right">
                         <template slot-scope="scope">
                             <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!isRedact" size="mini" @click="delrow(scope.row)">
@@ -190,10 +190,10 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="cancelsave()">
+                <el-button size="small" @click="cancelsave()">
                     取 消
                 </el-button>
-                <el-button type="primary" @click="addsave('saucesbu')">
+                <el-button type="primary" size="small" @click="addsave('saucesbu')">
                     确 定
                 </el-button>
             </div>

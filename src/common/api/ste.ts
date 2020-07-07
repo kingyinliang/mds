@@ -10,6 +10,10 @@ const STE_API = {
      */
     STE_SPLIT_LIST_API: params => httpProxy('/steOrderSplit/query', 'POST', params),
     /**
+     * @property {string} STE_HOME_LIST_API 杀菌车间-煮料列表-查询
+     */
+    STE_COOKING_POT_QUERY_API: params => httpProxy('/ste/steCookingPot/query', 'POST', params),
+    /**
      * @property {string} STE_DISSOLUTIONBUCKET_QUERY_API 杀菌车间-溶解罐管理-查询
      */
     STE_DISSOLUTIONBUCKET_QUERY_API: params => httpProxy('/steDissolutionPot/query', 'POST', params),

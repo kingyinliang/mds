@@ -1,110 +1,112 @@
 <template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row type="flex">
-                    <el-col :span="18">
-                        <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform multi_row">
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产日期：">
-                                <el-date-picker v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" style="width: 180px;" />
-                            </el-form-item>
-                            <el-form-item label="生产工序：">
-                                <el-select v-model="formHeader.deptId" placeholder="请选择" style="width: 180px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in deptId" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="提交人员：">
-                                <p class="el-input" style="width: 180px;">
-                                    {{ headList.changer }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="提交时间：">
-                                <p class="el-input" style="width: 180px;">
-                                    {{ headList.changed }}
-                                </p>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                    <el-col :span="6" style="font-size: 14px; line-height: 32px;">
-                        <div style=" float: right; overflow: hidden; text-align: left;">
-                            <span
-                                class="point"
-                                :style="{
-                                    background: headList.status === 'noPass' ? 'red' : headList.status === 'saved' ? '#1890f' : headList.status === 'submit' ? '#1890ff' : headList.status === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',
-                                }"
-                            />状态：
-                            <span
-                                :style="{
-                                    color: headList.status === 'noPass' ? 'red' : '',
-                                }"
-                            >{{ headList.status === 'noPass' ? '审核不通过' : headList.status === 'saved' ? '已保存' : headList.status === 'submit' ? '已提交' : headList.status === 'checked' ? '通过' : headList.status === '已同步' ? '未录入' : headList.status }}</span>
-                        </div>
-                        <div style="clear: both;" />
-                        <div style="width: 100%; margin-top: 10px; text-align: right;">
-                            <template style="float: right; margin-left: 10px;">
-                                <el-button v-if="isAuth('prs:timeSheet:list')" type="primary" size="small" @click="GetTimeList">
-                                    查询
-                                </el-button>
-                                <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('prs:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                                    {{ isRedact ? '取消' : '编辑' }}
-                                </el-button>
-                            </template>
-                            <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
-                                <el-button v-if="isAuth('prs:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                                    保存
-                                </el-button>
-                                <el-button v-if="isAuth('prs:timeSheet:update')" type="primary" size="small" @click="SubmitForm">
-                                    提交
-                                </el-button>
-                            </template>
-                        </div>
-                    </el-col>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
+    <div class="header_main">
+        <el-card class="searchCard">
+            <el-row type="flex">
+                <el-col :span="18">
+                    <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform multi_row">
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产日期：">
+                            <el-date-picker v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" style="width: 180px;" />
+                        </el-form-item>
+                        <el-form-item label="生产工序：">
+                            <el-select v-model="formHeader.deptId" placeholder="请选择" style="width: 180px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in deptId" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="提交人员：">
+                            <p class="el-input" style="width: 180px;">
+                                {{ headList.changer }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="提交时间：">
+                            <p class="el-input" style="width: 180px;">
+                                {{ headList.changed }}
+                            </p>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+                <el-col :span="6" style="font-size: 14px; line-height: 32px;">
+                    <div style=" float: right; overflow: hidden; text-align: left;">
+                        <span
+                            class="point"
+                            :style="{
+                                background: headList.status === 'noPass' ? 'red' : headList.status === 'saved' ? '#1890f' : headList.status === 'submit' ? '#1890ff' : headList.status === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',
+                            }"
+                        />状态：
+                        <span
+                            :style="{
+                                color: headList.status === 'noPass' ? 'red' : '',
+                            }"
+                        >{{ headList.status === 'noPass' ? '审核不通过' : headList.status === 'saved' ? '已保存' : headList.status === 'submit' ? '已提交' : headList.status === 'checked' ? '通过' : headList.status === '已同步' ? '未录入' : headList.status }}</span>
+                    </div>
+                    <div style="clear: both;" />
+                    <div style="width: 100%; margin-top: 10px; text-align: right;">
+                        <template style="float: right; margin-left: 10px;">
+                            <el-button v-if="isAuth('prs:timeSheet:list')" type="primary" size="small" @click="GetTimeList">
+                                查询
+                            </el-button>
+                            <!-- <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('prs:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                                {{ isRedact ? '取消' : '编辑' }}
+                            </el-button> -->
+                        </template>
+                        <!-- <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
+                            <el-button v-if="isAuth('prs:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                                保存
+                            </el-button>
+                            <el-button v-if="isAuth('prs:timeSheet:update')" type="primary" size="small" @click="SubmitForm">
+                                提交
+                            </el-button>
+                        </template> -->
+                    </div>
+                </el-col>
+            </el-row>
+            <div class="toggleSearchBottom">
+                <i class="el-icon-caret-top" />
+            </div>
+        </el-card>
+        <div>
             <div class="tableCard">
                 <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
             </div>
-            <div v-show="searchCard">
+            <div v-show="searchCard" style="margin-top: 5px;">
                 <el-card class="box-cards NewDaatTtabs">
-                    <el-card style=" position: relative; margin-bottom: 10px;" class="readyCard">
-                        <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
-                            <div class="clearfix">
-                                <h3 style=" float: left; font-weight: 600; font-size: 14px; line-height: 32px;">
-                                    准备时间（分钟：min）
-                                </h3>
-                                <el-button type="text" class="readyshiftBtn manHour" name="manHourReady" style="bottom: 15px;">
-                                    收起<i class="el-icon-caret-top" />
-                                </el-button>
-                                <el-form-item label="班次：" style="float: right; margin-right: 60px; margin-bottom: 10px;">
-                                    <el-select v-model="readyTimeDate.classes" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))">
-                                        <el-option label="白班" value="白班" />
-                                        <el-option label="中班" value="中班" />
-                                        <el-option label="夜班" value="夜班" />
-                                        <el-option label="多班" value="多班" />
-                                    </el-select>
-                                </el-form-item>
+                    <mds-card title="准备时间(分钟：min)" :name="'readytimes'">
+                        <template slot="titleBtn">
+                            <div style="float: right;">
+                                <el-select v-model="readyTimeDate.classes" size="small" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))">
+                                    <el-option label="白班" value="白班" />
+                                    <el-option label="中班" value="中班" />
+                                    <el-option label="夜班" value="夜班" />
+                                    <el-option label="多班" value="多班" />
+                                </el-select>
                             </div>
-                            <div class="manHourReadyBox">
+                        </template>
+                        <!-- <template slot="titleBtn">
+                            <el-form-item label="班次：" style="float: right; margin-right: 60px; margin-bottom: 10px;">
+                                <el-select v-model="readyTimeDate.classes" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))">
+                                    <el-option label="白班" value="白班" />
+                                    <el-option label="中班" value="中班" />
+                                    <el-option label="夜班" value="夜班" />
+                                    <el-option label="多班" value="多班" />
+                                </el-select>
+                            </el-form-item>
+                        </template> -->
+                        <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
+                            <div class="manHourReadyBox" style="margin-top: 10px;">
                                 <el-row v-if="readyTimeDate.classes === '白班' || readyTimeDate.classes === '多班' || !readyTimeDate.classes">
                                     <el-form-item label="交接班（白班）：">
                                         <el-input v-model="readyTimeDate.dayChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
@@ -149,16 +151,26 @@
                                 </el-row>
                             </div>
                         </el-form>
-                    </el-card>
-                    <el-card style="margin-bottom: 10px;">
-                        <h3 style=" font-weight: 600; font-size: 14px; line-height: 32px;">
-                            人员(小时:H)
-                        </h3>
-                        <worker ref="workerref" :is-redact="isRedact" :order="userOrder" />
-                    </el-card>
+                    </mds-card>
+                    <worker ref="workerref" :is-redact="isRedact" :order="userOrder" />
                 </el-card>
             </div>
         </div>
+        <redact-box v-if="searchCard">
+            <template slot="button">
+                <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('prs:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
+                    <el-button v-if="isAuth('prs:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('prs:timeSheet:update')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 
