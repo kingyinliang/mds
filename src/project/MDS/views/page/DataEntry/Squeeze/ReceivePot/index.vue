@@ -21,46 +21,52 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card class="searchCard newCard ferCard" style="margin-top: 5px;">
-            <h3 style=" margin-bottom: 8px; color: black;">
-                <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />领用罐列表
-            </h3>
-            <el-row class="dataList" :gutter="10" style="min-height: 150px;">
+        <mds-card title="领用罐列表" :pack-up="false" style="margin-top: 5px;">
+            <el-row class="potList" :gutter="10" style="min-height: 150px;">
                 <el-col v-for="(item, index) in dataList" :key="index" :span="4">
-                    <el-card class="dataList_item" style="padding: 0 !important;">
-                        <h3 class="dataList_item_tit">
-                            {{ item.holderNo }}
-                            <span style="color: #333; font-weight: 400; font-size: 14px;">
-                                -领用中
-                            </span>
-                        </h3>
-                        <div class="dataList_item_pot clearfix" style="position: relative;">
-                            <div class="dataList_item_pot_box">
-                                <div class="dataList_item_pot_box1">
-                                    <div class="dataList_item_pot_box_item1" :style="`height:${item.sumAmount ? (item.sumAmount / item.holderHold) * 100 : 0}%`" />
-                                    <div class="dataList_item_pot_box_detail">
-                                        <p>{{ item.batch }}</p>
-                                        <p>{{ item.materialName }}</p>
-                                        <p>{{ item.FER_DAYS || 0 }}天</p>
-                                        <p> {{ item.sumAmount / 1000 || 0 }}方 </p>
+                    <div class="box">
+                        <div class="box_title">
+                            {{ item.holderNo }}-领用中
+                            <el-button type="primary" size="small" style="float: right; margin-top: -2px; padding: 0 10px; line-height: 24px;" @click="repayPot(item)">
+                                还罐
+                            </el-button>
+                        </div>
+                        <div class="box_content">
+                            <div class="box_content_itemPot">
+                                <div class="pot_border">
+                                    <div class="pot" />
+                                    <div class="pot_water">
+                                        <div
+                                            class="pot_water_sole"
+                                            :style="{'height': (item.sumAmount ? (item.sumAmount / item.holderHold) * 100 : 0) + '%', 'background': '#69C0FF'}"
+                                        />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <el-row class="dataList_item_btn">
-                            <el-col :span="24" class="dataList_item_btn_item">
-                                <p @click="repayPot(item)">
-                                    还罐
-                                </p>
-                            </el-col>
-                        </el-row>
-                    </el-card>
+                        <div class="box_bottom">
+                            <div>
+                                <div class="box_bottom_sole">
+                                    {{ item.materialName }}
+                                </div>
+                                <div class="box_bottom_sole">
+                                    {{ item.FER_DAYS || 0 }}天
+                                </div>
+                                <div class="box_bottom_sole">
+                                    {{ item.batch }}
+                                </div>
+                                <div class="box_bottom_sole">
+                                    {{ item.sumAmount / 1000 || 0 }}方
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </el-col>
             </el-row>
             <el-row>
                 <el-pagination :current-page.sync="formHeader.currPage" :page-size="42" layout="total, prev, pager, next" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
-        </el-card>
+        </mds-card>
     </div>
 </template>
 

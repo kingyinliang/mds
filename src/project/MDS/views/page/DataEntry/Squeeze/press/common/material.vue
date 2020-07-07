@@ -1,20 +1,20 @@
 <template>
     <div>
-        <el-card>
-            <el-table v-if="formHeader.pressure === 1" :data="materialList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
+        <mds-card title="物料领用" :pack-up="false">
+            <el-table v-if="formHeader.pressure === 1" class="newTable" :data="materialList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
                 <el-table-column fixed="left" type="selection" width="50" />
-                <el-table-column label="工序" width="50">
+                <el-table-column label="工序" min-width="50">
                     预压
                 </el-table-column>
-                <el-table-column :key="Math.random()" width="150" prop="deviceName" show-overflow-tooltip>
+                <el-table-column :key="Math.random()" min-width="150" prop="deviceName" show-overflow-tooltip>
                     <template slot="header">
                         <i class="reqI">*</i><span>气垫车号</span>
                     </template>
                 </el-table-column>
-                <el-table-column :key="Math.random()" label="布浆线" prop="deptName" width="85" />
-                <el-table-column label="布浆结束时间" prop="pulpEndDate" width="150" :show-overflow-tooltip="true" />
-                <el-table-column :key="Math.random()" label="自淋时间(H)" prop="drenchTime" width="120" />
-                <el-table-column :key="Math.random()" width="120">
+                <el-table-column :key="Math.random()" label="布浆线" prop="deptName" min-width="85" />
+                <el-table-column label="布浆结束时间" prop="pulpEndDate" min-width="150" :show-overflow-tooltip="true" />
+                <el-table-column :key="Math.random()" label="自淋时间(H)" prop="drenchTime" min-width="120" />
+                <el-table-column :key="Math.random()" min-width="120">
                     <template slot="header">
                         <i class="reqI">*</i><span>预压机号</span>
                     </template>
@@ -24,7 +24,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column :key="Math.random()" width="195">
+                <el-table-column :key="Math.random()" min-width="195">
                     <template slot="header">
                         <i class="reqI">*</i><span>预压开始时间</span>
                     </template>
@@ -32,7 +32,7 @@
                         <el-date-picker v-model="scope.row.prePressStart" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 172px;" :disabled="!isRedact" @input="changePrePress(scope.row)" />
                     </template>
                 </el-table-column>
-                <el-table-column :key="Math.random()" width="200">
+                <el-table-column :key="Math.random()" min-width="200">
                     <template slot="header">
                         <i class="reqI">*</i><span>预压结束时间</span>
                     </template>
@@ -40,13 +40,13 @@
                         <el-date-picker v-model="scope.row.prePressEnd" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 172px;" :disabled="!isRedact" @input="changePrePress(scope.row)" />
                     </template>
                 </el-table-column>
-                <el-table-column :key="Math.random()" label="预压时间(H)" prop="prePressTime" width="110" />
-                <el-table-column v-if="formHeader.workShopName === '压榨二车间'" :key="Math.random()" label="终止压力(Mpa)" width="180">
+                <el-table-column :key="Math.random()" label="预压时间(H)" prop="prePressTime" min-width="110" />
+                <el-table-column v-if="formHeader.workShopName === '压榨二车间'" :key="Math.random()" label="终止压力(Mpa)" min-width="180">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.endPress" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column v-if="formHeader.workShopName === '压榨二车间'" :key="Math.random()" label="调压人员" width="150" :show-overflow-tooltip="true">
+                <el-table-column v-if="formHeader.workShopName === '压榨二车间'" :key="Math.random()" label="调压人员" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <el-col v-if="!scope.row.suitOperator">
                             <span :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">
@@ -57,21 +57,21 @@
                         <span v-else :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">{{ scope.row.suitOperator }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="挪笼人员" prop="moveOperator" :show-overflow-tooltip="true" width="150" />
+                <el-table-column label="挪笼人员" prop="moveOperator" :show-overflow-tooltip="true" min-width="150" />
             </el-table>
             <el-table v-if="formHeader.pressure === 2" :data="materialList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
-                <el-table-column fixed="left" type="selection" width="40" />
-                <el-table-column label="工序" width="50">
+                <el-table-column fixed="left" type="selection" min-width="40" />
+                <el-table-column label="工序" min-width="50">
                     终压
                 </el-table-column>
-                <el-table-column :key="Math.random()" width="150" prop="deviceName" show-overflow-tooltip>
+                <el-table-column :key="Math.random()" min-width="150" prop="deviceName" show-overflow-tooltip>
                     <template slot="header">
                         <i class="reqI">*</i><span>气垫车号</span>
                     </template>
                 </el-table-column>
-                <el-table-column :key="Math.random()" label="布浆线" prop="deptName" width="85" />
-                <el-table-column label="布浆结束时间" prop="pulpEndDate" width="150" :show-overflow-tooltip="true" />
-                <el-table-column :key="Math.random()" width="120">
+                <el-table-column :key="Math.random()" label="布浆线" prop="deptName" min-width="85" />
+                <el-table-column label="布浆结束时间" prop="pulpEndDate" min-width="150" :show-overflow-tooltip="true" />
+                <el-table-column :key="Math.random()" min-width="120">
                     <template slot="header">
                         <i class="reqI">*</i><span>终压机号</span>
                     </template>
@@ -81,7 +81,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column :key="Math.random()" width="195">
+                <el-table-column :key="Math.random()" min-width="195">
                     <template slot="header">
                         <i class="reqI">*</i><span>终压开始时间</span>
                     </template>
@@ -89,7 +89,7 @@
                         <el-date-picker v-model="scope.row.pressStart" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 172px;" :disabled="!isRedact" @input="changendPrePress(scope.row)" />
                     </template>
                 </el-table-column>
-                <el-table-column :key="Math.random()" width="200">
+                <el-table-column :key="Math.random()" min-width="200">
                     <template slot="header">
                         <i class="reqI">*</i><span>终压结束时间</span>
                     </template>
@@ -97,13 +97,13 @@
                         <el-date-picker v-model="scope.row.pressEnd" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" size="small" style="width: 172px;" :disabled="!isRedact" @input="changendPrePress(scope.row)" />
                     </template>
                 </el-table-column>
-                <el-table-column :key="Math.random()" label="终压时间(H)" prop="pressTime" width="110" />
+                <el-table-column :key="Math.random()" label="终压时间(H)" prop="pressTime" min-width="110" />
                 <el-table-column v-if="formHeader.workShopName === '压榨二车间'" :key="Math.random()" label="终止压力(Mpa)">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.press" size="small" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column v-if="formHeader.workShopName === '压榨二车间'" :key="Math.random()" label="调压人员" width="150" :show-overflow-tooltip="true">
+                <el-table-column v-if="formHeader.workShopName === '压榨二车间'" :key="Math.random()" label="调压人员" min-width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <el-col v-if="!scope.row.suitOperator">
                             <span :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">
@@ -114,8 +114,8 @@
                         <span v-else :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">{{ scope.row.suitOperator }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column :key="Math.random()" label="挪笼人员" prop="moveOperator" :show-overflow-tooltip="true" width="150" />
-                <el-table-column v-if="formHeader.workShopName === '压榨二车间'" :key="Math.random()" width="180">
+                <el-table-column :key="Math.random()" label="挪笼人员" prop="moveOperator" :show-overflow-tooltip="true" min-width="150" />
+                <el-table-column v-if="formHeader.workShopName === '压榨二车间'" :key="Math.random()" min-width="180">
                     <template slot="header">
                         <i class="reqI">*</i><span>压榨二碎布数（个）</span>
                     </template>
@@ -134,7 +134,7 @@
                     <el-input v-model="formInline.destoryNumWest" :disabled="!isRedact" size="small" />
                 </el-form-item>
             </el-form>
-        </el-card>
+        </mds-card>
         <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
             <el-row>
                 <el-col style="width: 500px;">
