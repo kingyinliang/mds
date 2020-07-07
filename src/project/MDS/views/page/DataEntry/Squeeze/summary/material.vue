@@ -1,11 +1,6 @@
 <template>
     <div>
-        <mds-card title="步浆信息" name="SumDate">
-            <template slot="titleBtn">
-                <el-button type="primary" style="float: right;" size="small" :disabled="true">
-                    酱醪领用
-                </el-button>
-            </template>
+        <mds-card title="布浆总量" name="SumDate">
             <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="SumDate" :row-class-name="RowDelFlag" @row-dblclick="GetLog">
                 <el-table-column label="原汁信息">
                     <el-table-column label="状态" width="95">
@@ -126,11 +121,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-row class="clearfix">
-                <p style="float: left; font-size: 14px;">
-                    布浆总量：
-                </p>
-            </el-row>
         </mds-card>
         <audit-log :table-data="MaterialAudit" />
     </div>
