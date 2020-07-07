@@ -18,7 +18,19 @@
                             </el-button>
                         </div>
                         <div style="padding: 10px;">
-                            <el-table ref="targetInfoList" header-row-class-name="tableHead" row-key="index" :data="targetInfoList" highlight-current-row border tooltip-effect="dark" class="newTable" size="small" @row-click="getChildItemList">
+                            <el-table
+                                ref="targetInfoList"
+                                header-row-class-name="tableHead"
+                                row-key="index"
+                                :data="targetInfoList"
+                                :height="mainClientHeight - 62 - 94 - 20 - 47"
+                                highlight-current-row
+                                border
+                                tooltip-effect="dark"
+                                class="newTable"
+                                size="small"
+                                @row-click="getChildItemList"
+                            >
                                 <el-table-column type="index" width="50" label="序号" fixed />
                                 <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" />
                                 <el-table-column prop="dictType" :show-overflow-tooltip="true" label="参数类型编码" width="110" />
@@ -50,7 +62,7 @@
                             </el-button>
                         </h5>
                         <div style="padding: 10px;">
-                            <el-table ref="targetParameterList" header-row-class-name="tableHead" :data="targetParameterList" border tooltip-effect="dark" class="newTable" size="small">
+                            <el-table ref="targetParameterList" header-row-class-name="tableHead" :data="targetParameterList" :height="mainClientHeight - 62 - 94 - 20 - 47" border tooltip-effect="dark" class="newTable" size="small">
                                 <el-table-column type="index" width="50" label="序号" fixed />
                                 <el-table-column prop="factoryName" :show-overflow-tooltip="true" label="工厂" width="100" />
                                 <el-table-column prop="dictType" :show-overflow-tooltip="true" label="参数类型编码">
@@ -76,8 +88,8 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
+                            <el-pagination v-if="targetParameterList.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalCount" @size-change="handlePageSizeChange" @current-change="handleCurrentPageChange" />
                         </div>
-                        <el-pagination v-if="targetParameterList.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalCount" @size-change="handlePageSizeChange" @current-change="handleCurrentPageChange" />
                     </div>
                 </el-col>
             </el-row>
@@ -100,6 +112,9 @@ import { COMMON_API } from 'common/api/api';
 
 
 export default class Index extends Vue {
+    get mainClientHeight() {
+        return this.$store.state.common.mainClientHeight;
+    }
 
     title='数据字典'
 

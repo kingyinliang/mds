@@ -11,12 +11,12 @@
         >
             <template slot="home">
                 <el-row class="home_card__main" :gutter="10">
-                    <el-col v-for="(item, index) in queryResultList" :key="index" :span="8" style="margin-bottom: 10px;">
+                    <el-col v-for="(item, index) in queryResultList" :key="index" :span="8" style=" min-width: 396px; margin-bottom: 10px;">
                         <el-form :model="item" size="small" label-position="right" label-width="85px">
                             <div class="home_card__main__item">
                                 <div class="home_card__main__item__title clearfix">
                                     <p class="home_card__main__item__title__left">
-                                        锅号：<span class="home_card__main__item__title__left__proLine">{{ item.productLineName }}</span>锅
+                                        锅号：<span class="home_card__main__item__title__left__proLine">{{ item.potNo }}</span>锅
                                     </p>
                                     <p v-if="item.activeOrderNo!==''" class="home_card__main__item__title__right">
                                         <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatusValue : '' }}</span>
@@ -32,28 +32,32 @@
                                     </div>
                                     <div class="home_card__main__item__main__right">
                                         <el-form-item label="生产订单：">
-                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" style="width: 100%;" @change="orderchange(item)">
-                                                <el-option v-for="(subItem, subIndex) in item.orderNoList" :key="subIndex" :label="subItem" :value="subItem" />
+                                            <el-select v-model="item.orderNo" placeholder="请选择" style="width: 100%;" @change="orderchange(item)">
+                                                <el-option v-for="(subItem, subIndex) in item.splitOrders" :key="subIndex" :label="subItem.orderNo" :value="subItem.id" />
                                             </el-select>
                                         </el-form-item>
                                         <el-form-item label="生产物料：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : '' }}</span>
+                                                <el-tooltip class="item" effect="dark" :content=" item.orderNoMap? `${item.orderNoMap.materialCode} ${item.orderNoMap.materialName}` : ''" placement="top">
+                                                    <span class="el-input__inner">{{ item.orderNoMap? `${item.orderNoMap.materialCode} ${item.orderNoMap.materialName}` : '' }}</span>
+                                                </el-tooltip>
                                             </div>
                                         </el-form-item>
                                         <el-form-item label="生产锅序：">
-                                            <el-select v-model="item.activeOrderNo" placeholder="请选择" style="width: 100%;" @change="orderchange(item)">
-                                                <el-option v-for="(subItem, subIndex) in item.orderNoList" :key="subIndex" :label="subItem" :value="subItem" />
+                                            <el-select v-model="item.potOrder" placeholder="请选择" style="width: 100%;" @change="potOrderChange(item)">
+                                                <span v-if="item.orderNoMap">
+                                                    <el-option v-for="(subItem, subIndex) in item.orderNoMap['potOrders']" :key="subIndex" :label="subItem.potOrder" :value="subItem.id" />
+                                                </span>
                                             </el-select>
                                         </el-form-item>
                                         <el-form-item label="计划锅数：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">1</span>
+                                                <span class="el-input__inner">{{ item.orderNoMap? item.orderNoMap.potCount : '' }}</span>
                                             </div>
                                         </el-form-item>
                                         <el-form-item label="生产锅数：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">1</span>
+                                                <span class="el-input__inner">{{ item.orderNoMap? item.orderNoMap.productPotCount : '' }}</span>
                                             </div>
                                         </el-form-item>
                                     </div>
@@ -91,10 +95,10 @@
 
     @Component
     export default class Sterilize extends Vue {
-        queryResultList: SteObj[] = [{}];
+        queryResultList: SteObj[] = [];
         rules = [
             {
-                prop: 'workshop',
+                prop: 'workShop',
                 text: '请选择生产车间'
             }
         ];
@@ -103,7 +107,7 @@
             {
                 type: 'select',
                 label: '生产车间',
-                prop: 'workshop',
+                prop: 'workShop',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -132,7 +136,7 @@
             {
                 type: 'input',
                 label: '生产锅号',
-                prop: 'guoNo'
+                prop: 'potNo'
             }
         ];
 
@@ -145,7 +149,21 @@
         };
 
         setData(data) {
-            console.log(data);
+            if (data.data) {
+                this.queryResultList = data.data
+            } else {
+                this.$infoToast('暂无任何内容');
+            }
+        }
+
+        orderchange(item) {
+            const filterArr: (any) = item.splitOrders.filter(it => it.id === item.orderNo);// eslint-disable-line
+            item.orderNoMap = filterArr[0];
+        }
+
+        potOrderChange(item) {
+            const filterArr: (any) = item.orderNoMap.potOrders.filter(it => it.id === item.potOrder);// eslint-disable-line
+            item.potOrderMap = filterArr[0];
         }
 
         goCraft() {
