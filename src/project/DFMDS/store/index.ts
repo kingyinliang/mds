@@ -4,6 +4,7 @@ import VuexPersistence from 'vuex-persist';
 import common from './modules/common';
 import user from './modules/user';
 import packaging from './modules/packaging';
+import sterilize from './modules/sterilize';
 
 Vue.use(Vuex);
 const vuexLocal = new VuexPersistence({
@@ -13,7 +14,8 @@ export default new Vuex.Store({
     modules: {
         common,
         user,
-        packaging
+        packaging,
+        sterilize
     },
     plugins: [vuexLocal.plugin]
 });

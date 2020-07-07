@@ -56,7 +56,6 @@
     import Material from '../common/Material.vue';
     import ProductPeople from '../common/ProductPeople.vue';
     import PendingNum from '../common/PendingNum.vue';
-    import TextRecord from '../common/TextRecord.vue';
     import ProductInStorage from '../common/ProductInStorage.vue';
     import Equipment from '../common/Equipment.vue';
 
@@ -66,7 +65,6 @@
             ReadyTime,
             ProductPeople,
             PendingNum,
-            TextRecord,
             Material,
             ProductInStorage,
             Equipment
@@ -223,6 +221,12 @@
                 this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptName;
                 this.formHeader.orderId = this.formHeader.id;
                 this.$refs.readyTime.init(this.formHeader);
+                this.$refs.productPeople.init(this.formHeader);
+                this.$refs.equipment.init(this.formHeader);
+                this.$refs.productInStorage.init(this.formHeader);
+                this.$refs.material.init(this.formHeader);
+                this.$refs.pendingNum.init(this.formHeader);
+                this.$refs.textRecord.init(this.formHeader);
             })
         }
 

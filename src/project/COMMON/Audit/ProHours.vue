@@ -18,7 +18,7 @@
                     <i class="title-icon" />
                     <span>报工列表</span>
                     <div style="float: right;">
-                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 120px; margin-right: 10px;" />
+                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <el-button type="primary" size="small" @click="pass">
                             过账
                         </el-button>
@@ -33,7 +33,7 @@
                     <i class="title-icon" />
                     <span>报工列表</span>
                     <div style="float: right;">
-                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 120px; margin-right: 10px;" />
+                        <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <el-button type="primary" size="small" class="sub-yellow" @click="writeOffsDialog">
                             反审
                         </el-button>
@@ -179,9 +179,13 @@
                 redact: true
             },
             {
-                type: 'input',
+                type: 'select',
                 redact: true,
                 header: true,
+                resVal: {
+                    label: 'label',
+                    value: 'value'
+                },
                 prop: 'finConf',
                 label: '部分/最后确认',
                 width: '120'
@@ -196,7 +200,7 @@
                 prop: 'interfaceReturn',
                 label: '接口回写'
             }
-        ]
+        ];
 
         $refs: {
             queryTable: HTMLFormElement;
@@ -205,7 +209,7 @@
         auditLogData = [] // 审核日志
         ReText = '' // 退回原因
         BackText = '' // 反审原因
-        postingDate = '' // 过账日期
+        postingDate = dateFormat(new Date(), 'yyyy-MM-dd'); // 过账日期
         visibleAuditLog = false // 审核日志弹窗
         visibleRefuse = false // 退回原因弹窗
         visibleBack = false // 反审原因弹窗
@@ -215,7 +219,7 @@
             {
                 type: 'select',
                 label: '生产车间',
-                prop: 'workshop',
+                prop: 'workShop',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -319,6 +323,16 @@
             }
         ];
 
+        mounted() {
+            this.$refs.queryTable.optionLists.finConf = [{
+                label: '完全报工',
+                value: 'X'
+            }, {
+                label: '部分报工',
+                value: ''
+            }]
+        }
+
         // 查询请求
         listInterface = params => {
             params.passStatus = this.$refs.queryTable.activeName * 1;// eslint-disable-line
@@ -384,7 +398,7 @@
             if (!row.redact) {
                 row.redact = true;
             } else {
-                if (!row.execStartDate || !row.setupFinDate || !row.operation || !row.finConf) {
+                if (!row.execStartDate || !row.setupFinDate || !row.operation) {
                     this.$warningToast('请填写必填项')
                     return false
                 }

@@ -1,8 +1,10 @@
 import httpProxy from 'utils/net/httpProxy';
 
-import auditApi from './audit'
-import pkgApi from './pkg'
-import steApi from './ste'
+import basicApi from './basic';
+import auditApi from './audit';
+import pkgApi from './pkg';
+import steApi from './ste';
+import messageApi from './message';
 
 export const COMMON_API = {
     /**
@@ -378,20 +380,43 @@ export const COMMON_API = {
     /**
      * @property {string} 根据工厂和父级名称模糊查询指定类型的子级
      */
-    SYS_CHILDTYPE_API: params => httpProxy('/sysDept/childType', 'POST', params)
+    SYS_CHILDTYPE_API: params => httpProxy('/sysDept/childType', 'POST', params),
+    /**
+     * @property {string} 辅料前处理 - 新增
+     */
+    PRE_MATERIAL_INSERT_API: params => httpProxy('/ste/stePreAccessories/insert', 'POST', params),
+    /**
+     * @property {string} 辅料前处理 - 修改
+     */
+    PRE_MATERIAL_UPDATE_API: params => httpProxy('/ste/stePreAccessories/update', 'POST', params),
+    /**
+    * @property {string} 辅料前处理 - 查询
+    */
+    PRE_MATERIAL_LIST_API: params => httpProxy('/ste/stePreAccessories/query', 'POST', params),
+    /**
+    * @property {string} 辅料前处理 - 删除
+    */
+    PRE_MATERIAL_REMOVE_API: params => httpProxy('/ste/stePreAccessories/remove', 'POST', params),
+    /**
+     * @property {string} 特殊辅料属性 - 新增
+     */
+    SPECIAL_MATERIAL_INSERT_API: params => httpProxy('/ste/steSpeAccessories/insert', 'POST', params),
+    /**
+     * @property {string} 特殊辅料属性 - 修改
+     */
+    SPECIAL_MATERIAL_UPDATE_API: params => httpProxy('/ste/steSpeAccessories/update', 'POST', params),
+    /**
+    * @property {string} 特殊辅料属性 - 查询
+    */
+    SPECIAL_MATERIAL_LIST_API: params => httpProxy('/ste/steSpeAccessories/query', 'POST', params),
+    /**
+    * @property {string} 特殊辅料属性 - 删除
+    */
+    SPECIAL_MATERIAL_REMOVE_API: params => httpProxy('/ste/steSpeAccessories/remove', 'POST', params)
 };
 
-export const MSG_API = {
-    /**
-     * @property {string}  MSG_QUERY_API 消息管理-消息查询
-     */
-    MSG_QUERY_API: params => httpProxy('/msg/query', 'POST', params),
-    /**
-     * @property {string}  MSG_READ_API 消息管理-标记已读
-     */
-    MSG_READ_API: params => httpProxy('/msg/read', 'POST', params)
-};
-
+export const BASIC_API = basicApi;
+export const MSG_API = messageApi;
 export const AUDIT_API = auditApi;
 export const PKG_API = pkgApi;
 export const STE_API = steApi;

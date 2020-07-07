@@ -16,7 +16,7 @@
                                 <el-input v-model="OrgDetail.deptCode" :disabled="true" auto-complete="off" style="width: 250px;" />
                             </el-form-item>
                             <el-form-item label="部门名称：">
-                                <el-input v-model="OrgDetail.deptName" :disabled="true" auto-complete="off" style="width: 250px;" />
+                                <el-input v-model="OrgDetail.deptName" :disabled="isRedact" auto-complete="off" style="width: 250px;" />
                             </el-form-item>
                             <el-form-item label="上级部门：">
                                 <el-input v-model="OrgDetail.parentName" :disabled="true" auto-complete="off" style="width: 250px;" />

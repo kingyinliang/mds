@@ -11,7 +11,7 @@
             <el-form ref="ruleForm" :model="ruleForm">
                 <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" border tooltip-effect="dark" size="small">
                     <el-table-column type="index" label="序号" width="50px" fixed />
-                    <el-table-column label="生产日期" prop="productDate" width="180">
+                    <el-table-column label="生产日期" prop="productDate" width="210">
                         <template slot="header">
                             <span class="notNull">* </span>生产日期
                         </template>
@@ -21,9 +21,9 @@
                                 type="date"
                                 placeholder="选择日期"
                                 size="small"
-                                style="width: 140px;"
-                                value-format="yyyy-MM-dd HH:mm"
-                                format="yyyy.MM.dd HH:mm"
+                                style="width: 180px;"
+                                value-format="yyyy-MM-dd"
+                                format="yyyy.MM.dd"
                                 :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
                             />
                         </template>
@@ -269,6 +269,10 @@
 
         // 提交时跑校验
         ruleSubmit() {
+            if (this.currentFormDataGroup.filter(it => it.delFlag !== 1).length === 0) {
+                this.$warningToast('请录入生产入库');
+                return false
+            }
             for (const item of this.currentFormDataGroup.filter(it => it.delFlag !== 1)) {
                 if (!item.productDate || !item.classes || !item.batch || !item.inStorageCount || !item.inStorageUnit) {
                     this.$warningToast('请填写生产入库必填项');
@@ -276,18 +280,6 @@
                 }
             }
             return true
-            // }
-            // this.$refs['ruleForm'].validate((valid) => {
-            //     if (valid) {
-            //         console.log('submit!!');
-            //         return true
-            //     }
-            //         this.$warningToast('请填写生产入库必填项');
-            //         return false;
-
-            //     });
-
-
         }
 
         // 加工校验 ruleForm
@@ -295,8 +287,6 @@
             currentFormDataGroup.forEach((item, index) => {
                 this.$set(ruleForm, 'r' + index, item)
             })
-            console.log('ruleForm')
-            console.log(ruleForm)
         }
 
         savedData(formHeader) {
@@ -370,9 +360,18 @@
             const inStorageBadUnitRatio: number = row.inStorageBadUnit === this.unitOptions[0].key ? 1 : this.ratio
             const sampleUnitRatio: number = row.sampleUnit === this.unitOptions[0].key ? 1 : this.ratio
             const outputUnitRatio: number = row.outputUnit === this.unitOptions[0].key ? 1 : this.ratio
-            const num = Number(_.add(_.add((row.inStorageCount * inStorageUnitRatio), (row.inStorageBadCount * inStorageBadUnitRatio)), (row.sampleCount * sampleUnitRatio)) / outputUnitRatio)
+            const num = Number(_.add(_.add((row.inStorageCount * inStorageUnitRatio), (row.inStorageBadCount * inStorageBadUnitRatio)), (row.sampleCount * sampleUnitRatio)))
+
             this.currentFormDataGroup[index].output = num
-            return num
+
+            let finalNum = 0
+            if (num % outputUnitRatio === 0) {
+                finalNum = _.divide(num / outputUnitRatio)
+            } else {
+                finalNum = _.divide(num / outputUnitRatio).toFixed(2)
+            }
+
+            return finalNum
         }
 
         get computedTotal(): number {
