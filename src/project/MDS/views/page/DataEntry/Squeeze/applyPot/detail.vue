@@ -1,153 +1,127 @@
 <template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row>
-                    <el-col>
-                        <div style="line-height: 40px;">
-                            <i style=" float: left; font-size: 22px;" class="iconfont factory-shouqicaidan" /><span style=" margin-left: 12px; font-weight: 600; font-size: 16px;">申请基本信息</span>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row type="flex">
-                    <el-col class="header-form" :span="24">
-                        <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="100px" class="topform multi_row">
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="formHeader.factory" class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('factory')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="formHeader.workShop" class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('workshop')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="酱醪名称：">
-                                <el-select v-model="formHeader.materialCode" filterable class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('material')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="半成品类别：" label-width="100px">
-                                <el-select v-model="formHeader.halfType" filterable class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('halfType')">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="sole in halfTypeList" :key="sole.halfType" :label="sole.halfName" :value="sole.halfType" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="申请数量：" label-width="100px">
-                                <el-input v-model.number="formHeader.amount" type="number" size="small" style="width: 140px;" :disabled="!isEdit" />
-                            </el-form-item>
-                            <el-form-item label="生产日期：">
-                                <el-date-picker v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" :disabled="!isEdit" />
-                            </el-form-item>
-                            <el-form-item label="申请编号：">
-                                <p class="header-form_input">
-                                    {{ formHeader.applyNo }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="申请时间：">
-                                <p class="header-form_input">
-                                    {{ formHeader.changed }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="订单状态：">
-                                <p class="header-form_input">
-                                    {{ formHeader.status === 'saved' ? '已保存' : formHeader.status === 'submit' ? '已提交' : formHeader.status }}
-                                </p>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="24">
-                        <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="100px" class="topform">
-                            <el-form-item label="备注：">
-                                <el-input v-model.trim="formHeader.remark" type="textarea" :rows="3" style="width: 500px;" :disabled="!isEdit" placeholder="请输入内容" />
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-                <el-row style="text-align: right;" class="buttonCss">
-                    <template style="float: right; margin-left: 10px;">
-                        <el-button v-if="isAuth('fer:openHolder:mySaveOrUpdate')" type="primary" size="small" :disabled="!isEdit" @click="save()">
-                            保存
-                        </el-button>
-                        <el-button v-if="isAuth('fer:openHolder:submit')" type="primary" size="small" :disabled="!isEdit" @click="submit()">
-                            提交
-                        </el-button>
+    <div class="header_main">
+        <mds-card title="申请基本信息" name="applyDetail">
+            <el-row type="flex">
+                <el-col class="header-form" :span="24">
+                    <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="100px" class="topform multi_row">
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="formHeader.factory" class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('factory')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="formHeader.workShop" class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('workshop')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="酱醪名称：">
+                            <el-select v-model="formHeader.materialCode" filterable class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('material')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in materialList" :key="sole.materialCode" :label="sole.materialCode + ' ' + sole.materialName" :value="sole.materialCode" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="半成品类别：" label-width="100px">
+                            <el-select v-model="formHeader.halfType" filterable class="selectwpx" style="width: 140px;" :disabled="!isEdit" @change="changeOptions('halfType')">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in halfTypeList" :key="sole.halfType" :label="sole.halfName" :value="sole.halfType" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="申请数量：" label-width="100px">
+                            <el-input v-model.number="formHeader.amount" type="number" size="small" style="width: 140px;" :disabled="!isEdit" />
+                        </el-form-item>
+                        <el-form-item label="生产日期：">
+                            <el-date-picker v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" style="width: 140px;" :disabled="!isEdit" />
+                        </el-form-item>
+                        <el-form-item label="申请编号：">
+                            <p class="header-form_input">
+                                {{ formHeader.applyNo }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="申请时间：">
+                            <p class="header-form_input">
+                                {{ formHeader.changed }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="订单状态：">
+                            <p class="header-form_input">
+                                {{ formHeader.status === 'saved' ? '已保存' : formHeader.status === 'submit' ? '已提交' : formHeader.status }}
+                            </p>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="24">
+                    <el-form :model="formHeader" size="small" :inline="true" label-position="right" label-width="100px" class="topform">
+                        <el-form-item label="备注：">
+                            <el-input v-model.trim="formHeader.remark" type="textarea" :rows="2" style="width: 500px;" :disabled="!isEdit" placeholder="请输入内容" />
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </mds-card>
+        <mds-card title="申请反馈信息" name="applyFeedback">
+            <el-table class="newTable" header-row-class-name="tableHead" :data="detailList" border tooltip-effect="dark">
+                <el-table-column type="index" label="序号" width="55" fixed />
+                <el-table-column label="申请编码" min-width="140">
+                    <template slot-scope="scope">
+                        {{ scope.row.applyNo }}
                     </template>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <div class="tableCard">
-                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-                <el-card>
-                    <el-row>
-                        <div style="line-height: 40px;">
-                            <i style=" float: left; font-size: 22px;" class="iconfont factory-shouqicaidan" /><span style=" margin-left: 12px; font-weight: 600; font-size: 16px;">申请反馈信息</span>
-                        </div>
-                    </el-row>
-                    <el-row>
-                        <el-table header-row-class-name="tableHead" :data="detailList" border tooltip-effect="dark">
-                            <el-table-column type="index" label="序号" width="55" fixed />
-                            <el-table-column label="申请编码" width="140">
-                                <template slot-scope="scope">
-                                    {{ scope.row.applyNo }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="罐号" :show-overflow-tooltip="true" width="120">
-                                <template slot-scope="scope">
-                                    {{ scope.row.holderName }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="订单类型" :show-overflow-tooltip="true" width="120">
-                                <template slot-scope="scope">
-                                    {{ scope.row.orderTypeName }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="发酵天数/天" :show-overflow-tooltip="true" width="100">
-                                <template slot-scope="scope">
-                                    {{ scope.row.ferDays }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="半成品类别" :show-overflow-tooltip="true" width="130">
-                                <template slot-scope="scope">
-                                    {{ scope.row.halfType }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="批次" width="110">
-                                <template slot-scope="scope">
-                                    {{ scope.row.batch }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="备注" width="140">
-                                <template slot-scope="scope">
-                                    {{ scope.row.remark }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="确认人员" width="150">
-                                <template slot-scope="scope">
-                                    {{ scope.row.changer }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="确认时间" :show-overflow-tooltip="true">
-                                <template slot-scope="scope">
-                                    {{ scope.row.changed }}
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </el-row>
-                </el-card>
-            </div>
-        </div>
+                </el-table-column>
+                <el-table-column label="罐号" :show-overflow-tooltip="true" min-width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.holderName }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单类型" :show-overflow-tooltip="true" min-width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.orderTypeName }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="发酵天数/天" :show-overflow-tooltip="true" min-width="100">
+                    <template slot-scope="scope">
+                        {{ scope.row.ferDays }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="半成品类别" :show-overflow-tooltip="true" min-width="130">
+                    <template slot-scope="scope">
+                        {{ scope.row.halfType }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="批次" min-width="110">
+                    <template slot-scope="scope">
+                        {{ scope.row.batch }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注" min-width="130">
+                    <template slot-scope="scope">
+                        {{ scope.row.remark }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="确认人员" min-width="150">
+                    <template slot-scope="scope">
+                        {{ scope.row.changer }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="确认时间" min-width="170" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.changed }}
+                    </template>
+                </el-table-column>
+            </el-table>
+        </mds-card>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="isAuth('fer:openHolder:mySaveOrUpdate')" type="primary" size="small" :disabled="!isEdit" @click="save()">
+                    保存
+                </el-button>
+                <el-button v-if="isAuth('fer:openHolder:submit')" type="primary" size="small" :disabled="!isEdit" @click="submit()">
+                    提交
+                </el-button>
+            </template>
+        </redact-box>
     </div>
 </template>
 
