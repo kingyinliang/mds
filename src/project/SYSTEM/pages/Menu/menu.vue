@@ -7,14 +7,14 @@
                 </el-button>
             </template>
             <el-table class="newTable" header-row-class-name="tableHead" :height="mainClientHeight - 64" :data="dataList" border tooltip-effect="dark" style="width: 100%;">
-                <table-tree-column prop="menuName" header-align="left" width="150" :show-overflow-tooltip="true" label="名称" />
-                <el-table-column prop="parentName" header-align="left" align="left" width="100" :show-overflow-tooltip="true" label="上级菜单" />
-                <el-table-column header-align="left" align="left" :show-overflow-tooltip="true" label="图标">
+                <table-tree-column prop="menuName" header-align="left" min-width="150" :show-overflow-tooltip="true" label="名称" />
+                <el-table-column prop="parentName" header-align="left" align="left" min-width="100" :show-overflow-tooltip="true" label="上级菜单" />
+                <el-table-column header-align="left" align="left" width="100" :show-overflow-tooltip="true" label="图标">
                     <template slot-scope="scope">
                         <i class="iconfont" :class="scope.row.menuIcon" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="type" header-align="left" align="left" :show-overflow-tooltip="true" label="类型">
+                <el-table-column prop="type" header-align="left" align="left" min-width="100" :show-overflow-tooltip="true" label="类型">
                     <template slot-scope="scope">
                         <el-tag v-if="scope.row.menuType === 'C'" size="small">
                             目录
@@ -34,7 +34,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="menuOrder" header-align="left" align="left" width="80" :show-overflow-tooltip="true" label="排序号" />
-                <el-table-column prop="menuUrl" header-align="left" align="left" width="180" :show-overflow-tooltip="true" label="菜单URL" />
+                <el-table-column prop="menuUrl" header-align="left" align="left" min-width="200" :show-overflow-tooltip="true" label="菜单URL" />
                 <el-table-column prop="permission" header-align="left" align="left" width="180" :show-overflow-tooltip="true" label="授权标识" />
                 <el-table-column fixed="right" header-align="left" align="left" width="88" label="操作">
                     <template slot-scope="scope">

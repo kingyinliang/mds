@@ -32,26 +32,6 @@ const mainRoutes: RouteConfig = {
             component: importTarget('COMMON/500'),
             name: '500',
             meta: { title: '500' }
-        },
-        {
-            path: '/DFMDS-pages-Message',
-            component: importTarget('DFMDS/pages/Message/index'),
-            name: 'DFMDS-pages-Message',
-            meta: {
-                menuId: 2,
-                title: 'Message',
-                isTab: true
-            }
-        },
-        {
-            path: '/detail',
-            component: importTarget('DFMDS/pages/Packaging/Audit/detail'),
-            name: 'detail',
-            meta: {
-                menuId: 1,
-                title: 'detail',
-                isTab: true
-            }
         }
     ],
     beforeEnter(to, from, next) {
@@ -84,7 +64,7 @@ router.beforeEach((to, from, next) => {
             router['options'].isAddDynamicMenuRoutes = true;
             sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'));
             sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'));
-            return next(Object.assign({}, to, { replace: true }));
+            return next(Object.assign({}, to, { replace: true }) as object);
         }
         sessionStorage.setItem('menuList', '[]');
         sessionStorage.setItem('permissions', '[]');

@@ -109,7 +109,10 @@
             {
                 prop: 'materialName',
                 label: '生产物料 ',
-                width: '120'
+                width: '120',
+                formatter: (row) => {
+                    return row.productMaterialCode + ' ' + row.productMaterialName;
+                }
             },
             {
                 prop: 'planOutput',
@@ -190,14 +193,14 @@
                 prop: 'interfaceReturn',
                 label: '接口回写'
             }
-        ]
+        ];
 
         $refs: {
             queryTable: HTMLFormElement;
         };
 
         // 过账日期
-        pstngDate = new Date().getFullYear().toString() + '-' + (new Date().getMonth() + 1 >= 10 ? (new Date().getMonth() + 1).toString() : '0' + (new Date().getMonth() + 1)) + '-' + (new Date().getDate() >= 10 ? new Date().getDate().toString() : '0' + new Date().getDate())
+        pstngDate = dateFormat(new Date(), 'yyyy-MM-dd');
         headerText = '' //抬头文本
         dialogTitle = '' //退回或反审弹窗title
         refuseOrWriteOffsText = ''//退回或反审原因
@@ -391,18 +394,24 @@
                 return false
             }
             if (this.$refs.queryTable.tabs[0].multipleSelection && this.$refs.queryTable.tabs[0].multipleSelection.length) {
+                const list = this.$refs.queryTable.tabs[0].multipleSelection
+                for (const item of list) {
+                    item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                    item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
+                    item.pstngDate = this.pstngDate
+                    item.headerText = this.headerText
+                    if (item.batch !== '' && item.batch !== null) {
+                        if (item.batch.length !== 10) {
+                            this.$warningToast('物料批次长度为10位')
+                            return false;
+                        }
+                    }
+                }
                 this.$confirm('确认过账，是否继续', '过账确认', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    const list = this.$refs.queryTable.tabs[0].multipleSelection
-                    list.forEach(item => {
-                        item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
-                        item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
-                        item.pstngDate = this.pstngDate
-                        item.headerText = this.headerText
-                    });
                     AUDIT_API.PROISSUEPASS_API(list).then(({ data }) => {
                         this.$successToast(data.msg)
                         this.$refs.queryTable.getDataList()
@@ -482,13 +491,19 @@
                     type: 'warning'
                 }).then(() => {
                     const list = this.$refs.queryTable.tabs[1].multipleSelection
-                    list.forEach(item => {
+                    for (const item of list) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
                         item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
                         item.reason = this.refuseOrWriteOffsText
                         item.headerText = this.headerText
                         item.pstngDate = this.pstngDate
-                    });
+                        if (item.batch !== '' && item.batch !== null) {
+                            if (item.batch.length !== 10) {
+                                this.$warningToast('物料批次长度为10位')
+                                return false;
+                            }
+                        }
+                    }
                     AUDIT_API.PROISSUEWRITEOFFS_API(list).then(({ data }) => {
                         this.isRefuseOrWriteOffsDialogShow = false
                         this.$successToast(data.msg);
@@ -509,8 +524,8 @@
                     this.$warningToast('请填写必填项')
                     return false;
                 }
-                if (row.batch.length > 10) {
-                    this.$warningToast('物料批次最大长度为10位')
+                if (row.batch.length !== 10) {
+                    this.$warningToast('物料批次长度为10位')
                     return false;
                 }
                 if (row.stgeLoc.length > 4) {
