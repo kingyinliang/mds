@@ -83,17 +83,33 @@
                     <el-col :span="12">
                         <div class="mod-demo-echarts">
                             <el-card>
-                                <div id="J_chartLineBox" class="chart-box" />
+                                <div id="J_chartLineBox" style="height: 211px;" />
                             </el-card>
                         </div>
                     </el-col>
                     <el-col :span="12">
-                        <el-table class="newTable" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
-                            <el-table-column prop="date" label="班次/标准" />
-                            <el-table-column prop="date" label="标准" />
-                            <el-table-column prop="date" label="白班" />
-                            <el-table-column prop="date" label="夜班" />
-                            <el-table-column prop="date" label="OEE" />
+                        <el-table class="newTable" :data="oeeList" header-row-class-name="tableHead" border tooltip-effect="dark">
+                            <el-table-column prop="name" label="班次/标准" />
+                            <el-table-column label="标准">
+                                <template slot-scope="scope">
+                                    {{ scope.row.standard }}{{ scope.row.standard ? '%' : '' }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="白班">
+                                <template slot-scope="scope">
+                                    {{ scope.row.day }}{{ scope.row.day ? '%' : '' }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="夜班">
+                                <template slot-scope="scope">
+                                    {{ scope.row.night }}{{ scope.row.night ? '%' : '' }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="OEE">
+                                <template slot-scope="scope">
+                                    {{ scope.row.whole }}{{ scope.row.whole ? '%' : '' }}
+                                </template>
+                            </el-table-column>
                         </el-table>
                     </el-col>
                 </el-row>
@@ -135,7 +151,7 @@
                     <el-col :span="12">
                         <div class="mod-demo-echarts">
                             <el-card>
-                                <div id="J_chartLineBoxDiff" class="chart-box" />
+                                <div id="J_chartLineBoxDiff" style="height: 300px;" />
                             </el-card>
                         </div>
                     </el-col>
@@ -202,9 +218,11 @@ export default class AuditDetail extends Vue {
     chartDiffBar: any;
     /* eslint-enable */
     proMaterialDiffList = [];
-    oeeList = [];
+    oeeList: OeeSole[] = [];
     prodPower = {};
     deviceRun = {};
+    // eslint-disable-next-line
+    oeePic: any[] = [['product', '标准', '白班', '夜班', 'OEE']];
 
     mounted() {
         this.auditDetail = this.$store.state.packaging.auditDetail;
@@ -213,7 +231,6 @@ export default class AuditDetail extends Vue {
         this.getProdPower(this.auditDetail);
         this.getDeviceRun(this.auditDetail);
         this.getAudit(this.auditDetail);
-        this.initChartLine();
     }
 
     get sidebarFold() {
@@ -224,6 +241,32 @@ export default class AuditDetail extends Vue {
     getOee(auditDetail) {
         PKG_API.PKG_AUDIT_DETAIL_OEE_API({ orderNo: auditDetail.orderNo }).then(({ data }) => {
             this.oeeList = data.data
+            let i = 0;
+            this.oeeList.map((item: OeeSole) => {
+                if (i === 0) {
+                    item.name = '可用率';
+                } else if (i === 1) {
+                    item.name = '时间稼动率';
+                } else if (i === 2) {
+                    item.name = '性能稼动率';
+                } else if (i === 3) {
+                    item.name = '良品率';
+                } else if (i === 4) {
+                    item.name = '综合效率';
+                } else if (i === 5) {
+                    item.name = '生产效率';
+                }
+                let sole: string[] = [];
+                if (item.name) {
+                    let night = '0'
+                    night = item.night ? item.night : '0';
+                    sole = [item.name, item.standard, item.day, night, item.whole];
+                    this.oeePic.push(sole);
+                }
+                i++;
+            })
+            console.log(this.oeePic)
+            this.initChartLine();
         })
     }
 
@@ -315,7 +358,18 @@ export default class AuditDetail extends Vue {
     initChartLine() {
         const option = {
             color: ['#124BBE', '#2372FF', '#3CB5EC', '#78E6FF'],
-            legend: {},
+            legend: {
+                itemHeight: 12,
+                y: '0px'
+            },
+            grid: {
+                top: '30px',
+                left: '0%',
+                right: '0',
+                bottom: '0',
+                containLabel: true
+                // height: 300
+            },
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -323,15 +377,16 @@ export default class AuditDetail extends Vue {
                 }
             },
             dataset: {
-                source: [
-                    ['product', '标准', '白班', '夜班', 'OEE'],
-                    ['可用率', 43.3, 85.8, 93.7, 1],
-                    ['时间移动率', 83.1, 73.4, 55.1, 2],
-                    ['性能稼动率', 86.4, 65.2, 82.5, 50],
-                    ['良品率', 72.4, 53.9, 39.1, 0],
-                    ['综合效率', 86.4, 65.2, 82.5, 50],
-                    ['生产效率', 72.4, 53.9, 39.1, 0]
-                ]
+                // source: [
+                //     ['product', '标准', '白班', '夜班', 'OEE'],
+                //     ['可用率', 43.3, 85.8, '9', '1'],
+                //     ['时间移动率', 83.1, 73.4, 55.1, 2],
+                //     ['性能稼动率', 86.4, 65.2, 82.5, 50],
+                //     ['良品率', 72.4, 53.9, 39.1, 0],
+                //     ['综合效率', 86.4, 65.2, 82.5, 50],
+                //     ['生产效率', 72.4, 53.9, 39.1, 0]
+                // ]
+                source: this.oeePic
             },
             xAxis: { type: 'category' },
             yAxis: {},
@@ -522,5 +577,12 @@ interface ProMaterialDiff{
     realLoss: string;
     realUseAmount: string;
     useAmount: string;
+}
+interface OeeSole{
+    name?: string;
+    standard: string;
+    day: string;
+    night: string;
+    whole: string;
 }
 </script>
