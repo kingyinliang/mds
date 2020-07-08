@@ -53,7 +53,16 @@
                         {{ holderStatusObject[scope.row.holderStatus] }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="holderArea" label="物理区域" :show-overflow-tooltip="true" width="120" />
+                <el-table-column prop="holderArea" label="物理区域" :show-overflow-tooltip="true" width="120">
+                    <template slot-scope="scope">
+                        {{ workshopaObject[scope.row.holderArea] }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="material" label="生产物料" :show-overflow-tooltip="true" width="120">
+                    <template slot-scope="scope">
+                        {{ workshopaObject[scope.row.material] }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="归属车间" :show-overflow-tooltip="true" width="92">
                     <template slot-scope="scope">
                         {{ workshopaObject[scope.row.deptId] }}
