@@ -8,6 +8,7 @@ import useComponents from 'src/components/index';
 import elementUi from './elementUi';
 import httpProxy from 'utils/net/httpProxy';
 import VueCookie from 'vue-cookie';
+import * as socketApi from 'utils/net/WebSocketConnect';
 
 // common
 import 'element-ui/lib/theme-chalk/index.css';
@@ -41,6 +42,8 @@ Vue.prototype.$successToast = str => {
 Vue.prototype.$infoToast = str => {
     Notification({ title: '提示', message: str, type: 'info' });
 };
+
+Vue.prototype.socketApi = socketApi;
 
 new Vue({
     router,

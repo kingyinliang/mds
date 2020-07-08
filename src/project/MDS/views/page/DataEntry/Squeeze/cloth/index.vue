@@ -25,26 +25,13 @@
                         <el-form-item label="生产日期：">
                             <el-date-picker v-model="formHeader.productDate" type="date" placeholder="选择日期" format="yyyy-MM-dd" value-format="yyyy-MM-dd" class="width180px" />
                         </el-form-item>
+                        <el-form-item style="float: right;">
+                            <el-button v-if="isAuth('prs:pro:materialList')" type="primary" size="small" @click="SearchList">
+                                查询
+                            </el-button>
+                        </el-form-item>
                     </el-form>
                 </el-col>
-            </el-row>
-            <el-row style="text-align: right;">
-                <template style="float: right; margin-left: 10px;">
-                    <el-button v-if="isAuth('prs:pro:materialList')" type="primary" size="small" @click="SearchList">
-                        查询
-                    </el-button>
-                    <el-button v-if="isAuth('prs:pro:updatePro')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                        {{ isRedact ? '取消' : '编辑' }}
-                    </el-button>
-                </template>
-                <template v-if="isRedact" style="float: right; margin-left: 10px;">
-                    <el-button v-if="isAuth('prs:pro:updatePro')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                        保存
-                    </el-button>
-                    <el-button v-if="isAuth('prs:pro:updatePro')" type="primary" size="small" @click="SubmitForm">
-                        提交
-                    </el-button>
-                </template>
             </el-row>
             <div class="toggleSearchBottom">
                 <i class="el-icon-caret-top" />
@@ -54,7 +41,7 @@
             <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                 <i class="el-icon-caret-bottom" />
             </div>
-            <el-tabs id="DaatTtabs" v-model="activeName" class="NewDaatTtabs" type="border-card" style="margin-top: 5px;" :style="{ display: contentshow ? 'block' : 'none' }">
+            <el-tabs id="DaatTtabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" style="margin-top: 5px;" :style="{ display: contentshow ? 'block' : 'none' }">
                 <el-tab-pane name="1" label="物料领用">
                     <Material ref="material" :is-redact="isRedact" :form-header="formHeader" />
                 </el-tab-pane>
@@ -66,6 +53,21 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
+        <redact-box v-if="contentshow">
+            <template slot="button">
+                <el-button v-if="isAuth('prs:pro:updatePro')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact" style="float: right; margin-left: 10px;">
+                    <el-button v-if="isAuth('prs:pro:updatePro')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('prs:pro:updatePro')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 

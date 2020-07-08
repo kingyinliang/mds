@@ -33,7 +33,7 @@
                 </el-menu-item>
             </el-menu>
             <el-button v-if="factoryName!=='系统设置'" type="text" style="float: right;" @click.native="goMessage">
-                <el-badge :value="200" :max="99" class="item">
+                <el-badge :value="messageNum" :max="99" class="item">
                     <i class="iconfont factory-bell" style="font-size: 18px;" />
                 </el-badge>
             </el-button>
@@ -43,6 +43,7 @@
 
 <script>
     import { COMMON_API } from 'common/api/api';
+    import * as socketApi from 'utils/net/WebSocketConnect';
 
     export default {
         name: 'MainTopbar',
@@ -64,7 +65,8 @@
                 gender: '',
                 visible: false,
                 factory: JSON.parse(sessionStorage.getItem('userFactory') || '[]'),
-                factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort
+                factoryName: JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort,
+                messageNum: 0
             };
         },
         computed: {
@@ -111,8 +113,12 @@
                 }
             }
         },
+        created() {
+            socketApi.getSock(this.getConfigResult)
+        },
         mounted() {
             this.gender = sessionStorage.getItem('gender')
+            this.websocketToLogin()
         },
         methods: {
             goMessage() {
@@ -120,7 +126,7 @@
                 this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'DFMDS-pages-Message');
                 setTimeout(() => {
                     this.$router.push({
-                        name: `DFMDS-pages-Message`
+                        name: `DFMDS-pages-Message-index`
                     });
                 }, 100);
 
@@ -134,6 +140,11 @@
                         .list[0].url.slice(12)
                         .replace(/\//g, '-')}`
                 });
+            },
+            getConfigResult(res) {
+                // 接收回调函数返回数据的方法
+                console.log(res)
+                this.messageNum = res.data
             },
             // 退出
             logoutHandle() {
@@ -152,6 +163,34 @@
                         });
                     })
                     .catch();
+            },
+            websocketToLogin() {
+                // 【agentData：发送的参数；this.getConfigResult：回调方法】
+                let key
+                if (process.env.VUE_APP_ENV === 'development') {
+                    key = 0
+                } else if (process.env.VUE_APP_ENV === 'test') {
+                    key = 1
+                } else {
+                    key = 2
+                }
+                const wsObject = [{
+                        url: 'wss://n2j6guq05a.execute-api.cn-north-1.amazonaws.com.cn/dev',
+                        appid: 'df-mds-dev',
+                        channel: 'df-mds-business-msg-dev'
+                    }, {
+                        url: 'wss://3nieh13pk3.execute-api.cn-north-1.amazonaws.com.cn/test',
+                        appid: 'df-mds-test',
+                        channel: 'df-mds-business-msg-test'
+                    }, {
+                        url: 'wss://95po8swao3.execute-api.cn-north-1.amazonaws.com.cn/prod',
+                        appid: 'df-mds-prod',
+                        channel: 'df-mds-business-msg-prod'
+                    }]
+
+                const url = `${wsObject[key].url}?appid=${wsObject[key].appid}&channel=${wsObject[key].channel}&flag=${sessionStorage.getItem('loginUserId')}`
+                console.log(url)
+                socketApi.createWebSocket(url)
             }
         }
     };
@@ -173,6 +212,6 @@
     }
     .item {
         margin-top: 10px;
-        margin-right: 40px;
+        margin-right: 20px;
     }
 </style>

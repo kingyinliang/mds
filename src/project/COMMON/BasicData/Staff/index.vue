@@ -6,6 +6,7 @@
             :right-tile="'人员'"
             :type="'table'"
             @treeNodeClick="showOrgDetail"
+            @getTreeSuccess="setDeptId"
         >
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
@@ -25,7 +26,7 @@
                     <el-table-column type="index" label="序号" :index="indexMethod" width="50" fixed />
                     <el-table-column prop="workNum" label="人员工号" width="120" />
                     <el-table-column prop="realName" label="人员姓名" width="100" />
-                    <el-table-column prop="deptName" label="所属部门" width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="deptName" label="所属部门" width="180" :show-overflow-tooltip="true" />
                     <el-table-column prop="sex" label="性别" :show-overflow-tooltip="true" width="60" :formatter="sexFormatter" />
                     <el-table-column prop="post" label="职务" :show-overflow-tooltip="true" width="160" />
                     <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="true" width="260" />
@@ -77,12 +78,12 @@ export default {
             return this.$store.state.common.mainClientHeight;
         }
     },
-    mounted() {
-        // 进页面预设根目录内容
-        this.deptID = '1';
-        this.getItemsList();
-    },
     methods: {
+        setDeptId(data) {
+            this.deptID = data[0].id;
+            this.deptName = data[0].deptName;
+            this.getItemsList()
+        },
         // 序号
         indexMethod(index) {
             return index + 1 + (Number(this.currPage) - 1) * (Number(this.pageSize));
@@ -122,7 +123,8 @@ export default {
                 this.multipleSelection = [];
                 this.targetInfoList = data.data.records;
                 this.targetInfoList.forEach(item => {
-                    item.deptName = item.sysDept.deptName;
+                    item.deptName = this.deptName;
+                    // item.deptName = item.sysDept.deptName;
                 })
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;

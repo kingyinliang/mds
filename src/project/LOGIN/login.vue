@@ -66,7 +66,7 @@
 import { COMMON_API } from 'common/api/api';
 import { LoginAnimation } from './loginCanvas';
 import SelectFactory from 'src/layout/main/SelectFactory';
-
+import { Loading } from 'element-ui';
 export default {
     name: 'Login',
     components: {
@@ -164,6 +164,24 @@ export default {
     mounted() {
         const canvas = new LoginAnimation(this.$);
         canvas.init();
+        // RDM 跳转用
+        if (window.location.href.indexOf('?') !== -1) {
+            console.log(window.location.href.split('?')[1].split('=')[1])
+            const url = decodeURIComponent(window.location.href.split('?')[1].split('=')[1]);
+            // const url = decodeURIComponent(window.location.href.split('#')[0].split('?')[1].split('=')[1]);
+            const urlData = JSON.parse(url);
+
+            const loading = Loading.service({
+                lock: true,
+                text: '加载中……',
+                background: 'rgba(255, 255, 255, 0.7)'
+            });
+            setTimeout(() => {
+                this.loginSuccess(urlData)
+                loading.close();
+            }, 3000);
+
+        }
     },
     methods: {
         play() {
@@ -200,31 +218,37 @@ export default {
                 if (valid) {
                     COMMON_API.LOGIN_API({
                         userName: this.ruleForm2.user,
-                        password: this.ruleForm2.pass
+                        password: this.ruleForm2.pass,
+                        loginSystem: 'MDS'
                     }).then(({ data }) => {
                         if (data.code === 200) {
-                            this.$cookie.set('token', data.data.token);
-                            sessionStorage.setItem('userId', data.data.uid || '');
-                            sessionStorage.setItem('userFactory', JSON.stringify(data.data.userFactory || '[]'));
-                            sessionStorage.setItem('userName', data.data.userName || '');
-                            sessionStorage.setItem('realName', data.data.realName || '');
-                            sessionStorage.setItem('gender', data.data.sex || 'M');
-                            sessionStorage.setItem('defaultFactory', data.data.defaultFactory || '');
-                            if (data.data.firstFlag === '1') {
-                                this.visible = true;
-                                this.factory = data.data.userFactory
-                            } else if (data.data.defaultFactory) {
-                                const dfFa = data.data.userFactory.filter(item => item.deptCode === data.data.defaultFactory)[0]
-                                this.$refs.selectfactory.goFa(dfFa)
-                            } else {
-                                this.selectFactory(data.data)
-                            }
+                            this.loginSuccess(data.data);
                         }
                     });
                 } else {
                     return false;
                 }
             });
+        },
+        loginSuccess(data) {
+            this.$cookie.set('token', data.token);
+            sessionStorage.setItem('userId', data.uid || '');
+            sessionStorage.setItem('userFactory', JSON.stringify(data.userFactory || '[]'));
+            sessionStorage.setItem('userName', data.userName || '');
+            sessionStorage.setItem('realName', data.realName || '');
+            sessionStorage.setItem('loginUserId', data.id || '');
+            sessionStorage.setItem('gender', data.sex || 'M');
+            sessionStorage.setItem('deptId', data.deptId || '');
+            sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
+            if (data.firstFlag === '1') {
+                this.visible = true;
+                this.factory = data.userFactory
+            } else if (data.defaultFactory) {
+                const dfFa = data.userFactory.filter(item => item.deptCode === data.defaultFactory)[0]
+                this.$refs.selectfactory.goFa(dfFa)
+            } else {
+                this.selectFactory(data)
+            }
         },
         selectFactory(data) {
             this.factory = data.userFactory

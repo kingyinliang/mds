@@ -574,3 +574,13 @@ export function compareObject(x, y) {
     }
     return true;
 }
+
+export function recombineField(arr, field) {
+    const newField: string[] = [];
+    if (arr.length !== 0) {
+        arr.map(item => {
+            newField.push(item[field])
+        })
+    }
+    return newField;
+}
