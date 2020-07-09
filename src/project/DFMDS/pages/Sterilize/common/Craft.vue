@@ -1,18 +1,30 @@
 <template>
     <div>
         <mds-card title="时间(单位:min)" :pack-up="false">
-            <el-form :inline="true" :model="craftData" label-width="100px">
-                <el-form-item label="入料开始时间：">
-                    <el-date-picker v-model="craftData.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" />
+            <el-form :inline="true" :model="craftData" label-width="120px">
+                <el-form-item>
+                    <template slot="label">
+                        <span class="notNull">* </span>入料开始时间：
+                    </template>
+                    <el-date-picker v-model="craftData.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 170px;" />
                 </el-form-item>
-                <el-form-item label="入料结束时间：">
-                    <el-date-picker v-model="craftData.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" />
+                <el-form-item>
+                    <template slot="label">
+                        <span class="notNull">* </span>入料结束时间：
+                    </template>
+                    <el-date-picker v-model="craftData.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 170px;" />
                 </el-form-item>
-                <el-form-item label="升温开始时间：">
-                    <el-date-picker v-model="craftData.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" />
+                <el-form-item>
+                    <template slot="label">
+                        <span class="notNull">* </span>升温开始时间：
+                    </template>
+                    <el-date-picker v-model="craftData.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 170px;" />
                 </el-form-item>
-                <el-form-item label="升温结束时间：">
-                    <el-date-picker v-model="craftData.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" />
+                <el-form-item>
+                    <template slot="label">
+                        <span class="notNull">* </span>升温结束时间：
+                    </template>
+                    <el-date-picker v-model="craftData.expEndDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 170px;" />
                 </el-form-item>
             </el-form>
         </mds-card>

@@ -119,20 +119,13 @@
             </el-table>
             <el-row class="solerow">
                 <div>
-                    标准作业人数：
-                </div>
-                <div class="input_bottom">
-                    {{ standardManpower }}
-                </div>
-                <div>
                     实际作业人数：
                 </div>
-                <div class="input_bottom">
+                <div class="input_border_bg">
                     {{ actualNumber }}
                 </div>
             </el-row>
         </mds-card>
-        <audit-log :table-data="productPeopleAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
         <official-worker v-if="officialWorkerStatus" ref="officialWorker" @changeUser="changeUser" />
         <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :org-tree="orgTree" :arr-list="arrList" @changeUser="changeUser" />
         <temporary-worker v-if="temporaryWorkerStatus" ref="temporaryWorker" @changeUser="changeUser" />
@@ -141,7 +134,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { COMMON_API, PKG_API, AUDIT_API } from 'common/api/api';
+import { COMMON_API } from 'common/api/api';
 import { dateFormat, getUserNameNumber, getDateDiff, accAdd } from 'utils/utils';
 import OfficialWorker from 'components/OfficialWorker.vue';
 import LoanedPersonnel from 'components/LoanedPersonnel.vue';
@@ -159,7 +152,6 @@ import _ from 'lodash';
 
 export default class ProductPeople extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact;
-    @Prop({ type: Array, default: [] }) classesOptions;
     @Prop({ type: String, default: '' }) status;
 
     $refs: {
@@ -179,6 +171,7 @@ export default class ProductPeople extends Vue {
     loanedPersonnelStatus = false;
     temporaryWorkerStatus = false;
     productPeopleAudit = [];
+    classesOptions: object[] = [];
 
     row: CurrentDataTable = {
         userList: []
@@ -186,18 +179,17 @@ export default class ProductPeople extends Vue {
 
     orgTree = [];
     arrList = [];
-    standardManpower = 0;
 
-    async init(formHeader) {
-        PKG_API.PKG_USER_QUERY_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            orderNo: formHeader.orderNo
-        }).then(({ data }) => {
-            if (data.data !== null) {
-                this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data));
-                this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data));
-            }
-        });
+    init() {
+        // PKG_API.PKG_USER_QUERY_API({
+        //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+        //     orderNo: formHeader.orderNo
+        // }).then(({ data }) => {
+        //     if (data.data !== null) {
+        //         this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data));
+        //         this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data));
+        //     }
+        // });
         // 工序
         this.getTeamList()
 
@@ -206,18 +198,13 @@ export default class ProductPeople extends Vue {
 
         // 获取组织结构树
         this.getTree()
-
-        this.getStandardManPower(this.$store.state.packaging.packDetail)
-
-        this.productPeopleAudit = await this.getAudit(formHeader, 'TIMESHEET');
     }
 
-    async getAudit(formHeader, verifyType) {
-        const a = await AUDIT_API.AUDIT_LOG_LIST_API({
-            orderNo: formHeader.orderNo,
-            verifyType: verifyType
-        })
-        return a.data.data
+    // 班次
+    getClassesList() {
+        COMMON_API.DICTQUERY_CLASSLIST_API({}).then(({ data }) => {
+            this.classesOptions = data.data;
+        });
     }
 
     // 保存
@@ -256,7 +243,7 @@ export default class ProductPeople extends Vue {
         COMMON_API.SYS_CHILDTYPE_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             deptType: ['PRODUCT_TEAM'],
-            deptName: '包装'
+            deptName: '杀菌'
         }).then(({ data }) => {
             this.teamList = data.data;
         });
@@ -275,24 +262,23 @@ export default class ProductPeople extends Vue {
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
         }).then(({ data }) => {
             this.orgTree = data.data;
-            // this.arrList = [this.OrgTree[0].children[0].id];
         });
     }
 
     // 获取产能
-    getStandardManPower(formHeader: object) {
-        COMMON_API.CAPACITYLIST_API({
-            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            deptId: formHeader['productLine'],
-            queryDate: formHeader['productDate'],
-            current: 1,
-            size: 10
-        }).then(({ data }) => {
-            if (data.data.records.length !== 0) {
-                this.standardManpower = data.data.records[0]['standardManpower'];
-            }
-        });
-    }
+    // getStandardManPower(formHeader: object) {
+    //     COMMON_API.CAPACITYLIST_API({
+    //         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+    //         deptId: formHeader['productLine'],
+    //         queryDate: formHeader['productDate'],
+    //         current: 1,
+    //         size: 10
+    //     }).then(({ data }) => {
+    //         if (data.data.records.length !== 0) {
+    //             this.standardManpower = data.data.records[0]['standardManpower'];
+    //         }
+    //     });
+    // }
 
     // 新增
     addNewDataRow() {
@@ -413,12 +399,12 @@ export default class ProductPeople extends Vue {
         let currentFormDataGroupNew: CurrentDataTable[] = [];
         currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
         if (currentFormDataGroupNew.length === 0) {
-            this.$warningToast('请填写生产人员页签人员统计');
+            this.$warningToast('人员统计');
             return false
         }
         for (const item of currentFormDataGroupNew) {
             if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || !item.dinner || Number(item.dinner) === 0 || !item.endDate || item.endDate === '') {
-                this.$warningToast('请填写生产人员页签人员统计必填项');
+                this.$warningToast('请填写人员统计必填项');
                 return false
             }
         }
@@ -473,9 +459,6 @@ interface UserTypeListObject {
     line-height: 33px;
     div {
         float: left;
-    }
-    .input_bottom {
-        margin-right: 50px;
     }
 }
 </style>
