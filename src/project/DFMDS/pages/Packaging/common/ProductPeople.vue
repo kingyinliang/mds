@@ -413,12 +413,12 @@ export default class ProductPeople extends Vue {
         let currentFormDataGroupNew: CurrentDataTable[] = [];
         currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
         if (currentFormDataGroupNew.length === 0) {
-            this.$warningToast('请录入生产人员');
+            this.$warningToast('请填写生产人员页签人员统计');
             return false
         }
         for (const item of currentFormDataGroupNew) {
             if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || !item.dinner || Number(item.dinner) === 0 || !item.endDate || item.endDate === '') {
-                this.$warningToast('请填写生产人员必填项');
+                this.$warningToast('请填写生产人员页签人员统计必填项');
                 return false
             }
         }

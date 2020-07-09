@@ -2,7 +2,7 @@
     <div class="header_main">
         <el-card class="searchCard">
             <el-row type="flex">
-                <el-col :span="18">
+                <el-col :span="20">
                     <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform multi_row">
                         <el-form-item label="生产车间：">
                             <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
@@ -32,7 +32,7 @@
                         </el-form-item>
                     </el-form>
                 </el-col>
-                <el-col :span="6" style="font-size: 14px; line-height: 32px;">
+                <el-col :span="4" style="font-size: 14px; line-height: 32px;">
                     <div style=" float: right; overflow: hidden; text-align: left;">
                         <span
                             class="point"

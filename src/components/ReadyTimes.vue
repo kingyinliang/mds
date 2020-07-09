@@ -1,5 +1,5 @@
 <template>
-    <mds-card :title="'准备工时(单位：min)'" :name="'readyTimes'">
+    <mds-card :title="'准备工时(单位：min)'" :name="'readyTimes'" class="header_main" style="padding: 0;">
         <template slot="titleBtn">
             <div style="float: right;">
                 <el-select v-model="currentFormDataGroup.classes" size="small" style="width: 100px;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')">
@@ -12,7 +12,7 @@
                 <h3><i class="point-icon" />{{ classesOptions.length !== 0 ? classesOptions.find((item)=> item.dictCode === 'M').dictValue : '' }}</h3>
             </div>
             <el-row>
-                <el-form :inline="true" :model="currentFormDataGroup" label-width="100px" class="multi_row">
+                <el-form :inline="true" :model="currentFormDataGroup" size="small" label-width="100px" class="multi_row">
                     <el-form-item prop="dayUser">
                         <template slot="label">
                             <span class="notNull">*</span>参与人数：
@@ -65,7 +65,7 @@
                 <h3><i class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'A').dictValue : '' }}</h3>
             </div>
             <el-row>
-                <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
+                <el-form :inline="true" :model="currentFormDataGroup" size="small" label-width="100px" class="multi_row">
                     <el-form-item label="">
                         <template slot="label">
                             <span v-if="currentFormDataGroup.classes === 'A'" class="notNull">*</span> 参与人数：
@@ -110,7 +110,7 @@
                 <h3><i class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'N').dictValue : '' }}</h3>
             </div>
             <el-row>
-                <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
+                <el-form :inline="true" :model="currentFormDataGroup" size="small" label-width="100px" class="multi_row">
                     <el-form-item
                         prop="nightUser"
                     >

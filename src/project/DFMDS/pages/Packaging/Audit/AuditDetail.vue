@@ -93,6 +93,11 @@
                                     {{ scope.row.standard }}{{ scope.row.standard ? '%' : '' }}
                                 </template>
                             </el-table-column>
+                            <el-table-column label="全天">
+                                <template slot-scope="scope">
+                                    {{ scope.row.whole }}{{ scope.row.whole ? '%' : '' }}
+                                </template>
+                            </el-table-column>
                             <el-table-column label="白班">
                                 <template slot-scope="scope">
                                     {{ scope.row.day }}{{ scope.row.day ? '%' : '' }}
@@ -103,33 +108,12 @@
                                     {{ scope.row.night }}{{ scope.row.night ? '%' : '' }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="OEE">
-                                <template slot-scope="scope">
-                                    {{ scope.row.whole }}{{ scope.row.whole ? '%' : '' }}
-                                </template>
-                            </el-table-column>
                         </el-table>
                     </el-col>
                 </el-row>
             </mds-card>
             <mds-card title="设备运行情况" :name="'EquipmentOperation'">
-                <template slot="titleBtn">
-                    <el-row style="float: right;">
-                        <el-form style="float: right;" :inline="true" :model="formHeader" label-width="90px" size="small" class="dataEntry-head-base__form">
-                            <el-form-item label="开始时间：">
-                                <p style="width: 135px;">
-                                    {{ deviceRun.startDate }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="结束时间：">
-                                <p style="width: 135px;">
-                                    {{ deviceRun.endDate }}
-                                </p>
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
-                </template>
-                <el-table class="newTable" :data="deviceRun.exceptionInfo" header-row-class-name="tableHead" border tooltip-effect="dark">
+                <el-table v-show="deviceRun.exceptionInfo.length !== 0" class="newTable" :data="deviceRun.exceptionInfo" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" fixed />
                     <el-table-column prop="classes" label="班次" />
                     <el-table-column prop="stopTypeName" label="停机类型" />
@@ -139,11 +123,21 @@
                     <el-table-column prop="durationUnit" label="单位" />
                     <el-table-column prop="exceptionCount" label="次数" />
                 </el-table>
-                <el-form :inline="true" :model="formHeader" label-width="90px" size="small" class="dataEntry-head-base__form">
-                    <el-form-item label="总运行时间：">
+                <el-form :inline="true" :model="formHeader" label-width="65px" size="small" class="dataEntry-head-base__form">
+                    <el-form-item label="开始时间：">
+                        <p style="width: 135px;">
+                            {{ deviceRun.startDate }}
+                        </p>
+                    </el-form-item>
+                    <el-form-item label="结束时间：">
+                        <p style="width: 135px;">
+                            {{ deviceRun.endDate }}
+                        </p>
+                    </el-form-item>
+                    <el-form-item label="总运行时间：" label-width="80px">
                         <p>{{ deviceRun.deviceRunTime }}(H)</p>
                     </el-form-item>
-                    <el-form-item label="总停线时间：">
+                    <el-form-item label="总停线时间：" label-width="80px">
                         <p>{{ deviceRun.devicePauseTime }}(MIN)</p>
                     </el-form-item>
                 </el-form>
@@ -224,7 +218,7 @@ export default class AuditDetail extends Vue {
     prodPower = {};
     deviceRun = {};
     // eslint-disable-next-line
-    oeePic: any[] = [['product', '标准', '白班', '夜班', 'OEE']];
+    oeePic: any[] = [['product', '标准', '全天', '白班', '夜班']];
 
     mounted() {
         this.auditDetail = this.$store.state.packaging.auditDetail;
@@ -262,7 +256,7 @@ export default class AuditDetail extends Vue {
                 if (item.name) {
                     let night = '0'
                     night = item.night ? item.night : '0';
-                    sole = [item.name, item.standard, item.day, night, item.whole];
+                    sole = [item.name, item.standard, item.whole, item.day, night];
                     this.oeePic.push(sole);
                 }
                 i++;
