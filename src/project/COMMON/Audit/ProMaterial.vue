@@ -501,12 +501,12 @@
                         item.reason = this.refuseOrWriteOffsText
                         item.headerText = this.headerText
                         item.pstngDate = this.pstngDate
-                        if (item.batch !== '' && item.batch !== null) {
-                            if (item.batch.length !== 10) {
-                                this.$warningToast('物料批次长度为10位')
-                                return false;
-                            }
-                        }
+                        // if (item.batch !== '' && item.batch !== null) {
+                        //     if (item.batch.length !== 10) {
+                        //         this.$warningToast('物料批次长度为10位')
+                        //         return false;
+                        //     }
+                        // }
                     }
                     AUDIT_API.PROISSUEWRITEOFFS_API(list).then(({ data }) => {
                         this.isRefuseOrWriteOffsDialogShow = false
