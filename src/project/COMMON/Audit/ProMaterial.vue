@@ -258,6 +258,7 @@
                         dictType: 'ORDER_TYPE'
                     })
                 },
+                filterable: true,
                 defaultValue: '',
                 resVal: {
                     resData: 'data',

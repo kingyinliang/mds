@@ -123,7 +123,7 @@
                     <el-table-column prop="durationUnit" label="单位" />
                     <el-table-column prop="exceptionCount" label="次数" />
                 </el-table>
-                <el-form :inline="true" :model="formHeader" label-width="65px" size="small" class="dataEntry-head-base__form">
+                <el-form :inline="true" :model="formHeader" label-width="70px" size="small" class="dataEntry-head-base__form">
                     <el-form-item label="开始时间：">
                         <p style="width: 135px;">
                             {{ deviceRun.startDate }}
@@ -134,11 +134,11 @@
                             {{ deviceRun.endDate }}
                         </p>
                     </el-form-item>
-                    <el-form-item label="总运行时间：" label-width="80px">
+                    <el-form-item label="总运行时间：" label-width="85px">
                         <p>{{ deviceRun.deviceRunTime }}(H)</p>
                     </el-form-item>
-                    <el-form-item label="总停线时间：" label-width="80px">
-                        <p>{{ deviceRun.devicePauseTime }}(MIN)</p>
+                    <el-form-item label="总停线时间：" label-width="85px">
+                        <p>{{ deviceRun.devicePauseTime !== null ? deviceRun.devicePauseTime : 0 }}(MIN)</p>
                     </el-form-item>
                 </el-form>
             </mds-card>
@@ -216,7 +216,9 @@ export default class AuditDetail extends Vue {
     proMaterialDiffList = [];
     oeeList: OeeSole[] = [];
     prodPower = {};
-    deviceRun = {};
+    deviceRun = {
+        exceptionInfo: []
+    };
     // eslint-disable-next-line
     oeePic: any[] = [['product', '标准', '全天', '白班', '夜班']];
 
