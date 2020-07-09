@@ -430,7 +430,11 @@
                     });
                     AUDIT_API.INPASS_API(list).then(({ data }) => {
                         this.$successToast(data.msg)
-                        this.$refs.queryTable.getDataList()
+                        this.$refs.queryTable.getDataList(true)
+                    }).catch((err) => {
+                        if (err.data.code === 201) {
+                            this.$refs.queryTable.getDataList(true)
+                        }
                     })
                 })
             }
