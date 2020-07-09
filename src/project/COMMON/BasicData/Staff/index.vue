@@ -122,10 +122,10 @@ export default {
                 }
                 this.multipleSelection = [];
                 this.targetInfoList = data.data.records;
-                this.targetInfoList.forEach(item => {
-                    item.deptName = this.deptName;
-                    // item.deptName = item.sysDept.deptName;
-                })
+                // this.targetInfoList.forEach(item => {
+                //     item.deptName = this.deptName;
+                //     // item.deptName = item.sysDept.deptName;
+                // })
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
