@@ -262,12 +262,28 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
+                    const pkgTimeSheet = this.$refs.readyTime.savedData(this.formHeader);
+                    const pkgUserSaveRequestDto = this.$refs.productPeople.savedData(this.formHeader);
                     const pkgInstorage = this.$refs.productInStorage.savedData(this.formHeader);
+                    const pkgGerms = this.$refs.pendingNum.savedData(this.formHeader);
+                    const pkgText = this.$refs.textRecord.savedData(this.formHeader);
+                    const { pkgDeviceSaveRequestDto, pkgExceptionSaveRequestDto } = this.$refs.equipment.savedData(this.formHeader);
+                    const { pkgPackingMaterial, pkgSemiMaterial } = this.$refs.material.savedData(this.formHeader);
+                    this.formHeader.orderId = this.formHeader.id;
                     return PKG_API.PKG_URGENT_SUBMIT_API({
                         pkgOrderUpdate: this.formHeader,
-                        pkgInstorage
+                        pkgTimeSheet,
+                        pkgUserSaveRequestDto,
+                        pkgDeviceSaveRequestDto,
+                        pkgExceptionSaveRequestDto,
+                        pkgInstorage,
+                        pkgPackingMaterial,
+                        pkgSemiMaterial,
+                        pkgGerms,
+                        pkgText
                     }).then(() => {
                         this.$successToast('提交成功');
+                        this.visible = false;
                     })
                 })
             } else {
