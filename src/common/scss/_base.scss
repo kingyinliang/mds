@@ -1712,3 +1712,26 @@ body {
     }
 }
 /* pot list end */
+.solerow {
+    margin-top: 5px;
+    line-height: 33px;
+    div {
+        float: left;
+        font-size: 12px;
+    }
+    .input_bottom {
+        margin-right: 50px;
+    }
+}
+.input_border_bg {
+    font-size: 12px;
+    width: 120px;
+    height: 32px;
+    padding-left: 8px;
+    border-radius: 4px;
+    background: #f5f5f5;
+    color: #333;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

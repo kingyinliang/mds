@@ -43,14 +43,12 @@
                     <i
                         class="dataEntry-head-title__status"
                         :class="{
-                            noPass: orderStatus === 'noPass',
-                            saved: orderStatus === 'saved',
-                            submit: orderStatus === 'submit',
-                            checked: orderStatus === 'checked',
-                            '': orderStatus === '已同步',
+                            noPass: formHeader.orderStatus === '已退回',
+                            checked: formHeader.orderStatus === '已审核',
+                            '': formHeader.orderStatus === '待审核',
                         }"
                     >
-                        订单状态：{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus === 'toBeAudited' ? '待审核' : orderStatus }}
+                        订单状态：{{ formHeader.orderStatus }}
                     </i>
                 </el-col>
             </el-row>
@@ -119,10 +117,14 @@
                     <el-row style="float: right;">
                         <el-form style="float: right;" :inline="true" :model="formHeader" label-width="90px" size="small" class="dataEntry-head-base__form">
                             <el-form-item label="开始时间：">
-                                <p>{{ deviceRun.startDate }}</p>
+                                <p style="width: 135px;">
+                                    {{ deviceRun.startDate }}
+                                </p>
                             </el-form-item>
                             <el-form-item label="结束时间：">
-                                <p>{{ deviceRun.endDate }}</p>
+                                <p style="width: 135px;">
+                                    {{ deviceRun.endDate }}
+                                </p>
                             </el-form-item>
                         </el-form>
                     </el-row>
@@ -265,7 +267,6 @@ export default class AuditDetail extends Vue {
                 }
                 i++;
             })
-            console.log(this.oeePic)
             this.initChartLine();
         })
     }
@@ -470,26 +471,33 @@ export default class AuditDetail extends Vue {
                     interval: 0,
                     formatter: function(params) {
                         let newParamsName = '';
-                        const paramsNameNumber = params.length;
-                        const provideNumber = 10; // 一行显示几个字
-                        const rowNumber = Math.ceil(paramsNameNumber / provideNumber);
-                        if (paramsNameNumber > provideNumber) {
-                            for (let p = 0; p < rowNumber; p++) {
-                                let tempStr = '';
-                                const start = p * provideNumber;
-                                const end = start + provideNumber;
-                                if (p === rowNumber - 1) {
-                                    tempStr = params.substring(start, paramsNameNumber);
-                                } else {
-                                    tempStr = params.substring(start, end) + '\n';
-                                }
-                                newParamsName += tempStr;
-                            }
-
+                        if (params.length > 12) {
+                            newParamsName = params.substring(0, 10);
                         } else {
                             newParamsName = params;
                         }
-                        return newParamsName
+                        return newParamsName;
+                        // let newParamsName = '';
+                        // const paramsNameNumber = params.length;
+                        // const provideNumber = 10; // 一行显示几个字
+                        // const rowNumber = Math.ceil(paramsNameNumber / provideNumber);
+                        // if (paramsNameNumber > provideNumber) {
+                        //     for (let p = 0; p < rowNumber; p++) {
+                        //         let tempStr = '';
+                        //         const start = p * provideNumber;
+                        //         const end = start + provideNumber;
+                        //         if (p === rowNumber - 1) {
+                        //             tempStr = params.substring(start, paramsNameNumber);
+                        //         } else {
+                        //             tempStr = params.substring(start, end) + '\n';
+                        //         }
+                        //         newParamsName += tempStr;
+                        //     }
+
+                        // } else {
+                        //     newParamsName = params;
+                        // }
+                        // return newParamsName
                     }
                 }
             },
