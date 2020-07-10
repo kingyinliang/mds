@@ -42,7 +42,7 @@
 </template>
 
 <script>
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, MSG_API } from 'common/api/api';
     import * as socketApi from 'utils/net/WebSocketConnect';
 
     export default {
@@ -119,8 +119,19 @@
         mounted() {
             this.gender = sessionStorage.getItem('gender')
             this.websocketToLogin()
+            // 获取消息数字
+            this.getMsgNum()
+
         },
         methods: {
+            getMsgNum() {
+                MSG_API.MSG_UNREAD_TOTAL_API({
+                    userId: sessionStorage.getItem('loginUserId') // 用户消息id列表
+                }).then(({ data }) => {
+                    this.messageNum = data.data
+                });
+            },
+
             goMessage() {
                 // this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
                 this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'DFMDS-pages-Message');
@@ -143,8 +154,10 @@
             },
             getConfigResult(res) {
                 // 接收回调函数返回数据的方法
+                console.log('函数 websocket 接收')
                 console.log(res)
                 this.messageNum = res.data
+                // this.getMsgNum()
             },
             // 退出
             logoutHandle() {
