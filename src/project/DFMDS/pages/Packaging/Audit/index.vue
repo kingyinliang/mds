@@ -244,13 +244,13 @@ export default class AuditIndex extends Vue {
     // 查询请求
     listInterface(params) {
         params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-        let orderStatus = ''
+        let orderStatus: string[] = [];
         if (this.$refs.queryTable.activeName === '0') {
-            orderStatus = 'D';
+            orderStatus = ['D'];
         } else if (this.$refs.queryTable.activeName === '1') {
-            orderStatus = 'C';
+            orderStatus = ['C', 'P'];
         } else {
-            orderStatus = 'R';
+            orderStatus = ['R'];
         }
         params.orderStatus = orderStatus; // eslint-disable-line
         params.current = this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage;// eslint-disable-line
@@ -276,11 +276,11 @@ export default class AuditIndex extends Vue {
                     const params = JSON.parse(JSON.stringify(this.$refs.queryTable.queryForm))
                     params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                     if (index === 0) {
-                        params['orderStatus'] = 'D';
+                        params['orderStatus'] = ['D'];
                     } else if (index === 1) {
-                        params.orderStatus = 'C';
+                        params.orderStatus = ['C', 'P'];
                     } else {
-                        params['orderStatus'] = 'R';
+                        params['orderStatus'] = ['R'];
                     }
                     params.current = 1;
                     params.size = this.$refs.queryTable.tabs[index].pages.pageSize;
