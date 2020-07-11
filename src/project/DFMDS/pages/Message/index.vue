@@ -102,7 +102,6 @@
     export default class PackagingIndex extends Vue {
 
         totalCountFromRead = 1
-
         currPageFromRead = 1
         pageSizeFromRead = 10
         totalCountFromUnread = 1
@@ -111,7 +110,6 @@
 
         unreadNum=0
         readNum=0
-
         readNumStyle=3
 
         daysFlag=[0, 0, 0]
@@ -121,25 +119,15 @@
         realName= sessionStorage.getItem('userName')
         post=sessionStorage.getItem('staff-post')
         deptName=sessionStorage.getItem('staff-location')
-        // iconLib: object={
-        //     '包装车间': 'factory-baozhuang',
-        //     '生管过账': 'factory-shenhe',
-        //     '计划管理': 'factory-icon-test',
-        //     '杀菌车间': 'factory-shajun',
-        //     '基础数据': 'factory-yibiao'
-        // }
 
         iconLib: Icon[]=[]
-        async created() {
-            await this.getIcon()
-        }
 
         mounted() {
+            this.getIcon()
             setTimeout(() => {
                 this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
                 this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
-            }, 2000);
-
+            }, 500);
         }
 
         getIcon() {
@@ -156,7 +144,6 @@
         }
 
         getMsgDataList(current, size, read): void {
-
             let daysFlagTemp = [0, 0, 0]
             if (read === 1) {
                 daysFlagTemp = JSON.parse(JSON.stringify(this.daysFlag))

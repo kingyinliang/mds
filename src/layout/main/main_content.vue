@@ -48,6 +48,15 @@ export default {
         return {};
     },
     computed: {
+        // 关闭当前页签
+        closeTab: {
+            get() {
+                return this.$store.state.common.msgTabAlive;
+            },
+            set(val) {
+                this.$store.commit('common/updateMsgTabAlive', val);
+            }
+        },
         documentClientHeight: {
             get() {
                 return this.$store.state.common.documentClientHeight;
@@ -86,12 +95,30 @@ export default {
             return { minHeight: height + 'px' };
         }
     },
+    watch: {
+        closeTab(newTab) {
+            if (newTab !== false) {
+                this.$store.commit('common/updateMsgTabAlive', false);
+                this.removeTabHandle('DFMDS-pages-Message-index', true);
+                this.$nextTick(() => {
+                    this.$router.push({ name: 'DFMDS-pages-Message-index' });
+                });
+            }
+        }
+    },
     methods: {
         // tabs, 选中tab
         selectedTabHandle(tab) {
             const finalTab = this.mainTabs.filter(item => item.name === tab.name);
             if (finalTab.length >= 1) {
                 this.$router.push({ name: finalTab[0].name });
+            }
+            // 重新加载消息
+            if (tab.name === 'DFMDS-pages-Message-index') {
+                this.removeTabHandle('DFMDS-pages-Message-index', true);
+                this.$nextTick(() => {
+                    this.$router.push({ name: 'DFMDS-pages-Message-index' });
+                });
             }
         },
         // tabs, 删除tab

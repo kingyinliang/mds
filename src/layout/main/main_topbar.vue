@@ -133,15 +133,16 @@
             },
 
             goMessage() {
-                // this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
-                this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'DFMDS-pages-Message');
-                setTimeout(() => {
-                    this.$router.push({
-                        name: `DFMDS-pages-Message-index`
-                    });
-                }, 100);
+                if (this.$store.state.common.mainTabs.find(tabItem => tabItem.name === 'DFMDS-pages-Message-index')) {
+                    this.$store.commit('common/updateMsgTabAlive', true);
+                } else {
+                    setTimeout(() => {
+                        this.$router.push({
+                            name: `DFMDS-pages-Message-index`
+                        });
+                    }, 500);
+                }
 
-                console.log(this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Message'))
 
             },
             goEacharts() {
@@ -156,8 +157,8 @@
                 // 接收回调函数返回数据的方法
                 console.log('函数 websocket 接收')
                 console.log(res)
-                this.messageNum = res.data
-                // this.getMsgNum()
+                //this.messageNum = res.data
+                this.getMsgNum()
             },
             // 退出
             logoutHandle() {
