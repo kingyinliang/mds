@@ -159,10 +159,10 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="materialUnit" label="单位" min-width="30" />
-                            <el-table-column prop="useAmount" label="领用数量" min-width="40" />
-                            <el-table-column prop="realUseAmount" label="实际用量" min-width="40" />
-                            <el-table-column prop="realLoss" label="实际损耗" min-width="40" />
-                            <el-table-column prop="lossRate" label="损耗率" min-width="40" />
+                            <el-table-column prop="useAmount" label="领用数量" min-width="45" />
+                            <el-table-column prop="realUseAmount" label="实际用量" min-width="45" />
+                            <el-table-column prop="realLoss" label="实际损耗" min-width="35" />
+                            <el-table-column prop="lossRate" label="损耗率" min-width="30" />
                         </el-table>
                     </el-col>
                 </el-row>
