@@ -386,10 +386,15 @@
                     this.$warningToast('请填写必填项')
                     return false
                 }
+                const status = row.status;
                 row.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                row.status = null;
                 AUDIT_API.INUPDATE_API(row).then(({ data }) => {
                     this.$successToast(data.msg);
-                    row.redact = false
+                    row.redact = false;
+                    row.status = status
+                }).catch(() => {
+                    row.status = status
                 })
             }
         }

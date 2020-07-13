@@ -337,6 +337,7 @@ export default class AuditDetail extends Vue {
                 workShop: this.formHeader.workShop
             }).then(() => {
                 this.$successToast('操作成功');
+                this.getOrderList();
             })
         })
     }

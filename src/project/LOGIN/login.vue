@@ -239,6 +239,8 @@ export default {
             sessionStorage.setItem('loginUserId', data.id || '');
             sessionStorage.setItem('gender', data.sex || 'M');
             sessionStorage.setItem('deptId', data.deptId || '');
+            sessionStorage.setItem('staff-post', data.post || '');
+            sessionStorage.setItem('staff-location', data.deptName || '');
             sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
             if (data.firstFlag === '1') {
                 this.visible = true;

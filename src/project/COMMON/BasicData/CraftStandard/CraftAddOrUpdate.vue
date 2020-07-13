@@ -1,6 +1,6 @@
 <template>
     <el-dialog :close-on-click-modal="false" :visible.sync="visible" :title="dataForm.id? '修改' : '新增'" width="420px">
-        <el-form :model="dataForm" :rules="dataRule" label-width="140px" size="small">
+        <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="140px" size="small">
             <el-form-item label="物料：" prop="productMaterial">
                 <el-select v-model="dataForm.productMaterial" filterable placeholder="请选择" style="width: 220px;">
                     <el-option v-for="(item, index) in serchSapList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
@@ -49,6 +49,10 @@
     @Component
     export default class CraftAddOrUpdate extends Vue {
         @Prop({ default: [] }) serchSapList: SapObj[];
+
+        $refs: {
+            dataForm: HTMLFormElement;
+        };
 
         visible = false;
         dataForm = {
@@ -99,19 +103,23 @@
         }
 
         dataFormSubmit() {
-            let net;
-            if (this.dataForm.id) {
-                net = BASIC_API.CRAFT_UPDATE_API
-            } else {
-                net = BASIC_API.CRAFT_ADD_API
-            }
-            const filterArr: (any) = this.serchSapList.filter(it => it.materialCode === this.dataForm.productMaterial);// eslint-disable-line
-            this.dataForm.productMaterialName = filterArr[0].materialName;
-            net(this.dataForm).then(({ data }) => {
-                this.visible = false;
-                this.$successToast(data.msg);
-                this.$emit('refreshDataList');
-            });
+            this.$refs.dataForm.validate(valid => {
+                if (valid) {
+                    let net;
+                    if (this.dataForm.id) {
+                        net = BASIC_API.CRAFT_UPDATE_API
+                    } else {
+                        net = BASIC_API.CRAFT_ADD_API
+                    }
+                    const filterArr: (any) = this.serchSapList.filter(it => it.materialCode === this.dataForm.productMaterial);// eslint-disable-line
+                    this.dataForm.productMaterialName = filterArr[0].materialName;
+                    net(this.dataForm).then(({ data }) => {
+                        this.visible = false;
+                        this.$successToast(data.msg);
+                        this.$emit('refreshDataList');
+                    });
+                }
+            })
         }
     }
     interface SapObj {
