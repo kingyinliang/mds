@@ -454,6 +454,19 @@ export default class Equipment extends Vue {
         dataEntryData(formHeader, this.firstFormDataGroup, this.orgFirstFormDataGroup, pkgDeviceSaveRequestDto.ids, pkgDeviceSaveRequestDto.pkgDeviceInsertDtos, pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos);
         dataEntryData(formHeader, this.secondFormDataGroup, this.orgSecondFormDataGroup, pkgExceptionSaveRequestDto.ids, pkgExceptionSaveRequestDto.pkgExceptionInsertDtos, pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos);
 
+        pkgDeviceSaveRequestDto.pkgDeviceInsertDtos.forEach(item => {
+            delete item['stopSituationArray']
+        })
+        pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos.forEach(item => {
+            delete item['stopSituationArray']
+        })
+        pkgExceptionSaveRequestDto.pkgExceptionInsertDtos.forEach(item => {
+            delete item['stopSituationArray']
+        })
+        pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos.forEach(item => {
+            delete item['stopSituationArray']
+        })
+
         return {
             pkgDeviceSaveRequestDto,
             pkgExceptionSaveRequestDto
