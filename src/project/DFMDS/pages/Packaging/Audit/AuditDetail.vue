@@ -22,8 +22,8 @@
                             <p>{{ formHeader.planOutput }} {{ formHeader.reakOutput }}</p>
                         </el-form-item>
                         <el-form-item label="订单日期：">
-                            <el-tooltip class="item" effect="dark" :content="formHeader.orderStartDate + ' ' + formHeader.orderEndDate" placement="top">
-                                <p>{{ formHeader.orderStartDate }} {{ formHeader.orderEndDate }}</p>
+                            <el-tooltip class="item" effect="dark" :content="formHeader.orderStartDate" placement="top">
+                                <p>{{ formHeader.orderStartDate }}</p>
                             </el-tooltip>
                         </el-form-item>
                         <el-form-item label="生产日期：">
