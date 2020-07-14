@@ -133,7 +133,7 @@
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '订单产量',
-                value: ['planOutput', 'realOutput']
+                value: ['planOutput', 'outputUnit']
             },
             {
                 type: 'tooltip',

@@ -131,7 +131,10 @@
             },
             {
                 prop: 'isSample',
-                label: '是否样品'
+                label: '是否样品',
+                formatter: (row) => {
+                    return row.isSample === '0' ? '否' : '是'
+                }
             },
             {
                 prop: 'batch',

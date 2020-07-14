@@ -19,7 +19,7 @@
                             <p>{{ formHeader.orderNo }}</p>
                         </el-form-item>
                         <el-form-item label="订单产量：">
-                            <p>{{ formHeader.planOutput }} {{ formHeader.reakOutput }}</p>
+                            <p>{{ formHeader.planOutput }} {{ formHeader.outputUnit }}</p>
                         </el-form-item>
                         <el-form-item label="订单日期：">
                             <el-tooltip class="item" effect="dark" :content="formHeader.orderStartDate" placement="top">
@@ -180,7 +180,7 @@
                         <el-button type="primary" size="small" @click="goDetail">
                             详情
                         </el-button>
-                        <el-button type="primary" size="small" :disabled="formHeader.orderStatus === '已审核'" @click="pass()">
+                        <el-button type="primary" size="small" :disabled="formHeader.orderStatus === '已审核' || formHeader.orderStatus === '已过账'" @click="pass()">
                             审核通过
                         </el-button>
                     </div>

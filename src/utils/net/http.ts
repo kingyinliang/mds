@@ -21,7 +21,11 @@ const HTTP_RESPONSE_STATE = {
     /**
      * 警告
      */
-    WARNING: 110
+    WARNING: 110,
+    /**
+     * 成功
+     */
+    SAP_ERROR: 201
     // Others failure state
 };
 

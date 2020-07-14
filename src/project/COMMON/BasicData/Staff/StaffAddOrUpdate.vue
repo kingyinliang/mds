@@ -79,6 +79,7 @@ export default {
         return {
             deptID: '',
             deptName: '',
+            factory: '',
             targetID: '',
             isDialogShow: false,
             isOrgTreeShow: false,
@@ -122,9 +123,10 @@ export default {
             this.isDialogShow = false;
         },
         // init
-        init(deptID, deptName, id) {
+        init(deptID, deptName, factory, id) {
             this.deptID = deptID;
             this.deptName = deptName;
+            this.factory = factory;
             if (id) {
                 this.targetID = id;
                 COMMON_API.USER_BATCH_QUERY_API({
@@ -146,6 +148,7 @@ export default {
         setDepartment(event, data) {
             this.dataForm.deptId = data.id;
             this.dataForm.deptName = data.deptName;
+            this.dataForm.factory = data.factory;
             this.isOrgTreeShow = false;
         },
         // 表单提交
@@ -180,7 +183,7 @@ export default {
 
 
                                 COMMON_API.USER_INSERT_API({
-                                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                    factory: this.factory,
                                     deptId: this.dataForm.deptId,
                                     userName: this.dataForm.workNum,
                                     realName: this.dataForm.realName,
