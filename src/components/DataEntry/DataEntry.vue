@@ -81,10 +81,10 @@
                             <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
                                 保存
                             </el-button>
-                            <el-button v-if="ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
-                                提交
-                            </el-button>
                         </template>
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth) && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
+                            提交
+                        </el-button>
                     </div>
                     <div v-else class="redact_btn">
                         <slot name="custom_btn" />
