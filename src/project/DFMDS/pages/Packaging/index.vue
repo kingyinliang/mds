@@ -16,7 +16,7 @@
                             <div class="home_card__main__item">
                                 <div class="home_card__main__item__title clearfix">
                                     <p class="home_card__main__item__title__left">
-                                        产线：<span class="home_card__main__item__title__left__proLine">{{ item.productLineName }}</span>产线
+                                        产线：<span class="home_card__main__item__title__left__proLine">{{ item.productLineName }}</span>
                                     </p>
                                     <p v-if="item.activeOrderNo!==''" class="home_card__main__item__title__right">
                                         <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatusValue : '' }}</span>
@@ -78,6 +78,10 @@
         }
     })
     export default class PackagingIndex extends Vue {
+        $refs: {
+            queryTable: HTMLFormElement;
+        };
+
         queryResultList: PkgObj[] = [];
         checkStatus: object[]=[];
 
@@ -144,6 +148,14 @@
                 text: '请选择生产车间'
             }
         ];
+
+        mounted() {
+            setTimeout(() => {
+                this.$nextTick(() => {
+                    this.$refs.queryTable.getDataList(true)
+                })
+            }, 2000);
+        }
 
         // 查询请求
         listInterface = params => {
