@@ -23,7 +23,7 @@
                                 size="small"
                                 style="width: 180px;"
                                 value-format="yyyy-MM-dd"
-                                format="yyyy.MM.dd"
+                                format="yyyy-MM-dd"
                                 :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
                             />
                         </template>

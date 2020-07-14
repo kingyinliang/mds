@@ -151,8 +151,7 @@
                 label: '物料批次',
                 type: 'input',
                 width: '140',
-                redact: true,
-                header: true
+                redact: true
             },
             {
                 prop: 'stgeLoc',
@@ -236,6 +235,7 @@
                         parentId: val || ''
                     })
                 },
+                defaultValue: '',
                 resVal: {
                     resData: 'data',
                     label: ['deptName'],
@@ -529,10 +529,10 @@
                     this.$warningToast('请填写必填项')
                     return false;
                 }
-                if (row.batch.length !== 10) {
-                    this.$warningToast('物料批次长度为10位')
-                    return false;
-                }
+                // if (row.batch.length !== 10) {
+                //     this.$warningToast('物料批次长度为10位')
+                //     return false;
+                // }
                 if (row.stgeLoc.length > 4) {
                     this.$warningToast('出库库位最大长度为4位')
                     return false;
@@ -557,7 +557,7 @@
 
          // 审核日志
         getAuditLog(row) {
-            console.log(this.$refs.queryTable.activeName)
+            // console.log(this.$refs.queryTable.activeName)
             AUDIT_API.AUDIT_LOG_LIST_API({
                 orderNo: row.orderNo,
                 verifyType: 'MATERIAL'

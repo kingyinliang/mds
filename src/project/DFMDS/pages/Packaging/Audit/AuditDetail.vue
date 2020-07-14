@@ -22,8 +22,8 @@
                             <p>{{ formHeader.planOutput }} {{ formHeader.reakOutput }}</p>
                         </el-form-item>
                         <el-form-item label="订单日期：">
-                            <el-tooltip class="item" effect="dark" :content="formHeader.orderStartDate + ' ' + formHeader.orderEndDate" placement="top">
-                                <p>{{ formHeader.orderStartDate }} {{ formHeader.orderEndDate }}</p>
+                            <el-tooltip class="item" effect="dark" :content="formHeader.orderStartDate" placement="top">
+                                <p>{{ formHeader.orderStartDate }}</p>
                             </el-tooltip>
                         </el-form-item>
                         <el-form-item label="生产日期：">
@@ -159,10 +159,10 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="materialUnit" label="单位" min-width="30" />
-                            <el-table-column prop="useAmount" label="领用数量" min-width="40" />
-                            <el-table-column prop="realUseAmount" label="实际用量" min-width="40" />
-                            <el-table-column prop="realLoss" label="实际损耗" min-width="40" />
-                            <el-table-column prop="lossRate" label="损耗率" min-width="40" />
+                            <el-table-column prop="useAmount" label="领用数量" min-width="45" />
+                            <el-table-column prop="realUseAmount" label="实际用量" min-width="45" />
+                            <el-table-column prop="realLoss" label="实际损耗" min-width="35" />
+                            <el-table-column prop="lossRate" label="损耗率" min-width="30" />
                         </el-table>
                     </el-col>
                 </el-row>
