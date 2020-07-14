@@ -25,7 +25,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="memo" min-width="120" :show-overflow-tooltip="true">
+                <el-table-column prop="memo" min-width="155" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班组/工序
                     </template>
@@ -65,12 +65,12 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" width="220" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" width="215" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" width="140" :show-overflow-tooltip="true">
@@ -81,12 +81,12 @@
                         <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="220" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="215" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="90" label="时长(H)" :show-overflow-tooltip="true">
@@ -99,7 +99,7 @@
                         <el-input v-model="scope.row.remark" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="150" label="操作人" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="145" label="操作人" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.changer }}
                     </template>

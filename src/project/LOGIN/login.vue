@@ -164,24 +164,27 @@ export default {
     mounted() {
         const canvas = new LoginAnimation(this.$);
         canvas.init();
-        // RDM 跳转用
+        // *********** RDM 跳转用  start
         if (window.location.href.indexOf('?') !== -1) {
-            console.log(window.location.href.split('?')[1].split('=')[1])
             const url = decodeURIComponent(window.location.href.split('?')[1].split('=')[1]);
-            // const url = decodeURIComponent(window.location.href.split('#')[0].split('?')[1].split('=')[1]);
             const urlData = JSON.parse(url);
-
-            const loading = Loading.service({
-                lock: true,
-                text: '加载中……',
-                background: 'rgba(255, 255, 255, 0.7)'
-            });
-            setTimeout(() => {
-                this.loginSuccess(urlData)
-                loading.close();
-            }, 3000);
-
+            if (typeof urlData.userFactory.find(item => { return item.id === '482537131483348992' }) !== 'undefined') {
+                const systemTemp = urlData.userFactory.filter(item => { return item.id === '482537131483348992' })
+                urlData.userFactory = systemTemp
+                const loading = Loading.service({
+                    lock: true,
+                    text: '加载中……',
+                    background: 'rgba(255, 255, 255, 0.7)'
+                });
+                setTimeout(() => {
+                    this.loginSuccess(urlData)
+                    loading.close();
+                }, 3000);
+            } else {
+                this.$warningToast('登入失败')
+            }
         }
+        // *********** RDM 跳转用  end
     },
     methods: {
         play() {
