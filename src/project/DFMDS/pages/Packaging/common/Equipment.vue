@@ -125,7 +125,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.stopMode'" :rules="dataRules.stopMode">
-                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeStopModeOption(scope.row)">
+                                <el-select v-model="scope.row.stopMode" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')||scope.row.stopType==='PLAN_HALT'" @change="changeStopModeOption(scope.row)">
                                     <el-option v-for="(item) in stopModeOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
