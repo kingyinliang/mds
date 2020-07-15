@@ -97,7 +97,7 @@
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column width="70">
                     <template slot-scope="scope">
-                        <el-button type="text" :disabled="!(isRedact && status !== '已审核' && status !== '待审核' && status !== '已过账' && scope.row.materialStatus !== '3')" @click="SplitDateS('materialS', scope.row, scope.$index)">
+                        <el-button type="text" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS('materialS', scope.row, scope.$index)">
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
@@ -107,7 +107,7 @@
                         <span class="notNull">* </span>使用锅序
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.sterilizeStorageNo" :disabled="!(isRedact && status !== '已审核' && status !== '待审核' && status !== '已过账' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.sterilizeStorageNo" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="锅号" prop="sterilizePotNo" width="150" :show-overflow-tooltip="true" />
@@ -116,7 +116,7 @@
                         <span class="notNull">* </span>实际用量
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.realUsed" :disabled="!(isRedact && status !== '已审核' && status !== '待审核' && status !== '已过账' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.realUsed" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="开始使用时间" width="195">
@@ -124,17 +124,17 @@
                         <span class="notNull">* </span>开始使用时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" :disabled="!(isRedact && status !== '已审核' && status !== '待审核' && status !== '已过账' && scope.row.materialStatus !== '3')" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.startDate" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="用完时间" prop="batch" width="195">
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" :disabled="!(isRedact && status !== '已审核' && status !== '待审核' && status !== '已过账' && scope.row.materialStatus !== '3')" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.endDate" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark" min-width="140">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.remark" :disabled="!(isRedact && status !== '已审核' && status !== '待审核' && status !== '已过账' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
+                        <el-input v-model="scope.row.remark" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" size="small" placeholder="请输入" />
                     </template>
                 </el-table-column>
                 <el-table-column label="操作人" prop="changer" width="140">
@@ -149,7 +149,7 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && status !== '已审核' && status !== '待审核' && status !== '已过账' && scope.row.materialStatus !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row, 'materialS')">
+                        <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row, 'materialS')">
                             删除
                         </el-button>
                     </template>
