@@ -559,7 +559,7 @@
                 const num = dataArr.reduce((total, currentValue: MaterialMap) => {
                     return total + Number(currentValue.realUseAmount)
                 }, 0);
-                const sumnum = Number(row.startStocks) + Number(row.receiveMaterial) - Number(num);
+                const sumnum = Number(row.startStocks) + Number(row.receiveMaterial) - Number(num) - Number(row.realLoss);
                 dataArr.forEach(item => {
                     item.endStocks = sumnum
                 })

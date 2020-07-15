@@ -296,7 +296,7 @@ export default class OrgStructure extends Vue {
     addOrg() {
         this.$refs['dataForm'].validate(valid => {
             if (valid) {
-                this.addDep.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                this.addDep.factory = this.clickTreeNode.factory;
                 COMMON_API.ADDORG_API(this.addDep).then(({ data }) => {
                     if (data.code === 200) {
                         this.$successToast('操作成功');

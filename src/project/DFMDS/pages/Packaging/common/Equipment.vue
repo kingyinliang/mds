@@ -49,7 +49,7 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <el-table-column label="运行时长(H)" width="120" :show-overflow-tooltip="true">
+                    <el-table-column label="运行时长(H)" width="120" :show-overflow-tooltip="true" placeholder="输入小时">
                         <template slot-scope="scope">
                             {{ operationHour(scope.row,scope.$index) }}
                         </template>
@@ -88,7 +88,7 @@
                 </div>
             </template>
             <el-form ref="ruleSecondForm" :model="ruleSecondForm">
-                <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+                <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
                     <el-table-column label="序号" type="index" width="55" fixed="left" />
                     <el-table-column min-width="130" :show-overflow-tooltip="true">
                         <template slot="header">
