@@ -30,7 +30,7 @@
                 <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :status="tabs[3].status" />
             </template>
             <template slot="5" slot-scope="data">
-                <material ref="material" :is-redact="data.isRedact" />
+                <material ref="material" :is-redact="data.isRedact" :status="tabs[4].status" />
             </template>
             <template slot="6" slot-scope="data">
                 <pending-num ref="pendingNum" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
@@ -284,6 +284,7 @@
                     }).then(() => {
                         this.$successToast('提交成功');
                         this.visible = false;
+                        this.getOrderList()
                     })
                 })
             } else {
