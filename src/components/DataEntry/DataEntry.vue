@@ -74,17 +74,17 @@
                         </span>
                     </div>
                     <div v-if="type === 'entry'" class="redact_btn">
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="isRedact = !isRedact">
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth)" type="primary" size="small" @click="setRedact">
                             {{ isRedact ? '取消' : '编辑' }}
                         </el-button>
                         <template v-if="isRedact || onlySubmit">
                             <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(saveAuth)" type="primary" size="small" @click="savedData('saved')">
                                 保存
                             </el-button>
-                            <el-button v-if="ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
-                                提交
-                            </el-button>
                         </template>
+                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账' && isAuth(redactAuth) && ifSubmit() && isAuth(submitAuth)" type="primary" size="small" @click="submitData">
+                            提交
+                        </el-button>
                     </div>
                     <div v-else class="redact_btn">
                         <slot name="custom_btn" />
@@ -290,6 +290,12 @@
             }
         },
         methods: {
+            setRedact() {
+                if (this.isRedact) {
+                    this.$emit('success');
+                }
+                this.isRedact = !this.isRedact
+            },
             tabClick(val) {
                 this.$refs.tabs.setCurrentName(val.name);
                 this.$emit('tab-click', val);

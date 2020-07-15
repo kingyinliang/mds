@@ -116,7 +116,7 @@
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '订单产量',
-                value: ['planOutput', 'realOutput']
+                value: ['planOutput', 'outputUnit']
             },
             {
                 type: 'p',
@@ -137,7 +137,7 @@
                 value: 'changer'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 icon: 'factory-riqi',
                 label: '提交时间', // 操作时间
                 value: 'changed'

@@ -131,7 +131,10 @@
             },
             {
                 prop: 'isSample',
-                label: '是否样品'
+                label: '是否样品',
+                formatter: (row) => {
+                    return row.isSample === '0' ? '否' : '是'
+                }
             },
             {
                 prop: 'batch',
@@ -235,6 +238,7 @@
                         parentId: val || ''
                     })
                 },
+                defaultValue: '',
                 resVal: {
                     resData: 'data',
                     label: ['deptName'],
@@ -427,12 +431,16 @@
                     type: 'warning'
                 }).then(() => {
                     const list = this.$refs.queryTable.tabs[0].multipleSelection
-                    list.forEach(item => {
+                    for (const item of list) {
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
                         item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
                         item.headerTxt = this.headText
                         item.pstngDate = this.postingDate
-                    });
+                        if (!item.stgeLoc || !item.moveType || !item.stckType) {
+                            this.$warningToast('请填写数据必填项')
+                            return false;
+                        }
+                    }
                     AUDIT_API.INPASS_API(list).then(({ data }) => {
                         this.$successToast(data.msg)
                         this.$refs.queryTable.getDataList(true)
@@ -497,7 +505,7 @@
 
         // 反审确认
         writeOffs() {
-            this.$confirm(`确定反审，是否继续？`, '反审确认', {
+            this.$confirm(`部分数据已经调用SAP接口已入库，请确认sap冲销，确认要反审?`, '反审确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

@@ -16,7 +16,7 @@
                             <div class="home_card__main__item">
                                 <div class="home_card__main__item__title clearfix">
                                     <p class="home_card__main__item__title__left">
-                                        产线：<span class="home_card__main__item__title__left__proLine">{{ item.productLineName }}</span>产线
+                                        产线：<span class="home_card__main__item__title__left__proLine">{{ item.productLineName }}</span>
                                     </p>
                                     <p v-if="item.activeOrderNo!==''" class="home_card__main__item__title__right">
                                         <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatusValue : '' }}</span>
@@ -34,7 +34,9 @@
                                         </el-form-item>
                                         <el-form-item label="生产物料：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : '' }}</span>
+                                                <el-tooltip class="item" effect="dark" :content="item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : ''" placement="top">
+                                                    <span class="el-input__inner">{{ item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : '' }}</span>
+                                                </el-tooltip>
                                             </div>
                                         </el-form-item>
                                         <el-form-item label="订单产量：">
@@ -76,6 +78,10 @@
         }
     })
     export default class PackagingIndex extends Vue {
+        $refs: {
+            queryTable: HTMLFormElement;
+        };
+
         queryResultList: PkgObj[] = [];
         checkStatus: object[]=[];
 
@@ -142,6 +148,14 @@
                 text: '请选择生产车间'
             }
         ];
+
+        mounted() {
+            setTimeout(() => {
+                this.$nextTick(() => {
+                    this.$refs.queryTable.getDataList(true)
+                })
+            }, 2000);
+        }
 
         // 查询请求
         listInterface = params => {

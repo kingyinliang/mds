@@ -64,6 +64,10 @@ http.interceptors.response.use(
             // 成功
             tryHideFullScreenLoading(); // 关闭遮罩
             return Promise.resolve(response);
+        } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.SAP_ERROR) {
+            // 成功
+            tryHideFullScreenLoading(); // 关闭遮罩
+            return Promise.reject(response);
         } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.EXPIRED_TOKEN) {
             Vue['cookie'].delete('token');
             router.options.isAddDynamicMenuRoutes = false;

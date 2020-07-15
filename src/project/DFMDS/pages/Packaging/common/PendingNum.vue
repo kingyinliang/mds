@@ -7,7 +7,7 @@
                 </el-button>
             </div>
         </template>
-        <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+        <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
             <el-table-column label="序号" type="index" width="60" fixed />
             <el-table-column width="100" :show-overflow-tooltip="true">
                 <template slot="header">
