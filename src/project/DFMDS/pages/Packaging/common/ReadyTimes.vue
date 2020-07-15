@@ -307,7 +307,7 @@ export default class ReadyTimes extends Vue {
                 return false
             }
         }
-        if (this.currentFormDataGroup.classes === 'A' || this.currentFormDataGroup.classes === 'D') { // 中
+        if (this.currentFormDataGroup.classes === 'A') { // 中
             if (!this.currentFormDataGroup.midUser || !this.currentFormDataGroup.midShift || !this.currentFormDataGroup.midMeeting || !this.currentFormDataGroup.midPrepaired || !this.currentFormDataGroup.midClear) {
                 this.$warningToast('请填写生产准备页签准备工时必填项');
                 return false

@@ -8,7 +8,9 @@
                             <p>{{ formHeader.workShopName }}</p>
                         </el-form-item>
                         <el-form-item label="生产产线：">
-                            <p>{{ formHeader.productLineName }}</p>
+                            <el-tooltip class="item" effect="dark" :content="formHeader.productLineName" placement="top">
+                                <p>{{ formHeader.productLineName }}</p>
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="生产物料：">
                             <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top">
@@ -62,7 +64,7 @@
                     <el-form-item label="实际产量：">
                         <p>{{ prodPower.countOutput }}</p>
                     </el-form-item>
-                    <el-form-item label="紧急入库产量：" label-width="100px">
+                    <el-form-item v-if="prodPower.urgencyCountOutput !== 0" label="紧急入库产量：" label-width="100px">
                         <p>{{ prodPower.urgencyCountOutput }}</p>
                     </el-form-item>
                     <el-form-item label="差异数量：">
@@ -113,16 +115,6 @@
                 </el-row>
             </mds-card>
             <mds-card title="设备运行情况" :name="'EquipmentOperation'">
-                <el-table v-show="deviceRun.exceptionInfo.length !== 0" class="newTable" :data="deviceRun.exceptionInfo" header-row-class-name="tableHead" border tooltip-effect="dark">
-                    <el-table-column type="index" label="序号" fixed />
-                    <el-table-column prop="classes" label="班次" />
-                    <el-table-column prop="stopTypeName" label="停机类型" />
-                    <el-table-column prop="stopMode" label="停机方式" />
-                    <el-table-column prop="stopSituation" label="异常情况" />
-                    <el-table-column prop="duration" label="时长" />
-                    <el-table-column prop="durationUnit" label="单位" />
-                    <el-table-column prop="exceptionCount" label="次数" />
-                </el-table>
                 <el-form :inline="true" :model="formHeader" label-width="70px" size="small" class="dataEntry-head-base__form">
                     <el-form-item label="开始时间：">
                         <p style="width: 135px;">
@@ -141,6 +133,16 @@
                         <p>{{ deviceRun.devicePauseTime !== null ? deviceRun.devicePauseTime : 0 }}(MIN)</p>
                     </el-form-item>
                 </el-form>
+                <el-table v-show="deviceRun.exceptionInfo.length !== 0" class="newTable" :data="deviceRun.exceptionInfo" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-top: 5px;">
+                    <el-table-column type="index" label="序号" fixed />
+                    <el-table-column prop="classes" label="班次" />
+                    <el-table-column prop="stopTypeName" label="停机类型" />
+                    <el-table-column prop="stopMode" label="停机方式" />
+                    <el-table-column prop="stopSituation" label="异常情况" />
+                    <el-table-column prop="duration" label="时长" />
+                    <el-table-column prop="durationUnit" label="单位" />
+                    <el-table-column prop="exceptionCount" label="次数" />
+                </el-table>
             </mds-card>
             <mds-card title="生产领料差异" :name="'ProductionMaterialDifference'">
                 <el-row :gutter="10">
