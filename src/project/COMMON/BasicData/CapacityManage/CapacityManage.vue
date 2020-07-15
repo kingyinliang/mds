@@ -23,7 +23,7 @@
                 <el-table ref="table1" class="newTable" :data="CapacityList" :height="mainClientHeight - 52 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="50" fixed="left" />
                     <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
-                    <el-table-column prop="workNum" :show-overflow-tooltip="true" label="物料">
+                    <el-table-column prop="workNum" min-width="120" :show-overflow-tooltip="true" label="物料">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                         </template>
@@ -32,7 +32,12 @@
                     <el-table-column prop="designCapacity" label="设计产能" :show-overflow-tooltip="true" width="87" />
                     <el-table-column prop="effectiveCapacity" label="有效产能" :show-overflow-tooltip="true" width="87" />
                     <el-table-column prop="capacityUnit" label="单位" width="50" :show-overflow-tooltip="true" />
-                    <el-table-column prop="standardManpower" label="标配人力" width="80" :show-overflow-tooltip="true" />
+                    <el-table-column prop="standardManpower" label="标配人力" min-width="80" :show-overflow-tooltip="true" />
+                    <el-table-column prop="availableRate" label="可用率" min-width="80" :show-overflow-tooltip="true" />
+                    <el-table-column prop="timeRate" label="时间稼动率" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="performanceRate" label="性能稼动率" min-width="100" :show-overflow-tooltip="true" />
+                    <el-table-column prop="oeeOrOpe" label="生产效率" min-width="80" :show-overflow-tooltip="true" />
+                    <el-table-column prop="yieldRate" label="良品率" min-width="80" :show-overflow-tooltip="true" />
                     <el-table-column prop="startDate" label="有效开始日期" width="110" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.startDate }}
