@@ -6,6 +6,10 @@ const STE_API = {
      */
     STE_HOME_LIST_API: params => httpProxy('/ste/query', 'POST', params),
     /**
+     * @property {string} STE_SEMI_LIST_API 杀菌车间-半成品领用查询
+     */
+    STE_SEMI_LIST_API: params => httpProxy('/ste/steSemiMaterial/query', 'POST', params),
+    /**
      * @property {string} STE_SPLIT_LIST_API 杀菌车间-订单拆分
      */
     STE_SPLIT_LIST_API: params => httpProxy('/steOrderSplit/query', 'POST', params),

@@ -11,7 +11,7 @@
             :tabs="tabs"
         >
             <template slot="1" slot-scope="data">
-                <semi-receive ref="craft" :is-redact="data.isRedact" />
+                <semi-receive ref="semiReceive" :is-redact="data.isRedact" />
             </template>
             <template slot="2" slot-scope="data">
                 <exc-record ref="ExcRecord" :is-redact="data.isRedact" />
@@ -35,6 +35,10 @@
         }
     })
     export default class SemiReceiveIndex extends Vue {
+        $refs: {
+            semiReceive: HTMLFormElement;
+        }
+
         formHeader: OrderData = {};
         headerBase = [
             {
@@ -110,11 +114,11 @@
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo
             }).then(({ data }) => {
-                console.log(data);
                 this.formHeader = data.data;
                 this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptName;
                 this.formHeader.potNo = this.$store.state.sterilize.SemiReceive.potNo;
                 this.formHeader.potOrder = this.$store.state.sterilize.SemiReceive.potOrderMap.potOrder;
+                this.$refs.semiReceive.init();
             })
         }
     }
