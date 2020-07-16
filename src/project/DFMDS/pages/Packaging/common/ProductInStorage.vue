@@ -374,6 +374,16 @@
             return finalNum
         }
 
+        uniquenessClasses() {
+            const classesMap: string[] = [];
+            this.currentFormDataGroup.map((item: CurrentDataTable) => {
+                if (item.classes && item.delFlag !== 1) {
+                    classesMap.push(item.classes);
+                }
+            })
+            return [...new Set(classesMap)];
+        }
+
         get computedTotal(): number {
             let total = 0;
             // if (this.currentFormDataGroup.length !== 0) {
