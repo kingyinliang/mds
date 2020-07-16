@@ -374,6 +374,10 @@ export const COMMON_API = {
      */
     OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params),
     /**
+     * @property {string} OREDER_QUERY_BY_NO_API 根据订单号查询
+     */
+    OREDER_QUERY_BY_NO_API: params => httpProxy('/order/queryByNo', 'GET', params),
+    /**
      * @property {string} OREDER_SYNC_API 字典表班次下拉
      */
     DICTQUERY_CLASSLIST_API: params => httpProxy('/sysDictItem/classes/dropDown', 'GET', params),
