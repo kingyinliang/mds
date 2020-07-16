@@ -366,6 +366,9 @@ export default class Equipment extends Vue {
                 });
                 this.orgFirstFormDataGroup = JSON.parse(JSON.stringify(this.firstFormDataGroup));
                 this.setValidate(this.firstFormDataGroup, this.ruleFirstForm)
+            } else {
+                this.firstFormDataGroup = []
+                this.orgFirstFormDataGroup = []
             }
         });
         await PKG_API.PKG_EXCEPTION_QUERY_API({ // 停机情况-查询
@@ -385,6 +388,9 @@ export default class Equipment extends Vue {
                 this.orgSecondFormDataGroup = JSON.parse(JSON.stringify(this.secondFormDataGroup));
 
                 this.setValidate(this.secondFormDataGroup, this.ruleSecondForm)
+            } else {
+                this.secondFormDataGroup = []
+                this.orgSecondFormDataGroup = []
             }
         });
 
