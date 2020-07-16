@@ -46,7 +46,7 @@
                                         </el-form-item>
                                         <el-form-item label="实际产量：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.activeOrderMap && item.activeOrderMap.realOutput? `${item.activeOrderMap.realOutput} ${item.activeOrderMap.outputUnit}` : `0${item.activeOrderMap.outputUnit}` }}</span>
+                                                <span class="el-input__inner">{{ item.activeOrderMap && item.activeOrderMap.realOutput? `${item.activeOrderMap.realOutput} ${item.activeOrderMap.outputUnit}` : `0 ${item.activeOrderMap.outputUnit}` }}</span>
                                             </div>
                                         </el-form-item>
                                         <div class="home_card__main__item__main__right__btn">
@@ -159,6 +159,12 @@
 
         // 查询请求
         listInterface = params => {
+            if ((params.productDate === '' || !params.productDate) && params.orderNo === '') {
+                this.$warningToast('日期或订单请选填一项');// eslint-disable-line
+                return new Promise((resolve, reject) => {
+                    reject('error') // eslint-disable-line
+                });
+            }
             params.current = 1;
             params.size = 10;
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
