@@ -288,7 +288,13 @@
                     })
                 })
             } else {
-
+                const arr = this.submitRules();
+                for (const rule of arr) {
+                    if (!rule('submit')) {
+                        this.visible = false
+                        return false;
+                    }
+                }
                 // 工时前四个页签校验
                 const pkgTimeSheet = this.$refs.readyTime.currentFormDataGroup;
                 const productPeopleClass = this.$refs.productPeople.uniquenessClasses();
@@ -318,13 +324,6 @@
                     }
                     if (productInStorageClass.length !== 1 || pkgTimeSheet.classes !== productInStorageClass[0]) {
                         this.$warningToast('生产入库页签班次与准备工时不一致');
-                        return false;
-                    }
-                }
-                const arr = this.submitRules();
-                for (const rule of arr) {
-                    if (!rule('submit')) {
-                        this.visible = false
                         return false;
                     }
                 }

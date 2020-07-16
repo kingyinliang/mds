@@ -1,16 +1,16 @@
-const path = require('path')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const StyleLintPlugin = require('stylelint-webpack-plugin')
+const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const StyleLintPlugin = require('stylelint-webpack-plugin');
 
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const IS_PROD = ['production'].includes(process.env.NODE_ENV)
+const IS_PROD = ['production'].includes(process.env.NODE_ENV);
 
-const pagesInfo = require('./pages.config')
+const pagesInfo = require('./pages.config');
 
-const resolve = (dir) => {
-    return path.join(__dirname, './', dir)
-}
+const resolve = dir => {
+    return path.join(__dirname, './', dir);
+};
 
 module.exports = {
     devServer: {
@@ -67,28 +67,28 @@ module.exports = {
             modules: ['src', 'node_modules'],
             alias: {
                 vue$: 'vue/dist/vue.esm.js',
-                'project': resolve('src/project'),
+                project: resolve('src/project'),
                 '@': resolve('src/project/MDS'),
-                'src': resolve('src'),
-                'utils': resolve('src/utils'),
-                'common': resolve('src/common'),
-                'MDS': resolve('src/project/MDS'),
-                'DFMDS': resolve('src/project/DFMDS'),
-            },
+                src: resolve('src'),
+                utils: resolve('src/utils'),
+                common: resolve('src/common'),
+                MDS: resolve('src/project/MDS'),
+                DFMDS: resolve('src/project/DFMDS')
+            }
         },
         plugins: [
             new CopyWebpackPlugin([
                 {
                     from: path.resolve(__dirname, './static'),
                     to: 'static',
-                    ignore: ['.*'],
-                },
+                    ignore: ['.*']
+                }
             ]),
             new StyleLintPlugin({
                 files: ['src/**/*.{vue,html,css,scss,sass,less}'],
                 failOnError: false,
                 cache: true,
-                fix: true,
+                fix: true
             })
         ]
     },
@@ -96,16 +96,16 @@ module.exports = {
         // // 3s白屏
         // config.plugins.delete('prefetch');
         // 修复HMR
-        config.resolve.symlinks(true)
+        config.resolve.symlinks(true);
         // Chunks
         config.optimization.splitChunks({
-            chunks: 'all',// async表示抽取异步模块，all表示对所有模块生效，initial表示对同步模块生效
+            chunks: 'all', // async表示抽取异步模块，all表示对所有模块生效，initial表示对同步模块生效
             cacheGroups: {
                 vendors: {
-                    test: /[\/]node_modules[\/]/,// 指定是node_modules下的第三方包
+                    test: /[\/]node_modules[\/]/, // 指定是node_modules下的第三方包
                     name: 'chunk-vendors',
                     chunks: 'all',
-                    priority: -10   // 抽取优先级
+                    priority: -10 // 抽取优先级
                 },
                 // 抽离自定义工具库
                 utilCommon: {
@@ -124,20 +124,21 @@ module.exports = {
                 .rule('images')
                 .use('url-loader')
                 .loader('url-loader')
-                .tap(options => Object.assign(options, { limit: 1024 }))
+                .tap(options => Object.assign(options, { limit: 1024 }));
         }
         // 添加打包分析
         if (process.env.npm_config_report) {
-            config.plugin('webpack-report').use(BundleAnalyzerPlugin, [{
-                analyzerHost: '127.0.0.1',
-                analyzerPort: 8888,
-                reportFilename: 'report.html',
-                defaultSizes: 'parsed',
-                openAnalyzer: true
-            }])
+            config.plugin('webpack-report').use(BundleAnalyzerPlugin, [
+                {
+                    analyzerHost: '127.0.0.1',
+                    analyzerPort: 8888,
+                    reportFilename: 'report.html',
+                    defaultSizes: 'parsed',
+                    openAnalyzer: true
+                }
+            ]);
         }
         // hash解决缓存
         config.output.filename('[name].[hash].js').end();
     }
-}
-
+};
