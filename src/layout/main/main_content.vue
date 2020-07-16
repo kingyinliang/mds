@@ -48,7 +48,7 @@ export default {
         return {};
     },
     computed: {
-        // 关闭当前页签
+        // 消息管理用 - 关闭当前页签
         closeTab: {
             get() {
                 return this.$store.state.common.msgTabAlive;

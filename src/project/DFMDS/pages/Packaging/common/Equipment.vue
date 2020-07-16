@@ -10,8 +10,8 @@
             </template>
             <el-form ref="ruleFirstForm" :model="ruleFirstForm">
                 <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
-                    <el-table-column label="序号" type="index" width="55" fixed="left" />
-                    <el-table-column min-width="130" :show-overflow-tooltip="true">
+                    <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
+                    <el-table-column width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>班次
                         </template>
@@ -28,22 +28,32 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <el-table-column min-width="370" :show-overflow-tooltip="true">
+                    <el-table-column width="200" :show-overflow-tooltip="true">
                         <template slot="header">
-                            <span class="notNull">*</span>开始时间 - 结束时间
+                            <span class="notNull">*</span>开始时间
                         </template>
                         <template slot-scope="scope">
-                            <el-form-item :prop="'r'+scope.$index+'.date'" :rules="dataRules.date">
+                            <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
+                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="结束时间" width="200">
+                        <template slot="header">
+                            <span class="notNull">*</span>结束时间
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.endDate'" :rules="dataRules.endDate">
                                 <el-date-picker
-                                    v-model="scope.row.date"
-                                    type="datetimerange"
+                                    v-model="scope.row.endDate"
+                                    type="datetime"
                                     size="small"
-                                    start-placeholder="开始时间"
-                                    end-placeholder="结束时间"
                                     value-format="yyyy-MM-dd HH:mm"
                                     format="yyyy-MM-dd HH:mm"
-                                    style="width: 340px;"
-                                    clearable
+                                    :default-value="scope.row.startDate"
+                                    placeholder="选择时间"
+                                    style="width: 180px;"
+                                    :picker-options="pickerOptionsEnd[0][scope.$index]"
                                     :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
                                 />
                             </el-form-item>
@@ -89,7 +99,7 @@
             </template>
             <el-form ref="ruleSecondForm" :model="ruleSecondForm">
                 <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
-                    <el-table-column label="序号" type="index" width="55" fixed="left" />
+                    <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
                     <el-table-column min-width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>班次
@@ -131,22 +141,43 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <el-table-column min-width="370" :show-overflow-tooltip="true">
+                    <el-table-column min-width="200" :show-overflow-tooltip="true">
                         <template slot="header">
-                            <span class="notNull">*</span>开始时间 - 结束时间
+                            <span class="notNull">*</span>开始时间
                         </template>
                         <template slot-scope="scope">
-                            <el-form-item :prop="'r'+scope.$index+'.date'" :rules="dataRules.date">
+                            <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
                                 <el-date-picker
-                                    v-model="scope.row.date"
-                                    type="datetimerange"
+                                    v-model="scope.row.startDate"
+                                    type="datetime"
                                     size="small"
-                                    start-placeholder="开始时间"
-                                    end-placeholder="结束时间"
                                     value-format="yyyy-MM-dd HH:mm"
                                     format="yyyy-MM-dd HH:mm"
-                                    style="width: 340px;"
+                                    placeholder="选择时间"
+                                    style="width: 170px;"
                                     clearable
+                                    :picker-options="pickerOptionsStart[1][scope.$index]"
+                                    :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
+                                />
+                            </el-form-item>
+                        </template>
+                    </el-table-column>
+                    <el-table-column min-width="200" :show-overflow-tooltip="true">
+                        <template slot="header">
+                            <span class="notNull">*</span>结束时间
+                        </template>
+                        <template slot-scope="scope">
+                            <el-form-item :prop="'r'+scope.$index+'.endDate'" :rules="dataRules.endDate">
+                                <el-date-picker
+                                    v-model="scope.row.endDate"
+                                    type="datetime"
+                                    size="small"
+                                    value-format="yyyy-MM-dd HH:mm"
+                                    format="yyyy-MM-dd HH:mm"
+                                    placeholder="选择时间"
+                                    style="width: 170px;"
+                                    clearable
+                                    :picker-options="pickerOptionsEnd[1][scope.$index]"
                                     :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
                                 />
                             </el-form-item>
@@ -196,11 +227,7 @@
                             </el-form-item>
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column label="描述" min-width="180" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
-                        </template>
-                    </el-table-column> -->
+
                     <el-table-column label="备注" min-width="180" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
@@ -361,9 +388,9 @@ export default class Equipment extends Vue {
         }).then(({ data }) => {
             if (data.data !== null) {
                 this.firstFormDataGroup = JSON.parse(JSON.stringify(data.data));
-                this.firstFormDataGroup.forEach(item => {
-                    item.date = [item.startDate as string, item.endDate as string]
-                });
+                // this.firstFormDataGroup.forEach(item => {
+                //     item.date = [item.startDate as string, item.endDate as string]
+                // });
                 this.orgFirstFormDataGroup = JSON.parse(JSON.stringify(this.firstFormDataGroup));
                 this.setValidate(this.firstFormDataGroup, this.ruleFirstForm)
             }
@@ -377,7 +404,7 @@ export default class Equipment extends Vue {
                 this.secondFormDataGroup.forEach(item => {
                     item.fzExceptionCount = false
                     item.fzReasonOptions = false
-                    item.date = [item.startDate as string, item.endDate as string]
+                    // item.date = [item.startDate as string, item.endDate as string]
                     this.changeStopModeDefaultOption(item);
                     this.changeStopReasonDefaultOption(item);
                 });
@@ -414,13 +441,13 @@ export default class Equipment extends Vue {
             return false
         }
         for (const item of this.firstFormDataGroup.filter(it => it.delFlag !== 1)) {
-            if (!item.classes || !item.date) {
+            if (!item.classes || !item.startDate || !item.endDate) {
                 this.$warningToast('请填写运行情况必填项');
                 return false
             }
         }
         for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1)) {
-            if (!item.classes || !item.stopType || !item.stopMode || !item.date || !item.exceptionCount || !item.stopSituation || (!item.stopReason && !item.fzReasonOptions) || (!item.exceptionInfo && item.fzReasonOptions)) {
+            if (!item.classes || !item.stopType || !item.stopMode || !item.startDate || !item.endDate || !item.exceptionCount || !item.stopSituation || (!item.stopReason && !item.fzReasonOptions) || (!item.exceptionInfo && item.fzReasonOptions)) {
                 this.$warningToast('请填写停机情况必填项');
                 return false
             }
@@ -429,10 +456,10 @@ export default class Equipment extends Vue {
     }
 
     savedData(formHeader) {
-        this.firstFormDataGroup.forEach(item => {
-            item.startDate = item.date[0]
-            item.endDate = item.date[1]
-        })
+        // this.firstFormDataGroup.forEach(item => {
+        //     item.startDate = item.date[0]
+        //     item.endDate = item.date[1]
+        // })
         const pkgDeviceSaveRequestDto: FristObj = {
             deviceRunTime: this.computedFirstDataTotal,
             ids: [],
@@ -440,10 +467,10 @@ export default class Equipment extends Vue {
             pkgDeviceUpdateDtos: []
         };
 
-        this.secondFormDataGroup.forEach(item => {
-            item.startDate = item.date[0]
-            item.endDate = item.date[1]
-        })
+        // this.secondFormDataGroup.forEach(item => {
+        //     item.startDate = item.date[0]
+        //     item.endDate = item.date[1]
+        // })
         const pkgExceptionSaveRequestDto: SecondObj = {
             devicePauseTime: this.computedSecondDataTotal,
             ids: [],
@@ -646,29 +673,30 @@ export default class Equipment extends Vue {
 
     operationHour(row, index): number {
         let num
-        if (row.date[1] !== '' && row.date[0] !== '') {
-            num = accDiv((new Date(row.date[1]).getTime() - new Date(row.date[0]).getTime()), 3600000).toFixed(2)
+        if (row.endDate !== '' && row.startDate !== '') {
+            num = accDiv((new Date(row.endDate).getTime() - new Date(row.startDate).getTime()), 3600000).toFixed(2)
         } else {
             num = 0
         }
-        // if (num <= 0) {
-        //     num = 0
-        // }
+        if (num <= 0) {
+            num = 0
+        }
         this.firstFormDataGroup[index].duration = num
 
         return num
     }
 
     stopMin(row, index): number {
+        console.log(row)
         let num
-        if (row.date[0] !== '' && row.date[1] !== '') {
-            num = accDiv((new Date(row.date[1]).getTime() - new Date(row.date[0]).getTime()), 60000).toFixed(2)
+        if (row.endDate !== '' && row.startDate !== '') {
+            num = accDiv((new Date(row.endDate).getTime() - new Date(row.startDate).getTime()), 60000).toFixed(2)
         } else {
             num = 0
         }
-        // if (num <= 0) {
-        //     num = 0
-        // }
+        if (num <= 0) {
+            num = 0
+        }
         this.secondFormDataGroup[index].duration = num
 
         return num
