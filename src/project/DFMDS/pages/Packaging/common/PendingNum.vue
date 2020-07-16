@@ -114,6 +114,9 @@ export default class PendingNum extends Vue {
             if (data.data !== null) {
                 this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data));
                 this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data));
+            } else {
+                this.currentFormDataGroup = []
+                this.orgFormDataGroup = []
             }
         })
     }
