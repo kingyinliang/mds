@@ -188,7 +188,7 @@
             savedDatas: {
                 type: Function,
                 default: () => {
-                //    emoty
+                    //    emoty
                 }
             },
             submitDatas: {
@@ -213,7 +213,7 @@
                     //
                 }
             },
-             //检测数据订单状态不显示
+            //检测数据订单状态不显示
             orderStatusShow: {
                 type: Boolean,
                 default: true
@@ -355,13 +355,13 @@
                 }).then(() => {
                     this.savedData('submit');
                 }).catch(() => {
-                // this.$infoToast('已取消删除');
+                    // this.$infoToast('已取消删除');
                 });
             },
             ifSubmit() {
                 return !this.notPermitSubmitStatus.includes(this.orderStatus);
             },
-             save() {
+            save() {
                 if (!this.isRedact) {
                     this.isRedact = !this.isRedact;
                 } else {

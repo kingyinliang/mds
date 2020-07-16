@@ -30,7 +30,7 @@
                 <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :status="tabs[3].status" />
             </template>
             <template slot="5" slot-scope="data">
-                <material ref="material" :is-redact="data.isRedact" />
+                <material ref="material" :is-redact="data.isRedact" :status="tabs[4].status" />
             </template>
             <template slot="6" slot-scope="data">
                 <pending-num ref="pendingNum" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
@@ -284,9 +284,43 @@
                     }).then(() => {
                         this.$successToast('提交成功');
                         this.visible = false;
+                        this.getOrderList()
                     })
                 })
             } else {
+
+                // 工时前四个页签校验
+                const pkgTimeSheet = this.$refs.readyTime.currentFormDataGroup;
+                const productPeopleClass = this.$refs.productPeople.uniquenessClasses();
+                const equipmentClass = this.$refs.equipment.uniquenessClasses();
+                const productInStorageClass = this.$refs.productInStorage.uniquenessClasses();
+                if (pkgTimeSheet.classes === 'D') { // 多班
+                    if (productPeopleClass.length < 2) {
+                        this.$warningToast('生产人员页签班次与准备工时不一致');
+                        return false;
+                    }
+                    if (equipmentClass.length < 2) {
+                        this.$warningToast('设备运行页签班次与准备工时不一致');
+                        return false;
+                    }
+                    if (productInStorageClass.length < 2) {
+                        this.$warningToast('生产入库页签班次与准备工时不一致');
+                        return false;
+                    }
+                } else {
+                    if (productPeopleClass.length !== 1 || pkgTimeSheet.classes !== productPeopleClass[0]) {
+                        this.$warningToast('生产人员页签班次与准备工时不一致');
+                        return false;
+                    }
+                    if (equipmentClass.length !== 1 || pkgTimeSheet.classes !== equipmentClass[0]) {
+                        this.$warningToast('设备运行页签班次与准备工时不一致');
+                        return false;
+                    }
+                    if (productInStorageClass.length !== 1 || pkgTimeSheet.classes !== productInStorageClass[0]) {
+                        this.$warningToast('生产入库页签班次与准备工时不一致');
+                        return false;
+                    }
+                }
                 const arr = this.submitRules();
                 for (const rule of arr) {
                     if (!rule('submit')) {

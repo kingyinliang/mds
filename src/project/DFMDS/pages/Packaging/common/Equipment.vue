@@ -792,6 +792,16 @@ export default class Equipment extends Vue {
         return total;
     }
 
+    uniquenessClasses() {
+        const classesMap: string[] = [];
+        this.firstFormDataGroup.map((item: FirstDataTable) => {
+            if (item.classes && item.delFlag === 0) {
+                classesMap.push(item.classes);
+            }
+        })
+        return [...new Set(classesMap)];
+    }
+
     get computedSecondDataTotal(): number {
         let total = 0;
         // const reducer = (accumulator, currentValue) => accumulator + currentValue;

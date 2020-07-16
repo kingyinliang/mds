@@ -425,6 +425,16 @@ export default class ProductPeople extends Vue {
         return true
     }
 
+    uniquenessClasses() {
+        const classesMap: string[] = [];
+        this.currentFormDataGroup.map((item: CurrentDataTable) => {
+            if (item.classes && item.delFlag === 0) {
+                classesMap.push(item.classes);
+            }
+        })
+        return [...new Set(classesMap)];
+    }
+
     get actualNumber() {
         let scrapNum = 0
         this.currentFormDataGroup.map((item: CurrentDataTable) => {
