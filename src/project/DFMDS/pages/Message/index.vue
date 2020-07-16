@@ -193,6 +193,7 @@
             const targetURL = item.msgUrl.replace(/\//g, '-')
 
             setTimeout(() => {
+                this.$store.commit('common/updateMsg', true);
                 this.$router.push({
                     path: targetURL
                 });
@@ -228,6 +229,7 @@
                     this.currPageFromUnread = 1
                     this.pageSizeFromUnread = 10
                     this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
+                    this.$store.commit('common/updateMsg', true);
                 });
             }
 

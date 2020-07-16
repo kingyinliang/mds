@@ -70,6 +70,15 @@
             };
         },
         computed: {
+            // 消息管理用 - 关闭当前页签
+            updateMsgNum: {
+                get() {
+                    return this.$store.state.common.updateMsg;
+                },
+                set(val) {
+                    this.$store.commit('common/updateMsg', val);
+                }
+            },
             navbarLayoutType: {
                 get() {
                     return this.$store.state.common.navbarLayoutType;
@@ -110,6 +119,14 @@
                 },
                 set(val) {
                     this.$store.commit('user/updaterealName', val);
+                }
+            }
+        },
+        watch: {
+            updateMsgNum(newStatus) {
+                if (newStatus !== false) {
+                    this.$store.commit('common/updateMsg', false);
+                    this.getMsgNum()
                 }
             }
         },
@@ -203,7 +220,6 @@
                     }]
 
                 const url = `${wsObject[key].url}?appid=${wsObject[key].appid}&channel=${wsObject[key].channel}&flag=${sessionStorage.getItem('loginUserId')}`
-                console.log(url)
                 socketApi.createWebSocket(url)
             }
         }
