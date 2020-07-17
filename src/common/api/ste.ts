@@ -30,6 +30,10 @@ const STE_API = {
      */
     STE_COOKING_DETAIL_CLEAR_API: params => httpProxy('/ste/steCookingPot/clean', 'POST', params),
     /**
+     * @property {string} STE_COOKING_DETAIL_ACCMATERIAL_API 杀菌车间-煮料详情-根据生产物料拉取辅料
+    */
+    STE_COOKING_DETAIL_ACCMATERIAL_API: params => httpProxy('/ste/steCookingPot/getAccMaterial', 'POST', params),
+    /**
      * @property {string} STE_DISSOLUTIONBUCKET_QUERY_API 杀菌车间-溶解罐管理-查询
      */
     STE_DISSOLUTIONBUCKET_QUERY_API: params => httpProxy('/steDissolutionPot/query', 'POST', params),

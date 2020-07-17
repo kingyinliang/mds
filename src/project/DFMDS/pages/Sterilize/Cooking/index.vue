@@ -8,20 +8,20 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="煮料锅/混合罐：" label-width="110px">
-                    <el-select v-model="formHeader.potNo" style="width: 170px;" placeholder="请选择" clearable>
+                    <el-select v-model="formHeader.potNo" style="width: 170px;" placeholder="请选择" clearable filterable>
                         <el-option v-for="(item, optIndex) in holderList" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产物料：">
-                    <el-select v-model="formHeader.productMaterial" style="width: 170px;" placeholder="请选择" clearable>
-                        <el-option v-for="(item, optIndex) in holderList" :key="optIndex" :label="item.deptName" :value="item.deptCode" />
+                    <el-select v-model="formHeader.productMaterial" style="width: 170px;" placeholder="请选择" clearable filterable>
+                        <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="配置日期：">
                     <el-date-picker v-model="formHeader.configStartDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 140px;" />
                 </el-form-item>
                 <el-form-item label="煮料锅序：">
-                    <el-select v-model="formHeader.potOrder" style="width: 170px;" placeholder="请选择" clearable>
+                    <el-select v-model="formHeader.potOrder" style="width: 170px;" placeholder="请选择" clearable filterable>
                         <el-option v-for="(item, optIndex) in holderNumberList" :key="optIndex" :label="item.name" :value="item.value" />
                     </el-select>
                 </el-form-item>
@@ -68,7 +68,7 @@
                 <el-table-column label="操作时间" width="160" prop="changed" />
                 <el-table-column label="操作" width="60" fixed="right">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="clearHolder(scope.row)">
+                        <el-button type="text" size="small" :disabled="(scope.row.clear <= 2 ? true : false)" @click="clearHolder(scope.row)">
                             清罐
                         </el-button>
                     </template>
@@ -121,22 +121,28 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { COMMON_API, STE_API } from 'common/api/api';
-import { dateFormat, getUserNameNumber } from 'utils/utils';
+import { dateFormat, getUserNameNumber, accSub } from 'utils/utils';
 
 @Component
 
 export default class AuditIndex extends Vue {
     formHeader = {
+        workShop: '',
+        potNo: '',
+        productMaterial: '',
+        configStartDate: dateFormat(new Date(), 'yyyy-MM-dd'),
+        potOrder: '',
+        cookingNo: '',
+        potStatus: '',
         current: 1,
         size: 10,
-        total: 0,
-        workShop: '',
-        configStartDate: dateFormat(new Date(), 'yyyy-MM-dd')
+        total: 0
     };
 
     queryFormRules = {};
     workShop = [];
-    holderList = [];
+    holderList: HoldList[] = [];
+    materialList: MaterialList[] = [];
     holderNumberList: HolderNumber[] = [];
     dataList = [];
     statusList = [
@@ -160,8 +166,14 @@ export default class AuditIndex extends Vue {
     }
 
     @Watch('formHeader.workShop')
-    getVisible(newVal) {
+    changeWorkShop(newVal) {
         this.getHolderList(newVal);
+    }
+
+    @Watch('formHeader.potNo')
+    changeHolderVisible(newVal) {
+        this.formHeader.productMaterial = '';
+        this.getMaterial(newVal);
     }
 
     // 车间下拉
@@ -183,17 +195,35 @@ export default class AuditIndex extends Vue {
     // 煮料锅/罐下拉
     getHolderList(deptId) {
         if (deptId) {
-            COMMON_API.HOLDER_QUERY_API({
-                current: 1,
+            COMMON_API.HOLDER_DROPDOWN_API({
                 deptId: this.formHeader.workShop,
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderType: '020',
-                size: 999
+                holderType: '020'
             }).then(({ data }) => {
-                this.holderList = data.data.records
+                this.holderList = data.data
             })
         } else {
             this.holderList = [];
+        }
+    }
+
+    // 生产物料下拉
+    getMaterial(potNo) {
+        this.materialList = []
+        if (potNo !== '') {
+            // eslint-disable-next-line
+            const materialSole: any = this.holderList.find(item => item.holderNo === potNo);
+            if (materialSole['material'].length > 0) {
+                this.materialList = materialSole['material'];
+            } else {
+                STE_API.STE_COOKING_MATERIAL_QUERY_API({ preStages: ['MIX'], productGroup: '1' }).then(({ data }) => {
+                    data.data.map(item => {
+                        this.materialList.push({
+                            materialCode: item.productMaterial,
+                            materialName: item.productMaterialName
+                        });
+                    })
+                })
+            }
         }
     }
 
@@ -211,6 +241,11 @@ export default class AuditIndex extends Vue {
 
     // 新增
     insertItem() {
+        if (!this.formHeader.workShop) {
+            this.$warningToast('请选择车间');
+        }
+        console.log(this.formHeader)
+        this.$store.commit('sterilize/updateCooking', this.formHeader);
         this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Cooking-detail'))
         setTimeout(() => {
             this.$router.push({
@@ -220,10 +255,18 @@ export default class AuditIndex extends Vue {
     }
 
     // 查询
-    getDataList() {
+    getDataList(st?) {
+        if (st === true) {
+            this.formHeader.current = 1;
+        }
         STE_API.STE_COOKING_POT_QUERY_API(this.formHeader).then(({ data }) => {
             if (data.code === 200) {
                 this.dataList = data.data.records
+                data.data.records.map((item) => {
+                    const cha = Number.parseInt(accSub(item.usePotCount, item.configPotCount), 10);
+                    item.clear = Math.abs(cha);
+                })
+                this.formHeader.total = data.data.total;
             }
         })
     }
@@ -240,16 +283,20 @@ export default class AuditIndex extends Vue {
     }
 
     handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.formHeader.size = val;
+        this.getDataList();
     }
 
     handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.formHeader.current = val;
+        this.getDataList();
     }
 
     // 清罐弹框
     clearHolder(row) {
         this.formatData = {
+            cookingId: row.id,
+            cookingNo: row.cookingNo,
             potNoName: row.potNoName,
             remainder: 0,
             productMaterial: row.productMaterial,
@@ -264,11 +311,30 @@ export default class AuditIndex extends Vue {
 
     // 清罐
     dataFormSubmit() {
-        console.log('1')
+        STE_API.STE_COOKING_DETAIL_CLEAR_API(this.formatData).then(({ data }) => {
+            if (data.code === 200) {
+                this.isDialogShow = false;
+                this.$successToast('清罐成功');
+                this.getDataList(true);
+            }
+        })
     }
 }
 interface HolderNumber{
     value?: number;
     name?: string;
+}
+interface MaterialList{
+    materialCode?: string;
+    materialName?: string;
+}
+interface HoldList{
+    deptId?: string;
+    holderName?: string;
+    holderNo: string;
+    holderType?: string;
+    holderVolume?: string;
+    id?: string;
+    material: MaterialList[];
 }
 </script>

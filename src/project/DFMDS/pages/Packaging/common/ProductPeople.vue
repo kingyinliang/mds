@@ -134,7 +134,7 @@
         </mds-card>
         <audit-log :table-data="productPeopleAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
         <official-worker v-if="officialWorkerStatus" ref="officialWorker" @changeUser="changeUser" />
-        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :org-tree="orgTree" :arr-list="arrList" @changeUser="changeUser" />
+        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" @changeUser="changeUser" />
         <temporary-worker v-if="temporaryWorkerStatus" ref="temporaryWorker" @changeUser="changeUser" />
     </div>
 </template>

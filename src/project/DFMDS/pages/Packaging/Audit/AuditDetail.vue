@@ -59,16 +59,16 @@
             <mds-card title="产量与人力" :name="'outputworker'">
                 <el-form :inline="true" :model="formHeader" label-width="75px" size="small" class="dataEntry-head-base__form">
                     <el-form-item label="订单产量：">
-                        <p>{{ prodPower.planOutput }}</p>
+                        <p>{{ prodPower.planOutput }} {{ prodPower.unitName }}</p>
                     </el-form-item>
                     <el-form-item label="实际产量：">
-                        <p>{{ prodPower.countOutput }}</p>
+                        <p>{{ prodPower.countOutput }} {{ prodPower.unitName }}</p>
                     </el-form-item>
                     <el-form-item v-if="prodPower.urgencyCountOutput !== 0" label="紧急入库产量：" label-width="100px">
                         <p>{{ prodPower.urgencyCountOutput }}</p>
                     </el-form-item>
                     <el-form-item label="差异数量：">
-                        <p>{{ prodPower.differences }}</p>
+                        <p>{{ prodPower.differences }} {{ prodPower.unitName }}</p>
                     </el-form-item>
                     <el-form-item label="标准人力：">
                         <p>{{ prodPower.standardMan }}</p>

@@ -98,7 +98,7 @@
                 </div>
             </template>
             <el-form ref="ruleSecondForm" :model="ruleSecondForm">
-                <el-table class="newTable" :data="secondFormDataGroup" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
+                <el-table ref="exception" class="newTable" :data="secondFormDataGroup" max-height="267" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
                     <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
                     <el-table-column min-width="130" :show-overflow-tooltip="true">
                         <template slot="header">
@@ -283,6 +283,7 @@ export default class Equipment extends Vue {
     $refs: {
         ruleFirstForm: HTMLFormElement;
         ruleSecondForm: HTMLFormElement;
+        exception: HTMLFormElement;
     }
 
     currentAudit = [];
@@ -746,6 +747,9 @@ export default class Equipment extends Vue {
         }
         this.secondFormDataGroup.push(sole);
         this.setValidate(this.secondFormDataGroup, this.ruleSecondForm)
+        this.$nextTick(() => {
+            this.$refs.exception.bodyWrapper.scrollTop = this.$refs.exception.bodyWrapper.scrollHeight;
+        });
     }
 
     rowDelFlag({ row }) {
