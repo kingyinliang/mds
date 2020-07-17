@@ -86,7 +86,7 @@
             </el-table>
         </mds-card>
         <mds-card :title="'半成品领用'" :name="'materialS'">
-            <el-table header-row-class-name="tableHead" class="newTable" :data="materialS" :row-class-name="rowDelFlag" :span-method="spanTwoMethod" border tooltip-effect="dark">
+            <el-table ref="materialS" header-row-class-name="tableHead" class="newTable" max-height="267" :data="materialS" :row-class-name="rowDelFlag" :span-method="spanTwoMethod" border tooltip-effect="dark">
                 <el-table-column type="index" label="序号" width="50px" />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
@@ -182,6 +182,10 @@
     export default class Material extends Vue {
         @Prop({ default: false }) isRedact: boolean;
         @Prop({ default: '' }) status: string;
+
+        $refs: {
+            materialS: HTMLFormElement;
+        }
 
         MaterialAudit = [];
 
@@ -529,6 +533,9 @@
                 changer: getUserNameNumber()
             });
             this.merge(this[str], str)
+            this.$nextTick(() => {
+                this.$refs.materialS.bodyWrapper.scrollTop = this.$refs.materialS.bodyWrapper.scrollHeight;
+            });
         }
 
         rowDelFlag({ row }) {

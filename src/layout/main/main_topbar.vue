@@ -33,7 +33,7 @@
                 </el-menu-item>
             </el-menu>
             <el-button v-if="factoryName!=='系统设置'" type="text" style="float: right;" @click.native="goMessage">
-                <el-badge :value="messageNum" :max="99" class="item">
+                <el-badge :value="messageNum" :max="99" class="item" :hidden="messageNum===0">
                     <i class="iconfont factory-bell" style="font-size: 18px;" />
                 </el-badge>
             </el-button>
@@ -241,7 +241,7 @@
         transition: 500ms;
     }
     .item {
-        margin-top: 10px;
-        margin-right: 20px;
+        margin-top: 6px;
+        margin-right: 15px;
     }
 </style>

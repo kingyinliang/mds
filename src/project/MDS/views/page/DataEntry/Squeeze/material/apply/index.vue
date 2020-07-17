@@ -1,296 +1,328 @@
 <template>
-    <el-row>
-        <el-col>
-            <div class="header_main">
-                <el-card class="newCard">
-                    <el-row type="flex">
-                        <el-col>
-                            <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
-                                <el-form-item label="生产工厂：">
-                                    <el-select v-model="params.factoryId" style="width: 150px;" @change="changeOptions('factory')">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="生产车间：">
-                                    <el-select v-model="params.workshopId" style="width: 150px;" @change="changeOptions('workshop')">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="布浆线：">
-                                    <el-select v-model="params.productLineId" style="width: 150px;" @change="changeOptions('productline')">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="sole in productlineList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="领用日期：">
-                                    <el-date-picker v-model="params.applyDate" type="date" value-format="yyyy-MM-dd" style="width: 150px;" />
-                                </el-form-item>
-                                <el-form-item class="floatr" style="width: 270px; text-align: right;">
-                                    <el-button v-if="isAuth('prs:material:list')" type="primary" size="small" @click="getOrderList()">
-                                        查询
-                                    </el-button>
-                                    <el-button v-if="isAuth('prs:material:mySaveOrUpdate') && searched && orderStatus !== 'submit' && orderStatus !== 'checked'" type="primary" size="small" @click="setDisabled(!disabled)">
-                                        {{ disabled ? '编辑' : '返回' }}
-                                    </el-button>
-                                    <el-button v-if="isAuth('prs:material:mySaveOrUpdate') && searched && !disabled && orderStatus !== 'submit' && orderStatus !== 'checked'" type="primary" size="small" @click="save()">
-                                        保存
-                                    </el-button>
-                                    <el-button v-if="isAuth('prs:material:mySaveOrUpdate') && searched && !disabled && orderStatus !== 'submit' && orderStatus !== 'checked'" type="primary" size="small" @click="submit()">
-                                        提交
-                                    </el-button>
-                                </el-form-item>
-                            </el-form>
-                        </el-col>
-                    </el-row>
-                </el-card>
-                <el-row v-if="searched" style="margin-top: 5px; background-color: #fff;">
-                    <el-col :span="24">
-                        <el-row type="flex" justify="center" style="margin-top: 20px;">
-                            <div v-for="(item, index) in sdList" :key="index" class="pot-box">
-                                <div class="pot-box-header">
-                                    <span class="pot-box-title" style="margin-left: 5px;">{{ item.deviceName }}</span>
-                                    <span class="pot-box-title" style="float: right; margin-right: 5px;">{{ availableMap.get(item.deviceId) === '0' ? '待领用' : availableMap.get(item.deviceId) === '1' ? '领用中' : '不可用' }}</span>
+    <div>
+        <div class="header_main">
+            <el-card class="newCard">
+                <el-row type="flex">
+                    <el-col>
+                        <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="sole_row">
+                            <el-form-item label="生产工厂：">
+                                <el-select v-model="params.factoryId" style="width: 150px;" @change="changeOptions('factory')">
+                                    <el-option label="请选择" value="" />
+                                    <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="生产车间：">
+                                <el-select v-model="params.workshopId" style="width: 150px;" @change="changeOptions('workshop')">
+                                    <el-option label="请选择" value="" />
+                                    <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="布浆线：">
+                                <el-select v-model="params.productLineId" style="width: 150px;" @change="changeOptions('productline')">
+                                    <el-option label="请选择" value="" />
+                                    <el-option v-for="sole in productlineList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="领用日期：">
+                                <el-date-picker v-model="params.applyDate" type="date" value-format="yyyy-MM-dd" style="width: 150px;" />
+                            </el-form-item>
+                            <el-form-item class="floatr" style="width: 270px; text-align: right;">
+                                <el-button v-if="isAuth('prs:material:list')" type="primary" size="small" @click="getOrderList()">
+                                    查询
+                                </el-button>
+                                <!-- <el-button v-if="isAuth('prs:material:mySaveOrUpdate') && searched && orderStatus !== 'submit' && orderStatus !== 'checked'" type="primary" size="small" @click="setDisabled(!disabled)">
+                                    {{ disabled ? '编辑' : '返回' }}
+                                </el-button>
+                                <el-button v-if="isAuth('prs:material:mySaveOrUpdate') && searched && !disabled && orderStatus !== 'submit' && orderStatus !== 'checked'" type="primary" size="small" @click="save()">
+                                    保存
+                                </el-button>
+                                <el-button v-if="isAuth('prs:material:mySaveOrUpdate') && searched && !disabled && orderStatus !== 'submit' && orderStatus !== 'checked'" type="primary" size="small" @click="submit()">
+                                    提交
+                                </el-button> -->
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+                </el-row>
+            </el-card>
+            <el-row v-if="searched" style="margin-top: 5px;">
+                <mds-card title="物料领用" :pack-up="false">
+                    <el-row :gutter="10" class="potColorBlock">
+                        <el-col v-for="(item, index) in sdList" :key="index" :span="8" class="potColorBlock_item">
+                            <div class="potColorBlock_sole bgColor">
+                                <div class="potColorBlock_sole_title">
+                                    {{ item.deviceName }}
+                                    <span>{{ availableMap.get(item.deviceId) === '0' ? '待领用' : availableMap.get(item.deviceId) === '1' ? '领用中' : '不可用' }}</span>
                                 </div>
-                                <div class="pot-box-container img" />
-                                <div class="pot-box-footer">
-                                    <div v-if="!disabled && availableMap.get(item.deviceId) === '0' && orderStatus !== 'submit' && orderStatus !== 'checked'" class="pot-box-button" @click="inPotStart(item.deviceId, item.deviceName)">
-                                        <span class="pot-box-button-title">入罐开始</span>
+                                <div class="potColorBlock_sole_content">
+                                    <div class="sole_pic">
+                                        <img src="@/assets/img/potColorBlock.png">
                                     </div>
-                                    <div v-else class="pot-box-button-disabled">
-                                        <span class="pot-box-button-title-disabled">入罐开始</span>
-                                    </div>
-                                    <div v-if="!disabled && availableMap.get(item.deviceId) === '1' && orderStatus !== 'submit' && orderStatus !== 'checked'" class="pot-box-button" @click="inPotEnd(item.deviceId, item.deviceName)">
-                                        <span class="pot-box-button-title">入罐结束</span>
-                                    </div>
-                                    <div v-else class="pot-box-button-disabled">
-                                        <span class="pot-box-button-title-disabled">入罐结束</span>
+                                    <div class="sole_button">
+                                        <el-button type="primary" size="small" :disabled="!(!disabled && availableMap.get(item.deviceId) === '0' && orderStatus !== 'submit' && orderStatus !== 'checked')" @click="inPotStart(item.deviceId, item.deviceName)">
+                                            入罐开始
+                                        </el-button>
+                                        <el-button type="primary" size="small" :disabled="!(!disabled && availableMap.get(item.deviceId) === '1' && orderStatus !== 'submit' && orderStatus !== 'checked')" @click="inPotEnd(item.deviceId, item.deviceName)">
+                                            入罐结束
+                                        </el-button>
                                     </div>
                                 </div>
                             </div>
-                        </el-row>
-                        <el-row>
-                            <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="modifyRecord">
-                                <el-table-column type="index" label="序号" width="55" fixed />
-                                <el-table-column label="布浆线" :show-overflow-tooltip="true">
-                                    <template slot-scope="scope" width="120">
-                                        {{ scope.row.productLineName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="暂存罐" :show-overflow-tooltip="true" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.storagePotName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="发酵罐号" :show-overflow-tooltip="true" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.fermentPotName }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="批次" :show-overflow-tooltip="true" width="120">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.batch }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="发酵剩余量" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.remainAmount }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="起始数">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.startAmount }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="终止数">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.endAmount }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="打料数">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.amount }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="暂存剩余量" width="100">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.storageAmount }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="单位">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.unit }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="备注">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.remark }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="操作时间" width="160">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.changed }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="操作人" width="140">
-                                    <template slot-scope="scope">
-                                        {{ scope.row.changer }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="操作" width="70" fixed="right">
-                                    <template slot-scope="scope">
-                                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(!disabled && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delRow(scope.row)">
-                                            删除
-                                        </el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </el-row>
-                    </el-col>
-                </el-row>
+                        </el-col>
+                        <!-- <div v-for="(item, index) in sdList" :key="index" class="pot-box">
+                            <div class="pot-box-header">
+                                <span class="pot-box-title" style="margin-left: 5px;">{{ item.deviceName }}</span>
+                                <span class="pot-box-title" style="float: right; margin-right: 5px;">{{ availableMap.get(item.deviceId) === '0' ? '待领用' : availableMap.get(item.deviceId) === '1' ? '领用中' : '不可用' }}</span>
+                            </div>
+                            <div class="pot-box-container img" />
+                            <div class="pot-box-footer">
+                                <div v-if="!disabled && availableMap.get(item.deviceId) === '0' && orderStatus !== 'submit' && orderStatus !== 'checked'" class="pot-box-button" @click="inPotStart(item.deviceId, item.deviceName)">
+                                    <span class="pot-box-button-title">入罐开始</span>
+                                </div>
+                                <div v-else class="pot-box-button-disabled">
+                                    <span class="pot-box-button-title-disabled">入罐开始</span>
+                                </div>
+                                <div v-if="!disabled && availableMap.get(item.deviceId) === '1' && orderStatus !== 'submit' && orderStatus !== 'checked'" class="pot-box-button" @click="inPotEnd(item.deviceId, item.deviceName)">
+                                    <span class="pot-box-button-title">入罐结束</span>
+                                </div>
+                                <div v-else class="pot-box-button-disabled">
+                                    <span class="pot-box-button-title-disabled">入罐结束</span>
+                                </div>
+                            </div>
+                        </div> -->
+                    </el-row>
+                    <el-row>
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="dataList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="modifyRecord">
+                            <el-table-column type="index" label="序号" width="55" fixed />
+                            <el-table-column label="布浆线" :show-overflow-tooltip="true">
+                                <template slot-scope="scope" width="120">
+                                    {{ scope.row.productLineName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="暂存罐" :show-overflow-tooltip="true" width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.storagePotName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="发酵罐号" :show-overflow-tooltip="true" width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.fermentPotName }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="批次" :show-overflow-tooltip="true" width="120">
+                                <template slot-scope="scope">
+                                    {{ scope.row.batch }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="发酵剩余量" width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.remainAmount }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="起始数">
+                                <template slot-scope="scope">
+                                    {{ scope.row.startAmount }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="终止数">
+                                <template slot-scope="scope">
+                                    {{ scope.row.endAmount }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="打料数">
+                                <template slot-scope="scope">
+                                    {{ scope.row.amount }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="暂存剩余量" width="100">
+                                <template slot-scope="scope">
+                                    {{ scope.row.storageAmount }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="单位">
+                                <template slot-scope="scope">
+                                    {{ scope.row.unit }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="备注">
+                                <template slot-scope="scope">
+                                    {{ scope.row.remark }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作时间" width="160">
+                                <template slot-scope="scope">
+                                    {{ scope.row.changed }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作人" width="140">
+                                <template slot-scope="scope">
+                                    {{ scope.row.changer }}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作" width="70" fixed="right">
+                                <template slot-scope="scope">
+                                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(!disabled && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delRow(scope.row)">
+                                        删除
+                                    </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-row>
+                </mds-card>
+            </el-row>
+        </div>
+        <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="500px" custom-class="dialog__class">
+            <div slot="title" class="title">
+                <span>{{ startForm.deviceName }}开始</span>
             </div>
-            <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="500px" custom-class="dialog__class">
-                <div slot="title" class="title">
-                    <span>{{ startForm.deviceName }}开始</span>
-                </div>
-                <div>
-                    <el-form ref="startForm" :model="startForm" :label-width="formLabelWidth" size="small">
-                        <el-form-item label="领用发酵罐：" required>
-                            <el-select v-model="startForm.fermentPotNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('fermentPotStart')">
-                                <el-option v-for="(item, index) in fermentPotList" :key="index" :label="item.holderName" :value="item.holderId" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="批次：" required>
-                            <el-input v-model.trim="startForm.batch" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="发酵罐剩余量：">
-                            <el-input v-model.number="startForm.remainAmount" type="number" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="起始数(方)：" required>
-                            <el-input v-model.number="startForm.startAmount" type="number" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="暂存量(L)：">
-                            <el-input v-model.number="startForm.storageAmount" type="number" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="单位：" required>
-                            {{ (startForm.unit = 'L') }}
-                        </el-form-item>
-                        <el-form-item label="对应布浆线：">
-                            <label>{{ startForm.productLineName }}</label>
-                        </el-form-item>
-                        <el-form-item label="操作时间：">
-                            <label>{{ startForm.changed }}</label>
-                        </el-form-item>
-                        <el-form-item label="操作人：">
-                            <label>{{ startForm.changer }}</label>
-                        </el-form-item>
-                    </el-form>
-                </div>
-                <div slot="footer" class="dialog-footer">
-                    <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible = false">
-                        取消
-                    </el-button>
-                    <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveStart()">
-                        保存
-                    </el-button>
-                </div>
-            </el-dialog>
-            <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible2" width="500px" custom-class="dialog__class">
-                <div slot="title" class="title">
-                    <span>{{ endForm.deviceName }}结束</span>
-                </div>
-                <div>
-                    <el-form ref="endForm" :model="endForm" :label-width="formLabelWidth" size="small">
-                        <el-form-item label="领用发酵罐：" required>
-                            {{ endForm.fermentPotName }}
-                        </el-form-item>
-                        <el-form-item label="批次：" required>
-                            {{ endForm.batch }}
-                        </el-form-item>
-                        <el-form-item label="发酵罐剩余量：">
-                            {{ endForm.remainAmount }}
-                        </el-form-item>
-                        <el-form-item label="打料结束数(L)：" required>
-                            <el-input v-model.number="endForm.endAmount" type="number" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="对应布浆线：">
-                            <label>{{ endForm.productLineName }}</label>
-                        </el-form-item>
-                        <el-form-item label="单位：" required>
-                            {{ (endForm.unit = 'L') }}
-                        </el-form-item>
-                        <el-form-item label="备注：">
-                            <el-input v-model.trim="endForm.remark" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="操作时间：">
-                            <label>{{ endForm.changed }}</label>
-                        </el-form-item>
-                        <el-form-item label="操作人：">
-                            <label>{{ endForm.changer }}</label>
-                        </el-form-item>
-                    </el-form>
-                </div>
-                <div slot="footer" class="dialog-footer">
-                    <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible2 = false">
-                        取消
-                    </el-button>
-                    <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveEnd()">
-                        保存
-                    </el-button>
-                </div>
-            </el-dialog>
-            <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible3" width="500px" custom-class="dialog__class">
-                <div slot="title" class="title">
-                    <span>入罐修改</span>
-                </div>
-                <div>
-                    <el-form ref="modifyForm" :model="modifyForm" :label-width="formLabelWidth" size="small">
-                        <el-form-item label="领用发酵罐：" required>
-                            <el-select v-model="modifyForm.fermentPotNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('fermentPotModify')">
-                                <el-option v-for="(item, index) in fermentPotList" :key="index" :label="item.holderName" :value="item.holderId" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="批次：" required>
-                            <el-input v-model.trim="modifyForm.batch" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="发酵罐剩余量：">
-                            <el-input v-model.number="modifyForm.remainAmount" type="number" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="起始数(方)：" required>
-                            <el-input v-model.number="modifyForm.startAmount" type="number" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="打料结束数(L)：" required>
-                            <el-input v-model.number="modifyForm.endAmount" type="number" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="暂存量(L)：">
-                            <el-input v-model.number="modifyForm.storageAmount" type="number" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="备注：">
-                            <el-input v-model.trim="modifyForm.remark" style="width: 220px;" />
-                        </el-form-item>
-                        <el-form-item label="对应布浆线：">
-                            <label>{{ modifyForm.productLineName }}</label>
-                        </el-form-item>
-                        <el-form-item label="操作时间：">
-                            <label>{{ modifyForm.changed }}</label>
-                        </el-form-item>
-                        <el-form-item label="操作人：">
-                            <label>{{ modifyForm.changer }}</label>
-                        </el-form-item>
-                    </el-form>
-                </div>
-                <div slot="footer" class="dialog-footer">
-                    <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible3 = false">
-                        取消
-                    </el-button>
-                    <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveModify()">
-                        保存
-                    </el-button>
-                </div>
-            </el-dialog>
-        </el-col>
-    </el-row>
+            <div>
+                <el-form ref="startForm" :model="startForm" :label-width="formLabelWidth" size="small">
+                    <el-form-item label="领用发酵罐：" required>
+                        <el-select v-model="startForm.fermentPotNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('fermentPotStart')">
+                            <el-option v-for="(item, index) in fermentPotList" :key="index" :label="item.holderName" :value="item.holderId" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="批次：" required>
+                        <el-input v-model.trim="startForm.batch" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="发酵罐剩余量：">
+                        <el-input v-model.number="startForm.remainAmount" type="number" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="起始数(方)：" required>
+                        <el-input v-model.number="startForm.startAmount" type="number" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="暂存量(L)：">
+                        <el-input v-model.number="startForm.storageAmount" type="number" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="单位：" required>
+                        {{ (startForm.unit = 'L') }}
+                    </el-form-item>
+                    <el-form-item label="对应布浆线：">
+                        <label>{{ startForm.productLineName }}</label>
+                    </el-form-item>
+                    <el-form-item label="操作时间：">
+                        <label>{{ startForm.changed }}</label>
+                    </el-form-item>
+                    <el-form-item label="操作人：">
+                        <label>{{ startForm.changer }}</label>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible = false">
+                    取消
+                </el-button>
+                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveStart()">
+                    保存
+                </el-button>
+            </div>
+        </el-dialog>
+        <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible2" width="500px" custom-class="dialog__class">
+            <div slot="title" class="title">
+                <span>{{ endForm.deviceName }}结束</span>
+            </div>
+            <div>
+                <el-form ref="endForm" :model="endForm" :label-width="formLabelWidth" size="small">
+                    <el-form-item label="领用发酵罐：" required>
+                        {{ endForm.fermentPotName }}
+                    </el-form-item>
+                    <el-form-item label="批次：" required>
+                        {{ endForm.batch }}
+                    </el-form-item>
+                    <el-form-item label="发酵罐剩余量：">
+                        {{ endForm.remainAmount }}
+                    </el-form-item>
+                    <el-form-item label="打料结束数(L)：" required>
+                        <el-input v-model.number="endForm.endAmount" type="number" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="对应布浆线：">
+                        <label>{{ endForm.productLineName }}</label>
+                    </el-form-item>
+                    <el-form-item label="单位：" required>
+                        {{ (endForm.unit = 'L') }}
+                    </el-form-item>
+                    <el-form-item label="备注：">
+                        <el-input v-model.trim="endForm.remark" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="操作时间：">
+                        <label>{{ endForm.changed }}</label>
+                    </el-form-item>
+                    <el-form-item label="操作人：">
+                        <label>{{ endForm.changer }}</label>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible2 = false">
+                    取消
+                </el-button>
+                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveEnd()">
+                    保存
+                </el-button>
+            </div>
+        </el-dialog>
+        <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible3" width="500px" custom-class="dialog__class">
+            <div slot="title" class="title">
+                <span>入罐修改</span>
+            </div>
+            <div>
+                <el-form ref="modifyForm" :model="modifyForm" :label-width="formLabelWidth" size="small">
+                    <el-form-item label="领用发酵罐：" required>
+                        <el-select v-model="modifyForm.fermentPotNo" value-key="holderId" placeholder="请选择" filterable style="width: 220px;" @change="changeOptions('fermentPotModify')">
+                            <el-option v-for="(item, index) in fermentPotList" :key="index" :label="item.holderName" :value="item.holderId" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="批次：" required>
+                        <el-input v-model.trim="modifyForm.batch" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="发酵罐剩余量：">
+                        <el-input v-model.number="modifyForm.remainAmount" type="number" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="起始数(方)：" required>
+                        <el-input v-model.number="modifyForm.startAmount" type="number" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="打料结束数(L)：" required>
+                        <el-input v-model.number="modifyForm.endAmount" type="number" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="暂存量(L)：">
+                        <el-input v-model.number="modifyForm.storageAmount" type="number" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="备注：">
+                        <el-input v-model.trim="modifyForm.remark" style="width: 220px;" />
+                    </el-form-item>
+                    <el-form-item label="对应布浆线：">
+                        <label>{{ modifyForm.productLineName }}</label>
+                    </el-form-item>
+                    <el-form-item label="操作时间：">
+                        <label>{{ modifyForm.changed }}</label>
+                    </el-form-item>
+                    <el-form-item label="操作人：">
+                        <label>{{ modifyForm.changer }}</label>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="dialogFormVisible3 = false">
+                    取消
+                </el-button>
+                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="saveModify()">
+                    保存
+                </el-button>
+            </div>
+        </el-dialog>
+        <redact-box v-if="searched">
+            <template slot="button">
+                <el-button v-if="isAuth('prs:material:mySaveOrUpdate') && searched && orderStatus !== 'submit' && orderStatus !== 'checked'" type="primary" size="small" @click="setDisabled(!disabled)">
+                    {{ disabled ? '编辑' : '取消' }}
+                </el-button>
+                <el-button v-if="isAuth('prs:material:mySaveOrUpdate') && searched && !disabled && orderStatus !== 'submit' && orderStatus !== 'checked'" type="primary" size="small" @click="save()">
+                    保存
+                </el-button>
+                <el-button v-if="isAuth('prs:material:mySaveOrUpdate') && searched && !disabled && orderStatus !== 'submit' && orderStatus !== 'checked'" type="primary" size="small" @click="submit()">
+                    提交
+                </el-button>
+            </template>
+        </redact-box>
+    </div>
 </template>
 
 <script lang="ts">
