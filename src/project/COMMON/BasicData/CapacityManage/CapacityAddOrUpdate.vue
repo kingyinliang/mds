@@ -24,6 +24,21 @@
                 <el-form-item label="标配人力：" prop="standardManpower">
                     <el-input v-model="dataForm.standardManpower" type="number" placeholder="手动输入" />
                 </el-form-item>
+                <el-form-item label="可用率：" prop="availableRate">
+                    <el-input v-model="dataForm.availableRate" type="number" placeholder="手动输入" />
+                </el-form-item>
+                <el-form-item label="时间稼动率：" prop="timeRate">
+                    <el-input v-model="dataForm.timeRate" type="number" placeholder="手动输入" />
+                </el-form-item>
+                <el-form-item label="性能稼动率：" prop="performanceRate">
+                    <el-input v-model="dataForm.performanceRate" type="number" placeholder="手动输入" />
+                </el-form-item>
+                <el-form-item label="生产效率：" prop="oeeOrOpe">
+                    <el-input v-model="dataForm.oeeOrOpe" type="number" placeholder="手动输入" />
+                </el-form-item>
+                <el-form-item label="良品率：" prop="yieldRate">
+                    <el-input v-model="dataForm.yieldRate" type="number" placeholder="手动输入" />
+                </el-form-item>
                 <el-form-item label="有效开始日期：" prop="startDate">
                     <el-date-picker v-model="dataForm.startDate" type="date" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
                 </el-form-item>
@@ -79,42 +94,17 @@ export default class CapacityAddOrUpdate extends Vue {
 
     dataRule = {
         materialCode: [{ required: true, message: '物料不能为空', trigger: 'blur' }],
-        basicCapacity: [
-            {
-                required: true,
-                message: '标准产能不能为空',
-                trigger: 'blur'
-            }
-        ],
-        effectiveCapacity: [
-            {
-                required: true,
-                message: '有效产能不能为空',
-                trigger: 'blur'
-            }
-        ],
-        standardManpower: [
-            {
-                required: true,
-                message: '标配人力不能为空',
-                trigger: 'blur'
-            }
-        ],
+        basicCapacity: [{ required: true, message: '标准产能不能为空', trigger: 'blur' }],
+        effectiveCapacity: [{ required: true, message: '有效产能不能为空', trigger: 'blur' }],
+        standardManpower: [{ required: true, message: '标配人力不能为空', trigger: 'blur' }],
         capacityUnit: [{ required: true, message: '单位不能为空', trigger: 'blur' }],
-        startDate: [
-            {
-                required: true,
-                message: '有效开始日期不能为空',
-                trigger: 'blur'
-            }
-        ],
-        endDate: [
-            {
-                required: true,
-                message: '有效结束日期不能为空',
-                trigger: 'blur'
-            }
-        ]
+        availableRate: [{ required: true, message: '可用率不能为空', trigger: 'blur' }],
+        timeRate: [{ required: true, message: '时间稼动率不能为空', trigger: 'blur' }],
+        performanceRate: [{ required: true, message: '性能稼动率不能为空', trigger: 'blur' }],
+        oeeOrOpe: [{ required: true, message: '生产效率不能为空', trigger: 'blur' }],
+        yieldRate: [{ required: true, message: '良品率不能为空', trigger: 'blur' }],
+        startDate: [{ required: true, message: '有效开始日期不能为空', trigger: 'blur' }],
+        endDate: [{ required: true, message: '有效结束日期不能为空', trigger: 'blur' }]
     }
 
     mounted() {

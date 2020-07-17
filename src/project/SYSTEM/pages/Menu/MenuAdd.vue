@@ -63,7 +63,7 @@
                                 </el-button>
                             </div>
                         </el-popover>
-                        <el-input v-model="dataForm.menuIcon" v-popover:iconListPopover :readonly="true" placeholder="菜单图标名称" class="icon-list__input" />
+                        <el-input v-model="dataForm.menuIcon" v-popover:iconListPopover placeholder="菜单图标名称" class="icon-list__input" clearable />
                     </el-col>
                 </el-row>
             </el-form-item>

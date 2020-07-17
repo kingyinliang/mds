@@ -6,13 +6,13 @@
                     <el-row style=" margin-bottom: 10px; color: black; font-size: 16px;">
                         组织架构
                     </el-row>
-                    <el-tree ref="orgtree" :data="orgTree" node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
+                    <el-tree ref="orgtree" :data="orgTree" node-key="id" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
                 </el-card>
             </el-col>
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
                     <el-input v-model="filterText" size="small" placeholder="搜索人员" />
-                    <el-tree ref="userlistTree" :filter-node-method="filterNode" node-key="userId" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
+                    <el-tree ref="userlistTree" :filter-node-method="filterNode" node-key="id" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
                 </el-card>
             </el-col>
             <el-col style="width: 50px; padding: 70px 5px;">
@@ -22,7 +22,7 @@
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
                     <el-input v-model="filterText1" size="small" placeholder="搜索人员" />
-                    <el-tree ref="userlistTree1" :filter-node-method="filterNode1" node-key="userId" :data="selctId" show-checkbox :props="selctListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick1" @check-change="userTree1" />
+                    <el-tree ref="userlistTree1" :filter-node-method="filterNode1" node-key="id" :data="selctId" show-checkbox :props="selctListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick1" @check-change="userTree1" />
                 </el-card>
             </el-col>
         </el-row>
@@ -43,14 +43,14 @@ export default {
     name: 'LoanedPersonnel',
     components: {},
     props: {
-        orgTree: {
-            type: Array,
-            default: function() { return [[]] }
-        },
-        arrList: {
-            type: Array,
-            default: function() { return {} }
-        }
+        // orgTree: {
+        //     type: Array,
+        //     default: function() { return [[]] }
+        // },
+        // arrList: {
+        //     type: Array,
+        //     default: function() { return {} }
+        // }
     },
     data() {
         return {
@@ -73,7 +73,9 @@ export default {
                     return data.label;
                 },
                 children: ''
-            }
+            },
+            orgTree: [],
+            arrList: []
         };
     },
     computed: {},
@@ -84,6 +86,9 @@ export default {
         filterText1(val) {
             this.$refs.userlistTree1.filter(val);
         }
+    },
+    mounted() {
+        this.getTree();
     },
     methods: {
         init(userId, userTypeName) {
@@ -96,6 +101,14 @@ export default {
                     this.selctId.push({ label: item });
                 });
             }
+        },
+        getTree() {
+            COMMON_API.ORGSTRUCTURE_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+            }).then(({ data }) => {
+                this.orgTree = data.data;
+                this.arrList = [this.orgTree[0].children[0].id];
+            });
         },
         // 根据组织架构查人
         setdetail(dataObj) {

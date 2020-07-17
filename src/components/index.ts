@@ -10,6 +10,7 @@ import QueryEntry from './QueryEntry/QueryEntry.vue'
 import TextRecord from './TextRecord/index.vue'
 import ExcRecord from './ExcRecord/index.vue'
 import RedactBox from './RedactBox/RedactBox.vue';
+import WorkHour from './WorkHour/WorkHour.vue';
 
 export default function(Vue) {
     Vue.component('ScrollTop', ScrollToTop);
@@ -24,4 +25,5 @@ export default function(Vue) {
     Vue.component('TextRecord', TextRecord);
     Vue.component('ExcRecord', ExcRecord);
     Vue.component('RedactBox', RedactBox);
+    Vue.component('WorkHour', WorkHour);
 }

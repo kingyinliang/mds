@@ -94,7 +94,7 @@
                 value: 'changer'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 label: '提交时间', // 操作时间
                 value: 'changed'
             }

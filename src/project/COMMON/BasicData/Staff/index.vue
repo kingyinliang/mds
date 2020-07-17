@@ -63,6 +63,7 @@ export default {
             isDialogShow: false,
             deptID: '',
             deptName: '',
+            factory: '',
             orgTree: [],
             targetInfoList: [],
             multipleSelection: [],
@@ -82,6 +83,7 @@ export default {
         setDeptId(data) {
             this.deptID = data[0].id;
             this.deptName = data[0].deptName;
+            this.factory = data[0].factory;
             this.getItemsList()
         },
         // 序号
@@ -122,10 +124,10 @@ export default {
                 }
                 this.multipleSelection = [];
                 this.targetInfoList = data.data.records;
-                this.targetInfoList.forEach(item => {
-                    item.deptName = this.deptName;
-                    // item.deptName = item.sysDept.deptName;
-                })
+                // this.targetInfoList.forEach(item => {
+                //     item.deptName = this.deptName;
+                //     // item.deptName = item.sysDept.deptName;
+                // })
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
@@ -139,9 +141,10 @@ export default {
         // 新增  修改
         addOrUpdateItem(id) {
             if (this.deptID) {
+                this.orgTree = this.$refs.orgView.OrgTree
                 this.isDialogShow = true;
                 this.$nextTick(() => {
-                    this.$refs.addOrUpdateItem.init(this.deptID, this.deptName, id);
+                    this.$refs.addOrUpdateItem.init(this.deptID, this.deptName, this.factory, id);
                 });
             } else {
                 this.$notify.error({ title: '错误', message: '请先选择部门' });

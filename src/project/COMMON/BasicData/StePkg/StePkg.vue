@@ -3,8 +3,10 @@
         <mds-card title="对应列表" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
-                    <el-input v-model.trim="queryForm.material" size="small" placeholder="领用物料" suffix-icon="el-icon-search" style="width: 160px; margin-right: 10px;" />
-                    <el-button type="primary" size="small" style="margin-right: 10px;" @click="GetDate()">
+                    <el-select v-model="queryForm.stePotId" size="small" placeholder="杀菌锅" style="width: 160px; margin-right: 10px;" clearable>
+                        <el-option v-for="(item, index) in holderList" :key="index" :label="item.holderName" :value="item.id" />
+                    </el-select>
+                    <el-button type="primary" size="small" style="margin-right: 10px;" @click="GetData()">
                         查询
                     </el-button>
                     <el-popover
@@ -14,19 +16,22 @@
                     >
                         <el-form :inline="true" size="small" :model="queryForm" label-width="100px">
                             <el-form-item label="杀菌车间：">
-                                <el-input v-model.trim="queryForm.material" style="width: 180px;" clearable />
-                            </el-form-item>
-                            <el-form-item label="杀菌锅：">
-                                <el-input v-model.trim="queryForm.material" style="width: 180px;" clearable />
+                                <el-select v-model="queryForm.steWorkShop" placeholder="请选择" style="width: 180px;" clearable>
+                                    <el-option v-for="(item, index) in steWorkShop" :key="index" :label="item.deptName" :value="item.id" />
+                                </el-select>
                             </el-form-item>
                             <el-form-item label="包装车间：">
-                                <el-input v-model.trim="queryForm.material" style="width: 180px;" clearable />
+                                <el-select v-model="queryForm.pkgWorkShop" placeholder="请选择" style="width: 180px;" clearable @change="getPkgLine">
+                                    <el-option v-for="(item, index) in pkgWorkShop" :key="index" :label="item.deptName" :value="item.id" />
+                                </el-select>
                             </el-form-item>
                             <el-form-item label="包装产线：">
-                                <el-input v-model.trim="queryForm.material" style="width: 180px;" clearable />
+                                <el-select v-model="queryForm.pkgLine" placeholder="请选择" style="width: 180px;" clearable>
+                                    <el-option v-for="(item, index) in pkgLine" :key="index" :label="item.deptName" :value="item.id" />
+                                </el-select>
                             </el-form-item>
                         </el-form>
-                        <el-button slot="reference" type="primary" size="small" @click="AddDate()">
+                        <el-button slot="reference" type="primary" size="small">
                             高级查询
                         </el-button>
                     </el-popover>
@@ -38,16 +43,16 @@
                     </el-button>
                 </div>
             </template>
-            <el-table header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 72 - 47" :data="tableData" border tooltip-effect="dark">
+            <el-table header-row-class-name="tableHead" class="newTable" :height="mainClientHeight - 72 - 47" :data="tableData" border tooltip-effect="dark" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" fixed="left" align="center" />
                 <el-table-column type="index" label="序号" width="50px" fixed />
-                <el-table-column label="杀菌车间" prop="classType" />
-                <el-table-column label="杀菌锅号" prop="classType" />
-                <el-table-column label="包装车间" prop="classType" />
-                <el-table-column label="包装产线" prop="classType" />
-                <el-table-column label="备注" prop="classType" />
-                <el-table-column label="操作人" prop="classType" />
-                <el-table-column label="操作时间" prop="classType" />
+                <el-table-column label="杀菌车间" prop="steWorkShopName" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="杀菌锅号" prop="stePotNo" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="包装车间" prop="pkgWorkShopName" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="包装产线" prop="pkgLineName" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
+                <el-table-column label="操作人" prop="changer" :show-overflow-tooltip="true" />
+                <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)">
@@ -57,15 +62,16 @@
                 </el-table-column>
             </el-table>
             <el-row>
-                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination :current-page="queryForm.current" :page-sizes="[10, 20, 50]" :page-size="queryForm.size" layout="total, sizes, prev, pager, next, jumper" :total="queryForm.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </mds-card>
-        <ste-pkg-add-or-update />
+        <ste-pkg-add-or-update v-if="addOrUpdate" ref="addOrUpdate" :ste-work-shop="steWorkShop" :pkg-work-shop="pkgWorkShop" :holder-list="holderList" @refreshDataList="GetData" />
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
+    import { COMMON_API, BASIC_API } from 'common/api/api';
     import StePkgAddOrUpdate from './StePkgAddOrUpdate.vue'
 
     @Component({
@@ -79,29 +85,125 @@
             return this.$store.state.common.mainClientHeight;
         }
 
-        currPage = 1;
-        pageSize = 10;
-        totalCount = 0;
-        queryForm = {
-            material: ''
+        $refs: {
+            addOrUpdate: HTMLFormElement;
         };
 
-        tableData = [];
+        queryForm = {
+            current: 1,
+            size: 10,
+            total: 0,
+            stePotId: '',
+            steWorkShop: '',
+            pkgWorkShop: '',
+            pkgLine: ''
+        };
 
-        remove() {
-            console.log(1);
+        addOrUpdate = false;
+        steWorkShop = [];
+        pkgWorkShop = [];
+        pkgLine = [];
+        holderList = [];
+        tableData = [];
+        multipleSelection: string[] = [];
+
+        mounted() {
+            COMMON_API.ORG_QUERY_WORKSHOP_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptType: ['WORK_SHOP'],
+                deptName: '包装'
+            }).then(({ data }) => {
+                this.pkgWorkShop = data.data
+            });
+            COMMON_API.ORG_QUERY_WORKSHOP_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                deptType: ['WORK_SHOP'],
+                deptName: '杀菌'
+            }).then(({ data }) => {
+                this.steWorkShop = data.data
+            });
+            COMMON_API.HOLDER_QUERY_API({
+                current: 1,
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                holderType: '014',
+                size: 999
+            }).then(({ data }) => {
+                this.holderList = data.data.records
+            })
         }
 
-        GetDate() {
-            console.log(1);
+        getPkgLine(n) {
+            COMMON_API.ORG_QUERY_CHILDREN_API({
+                parentId: n
+            }).then(({ data }) => {
+                this.pkgLine = data.data
+            })
+        }
+
+        remove() {
+            if (this.multipleSelection.length === 0) {
+                this.$warningToast('请选择要删除的数据');
+            } else {
+                this.$confirm('确认删除, 是否继续?', '删除', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    BASIC_API.STEPKG_DEL_API({
+                        ids: this.multipleSelection
+                    }).then(() => {
+                        this.$successToast('删除成功!');
+                        this.multipleSelection = [];
+                        this.GetData();
+                    })
+                }).catch()
+            }
+        }
+
+        GetData() {
+            BASIC_API.STEPKG_LIST_API(this.queryForm).then(({ data }) => {
+                if (data.data.current === 1 && data.data.records.length === 0) {
+                    this.$infoToast('暂无任何内容');
+                }
+                this.tableData = data.data.records;
+                this.queryForm.current = data.data.current;
+                this.queryForm.size = data.data.size;
+                this.queryForm.total = data.data.total;
+            });
         }
 
         AddDate() {
-            console.log(1);
+            this.addOrUpdate = true;
+            this.$nextTick(() => {
+                this.$refs.addOrUpdate.init();
+            });
         }
 
-        redact() {
-            console.log(1);
+        redact(row) {
+            this.addOrUpdate = true;
+            this.$nextTick(() => {
+                this.$refs.addOrUpdate.init(row);
+            });
+        }
+
+        // 表格选中
+        handleSelectionChange(val) {
+            this.multipleSelection = [];
+            val.forEach((item) => {
+                this.multipleSelection.push(item.id);
+            });
+        }
+
+        // 改变每页条数
+        handleSizeChange(val) {
+            this.queryForm.size = val;
+            this.GetData();
+        }
+
+        // 跳转页数
+        handleCurrentChange(val) {
+            this.queryForm.current = val;
+            this.GetData();
         }
     }
 </script>

@@ -33,7 +33,7 @@
                 </el-menu-item>
             </el-menu>
             <el-button v-if="factoryName!=='系统设置'" type="text" style="float: right;" @click.native="goMessage">
-                <el-badge :value="messageNum" :max="99" class="item">
+                <el-badge :value="messageNum" :max="99" class="item" :hidden="messageNum===0">
                     <i class="iconfont factory-bell" style="font-size: 18px;" />
                 </el-badge>
             </el-button>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, MSG_API } from 'common/api/api';
     import * as socketApi from 'utils/net/WebSocketConnect';
 
     export default {
@@ -70,6 +70,15 @@
             };
         },
         computed: {
+            // 消息管理用 - 关闭当前页签
+            updateMsgNum: {
+                get() {
+                    return this.$store.state.common.updateMsg;
+                },
+                set(val) {
+                    this.$store.commit('common/updateMsg', val);
+                }
+            },
             navbarLayoutType: {
                 get() {
                     return this.$store.state.common.navbarLayoutType;
@@ -113,24 +122,44 @@
                 }
             }
         },
+        watch: {
+            updateMsgNum(newStatus) {
+                if (newStatus !== false) {
+                    this.$store.commit('common/updateMsg', false);
+                    this.getMsgNum()
+                }
+            }
+        },
         created() {
             socketApi.getSock(this.getConfigResult)
         },
         mounted() {
             this.gender = sessionStorage.getItem('gender')
             this.websocketToLogin()
+            // 获取消息数字
+            this.getMsgNum()
+
         },
         methods: {
-            goMessage() {
-                // this.$store.commit('packaging/updatePackDetail', item.activeOrderMap);
-                this.mainTabs = this.mainTabs.filter(tabItem => tabItem.name !== 'DFMDS-pages-Message');
-                setTimeout(() => {
-                    this.$router.push({
-                        name: `DFMDS-pages-Message-index`
-                    });
-                }, 100);
+            getMsgNum() {
+                MSG_API.MSG_UNREAD_TOTAL_API({
+                    userId: sessionStorage.getItem('loginUserId') // 用户消息id列表
+                }).then(({ data }) => {
+                    this.messageNum = data.data
+                });
+            },
 
-                console.log(this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Message'))
+            goMessage() {
+                if (this.$store.state.common.mainTabs.find(tabItem => tabItem.name === 'DFMDS-pages-Message-index')) {
+                    this.$store.commit('common/updateMsgTabAlive', true);
+                } else {
+                    setTimeout(() => {
+                        this.$router.push({
+                            name: `DFMDS-pages-Message-index`
+                        });
+                    }, 500);
+                }
+
 
             },
             goEacharts() {
@@ -143,8 +172,10 @@
             },
             getConfigResult(res) {
                 // 接收回调函数返回数据的方法
+                console.log('函数 websocket 接收')
                 console.log(res)
-                this.messageNum = res.data
+                //this.messageNum = res.data
+                this.getMsgNum()
             },
             // 退出
             logoutHandle() {
@@ -189,7 +220,6 @@
                     }]
 
                 const url = `${wsObject[key].url}?appid=${wsObject[key].appid}&channel=${wsObject[key].channel}&flag=${sessionStorage.getItem('loginUserId')}`
-                console.log(url)
                 socketApi.createWebSocket(url)
             }
         }
@@ -211,7 +241,7 @@
         transition: 500ms;
     }
     .item {
-        margin-top: 10px;
-        margin-right: 20px;
+        margin-top: 6px;
+        margin-right: 15px;
     }
 </style>

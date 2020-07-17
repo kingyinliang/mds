@@ -197,7 +197,7 @@
                 label: '备注'
             },
             {
-                prop: 'interfaceReturn',
+                prop: 'interfaceMsg',
                 label: '接口回写'
             }
         ];
@@ -242,6 +242,7 @@
                         parentId: val || ''
                     })
                 },
+                defaultValue: '',
                 resVal: {
                     resData: 'data',
                     label: ['deptName'],
@@ -433,13 +434,24 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
+                    const list = this.$refs.queryTable.tabs[0].multipleSelection
+                    for (const item of list) {
+                        if (!item.execStartDate || !item.setupFinDate || !item.operation || !item.finConf) {
+                            this.$warningToast('请填写数据必填项')
+                            return false;
+                        }
+                    }
                     AUDIT_API.HOURS_PASS_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         list: this.$refs.queryTable.tabs[0].multipleSelection,
                         postingDate: this.postingDate
                     }).then(({ data }) => {
                         this.$successToast(data.msg)
-                        this.$refs.queryTable.getDataList()
+                        this.$refs.queryTable.getDataList(true)
+                    }).catch((err) => {
+                        if (err.data.code === 201) {
+                            this.$refs.queryTable.getDataList(true)
+                        }
                     })
                 })
             } else {

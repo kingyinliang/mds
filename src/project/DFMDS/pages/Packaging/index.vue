@@ -16,7 +16,7 @@
                             <div class="home_card__main__item">
                                 <div class="home_card__main__item__title clearfix">
                                     <p class="home_card__main__item__title__left">
-                                        产线：<span class="home_card__main__item__title__left__proLine">{{ item.productLineName }}</span>产线
+                                        产线：<span class="home_card__main__item__title__left__proLine">{{ item.productLineName }}</span>
                                     </p>
                                     <p v-if="item.activeOrderNo!==''" class="home_card__main__item__title__right">
                                         <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatusValue : '' }}</span>
@@ -34,7 +34,9 @@
                                         </el-form-item>
                                         <el-form-item label="生产物料：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : '' }}</span>
+                                                <el-tooltip class="item" effect="dark" :content="item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : ''" placement="top">
+                                                    <span class="el-input__inner">{{ item.activeOrderMap? `${item.activeOrderMap.materialCode} ${item.activeOrderMap.materialName}` : '' }}</span>
+                                                </el-tooltip>
                                             </div>
                                         </el-form-item>
                                         <el-form-item label="订单产量：">
@@ -44,7 +46,7 @@
                                         </el-form-item>
                                         <el-form-item label="实际产量：">
                                             <div class="disabled-input el-input el-input--small is-disabled">
-                                                <span class="el-input__inner">{{ item.activeOrderMap && item.activeOrderMap.realOutput? `${item.activeOrderMap.realOutput} ${item.activeOrderMap.outputUnit}` : `0${item.activeOrderMap.outputUnit}` }}</span>
+                                                <span class="el-input__inner">{{ item.activeOrderMap && item.activeOrderMap.realOutput? `${item.activeOrderMap.realOutput} ${item.activeOrderMap.outputUnit}` : `0 ${item.activeOrderMap.outputUnit}` }}</span>
                                             </div>
                                         </el-form-item>
                                         <div class="home_card__main__item__main__right__btn">
@@ -76,6 +78,10 @@
         }
     })
     export default class PackagingIndex extends Vue {
+        $refs: {
+            queryTable: HTMLFormElement;
+        };
+
         queryResultList: PkgObj[] = [];
         checkStatus: object[]=[];
 
@@ -143,8 +149,22 @@
             }
         ];
 
+        mounted() {
+            setTimeout(() => {
+                this.$nextTick(() => {
+                    this.$refs.queryTable.getDataList(true)
+                })
+            }, 2000);
+        }
+
         // 查询请求
         listInterface = params => {
+            if ((params.productDate === '' || !params.productDate) && params.orderNo === '') {
+                this.$warningToast('日期或订单请选填一项');// eslint-disable-line
+                return new Promise((resolve, reject) => {
+                    reject('error') // eslint-disable-line
+                });
+            }
             params.current = 1;
             params.size = 10;
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;

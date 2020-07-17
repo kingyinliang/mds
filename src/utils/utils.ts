@@ -266,7 +266,7 @@ interface UserObj {
 export function creatGetPath(path) {
     let paths = path.split('.');
     return function getPath(obj) {
-        let orgPaths = paths.concat()
+        let orgPaths = paths.concat();
         let res = obj;
         let prop;
         while ((prop = orgPaths.shift())) {
@@ -377,7 +377,7 @@ export function dataEntryData(formHeader, data, orgData, delArr, insertArr, upda
     });
 }
 export function getIsRedact(status) {
-    return status !== 'C' && status !== 'D' && status !== 'P'
+    return status !== 'C' && status !== 'D' && status !== 'P';
 }
 // 浮点型加法函数
 export function accAdd(arg1, arg2) {
@@ -579,8 +579,8 @@ export function recombineField(arr, field) {
     const newField: string[] = [];
     if (arr.length !== 0) {
         arr.map(item => {
-            newField.push(item[field])
-        })
+            newField.push(item[field]);
+        });
     }
     return newField;
 }

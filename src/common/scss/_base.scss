@@ -1762,6 +1762,18 @@ body {
         }
     }
 }
+/* pot color blocl end */
+.solerow {
+    margin-top: 5px;
+    line-height: 33px;
+    div {
+        float: left;
+        font-size: 12px;
+    }
+    .input_bottom {
+        margin-right: 50px;
+    }
+}
 .input_border_bg {
     font-size: 12px;
     width: 120px;
@@ -1774,4 +1786,3 @@ body {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-/* pot color blocl end */

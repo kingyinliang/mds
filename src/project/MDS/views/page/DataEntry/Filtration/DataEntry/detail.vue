@@ -293,13 +293,17 @@ export default {
             }
             const materialHolderList = this.$refs.material.GetmaterialList()
             const equWorkingHolderList = this.$refs.equworkinghours.GetequWorkingList()
-            const equWorkingHolderLists = equWorkingHolderList.filter(xy => xy.content === '过滤')
-            const diffArr = [...equWorkingHolderLists].filter(x => [...materialHolderList].every(y => (y.holderId !== x.holderId)));
-            const diffArrs = [...materialHolderList].filter(x => [...equWorkingHolderLists].every(y => (y.holderId !== x.holderId)));
-            if (diffArr.length !== 0 || diffArrs.length !== 0) {
-                this.$warningToast('设备工时与物料领用罐号须一致');
-                return false;
+            const equWorkingHolderLists = equWorkingHolderList.filter(xy => xy.content === '过滤' || xy.content === '脱盐')
+            if (equWorkingHolderLists.length !== 0) {
+                const diffArr = [...equWorkingHolderLists].filter(x => [...materialHolderList].every(y => (y.holderId !== x.holderId)));
+                const diffArrs = [...materialHolderList].filter(x => [...equWorkingHolderLists].every(y => (y.holderId !== x.holderId)));
+                if (diffArr.length !== 0 || diffArrs.length !== 0) {
+                    this.$warningToast('设备工时与物料领用罐号须一致');
+                    return false;
+                }
             }
+            // this.$warningToast('可正常提交');
+            // return false;
             this.$confirm('确认提交该订单, 是否继续?', '提交订单', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
