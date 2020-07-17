@@ -191,6 +191,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { GRANARY_API } from '@/api/api';
+// import { STE_API } from 'common/api/api';
 import MSG from '@/assets/js/hint-msg';
 @Component({
     components: {},
@@ -240,11 +241,12 @@ export default class DissolveBucketDetail extends Vue {
     };
 
     mounted() {
-        this.factoryId = this.$store.state.common.BeanPulp.factory;
-        this.holderId = this.$store.state.common.BeanPulp.holderId;
+        // this.factoryId = this.$store.state.common.BeanPulp.factory;
+        // this.holderId = this.$store.state.common.BeanPulp.holderId;
         this.retrieveDetail();
-        this.retrieveDataList();
-        this.retrieveAdjustList();
+        //this.retrieveDataList();
+        //this.retrieveAdjustList();
+
     }
 
     validatePassAdjustNum = (rule, value, callback) => {
@@ -318,16 +320,27 @@ export default class DissolveBucketDetail extends Vue {
 
     retrieveDetail() {
         this.formData = {};
-        Vue.prototype.$http(`${GRANARY_API.WHEAT_POT_DETAIL}/${this.factoryId}/${this.holderId}`, `GET`).then(({ data }) => {
-            if (data.code === 0) {
-                this.formData = data.data;
-            } else {
-                this.$notify.error({
-                    title: MSG.API.normalError.title,
-                    message: data.msg
-                });
-            }
-        });
+
+        console.log(this.$store.state.sterilize.dissolveBucketDetail)
+
+        // STE_API.STE_DISSOLUTIONBUCKET_ITEM_QUERY_API({
+        //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+        //     workShop:
+        //     }).then(({ data }) => {
+
+        // });
+
+
+        // Vue.prototype.$http(`${GRANARY_API.WHEAT_POT_DETAIL}/${this.factoryId}/${this.holderId}`, `GET`).then(({ data }) => {
+        //     if (data.code === 0) {
+        //         this.formData = data.data;
+        //     } else {
+        //         this.$notify.error({
+        //             title: MSG.API.normalError.title,
+        //             message: data.msg
+        //         });
+        //     }
+        // });
     }
 
     // 当前库存量
