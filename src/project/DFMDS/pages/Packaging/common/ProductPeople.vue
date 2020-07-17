@@ -65,7 +65,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" width="200" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" width="210" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>开始时间
                     </template>
@@ -81,7 +81,7 @@
                         <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="200" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="210" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>结束时间
                     </template>
@@ -134,7 +134,7 @@
         </mds-card>
         <audit-log :table-data="productPeopleAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
         <official-worker v-if="officialWorkerStatus" ref="officialWorker" @changeUser="changeUser" />
-        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :org-tree="orgTree" :arr-list="arrList" @changeUser="changeUser" />
+        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" @changeUser="changeUser" />
         <temporary-worker v-if="temporaryWorkerStatus" ref="temporaryWorker" @changeUser="changeUser" />
     </div>
 </template>

@@ -3,9 +3,17 @@ export default {
     state: {
         Craft: {},
         Cooking: {}, // 煮料
-        dissolveBucketDetail: {}
+        dissolveBucketDetail: {},
+        SemiReceive: {},
+        AcceAdd: {}
     },
     mutations: {
+        updateAcceAdd(state, AcceAdd) {
+            state.AcceAdd = AcceAdd;
+        },
+        updateSemiReceive(state, SemiReceive) {
+            state.SemiReceive = SemiReceive;
+        },
         updateCraft(state, Craft) {
             state.Craft = Craft;
         },

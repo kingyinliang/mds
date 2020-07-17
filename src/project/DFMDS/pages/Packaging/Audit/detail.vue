@@ -122,7 +122,7 @@
                 type: 'p',
                 icon: 'factory-riqi1',
                 label: '订单日期',
-                value: ['orderStartDate', 'orderEndDate']
+                value: 'orderStartDate'
             },
             {
                 type: 'date-picker',
