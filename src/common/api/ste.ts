@@ -6,9 +6,21 @@ const STE_API = {
      */
     STE_HOME_LIST_API: params => httpProxy('/ste/query', 'POST', params),
     /**
-     * @property {string} STE_SEMI_LIST_API 杀菌车间-半成品领用查询
+     * @property {string} STE_SEMI_LIST_API 杀菌车间-半成品领用-查询
      */
     STE_SEMI_LIST_API: params => httpProxy('/ste/steSemiMaterial/query', 'POST', params),
+    /**
+     * @property {string} STE_SEMI_COPY_API 杀菌车间-半成品领用-复制
+     */
+    STE_SEMI_COPY_API: params => httpProxy('/ste/steSemiMaterial/copy', 'POST', params),
+    /**
+     * @property {string} STE_SEMI_SAVE_API 杀菌车间-半成品领用-保存
+     */
+    STE_SEMI_SAVE_API: params => httpProxy('/ste/steSemiMaterial/save', 'POST', params),
+    /**
+     * @property {string} STE_SEMI_SUBMIT_API 杀菌车间-半成品领用-提交
+     */
+    STE_SEMI_SUBMIT_API: params => httpProxy('/ste/steSemiMaterial/submit', 'POST', params),
     /**
      * @property {string} STE_SPLIT_LIST_API 杀菌车间-订单拆分
      */

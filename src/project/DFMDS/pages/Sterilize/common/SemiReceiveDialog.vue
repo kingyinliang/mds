@@ -8,7 +8,9 @@
                 <el-input v-model="dataForm.consumeType" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="发酵罐号：" prop="fermentPotNo">
-                <el-input v-model="dataForm.fermentPotNo" placeholder="手动输入" />
+                <el-select v-model="dataForm.fermentPotNo" placeholder="请选择" clearable>
+                    <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
+                </el-select>
             </el-form-item>
             <el-form-item label="领用物料：" prop="">
                 <el-input v-model="dataForm.materialCode" placeholder="手动输入" />
@@ -51,12 +53,14 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
+    import { COMMON_API } from 'common/api/api';
 
     @Component
     export default class SemiReceiveDialog extends Vue {
-        $refs: {dataForm: HTMLFormElement}
+        $refs: {dataForm: HTMLFormElement};
         visible = false;
-        dataForm = {};
+        potArr = [];
+        dataForm: DataObj = {};
         dataRule = {
             stePotNo: [{ required: true, message: '生产锅号不能为空', trigger: 'blur' }],
             fermentPotNo: [{ required: true, message: '发酵罐号不能为空', trigger: 'blur' }],
@@ -66,17 +70,33 @@
             consumeBatch: [{ required: true, message: '领用批次不能为空', trigger: 'blur' }]
         };
 
+        mounted() {
+            COMMON_API.HOLDER_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                current: 1,
+                size: 9999,
+                holderType: '001'
+            }).then(({ data }) => {
+                this.potArr = data.data.records
+            })
+        }
+
         init() {
             this.visible = true;
+            this.dataForm.stePotNo = this.$store.state.sterilize.SemiReceive.potNo
         }
 
         dataFormSubmit() {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
-                    console.log(1);
+                    this.visible = false;
+                    this.$emit('success', this.dataForm)
                 }
             })
         }
+    }
+    interface DataObj {
+        stePotNo?: string;
     }
 </script>
 

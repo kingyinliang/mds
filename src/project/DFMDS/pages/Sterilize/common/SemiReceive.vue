@@ -41,7 +41,7 @@
             </div>
         </mds-card>
         <audit-log :table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
-        <semi-receive-dialog v-if="visible" ref="SemiReceiveDialog" />
+        <semi-receive-dialog v-if="visible" ref="SemiReceiveDialog" @success="dataPush" />
     </div>
 </template>
 
@@ -74,7 +74,7 @@
         }
 
         semiCopy() {
-            console.log(1);
+            STE_API.STE_SEMI_COPY_API({})
         }
 
         receive() {
@@ -82,6 +82,11 @@
             this.$nextTick(() => {
                 this.$refs.SemiReceiveDialog.init()
             });
+        }
+
+        dataPush(data) {
+            this.visible = false;
+            this.semiTable.push(data);
         }
 
         removeDataRow(row) {

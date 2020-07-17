@@ -9,6 +9,8 @@
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
+            :saved-datas="savedDatas"
+            :submit-datas="submitDatas"
         >
             <template slot="1" slot-scope="data">
                 <semi-receive ref="semiReceive" :is-redact="data.isRedact" />
@@ -25,7 +27,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, STE_API } from 'common/api/api';
     import SemiReceive from './common/SemiReceive.vue';
 
     @Component({
@@ -120,6 +122,14 @@
                 this.formHeader.potOrder = this.$store.state.sterilize.SemiReceive.potOrderMap.potOrder;
                 this.$refs.semiReceive.init();
             })
+        }
+
+        savedDatas() {
+            return STE_API.STE_SEMI_SAVE_API({})
+        }
+
+        submitDatas() {
+            return STE_API.STE_SEMI_SUBMIT_API({})
         }
     }
     interface OrderData {

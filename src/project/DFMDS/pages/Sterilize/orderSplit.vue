@@ -182,7 +182,7 @@
             {
                 type: 'select',
                 label: '状态',
-                prop: 'orderStatus',
+                prop: 'OrgOrderStatus',
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_CHECK_STATUS'
@@ -199,6 +199,7 @@
 
         // 查询请求
         listInterface = params => {
+            params.orderStatus = [params.OrgOrderStatus];
             params.current = this.currPage; // eslint-disable-line
             params.size = this.pageSize; // eslint-disable-line
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;

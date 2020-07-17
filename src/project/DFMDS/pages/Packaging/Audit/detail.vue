@@ -234,7 +234,7 @@
             if (this.$refs.dataEntry.activeName === '6' || this.$refs.dataEntry.activeName === '7') {
                 return false
             }
-            if (this.tabs[Number(this.$refs.dataEntry.activeName) - 1].status === 'R') {
+            if (this.tabs[Number(this.$refs.dataEntry.activeName) - 1].status !== 'D') {
                 return false
             }
             this.visibleRefuse = true;
