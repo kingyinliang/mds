@@ -59,7 +59,7 @@
                 </el-table-column>
                 <el-table-column label="挪笼人员" prop="moveOperator" :show-overflow-tooltip="true" min-width="150" />
             </el-table>
-            <el-table v-if="formHeader.pressure === 2" :data="materialList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
+            <el-table v-if="formHeader.pressure === 2" class="newTable" :data="materialList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
                 <el-table-column fixed="left" type="selection" min-width="40" />
                 <el-table-column label="工序" min-width="50">
                     终压
