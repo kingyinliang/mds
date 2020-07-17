@@ -17,7 +17,7 @@
                         >{{ scope.row.status === 'noPass' ? '审核不通过' : scope.row.status === 'saved' ? '已保存' : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'checked' ? '通过' : scope.row.status === '已同步' ? '未录入' : '未录入' }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column width="120">
+                <el-table-column min-width="120">
                     <template slot="header">
                         <i class="reqI">*</i><span>原汁罐号</span>
                     </template>
@@ -25,7 +25,7 @@
                         {{ scope.row.potNoName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="是否混合罐" width="110">
+                <el-table-column label="是否混合罐" min-width="110">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.fullPort" placeholder="请选择" disabled size="small" @change="fullPortChange">
                             <el-option label="正常" value="正常" />
@@ -34,34 +34,34 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="物料" width="220">
+                <el-table-column label="物料" min-width="220">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.material" filterable placeholder="请选择" disabled size="small" @change="setProVersion(scope.row)">
                             <el-option v-for="item in serchSapList" :key="item.code + ' ' + item.value" :label="item.code + ' ' + item.value" :value="item.code + ' ' + item.value" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="入罐数量" width="120" prop="inPotAmount" />
-                <el-table-column label="满罐数量" width="140" prop="fullPotAmount" />
-                <el-table-column label="单位" width="50" prop="unit" />
-                <el-table-column label="满罐日期" width="140" prop="fullPotDate" />
-                <el-table-column label="原汁批次" width="140" prop="batch" />
-                <el-table-column label="订单类型" width="120">
+                <el-table-column label="入罐数量" min-width="120" prop="inPotAmount" />
+                <el-table-column label="满罐数量" min-width="140" prop="fullPotAmount" />
+                <el-table-column label="单位" min-width="50" prop="unit" />
+                <el-table-column label="满罐日期" min-width="140" prop="fullPotDate" />
+                <el-table-column label="原汁批次" min-width="140" prop="batch" />
+                <el-table-column label="订单类型" min-width="120">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.orderType" placeholder="请选择" disabled size="mini" style="width: 100px;">
                             <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.value" :value="item.code" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="生产版本" width="120">
+                <el-table-column label="生产版本" min-width="120">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.proVersion" placeholder="请选择" size="mini" style="width: 100px;" :disabled="true">
                             <el-option v-for="(item, index) in versionList" :key="index" :label="item.value" :value="item.code" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="生产订单" width="140" prop="orderNo" />
-                <el-table-column label="操作" width="50" fixed="right">
+                <el-table-column label="生产订单" min-width="140" prop="orderNo" />
+                <el-table-column label="操作" width="60" fixed="right">
                     <template slot-scope="scope">
                         <el-button type="text" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isVerBack !== '1')" @click="backIn(scope.row)">
                             退回

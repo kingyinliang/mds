@@ -38,7 +38,7 @@
                                     <div class="pot_water">
                                         <div
                                             class="pot_water_sole"
-                                            :style="{'height': (item.sumAmount ? (item.sumAmount / item.holderHold) * 100 : 0) + '%', 'background': '#69C0FF'}"
+                                            :style="{'height': (item.sumAmount ? (item.sumAmount / item.holderHold) * 100 : 0) + '%', 'background': item.potColor}"
                                         />
                                     </div>
                                 </div>
@@ -130,6 +130,23 @@ export default {
                     this.formHeader.totalCount = data.holderInfo.length;
                     this.formHeader.currPage = 1;
                     this.dataList = this.sumDataList.slice((this.formHeader.currPage - 1) * this.formHeader.pageSize, (this.formHeader.currPage - 1) * this.formHeader.pageSize + this.formHeader.pageSize);
+                    this.dataList.map((item) => {
+                        if (item.FER_DAYS <= 30) {
+                            item.potColor = 'rgb(214, 210, 196)';
+                        } else if (item.FER_DAYS <= 60) {
+                            item.potColor = 'rgb(205, 167, 134)';
+                        } else if (item.FER_DAYS <= 90) {
+                            item.potColor = 'rgb(181, 129, 80)';
+                        } else if (item.FER_DAYS <= 120) {
+                            item.potColor = 'rgb(198, 124, 90)';
+                        } else if (item.FER_DAYS <= 150) {
+                            item.potColor = 'rgb(173, 89, 45)';
+                        } else if (item.FER_DAYS <= 180) {
+                            item.potColor = 'rgb(138, 57, 27)';
+                        } else if (item.FER_DAYS > 180) {
+                            item.potColor = 'rgb(199, 9, 9)';
+                        }
+                    })
                     if (!this.dataList.length) {
                         this.$notify({
                             title: '警告',

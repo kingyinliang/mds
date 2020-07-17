@@ -6,7 +6,7 @@
                     获取工时
                 </el-button>
             </template>
-            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="timeDate" tooltip-effect="dark" @row-dblclick="GetLog">
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" border :data="timeDate" tooltip-effect="dark" @row-dblclick="GetLog">
                 <el-table-column label="状态" width="95">
                     <template slot-scope="scope">
                         <span

@@ -1,7 +1,7 @@
 <template>
     <div>
         <mds-card title="布浆总量" name="SumDate">
-            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="SumDate" :row-class-name="RowDelFlag" @row-dblclick="GetLog">
+            <el-table ref="table1" class="newTable borderTable" header-row-class-name="tableHead" :data="SumDate" :row-class-name="RowDelFlag" @row-dblclick="GetLog">
                 <el-table-column label="原汁信息">
                     <el-table-column label="状态" width="95">
                         <template slot-scope="scope">
