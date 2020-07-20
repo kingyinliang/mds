@@ -5,7 +5,7 @@
             type="audit"
             :header-base="headerBase"
             :form-header="formHeader"
-            :order-status="formHeader.orderStatus"
+            :order-status="formHeader.orderStatusName"
             :tabs="tabs"
         >
             <template slot="1" slot-scope="data">

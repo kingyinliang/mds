@@ -182,7 +182,7 @@
                         <el-button type="primary" size="small" @click="goDetail">
                             详情
                         </el-button>
-                        <el-button type="primary" size="small" :disabled="formHeader.orderStatus !== '待审核'" @click="pass()">
+                        <el-button type="primary" size="small" :disabled="formHeader.orderStatusName !== '待审核'" @click="pass()">
                             审核通过
                         </el-button>
                     </div>

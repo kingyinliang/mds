@@ -8,12 +8,14 @@
                 <el-input v-model="dataForm.consumeType" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="发酵罐号：" prop="fermentPotNo">
-                <el-select v-model="dataForm.fermentPotNo" placeholder="请选择" clearable>
+                <el-select v-model="dataForm.fermentPotNo" placeholder="请选择" style="width: 100%;" clearable>
                     <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
                 </el-select>
             </el-form-item>
             <el-form-item label="领用物料：" prop="">
-                <el-input v-model="dataForm.materialCode" placeholder="手动输入" />
+                <el-select v-model="dataForm.materialCode" placeholder="请选择" style="width: 100%;" clearable>
+                    <el-option v-for="(item, index) in materialArr" :key="index" :label="item.holderName" :value="item.holderNo" />
+                </el-select>
             </el-form-item>
             <el-form-item label="单位：" prop="consumeUnit">
                 <el-input v-model="dataForm.consumeUnit" placeholder="手动输入" disabled />
@@ -53,13 +55,14 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, ORDER_API } from 'common/api/api';
 
     @Component
     export default class SemiReceiveDialog extends Vue {
         $refs: {dataForm: HTMLFormElement};
         visible = false;
         potArr = [];
+        materialArr = [];
         dataForm: DataObj = {};
         dataRule = {
             stePotNo: [{ required: true, message: '生产锅号不能为空', trigger: 'blur' }],
@@ -78,6 +81,12 @@
                 holderType: '001'
             }).then(({ data }) => {
                 this.potArr = data.data.records
+            })
+            ORDER_API.ORDER_BOOM_LIST_API({
+                materialType: 'ZHAL',
+                orderNoList: [this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo]
+            }).then(({ data }) => {
+                this.materialArr = data.data.records
             })
         }
 
