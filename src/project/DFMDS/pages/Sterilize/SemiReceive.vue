@@ -125,11 +125,13 @@
         }
 
         savedDatas() {
-            return STE_API.STE_SEMI_SAVE_API({})
+            const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
+            return STE_API.STE_SEMI_SAVE_API(steSemi)
         }
 
         submitDatas() {
-            return STE_API.STE_SEMI_SUBMIT_API({})
+            const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
+            return STE_API.STE_SEMI_SUBMIT_API(steSemi)
         }
     }
     interface OrderData {
