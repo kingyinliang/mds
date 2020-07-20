@@ -5,7 +5,7 @@
             :redact-auth="'pkg:order:update'"
             :save-auth="'pkg:order:update'"
             :submit-auth="'pkg:order:update'"
-            :order-status="formHeader.orderStatus"
+            :order-status="formHeader.orderStatusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"

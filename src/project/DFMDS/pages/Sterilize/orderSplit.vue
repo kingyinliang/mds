@@ -17,7 +17,7 @@
                                 <el-table-column type="index" width="55" label="序号" fixed />
                                 <el-table-column label="订单状态" width="80" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
-                                        <label :style="{ color: scope.row.orderStatus === '不通过' ? 'red' : scope.row.orderStatus === '通过' ? 'rgb(103, 194, 58)' : '',}">{{ scope.row.orderStatus }}</label>
+                                        <label :style="{ color: scope.row.orderStatusName === '不通过' ? 'red' : scope.row.orderStatusName === '通过' ? 'rgb(103, 194, 58)' : '',}">{{ scope.row.orderStatusName }}</label>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="订单日期" width="100" prop="orderStartDate" :show-overflow-tooltip="true" />
@@ -199,7 +199,7 @@
 
         // 查询请求
         listInterface = params => {
-            params.orderStatus = [params.OrgOrderStatus];
+            params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
             params.current = this.currPage; // eslint-disable-line
             params.size = this.pageSize; // eslint-disable-line
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
