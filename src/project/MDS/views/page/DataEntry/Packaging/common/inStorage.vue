@@ -625,14 +625,23 @@ export default {
                     this.$warningToast('生产入库批次不一致，请确认');
                     return false;
                 }
-                const jiaoji = this.InVlist.filter(x => InDateArray.find(y => (x.batch === y.batch && Number(x.aiShelves) === y.aiShelves)))
-                if (jiaoji.length !== this.InVlist.length) {
-                    ty = false;
-                    this.$warningToast('生产入库机维组确认数不一致，请确认');
-                    return false;
-                }
+                // const jiaoji = this.InVlist.filter(x => InDateArray.find(y => (x.batch === y.batch && Number(x.aiShelves) === y.aiShelves)))
+                // console.log(jiaoji);
+                // if (jiaoji.length !== this.InVlist.length) {
+                //     ty = false;
+                //     this.$warningToast('生产入库机维组确认数不一致，请确认');
+                //     return false;
+                // }
+                InDateArray.map((item) => {
+                    if (this.InVlist.find(inItem => inItem.batch === item.batch).jwzAcount !== item.aiShelves) {
+                        ty = false;
+                        this.$warningToast('生产入库机维组确认数不一致，请确认');
+                        return false;
+                    }
+                })
             }
             return ty;
+            // return false;
         },
         // 单位校验
         UnitRul(item) {

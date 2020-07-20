@@ -50,7 +50,7 @@
                             '': formHeader.orderStatus === '待审核',
                         }"
                     >
-                        订单状态：{{ formHeader.orderStatus }}
+                        订单状态：{{ formHeader.orderStatusName }}
                     </i>
                 </el-col>
             </el-row>
@@ -155,16 +155,16 @@
                     </el-col>
                     <el-col :span="12">
                         <el-table class="newTable" :data="proMaterialDiffList" header-row-class-name="tableHead" border tooltip-effect="dark">
-                            <el-table-column label="领用物料" show-overflow-tooltip>
+                            <el-table-column label="领用物料" show-overflow-tooltip min-width="170">
                                 <template slot-scope="scope">
                                     {{ scope.row.materialCode }} {{ scope.row.materialName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="materialUnit" label="单位" min-width="30" />
-                            <el-table-column prop="useAmount" label="领用数量" min-width="45" />
-                            <el-table-column prop="realUseAmount" label="实际用量" min-width="45" />
-                            <el-table-column prop="realLoss" label="实际损耗" min-width="35" />
-                            <el-table-column prop="lossRate" label="损耗率" min-width="30" />
+                            <el-table-column prop="materialUnit" label="单位" min-width="35" />
+                            <el-table-column prop="useAmount" label="领用数量" min-width="50" />
+                            <el-table-column prop="realUseAmount" label="实际用量" min-width="50" />
+                            <el-table-column prop="realLoss" label="实际损耗" min-width="40" />
+                            <el-table-column prop="lossRate" label="损耗率" min-width="50" />
                         </el-table>
                     </el-col>
                 </el-row>
