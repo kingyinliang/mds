@@ -86,7 +86,7 @@
 
         dataPush(data: SemiObj) {
             this.visible = false;
-            this.semiTable.push(data);
+            this.semiTable.push(data); //测试
         }
 
         removeDataRow(row) {
