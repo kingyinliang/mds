@@ -61,7 +61,7 @@
         $refs: {SemiReceiveDialog: HTMLFormElement}
 
         semiAudit = [];
-        semiTable = [];
+        semiTable: SemiObj[] = [];
         visible = false;
 
         init() {
@@ -84,7 +84,7 @@
             });
         }
 
-        dataPush(data) {
+        dataPush(data: SemiObj) {
             this.visible = false;
             this.semiTable.push(data);
         }
@@ -105,6 +105,11 @@
             }
             return '';
         }
+    }
+    interface SemiObj {
+        factoryName?: string;
+        potNo?: string;
+        potOrder?: string;
     }
 </script>
 
