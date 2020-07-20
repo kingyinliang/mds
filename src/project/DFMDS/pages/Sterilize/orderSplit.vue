@@ -211,10 +211,14 @@
         }
 
         setData(data) {
-            this.queryResultList = data.data.records;
-            this.currPage = data.data.current;
-            this.pageSize = data.data.size;
-            this.totalCount = data.data.total;
+            if (data.data.records.length) {
+                this.queryResultList = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+            } else {
+                this.$infoToast('暂无任何内容');
+            }
         }
 
         // 表格双击
@@ -230,10 +234,14 @@
                 return false
             }
             STE_API.STE_SPLIT_LIST_API(this.splitForm).then(({ data }) => {
-                this.splitTable = data.data.records
-                this.splitForm.current = data.data.current;
-                this.splitForm.size = data.data.size;
-                this.splitForm.total = data.data.total;
+                if (data.data.records.length) {
+                    this.splitTable = data.data.records
+                    this.splitForm.current = data.data.current;
+                    this.splitForm.size = data.data.size;
+                    this.splitForm.total = data.data.total;
+                } else {
+                    this.$infoToast('暂无任何内容');
+                }
             })
         }
 

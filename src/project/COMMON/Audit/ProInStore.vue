@@ -446,6 +446,7 @@
                         this.$refs.queryTable.getDataList(true)
                     }).catch((err) => {
                         if (err.data.code === 201) {
+                            this.$successToast(err.data.msg)
                             this.$refs.queryTable.getDataList(true)
                         }
                     })
