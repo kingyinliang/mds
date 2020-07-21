@@ -27,7 +27,15 @@
                 <el-input v-model="dataForm.holderArea" placeholder="手动输入" clearable />
             </el-form-item>
             <el-form-item label="生产物料：">
-                <el-input v-model="dataForm.material" placeholder="手动输入" clearable />
+                <!-- <el-input v-model="dataForm.material" placeholder="手动输入" clearable /> -->
+                <el-select v-model="dataForm.material" multiple placeholder="请选择" style="width: 100%;">
+                    <el-option
+                        v-for="item in materialList"
+                        :key="item.materialCode"
+                        :label="item.materialName"
+                        :value="item.materialCode"
+                    />
+                </el-select>
             </el-form-item>
             <el-form-item label="归属车间：" prop="workshop">
                 <template v-if="workshopList.length===0">
@@ -68,6 +76,7 @@
         },
         data() {
             return {
+                materialList: [],
                 containerID: '',
                 isDialogShow: false,
                 dataForm: {
@@ -78,7 +87,7 @@
                     holderStatus: '',
                     holderBatch: '',
                     holderArea: '',
-                    material: '',
+                    material: [],
                     workshop: ''
                 },
                 dataFormFromAdd: {
@@ -89,7 +98,7 @@
                     holderVolume: 0,
                     holderBatch: '',
                     holderArea: '',
-                    material: '',
+                    material: [],
                     workshop: ''
                 },
                 checkRules: {
@@ -121,6 +130,12 @@
                         id: obj.id,
                         version: obj.version
                     }).then(({ data }) => {
+                        const tempMaterial = []
+                        data.data.material.forEach(item => {
+                            tempMaterial.push(item.materialCode)
+                        })
+
+
                         this.dataForm.id = data.data.id;
                         this.dataForm.holderId = data.data.holderId;
                         this.dataForm.holderType = data.data.holderType;
@@ -130,16 +145,37 @@
                         this.dataForm.holderBatch = data.data.holderBatch;
                         this.dataForm.holderStatus = data.data.holderStatus;
                         this.dataForm.holderArea = data.data.holderArea;
-                        this.dataForm.material = data.data.material;
+                        this.dataForm.material = tempMaterial;
                         this.dataForm.workshop = data.data.deptId;
                         this.dataForm.version = data.data.version;
                         this.isDialogShow = true;
                     });
+
+
                 } else {
                     this.dataForm = Object.assign({}, this.dataFormFromAdd);
                     this.containerID = 0;
                     this.isDialogShow = true;
                 }
+
+                // COMMON_API.DICTQUERY_API({
+                //     dictType: 'COMMON_MATERIAL_TYPE'
+                // }).then(({ data }) => {
+                //     console.log('2222222')
+                //     console.log(data)
+                //     this.materialList = data.data
+                // });
+
+                COMMON_API.SEARCH_MATERIAL_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    materialType: 'ZHAL'
+                }).then(({ data }) => {
+                    this.materialList = data.data
+                    console.log('77777')
+                    console.log(data)
+                });
+
+
             },
             getContainerStatusList() {
                 COMMON_API.DICTQUERY_API({
@@ -150,6 +186,15 @@
             },
             submitDataForm() {
                 this.$refs.dataForm.validate(valid => {
+                    const tempMaterial = [];
+                    this.materialList.forEach(item => {
+                        this.dataForm.material.forEach(element => {
+                            if (item.materialCode === element) {
+                                tempMaterial.push({ materialCode: element, materialName: item.materialName })
+                            }
+                        })
+                    })
+
                     if (valid) {
                         if (this.containerID) { // 修改
                             COMMON_API.HOLDER_UPDATE_API({
@@ -161,7 +206,7 @@
                                 holderBatch: this.dataForm.holderBatch,
                                 holderStatus: this.dataForm.holderStatus,
                                 holderArea: this.dataForm.holderArea,
-                                material: this.dataForm.material,
+                                material: tempMaterial,
                                 deptId: this.dataForm.workshop,
                                 id: this.containerID,
                                 version: this.dataForm.version
@@ -178,7 +223,7 @@
                                 holderVolume: this.dataForm.holderVolume,
                                 holderBatch: this.dataForm.holderBatch,
                                 holderStatus: this.dataForm.holderStatus,
-                                material: this.dataForm.material,
+                                material: tempMaterial,
                                 holderArea: this.dataForm.holderArea,
                                 deptId: this.dataForm.workshop
                             }).then(() => {
