@@ -8,7 +8,7 @@
                 <el-radio v-model="dataForm.consumeType" label="1">
                     是
                 </el-radio>
-                <el-radio v-model="dataForm.consumeType" label="2">
+                <el-radio v-model="dataForm.consumeType" label="0">
                     否
                 </el-radio>
             </el-form-item>
@@ -19,7 +19,7 @@
             </el-form-item>
             <el-form-item label="领用物料：" prop="">
                 <el-select v-model="dataForm.materialCode" placeholder="请选择" style="width: 100%;" clearable @change="setUtil">
-                    <el-option v-for="(item, index) in materialArr" :key="index" :label="item.materialName" :value="item.materialCode" />
+                    <el-option v-for="(item, index) in materialArr" :key="index" :label="item.matnr + ' ' + item.materialName" :value="item.matnr" />
                 </el-select>
             </el-form-item>
             <el-form-item label="单位：" prop="consumeUnit">
@@ -61,13 +61,14 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, ORDER_API } from 'common/api/api';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
 
     @Component
     export default class SemiReceiveDialog extends Vue {
         $refs: {dataForm: HTMLFormElement};
         visible = false;
         potArr = [];
-        materialArr = [{ util: 'car', materialCode: 'adasdasdas', materialName: 'asdad' }];
+        materialArr: MaterialObj[] = [];
         dataRule = {
             stePotNo: [{ required: true, message: '生产锅号不能为空', trigger: 'blur' }],
             fermentPotNo: [{ required: true, message: '发酵罐号不能为空', trigger: 'blur' }],
@@ -94,34 +95,73 @@
                 materialType: 'ZHAL',
                 orderNoList: [this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo]
             }).then(({ data }) => {
-                console.log(data);
-                this.materialArr = [{ util: 'car', materialCode: 'adasdasdas', materialName: 'asdad' }]
+                this.materialArr = data.data
             })
         }
 
         init() {
             this.visible = true;
-            this.dataForm.stePotNo = this.$store.state.sterilize.SemiReceive.potNo
+            this.dataForm = {
+                id: '',
+                stePotNo: this.$store.state.sterilize.SemiReceive.potNo,
+                potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrder,
+                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
+                consumeType: '1',
+                fermentPotNo: '',
+                materialCode: '',
+                materialName: '',
+                consumeUnit: '',
+                consumeAmount: '',
+                consumeBatch: '',
+                fermentStorage: '',
+                tankNo: '',
+                remark: '',
+                changer: getUserNameNumber(),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
         }
 
         setUtil() {
-            this.dataForm.consumeUnit = this.materialArr.filter(it => it.materialCode === this.dataForm.materialCode)[0].util
+            const filterArr1: (any) = this.materialArr.filter(it => it.matnr === this.dataForm.materialCode);// eslint-disable-line
+            this.dataForm.consumeUnit = filterArr1[0].erfme;
+            this.dataForm.materialName = filterArr1[0].materialName
         }
 
         dataFormSubmit() {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
+                    if (this.dataForm.consumeType === '0') {
+                        this.dataForm.fermentPotNo = '';
+                        this.dataForm.fermentStorage = '';
+                    }
                     this.visible = false;
                     this.$emit('success', this.dataForm)
                 }
             })
         }
     }
+    interface MaterialObj {
+        matnr?: string;
+        materialName?: string;
+        erfme?: string;
+    }
     interface DataObj {
+        id?: string;
         consumeType?: string;
         stePotNo?: string;
+        potOrderId?: string;
+        potOrderNo?: string;
+        fermentPotNo?: string;
         materialCode?: string;
+        materialName?: string;
         consumeUnit?: string;
+        consumeAmount?: string;
+        consumeBatch?: string;
+        fermentStorage?: string;
+        tankNo?: string;
+        remark?: string;
+        changer?: string;
+        changed?: string;
     }
 </script>
 

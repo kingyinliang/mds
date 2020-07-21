@@ -2,7 +2,7 @@
     <el-dialog :close-on-click-modal="false" :visible.sync="visible" :title="dataForm.id? '修改' : '新增'" width="420px">
         <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="140px" size="small">
             <el-form-item label="物料：" prop="productMaterial">
-                <el-select v-model="dataForm.productMaterial" filterable placeholder="请选择" style="width: 220px;">
+                <el-select v-model="dataForm.productMaterial" filterable remote placeholder="请输入物料" :remote-method="remoteMethod" :loading="loading" style="width: 220px;">
                     <el-option v-for="(item, index) in serchSapList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
                 </el-select>
             </el-form-item>
@@ -42,18 +42,19 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { BASIC_API } from 'common/api/api';
+    import { Vue, Component } from 'vue-property-decorator';
+    import { COMMON_API, BASIC_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
 
     @Component
     export default class CraftAddOrUpdate extends Vue {
-        @Prop({ default: [] }) serchSapList: SapObj[];
 
         $refs: {
             dataForm: HTMLFormElement;
         };
 
+        serchSapList: SapObj[] = [];
+        loading = false;
         visible = false;
         dataForm = {
             id: '',
@@ -79,6 +80,23 @@
             startDate: [{ required: true, message: '有效开始日期', trigger: 'blur' }],
             endDate: [{ required: true, message: '有效结束日期', trigger: 'blur' }]
         };
+
+        remoteMethod(query) {
+            if (query !== '' && query.length > 1) {
+                this.loading = true;
+                COMMON_API.ALLMATERIAL_API({
+                    materialTypes: ['ZHAL'],
+                    material: query
+                }).then(({ data }) => {
+                    this.loading = false;
+                    this.serchSapList = data.data
+                }).catch(() => {
+                    this.loading = false;
+                })
+            } else {
+                this.serchSapList = [];
+            }
+        }
 
         init(data) {
             if (data) {

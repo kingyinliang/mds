@@ -7,6 +7,7 @@
             :form-header="formHeader"
             :order-status="formHeader.orderStatusName"
             :tabs="tabs"
+            @tab-click="tabClick"
         >
             <template slot="1" slot-scope="data">
                 <ready-time ref="readyTime" :is-redact="data.isRedact" :classes-options="classesOptions" />
@@ -30,7 +31,7 @@
                 <text-record ref="textRecord" :is-redact="data.isRedact" />
             </template>
             <template slot="custom_btn">
-                <el-button type="primary" size="small" class="sub-red" @click="pass()">
+                <el-button v-if="passBtn === 'D'" type="primary" size="small" class="sub-red" @click="pass()">
                     审核不通过
                 </el-button>
             </template>
@@ -181,6 +182,7 @@
             }
         ];
 
+        passBtn = '';
         formHeader: OrderData = {};
         classesOptions: object[] = [];
         visibleRefuse = false;
@@ -199,12 +201,19 @@
             });
         }
 
+        tabClick(val) {
+            const num = Number(val.name) - 1;
+            const status: (any) =  this.tabs[num].status;// eslint-disable-line
+            status ? this.passBtn = status : this.passBtn = ''
+        }
+
         initData() {
             PKG_API.PKG_TAG_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 orderNo: this.$store.state.packaging.auditDetailDetail.orderNo
             }).then(({ data }) => {
                 if (data.data !== null) {
+                    this.passBtn = data.data.readyTagStatus;
                     this.tabs[0].status = data.data.readyTagStatus;
                     this.tabs[1].status = data.data.userTagStatus;
                     this.tabs[2].status = data.data.deviceTagStatus;
