@@ -16,6 +16,7 @@
         "lint:style": "stylelint src/**/*.{css,scss} --syntax scss --fix"
     },
     "dependencies": {
+        "axios": "^0.19.2",
         "core-js": "^3.6.4",
         "echarts": "^4.6.0",
         "element-ui": "2.6.3",
