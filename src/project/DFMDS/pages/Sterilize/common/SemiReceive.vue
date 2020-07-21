@@ -97,7 +97,7 @@
                 orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
                 potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
             }).then(({ data }) => {
-                this.semiTable.concat(data);
+                this.semiTable = this.semiTable.concat(data.data);
             })
         }
 

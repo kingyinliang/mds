@@ -2,11 +2,18 @@
     <el-dialog :title="targetID ? '修改规格信息' : '新增规格'" :close-on-click-modal="false" :visible.sync="isDialogShow" @close="closeDialog">
         <el-form ref="dataForm" :model="dataForm" status-icon :rules="checkRules" label-width="100px" size="small">
             <el-form-item label="物料：" prop="material">
-                <el-select v-if="!targetID" v-model="dataForm.material" filterable placeholder="请选择" style="width: 100%;" @change="setBrand">
-                    <el-option v-for="item in serchSpecList" :key="item.id" :label="item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName" :value="item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName" />
-                </el-select>
-                <el-select v-else v-model="dataForm.material" filterable placeholder="请选择" style="width: 100%;" disabled @change="setBrand">
-                    <el-option v-for="item in serchSpecList" :key="item.id" :label="item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName" :value="item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName" />
+                <el-select
+                    v-model="dataForm.material"
+                    filterable
+                    remote
+                    placeholder="请输入物料"
+                    :remote-method="remoteMethod"
+                    :loading="loading"
+                    :disabled="targetID !== ''"
+                    style="width: 100%;"
+                    @change="setBrand"
+                >
+                    <el-option v-for="(item, index) in serchSapList" :key="index" :label="item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName" :value="item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName" />
                 </el-select>
             </el-form-item>
             <el-form-item label="品牌：" prop="brand">
@@ -54,14 +61,6 @@
         name: 'SpecificationAddOrUpdate',
         components: {},
         props: {
-            // serchSpecList: {
-            //     type: Array,
-            //     default: () => []
-            // }
-            serchSpecList: {
-                type: Array,
-                default: () => []
-            },
             largeClass: {
                 type: Array,
                 default: () => []
@@ -73,6 +72,8 @@
         },
         data() {
             return {
+                loading: false,
+                serchSapList: [],
                 isDialogShow: false,
                 // serchSpecList: [],
                 targetID: '',
@@ -99,6 +100,22 @@
         },
         computed: {},
         methods: {
+            remoteMethod(query) {
+                if (query !== '' && query.length > 1) {
+                    this.loading = true;
+                    COMMON_API.ALLMATERIAL_API({
+                        materialTypes: ['ZFER'],
+                        material: query
+                    }).then(({ data }) => {
+                        this.loading = false;
+                        this.serchSapList = data.data
+                    }).catch(() => {
+                        this.loading = false;
+                    })
+                } else {
+                    this.serchSapList = [];
+                }
+            },
             closeDialog() {
                 document.querySelectorAll('.j_closeBtn')[0].focus(); // bug 优化
                 this.$refs.dataForm.resetFields();

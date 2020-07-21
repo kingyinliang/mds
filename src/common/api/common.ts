@@ -248,9 +248,9 @@ const COMMON_API = {
      */
     DEVICEDEL_API: params => httpProxy('/sysDevice/remove', 'POST', params),
     /**
-     * @property {string} ALLMATERIAL_API 物料管理拿全部物料
+     * @property {string} ALLMATERIAL_API 物料管理拿全部物料 模糊查询
      */
-    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params, false),
+    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'POST', params, false),
     /**
      * @property {string} 根据编码查物料
      */

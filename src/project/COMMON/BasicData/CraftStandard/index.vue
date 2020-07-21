@@ -88,13 +88,13 @@
                 <el-pagination :current-page="queryForm.current" :page-sizes="[10, 20, 50]" :page-size="queryForm.size" layout="total, sizes, prev, pager, next, jumper" :total="queryForm.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </mds-card>
-        <craft-add-or-update v-if="addOrUpdate" ref="addOrUpdate" :serch-sap-list="SerchSapList" @refreshDataList="GetData" />
+        <craft-add-or-update v-if="addOrUpdate" ref="addOrUpdate" @refreshDataList="GetData" />
     </div>
 </template>
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API, BASIC_API } from 'common/api/api';
+    import { BASIC_API } from 'common/api/api';
     import CraftAddOrUpdate from './CraftAddOrUpdate.vue'
 
     @Component({
@@ -127,18 +127,7 @@
 
         addOrUpdate = false;
         tableData = [];
-        SerchSapList = [];
         multipleSelection: string[] = [];
-
-        mounted() {
-            COMMON_API.ALLMATERIAL_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.SerchSapList = data.data
-                }
-            })
-        }
 
         remove() {
             if (this.multipleSelection.length === 0) {
