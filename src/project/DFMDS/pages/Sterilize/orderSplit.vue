@@ -17,7 +17,7 @@
                                 <el-table-column type="index" width="55" label="序号" fixed />
                                 <el-table-column label="订单状态" width="80" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
-                                        <label :style="{ color: scope.row.orderStatus === '不通过' ? 'red' : scope.row.orderStatus === '通过' ? 'rgb(103, 194, 58)' : '',}">{{ scope.row.orderStatus }}</label>
+                                        <label :style="{ color: scope.row.orderStatusName === '不通过' ? 'red' : scope.row.orderStatusName === '通过' ? 'rgb(103, 194, 58)' : '',}">{{ scope.row.orderStatusName }}</label>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="订单日期" width="100" prop="orderStartDate" :show-overflow-tooltip="true" />
@@ -182,7 +182,7 @@
             {
                 type: 'select',
                 label: '状态',
-                prop: 'orderStatus',
+                prop: 'OrgOrderStatus',
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_CHECK_STATUS'
@@ -199,6 +199,7 @@
 
         // 查询请求
         listInterface = params => {
+            params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
             params.current = this.currPage; // eslint-disable-line
             params.size = this.pageSize; // eslint-disable-line
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
@@ -210,10 +211,14 @@
         }
 
         setData(data) {
-            this.queryResultList = data.data.records;
-            this.currPage = data.data.current;
-            this.pageSize = data.data.size;
-            this.totalCount = data.data.total;
+            if (data.data.records.length) {
+                this.queryResultList = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+            } else {
+                this.$infoToast('暂无任何内容');
+            }
         }
 
         // 表格双击
@@ -229,10 +234,14 @@
                 return false
             }
             STE_API.STE_SPLIT_LIST_API(this.splitForm).then(({ data }) => {
-                this.splitTable = data.data.records
-                this.splitForm.current = data.data.current;
-                this.splitForm.size = data.data.size;
-                this.splitForm.total = data.data.total;
+                if (data.data.records.length) {
+                    this.splitTable = data.data.records
+                    this.splitForm.current = data.data.current;
+                    this.splitForm.size = data.data.size;
+                    this.splitForm.total = data.data.total;
+                } else {
+                    this.$infoToast('暂无任何内容');
+                }
             })
         }
 

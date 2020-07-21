@@ -64,16 +64,16 @@
                                 </div>
                                 <div class="home_card__main__item__footer clearfix">
                                     <div style="float: right;">
-                                        <el-button size="small">
+                                        <el-button size="small" @click="goEntry(item, 1)">
                                             半成品领用
                                         </el-button>
-                                        <el-button size="small">
+                                        <el-button size="small" @click="goEntry(item, 2)">
                                             辅料添加
                                         </el-button>
-                                        <el-button size="small" @click="goCraft">
+                                        <el-button size="small" @click="goEntry(item, 3)">
                                             工艺控制
                                         </el-button>
-                                        <el-button size="small">
+                                        <el-button size="small" @click="goEntry(item, 4)">
                                             杀菌入库
                                         </el-button>
                                     </div>
@@ -166,12 +166,32 @@
             item.potOrderMap = filterArr[0];
         }
 
-        goCraft() {
-            this.$store.commit('sterilize/updateCraft', {});
-            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Craft'));
+        goEntry(item, index) {
+            if (!item.orderNo || !item.potOrder) {
+                this.$warningToast('请选择订单和锅序！')
+                return false;
+            }
+            if (index === 1) {
+                this.changeRouter(item, 'DFMDS-pages-Sterilize-SemiReceive', 'sterilize/updateSemiReceive')
+            } else if (index === 2) {
+                this.changeRouter(item, 'DFMDS-pages-Sterilize-AcceAdd', 'sterilize/updateAcceAdd')
+            } else if (index === 3) {
+                this.changeRouter(item, 'DFMDS-pages-Sterilize-Craft', 'sterilize/updateCraft')
+            } else if (index === 4) {
+                this.changeRouter(item, 'DFMDS-pages-Sterilize-SemiReceive', 'sterilize/updateSemiReceive')
+            }
+        }
+
+        changeRouter(item, url, store) {
+            this.$store.commit(store, {
+                potNo: item.potNo,
+                orderNoMap: item.orderNoMap,
+                potOrderMap: item.potOrderMap
+            });
+            this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== url));
             setTimeout(() => {
                 this.$router.push({
-                    name: `DFMDS-pages-Sterilize-Craft`
+                    name: url
                 });
             }, 100);
         }

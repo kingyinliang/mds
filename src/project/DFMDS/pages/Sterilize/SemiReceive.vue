@@ -5,13 +5,15 @@
             :redact-auth="'pkg:order:update'"
             :save-auth="'pkg:order:update'"
             :submit-auth="'pkg:order:update'"
-            :order-status="formHeader.orderStatus"
+            :order-status="formHeader.orderStatusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
+            :saved-datas="savedDatas"
+            :submit-datas="submitDatas"
         >
             <template slot="1" slot-scope="data">
-                <semi-receive ref="craft" :is-redact="data.isRedact" />
+                <semi-receive ref="semiReceive" :is-redact="data.isRedact" />
             </template>
             <template slot="2" slot-scope="data">
                 <exc-record ref="ExcRecord" :is-redact="data.isRedact" />
@@ -25,6 +27,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
+    import { COMMON_API, STE_API } from 'common/api/api';
     import SemiReceive from './common/SemiReceive.vue';
 
     @Component({
@@ -34,7 +37,11 @@
         }
     })
     export default class SemiReceiveIndex extends Vue {
-        formHeader = {};
+        $refs: {
+            semiReceive: HTMLFormElement;
+        }
+
+        formHeader: OrderData = {};
         headerBase = [
             {
                 type: 'p',
@@ -46,7 +53,7 @@
                 type: 'p',
                 label: '生产锅号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'workShopName'
+                value: 'potNo'
             },
             {
                 type: 'tooltip',
@@ -58,19 +65,13 @@
                 type: 'p',
                 label: '生产锅序',
                 icon: 'factory-bianhao',
-                value: 'workShopName'
+                value: 'potOrder'
             },
             {
                 type: 'p',
                 label: '生产产量',
                 icon: 'factory--meirijihuachanliangpeizhi',
-                value: 'workShopName'
-            },
-            {
-                type: 'p',
-                label: '生产产量',
-                icon: 'factory--meirijihuachanliangpeizhi',
-                value: 'workShopName'
+                value: ['planOutput', 'outputUnit']
             },
             {
                 type: 'p',
@@ -94,7 +95,7 @@
 
         tabs = [
             {
-                label: '工艺控制',
+                label: '半成品领用',
                 status: '未录入'
             },
             {
@@ -104,6 +105,39 @@
                 label: '文本记录'
             }
         ];
+
+        mounted() {
+            this.getOrderList()
+        }
+
+        // 查询表头
+        getOrderList() {
+            COMMON_API.OREDER_QUERY_BY_NO_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo
+            }).then(({ data }) => {
+                this.formHeader = data.data;
+                this.formHeader.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptName;
+                this.formHeader.potNo = this.$store.state.sterilize.SemiReceive.potNo;
+                this.formHeader.potOrder = this.$store.state.sterilize.SemiReceive.potOrderMap.potOrder;
+                this.$refs.semiReceive.init();
+            })
+        }
+
+        savedDatas() {
+            const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
+            return STE_API.STE_SEMI_SAVE_API(steSemi)
+        }
+
+        submitDatas() {
+            const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
+            return STE_API.STE_SEMI_SUBMIT_API(steSemi)
+        }
+    }
+    interface OrderData {
+        factoryName?: string;
+        potNo?: string;
+        potOrder?: string;
     }
 </script>
 

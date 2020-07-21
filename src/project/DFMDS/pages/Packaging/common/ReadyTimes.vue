@@ -211,6 +211,8 @@ export default class ReadyTimes extends Vue {
         }).then(({ data }) => {
             if (data.data === null) {
                 this.isNewForm = true
+                this.currentFormDataGroup = {}
+                this.orgFormDataGroup = {}
             } else {
                 this.isNewForm = false
                 this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
@@ -303,19 +305,19 @@ export default class ReadyTimes extends Vue {
     ruleSubmit() {
         if (this.currentFormDataGroup.classes === 'M' || this.currentFormDataGroup.classes === 'D') { // 早
             if (!this.currentFormDataGroup.dayUser || !this.currentFormDataGroup.dayShift || !this.currentFormDataGroup.dayMeeting || !this.currentFormDataGroup.dayPrepaired || !this.currentFormDataGroup.dayClear) {
-                this.$warningToast('请填写生产准备必填项')
+                this.$warningToast('请填写生产准备页签准备工时必填项');
                 return false
             }
         }
-        if (this.currentFormDataGroup.classes === 'A' || this.currentFormDataGroup.classes === 'D') { // 中
+        if (this.currentFormDataGroup.classes === 'A') { // 中
             if (!this.currentFormDataGroup.midUser || !this.currentFormDataGroup.midShift || !this.currentFormDataGroup.midMeeting || !this.currentFormDataGroup.midPrepaired || !this.currentFormDataGroup.midClear) {
-                this.$warningToast('请填写生产准备必填项')
+                this.$warningToast('请填写生产准备页签准备工时必填项');
                 return false
             }
         }
         if (this.currentFormDataGroup.classes === 'N' || this.currentFormDataGroup.classes === 'D') { // 晚
             if (!this.currentFormDataGroup.nightUser || !this.currentFormDataGroup.nightShift || !this.currentFormDataGroup.nightMeeting || !this.currentFormDataGroup.nightPrepaired || !this.currentFormDataGroup.nightClear) {
-                this.$warningToast('请填写生产准备必填项')
+                this.$warningToast('请填写生产准备页签准备工时必填项');
                 return false
             }
         }

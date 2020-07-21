@@ -26,6 +26,9 @@
             <el-form-item label="物理区域：">
                 <el-input v-model="dataForm.holderArea" placeholder="手动输入" clearable />
             </el-form-item>
+            <el-form-item label="生产物料：">
+                <el-input v-model="dataForm.material" placeholder="手动输入" clearable />
+            </el-form-item>
             <el-form-item label="归属车间：" prop="workshop">
                 <template v-if="workshopList.length===0">
                     请先建立车间
@@ -75,6 +78,7 @@
                     holderStatus: '',
                     holderBatch: '',
                     holderArea: '',
+                    material: '',
                     workshop: ''
                 },
                 dataFormFromAdd: {
@@ -85,6 +89,7 @@
                     holderVolume: 0,
                     holderBatch: '',
                     holderArea: '',
+                    material: '',
                     workshop: ''
                 },
                 checkRules: {
@@ -125,6 +130,7 @@
                         this.dataForm.holderBatch = data.data.holderBatch;
                         this.dataForm.holderStatus = data.data.holderStatus;
                         this.dataForm.holderArea = data.data.holderArea;
+                        this.dataForm.material = data.data.material;
                         this.dataForm.workshop = data.data.deptId;
                         this.dataForm.version = data.data.version;
                         this.isDialogShow = true;
@@ -155,6 +161,7 @@
                                 holderBatch: this.dataForm.holderBatch,
                                 holderStatus: this.dataForm.holderStatus,
                                 holderArea: this.dataForm.holderArea,
+                                material: this.dataForm.material,
                                 deptId: this.dataForm.workshop,
                                 id: this.containerID,
                                 version: this.dataForm.version
@@ -171,6 +178,7 @@
                                 holderVolume: this.dataForm.holderVolume,
                                 holderBatch: this.dataForm.holderBatch,
                                 holderStatus: this.dataForm.holderStatus,
+                                material: this.dataForm.material,
                                 holderArea: this.dataForm.holderArea,
                                 deptId: this.dataForm.workshop
                             }).then(() => {

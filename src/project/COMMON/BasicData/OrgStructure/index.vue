@@ -229,13 +229,16 @@ export default class OrgStructure extends Vue {
             const target: Node = e.target as Node
             if (target['className'] !== 'menuli') this.menuVisible = false;
         });
+
+        this.setdetail({});
     }
 
     // 展示详情
     setdetail(row: DeptObject) {
+        console.log(row)
         this.menuVisible = false;
         COMMON_API.ORGDETAIL_API({
-            id: row.id
+            id: row.id || 1
         }).then(({ data }) => {
             if (data.code === 200) {
                 this.OrgDetail = data.data;
@@ -296,7 +299,7 @@ export default class OrgStructure extends Vue {
     addOrg() {
         this.$refs['dataForm'].validate(valid => {
             if (valid) {
-                this.addDep.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+                this.addDep.factory = this.clickTreeNode.factory;
                 COMMON_API.ADDORG_API(this.addDep).then(({ data }) => {
                     if (data.code === 200) {
                         this.$successToast('操作成功');

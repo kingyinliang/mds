@@ -8,7 +8,9 @@
                             <p>{{ formHeader.workShopName }}</p>
                         </el-form-item>
                         <el-form-item label="生产产线：">
-                            <p>{{ formHeader.productLineName }}</p>
+                            <el-tooltip class="item" effect="dark" :content="formHeader.productLineName" placement="top">
+                                <p>{{ formHeader.productLineName }}</p>
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="生产物料：">
                             <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top">
@@ -19,11 +21,11 @@
                             <p>{{ formHeader.orderNo }}</p>
                         </el-form-item>
                         <el-form-item label="订单产量：">
-                            <p>{{ formHeader.planOutput }} {{ formHeader.reakOutput }}</p>
+                            <p>{{ formHeader.planOutput }} {{ formHeader.outputUnit }}</p>
                         </el-form-item>
                         <el-form-item label="订单日期：">
-                            <el-tooltip class="item" effect="dark" :content="formHeader.orderStartDate + ' ' + formHeader.orderEndDate" placement="top">
-                                <p>{{ formHeader.orderStartDate }} {{ formHeader.orderEndDate }}</p>
+                            <el-tooltip class="item" effect="dark" :content="formHeader.orderStartDate" placement="top">
+                                <p>{{ formHeader.orderStartDate }}</p>
                             </el-tooltip>
                         </el-form-item>
                         <el-form-item label="生产日期：">
@@ -43,14 +45,12 @@
                     <i
                         class="dataEntry-head-title__status"
                         :class="{
-                            noPass: orderStatus === 'noPass',
-                            saved: orderStatus === 'saved',
-                            submit: orderStatus === 'submit',
-                            checked: orderStatus === 'checked',
-                            '': orderStatus === '已同步',
+                            noPass: formHeader.orderStatus === '已退回',
+                            checked: formHeader.orderStatus === '已审核',
+                            '': formHeader.orderStatus === '待审核',
                         }"
                     >
-                        订单状态：{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus === 'toBeAudited' ? '待审核' : orderStatus }}
+                        订单状态：{{ formHeader.orderStatusName }}
                     </i>
                 </el-col>
             </el-row>
@@ -59,16 +59,16 @@
             <mds-card title="产量与人力" :name="'outputworker'">
                 <el-form :inline="true" :model="formHeader" label-width="75px" size="small" class="dataEntry-head-base__form">
                     <el-form-item label="订单产量：">
-                        <p>{{ prodPower.planOutput }}</p>
+                        <p>{{ prodPower.planOutput }} {{ prodPower.unitName }}</p>
                     </el-form-item>
                     <el-form-item label="实际产量：">
-                        <p>{{ prodPower.countOutput }}</p>
+                        <p>{{ prodPower.countOutput }} {{ prodPower.unitName }}</p>
                     </el-form-item>
-                    <el-form-item label="紧急入库产量：" label-width="100px">
+                    <el-form-item v-if="prodPower.urgencyCountOutput !== 0" label="紧急入库产量：" label-width="100px">
                         <p>{{ prodPower.urgencyCountOutput }}</p>
                     </el-form-item>
                     <el-form-item label="差异数量：">
-                        <p>{{ prodPower.differences }}</p>
+                        <p>{{ prodPower.differences }} {{ prodPower.unitName }}</p>
                     </el-form-item>
                     <el-form-item label="标准人力：">
                         <p>{{ prodPower.standardMan }}</p>
@@ -95,6 +95,11 @@
                                     {{ scope.row.standard }}{{ scope.row.standard ? '%' : '' }}
                                 </template>
                             </el-table-column>
+                            <el-table-column label="全天">
+                                <template slot-scope="scope">
+                                    {{ scope.row.whole }}{{ scope.row.whole ? '%' : '' }}
+                                </template>
+                            </el-table-column>
                             <el-table-column label="白班">
                                 <template slot-scope="scope">
                                     {{ scope.row.day }}{{ scope.row.day ? '%' : '' }}
@@ -105,29 +110,30 @@
                                     {{ scope.row.night }}{{ scope.row.night ? '%' : '' }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="OEE">
-                                <template slot-scope="scope">
-                                    {{ scope.row.whole }}{{ scope.row.whole ? '%' : '' }}
-                                </template>
-                            </el-table-column>
                         </el-table>
                     </el-col>
                 </el-row>
             </mds-card>
             <mds-card title="设备运行情况" :name="'EquipmentOperation'">
-                <template slot="titleBtn">
-                    <el-row style="float: right;">
-                        <el-form style="float: right;" :inline="true" :model="formHeader" label-width="90px" size="small" class="dataEntry-head-base__form">
-                            <el-form-item label="开始时间：">
-                                <p>{{ deviceRun.startDate }}</p>
-                            </el-form-item>
-                            <el-form-item label="结束时间：">
-                                <p>{{ deviceRun.endDate }}</p>
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
-                </template>
-                <el-table class="newTable" :data="deviceRun.exceptionInfo" header-row-class-name="tableHead" border tooltip-effect="dark">
+                <el-form :inline="true" :model="formHeader" label-width="70px" size="small" class="dataEntry-head-base__form">
+                    <el-form-item label="开始时间：">
+                        <p style="width: 135px;">
+                            {{ deviceRun.startDate }}
+                        </p>
+                    </el-form-item>
+                    <el-form-item label="结束时间：">
+                        <p style="width: 135px;">
+                            {{ deviceRun.endDate }}
+                        </p>
+                    </el-form-item>
+                    <el-form-item label="总运行时间：" label-width="85px">
+                        <p>{{ deviceRun.deviceRunTime }}(H)</p>
+                    </el-form-item>
+                    <el-form-item label="总停线时间：" label-width="85px">
+                        <p>{{ deviceRun.devicePauseTime !== null ? deviceRun.devicePauseTime : 0 }}(MIN)</p>
+                    </el-form-item>
+                </el-form>
+                <el-table v-show="deviceRun.exceptionInfo.length !== 0" class="newTable" :data="deviceRun.exceptionInfo" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-top: 5px;">
                     <el-table-column type="index" label="序号" fixed />
                     <el-table-column prop="classes" label="班次" />
                     <el-table-column prop="stopTypeName" label="停机类型" />
@@ -137,14 +143,6 @@
                     <el-table-column prop="durationUnit" label="单位" />
                     <el-table-column prop="exceptionCount" label="次数" />
                 </el-table>
-                <el-form :inline="true" :model="formHeader" label-width="90px" size="small" class="dataEntry-head-base__form">
-                    <el-form-item label="总运行时间：">
-                        <p>{{ deviceRun.deviceRunTime }}(H)</p>
-                    </el-form-item>
-                    <el-form-item label="总停线时间：">
-                        <p>{{ deviceRun.devicePauseTime }}(MIN)</p>
-                    </el-form-item>
-                </el-form>
             </mds-card>
             <mds-card title="生产领料差异" :name="'ProductionMaterialDifference'">
                 <el-row :gutter="10">
@@ -157,16 +155,16 @@
                     </el-col>
                     <el-col :span="12">
                         <el-table class="newTable" :data="proMaterialDiffList" header-row-class-name="tableHead" border tooltip-effect="dark">
-                            <el-table-column label="领用物料" show-overflow-tooltip>
+                            <el-table-column label="领用物料" show-overflow-tooltip min-width="170">
                                 <template slot-scope="scope">
                                     {{ scope.row.materialCode }} {{ scope.row.materialName }}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="materialUnit" label="单位" min-width="30" />
-                            <el-table-column prop="useAmount" label="领用数量" min-width="40" />
-                            <el-table-column prop="realUseAmount" label="实际用量" min-width="40" />
+                            <el-table-column prop="materialUnit" label="单位" min-width="35" />
+                            <el-table-column prop="useAmount" label="领用数量" min-width="50" />
+                            <el-table-column prop="realUseAmount" label="实际用量" min-width="50" />
                             <el-table-column prop="realLoss" label="实际损耗" min-width="40" />
-                            <el-table-column prop="lossRate" label="损耗率" min-width="40" />
+                            <el-table-column prop="lossRate" label="损耗率" min-width="50" />
                         </el-table>
                     </el-col>
                 </el-row>
@@ -184,7 +182,7 @@
                         <el-button type="primary" size="small" @click="goDetail">
                             详情
                         </el-button>
-                        <el-button type="primary" size="small" @click="pass()">
+                        <el-button type="primary" size="small" :disabled="formHeader.orderStatusName !== '待审核'" @click="pass()">
                             审核通过
                         </el-button>
                     </div>
@@ -220,9 +218,11 @@ export default class AuditDetail extends Vue {
     proMaterialDiffList = [];
     oeeList: OeeSole[] = [];
     prodPower = {};
-    deviceRun = {};
+    deviceRun = {
+        exceptionInfo: []
+    };
     // eslint-disable-next-line
-    oeePic: any[] = [['product', '标准', '白班', '夜班', 'OEE']];
+    oeePic: any[] = [['product', '标准', '全天', '白班', '夜班']];
 
     mounted() {
         this.auditDetail = this.$store.state.packaging.auditDetail;
@@ -260,12 +260,11 @@ export default class AuditDetail extends Vue {
                 if (item.name) {
                     let night = '0'
                     night = item.night ? item.night : '0';
-                    sole = [item.name, item.standard, item.day, night, item.whole];
+                    sole = [item.name, item.standard, item.whole, item.day, night];
                     this.oeePic.push(sole);
                 }
                 i++;
             })
-            console.log(this.oeePic)
             this.initChartLine();
         })
     }
@@ -340,6 +339,7 @@ export default class AuditDetail extends Vue {
                 workShop: this.formHeader.workShop
             }).then(() => {
                 this.$successToast('操作成功');
+                this.getOrderList();
             })
         })
     }
@@ -470,26 +470,33 @@ export default class AuditDetail extends Vue {
                     interval: 0,
                     formatter: function(params) {
                         let newParamsName = '';
-                        const paramsNameNumber = params.length;
-                        const provideNumber = 10; // 一行显示几个字
-                        const rowNumber = Math.ceil(paramsNameNumber / provideNumber);
-                        if (paramsNameNumber > provideNumber) {
-                            for (let p = 0; p < rowNumber; p++) {
-                                let tempStr = '';
-                                const start = p * provideNumber;
-                                const end = start + provideNumber;
-                                if (p === rowNumber - 1) {
-                                    tempStr = params.substring(start, paramsNameNumber);
-                                } else {
-                                    tempStr = params.substring(start, end) + '\n';
-                                }
-                                newParamsName += tempStr;
-                            }
-
+                        if (params.length > 12) {
+                            newParamsName = params.substring(0, 10);
                         } else {
                             newParamsName = params;
                         }
-                        return newParamsName
+                        return newParamsName;
+                        // let newParamsName = '';
+                        // const paramsNameNumber = params.length;
+                        // const provideNumber = 10; // 一行显示几个字
+                        // const rowNumber = Math.ceil(paramsNameNumber / provideNumber);
+                        // if (paramsNameNumber > provideNumber) {
+                        //     for (let p = 0; p < rowNumber; p++) {
+                        //         let tempStr = '';
+                        //         const start = p * provideNumber;
+                        //         const end = start + provideNumber;
+                        //         if (p === rowNumber - 1) {
+                        //             tempStr = params.substring(start, paramsNameNumber);
+                        //         } else {
+                        //             tempStr = params.substring(start, end) + '\n';
+                        //         }
+                        //         newParamsName += tempStr;
+                        //     }
+
+                        // } else {
+                        //     newParamsName = params;
+                        // }
+                        // return newParamsName
                     }
                 }
             },

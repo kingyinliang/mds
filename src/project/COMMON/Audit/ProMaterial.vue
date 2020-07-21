@@ -12,6 +12,7 @@
             :show-operation-column="true"
             :operation-column-width="140"
             @get-data-success="setData"
+            @tab-click="tabClick"
         >
             <template slot="tab-head0">
                 <div class="tab__heads clearfix">
@@ -43,7 +44,7 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button v-if="name === '0'" class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
+                <el-button class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
                     {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
                 <el-button class="ra_btn" type="text" round size="mini" @click="getAuditLog(scope.row)">
@@ -84,6 +85,7 @@
     export default class ProInStore extends Vue {
         mounted() {
             this.getMoveReas();
+            this.getHaveBeenMoveReas();
         }
 
         //表格数据
@@ -151,8 +153,7 @@
                 label: '物料批次',
                 type: 'input',
                 width: '140',
-                redact: true,
-                header: true
+                redact: true
             },
             {
                 prop: 'stgeLoc',
@@ -208,6 +209,8 @@
         auditLogData = [] // 审核日志
         isAuditLogDialogShow = false //审核日志弹窗
         moveReas = [] //移动原因
+        moveReason = []
+        haveMoveReason = []
         // 查询表头
         queryFormData = [
             {
@@ -236,6 +239,7 @@
                         parentId: val || ''
                     })
                 },
+                defaultValue: '',
                 resVal: {
                     resData: 'data',
                     label: ['deptName'],
@@ -258,6 +262,7 @@
                         dictType: 'ORDER_TYPE'
                     })
                 },
+                filterable: true,
                 defaultValue: '',
                 resVal: {
                     resData: 'data',
@@ -400,12 +405,16 @@
                     item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
                     item.pstngDate = this.pstngDate
                     item.headerText = this.headerText
-                    if (item.batch !== '' && item.batch !== null) {
-                        if (item.batch.length !== 10) {
-                            this.$warningToast('物料批次长度为10位')
-                            return false;
-                        }
+                    if (!item.stgeLoc || !item.moveType || !item.moveReason) {
+                        this.$warningToast('请填写必填项');
+                        return false;
                     }
+                    // if (item.batch !== '' && item.batch !== null) {
+                    //     if (item.batch.length !== 10) {
+                    //         this.$warningToast('物料批次长度为10位')
+                    //         return false;
+                    //     }
+                    // }
                 }
                 this.$confirm('确认过账，是否继续', '过账确认', {
                     confirmButtonText: '确定',
@@ -414,7 +423,12 @@
                 }).then(() => {
                     AUDIT_API.PROISSUEPASS_API(list).then(({ data }) => {
                         this.$successToast(data.msg)
-                        this.$refs.queryTable.getDataList()
+                        this.$refs.queryTable.getDataList(true)
+                    }).catch((err) => {
+                        if (err.data.code === 201) {
+                            this.$errorToast(err.data.msg);
+                            this.$refs.queryTable.getDataList(true)
+                        }
                     });
                 })
             } else {
@@ -475,9 +489,15 @@
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                         refuseList: list
                     }).then(({ data }) => {
-                        this.isRefuseOrWriteOffsDialogShow = false
-                        this.$successToast(data.msg)
-                        this.$refs.queryTable.getDataList()
+                        this.isRefuseOrWriteOffsDialogShow = false;
+                        this.$successToast(data.msg);
+                        this.$refs.queryTable.getDataList(true);
+                    }).catch((err) => {
+                        if (err.data.code === 201) {
+                            this.isRefuseOrWriteOffsDialogShow = false;
+                            this.$errorToast(err.data.msg);
+                            this.$refs.queryTable.getDataList(true);
+                        }
                     });
                 })
             } else {
@@ -497,12 +517,12 @@
                         item.reason = this.refuseOrWriteOffsText
                         item.headerText = this.headerText
                         item.pstngDate = this.pstngDate
-                        if (item.batch !== '' && item.batch !== null) {
-                            if (item.batch.length !== 10) {
-                                this.$warningToast('物料批次长度为10位')
-                                return false;
-                            }
-                        }
+                        // if (item.batch !== '' && item.batch !== null) {
+                        //     if (item.batch.length !== 10) {
+                        //         this.$warningToast('物料批次长度为10位')
+                        //         return false;
+                        //     }
+                        // }
                     }
                     AUDIT_API.PROISSUEWRITEOFFS_API(list).then(({ data }) => {
                         this.isRefuseOrWriteOffsDialogShow = false
@@ -524,10 +544,10 @@
                     this.$warningToast('请填写必填项')
                     return false;
                 }
-                if (row.batch.length !== 10) {
-                    this.$warningToast('物料批次长度为10位')
-                    return false;
-                }
+                // if (row.batch.length !== 10) {
+                //     this.$warningToast('物料批次长度为10位')
+                //     return false;
+                // }
                 if (row.stgeLoc.length > 4) {
                     this.$warningToast('出库库位最大长度为4位')
                     return false;
@@ -552,7 +572,7 @@
 
          // 审核日志
         getAuditLog(row) {
-            console.log(this.$refs.queryTable.activeName)
+            // console.log(this.$refs.queryTable.activeName)
             AUDIT_API.AUDIT_LOG_LIST_API({
                 orderNo: row.orderNo,
                 verifyType: 'MATERIAL'
@@ -562,12 +582,22 @@
             })
         }
 
-         //获取移动类型
+         //获取移动类型 - 未过账
         getMoveReas() {
             COMMON_API.DICTQUERY_API({
                 dictType: 'COMMON_MOVE_REASON'
             }).then(({ data }) => {
                 this.$refs.queryTable.optionLists.moveReason = data.data;
+                this.moveReason = data.data;
+            });
+        }
+
+         //获取移动类型 - 已过账
+        getHaveBeenMoveReas() {
+            COMMON_API.DICTQUERY_API({
+                dictType: 'RETURN_MOVE_REASON'
+            }).then(({ data }) => {
+                this.haveMoveReason = data.data;
             });
         }
 
@@ -577,6 +607,17 @@
                 return 0;
             }
             return 1;
+        }
+
+        // tab切换
+        tabClick(tab) {
+            if (tab.name === 0) {
+                console.log('11')
+                this.$refs.queryTable.optionLists.moveReason = this.moveReason;
+            } else {
+                console.log('22')
+                this.$refs.queryTable.optionLists.moveReason = this.haveMoveReason;
+            }
         }
     }
 </script>

@@ -1,44 +1,46 @@
 <template>
     <div>
-        <el-row class="clearfix">
-            <el-button type="primary" style="float: right;" size="small" :disabled="!isRedact" @click="GetTime">
-                获取工时
-            </el-button>
-        </el-row>
-        <el-table ref="table1" header-row-class-name="tableHead" :data="timeDate" tooltip-effect="dark" @row-dblclick="GetLog">
-            <el-table-column label="状态" width="95">
-                <template slot-scope="scope">
-                    <span
-                        :style="{
-                            color: scope.row.status === 'noPass' ? 'red' : scope.row.status === 'checked' ? '#67C23A' : '',
-                        }"
-                    >{{ scope.row.status === 'noPass' ? '审核不通过' : scope.row.status === 'saved' ? '已保存' : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'checked' ? '通过' : scope.row.status === '已同步' ? '未录入' : '未录入' }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="生产订单" width="120" prop="orderNo" />
-            <el-table-column label="工序" width="120" prop="processIdName" />
-            <el-table-column label="生产品项" prop="ssssss" :show-overflow-tooltip="true">
-                <template slot-scope="scope">
-                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
-                </template>
-            </el-table-column>
-            <el-table-column label="入库量" width="120" prop="inPotAmount" />
-            <el-table-column label="准备工时" width="120" prop="confActivity1" />
-            <el-table-column label="人工工时" width="120" prop="confActivity3" />
-            <el-table-column label="机器工时" width="120" prop="confActivity2">
-                <template slot-scope="scope">
-                    <el-input v-model="scope.row.confActivity2" size="small" placeholder="手工录入" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isVerBack !== '1')" />
-                </template>
-            </el-table-column>
-            <el-table-column label="单位" width="50" prop="confActiUnit1" />
-            <el-table-column label="操作" width="50" fixed="right">
-                <template slot-scope="scope">
-                    <el-button type="text" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isVerBack !== '1')" @click="BackTime(scope.row)">
-                        退回
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+        <mds-card title="工时" name="summeryHour">
+            <template slot="titleBtn">
+                <el-button type="primary" style="float: right;" size="small" :disabled="!isRedact" @click="GetTime">
+                    获取工时
+                </el-button>
+            </template>
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" border :data="timeDate" tooltip-effect="dark" @row-dblclick="GetLog">
+                <el-table-column label="状态" width="95">
+                    <template slot-scope="scope">
+                        <span
+                            :style="{
+                                color: scope.row.status === 'noPass' ? 'red' : scope.row.status === 'checked' ? '#67C23A' : '',
+                            }"
+                        >{{ scope.row.status === 'noPass' ? '审核不通过' : scope.row.status === 'saved' ? '已保存' : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'checked' ? '通过' : scope.row.status === '已同步' ? '未录入' : '未录入' }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="生产订单" width="120" prop="orderNo" />
+                <el-table-column label="工序" width="120" prop="processIdName" />
+                <el-table-column label="生产品项" prop="ssssss" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="入库量" width="120" prop="inPotAmount" />
+                <el-table-column label="准备工时" width="120" prop="confActivity1" />
+                <el-table-column label="人工工时" width="120" prop="confActivity3" />
+                <el-table-column label="机器工时" width="120" prop="confActivity2">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.confActivity2" size="small" placeholder="手工录入" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isVerBack !== '1')" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" width="50" prop="confActiUnit1" />
+                <el-table-column label="操作" width="50" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button type="text" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.isVerBack !== '1')" @click="BackTime(scope.row)">
+                            退回
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </mds-card>
         <audit-log :table-data="TimeAudit" />
     </div>
 </template>

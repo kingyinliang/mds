@@ -7,7 +7,7 @@
                 </el-button>
             </div>
         </template>
-        <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; max-height: 200px;">
+        <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
             <el-table-column label="序号" type="index" width="60" fixed />
             <el-table-column width="100" :show-overflow-tooltip="true">
                 <template slot="header">
@@ -114,6 +114,9 @@ export default class PendingNum extends Vue {
             if (data.data !== null) {
                 this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data));
                 this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data));
+            } else {
+                this.currentFormDataGroup = []
+                this.orgFormDataGroup = []
             }
         })
     }
@@ -171,7 +174,7 @@ export default class PendingNum extends Vue {
         currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
         for (const item of currentFormDataGroupNew) {
             if (!item.classes) {
-                this.$warningToast('请填写待处理数必填项');
+                this.$warningToast('请填写待处理数量页签必填项');
                 return false
             }
         }

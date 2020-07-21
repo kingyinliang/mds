@@ -17,7 +17,9 @@ export default {
         dynamicMenuRoutes: [],
         // 主入口标签页
         mainTabs: [],
-        mainTabsActiveName: ''
+        mainTabsActiveName: '',
+        msgTabAlive: false,
+        updateMsg: false
     },
     mutations: {
         updateDocumentClientHeight(state, height) {
@@ -49,6 +51,14 @@ export default {
         },
         updateMainTabsActiveName(state, name) {
             state.mainTabsActiveName = name;
+        },
+        // [消息管理] 关闭页签
+        updateMsgTabAlive(state, target) {
+            state.msgTabAlive = target;
+        },
+        // [消息管理] 更新未读消息数字
+        updateMsg(state, target) {
+            state.updateMsg = target;
         }
     }
-}
+};

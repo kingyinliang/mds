@@ -5,7 +5,7 @@
             :redact-auth="'pkg:order:update'"
             :save-auth="'pkg:order:update'"
             :submit-auth="'pkg:order:update'"
-            :order-status="formHeader.orderStatus"
+            :order-status="formHeader.orderStatusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
@@ -30,7 +30,7 @@
                 <product-in-storage ref="productInStorage" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" :status="tabs[3].status" />
             </template>
             <template slot="5" slot-scope="data">
-                <material ref="material" :is-redact="data.isRedact" />
+                <material ref="material" :is-redact="data.isRedact" :status="tabs[4].status" />
             </template>
             <template slot="6" slot-scope="data">
                 <pending-num ref="pendingNum" :is-redact="data.isRedact" :classes-options="classesOptions | classesOptionsFilter" />
@@ -133,7 +133,7 @@
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '订单产量',
-                value: ['planOutput', 'realOutput']
+                value: ['planOutput', 'outputUnit']
             },
             {
                 type: 'tooltip',
@@ -262,12 +262,29 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
+                    const pkgTimeSheet = this.$refs.readyTime.savedData(this.formHeader);
+                    const pkgUserSaveRequestDto = this.$refs.productPeople.savedData(this.formHeader);
                     const pkgInstorage = this.$refs.productInStorage.savedData(this.formHeader);
+                    const pkgGerms = this.$refs.pendingNum.savedData(this.formHeader);
+                    const pkgText = this.$refs.textRecord.savedData(this.formHeader);
+                    const { pkgDeviceSaveRequestDto, pkgExceptionSaveRequestDto } = this.$refs.equipment.savedData(this.formHeader);
+                    const { pkgPackingMaterial, pkgSemiMaterial } = this.$refs.material.savedData(this.formHeader);
+                    this.formHeader.orderId = this.formHeader.id;
                     return PKG_API.PKG_URGENT_SUBMIT_API({
                         pkgOrderUpdate: this.formHeader,
-                        pkgInstorage
+                        pkgTimeSheet,
+                        pkgUserSaveRequestDto,
+                        pkgDeviceSaveRequestDto,
+                        pkgExceptionSaveRequestDto,
+                        pkgInstorage,
+                        pkgPackingMaterial,
+                        pkgSemiMaterial,
+                        pkgGerms,
+                        pkgText
                     }).then(() => {
                         this.$successToast('提交成功');
+                        this.visible = false;
+                        this.getOrderList()
                     })
                 })
             } else {
@@ -275,6 +292,38 @@
                 for (const rule of arr) {
                     if (!rule('submit')) {
                         this.visible = false
+                        return false;
+                    }
+                }
+                // 工时前四个页签校验
+                const pkgTimeSheet = this.$refs.readyTime.currentFormDataGroup;
+                const productPeopleClass = this.$refs.productPeople.uniquenessClasses();
+                const equipmentClass = this.$refs.equipment.uniquenessClasses();
+                const productInStorageClass = this.$refs.productInStorage.uniquenessClasses();
+                if (pkgTimeSheet.classes === 'D') { // 多班
+                    if (productPeopleClass.length < 2) {
+                        this.$warningToast('生产人员页签班次与准备工时不一致');
+                        return false;
+                    }
+                    if (equipmentClass.length < 2) {
+                        this.$warningToast('设备运行页签班次与准备工时不一致');
+                        return false;
+                    }
+                    if (productInStorageClass.length < 2) {
+                        this.$warningToast('生产入库页签班次与准备工时不一致');
+                        return false;
+                    }
+                } else {
+                    if (productPeopleClass.length !== 1 || pkgTimeSheet.classes !== productPeopleClass[0]) {
+                        this.$warningToast('生产人员页签班次与准备工时不一致');
+                        return false;
+                    }
+                    if (equipmentClass.length !== 1 || pkgTimeSheet.classes !== equipmentClass[0]) {
+                        this.$warningToast('设备运行页签班次与准备工时不一致');
+                        return false;
+                    }
+                    if (productInStorageClass.length !== 1 || pkgTimeSheet.classes !== productInStorageClass[0]) {
+                        this.$warningToast('生产入库页签班次与准备工时不一致');
                         return false;
                     }
                 }
@@ -355,6 +404,7 @@ interface OrderData{
     orderNo?: string;
     orderStartDate?: string;
     orderStatus?: string;
+    orderStatusName?: string;
     orderType?: string;
     outputUnit?: string;
     planOutput?: number;

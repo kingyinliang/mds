@@ -50,10 +50,19 @@
                 <el-table-column prop="holderBatch" label="批数" :show-overflow-tooltip="true" width="80" />
                 <el-table-column label="状态" width="120">
                     <template slot-scope="scope">
-                        {{ holderStatusObject[scope.row.holderStatus] }}
+                        {{ scope.row.holderStatus }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="holderArea" label="物理区域" :show-overflow-tooltip="true" width="120" />
+                <el-table-column prop="holderArea" label="物理区域" :show-overflow-tooltip="true" width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.holderArea }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="material" label="生产物料" :show-overflow-tooltip="true" width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.material }}
+                    </template>
+                </el-table-column>
                 <el-table-column label="归属车间" :show-overflow-tooltip="true" width="92">
                     <template slot-scope="scope">
                         {{ workshopaObject[scope.row.deptId] }}
@@ -136,6 +145,8 @@
                     holderNo: this.controllableForm.holderNo,
                     holderVolume: this.controllableForm.holderVolume
                 }).then(({ data }) => {
+                    console.log('data')
+                    console.log(data)
                     if (haveParas && data.data.records.length === 0) {
                         this.$infoToast('暂无任何内容');
                     }

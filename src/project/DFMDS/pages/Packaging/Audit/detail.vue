@@ -5,7 +5,7 @@
             type="audit"
             :header-base="headerBase"
             :form-header="formHeader"
-            :order-status="formHeader.orderStatus"
+            :order-status="formHeader.orderStatusName"
             :tabs="tabs"
         >
             <template slot="1" slot-scope="data">
@@ -116,13 +116,13 @@
                 type: 'p',
                 icon: 'factory--meirijihuachanliangpeizhi',
                 label: '订单产量',
-                value: ['planOutput', 'realOutput']
+                value: ['planOutput', 'outputUnit']
             },
             {
                 type: 'p',
                 icon: 'factory-riqi1',
                 label: '订单日期',
-                value: ['orderStartDate', 'orderEndDate']
+                value: 'orderStartDate'
             },
             {
                 type: 'date-picker',
@@ -137,7 +137,7 @@
                 value: 'changer'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 icon: 'factory-riqi',
                 label: '提交时间', // 操作时间
                 value: 'changed'
@@ -232,6 +232,9 @@
 
         pass() {
             if (this.$refs.dataEntry.activeName === '6' || this.$refs.dataEntry.activeName === '7') {
+                return false
+            }
+            if (this.tabs[Number(this.$refs.dataEntry.activeName) - 1].status !== 'D') {
                 return false
             }
             this.visibleRefuse = true;

@@ -1,119 +1,117 @@
 <template>
     <div>
-        <el-card>
-            <div style="overflow: hidden;">
+        <mds-card title="物料领用" :puck-up="false">
+            <template slot="titleBtn">
                 <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="addmaterial">
                     + 新增
                 </el-button>
-            </div>
-            <div style="margin-top: 10px;">
-                <el-table class="newTable" :data="materialList" border header-row-class-name="tableHead" :row-class-name="rowDelFlag" @selection-change="handleSelectionChange" @row-dblclick="editmaterial">
-                    <el-table-column type="selection" width="50" fixed="left" :disabled="!isRedact" />
-                    <el-table-column type="index" label="序号" width="50px" fixed />
-                    <el-table-column min-width="100px">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>布浆机</span>
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.pulpMachineName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column min-width="180px" show-overflow-tooltip>
-                        <template slot="header">
-                            <i class="reqI">*</i><span>气垫小车号</span>
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.hovercraftName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="pulpNum" label="布浆张数" />
-                    <el-table-column min-width="150px">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>布浆开始时间</span>
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.pulpStartDate }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column min-width="150px">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>布浆结束时间</span>
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.pulpEndDate }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="pulpTime" label="布浆时间合计(MIN)" width="150px" />
-                    <el-table-column>
-                        <template slot="header">
-                            <i class="reqI">*</i><span>布浆量</span>
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.pulpAmount }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="unit" label="单位" />
-                    <el-table-column show-overflow-tooltip min-width="100px">
-                        <template slot="header">
-                            布号
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.clothNo }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column show-overflow-tooltip min-width="210px">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>原汁分类</span>
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.sauceClass }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column min-width="160px">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>布浆自淋时间(MIN)</span>
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.selfDrenchTime }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column min-width="150px">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>发酵罐号1</span>
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.potOne }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="potTwo" label="发酵罐号2" min-width="150px" />
-                    <el-table-column prop="classes" width="100px">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>白/中/夜班</span>
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.classes }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="man" show-overflow-tooltip min-width="210px">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>人员</span>
-                        </template>
-                        <template slot-scope="scope">
-                            {{ scope.row.man }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作时间" prop="changed" show-overflow-tooltip min-width="170px" />
-                    <el-table-column label="操作人" prop="changer" show-overflow-tooltip min-width="160px" />
-                    <el-table-column prop="remark" label="操作" fixed="right">
-                        <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!isRedact" size="mini" @click="delrow(scope.row)">
-                                删除
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
-        </el-card>
+            </template>
+            <el-table class="newTable" :data="materialList" border header-row-class-name="tableHead" :row-class-name="rowDelFlag" @selection-change="handleSelectionChange" @row-dblclick="editmaterial">
+                <el-table-column type="selection" width="50" fixed="left" :disabled="!isRedact" />
+                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column min-width="100px">
+                    <template slot="header">
+                        <i class="reqI">*</i><span>布浆机</span>
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.pulpMachineName }}
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="180px" show-overflow-tooltip>
+                    <template slot="header">
+                        <i class="reqI">*</i><span>气垫小车号</span>
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.hovercraftName }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="pulpNum" label="布浆张数" />
+                <el-table-column min-width="150px">
+                    <template slot="header">
+                        <i class="reqI">*</i><span>布浆开始时间</span>
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.pulpStartDate }}
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="150px">
+                    <template slot="header">
+                        <i class="reqI">*</i><span>布浆结束时间</span>
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.pulpEndDate }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="pulpTime" label="布浆时间合计(MIN)" width="150px" />
+                <el-table-column>
+                    <template slot="header">
+                        <i class="reqI">*</i><span>布浆量</span>
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.pulpAmount }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="unit" label="单位" />
+                <el-table-column show-overflow-tooltip min-width="100px">
+                    <template slot="header">
+                        布号
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.clothNo }}
+                    </template>
+                </el-table-column>
+                <el-table-column show-overflow-tooltip min-width="210px">
+                    <template slot="header">
+                        <i class="reqI">*</i><span>原汁分类</span>
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.sauceClass }}
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="160px">
+                    <template slot="header">
+                        <i class="reqI">*</i><span>布浆自淋时间(MIN)</span>
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.selfDrenchTime }}
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="150px">
+                    <template slot="header">
+                        <i class="reqI">*</i><span>发酵罐号1</span>
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.potOne }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="potTwo" label="发酵罐号2" min-width="150px" />
+                <el-table-column prop="classes" width="100px">
+                    <template slot="header">
+                        <i class="reqI">*</i><span>白/中/夜班</span>
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.classes }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="man" show-overflow-tooltip min-width="210px">
+                    <template slot="header">
+                        <i class="reqI">*</i><span>人员</span>
+                    </template>
+                    <template slot-scope="scope">
+                        {{ scope.row.man }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作时间" prop="changed" show-overflow-tooltip min-width="170px" />
+                <el-table-column label="操作人" prop="changer" show-overflow-tooltip min-width="160px" />
+                <el-table-column prop="remark" label="操作" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!isRedact" size="mini" @click="delrow(scope.row)">
+                            删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </mds-card>
         <el-dialog :close-on-click-modal="false" custom-class="dialog__class" :visible.sync="dialogFormVisibleMai" width="450px">
             <div slot="title">
                 熟酱醪领用

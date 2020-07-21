@@ -1,6 +1,6 @@
 <template>
     <div class="message-area">
-        <el-row style="padding: 0 11px;">
+        <el-row style="padding: 0 11px;" class="message-header">
             <el-col :span="24">
                 <el-card class="box-card" style="margin: 10px 0;">
                     <div class="hello-box">
@@ -10,7 +10,7 @@
                                 {{ realName }}, 祝你开心每一天
                             </div>
                             <div style=" height: 22px; padding-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px; line-height: 22px;">
-                                {{ post }} | 数字化产品研发组(对内)-系统运维组
+                                {{ post }} | {{ deptName }}
                             </div>
                         </div>
                         <div class="info-number">
@@ -26,75 +26,68 @@
                 </el-card>
             </el-col>
         </el-row>
-        <el-row :gutter="11" style="padding: 0 11px;">
-            <el-col :span="12" class="message-content">
-                <el-card class="box-card">
-                    <div slot="header" class="clearfix" style=" height: 24px; line-height: 24px;">
-                        <i class="iconfont factory-24_fayanduihualiuyan" style=" margin-top: 2px; color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">未读消息</span>
-                        <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text" :disabled="unreadList.length===0" @click="markReaded">
-                            全部已读
-                        </el-button>
-                    </div>
+        <div class="message-content">
+            <el-card class="box-card">
+                <div slot="header" class="clearfix" style=" height: 24px; line-height: 24px;">
+                    <i class="iconfont factory-24_fayanduihualiuyan" style=" margin-top: 2px; color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">未读消息</span>
+                    <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text" :disabled="unreadList.length===0" @click="markReaded">
+                        全部已读
+                    </el-button>
+                </div>
 
-                    <div :style="{minHeight:mainClientHeight-100 + 'px'}">
-                        <template class="">
-                            <ul>
-                                <li v-for="item in unreadList" :key="item.id" class="message-item" @click="seeMessage(item.msgUrl)">
-                                    <div class="message-item__img">
-                                        <span class="round-bg"><i class="iconfont" :class="item.icon" /></span>
-                                    </div>
-                                    <div class="message-item__infomation">
-                                        <div class="message-item__topic">
-                                            {{ item.workShopName }}
-                                        </div>
-                                        <div class="message-item__content">
-                                            <span>{{ item.msgContent }}</span>
-                                            <span class="message-item__date">2020-12-01 12:23</span>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </template>
-                    </div>
-                    <el-pagination v-if="unreadList.length!==0" :current-page="currPageFromUnread" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromUnread" layout="prev, pager, next,sizes, jumper" :total="totalCountFromUnread" @size-change="handlePageSizeChangeFromUnread" @current-change="handleCurrentPageChangeFromUnread" />
-                </el-card>
-            </el-col>
-            <el-col :span="12" class="message-content">
-                <el-card class="box-card">
-                    <div slot="header" class="clearfix" style=" height: 24px; line-height: 24px;">
-                        <i class="iconfont factory-15_jiefeng" style=" color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">已读消息</span>
-                        <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text" :disabled="readList.length===0|| readNumStyle===30" @click="readNumStyle=30;pageSizeFromRead = 10;currPageFromRead = 1;daysFlag=[0,0,1]; getMsgDataList(currPageFromRead, pageSizeFromRead, 1)">
-                            近30天
-                        </el-button>
-                        <el-button style="float: right; padding: 3px 0; font-size: 14px;" type="text" :disabled="readList.length===0 || readNumStyle===7" @click="readNumStyle=7;pageSizeFromRead = 10;currPageFromRead = 1;daysFlag=[0,1,0]; getMsgDataList(currPageFromRead, pageSizeFromRead, 1)">
-                            近7天
-                        </el-button>
-                        <el-button style="float: right; padding: 3px 0; font-size: 14px;" type="text" :disabled="readList.length===0 || readNumStyle===3" @click="readNumStyle=3;pageSizeFromRead = 10;currPageFromRead = 1;daysFlag=[1,0,0]; getMsgDataList(currPageFromRead, pageSizeFromRead, 1)">
-                            近3天
-                        </el-button>
-                    </div>
-                    <div :style="{minHeight:mainClientHeight-100 + 'px'}">
-                        <ul>
-                            <li v-for="item in readList" :key="item.id" class="message-item" @click="seeMessage(item.msgUrl)">
-                                <div class="message-item__img">
-                                    <span class="round-bg"><i class="iconfont" :class="item.icon" /></span>
-                                </div>
-                                <div class="message-item__infomation">
-                                    <div class="message-item__topic">
-                                        {{ item.workShopName }}
-                                    </div>
-                                    <div class="message-item__content">
-                                        <span>{{ item.msgContent }}</span>
-                                        <span class="message-item__date">2020-12-01 12:23</span>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <el-pagination v-if="readList.length!==0" :current-page="currPageFromRead" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromRead" layout="prev, pager, next,sizes, jumper" :total="totalCountFromRead" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
-                </el-card>
-            </el-col>
-        </el-row>
+                <ul>
+                    <li v-for="item in unreadList" :key="item.id" class="message-item" @click="seeMessage(item)">
+                        <div class="message-item__img">
+                            <span class="round-bg"><i class="iconfont" :class="item.icon" /></span>
+                        </div>
+                        <div class="message-item__infomation">
+                            <div class="message-item__topic">
+                                {{ item.workShopName }}
+                            </div>
+                            <div class="message-item__content">
+                                <span>{{ item.msgContent }}</span>
+                                <span class="message-item__date">{{ item.created.slice(0,-3) }}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <el-pagination v-if="unreadList.length!==0" :current-page="currPageFromUnread" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromUnread" layout="prev, pager, next,sizes, jumper" :total="totalCountFromUnread" @size-change="handlePageSizeChangeFromUnread" @current-change="handleCurrentPageChangeFromUnread" />
+            </el-card>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix" style=" height: 24px; line-height: 24px;">
+                    <i class="iconfont factory-15_jiefeng" style=" color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">已读消息</span>
+                    <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text" :disabled="readList.length===0|| readNumStyle===30" @click="readNumStyle=30;pageSizeFromRead = 10;currPageFromRead = 1;daysFlag=[0,0,1]; getMsgDataList(currPageFromRead, pageSizeFromRead, 1)">
+                        近30天
+                    </el-button>
+                    <el-button style="float: right; padding: 3px 0; font-size: 14px;" type="text" :disabled="readList.length===0 || readNumStyle===7" @click="readNumStyle=7;pageSizeFromRead = 10;currPageFromRead = 1;daysFlag=[0,1,0]; getMsgDataList(currPageFromRead, pageSizeFromRead, 1)">
+                        近7天
+                    </el-button>
+                    <el-button style="float: right; padding: 3px 0; font-size: 14px;" type="text" :disabled="readList.length===0 || readNumStyle===3" @click="readNumStyle=3;pageSizeFromRead = 10;currPageFromRead = 1;daysFlag=[1,0,0]; getMsgDataList(currPageFromRead, pageSizeFromRead, 1)">
+                        近3天
+                    </el-button>
+                </div>
+
+                <ul>
+                    <li v-for="item in readList" :key="item.id" class="message-item" @click="seeMessage(item)">
+                        <div class="message-item__img">
+                            <span class="round-bg"><i class="iconfont" :class="item.icon" /></span>
+                        </div>
+                        <div class="message-item__infomation">
+                            <div class="message-item__topic">
+                                {{ item.workShopName }}
+                            </div>
+                            <div class="message-item__content">
+                                <span>{{ item.msgContent }}</span>
+                                <span class="message-item__date">{{ item.created.slice(0,-3) }}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <el-pagination v-if="readList.length!==0" :current-page="currPageFromRead" :page-sizes="[10, 20, 50]" :page-size="pageSizeFromRead" layout="prev, pager, next,sizes, jumper" :total="totalCountFromRead" @size-change="handlePageSizeChangeFromRead" @current-change="handleCurrentPageChangeFromRead" />
+            </el-card>
+        </div>
     </div>
 </template>
 
@@ -107,6 +100,7 @@
         }
     })
     export default class PackagingIndex extends Vue {
+
         totalCountFromRead = 1
         currPageFromRead = 1
         pageSizeFromRead = 10
@@ -116,65 +110,40 @@
 
         unreadNum=0
         readNum=0
-
         readNumStyle=3
 
         daysFlag=[0, 0, 0]
-        readList: object[]=[]
-        unreadList: object[]=[]
+        readList: MessageObject[]=[]
+        unreadList: MessageObject[]=[]
         loginUserId= sessionStorage.getItem('loginUserId');
         realName= sessionStorage.getItem('userName')
-        post=''
+        post=sessionStorage.getItem('staff-post')
+        deptName=sessionStorage.getItem('staff-location')
+
+        iconLib: Icon[]=[]
+
         mounted() {
-            this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
-            this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
-            // COMMON_API.ORGSTRUCTURE_API({
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            // }).then(({ data }) => {
-            //     console.log('33333')
-            //     console.log(data)
-            // });
-
-
-            COMMON_API.USER_QUERY_API({
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    deptId: '9592E58E61A7A8FEE7',
-                    // deptId: sessionStorage.getItem('deptId'),
-                    workNum: sessionStorage.getItem('userName'),
-                    current: 1,
-                    size: 10
-                }).then(({ data }) => {
-                    console.log('2222')
-                    console.log(data)
-                    this.post = data.data.records[0].post || '暂无'
-                });
+            this.getIcon()
+            setTimeout(() => {
+                this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
+                this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
+            }, 500);
         }
 
-        //  设置类型參數
-        getChildItemListFromChange(): void {
-
-                    // COMMON_API.DICTIONARY_ITEM_QUERY_API({
-                    //     // factory: this.tempParentRow.factory,
-                    //     dictId: this.tempParentRow.id,
-                    //     size: this.pageSize,
-                    //     current: this.currPage
-                    // }).then(({ data }) => {
-                    //     this.isFocusChild = true;
-                    //     // this.currentFocusChildRow = row.id;
-                    //     console.log('我是清单回传值')
-                    //     if (data.data.records.length !== 0) {
-                    //         this.targetParameterList = data.data.records;
-                    //     } else {
-                    //         this.targetParameterList = [];
-                    //     }
-                    //     this.totalCount = data.data.total;
-                    //     this.currPage = data.data.current;
-                    //     this.pageSize = data.data.size;
-                    // });
+        getIcon() {
+            // 获取数据列表
+            COMMON_API.MENULIST_API({
+                factory: 'common'
+            }).then(({ data }) => {
+                data.data.forEach(item => {
+                    if (item.parentId === '0') {
+                        this.iconLib.push({ menuName: item.menuName, menuIcon: item.menuIcon })
+                    }
+                })
+            });
         }
 
         getMsgDataList(current, size, read): void {
-
             let daysFlagTemp = [0, 0, 0]
             if (read === 1) {
                 daysFlagTemp = JSON.parse(JSON.stringify(this.daysFlag))
@@ -189,48 +158,44 @@
                 thirtyDaysFlag: daysFlagTemp[2], //30天标记，1:选中，0:未选中
                 user: this.loginUserId // 登录用户id
             }).then(({ data }) => {
-                console.log('1111data')
-                console.log(data)
                 if (read === 1) {
                     this.readList = data.data.records
                     this.readNum = data.data.total
                     this.totalCountFromRead = data.data.total
+                    this.readList.forEach(item => {
+                        this.iconLib.forEach(element => {
+                            if (element.menuName === item.workShopName) {
+                                item.icon = element.menuIcon
+                            }
+                        })
+                            item.readed = true
+                    })
                 } else {
                     this.unreadList = data.data.records
                     this.unreadNum = data.data.total
                     this.totalCountFromUnread = data.data.total
+                    this.unreadList.forEach(item => {
+                        this.iconLib.forEach(element => {
+                            if (element.menuName === item.workShopName) {
+                                item.icon = element.menuIcon
+                            }
+                        })
+                    })
                 }
             });
         }
 
-        // 获取类型
-        getParentItemsList(): void {
-            // if (haveParas) {
-            //     this.currPageFromRead = 1;
-            // }
-            // const parasObj = {
-            //     factory: this.factoryForSearch,
-            //     typeOrName: this.stringForSearch,
-            //     current: this.currPageFromRead,
-            //     size: this.pageSizeFromRead
-            // }
-            // COMMON_API.DICTIONARY_QUERY_API(parasObj).then(({ data }) => {
-            //     this.isFocusChild = false; // 判断左右边 focus
-            //     this.targetInfoList = data.data.records; // parent table data
-            //     this.targetParameterList = []; // child table data
-            //     // this.preDaraArray = parasObj;
-            //     this.totalCountFromRead = data.data.total;
-            //     this.currPageFromRead = data.data.current;
-            //     this.pageSizeFromRead = data.data.size;
+        seeMessage(item) {
+            console.log(item)
+            if (!item.readed) {
+                this.markThisReaded(item.id)
+            }
+            const targetURL = item.msgUrl.replace(/\//g, '-')
 
-            // });
-        }
-
-        seeMessage(url) {
-            console.log(url)
             setTimeout(() => {
+                this.$store.commit('common/updateMsg', true);
                 this.$router.push({
-                    path: url
+                    path: targetURL
                 });
             }, 100);
         }
@@ -261,9 +226,27 @@
                     this.currPageFromRead = 1
                     this.pageSizeFromRead = 10
                     this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
+                    this.currPageFromUnread = 1
+                    this.pageSizeFromUnread = 10
+                    this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
+                    this.$store.commit('common/updateMsg', true);
                 });
             }
 
+        }
+
+        markThisReaded(id) {
+            MSG_API.MSG_READ_API({
+                ids: [id] // 用户消息id列表
+            }).then(() => {
+                this.readNumStyle = 3
+                this.currPageFromRead = 1
+                this.pageSizeFromRead = 10
+                this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
+                this.currPageFromUnread = 1
+                this.pageSizeFromUnread = 10
+                this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
+            });
         }
 
         // 改变每页条数
@@ -317,21 +300,36 @@ interface MessageObject{
         productTeamName?: string;
         workShop?: string;
         workShopName?: string;
+        readed?: boolean;
+}
+
+interface Icon{
+    menuName?: string;
+    menuIcon?: string;
 }
 </script>
 
 <style scoped>
+
 .el-card >>> .el-card__body {
     padding: 17px 25px;
 }
 
 .message-content >>> .el-card__header {
+    flex-grow: 0;
     padding: 8px 10px;
 }
 
 .message-content >>> .el-card__body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     padding: 1px 17px 5px 20px;
 }
+.el-card__body > ul {
+    flex-grow: 1;
+}
+
 
 .message-content >>> .el-pagination__editor.el-input .el-input__inner {
     height: 24px;
@@ -341,15 +339,45 @@ interface MessageObject{
     height: 24px;
     font-size: 14px;
 }
+
 </style>
 
 <style lang="scss" scoped>
 // @import "common/scss/temp.scss";
 @import "common/scss/_variables.scss";
-$icon-bg-color:#1b1717,#333,#147fe7,#5bd171,#ffbf00;
+$icon-bg-color:#f05c4a,#333,#147fe7,#5bd171,#ffbf00;
 $repeat: length($icon-bg-color);  // How often you want the pattern to repeat.
 
+.box-card {
+    border-radius: 8px;
+}
+.message-area {
+    display: flex;
+    flex-direction: column;
+}
 
+.message-header {
+    flex-grow: 0;
+}
+.message-content {
+    display: grid;
+    flex-grow: 1;
+    grid-auto-flow: row;
+    grid-gap: 11px;
+    grid-template-areas: "unread-area read-area";
+    grid-template-rows: 100%;
+    grid-template-columns: 1fr 1fr;
+    min-width: 1250px;
+    margin-bottom: 10px;
+    // align-items: stretch;
+    // justify-content: space-between;
+    padding: 0 11px;
+    .box-card {
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+    }
+}
 .hello-box {
     display: flex;
     flex-direction: row;
@@ -424,9 +452,10 @@ h4 {
     display: flex;
     padding: 10px 0 9px 0;
     border-bottom: 1px #e8e8e8 solid;
+    cursor: pointer;
 
     .message-item__img {
-        flex-grow: 1;
+        width: 55px;
         .round-bg {
             display: flex;
             align-items: center;
@@ -439,7 +468,7 @@ h4 {
         }
     }
     .message-item__infomation {
-        flex-grow: 9;
+        flex-grow: 1;
         .message-item__topic {
             height: 22px;
             margin-bottom: 5px;
@@ -450,10 +479,17 @@ h4 {
         }
         .message-item__content {
             display: flex;
+            flex-direction: row;
             justify-content: space-between;
             height: 22px;
             font-size: 14px;
             line-height: 22px;
+            span {
+                max-width: 350px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
         }
     }
 }

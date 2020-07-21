@@ -25,7 +25,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="memo" min-width="120" :show-overflow-tooltip="true">
+                <el-table-column prop="memo" min-width="220" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班组/工序
                     </template>
@@ -35,7 +35,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_man" min-width="130" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_man" min-width="125" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>人员属性
                     </template>
@@ -45,7 +45,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="200" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="190" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>人员
                     </template>
@@ -65,15 +65,15 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" width="220" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" width="210" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" width="140" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" width="135" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>用餐时间(MIN)
                     </template>
@@ -81,15 +81,15 @@
                         <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="220" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="210" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="90" label="时长(H)" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="80" label="时长(H)" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <p> {{ scope.row.duration = Number(workTime(scope.row.endDate, scope.row.startDate, scope.row)) }}{{ scope.row.durationUnit = 'H' }} </p>
                     </template>
@@ -99,7 +99,7 @@
                         <el-input v-model="scope.row.remark" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="verify_date" min-width="150" label="操作人" :show-overflow-tooltip="true">
+                <el-table-column prop="verify_date" min-width="140" label="操作人" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.changer }}
                     </template>
@@ -134,7 +134,7 @@
         </mds-card>
         <audit-log :table-data="productPeopleAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
         <official-worker v-if="officialWorkerStatus" ref="officialWorker" @changeUser="changeUser" />
-        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" :org-tree="orgTree" :arr-list="arrList" @changeUser="changeUser" />
+        <loaned-personnel v-if="loanedPersonnelStatus" ref="loanedPersonnel" @changeUser="changeUser" />
         <temporary-worker v-if="temporaryWorkerStatus" ref="temporaryWorker" @changeUser="changeUser" />
     </div>
 </template>
@@ -196,6 +196,9 @@ export default class ProductPeople extends Vue {
             if (data.data !== null) {
                 this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data));
                 this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data));
+            } else {
+                this.currentFormDataGroup = []
+                this.orgFormDataGroup = []
             }
         });
         // 工序
@@ -413,16 +416,26 @@ export default class ProductPeople extends Vue {
         let currentFormDataGroupNew: CurrentDataTable[] = [];
         currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
         if (currentFormDataGroupNew.length === 0) {
-            this.$warningToast('请录入生产人员');
+            this.$warningToast('请填写生产人员页签人员统计');
             return false
         }
         for (const item of currentFormDataGroupNew) {
             if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || !item.dinner || Number(item.dinner) === 0 || !item.endDate || item.endDate === '') {
-                this.$warningToast('请填写生产人员必填项');
+                this.$warningToast('请填写生产人员页签人员统计必填项');
                 return false
             }
         }
         return true
+    }
+
+    uniquenessClasses() {
+        const classesMap: string[] = [];
+        this.currentFormDataGroup.map((item: CurrentDataTable) => {
+            if (item.classes && item.delFlag === 0) {
+                classesMap.push(item.classes);
+            }
+        })
+        return [...new Set(classesMap)];
     }
 
     get actualNumber() {
