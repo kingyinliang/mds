@@ -63,7 +63,7 @@
                 </el-row>
             </template>
         </org-view>
-        <capacity-add-or-update v-if="visible" ref="capaaddupdate" :serch-sap-list="SerchSapList" @refreshDataList="getData" />
+        <capacity-add-or-update v-if="visible" ref="capaaddupdate" @refreshDataList="getData" />
     </div>
 </template>
 
@@ -93,19 +93,9 @@
         pageSize = 10
         visible = false
         CapacityList: object[] = []
-        SerchSapList: object[] = [];
 
         multipleSelection: string[] = []
 
-        mounted() {
-            COMMON_API.ALLMATERIAL_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-            }).then(({ data }) => {
-                if (data.code === 200) {
-                    this.SerchSapList = data.data
-                }
-            })
-        }
 
         setDeptId(data) {
             this.deptId = data[0].id

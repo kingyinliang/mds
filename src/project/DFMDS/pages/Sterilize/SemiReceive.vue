@@ -11,6 +11,7 @@
             :tabs="tabs"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
+            @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
                 <semi-receive ref="semiReceive" :is-redact="data.isRedact" />
