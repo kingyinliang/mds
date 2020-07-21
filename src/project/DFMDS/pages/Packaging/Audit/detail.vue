@@ -203,7 +203,11 @@
 
         tabClick(val) {
             const num = Number(val.name) - 1;
-            this.tabs[num].status ? this.passBtn = this.tabs[num].status : this.passBtn = ''
+            if (this.tabs[num].status) {
+                this.passBtn = this.tabs[num]['status'];
+            } else {
+                this.passBtn = ''
+            }
         }
 
         initData() {
