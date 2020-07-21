@@ -250,11 +250,11 @@ const COMMON_API = {
     /**
      * @property {string} ALLMATERIAL_API 物料管理拿全部物料
      */
-    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params, false),
+    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params, 'MDS', false),
     /**
      * @property {string} 根据编码查物料
      */
-    SEARCH_MATERIAL_API: params => httpProxy('/sysMaterial/queryListByType', 'POST', params, false),
+    SEARCH_MATERIAL_API: params => httpProxy('/sysMaterial/queryListByType', 'POST', params, 'MDS', false),
     /**
      * @property {string} SPECS_DROPDOWN_API 基础数据--规格管理-下拉列表
      */
@@ -410,7 +410,11 @@ const COMMON_API = {
     /**
      * @property {string} 特殊辅料属性 - 删除
      */
-    SPECIAL_MATERIAL_REMOVE_API: params => httpProxy('/ste/steSpeAccessories/remove', 'POST', params)
+    SPECIAL_MATERIAL_REMOVE_API: params => httpProxy('/ste/steSpeAccessories/remove', 'POST', params),
+    /**
+     * @property {string} PERMISSION_GROUP_QUERY_API 特殊辅料属性 - 删除
+     */
+    PERMISSION_GROUP_QUERY_API: params => httpProxy('/permissionGroup/queryPage', 'GET', params, 'RDM')
 };
 
 export default COMMON_API;

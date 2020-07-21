@@ -1,3 +1,11 @@
+<!--
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2020-07-21 13:57:11
+ * @LastEditors: Telliex
+ * @LastEditTime: 2020-07-21 16:30:09
+-->
+
 <template>
     <div class="header_main">
         <mds-card title="数据集" :name="'dataSet'" :pack-up="false" style="margin-bottom: 0; background: #fff;" class="view-area">
@@ -48,7 +56,7 @@
 </template>
 
 <script>
-    // import { COMMON_API } from 'common/api/api';
+    import { COMMON_API } from 'common/api/api';
     // import { SYSTEMSETUP_API } from '@/api/api';
     import EditDataSetItem from './AddAndUpdateDataSetItem'
 
@@ -85,6 +93,15 @@
                 return this.$store.state.common.mainClientHeight;
             }
         },
+
+        /**
+         * @description: 简单说明
+         * @param1: 参数名 {参数类型} 描述信息
+         * @param2: 参数名 {参数类型} 描述信息
+         * @param3: 参数名 {参数类型} 描述信息
+         * @return: {返回类型} 描述信息
+         * @example: 示例代码
+         */
         mounted() {
             this.getItemsList();
         },
@@ -98,21 +115,21 @@
                 if (haveParas) {
                     this.currPage = 1;
                 }
-                // COMMON_API.ROLE_QUERY_API({
-                //     factory: this.factoryID,
-                //     current: JSON.stringify(this.currPage),
-                //     size: JSON.stringify(this.pageSize),
-                //     roleName: searchWord.trim()
-                // }).then(({ data }) => {
-                //     if (haveParas && data.data.records.length === 0) {
-                //         this.$infoToast('暂无任何内容');
-                //     }
-                //     // this.controllableForm.owner = '';
-                //     this.targetInfoList = data.data.records;
-                //     this.currPage = data.data.current;
-                //     this.pageSize = data.data.size;
-                //     this.totalCount = data.data.total;
-                // });
+                COMMON_API.PERMISSION_GROUP_QUERY_API({
+                }).then(({ data }) => {
+                    console.log('1111111')
+                    console.log(data)
+                    // if (haveParas && data.data.records.length === 0) {
+                    //     this.$infoToast('暂无任何内容');
+                    // }
+                    // // this.controllableForm.owner = '';
+                    // this.targetInfoList = data.data.records;
+                    // this.currPage = data.data.current;
+                    // this.pageSize = data.data.size;
+                    // this.totalCount = data.data.total;
+                });
+
+
             },
 
             // [BTN:新增] 新增数据集 item
