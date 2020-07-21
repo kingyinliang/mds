@@ -63,7 +63,7 @@
         <el-dialog title="反审原因" :close-on-click-modal="false" :visible.sync="visibleBack">
             <el-input v-model="BackText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
             <div slot="footer" class="dialog-footer">
-                <el-button @click="visibleWriteOffs = false">
+                <el-button @click="visibleBack = false">
                     取消
                 </el-button>
                 <el-button type="primary" @click="writeOffs()">
@@ -219,7 +219,7 @@
             {
                 type: 'select',
                 label: '生产车间',
-                prop: 'workShop',
+                prop: 'workshop',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
