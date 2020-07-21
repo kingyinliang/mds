@@ -203,11 +203,8 @@
 
         tabClick(val) {
             const num = Number(val.name) - 1;
-            if (this.tabs[num].status) {
-                this.passBtn = this.tabs[num]['status'];
-            } else {
-                this.passBtn = ''
-            }
+            const status: (any) =  this.tabs[num].status;// eslint-disable-line
+            status ? this.passBtn = status : this.passBtn = ''
         }
 
         initData() {
