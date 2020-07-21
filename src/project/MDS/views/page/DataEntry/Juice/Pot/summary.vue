@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <el-tabs v-model="activeName" class="NewDaatTtabs" type="border-card">
+        <el-tabs v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">原汁库存汇总</span>
                 <div class="titleLeft">
@@ -9,7 +9,7 @@
                         导出
                     </el-button>
                 </div>
-                <el-table header-row-class-name="tableHead" :data="formDataTop" border tooltip-effect="dark">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="formDataTop" border tooltip-effect="dark">
                     <el-table-column label="" :show-overflow-tooltip="true" prop="type" />
                     <el-table-column label=">=7天" :show-overflow-tooltip="true" prop="gtSevenDay" />
                     <el-table-column label="6天" :show-overflow-tooltip="true" prop="sixDay" />
@@ -21,7 +21,7 @@
                     <el-table-column label="0天" :show-overflow-tooltip="true" prop="zeroDay" />
                     <el-table-column label="合计" :show-overflow-tooltip="true" prop="sumAmount" />
                 </el-table>
-                <el-table header-row-class-name="tableHead" :data="formData" border tooltip-effect="dark" style="margin-top: 25px;">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="formData" border tooltip-effect="dark" style="margin-top: 25px;">
                     <el-table-column label="" :show-overflow-tooltip="true" prop="type" />
                     <el-table-column label=">=15天" :show-overflow-tooltip="true" prop="gtFifteenDay" />
                     <el-table-column label="14天" :show-overflow-tooltip="true" prop="fourteenDay" />
@@ -42,7 +42,7 @@
                         导出
                     </el-button>
                 </div>
-                <el-table header-row-class-name="tableHead" :data="formLeftData" border tooltip-effect="dark">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="formLeftData" border tooltip-effect="dark">
                     <el-table-column label="味极鲜" :show-overflow-tooltip="true" prop="weijixian" />
                     <el-table-column label="六月鲜" :show-overflow-tooltip="true" prop="liuyuexian" />
                     <el-table-column label="JY" :show-overflow-tooltip="true" prop="jy" />
@@ -55,32 +55,32 @@
                 <div class="titleLeft">
                     <i class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />原汁总库存列表（单位:方）
                 </div>
-                <el-table header-row-class-name="tableHead" :data="dataLeftListOrder" border tooltip-effect="dark">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="dataLeftListOrder" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="55" :index="indexOrderMethod" fixed />
-                    <el-table-column label="原汁罐号" :show-overflow-tooltip="true" prop="holderName" width="120" />
-                    <el-table-column label="状态" :show-overflow-tooltip="true" width="75">
+                    <el-table-column label="原汁罐号" :show-overflow-tooltip="true" prop="holderName" min-width="120" />
+                    <el-table-column label="状态" :show-overflow-tooltip="true" min-width="75">
                         <template slot-scope="scope">
                             {{ scope.row.holderStatus === '6' ? '空罐' : scope.row.holderStatus === '7' ? '入料中' : scope.row.holderStatus === '8' ? '沉淀中' : scope.row.holderStatus === '9' ? '领用中' : scope.row.holderStatus === '10' ? '待清洗' : '' }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="罐内总量" :show-overflow-tooltip="true" prop="amount" width="100" />
-                    <el-table-column label="发酵罐号" :show-overflow-tooltip="true" prop="fermentationHolderName" width="100" />
-                    <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="fullDate" width="160" />
-                    <el-table-column label="车间" :show-overflow-tooltip="true" prop="workShop" width="70" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
+                    <el-table-column label="罐内总量" :show-overflow-tooltip="true" prop="amount" min-width="100" />
+                    <el-table-column label="发酵罐号" :show-overflow-tooltip="true" prop="fermentationHolderName" min-width="100" />
+                    <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="fullDate" min-width="160" />
+                    <el-table-column label="车间" :show-overflow-tooltip="true" prop="workShop" min-width="70" />
+                    <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}{{ scope.row.materialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="类别" :show-overflow-tooltip="true" prop="type" width="70" />
-                    <el-table-column label="是否F0/原汁JBS" :show-overflow-tooltip="true" width="80">
+                    <el-table-column label="类别" :show-overflow-tooltip="true" prop="type" min-width="70" />
+                    <el-table-column label="是否F0/原汁JBS" :show-overflow-tooltip="true" min-width="80">
                         <template slot-scope="scope">
                             {{ scope.row.isF === '1' ? 'F0' : scope.row.isF === '2' ? 'JBS' : '' }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="沉淀期" :show-overflow-tooltip="true" prop="days" width="70" />
-                    <el-table-column label="入库批次" :show-overflow-tooltip="true" prop="batch" width="110" />
-                    <el-table-column label="入库订单号" :show-overflow-tooltip="true" prop="orderNo" width="120" />
+                    <el-table-column label="沉淀期" :show-overflow-tooltip="true" prop="days" min-width="70" />
+                    <el-table-column label="入库批次" :show-overflow-tooltip="true" prop="batch" min-width="110" />
+                    <el-table-column label="入库订单号" :show-overflow-tooltip="true" prop="orderNo" min-width="120" />
                 </el-table>
                 <el-row>
                     <el-pagination :current-page="dataLeftCurrPage" :page-sizes="[10, 20, 50]" :page-size="dataPageSize" layout="total, sizes, prev, pager, next, jumper" :total="dataLeftTotalCount" @size-change="handleDataSizeChange" @current-change="handleDataCurrentChange" />
@@ -94,7 +94,7 @@
                         导出
                     </el-button>
                 </div>
-                <el-table header-row-class-name="tableHead" :data="formRightData" border tooltip-effect="dark">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="formRightData" border tooltip-effect="dark">
                     <el-table-column label="味极鲜" :show-overflow-tooltip="true" prop="weijixian" />
                     <el-table-column label="六月鲜" :show-overflow-tooltip="true" prop="liuyuexian" />
                     <el-table-column label="JY" :show-overflow-tooltip="true" prop="jy" />
@@ -107,32 +107,32 @@
                 <div class="titleLeft">
                     <i class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />可用原汁列表（单位:方）
                 </div>
-                <el-table header-row-class-name="tableHead" :data="dataRightListOrder" border tooltip-effect="dark">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="dataRightListOrder" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="55" :index="indexOrderMethodRight" fixed />
-                    <el-table-column label="原汁罐号" :show-overflow-tooltip="true" prop="holderName" width="120" />
-                    <el-table-column label="状态" :show-overflow-tooltip="true" width="75">
+                    <el-table-column label="原汁罐号" :show-overflow-tooltip="true" prop="holderName" min-width="120" />
+                    <el-table-column label="状态" :show-overflow-tooltip="true" min-width="75">
                         <template slot-scope="scope">
                             {{ scope.row.holderStatus === '6' ? '空罐' : scope.row.holderStatus === '7' ? '入料中' : scope.row.holderStatus === '8' ? '沉淀中' : scope.row.holderStatus === '9' ? '领用中' : scope.row.holderStatus === '10' ? '待清洗' : '' }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="罐内总量" :show-overflow-tooltip="true" prop="amount" width="100" />
-                    <el-table-column label="发酵罐号" :show-overflow-tooltip="true" prop="fermentationHolderName" width="100" />
-                    <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="fullDate" width="160" />
-                    <el-table-column label="车间" :show-overflow-tooltip="true" prop="workShop" width="70" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
+                    <el-table-column label="罐内总量" :show-overflow-tooltip="true" prop="amount" min-width="100" />
+                    <el-table-column label="发酵罐号" :show-overflow-tooltip="true" prop="fermentationHolderName" min-width="100" />
+                    <el-table-column label="满罐日期" :show-overflow-tooltip="true" prop="fullDate" min-width="160" />
+                    <el-table-column label="车间" :show-overflow-tooltip="true" prop="workShop" min-width="70" />
+                    <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}{{ scope.row.materialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="类别" :show-overflow-tooltip="true" prop="type" width="70" />
-                    <el-table-column label="是否F0" :show-overflow-tooltip="true" width="80">
+                    <el-table-column label="类别" :show-overflow-tooltip="true" prop="type" min-width="70" />
+                    <el-table-column label="是否F0" :show-overflow-tooltip="true" min-width="80">
                         <template slot-scope="scope">
                             {{ scope.row.isF === '1' ? 'F0' : scope.row.isF === '2' ? 'JBS' : '' }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="沉淀期" :show-overflow-tooltip="true" prop="days" width="70" />
-                    <el-table-column label="入库批次" :show-overflow-tooltip="true" prop="batch" width="110" />
-                    <el-table-column label="入库订单号" :show-overflow-tooltip="true" prop="orderNo" width="120" />
+                    <el-table-column label="沉淀期" :show-overflow-tooltip="true" prop="days" min-width="70" />
+                    <el-table-column label="入库批次" :show-overflow-tooltip="true" prop="batch" min-width="110" />
+                    <el-table-column label="入库订单号" :show-overflow-tooltip="true" prop="orderNo" min-width="120" />
                 </el-table>
                 <el-row>
                     <el-pagination :current-page="dataRightCurrPage" :page-sizes="[10, 20, 50]" :page-size="dataPageSize" layout="total, sizes, prev, pager, next, jumper" :total="dataRightTotalCount" @size-change="handleDataSizeChangeRight" @current-change="handleDataCurrentChangeRight" />
