@@ -278,6 +278,9 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_CHECK_STATUS'
+                    }).then((data) => {
+                        data.data.data = data.data.data.filter(it => it.dictValue === '已审核' || it.dictValue === '已过账' || it.dictValue === '接口失败' || it.dictValue === '反审');
+                        return data
                     })
                 },
                 defaultValue: '',
