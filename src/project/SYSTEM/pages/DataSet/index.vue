@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-07-21 13:57:11
  * @LastEditors: Telliex
- * @LastEditTime: 2020-07-22 20:11:20
+ * @LastEditTime: 2020-07-22 22:49:21
 -->
 
 <template>
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-    import { COMMON_API } from 'common/api/api';
+    import { RDM_API } from 'common/api/api';
     // import { SYSTEMSETUP_API } from '@/api/api';
     import EditDataSetItem from './AddAndUpdateDataSetItem'
 
@@ -104,7 +104,7 @@
             this.getItemsList(true);
 
             // 呼叫拥有人清单
-            COMMON_API.USER_ROLE_QUERY_API({
+            RDM_API.USER_ROLE_QUERY_API({
                 factory: 'common',
                 current: 1,
                 size: 9999
@@ -116,7 +116,7 @@
             });
 
             // 呼叫属性选项
-            COMMON_API.PERMISSION_LIST_PERMISSIONCODE_API({
+            RDM_API.PERMISSION_LIST_PERMISSIONCODE_API({
             }).then(({ data }) => {
                 this.projectArray = data.data.project
                 this.taskArray = data.data.task
@@ -137,7 +137,7 @@
                 if (haveParas) {
                     this.currPage = 1;
                 }
-                COMMON_API.PERMISSION_GROUP_QUERY_API({
+                RDM_API.PERMISSION_GROUP_QUERY_API({
                     current: this.currPage,
                     size: this.pageSize,
                     owner: who
@@ -180,7 +180,8 @@
                 })
                     .then(() => {
                         console.log(item)
-                        COMMON_API.PERMISSION_REMOVE_API({ groupId: item.id }).then(() => {
+                        RDM_API.PERMISSION_REMOVE_API({ groupId: item.id }).then(() => {
+                            this.$successToast('删除成功');
                             this.getItemsList();
                         }).catch(() => {
                             //
