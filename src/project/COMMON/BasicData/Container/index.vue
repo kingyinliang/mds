@@ -58,9 +58,9 @@
                         {{ scope.row.holderArea }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="material" label="生产物料" :show-overflow-tooltip="true" width="120">
+                <el-table-column prop="material" label="生产物料" :show-overflow-tooltip="true" min-width="300">
                     <template slot-scope="scope">
-                        {{ scope.row.material }}
+                        {{ transferMaterialList(scope.row.material) }}
                     </template>
                 </el-table-column>
                 <el-table-column label="归属车间" :show-overflow-tooltip="true" width="92">
@@ -92,6 +92,7 @@
         },
         data() {
             return {
+                materialList: [],
                 isDialogShow: false,
                 controllableForm: {
                     deptID: '',
@@ -125,11 +126,39 @@
             this.getContainerTypeList();
             // 获取容器清单
             this.getItemsList();
+             // 获取物料列表
+            this.getMaterialList()
         },
         methods: {
             // 序号
             indexMethod(index) {
                 return index + 1 + (Number(this.currPage) - 1) * Number(this.pageSize);
+            },
+
+            transferMaterialList(obj) {
+                const temp = []
+                obj.forEach(item => {
+                    temp.push(item.materialName)
+                })
+                return temp.join()
+            },
+            // 获取物料列表
+            getMaterialList() {
+                // COMMON_API.DICTQUERY_API({
+                //     dictType: 'COMMON_MATERIAL_TYPE'
+                // }).then(({ data }) => {
+                //     this.materialList = data.data
+                // });
+                COMMON_API.SEARCH_MATERIAL_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    materialType: 'ZHAL'
+                }).then(({ data }) => {
+                    this.materialList = data.data
+                    console.log('77777')
+                    console.log(data)
+                });
+
+
             },
             // 获取容器列表
             getItemsList(haveParas) {
