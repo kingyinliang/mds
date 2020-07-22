@@ -250,7 +250,7 @@ const COMMON_API = {
     /**
      * @property {string} ALLMATERIAL_API 物料管理拿全部物料 模糊查询
      */
-    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params, 'MDS', false),
+    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'POST', params, 'MDS', false),
     /**
      * @property {string} 根据编码查物料
      */
