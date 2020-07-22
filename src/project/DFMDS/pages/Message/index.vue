@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
+    import { Vue, Component, Watch } from 'vue-property-decorator';
     import { COMMON_API, MSG_API } from 'common/api/api';
 
     @Component({
@@ -129,6 +129,19 @@
                 this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
             }, 500);
         }
+
+        // 消息管理用 - 关闭当前页签
+        get updateMsgNum(): boolean {
+            return this.$store.state.common.updateMsg;
+        }
+
+        @Watch('updateMsgNum', { immediate: true, deep: true })
+        watchUpdateMsgNum(newStatus: boolean) {
+            if (newStatus !== false) {
+                this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
+            }
+        }
+
 
         getIcon() {
             // 获取数据列表
