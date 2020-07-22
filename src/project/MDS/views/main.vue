@@ -49,6 +49,14 @@ export default {
                 this.$store.commit('common/updateDocumentClientHeight', val);
             }
         },
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            },
+            set(val) {
+                this.$store.commit('common/updateMainClientHeight', val);
+            }
+        },
         sidebarFold: {
             get() {
                 return this.$store.state.common.sidebarFold;
@@ -108,8 +116,10 @@ export default {
         // 重置窗口可视高度
         resetDocumentClientHeight() {
             this.documentClientHeight = document.documentElement['clientHeight'];
+            this.mainClientHeight = document.documentElement['clientHeight'] - 32 - 40 - 56;
             window.onresize = () => {
                 this.documentClientHeight = document.documentElement['clientHeight'];
+                this.mainClientHeight = document.documentElement['clientHeight'] - 32 - 40 - 56;
             };
         },
         // 获取当前管理员信息

@@ -1074,6 +1074,9 @@
                     border-bottom: none;
                 }
             }
+            .el-table__fixed-right-patch {
+                display: none;
+            }
             tr:nth-child(even) {
                 background-color: #f7f7f7;
             }
@@ -1738,7 +1741,7 @@ body {
             line-height: 17px;
             span {
                 float: right;
-            } 
+            }
         }
         &_content {
             display: flex;

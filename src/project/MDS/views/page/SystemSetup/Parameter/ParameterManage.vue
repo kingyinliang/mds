@@ -1,70 +1,83 @@
 <template>
-    <el-col>
-        <div class="main main-header">
-            <el-card>
-                <el-row style="margin-bottom: 10px;">
-                    <el-select v-model="factory">
-                        <el-option label="请选择" value="" />
-                        <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                    </el-select>
-                    <el-input v-model="searchType" placeholder="请输入" suffix-icon="el-icon-search" style="width: 200px;" />
-                    <el-button type="primary" @click="getdictList">
-                        查询
-                    </el-button>
-                </el-row>
-                <el-row type="flex" :gutter="10">
-                    <el-col :span="8" style="min-width: 400px;">
-                        <el-card>
-                            <div slot="header" class="clearfix">
-                                <div slot="header" class="clearfix">
-                                    <span style="float: left; line-height: 40px;">参数类型</span>
-                                    <el-button v-if="isAuth('sys:dict:save')" type="text" icon="el-icon-plus" style="display: inline-block; float: right; padding: 12px;" @click="addorupdate('type')" />
-                                </div>
-                            </div>
-                            <div>
-                                <el-table header-row-class-name="tableHead" :data="parameterType" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @row-click="setTypeDetail">
-                                    <el-table-column type="index" width="50" label="序号" fixed />
-                                    <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" />
-                                    <el-table-column prop="type" :show-overflow-tooltip="true" label="参数类型编码" width="110" />
-                                    <el-table-column prop="name" :show-overflow-tooltip="true" label="参数类型名称" width="110" />
-                                </el-table>
-                                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <el-col :span="16">
-                        <el-card>
-                            <div slot="header" class="clearfix">
-                                <span style="float: left; line-height: 40px;">参数</span>
-                                <el-button v-if="isAuth('sys:dict:save')" type="text" icon="el-icon-plus" style="display: inline-block; float: right; padding: 12px;" @click="addorupdate('param', false, true)" />
-                            </div>
-                            <div>
-                                <el-table ref="table1" header-row-class-name="tableHead" :data="parameter" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                                    <el-table-column type="index" width="50" label="序号" fixed />
-                                    <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" width="100" />
-                                    <el-table-column prop="type" :show-overflow-tooltip="true" label="参数类型编码" />
-                                    <el-table-column prop="name" :show-overflow-tooltip="true" label="参数类型名称" />
-                                    <el-table-column prop="code" :show-overflow-tooltip="true" label="参数编码" />
-                                    <el-table-column prop="value" :show-overflow-tooltip="true" label="参数名称" />
-                                    <el-table-column width="96" label="操作">
-                                        <template slot-scope="scope">
-                                            <el-button v-if="isAuth('sys:dict:delete')" type="text" @click="remove(scope.row)">
-                                                删除
-                                            </el-button>
-                                            <el-button v-if="isAuth('sys:dict:update')" type="text" @click="addorupdate('param', scope.row)">
-                                                编辑
-                                            </el-button>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                            </div>
-                        </el-card>
-                    </el-col>
-                </el-row>
-            </el-card>
-        </div>
+    <div class="header_main">
+        <mds-card title="数据字典" :name="'org'" :pack-up="false" style="background: #fff;">
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <div class="org-card">
+                        <h4 class="org-card_title">
+                            <span>参数类型</span>
+                            <el-button v-if="isAuth('sys:dict:save')" type="text" icon="el-icon-plus" style="margin-right: 10px; color: #fff; font-weight: 800;" @click="addorupdate('type')" />
+                        </h4>
+                        <div class="search-bar">
+                            <el-select v-model="factory" size="small" clearable placeholder="请选择">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                            </el-select>
+                            <el-input v-model="searchType" size="small" placeholder="请输入" suffix-icon="el-icon-search" />
+                            <el-button type="primary" size="small" @click="getdictList">
+                                查询
+                            </el-button>
+                        </div>
+                        <div style="padding: 10px;">
+                            <el-table
+                                header-row-class-name="tableHead"
+                                class="newTable"
+                                size="small"
+                                :data="parameterType"
+                                row-key="index"
+                                :height="mainClientHeight - 62 - 97 - 20 - 47"
+                                highlight-current-row
+                                border
+                                tooltip-effect="dark"
+                                style="width: 100%;"
+                                @row-click="setTypeDetail"
+                            >
+                                <el-table-column type="index" width="50" label="序号" fixed />
+                                <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" />
+                                <el-table-column prop="type" :show-overflow-tooltip="true" label="参数类型编码" width="110" />
+                                <el-table-column prop="name" :show-overflow-tooltip="true" label="参数类型名称" width="110" />
+                            </el-table>
+                            <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="16">
+                    <div class="org-card">
+                        <h4 class="org-card_title">
+                            <span>参数</span>
+                        </h4>
+                        <h5>
+                            <span><i class="title-icon" style="background: #487bff;" />详细参数</span>
+                            <el-button v-if="isAuth('sys:dict:save')" size="small" type="primary" @click="addorupdate('param', false, true)">
+                                新增
+                            </el-button>
+                        </h5>
+                        <div style="padding: 10px;">
+                            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="parameter" :height="mainClientHeight - 62 - 97 - 20" border tooltip-effect="dark" style="width: 100%;">
+                                <el-table-column type="index" width="50" label="序号" fixed />
+                                <el-table-column :show-overflow-tooltip="true" label="工厂" prop="factoryName" width="100" />
+                                <el-table-column prop="type" :show-overflow-tooltip="true" label="参数类型编码" />
+                                <el-table-column prop="name" :show-overflow-tooltip="true" label="参数类型名称" />
+                                <el-table-column prop="code" :show-overflow-tooltip="true" label="参数编码" />
+                                <el-table-column prop="value" :show-overflow-tooltip="true" label="参数名称" />
+                                <el-table-column width="96" label="操作">
+                                    <template slot-scope="scope">
+                                        <el-button v-if="isAuth('sys:dict:delete')" type="text" @click="remove(scope.row)">
+                                            删除
+                                        </el-button>
+                                        <el-button v-if="isAuth('sys:dict:update')" type="text" @click="addorupdate('param', scope.row)">
+                                            编辑
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </div>
+                </el-col>
+            </el-row>
+        </mds-card>
         <add-or-update v-if="visible" ref="addOrupdate" :factory-list="factoryList" @refreshDataList="getList()" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -90,7 +103,13 @@ export default {
             pageSize: 10
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            }
+        }
+    },
     mounted() {
         this.getdictList();
         this.getFactoryList();
@@ -196,16 +215,67 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.el-card__header {
-    padding: 13px 15px;
-}
-.main-header .el-card__header {
-    padding: 0 15px !important;
-}
-</style>
-<style scoped>
-.el-button[type="text"] {
-    padding: 0;
-}
+<style scoped lang="scss">
+    .org-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(232, 232, 232, 1);
+        border-radius: 4px;
+        box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.09);
+
+        ::v-deep .el-tree-node__expand-icon { /* stylelint-disable-line */
+            color: #487bff;
+        }
+
+        .org-card_title {
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: space-between;
+            height: 40px;
+            padding-left: 10px;
+            color: white;
+            line-height: 40px;
+            background: rgba(72, 123, 255, 1);
+        }
+        .search-bar {
+            display: inline-grid;
+            grid-column-gap: 10px;
+            grid-template-columns: 1fr 1fr 64px;
+            padding: 10px;
+        }
+        h5 {
+            position: relative;
+            display: inline-flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 10px;
+            padding-left: 10px;
+            font-weight: bold;
+            font-size: 14px !important;
+            line-height: 32px;
+            &::before {
+                position: absolute;
+                top: 34%;
+                left: 2px;
+                width: 4px;
+                height: 12px;
+                background: #487bff;
+                border-radius: 2px;
+                content: "";
+            }
+        }
+        .filter-input {
+            padding: 6px 10px;
+        }
+
+        .tree-main {
+            flex: 1;
+            overflow-y: scroll;
+        }
+        .detail-main {
+            padding: 16px 10px 0 10px;
+        }
+    }
 </style>
