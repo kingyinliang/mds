@@ -126,8 +126,8 @@
             updateMsgNum(newStatus) {
                 if (newStatus !== false) {
                     this.$store.commit('common/updateMsg', false);
-                    this.getMsgNum()
                 }
+                this.getMsgNum()
             }
         },
         created() {
