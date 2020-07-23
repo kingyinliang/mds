@@ -65,7 +65,7 @@
                         <p>{{ prodPower.countOutput }} {{ prodPower.unitName }}</p>
                     </el-form-item>
                     <el-form-item v-if="prodPower.urgencyCountOutput !== 0" label="紧急入库产量：" label-width="100px">
-                        <p>{{ prodPower.urgencyCountOutput }}</p>
+                        <p>{{ prodPower.urgencyCountOutput }} {{ prodPower.unitName }}</p>
                     </el-form-item>
                     <el-form-item label="差异数量：">
                         <p>{{ prodPower.differences }} {{ prodPower.unitName }}</p>

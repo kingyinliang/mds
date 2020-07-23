@@ -12,7 +12,6 @@
             :show-operation-column="true"
             :operation-column-width="140"
             @get-data-success="setData"
-            @tab-click="tabClick"
         >
             <template slot="tab-head0">
                 <div class="tab__heads clearfix">
@@ -84,8 +83,8 @@
 
     export default class ProInStore extends Vue {
         mounted() {
-            this.getMoveReas();
             this.getHaveBeenMoveReas();
+            this.getMoveReas();
         }
 
         //表格数据
@@ -93,108 +92,120 @@
             return this.$refs.queryTable.activeName;
         }
 
-        Column = [
-            {
-                prop: 'status',
-                label: '过账状态'
-            },
-            {
-                prop: 'orderProductDate',
-                label: '生产日期',
-                width: '120'
-            },
-            {
-                prop: 'orderNo',
-                label: '生产订单',
-                width: '120'
-            },
-            {
-                prop: 'materialName',
-                label: '生产物料 ',
-                width: '120',
-                formatter: (row) => {
-                    return row.productMaterialCode + ' ' + row.productMaterialName;
-                }
-            },
-            {
-                prop: 'planOutput',
-                label: '计划数量'
-            },
-            {
-                prop: 'outputUnit',
-                label: '单位'
-            },
-            {
-                prop: 'countOutput',
-                label: '入库数量'
-            },
-            {
-                prop: 'countOutputUnit',
-                label: '单位'
-            },
-            {
-                prop: 'materialName',
-                label: '组件物料',
-                width: '120',
-                formatter: (row) => {
-                    return row.materialCode + ' ' + row.materialName;
-                }
-            },
-            {
-                prop: 'entryQnt',
-                label: '发料数量'
-            },
-            {
-                prop: 'entryUom',
-                label: '单位'
-            },
-            {
-                prop: 'batch',
-                label: '物料批次',
-                type: 'input',
-                width: '140',
-                redact: true
-            },
-            {
-                prop: 'stgeLoc',
-                label: '出库库位',
-                type: 'input',
-                width: '140',
-                redact: true,
-                header: true
-            },
-            {
-                prop: 'moveType',
-                label: '移动类型',
-                type: 'input',
-                width: '140',
-                redact: true,
-                header: true
-            },
-            {
-                prop: 'moveReason',
-                label: '移动原因',
-                resVal: {
-                    label: 'dictValue',
-                    value: 'dictCode'
-                },
-                type: 'select',
-                width: '140',
-                redact: true,
-                header: true
-            },
-            {
-                prop: 'remark',
-                label: '备注',
-                type: 'input',
-                width: '140',
-                redact: true
-            },
-            {
-                prop: 'interfaceReturn',
-                label: '接口回写'
-            }
-        ];
+        // Column = [
+        //     {
+        //         prop: 'status',
+        //         label: '过账状态'
+        //     },
+        //     {
+        //         prop: 'orderProductDate',
+        //         label: '生产日期',
+        //         width: '120'
+        //     },
+        //     {
+        //         prop: 'orderNo',
+        //         label: '生产订单',
+        //         width: '120'
+        //     },
+        //     {
+        //         prop: 'materialName',
+        //         label: '生产物料 ',
+        //         width: '120',
+        //         formatter: (row) => {
+        //             return row.productMaterialCode + ' ' + row.productMaterialName;
+        //         }
+        //     },
+        //     {
+        //         prop: 'planOutput',
+        //         label: '计划数量'
+        //     },
+        //     {
+        //         prop: 'outputUnit',
+        //         label: '单位'
+        //     },
+        //     {
+        //         prop: 'countOutput',
+        //         label: '入库数量'
+        //     },
+        //     {
+        //         prop: 'countOutputUnit',
+        //         label: '单位'
+        //     },
+        //     {
+        //         prop: 'materialName',
+        //         label: '组件物料',
+        //         width: '120',
+        //         formatter: (row) => {
+        //             return row.materialCode + ' ' + row.materialName;
+        //         }
+        //     },
+        //     {
+        //         prop: 'entryQnt',
+        //         label: '发料数量'
+        //     },
+        //     {
+        //         prop: 'entryUom',
+        //         label: '单位'
+        //     },
+        //     {
+        //         prop: 'batch',
+        //         label: '物料批次',
+        //         type: 'input',
+        //         width: '140',
+        //         redact: true
+        //     },
+        //     {
+        //         prop: 'stgeLoc',
+        //         label: '出库库位',
+        //         type: 'input',
+        //         width: '140',
+        //         redact: true,
+        //         header: true
+        //     },
+        //     {
+        //         prop: 'moveType',
+        //         label: '移动类型',
+        //         type: 'input',
+        //         width: '140',
+        //         redact: true,
+        //         header: true
+        //     },
+        //     {
+        //         prop: 'moveReason',
+        //         label: '过账移动原因',
+        //         resVal: {
+        //             label: 'dictValue',
+        //             value: 'dictCode'
+        //         },
+        //         type: 'select',
+        //         width: '140',
+        //         redact: true,
+        //         header: true
+        //     },
+        //     {
+        //         prop: 'writeoffsMoveReason',
+        //         label: '反审移动原因',
+        //         resVal: {
+        //             label: 'dictValue',
+        //             value: 'dictCode'
+        //         },
+        //         type: 'select',
+        //         width: '140',
+        //         redact: true,
+        //         header: true
+        //     },
+        //     {
+        //         prop: 'remark',
+        //         label: '备注',
+        //         type: 'input',
+        //         width: '140',
+        //         redact: true
+        //     },
+        //     {
+        //         prop: 'interfaceReturn',
+        //         label: '接口回写'
+        //     }
+        // ];
 
         $refs: {
             queryTable: HTMLFormElement;
@@ -327,7 +338,7 @@
                     totalCount: 0
                 },
                 showOperationColumn: true,
-                column: this.Column // eslint-disable-line
+                column: this.getColumn(1) // eslint-disable-line
             },
             {
                 label: '已过账',
@@ -339,9 +350,131 @@
                     totalCount: 0
                 },
                 showOperationColumn: true,
-                column: this.Column // eslint-disable-line
+                column: this.getColumn(2) // eslint-disable-line
             }
         ];
+
+        getColumn(type) {
+            const column = [
+                    {
+                        prop: 'status',
+                        label: '过账状态'
+                    },
+                    {
+                        prop: 'orderProductDate',
+                        label: '生产日期',
+                        width: '120'
+                    },
+                    {
+                        prop: 'orderNo',
+                        label: '生产订单',
+                        width: '120'
+                    },
+                    {
+                        prop: 'materialName',
+                        label: '生产物料 ',
+                        width: '120',
+                        formatter: (row) => {
+                            return row.productMaterialCode + ' ' + row.productMaterialName;
+                        }
+                    },
+                    {
+                        prop: 'planOutput',
+                        label: '计划数量'
+                    },
+                    {
+                        prop: 'outputUnit',
+                        label: '单位'
+                    },
+                    {
+                        prop: 'countOutput',
+                        label: '入库数量'
+                    },
+                    {
+                        prop: 'countOutputUnit',
+                        label: '单位'
+                    },
+                    {
+                        prop: 'materialName',
+                        label: '组件物料',
+                        width: '120',
+                        formatter: (row) => {
+                            return row.materialCode + ' ' + row.materialName;
+                        }
+                    },
+                    {
+                        prop: 'entryQnt',
+                        label: '发料数量'
+                    },
+                    {
+                        prop: 'entryUom',
+                        label: '单位'
+                    },
+                    {
+                        prop: 'batch',
+                        label: '物料批次',
+                        type: 'input',
+                        width: '140',
+                        redact: true
+                    },
+                    {
+                        prop: 'stgeLoc',
+                        label: '出库库位',
+                        type: 'input',
+                        width: '140',
+                        redact: true,
+                        header: true
+                    },
+                    {
+                        prop: 'moveType',
+                        label: '移动类型',
+                        type: 'input',
+                        width: '140',
+                        redact: true,
+                        header: true
+                    },
+                    {
+                        prop: 'moveReason',
+                        label: '过账移动原因',
+                        resVal: {
+                            label: 'dictValue',
+                            value: 'dictCode'
+                        },
+                        type: 'select',
+                        width: '140',
+                        redact: true,
+                        header: true
+                    },
+                    {
+                        prop: 'writeoffsMoveReason',
+                        label: '反审移动原因',
+                        resVal: {
+                            label: 'dictValue',
+                            value: 'dictCode'
+                        },
+                        type: 'select',
+                        width: '140',
+                        redact: true,
+                        header: false
+                    },
+                    {
+                        prop: 'remark',
+                        label: '备注',
+                        type: 'input',
+                        width: '140',
+                        redact: true
+                    },
+                    {
+                        prop: 'interfaceReturn',
+                        label: '接口回写'
+                    }
+                ];
+                if (type === 2) {
+                    column[14]['header'] = false;
+                    column[15]['header'] = true;
+                }
+            return column;
+        }
 
         // 查询请求
         listInterface = params => {
@@ -365,14 +498,16 @@
                         params.total = this.$refs.queryTable.tabs[index].pages.totalCount;
                         AUDIT_API.PROISSUEQUERY_API(params).then(({ data }) => {
                             this.setRedact(data.data.records);
-                            this.tabs[index].tableData = data.data.records;
+                            const datasNew = this.changeMoveReason(data.data.records, index);
+                            this.tabs[index].tableData = datasNew;
                             this.$refs.queryTable.tabs[index].pages.currPage = data.data.current;
                             this.$refs.queryTable.tabs[index].pages.pageSize = data.data.size;
                             this.$refs.queryTable.tabs[index].pages.totalCount = data.data.total;
                         });
                     } else {
                         this.setRedact(datas.data.records);
-                        this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                        const datasNew = this.changeMoveReason(datas.data.records, this.$refs.queryTable.activeName);
+                        this.tabs[this.$refs.queryTable.activeName].tableData = datasNew;
                         this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
                         this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
                         this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
@@ -380,12 +515,25 @@
                 })
             } else {
                 this.setRedact(datas.data.records);
-                this.tabs[this.$refs.queryTable.activeName].tableData = datas.data.records;
+                const datasNew = this.changeMoveReason(datas.data.records, this.$refs.queryTable.activeName);
+                this.tabs[this.$refs.queryTable.activeName].tableData = datasNew;
                 this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.currPage = datas.data.current;
                 this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.pageSize = datas.data.size;
                 this.$refs.queryTable.tabs[this.$refs.queryTable.activeName].pages.totalCount = datas.data.total;
             }
+        }
 
+        changeMoveReason(datas, activeName) {
+            datas.map(item => {
+                if (activeName === '0') {
+                    if (!item.moveReason) {
+                        item.moveReason = '0001';
+                    }
+                } else if (!item.writeoffsMoveReason) {
+                        item.writeoffsMoveReason = '0002';
+                    }
+            })
+            return datas;
         }
 
         // 设置编辑
@@ -515,6 +663,10 @@
                 }).then(() => {
                     const list = this.$refs.queryTable.tabs[1].multipleSelection
                     for (const item of list) {
+                        if (!item.stgeLoc || !item.moveType || !item.writeoffsMoveReason) {
+                            this.$warningToast('请填写必填项');
+                            return false;
+                        }
                         item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id
                         item.factoryCode = JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode
                         item.reason = this.refuseOrWriteOffsText
@@ -531,6 +683,12 @@
                         this.isRefuseOrWriteOffsDialogShow = false
                         this.$successToast(data.msg);
                         this.$refs.queryTable.getDataList()
+                    }).catch((err) => {
+                        if (err.data.code === 201) {
+                            this.isRefuseOrWriteOffsDialogShow = false;
+                            this.$errorToast(err.data.msg);
+                            this.$refs.queryTable.getDataList(true);
+                        }
                     });
                 })
             }
@@ -543,7 +701,7 @@
                 // this.$refs.table1.bodyWrapper.scrollLeft = document.querySelector('.el-table__body').offsetWidth - document.querySelector('.el-table__body-wrapper').clientWidth;
                 // this.$refs.table.bodyWrapper.scrollLeft = 10000;
             } else {
-                if (!row.stgeLoc || !row.moveType || !row.moveReason) {
+                if (!row.stgeLoc || !row.moveType) {
                     this.$warningToast('请填写必填项')
                     return false;
                 }
@@ -565,6 +723,7 @@
                     stgeLoc: row.stgeLoc,
                     moveType: row.moveType,
                     moveReason: row.moveReason,
+                    writeoffsMoveReason: row.writeoffsMoveReason,
                     remark: row.remark
                 }).then(({ data }) => {
                     this.$successToast(data.msg)
@@ -600,6 +759,7 @@
             COMMON_API.DICTQUERY_API({
                 dictType: 'RETURN_MOVE_REASON'
             }).then(({ data }) => {
+                this.$refs.queryTable.optionLists.writeoffsMoveReason = data.data;
                 this.haveMoveReason = data.data;
             });
         }
@@ -610,17 +770,6 @@
                 return 0;
             }
             return 1;
-        }
-
-        // tab切换
-        tabClick(tab) {
-            if (tab.name === 0) {
-                console.log('11')
-                this.$refs.queryTable.optionLists.moveReason = this.moveReason;
-            } else {
-                console.log('22')
-                this.$refs.queryTable.optionLists.moveReason = this.haveMoveReason;
-            }
         }
     }
 </script>
