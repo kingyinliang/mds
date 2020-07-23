@@ -5,12 +5,13 @@
             :redact-auth="'pkg:order:update'"
             :save-auth="'pkg:order:update'"
             :submit-auth="'pkg:order:update'"
-            :order-status="formHeader.orderStatus"
+            :order-status="formHeader.orderStatusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
+            @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
                 <semi-receive ref="semiReceive" :is-redact="data.isRedact" />
@@ -125,11 +126,13 @@
         }
 
         savedDatas() {
-            return STE_API.STE_SEMI_SAVE_API({})
+            const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
+            return STE_API.STE_SEMI_SAVE_API(steSemi)
         }
 
         submitDatas() {
-            return STE_API.STE_SEMI_SUBMIT_API({})
+            const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
+            return STE_API.STE_SEMI_SUBMIT_API(steSemi)
         }
     }
     interface OrderData {

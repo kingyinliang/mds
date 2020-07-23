@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
+    import { Vue, Component, Watch } from 'vue-property-decorator';
     import { COMMON_API, MSG_API } from 'common/api/api';
 
     @Component({
@@ -122,13 +122,27 @@
 
         iconLib: Icon[]=[]
 
-        mounted() {
-            this.getIcon()
+        async mounted() {
+            await this.getIcon()
             setTimeout(() => {
+                // 取已读、未读消息
                 this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
                 this.getMsgDataList(this.currPageFromRead, this.pageSizeFromRead, 1)
             }, 500);
         }
+
+        // 侦听消息是否有异动
+        get updateMsgNum(): boolean {
+            return this.$store.state.common.updateMsg;
+        }
+
+        @Watch('updateMsgNum', { immediate: true, deep: true })
+        watchUpdateMsgNum(newStatus: boolean) {
+            if (newStatus !== false) {
+                this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
+            }
+        }
+
 
         getIcon() {
             // 获取数据列表
@@ -163,8 +177,8 @@
                     this.readNum = data.data.total
                     this.totalCountFromRead = data.data.total
                     this.readList.forEach(item => {
-                        this.iconLib.forEach(element => {
-                            if (element.menuName === item.workShopName) {
+                        this.iconLib.forEach((element: Icon) => {
+                            if (item.workShopName.indexOf(element.menuName.substring(0, 2)) !== -1) {
                                 item.icon = element.menuIcon
                             }
                         })
@@ -174,9 +188,9 @@
                     this.unreadList = data.data.records
                     this.unreadNum = data.data.total
                     this.totalCountFromUnread = data.data.total
-                    this.unreadList.forEach(item => {
-                        this.iconLib.forEach(element => {
-                            if (element.menuName === item.workShopName) {
+                    this.unreadList.forEach((item: MessageObject) => {
+                        this.iconLib.forEach((element: Icon) => {
+                            if (item.workShopName.indexOf(element.menuName.substring(0, 2)) !== -1) {
                                 item.icon = element.menuIcon
                             }
                         })
@@ -185,19 +199,26 @@
             });
         }
 
+        /**
+         * @description: 跳转制目标 url
+         * @param1: item {object} 该条 message object
+         * @return: no
+         */
         seeMessage(item) {
-            console.log(item)
             if (!item.readed) {
                 this.markThisReaded(item.id)
             }
-            const targetURL = item.msgUrl.replace(/\//g, '-')
+            if (item.msgUrl !== '') {
+                const targetURL = item.msgUrl.replace(/\//g, '-')
 
-            setTimeout(() => {
-                this.$store.commit('common/updateMsg', true);
-                this.$router.push({
-                    path: targetURL
-                });
-            }, 100);
+                setTimeout(() => {
+                    this.$store.commit('common/updateMsg', true);
+                    this.$router.push({
+                        path: targetURL
+                    });
+                }, 100);
+            }
+
         }
 
         async markReaded() {
@@ -209,8 +230,6 @@
                 read: 0, // 已读标记,1:已读，0:未读
                 user: this.loginUserId // 登录用户id
             }).then(({ data }) => {
-                console.log('v1')
-                console.log(data)
                 data.data.records.forEach(item => {
                     unreadTemp.push(item.id)
                 });
@@ -299,12 +318,12 @@ interface MessageObject{
         productTeam?: string;
         productTeamName?: string;
         workShop?: string;
-        workShopName?: string;
+        workShopName: string;
         readed?: boolean;
 }
 
 interface Icon{
-    menuName?: string;
+    menuName: string;
     menuIcon?: string;
 }
 </script>

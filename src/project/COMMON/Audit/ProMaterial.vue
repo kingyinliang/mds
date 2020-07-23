@@ -302,35 +302,20 @@
                 type: 'select',
                 label: '过账状态',
                 prop: 'postingStatus',
-                defaultOptionsList: [
-                    {
-                        value: 'C',
-                        label: '已审核'
-                    },
-                    {
-                        value: 'P',
-                        label: '已过账'
-                    },
-                    {
-                        value: 'F',
-                        label: '接口失败'
-                    },
-                    {
-                        value: 'X',
-                        label: '反审'
-                    }
-                ],
-                // defaultOptionsFn: () => {
-                //     return COMMON_API.DICTQUERY_API({
-                //         dictType: 'COMMON_CHECK_STATUS'
-                //     })
-                // },
-                defaultValue: ''
-                // resVal: {
-                //     resData: 'data',
-                //     label: ['dictValue'],
-                //     value: 'dictCode'
-                // }
+                defaultOptionsFn: () => {
+                    return COMMON_API.DICTQUERY_API({
+                        dictType: 'COMMON_CHECK_STATUS'
+                    }).then((data) => {
+                        data.data.data = data.data.data.filter(it => it.dictValue === '已审核' || it.dictValue === '已过账' || it.dictValue === '接口失败' || it.dictValue === '反审');
+                        return data
+                    })
+                },
+                defaultValue: '',
+                resVal: {
+                    resData: 'data',
+                    label: ['dictValue'],
+                    value: 'dictCode'
+                }
             },
             {
                 type: 'date-interval',
@@ -698,6 +683,12 @@
                         this.isRefuseOrWriteOffsDialogShow = false
                         this.$successToast(data.msg);
                         this.$refs.queryTable.getDataList()
+                    }).catch((err) => {
+                        if (err.data.code === 201) {
+                            this.isRefuseOrWriteOffsDialogShow = false;
+                            this.$errorToast(err.data.msg);
+                            this.$refs.queryTable.getDataList(true);
+                        }
                     });
                 })
             }

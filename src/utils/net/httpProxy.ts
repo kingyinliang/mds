@@ -6,7 +6,7 @@ import { Notification, Loading } from 'element-ui';
 const http = axios.create({
     timeout: 1000
 });
-const HOST = process.env.VUE_APP_BASE_API + process.env.VUE_APP_API_V;
+let HOST = process.env.VUE_APP_BASE_API + process.env.VUE_APP_API_V;
 
 let loading: any; // eslint-disable-line
 // 使用Element loading-start 方法
@@ -96,8 +96,27 @@ http.interceptors.response.use(
  * @param {string} url{string} api地址 data{object} 参数 ContentType{boole} post拼接路径 responseType{boole}下载文件流 londingstatus{boole}加载遮罩
  * @param {string} [method] {@link module:constants/http method}
  * */
-export default (url: string, method: string = HTTP_METHOD.GET, data = {}, londingstatus = true) => {
+export default (url: string, method: string = HTTP_METHOD.GET, data = {}, bussiness = 'MDS', londingstatus = true) => {
     // eslint-disable-line
+    // RDM api call
+    if (bussiness === 'RDM') {
+        if (process.env.VUE_APP_ENV === 'development') {
+            // dev
+            HOST = 'https://plnn08je41.execute-api.cn-north-1.amazonaws.com.cn/dev/rdm-common';
+            // HOST = 'http://10.10.2.254:8081/rdm-common';
+        } else if (process.env.VUE_APP_ENV === 'test') {
+            // test
+            HOST = 'https://mrqak4b6gk.execute-api.cn-north-1.amazonaws.com.cn/test/rdm-common';
+        } else if (process.env.VUE_APP_BASE_API === 'production') {
+            //prd
+            HOST = '';
+        } else {
+            // pre
+            HOST = 'https://ok6nlm514l.execute-api.cn-north-1.amazonaws.com.cn/pre/rdm-common';
+        }
+    } else {
+        HOST = process.env.VUE_APP_BASE_API + process.env.VUE_APP_API_V;
+    }
     const options = {
         url: HOST + url,
         method,
@@ -105,6 +124,7 @@ export default (url: string, method: string = HTTP_METHOD.GET, data = {}, londin
         timeout: 1000 * 60 * 20,
         withCredentials: false
     };
+
     Vue.prototype.lodingState = londingstatus;
     if (method !== HTTP_METHOD.GET) {
         options['data'] = data;

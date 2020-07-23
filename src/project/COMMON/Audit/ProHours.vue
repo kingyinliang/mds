@@ -63,7 +63,7 @@
         <el-dialog title="反审原因" :close-on-click-modal="false" :visible.sync="visibleBack">
             <el-input v-model="BackText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
             <div slot="footer" class="dialog-footer">
-                <el-button @click="visibleWriteOffs = false">
+                <el-button @click="visibleBack = false">
                     取消
                 </el-button>
                 <el-button type="primary" @click="writeOffs()">
@@ -219,7 +219,7 @@
             {
                 type: 'select',
                 label: '生产车间',
-                prop: 'workShop',
+                prop: 'workshop',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -278,6 +278,9 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_CHECK_STATUS'
+                    }).then((data) => {
+                        data.data.data = data.data.data.filter(it => it.dictValue === '已审核' || it.dictValue === '已过账' || it.dictValue === '接口失败' || it.dictValue === '反审');
+                        return data
                     })
                 },
                 defaultValue: '',

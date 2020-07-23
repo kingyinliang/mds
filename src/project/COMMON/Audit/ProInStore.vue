@@ -65,7 +65,7 @@
         <el-dialog title="反审原因" :close-on-click-modal="false" :visible.sync="visibleBack">
             <el-input v-model="BackText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
             <div slot="footer" class="dialog-footer">
-                <el-button @click="visibleWriteOffs = false">
+                <el-button @click="visibleBack = false">
                     取消
                 </el-button>
                 <el-button type="primary" @click="writeOffs()">
@@ -274,6 +274,9 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_CHECK_STATUS'
+                    }).then((data) => {
+                        data.data.data = data.data.data.filter(it => it.dictValue === '已审核' || it.dictValue === '已过账' || it.dictValue === '接口失败' || it.dictValue === '反审');
+                        return data
                     })
                 },
                 defaultValue: '',
@@ -446,6 +449,7 @@
                         this.$refs.queryTable.getDataList(true)
                     }).catch((err) => {
                         if (err.data.code === 201) {
+                            this.$successToast(err.data.msg)
                             this.$refs.queryTable.getDataList(true)
                         }
                     })
@@ -505,6 +509,10 @@
 
         // 反审确认
         writeOffs() {
+            if (!this.BackText) {
+                this.$warningToast('请填写审核意见')
+                return false;
+            }
             this.$confirm(`部分数据已经调用SAP接口已入库，请确认sap冲销，确认要反审?`, '反审确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -521,12 +529,12 @@
                 AUDIT_API.INWRITEOFFS_API(list).then(({ data }) => {
                     this.visibleBack = false;
                     this.$successToast(data.msg);
-                    this.$refs.queryTable.getDataList()
+                    this.$refs.queryTable.getDataList(true)
                 }).catch((err) => {
                     if (err.data.code === 201) {
                         this.visibleBack = false;
                         this.$errorToast(err.data.msg);
-                        this.$refs.queryTable.getDataList()
+                        this.$refs.queryTable.getDataList(true)
                     }
                 })
             })
