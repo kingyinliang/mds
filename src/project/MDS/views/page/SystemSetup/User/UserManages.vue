@@ -1,72 +1,69 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <el-row class="clearfix">
-                    <div style="float: right;">
-                        <el-form :inline="true" :model="condition" size="small" label-width="68px" class="topforms2" @keyup.enter.native="getList(true)">
-                            <el-form-item>
-                                <el-input v-model="condition.param" placeholder="用户名/工号" suffix-icon="el-icon-search" />
-                            </el-form-item>
-                            <el-form-item>
+    <div class="header_main">
+        <mds-card title="人员管理" :name="'org'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <div class="org-card" :style="siteContentViewHeight">
+                        <div class="org-card_title">
+                            组织架构一览
+                        </div>
+                        <div class="filter-input">
+                            <el-input v-model="filterText" placeholder="部门名称" size="small">
+                                <i slot="prefix" class="el-input__icon el-icon-search" />
+                            </el-input>
+                        </div>
+                        <div class="tree-main SelfScrollbar">
+                            <el-tree ref="tree2" :data="OrgTree" node-key="deptId" :default-expanded-keys="arrList" :filter-node-method="filterNode" :expand-on-click-node="false" @node-click="setdetail" />
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="16">
+                    <div class="org-card" :style="siteContentViewHeight">
+                        <div class="org-card_title">
+                            组织详细信息
+                        </div>
+                        <div class="detail-main SelfScrollbar clearfix">
+                            <div class="view-btn" style="float: right; margin-bottom: 10px;">
+                                <el-input v-model="condition.param" placeholder="工号/姓名" size="small" suffix-icon="el-icon-search" clearable style="width: 180px; margin-right: 16px;" />
                                 <el-button type="primary" size="small" @click="getList(true)">
                                     查询
                                 </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                </el-row>
-                <el-row type="flex" :gutter="20">
-                    <el-col :span="8">
-                        <el-card>
-                            <div slot="header" class="clearfix">
-                                <span>组织架构</span>
-                            </div>
-                            <el-tree :data="OrgTree" node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
-                        </el-card>
-                    </el-col>
-                    <el-col v-if="isAuth('sys:user:checkList')" :span="16">
-                        <el-card>
-                            <div slot="header" class="clearfix">
-                                <span>人员</span>
-                            </div>
-                            <div>
-                                <el-button v-if="isAuth('sys:user:delete')" type="danger" style="float: right; margin: 0 20px 20px 0;" size="small" @click="remove()">
-                                    批量删除
-                                </el-button>
-                                <el-button v-if="isAuth('sys:user:save')" type="primary" style="float: right; margin: 0 20px 20px 0;" size="small" @click="addOrupdate()">
+                                <el-button v-if="isAuth('sys:user:save')" type="primary" size="small" @click="addOrupdate()">
                                     增加
                                 </el-button>
-                                <el-table ref="table1" :data="userArr" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                                    <el-table-column type="selection" width="50" fixed />
-                                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
-                                    <el-table-column prop="workNum" label="人员工号" width="87" />
-                                    <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
-                                    <el-table-column prop="realName" label="人员姓名" width="87" />
-                                    <el-table-column prop="deptName" label="所属部门" width="87" :show-overflow-tooltip="true" />
-                                    <el-table-column prop="post" label="职务" :show-overflow-tooltip="true" width="150" />
-                                    <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="true" width="250" />
-                                    <el-table-column prop="mobile" label="手机号" :show-overflow-tooltip="true" width="112" />
-                                    <el-table-column prop="created" label="创建日期" width="160" />
-                                    <el-table-column label="操作" fixed="right" width="65">
-                                        <template slot-scope="scope">
-                                            <el-button v-if="isAuth('sys:user:update') && isAuth('sys:user:info')" style="padding: 0;" type="text" @click="addOrupdate(scope.row.userId)">
-                                                编辑
-                                            </el-button>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
+                                <el-button v-if="isAuth('sys:user:delete')" type="danger" size="small" @click="remove()">
+                                    批量删除
+                                </el-button>
                             </div>
+                            <el-table ref="table1" class="newTable" :data="userArr" :height="mainClientHeight - 52 - 155" header-row-class-name="tableHead" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                                <el-table-column type="selection" width="50" fixed />
+                                <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
+                                <el-table-column prop="workNum" label="人员工号" width="87" />
+                                <el-table-column prop="workNumTemp" label="虚拟工号" width="110" />
+                                <el-table-column prop="realName" label="人员姓名" width="87" />
+                                <el-table-column prop="deptName" label="所属部门" width="87" :show-overflow-tooltip="true" />
+                                <el-table-column prop="post" label="职务" :show-overflow-tooltip="true" width="150" />
+                                <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="true" width="250" />
+                                <el-table-column prop="mobile" label="手机号" :show-overflow-tooltip="true" width="112" />
+                                <el-table-column prop="created" label="创建日期" width="160" />
+                                <el-table-column label="操作" fixed="right" width="65">
+                                    <template slot-scope="scope">
+                                        <el-button v-if="isAuth('sys:user:update') && isAuth('sys:user:info')" style="padding: 0;" type="text" @click="addOrupdate(scope.row.userId)">
+                                            编辑
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
                             <el-row>
                                 <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                             </el-row>
-                        </el-card>
-                    </el-col>
-                </el-row>
-            </el-card>
-        </div>
+                        </div>
+                    </div>
+                </el-col>
+            </el-row>
+        </mds-card>
         <user-add-or-update v-if="visible" ref="addOrupdate" :org-tree="OrgTree" @refreshDataList="getList" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -79,6 +76,7 @@ export default {
     },
     data() {
         return {
+            filterText: '',
             condition: {
                 param: ''
             },
@@ -94,11 +92,33 @@ export default {
             pageSize: 10
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            }
+        },
+        siteContentViewHeight: {
+            get() {
+                const height = this.mainClientHeight - 54;
+                return { height: height + 'px' };
+            }
+        }
+    },
+    watch: {
+        filterText(val) {
+            this.$refs.tree2.filter(val);
+        }
+    },
     mounted() {
         this.getTree();
     },
     methods: {
+        // 搜索
+        filterNode(value, data) {
+            if (!value) return true;
+            return data.label.indexOf(value) !== -1;
+        },
         // 序号
         indexMethod(index) {
             return index + 1 + (Number(this.currPage) - 1) * (Number(this.pageSize));
@@ -228,4 +248,44 @@ export default {
 };
 </script>
 
+<style scoped lang="scss">
+    .org-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 500px;
+        overflow: hidden;
+        border: 1px solid rgba(232, 232, 232, 1);
+        border-radius: 4px;
+        box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.09);
+
+        ::v-deep .el-tree-node__expand-icon { /* stylelint-disable-line */
+            color: #487bff;
+        }
+        ::v-deep .el-tree-node__expand-icon.is-leaf { /* stylelint-disable-line */
+            color: transparent;
+        }
+
+        .org-card_title {
+            height: 40px;
+            padding-left: 10px;
+            color: white;
+            line-height: 40px;
+            background: rgba(72, 123, 255, 1);
+        }
+
+        .filter-input {
+            padding: 6px 10px;
+        }
+
+        .tree-main {
+            flex: 1;
+            overflow-y: scroll;
+        }
+        .detail-main {
+            padding: 16px 10px 0 10px;
+            overflow-y: scroll;
+        }
+    }
+</style>
 <style scoped></style>

@@ -3,7 +3,7 @@
         <template v-if="!loading">
             <main-navbar :update-password="updatePassword" :select-factory="SelectFactory" />
             <main-sidebar />
-            <div class="site-content__wrapper" :style="{ 'min-height': documentClientHeight + 'px' }">
+            <div class="site-content__wrapper SelfScrollbar" :style="{ 'min-height': documentClientHeight + 'px' }">
                 <main-content />
             </div>
             <scroll-top />

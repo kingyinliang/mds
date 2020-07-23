@@ -177,20 +177,6 @@
     };
 </script>
 <style lang="scss" scoped>
-    .footer {
-        position: absolute;
-        bottom: 7px;
-        width: 100%;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 12px;
-        line-height: 20px;
-        text-align: center;
-        a {
-            margin: 0 10px;
-            color: rgba(0, 0, 0, 0.45);
-            font-size: 14px;
-        }
-    }
 
     @keyframes rollin {
         0% {

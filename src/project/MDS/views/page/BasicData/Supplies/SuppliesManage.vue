@@ -1,52 +1,42 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <div class="clearfix">
-                    <el-row style="float: right;">
-                        <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="querys(true)" @submit.native.prevent>
-                            <el-form-item>
-                                <el-input v-model="form.param" placeholder="物料/物料类型" suffix-icon="el-icon-search" />
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button v-if="isAuth('sys:sapMaterial:list')" type="primary" size="small" @click="querys(true)">
-                                    查询
-                                </el-button>
-                                <el-button v-if="isAuth('sys:sapMaterial:syncMaterialManual')" type="primary" size="small" @click="SapuUpdate">
-                                    同步
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
+    <div class="header_main">
+        <mds-card title="物料列表" :name="'role'" :pack-up="false" style="background: #fff;">
+            <template slot="titleBtn">
+                <div style="float: right; height: 32px; margin-bottom: 10px;">
+                    <el-input v-model="form.param" placeholder="物料/物料类型" suffix-icon="el-icon-search" size="small" style="width: 180px; margin-right: 16px;" />
+                    <el-button v-if="isAuth('sys:sapMaterial:list')" type="primary" size="small" @click="querys(true)">
+                        查询
+                    </el-button>
+                    <el-button v-if="isAuth('sys:sapMaterial:syncMaterialManual')" type="primary" size="small" @click="SapuUpdate">
+                        同步
+                    </el-button>
                 </div>
-                <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="saplist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column :show-overflow-tooltip="true" label="物料">
-                            <template slot-scope="scope">
-                                <el-button style="padding: 0;" type="text" @click="showdetail(scope.row.materialId)">
-                                    {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                        <el-table-column :show-overflow-tooltip="true" label="工厂" width="180" prop="factoryName" />
-                        <el-table-column :show-overflow-tooltip="true" label="物料类型" width="180">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialTypeCode }}
-                                {{ scope.row.materialTypeName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="basicUnit" label="基本单位" :show-overflow-tooltip="true" width="79" />
-                        <el-table-column prop="productUnit" label="生产单位" :show-overflow-tooltip="true" width="79" />
-                        <el-table-column prop="syncDate" label="同步日期" width="100" />
-                    </el-table>
-                </el-row>
-                <el-row>
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+            </template>
+            <el-table ref="table1" class="newTable" :height="mainClientHeight - 30 - 42 - 47" header-row-class-name="tableHead" :data="saplist" border tooltip-effect="dark" style="width: 100%;">
+                <el-table-column :show-overflow-tooltip="true" label="物料">
+                    <template slot-scope="scope">
+                        <el-button style="padding: 0;" type="text" @click="showdetail(scope.row.materialId)">
+                            {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                        </el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column :show-overflow-tooltip="true" label="工厂" width="180" prop="factoryName" />
+                <el-table-column :show-overflow-tooltip="true" label="物料类型" width="180">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialTypeCode }}
+                        {{ scope.row.materialTypeName }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="basicUnit" label="基本单位" :show-overflow-tooltip="true" width="79" />
+                <el-table-column prop="productUnit" label="生产单位" :show-overflow-tooltip="true" width="79" />
+                <el-table-column prop="syncDate" label="同步日期" width="100" />
+            </el-table>
+            <el-row>
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <sap-detail v-if="visible" ref="sapDetail" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -72,7 +62,13 @@ export default {
             saplist: []
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            }
+        }
+    },
     mounted() {
         this.Getsaplist();
     },

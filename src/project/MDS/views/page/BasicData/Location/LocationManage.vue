@@ -1,67 +1,59 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <div class="clearfix">
-                    <el-row style="float: right;">
-                        <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="getLocationList(true)" @submit.native.prevent>
-                            <el-form-item>
-                                <el-input v-model="form.deptName" placeholder="车间" suffix-icon="el-icon-search" />
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button v-if="isAuth('sys:sto:list')" type="primary" size="small" @click="getLocationList(true)">
-                                    查询
-                                </el-button>
-                                <el-button v-if="isAuth('sys:sto:list')" type="primary" size="small" @click="visibleHightLevelQuery = true">
-                                    高级查询
-                                </el-button>
-                                <el-button v-if="isAuth('sys:sto:save')" type="primary" size="small" @click="addLocation()">
-                                    新增
-                                </el-button>
-                                <el-button v-if="isAuth('sys:sto:delete')" type="danger" size="small" @click="remove()">
-                                    批量删除
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
+    <div class="header_main">
+        <mds-card title="库位列表" :name="'role'" :pack-up="false" style="background: #fff;">
+            <template slot="titleBtn">
+                <div style="float: right; height: 32px; margin-bottom: 10px;">
+                    <el-input v-model="form.deptName" placeholder="车间" size="small" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
+                    <el-button v-if="isAuth('sys:sto:list')" type="primary" size="small" @click="getLocationList(true)">
+                        查询
+                    </el-button>
+                    <el-button v-if="isAuth('sys:sto:list')" type="primary" size="small" @click="visibleHightLevelQuery = true">
+                        高级查询
+                    </el-button>
+                    <el-button v-if="isAuth('sys:sto:save')" type="primary" size="small" @click="addLocation()">
+                        新增
+                    </el-button>
+                    <el-button v-if="isAuth('sys:sto:delete')" type="danger" size="small" @click="remove()">
+                        批量删除
+                    </el-button>
                 </div>
-                <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="list" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange" @row-dblclick="EditRow">
-                        <el-table-column type="selection" width="50" fixed />
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
-                        <el-table-column prop="factoryName" width="120" :show-overflow-tooltip="true" label="工厂" />
-                        <el-table-column prop="deptName" width="120" :show-overflow-tooltip="true" label="车间" />
-                        <el-table-column :show-overflow-tooltip="true" label="物料类型">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialTypeCode + ' ' + scope.row.materialTypeName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column :show-overflow-tooltip="true" label="物料编码">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="80" prop="storageLocation" label="库位" />
-                        <el-table-column width="91" label="是否样品库">
-                            <template slot-scope="scope">
-                                {{ scope.row.isSample === '0' ? '否' : '是' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="materialOperation" width="84" label="发料/入库" />
-                        <el-table-column width="84" label="操作">
-                            <template slot-scope="scope">
-                                <el-button type="primary" size="small" :disabled="isdisabled" @click="EditRow(scope.row)">
-                                    编辑
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-row>
-                <el-row>
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+            </template>
+            <el-row>
+                <el-table ref="table1" class="newTable" :height="mainClientHeight - 30 - 42 - 47" header-row-class-name="tableHead" :data="list" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange" @row-dblclick="EditRow">
+                    <el-table-column type="selection" width="50" fixed />
+                    <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
+                    <el-table-column prop="factoryName" width="120" :show-overflow-tooltip="true" label="工厂" />
+                    <el-table-column prop="deptName" width="120" :show-overflow-tooltip="true" label="车间" />
+                    <el-table-column :show-overflow-tooltip="true" label="物料类型">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialTypeCode + ' ' + scope.row.materialTypeName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column :show-overflow-tooltip="true" label="物料编码">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="80" prop="storageLocation" label="库位" />
+                    <el-table-column width="91" label="是否样品库">
+                        <template slot-scope="scope">
+                            {{ scope.row.isSample === '0' ? '否' : '是' }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="materialOperation" width="84" label="发料/入库" />
+                    <el-table-column width="84" label="操作">
+                        <template slot-scope="scope">
+                            <el-button type="primary" size="small" :disabled="isdisabled" @click="EditRow(scope.row)">
+                                编辑
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-row>
+            <el-row>
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="visibleHightLevelQuery">
             <el-form :model="form" size="small" label-width="110px" class="locationdialog">
                 <el-form-item label="工厂：">
@@ -98,7 +90,7 @@
             </span>
         </el-dialog>
         <location-add v-if="visible" ref="locationAdd" @refreshDataList="getLocationList()" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -134,7 +126,13 @@ export default {
             isdisabled: false
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            }
+        }
+    },
     watch: {
         'form.factory'(n) {
             this.Getdeptbyid(n);
