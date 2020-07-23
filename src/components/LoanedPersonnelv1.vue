@@ -17,6 +17,7 @@
                     hasChecked: '${checked}/${total}'
                 }"
                 :data="userlist"
+                @change="test"
             />
         </div>
         <div slot="footer" class="dialog-footer">
@@ -56,19 +57,28 @@ export default {
     },
     computed: {},
     methods: {
+        test() {
+            console.log(this.selctId)
+        },
         handleCheckAllChange() {
             this.openOrgTree = !this.openOrgTree
         },
         init(userId, userTypeName) {
+            console.log('userId')
+            console.log(userId)
+            const temp = userId.split(',')
+
             this.userTypeName = userTypeName;
             this.visible = true;
-            this.selctId = [];
+            this.selctId = temp;
+            console.log('this.selctId')
+            console.log(this.selctId)
             this.userlist = [];
-            if (userId && userId.length > 0) {
-                userId.forEach((item) => {
-                    this.selctId.push({ key: item.key });
-                });
-            }
+            // if (userId && userId.length > 0) {
+            //     userId.forEach((item) => {
+            //         this.selctId.push({ key: item.key });
+            //     });
+            // }
         },
         // 根据组织架构查人
         setdetail(dataObj) {
@@ -84,8 +94,8 @@ export default {
                 this.userlist = []
                 data.data.records.forEach(item => {
                     this.userlist.push({
-                        key: item.userName,
-                        label: item.realName
+                        key: item.realName + '(' + item.workNum + ')',
+                        label: item.realName + '(' + item.workNum + ')'
                     })
                 })
             });
@@ -93,8 +103,10 @@ export default {
         updateUser() {
             this.visible = false;
             const row = [];
+            console.log('selctId')
+            console.log(this.selctId)
             this.selctId.forEach(item => {
-                row.push(item.key);
+                row.push(item);
             });
             this.$emit('changeUser', row);
         }

@@ -67,20 +67,22 @@
                                     </el-form-item>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="单位" prop="inStorageUnit" width="140">
+                            <el-table-column :show-overflow-tooltip="true" width="140">
                                 <template slot="header">
                                     <span class="notNull">* </span>单位
                                 </template>
                                 <template slot-scope="scope">
                                     <el-form-item prop="">
-                                        <el-select v-model="scope.row.feedUnit" placeholder="请选择" size="small">
+                                        <!-- <el-input v-model.trim="scope.row.feedUnit" size="small" placeholder="输入锅数" clearable /> -->
+                                        {{ scope.row.feedUnit }}
+                                        <!-- <el-select v-model="scope.row.feedUnit" placeholder="请选择" size="small">
                                             <el-option
                                                 v-for="item in 10"
                                                 :key="item.key"
                                                 :label="item.value"
                                                 :value="item.key"
                                             />
-                                        </el-select>
+                                        </el-select> -->
                                     </el-form-item>
                                 </template>
                             </el-table-column>
@@ -112,10 +114,10 @@
                                     <el-form-item prop="">
                                         <div class="required" style="min-height: 32px; line-height: 32px;">
                                             <!-- <span style="cursor: pointer;">
-                                                    <i v-for="(item, index) in scope.row.feedMan" :key="index">{{ item }}，</i>
-                                                </span> -->
-                                            <span style="cursor: pointer;" @click="selectUser(scope.row)">
-                                                <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
+                                                <i v-for="(item, index) in scope.row.feedMan.split(',')" :key="index">{{ item }}，</i>
+                                            </span> -->
+                                            <span style="cursor: pointer;" @click="selectUser(scope.row,scope.$index)">
+                                                <i v-for="(item, index) in scope.row.feedMan.split(',')" :key="index">{{ item }}，</i>
                                                 <i>点击选择人员</i>
                                             </span>
                                         </div>
@@ -211,7 +213,7 @@
 
 
         holderStatus: HolderStatus[]=[]
-
+        currentRowIndex=0
         dataList = []
         totalCount = 1
         currPage = 1
@@ -392,10 +394,8 @@
                 console.log('查询生产物料')
                 console.log(data)
                     if (data.data.records[0].material) {
-                        const temp = data.data.records[0].material.split(',')
-                        console.log(temp)
-                        temp.forEach(element => {
-                            this.productMateriallList.push({ dictCode: element, dictValue: element })
+                        data.data.records[0].material.forEach(element => {
+                            this.productMateriallList.push({ dictCode: element.materialCode, dictValue: element.materialName })
                         })
                     }
             });
@@ -438,7 +438,9 @@
         // 员工确认
         changeUser(item) {
             console.log('人员是哪些呢？')
-            console.log(item)
+            console.log(item.join(','))
+            this.importBucketInfo[this.currentRowIndex].feedMan = item.join(',')
+            this.importBucketInfo[this.currentRowIndex].userList = item
             // this.row.userList = userId;
             this.isLoanedPersonnelStatusDialogVisible = false;
 
@@ -446,8 +448,9 @@
         }
 
         // 选择人员 正式借调
-        selectUser(row) {
+        selectUser(row, index) {
             this.isLoanedPersonnelStatusDialogVisible = true;
+            this.currentRowIndex = index
             this.$nextTick(() => {
                 this.$refs.loanedPersonnel.init(row.feedMan, '投料人员');
             });
@@ -467,6 +470,7 @@
                 feedAmount: 0, // 投料数量
                 feedBatch: '', // 投料批次
                 feedMan: '', // 投料人
+                userList: [],
                 feedDate: '', // 投料时间
                 remark: '',
                 changer: getUserNameNumber(),
@@ -597,7 +601,7 @@ interface CurrentDataTable{
     productMaterialName?: string;
     remark?: string;
     delFlag?: number;
-    userList?: object[];
+    userList?: string[];
 }
 
 </script>
