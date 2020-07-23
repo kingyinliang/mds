@@ -7,7 +7,7 @@
                         <template slot="label">
                             <span class="notNull">*</span>生产车间：
                         </template>
-                        <el-select v-model="formHeaders.workShop" style="width: 175px;" placeholder="请选择">
+                        <el-select v-model="formHeaders.workShop" style="width: 175px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== ''">
                             <el-option v-for="(item, optIndex) in workShop" :key="optIndex" :label="item.deptName" :value="item.deptCode" />
                         </el-select>
                     </el-form-item>
@@ -15,7 +15,7 @@
                         <template slot="label">
                             <span class="notNull">*</span>煮料锅：
                         </template>
-                        <el-select v-model="formHeaders.potNo" style="width: 175px;" placeholder="请选择">
+                        <el-select v-model="formHeaders.potNo" style="width: 175px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== ''">
                             <el-option v-for="(item, optIndex) in holderList" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
                         </el-select>
                     </el-form-item>
@@ -23,7 +23,7 @@
                         <template slot="label">
                             <span class="notNull">*</span>生产物料：
                         </template>
-                        <el-select v-model="formHeaders.productMaterial" style="width: 175px;" placeholder="请选择">
+                        <el-select v-model="formHeaders.productMaterial" style="width: 175px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== ''">
                             <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
                         </el-select>
                     </el-form-item>
@@ -94,7 +94,7 @@
                         <span class="notNull">*</span>溶解罐号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.potNo" placeholder="请选择" size="small">
+                        <el-select v-model="scope.row.potNo" placeholder="请选择" size="small" @change="changePotNo($event, scope.row)">
                             <el-option v-for="item in dissolutionPot" :key="item.potId" :value="item.potNo" :label="item.potNo" />
                         </el-select>
                     </template>
@@ -104,20 +104,20 @@
                         {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="投料时间" min-width="55" prop="feedDate" />
-                <el-table-column label="单位" min-width="55" prop="feedUnit" />
-                <el-table-column label="领用数量" min-width="90">
+                <el-table-column label="投料时间" min-width="140" prop="feedDate" />
+                <el-table-column label="单位" min-width="50" prop="feedUnit" />
+                <el-table-column label="领用数量" min-width="100">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.userAmount" placeholder="输入数量" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="溶解罐库存" min-width="55" prop="remainder" />
-                <el-table-column label="备注" min-width="80">
+                <el-table-column label="溶解罐库存" min-width="90" prop="remainder" />
+                <el-table-column label="备注" min-width="100">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.remark" placeholder="输入备注" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="操作人" min-width="160" prop="changer" />
+                <el-table-column label="操作人" min-width="140" prop="changer" />
                 <el-table-column label="操作时间" min-width="160" prop="changed" />
                 <el-table-column label="操作" min-width="70">
                     <template slot-scope="scope">
@@ -131,21 +131,39 @@
         <mds-card title="辅料领用" name="ingredients">
             <el-table ref="table" class="newTable" :data="accessoriesResponseDtos" :row-class-name="rowDelFlag" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
                 <el-table-column type="index" label="序号" fixed="left" width="55" />
-                <el-table-column label="领用物料" min-width="55">
+                <el-table-column label="领用物料" min-width="180">
                     <template slot-scope="scope">
                         {{ scope.row.useMaterial }} {{ scope.row.useMaterialName }}
                     </template>
                 </el-table-column>
                 <el-table-column label="单位" min-width="55" prop="useUnit" />
-                <el-table-column label="" min-width="55" prop="holder" />
-                <el-table-column label="领用数量" min-width="55" prop="useAmount" />
-                <el-table-column label="领用批次" min-width="55" prop="useBatch" />
-                <el-table-column label="备注" min-width="55" prop="remark" />
-                <el-table-column label="操作人" min-width="160" prop="changer" />
+                <el-table-column min-width="55">
+                    <template slot-scope="scope">
+                        <el-button type="text" @click="accSplit(scope.row, scope.$index)">
+                            <i class="iconfont factory-chaifen" />拆分
+                        </el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column label="领用数量" min-width="110">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.useAmount" size="small" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="领用批次" min-width="110">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.useBatch" size="small" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注" min-width="90" prop="remark">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.remark" size="small" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作人" min-width="140" prop="changer" />
                 <el-table-column label="操作时间" min-width="160" prop="changed" />
                 <el-table-column label="操作" min-width="70">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.row)">
+                        <el-button class="delBtn" :disabled="scope.row.splitFlag === 'N'" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -173,18 +191,8 @@ import _ from 'lodash';
 
 @Component
 
-export default class AuditIndex extends Vue {
-    formHeaders = {
-        workShop: '',
-        potNo: '',
-        productMaterial: '',
-        configStartDate: '',
-        configEndDate: '',
-        configPotCount: '',
-        cookingNo: '',
-        useDate: '',
-        potOrder: ''
-    };
+export default class CookingDetail extends Vue {
+    formHeaders: HeaderInfo = {};
 
     workShop = [];
     holderList: HoldList[] = [];
@@ -199,7 +207,7 @@ export default class AuditIndex extends Vue {
     accessoriesResponseDtosOrg: Accessories[] = [];
     dissolutionResponseDtos: Dissolution[] = []; // 溶解罐领用
     dissolutionResponseDtosOrg: Dissolution[] = [];
-    dissolutionPot = []; // 溶解罐
+    dissolutionPot: DissolutionPot[] = []; // 溶解罐
 
     mounted() {
         this.getWorkShop();
@@ -320,6 +328,7 @@ export default class AuditIndex extends Vue {
     // 新增 - 溶解罐
     insertItem() {
         const sole: Dissolution = {
+            potId: '',
             potNo: '',
             productMaterial: '',
             productMaterialName: '',
@@ -338,11 +347,11 @@ export default class AuditIndex extends Vue {
     // 查询
     getDetail(cookingNo) {
         STE_API.STE_COOKING_DETAIL_QUERY_API({ cookingNo: cookingNo }).then(({ data }) => {
-            this.formHeaders = data.data.steCookingPotResponseDto; // 头部信息
-            this.accessoriesResponseDtos = data.data.accessoriesResponseDtos;
-            this.accessoriesResponseDtosOrg = data.data.accessoriesResponseDtos;
-            this.dissolutionResponseDtos = data.data.dissolutionResponseDtos;
-            this.dissolutionResponseDtosOrg = data.data.dissolutionResponseDtos;
+            this.formHeaders = JSON.parse(JSON.stringify(data.data.steCookingPotResponseDto)); // 头部信息
+            this.accessoriesResponseDtos = JSON.parse(JSON.stringify(data.data.accessoriesResponseDtos));
+            this.accessoriesResponseDtosOrg = JSON.parse(JSON.stringify(data.data.accessoriesResponseDtos));
+            this.dissolutionResponseDtos = JSON.parse(JSON.stringify(data.data.dissolutionResponseDtos));
+            this.dissolutionResponseDtosOrg = JSON.parse(JSON.stringify(data.data.dissolutionResponseDtos));
         })
     }
 
@@ -377,8 +386,8 @@ export default class AuditIndex extends Vue {
 
     // 保存
     saveData() {
-        if (!this.formHeaders.workShop || !this.formHeaders.potNo || !this.formHeaders.productMaterial || !this.formHeaders.configStartDate || !this.formHeaders.configEndDate || !this.formHeaders.configPotCount || !this.formHeaders.useDate || !this.formHeaders.potOrder) {
-            this.$warningToast('请完善头部必填信息');
+        if (!this.formHeaders.workShop || !this.formHeaders.potNo || !this.formHeaders.productMaterial) {
+            this.$warningToast('请完善头部生产车间、煮料锅、生产物料三项信息');
             return false;
         }
         // 溶解罐领用
@@ -400,6 +409,8 @@ export default class AuditIndex extends Vue {
         })
 
         // 辅料领用
+        console.log(this.accessoriesResponseDtosOrg);
+        console.log(this.accessoriesResponseDtos);
         const accIds: string[] = [];
         const accessInsert: Accessories[] = [];
         const accessUpdate: Accessories[] = [];
@@ -418,8 +429,12 @@ export default class AuditIndex extends Vue {
         })
 
         // 头部
-        const headerInsert = {};
-        const headerUpdate = this.formHeaders;
+        let headerInsert = this.formHeaders;
+        let headerUpdate = {};
+        if (this.formHeaders.cookingNo) {
+            headerInsert = {};
+            headerUpdate = this.formHeaders;
+        }
 
         STE_API.STE_COOKING_DETAIL_SAVE_API({
             factoryCode: JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode,
@@ -433,12 +448,74 @@ export default class AuditIndex extends Vue {
             dissolutionDelete: dissIds
         }).then(({ data }) => {
             // this.isRedact = false;
-            console.log(data);
             this.$successToast('保存成功');
+            this.getDetail(data.msg);
         })
+    }
+
+    // 拆分
+    accSplit(row, index) {
+        this.accessoriesResponseDtos.splice(index + 1, 0, {
+            useMaterial: row.useMaterial,
+            useMaterialName: row.useMaterialName,
+            useUnit: row.useUnit,
+            useAmount: '',
+            useBatch: '',
+            remark: '',
+            splitFlag: 'Y',
+            changer: getUserNameNumber(),
+            changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+        });
+    }
+
+    // 溶解罐
+    changePotNo(val, row) {
+        console.log(val)
+        console.log(row)
+        const potSole = this.dissolutionPot.find((item: DissolutionPot) => item.potNo === val);
+        if (potSole) {
+            row.potId = potSole.id;
+            row.productMaterial = potSole.prodcutMaterial;
+            row.productMaterialName = potSole.prodcutMaterialName;
+            row.feedDate = potSole.feedDate;
+            row.feedUnit = 'KG';
+            row.remainder = potSole.potAmount;
+        }
+        console.log(row)
+    }
+
+    // 提交
+    submitDatas() {
+        if (!this.formHeaders.workShop || !this.formHeaders.potNo || !this.formHeaders.productMaterial || !this.formHeaders.configStartDate || !this.formHeaders.configEndDate || !this.formHeaders.configPotCount || !this.formHeaders.useDate || !this.formHeaders.potOrder) {
+            this.$warningToast('请完善头部所有必填信息');
+            return false;
+        }
     }
 }
 
+interface HeaderInfo {
+    changed?: string;
+    changer?: string;
+    clear?: string;
+    configEndDate?: string;
+    configPotCount?: string;
+    configStartDate?: string;
+    cookingNo?: string;
+    id?: string;
+    potNo?: string;
+    potNoName?: string;
+    potOrder?: string;
+    potStatus?: string;
+    potStatusName?: string;
+    productMaterial?: string;
+    productMaterialName?: string;
+    remainder?: string;
+    remark?: string;
+    useDate?: string;
+    usePotCount?: string;
+    workShop?: string;
+    workShopName?: string;
+}
 interface MaterialList{
     materialCode?: string;
     materialName?: string;
@@ -452,25 +529,24 @@ interface HoldList{
     id?: string;
     material: MaterialList[];
 }
-// interface ProMaterial {
-//     changed?: string;
-//     changer?: string;
-//     id?: string;
-//     potDisplay?: string;
-//     preStage?: string;
-//     preStageName?: string;
-//     productMaterial?: string;
-//     productMaterialName?: string;
-//     remark?: string;
-//     useMaterial?: string;
-//     useMaterialName?: string;
-// }
+interface DissolutionPot {
+    id?: string;
+    potId?: string;
+    potNo?: string;
+    potAmount?: string;
+    prodcutMaterial?: string;
+    prodcutMaterialName?: string;
+    ratio?: string;
+    cycle?: string;
+    feedDate?: string;
+}
 interface HolderNumber {
     value?: number;
     name?: string;
 }
 interface Dissolution {
     id?: string;
+    potId?: string;
     potNo?: string;
     productMaterial?: string;
     productMaterialName?: string;
@@ -491,8 +567,10 @@ interface Accessories {
     useAmount?: string;
     useBatch?: string;
     remark?: string;
+    splitFlag?: string; // N主数据  Y拆出来的
     changer?: string;
     changed?: string;
     delFlag?: number;
+    cookingId?: string;
 }
 </script>

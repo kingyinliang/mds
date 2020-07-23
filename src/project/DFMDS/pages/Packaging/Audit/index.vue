@@ -103,7 +103,7 @@ export default class AuditIndex extends Vue {
 
     Column = [
         {
-            prop: 'orderStatus',
+            prop: 'orderStatusName',
             label: '状态',
             minwidth: '50'
         },
@@ -156,7 +156,7 @@ export default class AuditIndex extends Vue {
             },
             column: [
                 {
-                    prop: 'orderStatus',
+                    prop: 'orderStatusName',
                     label: '状态',
                     minwidth: '50'
                 },

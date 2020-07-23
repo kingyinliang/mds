@@ -238,6 +238,10 @@ export const COMMON_API = {
      */
     DEVICELIST_API: params => httpProxy('/sysDevice/query', 'POST', params),
     /**
+     * @property {string} DEVICE_LISTBYTYPE_API 设备管理列表 - 不翻页
+     */
+    DEVICE_LISTBYTYPE_API: params => httpProxy('/sysDevice/listByType', 'POST', params),
+    /**
      * @property {string} DEVICELIST_API 设备管理新增
      */
     DEVICEADD_API: params => httpProxy('/sysDevice/insert', 'POST', params),
