@@ -232,7 +232,11 @@ const COMMON_API = {
      */
     DEVICELIST_API: params => httpProxy('/sysDevice/query', 'POST', params),
     /**
-     * @property {string} DEVICELIST_API 设备管理新增
+     * @property {string} DEVICE_LISTBYTYPE_API 设备管理列表 - 不翻页
+     */
+    DEVICE_LISTBYTYPE_API: params => httpProxy('/sysDevice/listByType', 'POST', params),
+    /**
+     * @property {string} DEVICEADD_API 设备管理新增
      */
     DEVICEADD_API: params => httpProxy('/sysDevice/insert', 'POST', params),
     /**
@@ -240,11 +244,11 @@ const COMMON_API = {
      */
     DEVICECONFIG_API: params => httpProxy('/sysDevice/updateStatus', 'POST', params),
     /**
-     * @property {string} DEVICELIST_API 设备管理修改
+     * @property {string} DEVICEUPDATA_API 设备管理修改
      */
     DEVICEUPDATA_API: params => httpProxy('/sysDevice/update', 'POST', params),
     /**
-     * @property {string} DEVICELIST_API 设备管理删除
+     * @property {string} DEVICEDEL_API 设备管理删除
      */
     DEVICEDEL_API: params => httpProxy('/sysDevice/remove', 'POST', params),
     /**
@@ -412,9 +416,25 @@ const COMMON_API = {
      */
     SPECIAL_MATERIAL_REMOVE_API: params => httpProxy('/ste/steSpeAccessories/remove', 'POST', params),
     /**
-     * @property {string} PERMISSION_GROUP_QUERY_API 特殊辅料属性 - 删除
+     * @property {string} PERMISSION_GROUP_QUERY_API  RDM 数据集分页列表
      */
-    PERMISSION_GROUP_QUERY_API: params => httpProxy('/permissionGroup/queryPage', 'GET', params, 'RDM')
+    PERMISSION_GROUP_QUERY_API: params => httpProxy('/permissionGroup/queryPage', 'GET', params, 'RDM'),
+    /**
+     * @property {string} PERMISSION_LIST_PERMISSIONCODE_API RDM 列出所有权限属性字典
+     */
+    PERMISSION_LIST_PERMISSIONCODE_API: params => httpProxy('/permission/listPermissionCode', 'GET', params, 'RDM'),
+    /**
+     * @property {string} PERMISSION_QUERY_ITEMLIST_API RDM 查询数据集下的权限列表
+     */
+    PERMISSION_QUERY_ITEMLIST_API: params => httpProxy('/permissionGroup/queryItemList', 'GET', params, 'RDM'),
+    /**
+     * @property {string} ERMISSION_SAVE_API RDM 数据集保存
+     */
+    PERMISSION_SAVE_API: params => httpProxy('/permissionGroup/save', 'POST', params, 'RDM'),
+    /**
+     * @property {string} ERMISSION_SAVE_API RDM 数据集删除
+     */
+    PERMISSION_REMOVE_API: params => httpProxy('/permissionGroup/remove', 'GET', params, 'RDM')
 };
 
 export default COMMON_API;

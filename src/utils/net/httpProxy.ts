@@ -103,6 +103,7 @@ export default (url: string, method: string = HTTP_METHOD.GET, data = {}, bussin
         if (process.env.VUE_APP_ENV === 'development') {
             // dev
             HOST = 'https://plnn08je41.execute-api.cn-north-1.amazonaws.com.cn/dev/rdm-common';
+            // HOST = 'http://10.10.2.254:8081/rdm-common';
         } else if (process.env.VUE_APP_ENV === 'test') {
             // test
             HOST = 'https://mrqak4b6gk.execute-api.cn-north-1.amazonaws.com.cn/test/rdm-common';
@@ -113,6 +114,8 @@ export default (url: string, method: string = HTTP_METHOD.GET, data = {}, bussin
             // pre
             HOST = 'https://ok6nlm514l.execute-api.cn-north-1.amazonaws.com.cn/pre/rdm-common';
         }
+    } else {
+        HOST = process.env.VUE_APP_BASE_API + process.env.VUE_APP_API_V;
     }
     const options = {
         url: HOST + url,
