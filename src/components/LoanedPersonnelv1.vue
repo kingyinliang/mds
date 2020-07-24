@@ -66,7 +66,10 @@ export default {
         init(userId, userTypeName) {
             console.log('userId')
             console.log(userId)
-            const temp = userId.split(',')
+            let temp = []
+            if (userId !== '') {
+                temp = userId.split(',')
+            }
 
             this.userTypeName = userTypeName;
             this.visible = true;

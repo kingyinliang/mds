@@ -1,3 +1,10 @@
+/*
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2020-07-20 10:11:29
+ * @LastEditors: Telliex
+ * @LastEditTime: 2020-07-24 00:20:54
+ */
 import httpProxy from 'utils/net/httpProxy';
 
 const STE_API = {
@@ -47,7 +54,7 @@ const STE_API = {
     STE_COOKING_DETAIL_CLEAR_API: params => httpProxy('/ste/steCookingPot/clean', 'POST', params),
     /**
      * @property {string} STE_COOKING_DETAIL_ACCMATERIAL_API 杀菌车间-煮料详情-根据生产物料拉取辅料
-    */
+     */
     STE_COOKING_DETAIL_ACCMATERIAL_API: params => httpProxy('/ste/steCookingPot/getAccMaterial', 'POST', params),
     /**
      * @property {string} STE_DISSOLUTIONBUCKET_QUERY_API 杀菌车间-溶解罐管理-查询
@@ -61,6 +68,10 @@ const STE_API = {
      * @property {string} STE_DISSOLUTIONBUCKET_ITEM_QUERY_API 杀菌车间-溶解罐管理-满罐、取消满罐
      */
     STE_DISSOLUTIONBUCKET_FULL_API: params => httpProxy('/steDissolutionPot/full', 'POST', params),
+    /**
+     * @property {string} STE_DISSOLUTIONBUCKET_CLEAN_API 杀菌车间-溶解罐管理-清罐
+     */
+    STE_DISSOLUTIONBUCKET_CLEAN_API: params => httpProxy('/steDissolutionPot/clean', 'POST', params),
     /**
      * @property {string} STE_DISSOLUTIONBUCKET_ITEM_QUERY_API 杀菌车间-溶解罐管理-入罐
      */
