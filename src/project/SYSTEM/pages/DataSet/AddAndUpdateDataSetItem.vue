@@ -163,33 +163,12 @@
                 //     this.dialogTitle = '';
                 //     this.dataForm = {};
                 // }
-                this.isDialogShow = true;
 
                 if (title === '新增数据集') {
+                    this.initForm()
                      // add
-                this.isProjectIndeterminate = false
-                this.isTaskIndeterminate = false
-                this.isStandardIndeterminate = false
-                this.isFormulaIndeterminate = false
-                this.isBlueprintIndeterminate = false
-
-                this.dataForm = {
-                    dataSetCode: '',
-                    dataSetDescribe: '',
-                    dataSetOwner: '',
-                    dataSetProjectSelectAll: false,
-                    dataSetTaskSelectAll: false,
-                    dataSetStandardSelectAll: false,
-                    dataSetFormulaSelectAll: false,
-                    dataSetBlueprintSelectAll: false,
-                    project: [],
-                    task: [],
-                    standard: [],
-                    formula: [],
-                    bluePrint: []
-                }
-
                 } else {
+                    this.initForm()
                     //edit
                     RDM_API.PERMISSION_QUERY_ITEMLIST_API({
                         groupCode: obj.groupCode
@@ -253,7 +232,7 @@
                     })
 
                 }
-
+                this.isDialogShow = true;
                 // // 呼叫属性选项
                 // RDM_API.PERMISSION_LIST_PERMISSIONCODE_API({
                 // }).then(({ data }) => {
@@ -267,6 +246,29 @@
                 // })
 
 
+            },
+            initForm() {
+                this.isProjectIndeterminate = false
+                this.isTaskIndeterminate = false
+                this.isStandardIndeterminate = false
+                this.isFormulaIndeterminate = false
+                this.isBlueprintIndeterminate = false
+
+                    this.dataForm = {
+                        dataSetCode: '',
+                        dataSetDescribe: '',
+                        dataSetOwner: '',
+                        dataSetProjectSelectAll: false,
+                        dataSetTaskSelectAll: false,
+                        dataSetStandardSelectAll: false,
+                        dataSetFormulaSelectAll: false,
+                        dataSetBlueprintSelectAll: false,
+                        project: [],
+                        task: [],
+                        standard: [],
+                        formula: [],
+                        bluePrint: []
+                    }
             },
             submitDataForm() {
                 this.$refs.dataForm.validate(valid => {
@@ -313,7 +315,7 @@
                             console.log('提交复制')
                             const tempOwner = this.dataForm.dataSetOwner.split(' ')
                             // 复制
-                            RDM_API.PERMISSION_SAVE_API({
+                            RDM_API.PERMISSION_DATASET_SAVE_API({
                                 permissionItemList: {
                                     project: this.dataForm.project,
                                     task: this.dataForm.task,
