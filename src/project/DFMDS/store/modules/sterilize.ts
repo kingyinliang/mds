@@ -5,7 +5,8 @@ export default {
         Cooking: {}, // 煮料
         dissolveBucketDetail: {},
         SemiReceive: {},
-        AcceAdd: {}
+        AcceAdd: {},
+        auditDetail: {}
     },
     mutations: {
         updateAcceAdd(state, AcceAdd) {
@@ -22,6 +23,9 @@ export default {
         },
         updateDissolveBucket(state, item) {
             state.dissolveBucketDetail = item;
+        },
+        updateAuditDetail(state, auditDetail) {
+            state.auditDetail = auditDetail;
         }
     }
 };
