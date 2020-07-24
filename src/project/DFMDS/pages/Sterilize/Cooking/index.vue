@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard" style="margin-bottom: 5px;">
-            <el-form :model="formHeader" :rules="queryFormRules" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
+            <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row clearfix" style="font-size: 0;">
                 <el-form-item label="生产车间：">
                     <el-select v-model="formHeader.workShop" style="width: 170px;" placeholder="请选择">
                         <el-option v-for="(item, optIndex) in workShop" :key="optIndex" :label="item.deptName" :value="item.deptCode" />
@@ -125,7 +125,7 @@ import { dateFormat, getUserNameNumber, accSub } from 'utils/utils';
 
 @Component
 
-export default class AuditIndex extends Vue {
+export default class CookingIndex extends Vue {
     formHeader = {
         workShop: '',
         potNo: '',
@@ -139,7 +139,6 @@ export default class AuditIndex extends Vue {
         total: 0
     };
 
-    queryFormRules = {};
     workShop = [];
     holderList: HoldList[] = [];
     materialList: MaterialList[] = [];
@@ -244,7 +243,6 @@ export default class AuditIndex extends Vue {
         if (!this.formHeader.workShop) {
             this.$warningToast('请选择车间');
         }
-        console.log(this.formHeader)
         this.$store.commit('sterilize/updateCooking', this.formHeader);
         this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Cooking-detail'))
         setTimeout(() => {
@@ -298,10 +296,12 @@ export default class AuditIndex extends Vue {
             cookingId: row.id,
             cookingNo: row.cookingNo,
             potNoName: row.potNoName,
-            remainder: 0,
+            remainder: row.remainder,
             productMaterial: row.productMaterial,
             productMaterialName: row.productMaterial,
             potStatusName: row.potStatusName,
+            moveAmount: row.remainder,
+            moveUnit: 'KG',
             remark: '',
             changer: getUserNameNumber(),
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')

@@ -246,6 +246,7 @@
             if (this.tabs[Number(this.$refs.dataEntry.activeName) - 1].status !== 'D') {
                 return false
             }
+            this.ReText = '';
             this.visibleRefuse = true;
 
         }

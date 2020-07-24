@@ -95,7 +95,31 @@ const STE_API = {
     /**
      * @property {string} STE_PREACCESSORIES_LIST_API 杀菌车间-辅料前处理-查询不带分页
      */
-    STE_PREACCESSORIES_LIST_API: params => httpProxy('/ste/stePreAccessories/listByType', 'POST', params)
+    STE_PREACCESSORIES_LIST_API: params => httpProxy('/ste/stePreAccessories/listByType', 'POST', params),
+    /**
+     * @property {string} STE_PREACCESSORIES_LIST_API 杀菌车间-杀菌工艺-查询
+     */
+    STE_DETAIL_CRAFT_INFO_API: params => httpProxy('/ste/steProcessorControl/query', 'POST', params),
+    /**
+     * @property {string} STE_DETAIL_CRAFTHEADER_INFO_API 杀菌车间-杀菌工艺-头部查询
+     */
+    STE_DETAIL_CRAFTHEADER_INFO_API: params => httpProxy('/steOrderSplit/potOrder/queryByPortOrderNo', 'GET', params),
+    /**
+     * @property {string} STE_PREACCESSORIES_LIST_API 杀菌车间-杀菌工艺-保存
+     */
+    STE_DETAIL_CRAFT_SAVED_API: params => httpProxy('/ste/steProcessorControl/save', 'POST', params),
+    /**
+     * @property {string} STE_PREACCESSORIES_LIST_API 杀菌车间-杀菌工艺-提交
+     */
+    STE_DETAIL_CRAFT_SUBMIT_API: params => httpProxy('/ste/steProcessorControl/submit', 'POST', params),
+    /**
+     * @property {string} STE_DETAIL_CRAFTEXC_LIST_API 杀菌车间-杀菌工艺-异常-查询
+     */
+    STE_DETAIL_CRAFTEXC_LIST_API: params => httpProxy('/ste/steException/query', 'POST', params),
+    /**
+     * @property {string} STE_DETAIL_CRAFTEXC_LIST_API 杀菌车间-杀菌工艺-文本-查询
+     */
+    STE_DETAIL_TEXT_API: params => httpProxy('/ste/steText/query', 'POST', params)
 };
 
 export default STE_API;

@@ -5,7 +5,11 @@
                 <template v-for="item in queryFormData">
                     <template v-if="!item.hide">
                         <el-form-item v-if="item.type === 'select'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop">
-                            <el-select :ref="item.prop" v-model="queryForm[item.prop]" style="width: 170px;" :filterable="item.filterable" :clearable="!item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
+                            <el-select v-if="item.defaultOptionsList" :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable" :clearable="!item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(opt, optIndex) in item.defaultOptionsList" :key="optIndex" :label="opt.label" :value="opt.value" />
+                            </el-select>
+                            <el-select v-else :ref="item.prop" v-model="queryForm[item.prop]" :style="`width: ${item.width ? item.width : 170}px;`" :filterable="item.filterable" :clearable="!item.clearable" :disabled="item.disabled" :placeholder="'请选择' + item.label">
                                 <el-option label="请选择" value="" />
                                 <el-option v-for="(opt, optIndex) in optionLists[item.prop]" :key="optIndex" :label="setLabel(opt, item)" :value="opt[item.resVal.value]" />
                             </el-select>
@@ -51,7 +55,7 @@
                 <div>
                     <slot :name="'tab-head' + index" />
                 </div>
-                <el-table ref="table" class="newTable" :data="tabItem.tableData" height="400" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change=" val => tabHandleSelectionChange(val, index)">
+                <el-table ref="table" class="newTable" :data="tabItem.tableData" max-height="420" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change=" val => tabHandleSelectionChange(val, index)">
                     <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
                     <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                     <template v-for="(item, index2) in tabItem.column">
@@ -573,8 +577,8 @@
                 this.getDataList();
             },
             tabClick(tab) {
-                // console.log(tab.name);
-                this.$emit('tab-click', tab);
+                const tabName = JSON.parse(JSON.stringify(tab.name));
+                this.$emit('tab-click', tabName);
             },
             lineClick(row) {
                 this.$emit('line-click', row);

@@ -1,13 +1,13 @@
 <template>
     <mds-card title="文本记录" :name="'textRecord'">
-        <el-input v-model="currentFormDataGroup.pkgText" type="textarea" :rows="7" :disabled="!isRedact" style="width: 100%; height: 200px;" />
+        <el-input v-model="currentFormDataGroup.text" type="textarea" :rows="7" :disabled="!isRedact" style="width: 100%; height: 200px;" />
     </mds-card>
 </template>
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { PKG_API } from 'common/api/api';
-    import _ from 'lodash';
+    import { PKG_API, STE_API } from 'common/api/api';
+    // import _ from 'lodash';
 
     @Component({
         name: 'TextRecord'
@@ -17,7 +17,7 @@
         @Prop({ type: Boolean, default: false }) isRedact
 
         currentFormDataGroup: TextObj = {
-            pkgText: '', // 文本
+            text: '', // 文本
             factory: '', // 工厂
             id: '', // 主键
             orderId: '', // 订单ID
@@ -25,7 +25,7 @@
         }
 
         orgFormDataGroup: TextObj = {
-            pkgText: '', // 文本
+            text: '', // 文本
             factory: '', // 工厂
             id: '', // 主键
             orderId: '', // 订单ID
@@ -35,32 +35,65 @@
         isChange=false
         isNewForm=false
 
-        init(formHeader) {
-            PKG_API.PKG_TEXT_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: formHeader.orderNo
-            }).then(({ data }) => {
-                if (data.data !== null) {
-                    this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
-                    this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data))
-                    this.isNewForm = false
-                } else {
-                    this.isNewForm = true
-                }
-            })
+        init(formHeader, workShop?) {
+            if (workShop === 'sterilize') {
+                STE_API.STE_DETAIL_TEXT_API({
+                    potOrderNo: formHeader.potOrderNo,
+                    orderNo: formHeader.orderNo,
+                    textStage: formHeader.textStage
+                }).then(({ data }) => {
+                    this.getData(data);
+                })
+            } else {
+                PKG_API.PKG_TEXT_QUERY_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    orderNo: formHeader.orderNo
+                }).then(({ data }) => {
+                    this.getData(data);
+                })
+            }
         }
 
-        savedData(formHeader) {
+        getData(data) {
+            if (data.data !== null) {
+                this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
+                this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data))
+                this.isNewForm = false
+            } else {
+                this.isNewForm = true
+            }
+        }
+
+        savedData(formHeader, workShop?) {
             let pkgTextInsert: TextObj = {};
             let pkgTextUpdate: TextObj = {};
-            if (!_.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)) {
+            // if (!_.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)) {
+            //     this.currentFormDataGroup.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            //     this.currentFormDataGroup.orderId = formHeader.id;
+            //     this.currentFormDataGroup.orderNo = formHeader.orderNo;
+            //     if (this.isNewForm) {
+            //         pkgTextInsert = this.currentFormDataGroup
+            //     } else {
+            //         pkgTextUpdate = this.currentFormDataGroup
+            //     }
+            // }
+            if (workShop === 'sterilize') {
+                this.currentFormDataGroup.orderId = formHeader.orderId;
+                this.currentFormDataGroup.orderNo = formHeader.orderNo;
+                this.currentFormDataGroup.potOrderId = formHeader.id;
+                this.currentFormDataGroup.potOrderNo = formHeader.potOrderNo;
+                this.currentFormDataGroup.textStage = formHeader.textStage;
+            } else {
                 this.currentFormDataGroup.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
                 this.currentFormDataGroup.orderId = formHeader.id;
                 this.currentFormDataGroup.orderNo = formHeader.orderNo;
-                if (this.isNewForm) {
-                    pkgTextInsert = this.currentFormDataGroup
-                } else {
-                    pkgTextUpdate = this.currentFormDataGroup
+            }
+            if (this.isNewForm && this.currentFormDataGroup.text !== '') {
+                pkgTextInsert = this.currentFormDataGroup;
+            } else {
+                // eslint-disable-next-line
+                if (this.currentFormDataGroup.text !== this.orgFormDataGroup.text) {
+                    pkgTextUpdate = this.currentFormDataGroup;
                 }
             }
             return {
@@ -70,11 +103,14 @@
         }
     }
     interface TextObj{
-        pkgText?: string ; // 文本
+        text?: string ; // 文本
         factory?: string ; // 工厂
         id?: string ; // 主键
         orderId?: string ; // 订单ID
         orderNo?: string ; // 订单号
+        potOrderId?: string;
+        potOrderNo?: string;
+        textStage?: string;
     }
 </script>
 

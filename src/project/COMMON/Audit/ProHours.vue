@@ -466,7 +466,8 @@
         refuseDialog() {
             if (this.$refs.queryTable.tabs[0].multipleSelection && this.$refs.queryTable.tabs[0].multipleSelection.length) {
                 if (this.postingDate) {
-                    this.visibleRefuse = true
+                    this.visibleRefuse = true;
+                    this.ReText = ''
                 } else {
                     this.$warningToast('请选择过账日期')
                 }
@@ -503,7 +504,8 @@
         writeOffsDialog() {
             if (this.$refs.queryTable.tabs[1].multipleSelection && this.$refs.queryTable.tabs[1].multipleSelection.length) {
                 if (this.postingDate) {
-                    this.visibleBack = true
+                    this.visibleBack = true;
+                    this.BackText = ''
                 } else {
                     this.$warningToast('请选择过账日期')
                 }
