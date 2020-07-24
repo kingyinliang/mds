@@ -434,7 +434,11 @@ const COMMON_API = {
     /**
      * @property {string} ERMISSION_SAVE_API RDM 数据集删除
      */
-    PERMISSION_REMOVE_API: params => httpProxy('/permissionGroup/remove', 'GET', params, 'RDM')
+    PERMISSION_REMOVE_API: params => httpProxy('/permissionGroup/remove', 'GET', params, 'RDM'),
+    /**
+     * @property {string} DROPDOWN_UNIT_API 根据物料获取单位
+     */
+    DROPDOWN_UNIT_API: params => httpProxy('/sysMaterial/unit/dropDown', 'GET', params)
 };
 
 export default COMMON_API;
