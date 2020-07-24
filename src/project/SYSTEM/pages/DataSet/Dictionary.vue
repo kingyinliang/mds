@@ -18,30 +18,30 @@
                 <el-table-column type="index" label="序号" :index="indexMethod" width="50" align="center" fixed />
                 <el-table-column prop="dictionaryCode" label="属性编码" :show-overflow-tooltip="true" min-width="200">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.dictionaryCode" size="small" placeholder="输入属性编码" :disabled="!scope.row.isRedact" />
+                        <el-input v-model="scope.row.dictionaryCode" size="small" placeholder="输入属性编码" :disabled="!scope.row.isRedact" @blur="checkInput(scope.row)" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="dictionaryOwner" label="属性归属人" width="160">
+                <el-table-column prop="dictionaryOwner" label="属性归属人" width="200">
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.dictionaryOwner" placeholder="请选择" size="small" :disabled="!scope.row.isRedact">
+                        <el-select v-model="scope.row.dictionaryOwner" placeholder="请选择" size="small" :disabled="!scope.row.isRedact" @change="checkSelected(scope.row)">
                             <el-option
-                                v-for="item in 10"
-                                :key="item.dictCode"
-                                :label="item.dictValue"
-                                :value="item.dictCode"
+                                v-for="item in ownerList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
                             />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="dictionaryDescrible" label="数据集描述" :show-overflow-tooltip="true" min-width="500">
+                <el-table-column prop="propertyList" label="数据集描述" :show-overflow-tooltip="true" min-width="500">
                     <template slot-scope="scope">
-                        <el-checkbox-group v-model="scope.row.propertyList" :disabled="!scope.row.isRedact">
-                            <el-checkbox label="项目属性" />
-                            <el-checkbox label="任务属性" />
-                            <el-checkbox label="配方属性" />
-                            <el-checkbox label="图纸属性" />
-                            <el-checkbox label="产品&标准" />
-                        </el-checkbox-group>
+                        <!-- <el-checkbox-group v-model="scope.row.propertyList" :disabled="!scope.row.isRedact"> -->
+                        <el-checkbox v-model="scope.row.project" label="项目属性" :disabled="!scope.row.isRedact" />
+                        <el-checkbox v-model="scope.row.task" label="任务属性" :disabled="!scope.row.isRedact" />
+                        <el-checkbox v-model="scope.row.formula" label="配方属性" :disabled="!scope.row.isRedact" />
+                        <el-checkbox v-model="scope.row.blueprint" label="图纸属性" :disabled="!scope.row.isRedact" />
+                        <el-checkbox v-model="scope.row.standard" label="产品&标准" :disabled="!scope.row.isRedact" />
+                        <!-- </el-checkbox-group> -->
                     </template>
                 </el-table-column>
                 <el-table-column prop="created" label="创建日期" :show-overflow-tooltip="true" width="160" />
@@ -63,9 +63,9 @@
 </template>
 
 <script>
-    // import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, RDM_API } from 'common/api/api';
     // import { SYSTEMSETUP_API } from '@/api/api';
-    import { dateFormat, getUserNameNumber } from 'utils/utils';
+    import { dateFormat } from 'utils/utils';
 
     export default {
         name: 'DataSetManages',
@@ -77,23 +77,15 @@
                 controllableForm: {
                     owner: ''
                 },
+                ownerList: [],
                 currPage: 1,
                 pageSize: 10,
                 totalCount: 1,
-                targetInfoList: [
-                    {
-                        dictionaryCode: 'A1234',
-                        dictionaryDescrible: 'teacher',
-                        dictionaryOwner: '邱建又(18060163)',
-                        propertyList: [],
-                        created: '2020-01-01 18:30',
-                        changed: '2020-05-01 18:30',
-                        changer: '邱建又(18060163)',
-                        isRedact: false
-                    }
-                ],
+                targetInfoList: [],
                 currentComponent: '',
-                isEditDataSetItemShow: true
+                isEditDataSetItemShow: true,
+                hasInputError: false,
+                hasSelectError: false
             };
         },
         computed: {
@@ -101,11 +93,22 @@
                 return this.$store.state.common.mainClientHeight;
             },
             canSave() {
-                return typeof this.targetInfoList.find(item => item.isRedact === true) !== 'undefined'
+                return typeof this.targetInfoList.find(item => item.isRedact === true) !== 'undefined' && this.hasInputError === false && this.hasSelectError === false
             }
         },
         mounted() {
-            this.getItemsList();
+            this.getItemsList(true);
+            // 呼叫拥有人清单
+            COMMON_API.USER_ROLE_QUERY_API({
+                factory: 'common',
+                current: 1,
+                size: 9999
+            }).then(({ data }) => {
+                this.ownerList = []
+                data.data.records.forEach(item => {
+                    this.ownerList.push({ value: item.realName + ' ' + item.workNum, label: item.realName + ' ' + item.workNum })
+                })
+            });
         },
         methods: {
             // 序号
@@ -118,35 +121,73 @@
                     this.currPage = 1;
                 }
 
-                // COMMON_API.ROLE_QUERY_API({
-                //     factory: this.factoryID,
-                //     current: JSON.stringify(this.currPage),
-                //     size: JSON.stringify(this.pageSize),
-                //     roleName: searchWord.trim()
-                // }).then(({ data }) => {
-                //     if (haveParas && data.data.records.length === 0) {
-                //         this.$infoToast('暂无任何内容');
-                //     }
-                //     // this.controllableForm.owner = '';
-                //     this.targetInfoList = data.data.records;
-                //     this.currPage = data.data.current;
-                //     this.pageSize = data.data.size;
-                //     this.totalCount = data.data.total;
-                // });
+                RDM_API.PERMISSION_QUERY_API({
+                    current: this.currPage,
+                    size: this.pageSize
+                }).then(({ data }) => {
+                    if (data.data.records.length === 0) {
+                        this.$infoToast('暂无任何内容');
+                    }
+                    console.log('列表数据')
+                    console.log(data)
+                    // this.controllableForm.owner = '';
+                    this.targetInfoList = []
+                    data.data.records.forEach(item => {
+                        this.targetInfoList.push(
+                            {
+                                dictionaryCode: item.permissionCode,
+                                dictionaryOwner: item.realName + ' ' + item.workNum,
+                                propertyList: [],
+                                created: item.createTime,
+                                changed: item.modifiedTime,
+                                changer: item.modifierName + ' ' + item.modifierId,
+                                blueprint: item.blueprintPermission,
+                                standard: item.productStandardPermission,
+                                project: item.projectPermission,
+                                formula: item.recipePermission,
+                                task: item.taskPermission,
+                                isRedact: false
+                            }
+                        )
+                    })
+                    this.currPage = data.data.current;
+                    this.pageSize = data.data.size;
+                    this.totalCount = data.data.total;
+                });
 
-                // 加入 isRedact 參數
+            },
+            checkInput(item) {
+                if (this.targetInfoList.filter(element => element.dictionaryCode === item.dictionaryCode).length >= 2) {
+                    this.$errorToast('编码重复');
+                    this.hasInputError = true;
+                } else {
+                    this.hasInputError = false;
+                }
+            },
+            checkSelected(item) {
+                if (this.targetInfoList.filter(element => element.dictionaryOwner === item.dictionaryOwner).length >= 2) {
+                    this.$errorToast('属性归属人重复');
+                    this.hasSelectError = true;
+                } else {
+                    this.hasSelectError = false;
+                }
+
             },
 
             // [BTN:新增] 新增数据集 item
             addItem() {
                 this.targetInfoList.unshift({
                         dictionaryCode: '',
-                        dictionaryDescrible: '',
                         dictionaryOwner: '',
                         propertyList: [],
-                        created: dateFormat(new Date(), 'yyyy-MM-dd hh:mm'),
-                        changed: '',
-                        changer: getUserNameNumber(),
+                        created: dateFormat(new Date(), 'yyyy-MM-dd'),
+                        changed: dateFormat(new Date(), 'yyyy-MM-dd'),
+                        changer: sessionStorage.getItem('realName') + ' ' + sessionStorage.getItem('userName'),
+                        blueprint: false,
+                        standard: false,
+                        project: false,
+                        formula: false,
+                        task: false,
                         isRedact: true
                     })
             },
@@ -154,41 +195,86 @@
             editItem(obj) {
                 console.log(obj)
                 obj.isRedact = true
-                obj.changed = dateFormat(new Date(), 'yyyy-MM-dd hh:mm')
-            },
-            // [BTN:复制]:复制数据集 item
-            duplicationItem(obj) {
-                this.$nextTick(() => {
-                    this.$refs.editDataSetItem.init(obj, '新增数据集(复制 A1111)');
-                });
+                obj.changed = dateFormat(new Date(), 'yyyy-MM-dd')
             },
             // [BTN:删除]:删除数据集 item
-            removeItems() {
-                this.$confirm('确认删除该数据集, 是否继续?', '删除数据集', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                })
-                    .then(() => {
-                        // COMMON_API.ROLE_REMOVE_API({ id: id }).then(() => {
-                        //     this.getItemsList();
-                        // }).catch(() => {
-                        //     //
-                        // });
-                    })
-            },
+            // removeItems() {
+            //     this.$confirm('确认删除该数据集, 是否继续?', '删除数据集', {
+            //         confirmButtonText: '确定',
+            //         cancelButtonText: '取消',
+            //         type: 'warning'
+            //     })
+            //         .then(() => {
+            //             // COMMON_API.ROLE_REMOVE_API({ id: id }).then(() => {
+            //             //     this.getItemsList();
+            //             // }).catch(() => {
+            //             //     //
+            //             // });
+            //         })
+            // },
             // 改变每页条数
             handleSizeChange(val) {
-                this.pageSize = val;
-                this.getItemsList();
+                if (this.canSave === false) {
+                    this.pageSize = val;
+                    this.getItemsList();
+                } else {
+                    this.$errorToast('请先保存');
+                }
+
             },
             // 跳转页数
             handleCurrentChange(val) {
-                this.currPage = val;
-                this.getItemsList();
+                if (this.canSave === false) {
+                    this.currPage = val;
+                    this.getItemsList();
+                } else {
+                    this.$errorToast('请先保存');
+                }
             },
             saveDictionaryModify() {
-                this.targetInfoList.forEach(item => { item.isRedact = false })
+                let hasEmpty = false
+                this.targetInfoList.forEach(item => {
+                    if (item.dictionaryCode === '' || item.dictionaryOwner === '') {
+                        this.$errorToast('有漏填栏位');
+                        hasEmpty = true
+                    }
+                })
+
+                if (this.hasInputError === false && this.hasSelectError === false && hasEmpty === false) {
+                    const temp = []
+
+                    console.log('this.targetInfoList')
+                    console.log(this.targetInfoList)
+                    this.targetInfoList.forEach(item => {
+                        const tempDictionaryOwner = item.dictionaryOwner.split(' ')
+                        const tempChanger = item.changer.split(' ')
+                        temp.push({
+                            permissionCode: item.dictionaryCode,
+                            realName: tempDictionaryOwner[0],
+                            workNum: tempDictionaryOwner[1],
+                            projectPermission: item.project,
+                            taskPermission: item.task,
+                            recipePermission: item.formula,
+                            blueprintPermission: item.blueprint,
+                            productStandardPermission: item.standard,
+                            createTime: item.created,
+                            modifiedTime: item.changed,
+                            modifierId: tempChanger[1] === 'null' ? null : tempChanger[1],
+                            modifierName: tempChanger[0] === 'null' ? null : tempChanger[0]
+                        })
+                        item.isRedact = false
+                    })
+
+                    console.log('temp')
+                    console.log(temp)
+                    RDM_API.PERMISSION_SAVE_API({
+                        aaa: temp
+                    }).then(({ data }) => {
+                        this.$successToast('保存成功');
+                        console.log('data')
+                        console.log(data)
+                    })
+                }
             },
             // 导出
             exportData() {

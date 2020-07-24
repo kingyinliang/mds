@@ -84,7 +84,7 @@
 </template>
 
 <script>
-    import { COMMON_API } from 'common/api/api';
+    import { RDM_API } from 'common/api/api';
     // import { dateFormat, getUserNameNumber } from 'utils/utils';
     export default {
         name: 'RoleaddAndUpdate',
@@ -191,7 +191,7 @@
 
                 } else {
                     //edit
-                    COMMON_API.PERMISSION_QUERY_ITEMLIST_API({
+                    RDM_API.PERMISSION_QUERY_ITEMLIST_API({
                         groupCode: obj.groupCode
                     }).then(({ data }) => {
 
@@ -255,7 +255,7 @@
                 }
 
                 // // 呼叫属性选项
-                // COMMON_API.PERMISSION_LIST_PERMISSIONCODE_API({
+                // RDM_API.PERMISSION_LIST_PERMISSIONCODE_API({
                 // }).then(({ data }) => {
                 //     console.log('333333')
                 //     console.log(data)
@@ -276,7 +276,7 @@
                             const tempOwner = this.dataForm.dataSetOwner.split(' ')
 
                             // 新增
-                            COMMON_API.PERMISSION_SAVE_API({
+                            RDM_API.PERMISSION_DATASET_SAVE_API({
                                 permissionItemList: {
                                     project: this.dataForm.project,
                                     task: this.dataForm.task,
@@ -288,6 +288,7 @@
                                 realName: tempOwner[0],
                                 workNum: tempOwner[1]
                             }).then(() => {
+                                this.$successToast('新增成功');
                                 this.$emit('refreshDataList');
                                 this.isDialogShow = false;
                             }).catch(() => {
@@ -296,12 +297,13 @@
                         } else if (this.dialogTitle === '编辑数据集') {
                             console.log('提交修改')
                             // 修改
-                            COMMON_API.ROLE_INSERT_API({
+                            RDM_API.ROLE_INSERT_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 roleCode: this.dataForm.roleCode,
                                 roleName: this.dataForm.roleName,
                                 remark: this.dataForm.roleDescribe
                             }).then(() => {
+                                this.$successToast('编辑成功');
                                 this.$emit('refreshDataList');
                                 this.isDialogShow = false;
                             }).catch(() => {
@@ -311,7 +313,7 @@
                             console.log('提交复制')
                             const tempOwner = this.dataForm.dataSetOwner.split(' ')
                             // 复制
-                            COMMON_API.PERMISSION_SAVE_API({
+                            RDM_API.PERMISSION_SAVE_API({
                                 permissionItemList: {
                                     project: this.dataForm.project,
                                     task: this.dataForm.task,
@@ -323,6 +325,7 @@
                                 realName: tempOwner[0],
                                 workNum: tempOwner[1]
                             }).then(() => {
+                                this.$successToast('新增成功');
                                 this.$emit('refreshDataList');
                                 this.isDialogShow = false;
                             }).catch(() => {
