@@ -227,21 +227,21 @@
 </script>
 
 <style lang="scss" scoped>
-    .site-navbar {
-        background: #002140 !important;
-    }
-    .packup {
-        transform: rotate(0deg);
-    }
-    .open {
-        transform: rotate(180deg);
-    }
-    .switching {
-        display: block;
-        transition: 500ms;
-    }
-    .item {
-        margin-top: 6px;
-        margin-right: 15px;
-    }
+.site-navbar {
+    background: #002140 !important;
+}
+.packup {
+    transform: rotate(0deg);
+}
+.open {
+    transform: rotate(180deg);
+}
+.switching {
+    display: block;
+    transition: 500ms;
+}
+.item {
+    margin-top: 6px;
+    margin-right: 15px;
+}
 </style>
