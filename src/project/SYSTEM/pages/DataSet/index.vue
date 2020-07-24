@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-07-21 13:57:11
  * @LastEditors: Telliex
- * @LastEditTime: 2020-07-22 22:49:21
+ * @LastEditTime: 2020-07-23 14:31:01
 -->
 
 <template>
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-    import { RDM_API } from 'common/api/api';
+    import { COMMON_API, RDM_API } from 'common/api/api';
     // import { SYSTEMSETUP_API } from '@/api/api';
     import EditDataSetItem from './AddAndUpdateDataSetItem'
 
@@ -104,7 +104,7 @@
             this.getItemsList(true);
 
             // 呼叫拥有人清单
-            RDM_API.USER_ROLE_QUERY_API({
+            COMMON_API.USER_ROLE_QUERY_API({
                 factory: 'common',
                 current: 1,
                 size: 9999

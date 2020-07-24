@@ -276,7 +276,7 @@
                             const tempOwner = this.dataForm.dataSetOwner.split(' ')
 
                             // 新增
-                            RDM_API.PERMISSION_SAVE_API({
+                            RDM_API.PERMISSION_DATASET_SAVE_API({
                                 permissionItemList: {
                                     project: this.dataForm.project,
                                     task: this.dataForm.task,
@@ -288,6 +288,7 @@
                                 realName: tempOwner[0],
                                 workNum: tempOwner[1]
                             }).then(() => {
+                                this.$successToast('新增成功');
                                 this.$emit('refreshDataList');
                                 this.isDialogShow = false;
                             }).catch(() => {
@@ -302,6 +303,7 @@
                                 roleName: this.dataForm.roleName,
                                 remark: this.dataForm.roleDescribe
                             }).then(() => {
+                                this.$successToast('编辑成功');
                                 this.$emit('refreshDataList');
                                 this.isDialogShow = false;
                             }).catch(() => {
@@ -323,6 +325,7 @@
                                 realName: tempOwner[0],
                                 workNum: tempOwner[1]
                             }).then(() => {
+                                this.$successToast('新增成功');
                                 this.$emit('refreshDataList');
                                 this.isDialogShow = false;
                             }).catch(() => {
