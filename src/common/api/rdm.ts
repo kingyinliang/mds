@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-07-22 20:15:16
  * @LastEditors: Telliex
- * @LastEditTime: 2020-07-23 15:27:43
+ * @LastEditTime: 2020-07-24 11:08:22
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -35,7 +35,7 @@ const RDM_API = {
     /**
      * @property {string} PERMISSION_SAVE_API RDM 属性字典 保存
      */
-    PERMISSION_SAVE_API: params => httpProxy('/permission/save', 'GET', params, 'RDM')
+    PERMISSION_SAVE_API: params => httpProxy('/permission/save', 'POST', params, 'RDM')
 };
 
 export default RDM_API;
