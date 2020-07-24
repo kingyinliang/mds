@@ -1707,7 +1707,8 @@ body {
             }
             &_sole {
                 width: 50%;
-                float: left;
+                float: left;;
+                height: 23px;
             }
             &_sole:nth-child(2n) {
                 text-align: right

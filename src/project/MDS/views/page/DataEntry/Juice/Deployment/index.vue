@@ -53,68 +53,66 @@
             </div> -->
         </el-card>
         <mds-card title="原汁调配" name="deployment" :pack-up="false" style="margin-top: 10px;">
-            <el-card>
-                <el-table :data="dataList" class="newTable" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
-                    <el-table-column label="状态" width="90" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            <span
-                                :style="{
-                                    color: scope.row.status === '审核不通过' ? 'red' : scope.row.status === '审核通过' ? '#7ED321' : '',
-                                }"
-                            >{{ scope.row.status }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="调配单号" prop="orderNo" width="130" />
-                    <el-table-column label="生产车间" prop="workShopName" width="100" :show-overflow-tooltip="true" />
-                    <el-table-column label="调配单日期" prop="allocateDate" width="115" />
-                    <el-table-column label="杀菌物料" width="190" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialCode }}{{ scope.row.materialName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="计划BL原汁总量" prop="planAmount" />
-                    <el-table-column label="BL原汁总量" prop="blAmount" />
-                    <el-table-column label="单位" prop="unit" width="50" />
-                    <el-table-column width="130">
-                        <template slot="header">
-                            <i class="reqI">*</i> 调配罐
-                        </template>
-                        <template slot-scope="scope">
-                            <el-select v-model="scope.row.holderId" size="small" :disabled="!isRedact">
-                                <el-option value="">
-                                    请选择
-                                </el-option>
-                                <el-option v-for="(item, index) in holderList" :key="index" :label="item.holderName" :value="item.holderId" />
-                            </el-select>
-                        </template>
-                    </el-table-column>
-                    <el-table-column width="170">
-                        <template slot="header">
-                            <i class="reqI">*</i> 调配日期
-                        </template>
-                        <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.allocateTime" :disabled="!isRedact" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="调配单备注" prop="remark" width="100" :show-overflow-tooltip="true" />
-                    <el-table-column label="创建人员" prop="creator" width="150" />
-                    <el-table-column label="创建时间" prop="created" width="170" />
-                    <el-table-column label="调配人员" prop="changer" width="150" />
-                    <el-table-column label="调配时间" prop="changed" width="170" />
-                    <el-table-column label="操作" width="150" fixed="right">
-                        <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="ShowDetail(scope.row)">
-                                调配
-                            </el-button>
-                            <el-button type="primary" size="small" @click="AddRecord(scope.row)">
-                                记录
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-pagination :current-page="pages.currentPage" :page-sizes="[10, 20, 50]" :page-size="pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pages.currentTotal" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </el-card>
+            <el-table :data="dataList" class="newTable" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
+                <el-table-column label="状态" width="90" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <span
+                            :style="{
+                                color: scope.row.status === '审核不通过' ? 'red' : scope.row.status === '审核通过' ? '#7ED321' : '',
+                            }"
+                        >{{ scope.row.status }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="调配单号" prop="orderNo" width="130" />
+                <el-table-column label="生产车间" prop="workShopName" width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="调配单日期" prop="allocateDate" width="115" />
+                <el-table-column label="杀菌物料" width="190" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialCode }}{{ scope.row.materialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="计划BL原汁总量" prop="planAmount" />
+                <el-table-column label="BL原汁总量" prop="blAmount" />
+                <el-table-column label="单位" prop="unit" width="50" />
+                <el-table-column width="130">
+                    <template slot="header">
+                        <i class="reqI">*</i> 调配罐
+                    </template>
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.holderId" size="small" :disabled="!isRedact">
+                            <el-option value="">
+                                请选择
+                            </el-option>
+                            <el-option v-for="(item, index) in holderList" :key="index" :label="item.holderName" :value="item.holderId" />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column width="170">
+                    <template slot="header">
+                        <i class="reqI">*</i> 调配日期
+                    </template>
+                    <template slot-scope="scope">
+                        <el-date-picker v-model="scope.row.allocateTime" :disabled="!isRedact" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="调配单备注" prop="remark" width="100" :show-overflow-tooltip="true" />
+                <el-table-column label="创建人员" prop="creator" width="150" />
+                <el-table-column label="创建时间" prop="created" width="170" />
+                <el-table-column label="调配人员" prop="changer" width="150" />
+                <el-table-column label="调配时间" prop="changed" width="170" />
+                <el-table-column label="操作" width="150" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="small" @click="ShowDetail(scope.row)">
+                            调配
+                        </el-button>
+                        <el-button type="primary" size="small" @click="AddRecord(scope.row)">
+                            记录
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination :current-page="pages.currentPage" :page-sizes="[10, 20, 50]" :page-size="pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pages.currentTotal" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
         <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class="dialog__class">
             <div slot="title">
