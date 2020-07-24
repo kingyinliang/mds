@@ -1,57 +1,49 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <div class="clearfix">
-                    <el-row style="float: right;">
-                        <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="GetLocationList(true)" @submit.native.prevent>
-                            <el-form-item>
-                                <el-input v-model="form.batch" placeholder="批次" suffix-icon="el-icon-search" />
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button v-if="isAuth('sys:sapGranaryMaterial:list')" type="primary" size="small" @click="GetList(true)">
-                                    查询
-                                </el-button>
-                                <el-button v-if="isAuth('sys:sapGranaryMaterial:list')" type="primary" size="small" @click="visible1 = true">
-                                    高级查询
-                                </el-button>
-                                <el-button v-if="isAuth('sys:sapGranaryMaterial:syncInstorageManual')" type="primary" size="small" @click="DataSynchronism()">
-                                    同步
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
+    <div class="header_main">
+        <mds-card title="原料入库记录" :name="'role'" :pack-up="false" style="background: #fff;">
+            <template slot="titleBtn">
+                <div style="float: right; height: 32px; margin-bottom: 10px;">
+                    <el-input v-model="form.batch" placeholder="批次" size="small" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
+                    <el-button v-if="isAuth('sys:sapGranaryMaterial:list')" type="primary" size="small" @click="GetList(true)">
+                        查询
+                    </el-button>
+                    <el-button v-if="isAuth('sys:sapGranaryMaterial:list')" type="primary" size="small" @click="visible1 = true">
+                        高级查询
+                    </el-button>
+                    <el-button v-if="isAuth('sys:sapGranaryMaterial:syncInstorageManual')" type="primary" size="small" @click="DataSynchronism()">
+                        同步
+                    </el-button>
                 </div>
-                <el-row>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="list" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column label="物料" :show-overflow-tooltip="true" width="170px">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialCode }}
-                                {{ scope.row.materialName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="物料类型" :show-overflow-tooltip="true" width="130px">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialTypeCode }}
-                                {{ scope.row.materialTypeName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="工厂" :show-overflow-tooltip="true" prop="factoryName" />
-                        <el-table-column label="过账日期" :show-overflow-tooltip="true" prop="postingDate" width="100px" />
-                        <el-table-column label="批次" :show-overflow-tooltip="true" prop="batch" width="120px" />
-                        <el-table-column label="数量" :show-overflow-tooltip="true" prop="quantity" width="100px" />
-                        <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" width="60px" />
-                        <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="moveType" width="90px" />
-                        <el-table-column label="库存" :show-overflow-tooltip="true" prop="quantity" width="80px" />
-                        <el-table-column label="罐号" :show-overflow-tooltip="true" prop="holderNo" width="60px" />
-                        <el-table-column label="同步日期" :show-overflow-tooltip="true" prop="syncDate" width="100px" />
-                    </el-table>
-                </el-row>
-                <el-row>
-                    <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+            </template>
+            <el-row>
+                <el-table ref="table1" class="newTable" :height="mainClientHeight - 30 - 42 - 47" header-row-class-name="tableHead" :data="list" border tooltip-effect="dark" style="width: 100%;">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" width="170px">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialCode }}
+                            {{ scope.row.materialName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="物料类型" :show-overflow-tooltip="true" width="130px">
+                        <template slot-scope="scope">
+                            {{ scope.row.materialTypeCode }}
+                            {{ scope.row.materialTypeName }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="工厂" :show-overflow-tooltip="true" prop="factoryName" />
+                    <el-table-column label="过账日期" :show-overflow-tooltip="true" prop="postingDate" width="100px" />
+                    <el-table-column label="批次" :show-overflow-tooltip="true" prop="batch" width="120px" />
+                    <el-table-column label="数量" :show-overflow-tooltip="true" prop="quantity" width="100px" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="unit" width="60px" />
+                    <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="moveType" width="90px" />
+                    <el-table-column label="库存" :show-overflow-tooltip="true" prop="quantity" width="80px" />
+                    <el-table-column label="罐号" :show-overflow-tooltip="true" prop="holderNo" width="60px" />
+                    <el-table-column label="同步日期" :show-overflow-tooltip="true" prop="syncDate" width="100px" />
+                </el-table>
+            </el-row>
+            <el-row>
+                <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <el-dialog :close-on-click-modal="false" :visible.sync="visible1" width="510px" custom-class="dialog__class">
             <div slot="title">
                 高级查询
@@ -79,7 +71,7 @@
                 <el-button type="primary" @click="GetList(true, 'highc')">确定</el-button>
             </span>
         </el-dialog>
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -111,7 +103,13 @@ export default {
             guanList: []
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            }
+        }
+    },
     mounted() {
         this.GetList();
         this.PuplWheatList();

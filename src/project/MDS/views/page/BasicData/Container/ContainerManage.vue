@@ -1,155 +1,148 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <h3>容器管理列表</h3>
-                <el-row type="flex">
-                    <el-col class="header_main" style="margin-bottom: 10px;">
-                        <el-form :inline="true" :model="form" size="small" label-width="70px" class="multi_row" @keyup.enter.native="qurery()" @submit.native.prevent>
-                            <el-form-item label="归属工厂：">
-                                <el-select v-model="form.factory" placeholder="请选择">
-                                    <el-option label="" value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) in factoryList" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="归属车间：">
-                                <el-select v-model="form.dept_id" placeholder="请选择">
-                                    <el-option label="" value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="容器类型：">
-                                <el-select v-model="form.holder_type" placeholder="请选择">
-                                    <el-option label="" value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) in dictList" :key="index" :label="item.value" :value="item.code" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="容器号：">
-                                <el-input v-model="form.holder_no" placeholder="手动输入" clearable />
-                            </el-form-item>
-                            <el-form-item label="容器量：">
-                                <el-input v-model="form.holder_hold" placeholder="手动输入" clearable />
-                            </el-form-item>
-                            <el-form-item class="floatr">
-                                <el-button v-if="isAuth('sys:holder:checkList')" type="primary" size="small" @click="qurery(true)">
-                                    查询
-                                </el-button>
-                                <el-button v-if="isAuth('sys:holder:save')" type="primary" size="small" @click="addOrupdate()">
-                                    新增
-                                </el-button>
-                                <el-button v-if="isAuth('sys:holder:delete')" type="danger" size="small" @click="remove">
-                                    批量删除
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-table
-                        ref="table1"
-                        header-row-class-name="tableHead"
-                        :data="list"
-                        border
-                        tooltip-effect="dark"
-                        style="width: 100%; margin-bottom: 20px;"
-                        @selection-change="handleSelectionChange"
-                    >
-                        <el-table-column
-                            type="selection"
-                            width="45"
-                            fixed
-                        />
-                        <el-table-column
-                            type="index"
-                            :index="indexMethod"
-                            label="序号"
-                            width="55"
-                            fixed
-                        />
-                        <el-table-column
-                            prop="typeName"
-                            label="容器类型"
-                            :show-overflow-tooltip="true"
-                            width="100"
-                        />
-                        <el-table-column
-                            prop="holderNo"
-                            label="容器号"
-                            :show-overflow-tooltip="true"
-                            width="80"
-                        />
-                        <el-table-column
-                            prop="holderName"
-                            :show-overflow-tooltip="true"
-                            label="容器描述"
-                        />
-                        <el-table-column
-                            prop="holderHold"
-                            label="容器量"
-                            :show-overflow-tooltip="true"
-                            width="80"
-                        />
-                        <el-table-column
-                            prop="holderPatch"
-                            label="批数"
-                            :show-overflow-tooltip="true"
-                            width="80"
-                        />
-                        <el-table-column label="状态" prop="holderStatusName" width="120" />
-                        <el-table-column
-                            prop="holderArea"
-                            label="物理区域"
-                            :show-overflow-tooltip="true"
-                            width="120"
-                        />
-                        <el-table-column
-                            prop="factoryName"
-                            label="归属工厂"
-                            :show-overflow-tooltip="true"
-                            width="120"
-                        />
-                        <el-table-column
-                            prop="deptName"
-                            label="归属车间"
-                            :show-overflow-tooltip="true"
-                            width="92"
-                        />
-                        <el-table-column
-                            fixed="right"
-                            label="操作"
-                            header-align="left"
-                            align="left"
-                            width="65"
-                        >
-                            <template slot-scope="scope">
-                                <el-button v-if="isAuth('sys:holder:delete') && isAuth('sys:holder:findById')" style="padding: 0;" type="text" @click="addOrupdate(scope.row.holderId)">
-                                    编辑
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-row>
-                <el-row>
-                    <el-pagination
-                        :current-page="form.currPage"
-                        :page-sizes="[10, 20, 50]"
-                        :page-size="form.pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="form.totalCount"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                    />
-                </el-row>
-            </el-card>
-        </div>
+    <div class="header_main">
+        <mds-card title="容器管理列表" :name="'raw'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
+            <div>
+                <el-form :inline="true" :model="form" size="small" label-width="70px" class="multi_row" @keyup.enter.native="qurery()" @submit.native.prevent>
+                    <el-form-item label="归属工厂：">
+                        <el-select v-model="form.factory" placeholder="请选择" style="width: 120px;">
+                            <el-option label="" value="">
+                                请选择
+                            </el-option>
+                            <el-option v-for="(item, index) in factoryList" :key="index" :label="item.deptName" :value="item.deptId" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="归属车间：">
+                        <el-select v-model="form.dept_id" placeholder="请选择" style="width: 120px;">
+                            <el-option label="" value="">
+                                请选择
+                            </el-option>
+                            <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="容器类型：">
+                        <el-select v-model="form.holder_type" placeholder="请选择" style="width: 120px;">
+                            <el-option label="" value="">
+                                请选择
+                            </el-option>
+                            <el-option v-for="(item, index) in dictList" :key="index" :label="item.value" :value="item.code" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="容器号：">
+                        <el-input v-model="form.holder_no" placeholder="手动输入" clearable style="width: 120px;" />
+                    </el-form-item>
+                    <el-form-item label="容器量：">
+                        <el-input v-model="form.holder_hold" placeholder="手动输入" clearable style="width: 120px;" />
+                    </el-form-item>
+                    <el-form-item class="floatr">
+                        <el-button v-if="isAuth('sys:holder:checkList')" type="primary" size="small" @click="qurery(true)">
+                            查询
+                        </el-button>
+                        <el-button v-if="isAuth('sys:holder:save')" type="primary" size="small" @click="addOrupdate()">
+                            新增
+                        </el-button>
+                        <el-button v-if="isAuth('sys:holder:delete')" type="danger" size="small" @click="remove">
+                            批量删除
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <el-table
+                ref="table1"
+                class="newTable"
+                :height="mainClientHeight - 55 - 39 - 47"
+                header-row-class-name="tableHead"
+                :data="list"
+                border
+                tooltip-effect="dark"
+                style="width: 100%;"
+                @selection-change="handleSelectionChange"
+            >
+                <el-table-column
+                    type="selection"
+                    width="45"
+                    fixed
+                />
+                <el-table-column
+                    type="index"
+                    :index="indexMethod"
+                    label="序号"
+                    width="55"
+                    fixed
+                />
+                <el-table-column
+                    prop="typeName"
+                    label="容器类型"
+                    :show-overflow-tooltip="true"
+                    width="100"
+                />
+                <el-table-column
+                    prop="holderNo"
+                    label="容器号"
+                    :show-overflow-tooltip="true"
+                    width="80"
+                />
+                <el-table-column
+                    prop="holderName"
+                    :show-overflow-tooltip="true"
+                    label="容器描述"
+                />
+                <el-table-column
+                    prop="holderHold"
+                    label="容器量"
+                    :show-overflow-tooltip="true"
+                    width="80"
+                />
+                <el-table-column
+                    prop="holderPatch"
+                    label="批数"
+                    :show-overflow-tooltip="true"
+                    width="80"
+                />
+                <el-table-column label="状态" prop="holderStatusName" width="120" />
+                <el-table-column
+                    prop="holderArea"
+                    label="物理区域"
+                    :show-overflow-tooltip="true"
+                    width="120"
+                />
+                <el-table-column
+                    prop="factoryName"
+                    label="归属工厂"
+                    :show-overflow-tooltip="true"
+                    width="120"
+                />
+                <el-table-column
+                    prop="deptName"
+                    label="归属车间"
+                    :show-overflow-tooltip="true"
+                    width="92"
+                />
+                <el-table-column
+                    fixed="right"
+                    label="操作"
+                    header-align="left"
+                    align="left"
+                    width="65"
+                >
+                    <template slot-scope="scope">
+                        <el-button v-if="isAuth('sys:holder:delete') && isAuth('sys:holder:findById')" style="padding: 0;" type="text" @click="addOrupdate(scope.row.holderId)">
+                            编辑
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination
+                :current-page="form.currPage"
+                :page-sizes="[10, 20, 50]"
+                :page-size="form.pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="form.totalCount"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+            />
+        </mds-card>
         <con-addor-update v-if="visible" ref="addOrupdate" @refreshDataList="GetContainerList" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -184,7 +177,13 @@ export default {
             list: []
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            }
+        }
+    },
     watch: {
         'form.factory'(n) {
             this.Getdeptcode(n);

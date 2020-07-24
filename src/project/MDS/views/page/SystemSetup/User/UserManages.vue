@@ -20,7 +20,7 @@
                 <el-col :span="16">
                     <div class="org-card" :style="siteContentViewHeight">
                         <div class="org-card_title">
-                            组织详细信息
+                            人员列表
                         </div>
                         <div class="detail-main SelfScrollbar clearfix">
                             <div class="view-btn" style="float: right; margin-bottom: 10px;">
