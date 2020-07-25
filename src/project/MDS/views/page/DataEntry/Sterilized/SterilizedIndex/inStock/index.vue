@@ -7,13 +7,13 @@
                 </el-col>
                 <el-col style="width: 100px;">
                     <div
-                        style=" float: right; padding-top: 0;"
+                        style=" float: right; padding-top: 0; line-height: 25px;"
                         :style="{
                             color: orderStatus === 'noPass' ? 'red' : '',
                         }"
                     >
                         <span
-                            style=" float: left; width: 5px; height: 5px; margin-top: 7px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
+                            style=" float: left; width: 5px; height: 5px; margin-top: 10px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
                             :style="{
                                 background: orderStatus === 'noPass' ? 'red' : '#1890FF',
                             }"
@@ -21,23 +21,8 @@
                     </div>
                 </el-col>
             </el-row>
-            <el-row style=" position: absolute; right: 20px; bottom: 10px; text-align: right;" class="buttonCss">
-                <template style="float: right; margin-left: 10px;">
-                    <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:inStorage:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                        {{ isRedact ? '取消' : '编辑' }}
-                    </el-button>
-                </template>
-                <template v-if="isRedact" style="float: right; margin-left: 10px;">
-                    <el-button v-if="isAuth('ste:inStorage:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                        保存
-                    </el-button>
-                    <el-button v-if="isAuth('ste:inStorage:submit')" type="primary" size="small" @click="SubmitForm">
-                        提交
-                    </el-button>
-                </template>
-            </el-row>
         </el-card>
-        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card">
+        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
                     杀菌入库
@@ -58,24 +43,24 @@
                         </el-button>
                     </div>
                     <div style="flex: 1; min-width: 990px;">
-                        <el-table header-row-class-name="tableHead" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow">
+                        <el-table header-row-class-name="tableHead" class="newTable" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow">
                             <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" fixed />
-                            <el-table-column label="日期" width="80" prop="date" :show-overflow-tooltip="true" />
-                            <el-table-column label="半成品罐号" width="95" prop="holderName" :show-overflow-tooltip="true" />
-                            <el-table-column label="半成品批次" width="95" prop="batch" :show-overflow-tooltip="true" />
-                            <el-table-column label="入罐数量" width="80" prop="inAmount" :show-overflow-tooltip="true" />
-                            <el-table-column label="满罐数量" width="80" prop="fullAmount" :show-overflow-tooltip="true" />
-                            <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true" />
-                            <el-table-column label="罐内库存" width="80" prop="inTankAmount" :show-overflow-tooltip="true" />
-                            <el-table-column label="满罐" width="60" prop="isFull" :show-overflow-tooltip="true">
+                            <el-table-column label="日期" min-width="150" prop="date" :show-overflow-tooltip="true" />
+                            <el-table-column label="半成品罐号" min-width="130" prop="holderName" :show-overflow-tooltip="true" />
+                            <el-table-column label="半成品批次" min-width="110" prop="batch" :show-overflow-tooltip="true" />
+                            <el-table-column label="入罐数量" min-width="80" prop="inAmount" :show-overflow-tooltip="true" />
+                            <el-table-column label="满罐数量" min-width="80" prop="fullAmount" :show-overflow-tooltip="true" />
+                            <el-table-column label="单位" min-width="50" prop="unit" :show-overflow-tooltip="true" />
+                            <el-table-column label="罐内库存" min-width="80" prop="inTankAmount" :show-overflow-tooltip="true" />
+                            <el-table-column label="满罐" min-width="60" prop="isFull" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.isFull === '1' ? '是' : '否' }}
                                 </template>
                             </el-table-column>
-                            <el-table-column label="满罐时间" width="120" prop="fullDate" :show-overflow-tooltip="true" />
-                            <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
-                            <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
-                            <el-table-column label="操作人" width="80" prop="changer" :show-overflow-tooltip="true" />
+                            <el-table-column label="满罐时间" min-width="120" prop="fullDate" :show-overflow-tooltip="true" />
+                            <el-table-column label="备注" min-width="120" prop="remark" :show-overflow-tooltip="true" />
+                            <el-table-column label="操作人" min-width="140" prop="changer" :show-overflow-tooltip="true" />
+                            <el-table-column label="操作时间" min-width="160" prop="changed" :show-overflow-tooltip="true" />
                             <el-table-column label="操作" fixed="right" width="50" prop="changer" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     <el-button class="delBtn" type="text" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delRow(scope.row)">
@@ -86,7 +71,7 @@
                         </el-table>
                     </div>
                 </div>
-                <audit-log :table-data="DataAudit" />
+                <audit-log :table-data="DataAudit" style="margin-top: 10px;" />
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
@@ -145,6 +130,21 @@
                 <el-button type="primary" size="small" :disabled="PotObject.maxStatus" @click="addIn()">确定</el-button>
             </span>
         </el-dialog>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:inStorage:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button v-if="isAuth('ste:inStorage:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('ste:inStorage:submit')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 
@@ -579,6 +579,7 @@ export default {
     width: 92px;
     p {
         padding: 0;
+        font-size: 12px;
         line-height: 20px;
     }
 }
