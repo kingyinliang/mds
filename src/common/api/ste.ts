@@ -49,6 +49,14 @@ const STE_API = {
      */
     STE_COOKING_DETAIL_SAVE_API: params => httpProxy('/ste/steCookingPot/save', 'POST', params),
     /**
+     * @property {string} STE_COOKING_DETAIL_SUBMIT_API 杀菌车间-煮料详情-提交
+     */
+    STE_COOKING_DETAIL_SUBMIT_API: params => httpProxy('/ste/steCookingPot/submit', 'POST', params),
+    /**
+     * @property {string} STE_COOKING_DETAIL_ROLLBACK_API 杀菌车间-煮料详情-撤回
+     */
+    STE_COOKING_DETAIL_ROLLBACK_API: params => httpProxy('/ste/steCookingPot/rollback', 'POST', params),
+    /**
      * @property {string} STE_COOKING_DETAIL_CLEAR_API 杀菌车间-煮料详情-清罐
      */
     STE_COOKING_DETAIL_CLEAR_API: params => httpProxy('/ste/steCookingPot/clean', 'POST', params),

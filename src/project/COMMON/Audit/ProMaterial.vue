@@ -306,7 +306,7 @@
                     return COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_CHECK_STATUS'
                     }).then((data) => {
-                        data.data.data = data.data.data.filter(it => it.dictValue === '已审核' || it.dictValue === '已过账' || it.dictValue === '接口失败' || it.dictValue === '反审');
+                        data.data.data = data.data.data.filter(it => it.dictValue === '已审核' || it.dictValue === '已退回' || it.dictValue === '接口失败' || it.dictValue === '反审');
                         return data
                     })
                 },
@@ -595,6 +595,7 @@
                     if (this.dialogTitle === '反审原因') {
                         this.refuseOrWriteOffsText = '';
                     }
+                    this.refuseOrWriteOffsText = '';
                     this.dialogTitle = '退回原因';
                     this.isRefuseOrWriteOffsDialogShow = true;
                 } else {
@@ -610,6 +611,7 @@
                     if (this.dialogTitle === '退回原因') {
                         this.refuseOrWriteOffsText = ''
                     }
+                    this.refuseOrWriteOffsText = '';
                     this.dialogTitle = '反审原因'
                     this.isRefuseOrWriteOffsDialogShow = true
                 } else {

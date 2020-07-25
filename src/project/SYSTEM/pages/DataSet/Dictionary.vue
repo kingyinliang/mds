@@ -135,6 +135,7 @@
                     data.data.records.forEach(item => {
                         this.targetInfoList.push(
                             {
+                                id: item.id,
                                 dictionaryCode: item.permissionCode,
                                 dictionaryOwner: item.realName + ' ' + item.workNum,
                                 propertyList: [],
@@ -177,6 +178,7 @@
             // [BTN:新增] 新增数据集 item
             addItem() {
                 this.targetInfoList.unshift({
+                        id: '',
                         dictionaryCode: '',
                         dictionaryOwner: '',
                         propertyList: [],
@@ -249,6 +251,7 @@
                         const tempDictionaryOwner = item.dictionaryOwner.split(' ')
                         const tempChanger = item.changer.split(' ')
                         temp.push({
+                            id: item.id,
                             permissionCode: item.dictionaryCode,
                             realName: tempDictionaryOwner[0],
                             workNum: tempDictionaryOwner[1],
@@ -267,9 +270,7 @@
 
                     console.log('temp')
                     console.log(temp)
-                    RDM_API.PERMISSION_SAVE_API({
-                        aaa: temp
-                    }).then(({ data }) => {
+                    RDM_API.PERMISSION_SAVE_API(temp).then(({ data }) => {
                         this.$successToast('保存成功');
                         console.log('data')
                         console.log(data)

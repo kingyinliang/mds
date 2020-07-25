@@ -262,6 +262,7 @@
                                 checkStatus: item.checkStatus,
                                 delFlag: item.delFlag,
                                 endStocks: item.endStocks,
+                                materialType: item.materialType,
                                 materialCode: item.materialCode,
                                 materialName: item.materialName,
                                 materialStatus: item.materialStatus,
@@ -291,6 +292,7 @@
                         checkStatus: item.checkStatus,
                         delFlag: item.delFlag,
                         endStocks: item.endStocks,
+                        materialType: item.materialType,
                         materialCode: item.materialCode,
                         materialName: item.materialName,
                         materialStatus: item.materialStatus,
@@ -327,6 +329,7 @@
                                 mainId: item.mainId,
                                 id: item.mainId,
                                 checkStatus: item.checkStatus,
+                                materialType: item.materialType,
                                 materialCode: item.materialCode,
                                 materialName: item.materialName,
                                 materialUnit: item.materialUnit,
@@ -350,6 +353,7 @@
                         id: item.mainId,
                         checkStatus: item.checkStatus,
                         delFlag: item.delFlag,
+                        materialType: item.materialType,
                         materialCode: item.materialCode,
                         materialName: item.materialName,
                         materialUnit: item.materialUnit,
@@ -412,6 +416,7 @@
                         orderId: item.orderId,
                         orderNo: item.orderNo,
                         posnr: item.posnr,
+                        materialType: item.materialType,
                         materialCode: item.materialCode,
                         materialName: item.materialName,
                         materialStatus: item.materialStatus,
@@ -485,6 +490,7 @@
                 orderNo: row.orderNo,
                 posnr: row.posnr,
                 mainId: row.mainId,
+                materialType: row.materialType,
                 materialCode: row.materialCode,
                 materialName: row.materialName,
                 materialStatus: row.materialStatus,
@@ -517,6 +523,7 @@
                 orderNo: row.orderNo,
                 posnr: row.posnr,
                 mainId: row.mainId,
+                materialType: row.materialType,
                 materialCode: row.materialCode,
                 materialName: row.materialName,
                 materialStatus: row.materialStatus,
@@ -600,6 +607,7 @@ interface MaterialMap{
     factory?: string;
     realLoss?: string | number;
     checkStatus?: string;
+    materialType?: string;
     materialCode?: string;
     materialName?: string;
     materialStatus?: string;
