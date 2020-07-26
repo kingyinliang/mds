@@ -31,7 +31,7 @@
                                     <el-form-item prop="prodcutMaterial">
                                         <el-select v-model="scope.row.prodcutMaterial" size="small" clearable>
                                             <el-option
-                                                v-for="item in productMateriallList"
+                                                v-for="item in productMaterialList"
                                                 :key="'b'+item.dictCode"
                                                 :label="item.dictValue"
                                                 :value="item.dictCode"
@@ -158,7 +158,7 @@
                             </el-table-column>
                         </el-table>
                         <el-form-item v-if="importBucketInfo.length>=1" label="满罐选项: " prop="">
-                            <el-checkbox v-model="importBucketStatus" />
+                            <el-checkbox v-model="importBucketStatus" style="margin-left: 10px;" />
                         </el-form-item>
                     </el-form>
                 </div>
@@ -195,17 +195,21 @@
         }
     })
     export default class ImportBucketIndex extends Vue {
-
         $refs: {
             loanedPersonnel: HTMLFormElement;
         }
 
+
+        currentWorkShop=''
+
+
         // 点击赋予 item info
         currentPotNo=''
-        currentWorkShop=''
+        currentPotId=''
         currentPotStatus='E' // 罐状态
+        currentCycle=''
 
-        productMateriallList: object[]=[] // 生产物料清单
+        productMaterialList: ProductMaterial[]=[] // 生产物料清单
         feedMateriallList: object[]=[] // 投料物料清单
 
         importBucketStatus=false // 是否满罐
@@ -245,51 +249,55 @@
         }
 
         // 入罐
-        init(item) {
-            console.log('入罐item')
-            console.log(item)
+        init(item, workshop) {
             this.isTableDialogVisible = true
-            this.currentPotNo = item.potId
+            this.currentPotId = item.potId
+            this.currentPotNo = item.potNo
             this.currentPotStatus = item.potStatus
-            // 溶解罐管理-查询入罐信息
+            this.currentWorkShop = workshop
+            this.currentCycle = item.cycle
+            // API 溶解罐管理-查询入罐信息
             STE_API.STE_DISSOLUTIONBUCKET_ENTER_QUERY_API({
+                cycle: item.cycle,
+                id: item.id,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderId: this.currentPotNo
+                potId: this.currentPotId,
+                potStatus: this.currentPotStatus,
+                potNo: this.currentPotNo,
+                workShop: this.currentWorkShop
             }).then(({ data }) => {
                 console.log('查询入罐信息')
                 console.log(data)
-                if (!data.data) {
+                this.importBucketInfo = []
+                if (data.data) {
                     this.importBucketInfo = data.data
                     this.orgFormDataGroup = JSON.parse(JSON.stringify(this.importBucketInfo))
-                } else {
-                    this.importBucketInfo = []
                 }
             });
 
-            // 容器管理-查询生产物料
+            // API 容器管理-分页查询-查询生产物料
             COMMON_API.HOLDER_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.currentWorkShop,
                 current: 1,
                 size: 9999,
-                holderNo: item.potNo,
+                holderNo: this.currentPotNo,
                 holderType: '019' // 溶解罐参数编码
             }).then(({ data }) => {
-                this.productMateriallList = []
                 console.log('查询生产物料')
                 console.log(data)
-                    if (data.data.records[0].material) {
-                        data.data.records[0].material.forEach(element => {
-                            this.productMateriallList.push({ dictCode: element.materialCode, dictValue: element.materialName, id: element.id })
-                        })
-                    }
+                this.productMaterialList = []
+                if (data.data.records[0].material) {
+                    data.data.records[0].material.forEach(element => {
+                        this.productMaterialList.push({ dictCode: element.materialCode, dictValue: element.materialName, id: element.id })
+                    })
+                }
             });
 
-            // 辅料前处理-查询不带分页 (查询生产物料)
+            // API 辅料前处理-查询不带分页 (查询生产物料)
             STE_API.STE_PREACCESSORIES_LIST_API({
-                current: 1,
-                // preStage: 'DISSOLUTION',
-                size: 99999
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                // preStage: 'DISSOLUTION'
             }).then(({ data }) => {
                 console.log('辅料前处理')
                 console.log(data)
@@ -299,7 +307,6 @@
                         this.feedMateriallList.push({ dictCode: element.productMaterial, dictValue: element.productMaterialName })
                     })
                 }
-
             });
         }
 
@@ -324,9 +331,6 @@
 
         // 员工确认
         changeUser(item) {
-            console.log('人员是哪些呢？')
-            console.log(item)
-
             this.importBucketInfo[this.currentRowIndex].feedMan = item.join(',')
             this.isLoanedPersonnelStatusDialogVisible = false;
         }
@@ -343,16 +347,17 @@
 
         // 新增行
         addNewDataRow() {
-            console.log(this.importBucketInfo)
             let sole: CurrentDataTable = {}
             const itemSize = this.importBucketInfo.length
             if (itemSize !== 0) {
+                const tempProductMaterial = this.productMaterialList.filter(item => item.dictCode === this.importBucketInfo[itemSize - 1].prodcutMaterial) as ProductMaterial
                 sole = {
+                    cycle: this.currentCycle,
                     delFlag: 0,
                     potNo: this.currentPotNo, // 溶解罐号
-                    prodcutMaterial: this.importBucketForm[itemSize - 1].prodcutMaterial, // 生产物料
-                    potCount: this.importBucketForm[itemSize - 1].potCount, // 配置锅数
-                    feedMaterial: this.importBucketForm[itemSize - 1].feedMaterial, // 投料物料
+                    prodcutMaterial: this.importBucketInfo[itemSize - 1].prodcutMaterial, // 生产物料
+                    potCount: this.importBucketInfo[itemSize - 1].potCount, // 配置锅数
+                    feedMaterial: this.importBucketInfo[itemSize - 1].feedMaterial, // 投料物料
                     feedUnit: 'KG', // 投料物料单位
                     feedAmount: 0, // 投料数量
                     feedBatch: '', // 投料批次
@@ -361,13 +366,14 @@
                     remark: '',
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
-                    feedMaterialName: this.importBucketForm[itemSize - 1].feedMaterialName,
-                    potStatus: this.currentPotStatus
-                    // id?: string;
-                    // productMaterialName?: string;
+                    feedMaterialName: this.importBucketInfo[itemSize - 1].feedMaterialName,
+                    potStatus: this.currentPotStatus,
+                    potId: this.currentPotId,
+                    productMaterialName: tempProductMaterial.dictValue
                 }
             } else {
                 sole = {
+                    cycle: this.currentCycle,
                     delFlag: 0,
                     potNo: this.currentPotNo, // 溶解罐号
                     prodcutMaterial: '', // 生产物料
@@ -382,9 +388,9 @@
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                     feedMaterialName: '',
-                    potStatus: this.currentPotStatus
-                    // id?: string;
-                    // productMaterialName?: string;
+                    potStatus: this.currentPotStatus,
+                    potId: this.currentPotId,
+                    productMaterialName: ''
                 }
             }
             this.importBucketInfo.push(sole)
@@ -456,6 +462,7 @@
                 }).then(({ data }) => {
                     console.log(data)
                     this.$emit('importBucketFinish', obj);
+                    this.isTableDialogVisible = false
                 });
             }
         }
@@ -500,6 +507,8 @@ interface HolderStatus{
 }
 
 interface CurrentDataTable{
+    cycle?: string;
+    potId?: string;
     changed?: string;
     changer?: string;
     feedAmount?: number;
@@ -537,6 +546,12 @@ interface FinalDataTable{
     remark?: string;
     delFlag?: number;
 }
+
+interface ProductMaterial{
+    dictCode?: string;
+    dictValue?: string;
+    id?: string;
+}
 </script>
 <style scoped>
 .el-pagination >>> .el-pager li.active {
@@ -558,21 +573,37 @@ interface FinalDataTable{
     background: transparent;
 }
 
-/* .header_main >>> .el-checkbox__inner {
-    -webkit-box-sizing: border-box;
+.inner-area__body >>> .el-checkbox__inner {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
     box-sizing: border-box;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: #fff;
-    border: 1px solid #dcdfe6;
-    border-radius: 100%;
-    cursor: pointer;
-} */
+    border: 1px solid #1b91ff;
+    border-radius: 10px;
+    transition: border-color 0.25s cubic-bezier(0.71, -0.46, 0.29, 1.46), background-color 0.25s cubic-bezier(0.71, -0.46, 0.29, 1.46);
+}
+.inner-area__body >>> .el-checkbox__inner::after {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    height: 8px;
+    background: #1b91ff;
+    border: none;
+    border: 0;
+    border-radius: 4px;
+    transform: rotate(0deg) scaleY(0);
+    transform-origin: center;
+    transition: transform 0.15s ease-in 0.05s;
+    content: "";
+}
 
-/* .el-checkbox__input.is-checked .el-checkbox__inner::after {
-    -webkit-transform: rotate(45deg) scaleY(1);
-    transform: rotate(45deg) scaleY(1);
-} */
+.inner-area__body >>> .el-checkbox__input.is-checked .el-checkbox__inner::after {
+    transform: rotate(0deg) scaleY(1);
+}
 </style>
 
 <style lang="scss" scoped>
