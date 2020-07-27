@@ -10,7 +10,6 @@
                         <!-- <div class="dataEntry-head-leftRight-pot__tank">
                             <div class="dataEntry-head-leftRight-pot__tank__bg" />
                         </div> -->
-
                         <img src="~DFMDS/assets/img/pot-c.png" alt="" style=" left: 0; z-index: 1;">
                         <img src="~DFMDS/assets/img/pot.png" alt="" style=" left: 0; z-index: 2;">
                     </div>
@@ -49,7 +48,7 @@
                     当前库存
                 </span>
                 <el-table header-row-class-name="" :data="currentInventoryDataGroup" border tooltip-effect="dark" class="newTable" size="mini">
-                    <el-table-column type="index" label="序号" width="55" fixed />
+                    <el-table-column type="index" label="序号" width="55" fixed align="center" />
                     <el-table-column label="罐号" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.potNo }}
@@ -60,27 +59,27 @@
                             {{ scope.row.prodcutMaterial }} {{ scope.row.prodcutMaterialName }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="批次" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="批次" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             {{ scope.row.feedBatch }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="移动类型" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="移动类型" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             {{ chechMoveType(scope.row.moveType) }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
+                    <el-table-column label="移动数量" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
-                            {{ scope.row.moveAmount.toFixed(3) }}
+                            <span v-if="scope.row.moveType!=='R'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="单位" :show-overflow-tooltip="true" width="170">
+                    <el-table-column label="单位" :show-overflow-tooltip="true" width="80">
                         <template slot-scope="scope">
                             {{ scope.row.moveUnit }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="领用锅号" :show-overflow-tooltip="true" width="160">
+                    <el-table-column label="领用锅号" :show-overflow-tooltip="true" width="100">
                         <template slot-scope="scope">
                             {{ scope.row.usePotNo }}
                         </template>
@@ -143,7 +142,7 @@
                     </el-table-column>
                     <el-table-column label="移动数量" :show-overflow-tooltip="true" width="180">
                         <template slot-scope="scope">
-                            {{ scope.row.moveAmount.toFixed(3) }}
+                            <span v-if="scope.row.moveType!=='R'">-</span>{{ scope.row.moveAmount.toFixed(3) }}
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" :show-overflow-tooltip="true" width="170">
@@ -219,6 +218,7 @@ export default class DissolveBucketDetail extends Vue {
         console.log(this.$store.state.sterilize.dissolveBucketDetail)
         this.importData = this.$store.state.sterilize.dissolveBucketDetail
         STE_API.STE_DISSOLUTIONBUCKET_ITEM_QUERY_API({
+            cycle: this.importData.cycle,
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             potId: this.importData.potId,
             potNo: this.importData.potNo,
@@ -284,5 +284,13 @@ interface ImportData{
 
 .el-form-item--small.el-form-item {
     margin-bottom: 18px;
+}
+
+@media (max-width: 1367px) {
+    .header_main .dataEntry-head-leftRight .card-left,
+    .header_main .dataEntry-head-leftRight .card-right {
+        height: 170px;
+        padding: 10px;
+    }
 }
 </style>
