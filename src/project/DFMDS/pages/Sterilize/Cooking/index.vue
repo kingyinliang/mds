@@ -53,8 +53,8 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="生产车间" min-width="110" prop="workShopName" />
-                <el-table-column label="煮料锅/混合罐" min-width="120" show-overflow-tooltip prop="potNoName" />
-                <el-table-column label="生产物料" min-width="120" show-overflow-tooltip>
+                <el-table-column label="煮料锅/混合罐" min-width="165" show-overflow-tooltip prop="potNoName" />
+                <el-table-column label="生产物料" min-width="220" show-overflow-tooltip>
                     <template slot-scope="scope">
                         {{ scope.row.productMaterial }} {{ scope.row.productMaterialName }}
                     </template>
@@ -68,7 +68,7 @@
                 <el-table-column label="操作时间" width="160" prop="changed" />
                 <el-table-column label="操作" width="60" fixed="right">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" :disabled="(scope.row.clear <= 2 ? true : false)" @click="clearHolder(scope.row)">
+                        <el-button type="text" size="small" :disabled="(scope.row.clear <= 2 ? false : true) || scope.row.potStatus === 'S'" @click="clearHolder(scope.row)">
                             清罐
                         </el-button>
                     </template>
@@ -243,7 +243,11 @@ export default class CookingIndex extends Vue {
         if (!this.formHeader.workShop) {
             this.$warningToast('请选择车间');
         }
-        this.$store.commit('sterilize/updateCooking', this.formHeader);
+        const formHeader = JSON.parse(JSON.stringify(this.formHeader));
+        if (this.formHeader.configStartDate !== '' && this.formHeader.configStartDate !== null) {
+            formHeader.configStartDate = this.formHeader.configStartDate + ' 00:00';
+        }
+        this.$store.commit('sterilize/updateCooking', formHeader);
         this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Cooking-detail'))
         setTimeout(() => {
             this.$router.push({
