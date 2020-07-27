@@ -79,7 +79,7 @@
                 </el-row>
             </el-form>
         </el-card>
-        <mds-card title="溶解罐领用" name="dissolvingTank">
+        <mds-card v-if="dissolutionPhase" title="溶解罐领用" name="dissolvingTank">
             <template slot="titleBtn">
                 <div style="float: right;">
                     <el-button type="primary" size="small" :disabled="!isRedact" @click="insertItem()">
@@ -228,6 +228,7 @@ export default class CookingDetail extends Vue {
     dissolutionResponseDtos: Dissolution[] = []; // 溶解罐领用
     dissolutionResponseDtosOrg: Dissolution[] = [];
     dissolutionPot: DissolutionPot[] = []; // 溶解罐
+    dissolutionPhase = true;
 
     mounted() {
         this.getWorkShop();
@@ -282,7 +283,7 @@ export default class CookingDetail extends Vue {
             }).then(({ data }) => {
                 this.holderList = data.data
                 if (getMaterial) {
-                    this.getMaterial(this.formHeaders.potNo);
+                    this.getMaterial(this.formHeaders.potNo, true);
                 }
             })
         } else {
@@ -291,9 +292,12 @@ export default class CookingDetail extends Vue {
     }
 
     // 生产物料下拉
-    getMaterial(potNo) {
+    getMaterial(potNo, bool = false) {
         if (this.holderList.length !== 0) {
             this.materialList = []
+            if (bool === false) {
+                this.formHeaders.productMaterial = '';
+            }
             if (potNo !== '') {
                 // eslint-disable-next-line
                 const materialSole: any = this.holderList.find(item => item.holderNo === potNo);
@@ -338,7 +342,8 @@ export default class CookingDetail extends Vue {
         if (materialCode && this.formHeaders.cookingNo === '') {
             STE_API.STE_COOKING_DETAIL_ACCMATERIAL_API({ productMaterial: materialCode }).then(({ data }) => {
                 if (data.code === 200) {
-                    this.accessoriesResponseDtos = data.data;
+                    this.accessoriesResponseDtos = data.data.steAccList;
+                    this.dissolutionPhase = data.data.dissolutionPhase;
                     this.accessoriesResponseDtos.map(item => {
                         this.getUnit(item.useMaterial, item);
                     })
@@ -376,6 +381,7 @@ export default class CookingDetail extends Vue {
     // 查询
     getDetail(cookingNo) {
         STE_API.STE_COOKING_DETAIL_QUERY_API({ cookingNo: cookingNo }).then(({ data }) => {
+            this.dissolutionPhase = data.data.dissolutionPhase;
             this.formHeaders = JSON.parse(JSON.stringify(data.data.steCookingPotResponseDto)); // 头部信息
             this.accessoriesResponseDtos = JSON.parse(JSON.stringify(data.data.accessoriesResponseDtos));
             this.accessoriesResponseDtosOrg = JSON.parse(JSON.stringify(data.data.accessoriesResponseDtos));
