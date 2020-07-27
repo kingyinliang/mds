@@ -11,10 +11,10 @@
             :tabs="tabs"
         >
             <template slot="1" slot-scope="data">
-                <acce-add ref="craft" :is-redact="data.isRedact" />
+                <acce-add ref="acceadd" :is-redact="data.isRedact" />
             </template>
             <template slot="2" slot-scope="data">
-                <exc-record ref="ExcRecord" :is-redact="data.isRedact" />
+                <exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
             </template>
             <template slot="3" slot-scope="data">
                 <text-record ref="textRecord" :is-redact="data.isRedact" />
@@ -26,6 +26,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import AcceAdd from './common/AcceAdd.vue';
+    import { STE_API } from 'common/api/api';
 
     @Component({
         name: 'AcceAddIndex',
@@ -34,7 +35,13 @@
         }
     })
     export default class AcceAddIndex extends Vue {
-        formHeader = {};
+        $refs: {
+            acceadd: HTMLFormElement;
+            excRecord: HTMLFormElement;
+            textRecord: HTMLFormElement;
+        };
+
+        formHeader: OrderData = {};
         headerBase = [
             {
                 type: 'p',
@@ -46,7 +53,7 @@
                 type: 'p',
                 label: '生产锅号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'workShopName'
+                value: 'potNo'
             },
             {
                 type: 'tooltip',
@@ -58,19 +65,13 @@
                 type: 'p',
                 label: '生产锅序',
                 icon: 'factory-bianhao',
-                value: 'workShopName'
+                value: 'potOrder'
             },
             {
                 type: 'p',
                 label: '生产产量',
                 icon: 'factory--meirijihuachanliangpeizhi',
-                value: 'workShopName'
-            },
-            {
-                type: 'p',
-                label: '生产产量',
-                icon: 'factory--meirijihuachanliangpeizhi',
-                value: 'workShopName'
+                value: 'potAmount'
             },
             {
                 type: 'p',
@@ -94,7 +95,7 @@
 
         tabs = [
             {
-                label: '工艺控制',
+                label: '辅料添加',
                 status: '未录入'
             },
             {
@@ -104,6 +105,29 @@
                 label: '文本记录'
             }
         ];
+
+        mounted() {
+            this.getOrderList()
+        }
+
+        // 查询表头
+        getOrderList() {
+            STE_API.STE_DETAIL_CRAFTHEADER_INFO_API({
+                potOrderNo: this.$store.state.sterilize.AcceAdd.potOrderMap.potOrderNo
+            }).then(({ data }) => {
+                this.formHeader = data.data;
+                this.formHeader.textStage = 'acceadd';
+                this.$refs.acceadd.init(this.formHeader);
+                this.$refs.excRecord.init(this.formHeader, 'acceadd');
+                this.$refs.textRecord.init(this.formHeader, 'sterilize');
+            })
+        }
+    }
+    interface OrderData {
+        textStage?: string;
+        factoryName?: string;
+        potNo?: string;
+        potOrder?: string;
     }
 </script>
 
