@@ -28,11 +28,11 @@
             </el-form-item>
             <el-form-item label="生产物料：">
                 <!-- <el-input v-model="dataForm.material" placeholder="手动输入" clearable /> -->
-                <el-select v-model="dataForm.material" multiple placeholder="请选择" style="width: 100%;">
+                <el-select v-model="dataForm.material" multiple placeholder="请选择" filterable style="width: 100%;">
                     <el-option
                         v-for="item in materialList"
                         :key="item.materialCode"
-                        :label="item.materialName"
+                        :label="item.materialName+' '+item.materialCode"
                         :value="item.materialCode"
                     />
                 </el-select>
@@ -166,7 +166,7 @@
                 //     this.materialList = data.data
                 // });
 
-                COMMON_API.SEARCH_MATERIAL_API({
+                COMMON_API.SEARCH_MATERIAL_API({ // /sysMaterial/queryListByType
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     materialType: 'ZHAL'
                 }).then(({ data }) => {
