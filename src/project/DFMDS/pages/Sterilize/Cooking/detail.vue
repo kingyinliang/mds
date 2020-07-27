@@ -530,7 +530,7 @@ export default class CookingDetail extends Vue {
             this.$warningToast('请完善头部所有必填信息');
             return false;
         }
-        if (this.dissolutionResponseDtos.filter(it => it.delFlag !== 1).length === 0) {
+        if (this.dissolutionPhase === true && this.dissolutionResponseDtos.filter(it => it.delFlag !== 1).length === 0) {
             this.$warningToast('请录入溶解罐领用数据');
             return false;
         }
