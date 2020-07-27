@@ -28,10 +28,10 @@
                     杀菌入库
                 </span>
                 <div class="instorage-card" style="min-width: 1128px;">
-                    <div style="width: 138px;" class="instorage-card-left">
+                    <div class="instorage-card-left" style="width: 138px; background: #f2f2f2; border-radius: 6px;">
                         <p>杀菌罐</p>
                         <div style=" position: relative; padding: 0 10px; text-align: center;">
-                            <img src="@/assets/img/ferPot.png" alt="" style="width: 112px; height: 190px;">
+                            <img src="@/assets/img/ferPot.png" alt="" style="width: 110px; height: 188px;">
                             <div class="pot-detail">
                                 <p>{{ PotDetail.batch }}</p>
                                 <p>{{ PotDetail.amount }}</p>
@@ -42,7 +42,7 @@
                             入罐
                         </el-button>
                     </div>
-                    <div style="flex: 1; min-width: 990px;">
+                    <div style="flex: 1; min-width: 990px; margin-left: 10px;">
                         <el-table header-row-class-name="tableHead" class="newTable" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow">
                             <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" fixed />
                             <el-table-column label="日期" min-width="150" prop="date" :show-overflow-tooltip="true" />
