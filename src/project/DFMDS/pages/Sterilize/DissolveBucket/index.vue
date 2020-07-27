@@ -203,7 +203,7 @@
                 prop: 'potId',
                 optionsFn: val => {
                     return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({
+                        COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
                             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                             deptId: val,
                             current: 1,
@@ -219,7 +219,7 @@
                 resVal: {
                     resData: 'data.records',
                     label: ['holderName'],
-                    value: 'holderNo'
+                    value: 'id'
                 }
             },
             {
