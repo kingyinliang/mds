@@ -224,6 +224,9 @@ export default {
         } else {
             this.GetorderNo(this.orderArray);
         }
+        if (this.$store.state.common.Sterilized.isRedact === true) {
+            this.isRedact = this.$store.state.common.Sterilized.isRedact
+        }
         // this.GetInfoList('C57A2AE171024496AD26B0BEE8B0ACAD')
     },
     methods: {

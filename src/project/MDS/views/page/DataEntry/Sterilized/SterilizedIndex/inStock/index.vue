@@ -38,7 +38,7 @@
                                 <p>{{ PotDetail.material }}</p>
                             </div>
                         </div>
-                        <el-button type="text" class="instorage-card-left_btn" size="small" :disabled="!(isRedact && orderStatus !== 'submit' && orderStatus !== 'checked')" @click="showDialog()">
+                        <el-button type="primary" style="width: 100%; margin-top: 10px;" size="small" :disabled="!(isRedact && orderStatus !== 'submit' && orderStatus !== 'checked')" @click="showDialog()">
                             入罐
                         </el-button>
                     </div>

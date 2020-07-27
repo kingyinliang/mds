@@ -59,17 +59,17 @@
                                             <div
                                                 v-if="item.holderStatus === '1' || item.holderStatus === '3' || item.holderStatus === '4'"
                                                 class="pot_water_sole"
-                                                :style="{'height': (item.amount <= 0 ? '0' : item.amount / item.holderHold > 1 ? '100' : (item.amount / item.holderHold) * 100) + '%', 'background': item.potColor}"
+                                                :style="{'height': (item.amount <= 0 ? '0' : item.amount / item.holderHold > 1 ? '100' : (item.amount / item.holderHold) * 100) + '%', 'background': '#AD592D'}"
                                             />
                                             <div
                                                 v-if="item.holderStatus === '2'"
                                                 class="pot_water_sole"
-                                                :style="{'height': '100%', 'background': item.potColor}"
+                                                :style="{'height': '100%', 'background': '#AD592D'}"
                                             />
                                             <div
                                                 v-else
                                                 class="pot_water_sole"
-                                                :style="{'height': '0%', 'background': item.potColor}"
+                                                :style="{'height': '0%', 'background': '#AD592D'}"
                                             />
                                         </div>
                                     </div>

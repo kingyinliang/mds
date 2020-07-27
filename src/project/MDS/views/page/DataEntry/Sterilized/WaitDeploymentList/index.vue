@@ -315,7 +315,8 @@ export default {
                     planOutputTotal: planOutputTotal,
                     materialCode: materialCode,
                     materialName: this.multipleSelection[0].materialName,
-                    type: this.activeName
+                    type: this.activeName,
+                    isRedact: true
                 };
                 // console.log(this.Sterilized);
                 this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Sterilized-WaitDeploymentList-doDeployment');

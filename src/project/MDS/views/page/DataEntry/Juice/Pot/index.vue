@@ -859,17 +859,7 @@
                         this.fastS = true;
                         this.dataListAll = data.indexList.potList;
                         this.dataListAll.map(item => {
-                            if (item.HOLDER_STATUS === '9') {
-                                item.potColor = '#8BC34A';
-                            } else if (item.days >= 40) {
-                                item.potColor = '#C70909';
-                            } else if (item.days >= 20) {
-                                item.potColor = '#3F2021';
-                            } else if (item.days >= 6) {
-                                item.potColor = '#B58150';
-                            } else {
-                                item.potColor = '#B58150';
-                            }
+                            item.potColor = '#AD592D';
                         })
                         this.holderStatus = '';
                         this.days = '';

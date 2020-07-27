@@ -7,7 +7,7 @@
                         罐号：{{ formData.HOLDER_NAME ? formData.HOLDER_NAME : '' }}
                     </p>
                     <div class="header_pot_image">
-                        <div class="header_pot_image_content" />
+                        <div class="header_pot_image_content" style=" background: linear-gradient(#ad592d, #8a391b);" />
                     </div>
                 </el-col>
                 <el-col>

@@ -133,7 +133,7 @@
             <el-pagination :current-page="pages.currPage" :page-sizes="[10, 20, 50]" :page-size="pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pages.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </el-tabs>
         <mds-card title="调配订单信息" name="orderInfoList" style="margin-top: 10px;">
-            <el-table :data="orderInfoList" border header-row-class-name="tableHead" style="margin-top: 10px;">
+            <el-table :data="orderInfoList" border class="newTable" header-row-class-name="tableHead" style="margin-top: 10px;">
                 <el-table-column label="订单号" prop="orderNo" width="120" />
                 <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
