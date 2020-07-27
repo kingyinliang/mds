@@ -50,7 +50,7 @@
                 <el-table-column prop="holderBatch" label="批数" :show-overflow-tooltip="true" width="80" />
                 <el-table-column label="状态" width="120">
                     <template slot-scope="scope">
-                        {{ scope.row.holderStatus }}
+                        {{ holderStatusObject[scope.row.holderStatus] }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="holderArea" label="物理区域" :show-overflow-tooltip="true" width="120">
