@@ -7,7 +7,7 @@
                         罐号：{{ formData.HOLDER_NAME ? formData.HOLDER_NAME : '' }}
                     </p>
                     <div class="header_pot_image">
-                        <div class="header_pot_image_content" />
+                        <div class="header_pot_image_content" style=" background: linear-gradient(#ad592d, #8a391b);" />
                     </div>
                 </el-col>
                 <el-col>
@@ -45,51 +45,51 @@
                 </el-col>
             </el-row>
         </el-card>
-        <el-tabs v-model="activeName" class="NewDaatTtabs" type="border-card" style="margin-top: 5px;">
+        <el-tabs v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" style="margin-top: 5px;">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">当前数据</span>
-                <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="dataList" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="55" />
-                    <el-table-column label="半成品罐号" :show-overflow-tooltip="true" prop="HOLDER_NAME" width="100" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" width="160">
+                    <el-table-column label="半成品罐号" :show-overflow-tooltip="true" prop="HOLDER_NAME" min-width="120" />
+                    <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" min-width="220">
                         <template slot-scope="scope">
                             {{ scope.row.MATERIAL_CODE }}
                             {{ scope.row.MATERIAL_NAME }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="半成品批次" :show-overflow-tooltip="true" prop="BATCH" width="110" />
-                    <el-table-column label="移动数量" :show-overflow-tooltip="true" prop="AMOUNT" width="85" />
-                    <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="DATA_TYPE" width="85" />
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="UNIT" width="60" />
-                    <el-table-column label="订单号" :show-overflow-tooltip="true" prop="ORDER_NO" width="120" />
-                    <el-table-column label="出/入罐类别" :show-overflow-tooltip="true" prop="HOLDER_TYPE" width="110" />
-                    <el-table-column label="出/入罐号" :show-overflow-tooltip="true" prop="IN_HOLDER_NO" width="110" />
-                    <el-table-column label="备注" :show-overflow-tooltip="true" prop="REMARK" width="100" />
-                    <el-table-column label="操作时间" :show-overflow-tooltip="true" prop="CHANGED" width="110" />
-                    <el-table-column label="操作人" :show-overflow-tooltip="true" prop="CHANGER" width="110" />
+                    <el-table-column label="半成品批次" :show-overflow-tooltip="true" prop="BATCH" min-width="110" />
+                    <el-table-column label="移动数量" :show-overflow-tooltip="true" prop="AMOUNT" min-width="85" />
+                    <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="DATA_TYPE" min-width="85" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="UNIT" min-width="60" />
+                    <el-table-column label="订单号" :show-overflow-tooltip="true" prop="ORDER_NO" min-width="120" />
+                    <el-table-column label="出/入罐类别" :show-overflow-tooltip="true" prop="HOLDER_TYPE" min-width="110" />
+                    <el-table-column label="出/入罐号" :show-overflow-tooltip="true" prop="IN_HOLDER_NO" min-width="110" />
+                    <el-table-column label="备注" :show-overflow-tooltip="true" prop="REMARK" min-width="100" />
+                    <el-table-column label="操作时间" :show-overflow-tooltip="true" prop="CHANGED" min-width="160" />
+                    <el-table-column label="操作人" :show-overflow-tooltip="true" prop="CHANGER" min-width="140" />
                 </el-table>
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">历史数据</span>
-                <el-table header-row-class-name="tableHead" :data="dataHistory" border tooltip-effect="dark">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="dataHistory" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="55" fixed />
-                    <el-table-column label="半成品罐号" :show-overflow-tooltip="true" prop="HOLDER_NAME" width="110" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" width="160">
+                    <el-table-column label="半成品罐号" :show-overflow-tooltip="true" prop="HOLDER_NAME" min-width="110" />
+                    <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" min-width="220">
                         <template slot-scope="scope">
                             {{ scope.row.MATERIAL_CODE }}
                             {{ scope.row.MATERIAL_NAME }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="半成品批次" :show-overflow-tooltip="true" prop="BATCH" width="110" />
-                    <el-table-column label="移动数量" :show-overflow-tooltip="true" prop="AMOUNT" width="85" />
-                    <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="DATA_TYPE" width="85" />
-                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="UNIT" width="60" />
-                    <el-table-column label="订单号" :show-overflow-tooltip="true" prop="ORDER_NO" width="120" />
-                    <el-table-column label="出/入罐类别" :show-overflow-tooltip="true" prop="HOLDER_TYPE" width="110" />
-                    <el-table-column label="出/入罐号" :show-overflow-tooltip="true" prop="IN_HOLDER_NO" width="110" />
-                    <el-table-column label="备注" :show-overflow-tooltip="true" prop="REMARK" width="100" />
-                    <el-table-column label="操作时间" :show-overflow-tooltip="true" prop="CHANGED" width="110" />
-                    <el-table-column label="操作人" :show-overflow-tooltip="true" prop="CHANGER" width="110" />
+                    <el-table-column label="半成品批次" :show-overflow-tooltip="true" prop="BATCH" min-width="110" />
+                    <el-table-column label="移动数量" :show-overflow-tooltip="true" prop="AMOUNT" min-width="85" />
+                    <el-table-column label="移动类型" :show-overflow-tooltip="true" prop="DATA_TYPE" min-width="85" />
+                    <el-table-column label="单位" :show-overflow-tooltip="true" prop="UNIT" min-width="60" />
+                    <el-table-column label="订单号" :show-overflow-tooltip="true" prop="ORDER_NO" min-width="120" />
+                    <el-table-column label="出/入罐类别" :show-overflow-tooltip="true" prop="HOLDER_TYPE" min-width="110" />
+                    <el-table-column label="出/入罐号" :show-overflow-tooltip="true" prop="IN_HOLDER_NO" min-width="110" />
+                    <el-table-column label="备注" :show-overflow-tooltip="true" prop="REMARK" min-width="100" />
+                    <el-table-column label="操作时间" :show-overflow-tooltip="true" prop="CHANGED" min-width="160" />
+                    <el-table-column label="操作人" :show-overflow-tooltip="true" prop="CHANGER" min-width="140" />
                 </el-table>
             </el-tab-pane>
         </el-tabs>

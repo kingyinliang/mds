@@ -42,20 +42,21 @@
                 :row-class-name="rowDelFlag"
                 border
                 header-row-class-name="tableHead"
+                class="newTable"
                 style="margin-top: 10px;"
                 @row-dblclick="EditInfo"
             >
                 >
                 <el-table-column type="index" label="序号" width="50" fixed />
-                <el-table-column label="过滤机号" prop="deviceName" width="120" />
-                <el-table-column label="领用罐号" prop="holderName" width="120" show-overflow-tooltip />
-                <el-table-column label="工作内容" prop="content" />
-                <el-table-column label="开始时间" prop="startTime" width="140" show-overflow-tooltip />
-                <el-table-column label="结束时间" prop="endTime" width="140" show-overflow-tooltip />
-                <el-table-column label="时长(H)" prop="timeLength" />
-                <el-table-column label="备注" prop="remark" />
-                <el-table-column label="操作时间" prop="changed" width="150" show-overflow-tooltip />
-                <el-table-column label="操作人" prop="changer" width="145" show-overflow-tooltip />
+                <el-table-column label="过滤机号" prop="deviceName" min-width="120" />
+                <el-table-column label="领用罐号" prop="holderName" min-width="120" show-overflow-tooltip />
+                <el-table-column label="工作内容" prop="content" min-width="90" />
+                <el-table-column label="开始时间" prop="startTime" min-width="140" show-overflow-tooltip />
+                <el-table-column label="结束时间" prop="endTime" min-width="140" show-overflow-tooltip />
+                <el-table-column label="时长(H)" prop="timeLength" min-width="90" />
+                <el-table-column label="备注" prop="remark" min-width="80" />
+                <el-table-column label="操作时间" prop="changed" min-width="160" show-overflow-tooltip />
+                <el-table-column label="操作人" prop="changer" min-width="145" show-overflow-tooltip />
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || scope.row.status === 'checked' || scope.row.status === 'submit'" @click="DelRow(scope.row)">
@@ -65,9 +66,7 @@
                 </el-table-column>
             </el-table>
         </el-card>
-        <el-card>
-            <audit-log :table-data="recordList" />
-        </el-card>
+        <audit-log :table-data="recordList" />
         <el-dialog :visible.sync="dialogVisible" width="400px" :close-on-click-modal="false" custom-class="dialog__class" @keyup.enter.native="SaveDialog('workInfo')">
             <div slot="title">
                 {{ workInfo.deviceName }}

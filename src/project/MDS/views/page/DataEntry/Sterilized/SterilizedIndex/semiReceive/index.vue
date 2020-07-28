@@ -7,13 +7,13 @@
                 </el-col>
                 <el-col style="width: 100px;">
                     <div
-                        style=" float: right; padding-top: 0;"
+                        style=" float: right; padding-top: 0; line-height: 25px;"
                         :style="{
                             color: orderStatus === 'noPass' ? 'red' : '',
                         }"
                     >
                         <span
-                            style=" float: left; width: 5px; height: 5px; margin-top: 7px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
+                            style=" float: left; width: 5px; height: 5px; margin-top: 10px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
                             :style="{
                                 background: orderStatus === 'noPass' ? 'red' : '#1890FF',
                             }"
@@ -21,87 +21,74 @@
                     </div>
                 </el-col>
             </el-row>
-            <el-row style=" position: absolute; right: 20px; bottom: 10px; text-align: right;" class="buttonCss">
-                <template style="float: right; margin-left: 10px;">
-                    <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:semiMaterial:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                        {{ isRedact ? '取消' : '编辑' }}
-                    </el-button>
-                </template>
-                <template v-if="isRedact" style="float: right; margin-left: 10px;">
-                    <el-button v-if="isAuth('ste:semiMaterial:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                        保存
-                    </el-button>
-                    <el-button v-if="isAuth('ste:semiMaterial:submit')" type="primary" size="small" @click="SubmitForm">
-                        提交
-                    </el-button>
-                </template>
-            </el-row>
         </el-card>
-        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card">
+        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
                     原汁领用
                 </span>
-                <el-table header-row-class-name="tableHead" :data="MaterialDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-                    <el-table-column type="index" width="55" label="序号" fixed />
-                    <el-table-column label="领用物料" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="单位" width="50" prop="unit" />
-                    <el-table-column label="计划领料" width="90" prop="planAmount" />
-                    <el-table-column label="操作" width="70">
-                        <template slot-scope="scope">
-                            <el-button type="text" size="mini" disabled @click="addData(scope.row, scope.$index)">
-                                <i class="icons iconfont factory-chaifen" />拆分
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column width="130">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>罐号</span>
-                        </template>
-                        <template slot-scope="scope">
-                            <el-select v-model="scope.row.holderId" placeholder="请选择" filterable size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="setBatch(scope.row)">
-                                <el-option v-for="(sole, index) in PotList" :key="index" :value="sole.holderId" :label="sole.holderName" />
-                            </el-select>
-                        </template>
-                    </el-table-column>
-                    <el-table-column width="200" label="罐内物料" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            <i v-if="scope.row.holderMaterialCode !== null">{{ scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName }}</i>
-                        </template>
-                    </el-table-column>
-                    <el-table-column width="130">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>批次</span>
-                        </template>
-                        <template slot-scope="scope">
-                            <el-input v-model="scope.row.batch" :disabled="!scope.row.isB" size="small" maxlength="10" />
-                        </template>
-                    </el-table-column>
-                    <el-table-column width="130">
-                        <template slot="header">
-                            <i class="reqI">*</i><span>实际领料</span>
-                        </template>
-                        <template slot-scope="scope">
-                            <el-input v-model="scope.row.receiveAmount" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" placeholder="手工录入" size="small" />
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="备注" width="110">
-                        <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" placeholder="手工录入" size="small" />
-                        </template>
-                    </el-table-column>
-                    <el-table-column fixed="right" label="操作" width="70">
-                        <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delRow(scope.row)">
-                                删除
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                <mds-card title="原汁领用" name="MaterialDate">
+                    <el-table header-row-class-name="tableHead" class="newTable" :data="MaterialDate" :row-class-name="RowDelFlag" border tooltip-effect="dark">
+                        <el-table-column type="index" min-width="55" label="序号" fixed />
+                        <el-table-column label="领用物料" min-width="220" :show-overflow-tooltip="true">
+                            <template slot-scope="scope">
+                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="单位" min-width="50" prop="unit" />
+                        <el-table-column label="计划领料" min-width="90" prop="planAmount" />
+                        <el-table-column label="操作" width="70">
+                            <template slot-scope="scope">
+                                <el-button type="text" size="mini" disabled @click="addData(scope.row, scope.$index)">
+                                    <i class="icons iconfont factory-chaifen" />拆分
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="130">
+                            <template slot="header">
+                                <i class="reqI">*</i><span>罐号</span>
+                            </template>
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.holderId" placeholder="请选择" filterable size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="setBatch(scope.row)">
+                                    <el-option v-for="(sole, index) in PotList" :key="index" :value="sole.holderId" :label="sole.holderName" />
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="200" label="罐内物料" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                <i v-if="scope.row.holderMaterialCode !== null">{{ scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName }}</i>
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="130">
+                            <template slot="header">
+                                <i class="reqI">*</i><span>批次</span>
+                            </template>
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.batch" :disabled="!scope.row.isB" size="small" maxlength="10" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="100">
+                            <template slot="header">
+                                <i class="reqI">*</i><span>实际领料</span>
+                            </template>
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.receiveAmount" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" placeholder="手工录入" size="small" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="备注" min-width="100">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.remark" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" placeholder="手工录入" size="small" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column fixed="right" label="操作" width="70">
+                            <template slot-scope="scope">
+                                <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delRow(scope.row)">
+                                    删除
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </mds-card>
                 <audit-log :table-data="DataAudit" />
             </el-tab-pane>
             <el-tab-pane name="2">
@@ -117,6 +104,21 @@
                 <text-record ref="textrecord" :is-redact="isRedact" />
             </el-tab-pane>
         </el-tabs>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:semiMaterial:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button v-if="isAuth('ste:semiMaterial:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('ste:semiMaterial:submit')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 

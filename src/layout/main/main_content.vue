@@ -1,5 +1,5 @@
 <template>
-    <main class="site-content" :class="{ 'site-content--tabs': $route.meta.isTab }">
+    <main :style="{ 'min-height': (documentClientHeight - 32) + 'px' }" class="site-content" :class="{ 'site-content--tabs': $route.meta.isTab }">
         <!-- 主入口标签页 s -->
         <el-tabs v-if="$route.meta.isTab" v-model="mainTabsActiveName" :closable="true" @tab-click="selectedTabHandle" @tab-remove="removeTabHandle">
             <el-dropdown class="site-tabs__tools" :show-timeout="0">

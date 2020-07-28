@@ -1,106 +1,89 @@
 <template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCards searchCard">
-                <el-row type="flex">
-                    <el-col>
-                        <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="marbottom multi_row">
-                            <el-form-item label="生产车间：">
-                                <p class="input_bottom">
-                                    {{ formHeader.workShopName }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="生产订单：">
+    <div class="header_main">
+        <el-card class="searchCards searchCard">
+            <el-row type="flex">
+                <el-col>
+                    <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="marbottom multi_row">
+                        <el-form-item label="生产车间：">
+                            <p class="input_bottom">
+                                {{ formHeader.workShopName }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="生产订单：">
+                            <p
+                                :style="{
+                                    color: formHeader.exportMaterial !== '' ? '#FFBF00' : '',
+                                }"
+                                class="input_bottom"
+                            >
+                                {{ formHeader.orderNo }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="生产品项：">
+                            <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top-start">
                                 <p
                                     :style="{
+                                        'font-size': '12px',
                                         color: formHeader.exportMaterial !== '' ? '#FFBF00' : '',
                                     }"
                                     class="input_bottom"
                                 >
-                                    {{ formHeader.orderNo }}
+                                    {{ (formHeader.materialCode || '') + ' ' + (formHeader.materialName || '') }}
                                 </p>
-                            </el-form-item>
-                            <el-form-item label="生产品项：">
-                                <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top-start">
-                                    <p
-                                        :style="{
-                                            'font-size': '12px',
-                                            color: formHeader.exportMaterial !== '' ? '#FFBF00' : '',
-                                        }"
-                                        class="input_bottom"
-                                    >
-                                        {{ (formHeader.materialCode || '') + ' ' + (formHeader.materialName || '') }}
-                                    </p>
-                                </el-tooltip>
-                            </el-form-item>
-                            <el-form-item label="计划产量：">
-                                <p class="input_bottom">
-                                    {{ (formHeader.planOutput || '') + ' ' + (formHeader.outputUnit || '') }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="订单日期：">
-                                <p class="input_bottom">
-                                    {{ formHeader.orderDate }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="生产日期：">
-                                <el-date-picker v-model="formHeader.productDate" size="small" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 145px;" />
-                            </el-form-item>
-                            <el-form-item label="提交人员：">
-                                <p class="input_bottom">
-                                    {{ formHeader.changer }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="提交时间：">
-                                <p class="input_bottom">
-                                    {{ formHeader.changed }}
-                                </p>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                    <el-col style="max-width: 210px; height: 30px;">
-                        <div
-                            style=" float: right; padding-top: 0; font-size: 14px;"
+                            </el-tooltip>
+                        </el-form-item>
+                        <el-form-item label="计划产量：">
+                            <p class="input_bottom">
+                                {{ (formHeader.planOutput || '') + ' ' + (formHeader.outputUnit || '') }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="订单日期：">
+                            <p class="input_bottom">
+                                {{ formHeader.orderDate }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="生产日期：">
+                            <el-date-picker v-model="formHeader.productDate" size="small" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 145px;" />
+                        </el-form-item>
+                        <el-form-item label="提交人员：">
+                            <p class="input_bottom">
+                                {{ formHeader.changer }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="提交时间：">
+                            <p class="input_bottom">
+                                {{ formHeader.changed }}
+                            </p>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+                <el-col style="max-width: 160px; height: 30px;">
+                    <div
+                        style=" float: right; padding-top: 0; font-size: 14px; line-height: 25px;"
+                        :style="{
+                            color: orderStatus === 'noPass' ? 'red' : '',
+                        }"
+                    >
+                        <span
+                            style=" float: left; width: 5px; height: 5px; margin-top: 7px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
                             :style="{
-                                color: orderStatus === 'noPass' ? 'red' : '',
+                                background: orderStatus === 'noPass' ? 'red' : '#1890FF',
                             }"
-                        >
-                            <span
-                                style=" float: left; width: 5px; height: 5px; margin-top: 7px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
-                                :style="{
-                                    background: orderStatus === 'noPass' ? 'red' : '#1890FF',
-                                }"
-                            />订单状态：{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : '未录入' }}
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row style=" position: absolute; top: 44px; right: 7px; text-align: right;">
-                    <template style="float: right; margin-left: 10px;">
-                        <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('filter:instorage:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                            {{ isRedact ? '取消' : '编辑' }}
-                        </el-button>
-                    </template>
-                    <template v-if="isRedact" style="float: right; margin-left: 10px;">
-                        <el-button v-if="isAuth('filter:instorage:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                            保存
-                        </el-button>
-                        <el-button v-if="isAuth('filter:instorage:submit')" type="primary" size="small" @click="SubmitForm">
-                            提交
-                        </el-button>
-                    </template>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
+                        />订单状态：{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : '未录入' }}
+                    </div>
+                </el-col>
+            </el-row>
+            <div class="toggleSearchBottom">
+                <i class="el-icon-caret-top" />
+            </div>
+        </el-card>
+        <div class="main" style="padding: 0;">
             <div class="tableCard">
                 <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
                     <i class="el-icon-caret-bottom" />
                 </div>
             </div>
-            <el-tabs ref="tabs" v-model="activeName" type="border-card" class="NewDaatTtabs" @tab-click="tabClick">
+            <el-tabs ref="tabs" v-model="activeName" type="border-card" class="NewDaatTtabs tabsPages" @tab-click="tabClick">
                 <el-tab-pane name="1">
                     <span slot="label" class="spanview">
                         <el-tooltip class="item" effect="dark" :content="EquState === 'noPass' ? '不通过' : EquState === 'saved' ? '已保存' : EquState === 'submit' ? '已提交' : EquState === 'checked' ? '通过' : '未录入'" placement="top-start">
@@ -163,6 +146,21 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('filter:instorage:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact" style="float: right; margin-left: 10px;">
+                    <el-button v-if="isAuth('filter:instorage:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('filter:instorage:submit')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 

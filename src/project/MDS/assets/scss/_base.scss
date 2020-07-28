@@ -381,8 +381,8 @@ img {
 ------------------------------ */
 .site-content {
     position: relative;
-    padding-bottom: 30px;
-    min-height: 576px;
+    padding-bottom: 0px !important;
+    // min-height: 576px;
     overflow: hidden;
     //padding: 15px;
 
@@ -994,7 +994,7 @@ img {
                 border-bottom: 1px solid white;
             }
             .el-tabs__content {
-                min-height: 300px;
+                // min-height: 300px;
                 padding: 16px 10px;
                 background: white;
                 border-radius: 0 8px 0 0;
@@ -1377,7 +1377,7 @@ img {
 
     @include dataEntry-head($base-sise);
     .site-content {
-        min-height: 726px;
+        // min-height: 726px;
     }
 }
 
@@ -1386,7 +1386,7 @@ img {
 
     @include dataEntry-head($base-sise);
     .site-content {
-        min-height: 926px;
+        // min-height: 926px;
     }
 }
 

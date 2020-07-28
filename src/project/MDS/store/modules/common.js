@@ -224,7 +224,8 @@ export default {
             orderNo: '',
             planOutputTotal: 0,
             holderId: '',
-            type: ''
+            type: '',
+            isRedact: ''
         },
         /**
          * 过滤车间
