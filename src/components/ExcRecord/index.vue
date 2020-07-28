@@ -126,7 +126,7 @@ export default class ExcRecord extends Vue {
         ENERGY: []
     };
 
-    init(formHeader) {
+    init(formHeader, tagName) {
         const net1 = new Promise((resolve) => {
             this.getexcReasonTwo(formHeader, resolve);
         });
@@ -143,7 +143,7 @@ export default class ExcRecord extends Vue {
                 })
                 this.getClassesList();
                 this.getAbnormalList();
-                this.getExcList(formHeader);
+                this.getExcList(formHeader, tagName);
             })
         })
     }
@@ -168,11 +168,11 @@ export default class ExcRecord extends Vue {
         }
     }
 
-    getExcList(formHeader) {
+    getExcList(formHeader, tagName) {
         STE_API.STE_DETAIL_CRAFTEXC_LIST_API({
             potOrderNo: formHeader.potOrderNo,
             orderNo: formHeader.orderNo,
-            exceptionStage: 'craft'
+            exceptionStage: tagName
         }).then(({ data }) => {
             this.excList = data.data;
             this.excListOrg = JSON.parse(JSON.stringify(data.data));
@@ -231,12 +231,12 @@ export default class ExcRecord extends Vue {
         }
     }
 
-    getSavedOrSubmitData(formHeader) {
+    getSavedOrSubmitData(formHeader, tagName) {
         const ids: string[] = [];
         const InsertDto: ExcList[] = [];
         const UpdateDto: ExcList[] = [];
         this.excList.map((item: ExcList) => {
-            item.exceptionStage = 'craft';
+            item.exceptionStage = tagName;
             item.orderId = formHeader.orderId;
             item.orderNo = formHeader.orderNo;
             item.potOrderId = formHeader.id;
