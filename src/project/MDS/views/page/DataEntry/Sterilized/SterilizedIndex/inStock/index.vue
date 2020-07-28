@@ -27,8 +27,8 @@
                 <span slot="label" class="spanview">
                     杀菌入库
                 </span>
-                <div class="instorage-card" style="min-width: 1128px;">
-                    <div class="instorage-card-left" style="width: 138px; background: #f2f2f2; border-radius: 6px;">
+                <div class="inStorage_card">
+                    <div class="inStorage_card_left" style="width: 158px;">
                         <p>杀菌罐</p>
                         <div style=" position: relative; padding: 0 10px; text-align: center;">
                             <img src="@/assets/img/ferPot.png" alt="" style="width: 110px; height: 188px;">
@@ -38,7 +38,7 @@
                                 <p>{{ PotDetail.material }}</p>
                             </div>
                         </div>
-                        <el-button type="primary" style="width: 100%; margin-top: 10px;" size="small" :disabled="!(isRedact && orderStatus !== 'submit' && orderStatus !== 'checked')" @click="showDialog()">
+                        <el-button type="text" class="button" size="small" :disabled="!(isRedact && orderStatus !== 'submit' && orderStatus !== 'checked')" @click="showDialog()">
                             入罐
                         </el-button>
                     </div>
@@ -555,8 +555,16 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-.instorage-card {
+.inStorage_card {
     display: flex;
+    .button {
+        width: 100%;
+        margin-top: 10px;
+        padding: 0;
+        line-height: 32px;
+        background: #f7f9fa;
+        border: none;
+    }
     &_left {
         width: 158px;
         margin-right: 5px;
@@ -565,21 +573,24 @@ export default {
         border: 1px solid rgba(0, 0, 0, 0.09);
         border-radius: 6px;
         box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.09);
-
         p {
             padding: 10px;
             font-size: 14px;
+        }
+        &_btn {
+            width: 100%;
+            margin-top: 10px;
+            background: #f7f9fa;
         }
     }
 }
 .pot-detail {
     position: absolute;
     top: 40px;
-    left: 20px;
+    left: 30px;
     width: 92px;
     p {
         padding: 0;
-        font-size: 12px;
         line-height: 20px;
     }
 }

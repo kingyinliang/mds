@@ -1,160 +1,166 @@
 <template>
     <div class="header_main">
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row type="flex">
-                    <el-col :span="18">
-                        <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform multi_row">
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产日期：">
-                                <el-date-picker v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" style="width: 180px;" />
-                            </el-form-item>
-                            <el-form-item label="生产工序：">
-                                <el-select v-model="formHeader.deptId" placeholder="请选择" style="width: 180px;" @change="setDeptName">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in deptId" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="产量状态：">
-                                <el-select v-model="formHeader.outputStatus" placeholder="请选择" style="width: 180px;" @change="cleanS">
-                                    <el-option label="正常生产" value="0" />
-                                    <el-option label="有出勤，无产量" value="1" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="提交人员：">
-                                <p class="el-input" style="width: 180px;">
-                                    {{ headList.changer }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="提交时间：">
-                                <p class="el-input" style="width: 180px;">
-                                    {{ headList.changed }}
-                                </p>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                    <el-col :span="6" style="font-size: 14px; line-height: 32px;">
-                        <div style=" float: right; overflow: hidden; text-align: left;">
-                            <span
-                                class="point"
-                                :style="{
-                                    background: headList.status === 'noPass' ? 'red' : headList.status === 'saved' ? '#1890f' : headList.status === 'submit' ? '#1890ff' : headList.status === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',
-                                }"
-                            />状态：
-                            <span
-                                :style="{
-                                    color: headList.status === 'noPass' ? 'red' : '',
-                                }"
-                            >{{ headList.status === 'noPass' ? '审核不通过' : headList.status === 'saved' ? '已保存' : headList.status === 'submit' ? '已提交' : headList.status === 'checked' ? '通过' : headList.status === '已同步' ? '未录入' : headList.status }}</span>
-                        </div>
-                        <div style="clear: both;" />
-                        <div style="width: 100%; margin-top: 47px; text-align: right;">
-                            <template style="float: right; margin-left: 10px;">
-                                <el-button v-if="isAuth('filter:timeSheet:list')" type="primary" size="small" @click="GetTimeList">
-                                    查询
-                                </el-button>
-                                <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('ste:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                                    {{ isRedact ? '取消' : '编辑' }}
-                                </el-button>
-                            </template>
-                            <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
-                                <el-button v-if="isAuth('filter:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                                    保存
-                                </el-button>
-                                <el-button v-if="isAuth('filter:timeSheet:update')" type="primary" size="small" @click="SubmitForm">
-                                    提交
-                                </el-button>
-                            </template>
-                        </div>
-                    </el-col>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <div class="tableCard">
-                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-            </div>
-            <div v-show="searchCard">
-                <el-card class="box-cards NewDaatTtabs">
-                    <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
-                        <mds-card :title="'准备时间（分钟：min）'" :name="'ready'" style=" position: relative; margin-bottom: 10px;" class="readyCard">
-                            <template slot="titleBtn">
-                                <el-form-item label="班次：" style="float: right; margin-bottom: 10px;">
-                                    <el-select v-model="readyTimeDate.classes" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))">
-                                        <el-option label="白班" value="白班" />
-                                        <el-option label="中班" value="中班" />
-                                        <el-option label="夜班" value="夜班" />
-                                        <el-option label="多班" value="多班" />
-                                    </el-select>
-                                </el-form-item>
-                            </template>
-                            <div class="manHourReadyBox">
-                                <el-row v-if="readyTimeDate.classes === '白班' || readyTimeDate.classes === '多班' || !readyTimeDate.classes">
-                                    <el-form-item label="交接班（白班）：">
-                                        <el-input v-model="readyTimeDate.dayChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                    <el-form-item label="班前会：" label-width="80px">
-                                        <el-input v-model="readyTimeDate.dayChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                    <el-form-item label="生产前准备：" label-width="100px">
-                                        <el-input v-model="readyTimeDate.dayChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                    <el-form-item label="生产后清场：" label-width="100px">
-                                        <el-input v-model="readyTimeDate.dayChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                </el-row>
-                                <el-row v-if="readyTimeDate.classes === '中班' || readyTimeDate.classes === '多班' || !readyTimeDate.classes">
-                                    <el-form-item label="交接班（中班）：">
-                                        <el-input v-model="readyTimeDate.midChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                    <el-form-item label="班前会：" label-width="80px">
-                                        <el-input v-model="readyTimeDate.midChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                    <el-form-item label="生产前准备：" label-width="100px">
-                                        <el-input v-model="readyTimeDate.midChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                    <el-form-item label="生产后清场：" label-width="100px">
-                                        <el-input v-model="readyTimeDate.midChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                </el-row>
-                                <el-row v-if="readyTimeDate.classes === '夜班' || readyTimeDate.classes === '多班' || !readyTimeDate.classes">
-                                    <el-form-item label="交接班（夜班）：">
-                                        <el-input v-model="readyTimeDate.nightChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                    <el-form-item label="班前会：" label-width="80px">
-                                        <el-input v-model="readyTimeDate.nightChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                    <el-form-item label="生产前准备：" label-width="100px">
-                                        <el-input v-model="readyTimeDate.nightChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                    <el-form-item label="生产后清场：" label-width="100px">
-                                        <el-input v-model="readyTimeDate.nightChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
-                                    </el-form-item>
-                                </el-row>
-                            </div>
-                        </mds-card>
+        <el-card class="searchCard">
+            <el-row type="flex">
+                <el-col :span="20">
+                    <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform multi_row">
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产日期：">
+                            <el-date-picker v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" style="width: 180px;" />
+                        </el-form-item>
+                        <el-form-item label="生产工序：">
+                            <el-select v-model="formHeader.deptId" placeholder="请选择" style="width: 180px;" @change="setDeptName">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in deptId" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="产量状态：">
+                            <el-select v-model="formHeader.outputStatus" placeholder="请选择" style="width: 180px;" @change="cleanS">
+                                <el-option label="正常生产" value="0" />
+                                <el-option label="有出勤，无产量" value="1" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="提交人员：">
+                            <p class="el-input" style="width: 180px;">
+                                {{ headList.changer }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="提交时间：">
+                            <p class="el-input" style="width: 180px;">
+                                {{ headList.changed }}
+                            </p>
+                        </el-form-item>
                     </el-form>
-                    <worker ref="workerref" :is-redact="isRedact" :order="userOrder" />
-                </el-card>
-            </div>
+                </el-col>
+                <el-col :span="4" style="font-size: 14px; line-height: 32px;">
+                    <div style=" float: right; overflow: hidden; text-align: left;">
+                        <span
+                            class="point"
+                            :style="{
+                                background: headList.status === 'noPass' ? 'red' : headList.status === 'saved' ? '#1890f' : headList.status === 'submit' ? '#1890ff' : headList.status === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',
+                            }"
+                        />状态：
+                        <span
+                            :style="{
+                                color: headList.status === 'noPass' ? 'red' : '',
+                            }"
+                        >{{ headList.status === 'noPass' ? '审核不通过' : headList.status === 'saved' ? '已保存' : headList.status === 'submit' ? '已提交' : headList.status === 'checked' ? '通过' : headList.status === '已同步' ? '未录入' : headList.status }}</span>
+                    </div>
+                    <div style="clear: both;" />
+                    <div style="width: 100%; margin-top: 10px; text-align: right;">
+                        <template style="float: right; margin-left: 10px;">
+                            <el-button v-if="isAuth('filter:timeSheet:list')" type="primary" size="small" @click="GetTimeList">
+                                查询
+                            </el-button>
+                            <!-- <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('ste:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                                {{ isRedact ? '取消' : '编辑' }}
+                            </el-button> -->
+                        </template>
+                        <!-- <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
+                            <el-button v-if="isAuth('filter:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                                保存
+                            </el-button>
+                            <el-button v-if="isAuth('filter:timeSheet:update')" type="primary" size="small" @click="SubmitForm">
+                                提交
+                            </el-button>
+                        </template> -->
+                    </div>
+                </el-col>
+            </el-row>
+            <!-- <div class="toggleSearchBottom">
+                <i class="el-icon-caret-top" />
+            </div> -->
+        </el-card>
+        <!-- <div class="main"> -->
+        <div v-show="searchCard" style="margin-top: 10px;">
+            <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
+                <mds-card :title="'准备时间（分钟：min）'" :name="'ready'" style=" position: relative; margin-bottom: 10px;" class="readyCard">
+                    <template slot="titleBtn">
+                        <el-form-item label="班次：" style="float: right; margin-bottom: 10px;">
+                            <el-select v-model="readyTimeDate.classes" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))">
+                                <el-option label="白班" value="白班" />
+                                <el-option label="中班" value="中班" />
+                                <el-option label="夜班" value="夜班" />
+                                <el-option label="多班" value="多班" />
+                            </el-select>
+                        </el-form-item>
+                    </template>
+                    <div class="manHourReadyBox">
+                        <el-row v-if="readyTimeDate.classes === '白班' || readyTimeDate.classes === '多班' || !readyTimeDate.classes">
+                            <el-form-item label="交接班（白班）：">
+                                <el-input v-model="readyTimeDate.dayChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                            <el-form-item label="班前会：" label-width="80px">
+                                <el-input v-model="readyTimeDate.dayChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                            <el-form-item label="生产前准备：" label-width="100px">
+                                <el-input v-model="readyTimeDate.dayChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                            <el-form-item label="生产后清场：" label-width="100px">
+                                <el-input v-model="readyTimeDate.dayChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                        </el-row>
+                        <el-row v-if="readyTimeDate.classes === '中班' || readyTimeDate.classes === '多班' || !readyTimeDate.classes">
+                            <el-form-item label="交接班（中班）：">
+                                <el-input v-model="readyTimeDate.midChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                            <el-form-item label="班前会：" label-width="80px">
+                                <el-input v-model="readyTimeDate.midChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                            <el-form-item label="生产前准备：" label-width="100px">
+                                <el-input v-model="readyTimeDate.midChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                            <el-form-item label="生产后清场：" label-width="100px">
+                                <el-input v-model="readyTimeDate.midChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                        </el-row>
+                        <el-row v-if="readyTimeDate.classes === '夜班' || readyTimeDate.classes === '多班' || !readyTimeDate.classes">
+                            <el-form-item label="交接班（夜班）：">
+                                <el-input v-model="readyTimeDate.nightChange" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                            <el-form-item label="班前会：" label-width="80px">
+                                <el-input v-model="readyTimeDate.nightChangeBefore" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                            <el-form-item label="生产前准备：" label-width="100px">
+                                <el-input v-model="readyTimeDate.nightChangePre" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                            <el-form-item label="生产后清场：" label-width="100px">
+                                <el-input v-model="readyTimeDate.nightChangeAfter" placeholder="手工录入" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))" />
+                            </el-form-item>
+                        </el-row>
+                    </div>
+                </mds-card>
+            </el-form>
+            <worker ref="workerref" :is-redact="isRedact" :order="userOrder" />
+            <redact-box>
+                <template slot="button">
+                    <el-button v-if="searchCard && headList.status !== 'submit' && headList.status !== 'checked' && isAuth('ste:timeSheet:update')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                        {{ isRedact ? '取消' : '编辑' }}
+                    </el-button>
+                    <template v-if="isRedact && searchCard">
+                        <el-button v-if="isAuth('filter:timeSheet:update')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                            保存
+                        </el-button>
+                        <el-button v-if="isAuth('filter:timeSheet:update')" type="primary" size="small" @click="SubmitForm">
+                            提交
+                        </el-button>
+                    </template>
+                </template>
+            </redact-box>
         </div>
     </div>
+    <!-- </div> -->
 </template>
 
 <script>

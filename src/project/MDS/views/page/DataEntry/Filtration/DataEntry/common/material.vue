@@ -3,15 +3,15 @@
         <div class="inStorage_card">
             <div style="width: 158px;" class="inStorage_card_left">
                 <p>半成品罐</p>
-                <div style=" padding: 0 20px; text-align: center;">
-                    <img src="@/assets/img/ferPot.png" alt="" style="width: 92px; height: 190px;">
+                <div style="padding: 0 20px; text-align: center;">
+                    <img src="@/assets/img/ferPot.png" alt="" style="width: 112px; height: 210px;">
                 </div>
                 <el-button type="text" class="button" size="small" :disabled="!isRedact" @click="ShowDialog()">
                     领用
                 </el-button>
             </div>
             <div style="flex: 1;">
-                <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="updateRow">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="dataList" border tooltip-effect="dark" :row-class-name="rowDelFlag" @row-dblclick="updateRow">
                     <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" fixed />
                     <el-table-column label="物料" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
@@ -35,9 +35,7 @@
                 </el-table>
             </div>
         </div>
-        <el-card style="margin-top: 25px;">
-            <audit-log :table-data="readAudit" />
-        </el-card>
+        <audit-log :table-data="readAudit" style="margin-top: 10px;" />
         <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class="dialog__class" @keyup.enter.native="SaveDialog('receive')">
             <div slot="title">
                 领用
