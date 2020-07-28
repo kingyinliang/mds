@@ -128,6 +128,8 @@ export default {
             this.$http(`${BASICDATA_API.ORGSTRUCTURE_API}`, 'GET', {}).then(({ data }) => {
                 if (data.code === 0) {
                     this.OrgTree = data.deptList;
+                    this.deptId = this.OrgTree[0]['deptId'];
+                    this.deptName = this.OrgTree[0]['deptName'];
                     this.arrList = [this.OrgTree[0].children[0].deptId];
                 } else {
                     this.$errorToast(data.msg);
