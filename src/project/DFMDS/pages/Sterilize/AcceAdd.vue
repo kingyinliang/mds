@@ -9,6 +9,9 @@
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
+            :saved-datas="savedDatas"
+            :submit-datas="submitDatas"
+            @success="getOrderList"
         >
             <template slot="1" slot-scope="data">
                 <acce-add ref="acceadd" :is-redact="data.isRedact" />
@@ -120,6 +123,36 @@
                 this.$refs.acceadd.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'acceadd');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
+            })
+        }
+
+        savedDatas() {
+            const acceadd = this.$refs.acceadd.savedData(this.formHeader);
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'acceadd');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
+
+            return STE_API.STE_ACCE_SAVE_API({
+                ...acceadd,
+                steExceptionInsertDtos: excRequest.InsertDto,
+                steExceptionUpdateDtos: excRequest.UpdateDto,
+                steExceptionRemoveDto: excRequest.ids,
+                steTextInsertDto: textRequest.pkgTextInsert,
+                steTextUpdateDto: textRequest.pkgTextUpdate
+            })
+        }
+
+        submitDatas() {
+            const acceadd = this.$refs.acceadd.savedData(this.formHeader);
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'acceadd');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
+
+            return STE_API.STE_ACCE_SAVE_API({
+                ...acceadd,
+                steExceptionInsertDtos: excRequest.InsertDto,
+                steExceptionUpdateDtos: excRequest.UpdateDto,
+                steExceptionRemoveDto: excRequest.ids,
+                steTextInsertDto: textRequest.pkgTextInsert,
+                steTextUpdateDto: textRequest.pkgTextUpdate
             })
         }
     }

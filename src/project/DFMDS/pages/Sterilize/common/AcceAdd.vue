@@ -1,6 +1,6 @@
 <template>
     <div>
-        <mds-card v-if="steCookingConsumeFlag !== '1'" title="煮料锅/混合罐领用" name="table">
+        <mds-card v-if="steCookingConsumeFlag === '1'" title="煮料锅/混合罐领用" name="table">
             <template slot="titleBtn">
                 <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="addDataRowCookingConsume()">
                     新增
@@ -12,29 +12,31 @@
                     <template slot="header">
                         <span class="notNull">* </span>煮料锅/混合罐号
                     </template>
-                    <template slot="scope">
-                        <el-input v-model.trim="scope.row.potNo" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.potNo" placeholder="请选择" size="small" clearable filterable :disabled="!isRedact">
+                            <el-option v-for="(item, optIndex) in holderList" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
+                        </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column min-width="100px">
+                <el-table-column min-width="200">
                     <template slot="header">
                         <span class="notNull">* </span>配置日期
                     </template>
-                    <template slot="scope">
-                        <el-input v-model.trim="scope.row.configDate" size="small" placeholder="请输入" :disabled="!isRedact" />
+                    <template slot-scope="scope">
+                        <el-date-picker v-model="scope.row.configDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="100px">
                     <template slot="header">
                         <span class="notNull">* </span>煮料锅序
                     </template>
-                    <template slot="scope">
+                    <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.cookingNum" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="cookingOrderNo" label="煮料锅单" min-width="100px" :show-overflow-tooltip="true" />
                 <el-table-column prop="cookingMaterialCode" label="煮料锅生产物料" min-width="140px" :show-overflow-tooltip="true">
-                    <template slot="scope">
+                    <template slot-scope="scope">
                         {{ scope.row.cookingMaterialCode }}
                         {{ scope.row.cookingMaterialName }}
                     </template>
@@ -44,7 +46,7 @@
                     <template slot="header">
                         <span class="notNull">* </span>领用数量
                     </template>
-                    <template slot="scope">
+                    <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.consumeAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
@@ -54,7 +56,7 @@
                     <template slot="header">
                         <span class="notNull">* </span>添加时间
                     </template>
-                    <template slot="scope">
+                    <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.addDate" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
@@ -76,54 +78,51 @@
             </el-table>
         </mds-card>
         <mds-card title="辅料领用" name="table1" icon-bg="#ffbf00">
-            <el-table header-row-class-name="tableHead" class="newTable" :data="steAccessoriesConsume" border tooltip-effect="dark">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="steAccessoriesConsume" :span-method="spanMethod" :row-class-name="rowDelFlag" border tooltip-effect="dark">
                 <el-table-column type="index" label="序号" width="50px" fixed />
-                <el-table-column label="领用物料" width="140">
+                <el-table-column label="领用物料" min-width="160" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.changer }}
-                    </template>
-                    <template slot="scope">
-                        <el-input v-model.trim="scope.row.useMaterialCode" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        {{ scope.row.useMaterialCode + ' ' + scope.row.useMaterialName }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="useUnit" label="单位" :show-overflow-tooltip="true" />
-                <el-table-column>
-                    <template slot="scope">
+                <el-table-column prop="useUnit" label="单位" width="50" :show-overflow-tooltip="true" />
+                <el-table-column width="70">
+                    <template slot-scope="scope">
                         <el-button type="text" :disabled="!(isRedact)" @click="SplitDate('steAccessoriesConsume', scope.row, scope.$index)">
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column>
+                <el-table-column min-width="120">
                     <template slot="header">
                         <span class="notNull">* </span>领用数量
                     </template>
-                    <template slot="scope">
+                    <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.useAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column>
+                <el-table-column min-width="120">
                     <template slot="header">
                         <span class="notNull">* </span>领用批次
                     </template>
-                    <template slot="scope">
+                    <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.useBatch" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column>
+                <el-table-column width="200">
                     <template slot="header">
                         <span class="notNull">* </span>添加时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" />
+                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
-                <el-table-column label="称取盒编号">
+                <el-table-column min-width="140" label="称取盒编号">
                     <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.useBoxNo" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
-                <el-table-column label="备注">
+                <el-table-column label="备注" min-width="100">
                     <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
@@ -140,7 +139,7 @@
                 </el-table-column>
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
+                        <el-button v-if="scope.row.splitFlag === 'Y'" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, 'steAccessoriesConsume')">
                             删除
                         </el-button>
                     </template>
@@ -148,19 +147,24 @@
             </el-table>
         </mds-card>
         <mds-card title="增补料" name="table2" icon-bg="#5BD171">
-            <el-table header-row-class-name="tableHead" class="newTable" :data="newSteAccessoriesConsume" border tooltip-effect="dark">
+            <template slot="titleBtn">
+                <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="addDataNewSteAccessoriesConsume()">
+                    新增
+                </el-button>
+            </template>
+            <el-table header-row-class-name="tableHead" class="newTable" :data="newSteAccessoriesConsume" :span-method="spanTwoMethod" :row-class-name="rowDelFlag" border tooltip-effect="dark">
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" width="140">
-                    <template slot-scope="scope">
-                        {{ scope.row.changer }}
+                    <template slot="header">
+                        <span class="notNull">* </span>领用物料
                     </template>
-                    <template slot="scope">
+                    <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.useMaterialCode" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="useUnit" label="单位" :show-overflow-tooltip="true" />
                 <el-table-column>
-                    <template slot="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" :disabled="!(isRedact)" @click="SplitDate('steAccessoriesConsume', scope.row, scope.$index)">
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
@@ -170,7 +174,7 @@
                     <template slot="header">
                         <span class="notNull">* </span>领用数量
                     </template>
-                    <template slot="scope">
+                    <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.useAmount" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
@@ -178,7 +182,7 @@
                     <template slot="header">
                         <span class="notNull">* </span>领用批次
                     </template>
-                    <template slot="scope">
+                    <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.useBatch" size="small" placeholder="请输入" :disabled="!isRedact" />
                     </template>
                 </el-table-column>
@@ -199,7 +203,7 @@
                 <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" />
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, 'newSteAccessoriesConsume')">
                             删除
                         </el-button>
                     </template>
@@ -212,7 +216,8 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { STE_API } from 'common/api/api';
+    import { COMMON_API, STE_API } from 'common/api/api';
+    import { dateFormat, dataEntryData } from 'utils/utils';
 
     @Component
     export default class AcceAdd extends Vue {
@@ -220,6 +225,11 @@
 
         steCookingConsumeFlag = '1';
         acceAddAudit = [];
+        spanOneArr = {};
+        spanTwoArr = {};
+        holderList = [];
+        materialList = [];
+        formHeader: OrderData = {};
         steCookingConsume: CCObj[] = [];
         OrgSteCookingConsume: CCObj[] = [];
         steAccessoriesConsume: ACObj[] = [];
@@ -227,41 +237,197 @@
         newSteAccessoriesConsume: ACObj[] = [];
         OrgNewSteAccessoriesConsume: ACObj[] = [];
 
+        savedData(formHeader) {
+            const steCookingConsumeSaveDto = {
+                delIds: [],
+                insertData: [],
+                updateData: []
+            };
+            const steAccessoriesConsumeSaveDto = {
+                delIds: [],
+                insertData: [],
+                updateData: []
+            };
+            const newSteAccessoriesConsumeSaveDto = {
+                delIds: [],
+                insertData: [],
+                updateData: []
+            };
+
+            dataEntryData(formHeader, this.steCookingConsume, this.OrgSteCookingConsume, steCookingConsumeSaveDto.delIds, steCookingConsumeSaveDto.insertData, steCookingConsumeSaveDto.updateData, (item) => {
+                item.potOrderNo = formHeader.potOrderNo;
+                item.potOrderId = formHeader.potOrderId;
+            });
+            dataEntryData(formHeader, this.steAccessoriesConsume, this.OrgSteAccessoriesConsume, steAccessoriesConsumeSaveDto.delIds, steAccessoriesConsumeSaveDto.insertData, steAccessoriesConsumeSaveDto.updateData, (item) => {
+                item.potOrderNo = formHeader.potOrderNo;
+                item.potOrderId = formHeader.potOrderId;
+            });
+            dataEntryData(formHeader, this.newSteAccessoriesConsume, this.OrgNewSteAccessoriesConsume, newSteAccessoriesConsumeSaveDto.delIds, newSteAccessoriesConsumeSaveDto.insertData, newSteAccessoriesConsumeSaveDto.updateData, (item) => {
+                item.potOrderNo = formHeader.potOrderNo;
+                item.potOrderId = formHeader.potOrderId;
+            });
+            return {
+                steCookingConsumeSaveDto,
+                steAccessoriesConsumeSaveDto,
+                newSteAccessoriesConsumeSaveDto
+            }
+        }
+
         init(formHeader) {
+            this.formHeader = formHeader;
+            this.getHolderList();
             STE_API.STE_ACCE_LIST_API({
                 materialCode: formHeader.materialCode,
                 orderNo: formHeader.orderNo,
                 potOrderNo: formHeader.potOrderNo
             }).then(({ data }) => {
-                this.steCookingConsumeFlag = data.data.steCookingConsumeFlag
+                this.steCookingConsumeFlag = data.data.steCookingConsumeFlag;
                this.newSteAccessoriesConsume = JSON.parse(JSON.stringify(data.data.newSteAccessoriesConsume));
                this.OrgNewSteAccessoriesConsume = JSON.parse(JSON.stringify(data.data.newSteAccessoriesConsume));
                this.steAccessoriesConsume = JSON.parse(JSON.stringify(data.data.steAccessoriesConsume));
                this.OrgSteAccessoriesConsume = JSON.parse(JSON.stringify(data.data.steAccessoriesConsume));
                this.steCookingConsume = JSON.parse(JSON.stringify(data.data.steCookingConsume));
                this.OrgSteCookingConsume = JSON.parse(JSON.stringify(data.data.steCookingConsume));
+               this.merge(this.steAccessoriesConsume, 'steAccessoriesConsume');
+               this.merge(this.newSteAccessoriesConsume, 'newSteAccessoriesConsume');
+            })
+        }
+
+        // 煮料锅/罐下拉
+        getHolderList() {
+            COMMON_API.HOLDER_DROPDOWN_API({
+                deptId: this.formHeader.workShop,
+                holderType: '020'
+            }).then(({ data }) => {
+                this.holderList = data.data
             })
         }
 
         // 新增  - 煮料锅/混合罐领用
         addDataRowCookingConsume() {
-        //    0
-            this.steCookingConsume.push({})
+            this.steCookingConsume.push({
+                potOrderNo: this.formHeader.potOrderNo,
+                potOrderId: this.formHeader.potOrderId,
+                configDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            })
+        }
+
+        addDataNewSteAccessoriesConsume() {
+            this.newSteAccessoriesConsume.push({
+                id: '',
+                potOrderNo: this.formHeader.potOrderNo,
+                potOrderId: this.formHeader.potOrderId,
+                useMaterialCode: '',
+                useMaterialName: '',
+                useUnit: '',
+                splitFlag: 'N'
+            })
+            this.merge(this.newSteAccessoriesConsume, 'newSteAccessoriesConsume');
         }
 
         SplitDate(str, row, index) {
-            this[str].splice(index + 1, 0, row)
+            if (!row.useMaterialCode) {
+                return false
+            }
+            this[str].splice(index + this[str].filter(item => item.useMaterialCode === row.useMaterialCode).length, 0, {
+                id: '',
+                potOrderNo: this.formHeader.potOrderNo,
+                potOrderId: this.formHeader.potOrderId,
+                useMaterialCode: row.useMaterialCode,
+                useMaterialName: row.useMaterialName,
+                useUnit: row.useUnit,
+                splitFlag: 'Y'
+            })
+            this.merge(this[str], str)
         }
 
-        removeDataRow(row) {
-            console.log(row);
+        // 设置合并行
+        merge(tableData, Data) {
+            const spanOneArr: number[] = [];
+            let concatOne = 0;
+            tableData.forEach((item, index) => {
+                if (index === 0) {
+                    spanOneArr.push(1);
+                } else if (item.useMaterialCode === tableData[index - 1].useMaterialCode && item.useMaterialCode) {
+                    if (item.delFlag !== 1) {
+                        spanOneArr[concatOne] += 1;
+                    }
+                    spanOneArr.push(0);
+                } else {
+                    spanOneArr.push(1);
+                    concatOne = index;
+                }
+            });
+            if (Data === 'steAccessoriesConsume') {
+                this.spanOneArr = spanOneArr
+            }
+            if (Data === 'newSteAccessoriesConsume') {
+                this.spanTwoArr = spanOneArr
+            }
         }
+
+        // 合并行
+        spanMethod({ rowIndex, columnIndex }) {
+            if (columnIndex <= 3) {
+                return {
+                    rowspan: this.spanOneArr[rowIndex],
+                    colspan: this.spanOneArr[rowIndex] > 0 ? 1 : 0
+                };
+            }
+        }
+
+        spanTwoMethod({ rowIndex, columnIndex }) {
+            if (columnIndex <= 3) {
+                return {
+                    rowspan: this.spanTwoArr[rowIndex],
+                    colspan: this.spanTwoArr[rowIndex] > 0 ? 1 : 0
+                };
+            }
+        }
+
+        rowDelFlag({ row }) {
+            if (row.delFlag === 1) {
+                return 'rowDel';
+            }
+            return '';
+        }
+
+        removeDataRow(row, str) {
+            this.$confirm('是否删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                row.delFlag = 1;
+                this.merge(this[str], str)
+            });
+        }
+    }
+    interface OrderData {
+        workShop?: string;
+        potOrderNo?: string;
+        potOrderId?: string;
+        textStage?: string;
+        factoryName?: string;
+        potNo?: string;
+        potOrder?: string;
     }
     interface ACObj {
         id?: string;
+        delFlag?: number;
+        potOrderNo?: string;
+        potOrderId?: string;
+        useMaterialCode?: string;
+        useMaterialName?: string;
+        useUnit?: string;
+        splitFlag?: string;
     }
     interface CCObj {
         id?: string;
+        delFlag?: number;
+        potOrderNo?: string;
+        potOrderId?: string;
+        configDate?: string;
     }
 </script>
 

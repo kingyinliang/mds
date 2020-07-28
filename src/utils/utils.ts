@@ -373,7 +373,8 @@ export function dataEntryData(formHeader, data: DataEntryDataObj[], orgData: Dat
                 delArr.push(item.id);
             }
         } else if (item.id) {
-            if (!_.isEqual(orgData[index], item)) {
+            const orgObj = orgData.filter(it => it.id === item.id)[0];
+            if (!_.isEqual(orgObj, item)) {
                 item.orderId = formHeader.id;
                 if (processingData) {
                     processingData(item)
