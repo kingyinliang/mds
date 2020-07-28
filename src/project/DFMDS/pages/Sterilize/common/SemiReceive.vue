@@ -66,10 +66,10 @@
         orgSemiTable: SemiObj[] = [];
         visible = false;
 
-        init() {
+        init(formHeader) {
             STE_API.STE_SEMI_LIST_API({
-                orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
-                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
+                orderNo: formHeader.orderNo,
+                potOrderNo: formHeader.potOrderNo
             }).then(({ data }) => {
                 this.semiTable = data.data;
                 this.orgSemiTable = data.data;
@@ -131,6 +131,11 @@
         }
     }
     interface SemiObj {
+        delFlag?: number;
+        id?: string;
+        orderId?: string;
+        factory?: string;
+        orderNo?: string;
         factoryName?: string;
         potNo?: string;
         potOrder?: string;
