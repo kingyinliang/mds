@@ -120,7 +120,7 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="resetForm('formatData')">取消</el-button>
+                <el-button size="small" @click="resetForm">取消</el-button>
                 <el-button size="small" type="primary" @click="dataFormSubmit('formatData')">确定</el-button>
             </span>
         </el-dialog>
