@@ -87,7 +87,7 @@
                 </el-button>
             </span>
         </el-dialog>
-        <el-dialog :title="'辅料前处理信息'" :close-on-click-modal="false" :visible.sync="isDialogShow">
+        <el-dialog :title="'辅料前处理信息'" :close-on-click-modal="false" :visible.sync="isDialogShow" :before-close="resetForm">
             <div style="width: 400px; margin: auto;">
                 <el-form ref="formatData" :model="formatData" :rules="rules" size="small" label-width="110px" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
                     <el-form-item label="生产物料：" prop="productMaterialString">
@@ -120,7 +120,7 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="isDialogShow = false">取消</el-button>
+                <el-button size="small" @click="resetForm('formatData')">取消</el-button>
                 <el-button size="small" type="primary" @click="dataFormSubmit('formatData')">确定</el-button>
             </span>
         </el-dialog>
@@ -166,6 +166,7 @@ export default class MaterialPretreatment extends Vue {
 
     $refs: {
         validate: HTMLFormElement;
+        formatData: HTMLFormElement;
     }
 
     mounted() {
@@ -304,6 +305,7 @@ export default class MaterialPretreatment extends Vue {
                             this.isDialogShow = false;
                             this.$successToast('修改成功');
                             this.getDataList(true);
+                            this.$refs[formName].resetFields();
                         }
                     })
                 } else {
@@ -312,11 +314,17 @@ export default class MaterialPretreatment extends Vue {
                             this.isDialogShow = false;
                             this.$successToast('保存成功');
                             this.getDataList(true);
+                            this.$refs[formName].resetFields();
                         }
                     })
                 }
             }
         });
+    }
+
+    resetForm() {
+        this.$refs.formatData.resetFields();
+        this.isDialogShow = false
     }
 
     handleSelectionChange(val) {
