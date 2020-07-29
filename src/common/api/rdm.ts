@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-07-22 20:15:16
  * @LastEditors: Telliex
- * @LastEditTime: 2020-07-24 11:08:22
+ * @LastEditTime: 2020-07-29 13:49:53
  */
 import httpProxy from 'utils/net/httpProxy';
 
@@ -25,7 +25,7 @@ const RDM_API = {
      */
     PERMISSION_DATASET_SAVE_API: params => httpProxy('/permissionGroup/save', 'POST', params, 'RDM'),
     /**
-     * @property {string} EPERMISSION_REMOVE_API RDM 数据集删除
+     * @property {string} PERMISSION_REMOVE_API RDM 数据集删除
      */
     PERMISSION_REMOVE_API: params => httpProxy('/permissionGroup/remove', 'GET', params, 'RDM'),
     /**
