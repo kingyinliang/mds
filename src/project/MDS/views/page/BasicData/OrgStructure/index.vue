@@ -435,30 +435,30 @@ export default {
         //  新增
         openAddOrgFrom(formName) {
             this.$refs[formName].validate((valid) => {
-            if (valid) {
-                if (this.sibling) {
-                    this.addDep.parentId = this.clickTreeNode.parentId;
-                } else {
-                    this.addDep.parentId = this.clickTreeNode.deptId;
-                }
-                if (this.addDep.deptType !== 'proLine') {
-                    delete this.addDep.fileName;
-                    delete this.addDep.proLine;
-                    delete this.addDep.picUrl;
-                }
-                this.$http(`${BASICDATA_API.ADDORG_API}`, 'POST', this.addDep).then(({ data }) => {
-                    if (data.code === 0) {
-                        this.$successToast('操作成功');
-                        this.getOrgTree();
-                        this.addDep = {}
-                        this.dialogFormVisible = false;
+                if (valid) {
+                    if (this.sibling) {
+                        this.addDep.parentId = this.clickTreeNode.parentId;
                     } else {
-                        this.$errorToast(data.msg);
+                        this.addDep.parentId = this.clickTreeNode.deptId;
                     }
-                });
-            } else {
-                return false;
-            }
+                    if (this.addDep.deptType !== 'proLine') {
+                        delete this.addDep.fileName;
+                        delete this.addDep.proLine;
+                        delete this.addDep.picUrl;
+                    }
+                    this.$http(`${BASICDATA_API.ADDORG_API}`, 'POST', this.addDep).then(({ data }) => {
+                        if (data.code === 0) {
+                            this.$successToast('操作成功');
+                            this.getOrgTree();
+                            this.addDep = {}
+                            this.dialogFormVisible = false;
+                        } else {
+                            this.$errorToast(data.msg);
+                        }
+                    });
+                } else {
+                    return false;
+                }
             });
 
         }
