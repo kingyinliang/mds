@@ -1,17 +1,17 @@
 <template>
     <div class="header_main">
-        <el-card class="searchCard">
+        <el-card class="searchCard newCard">
             <el-row type="flex">
                 <el-col class="header_pot" style="width: 160px;">
                     <p class="header_pot_label">
                         罐号：{{ formData.HOLDER_NAME ? formData.HOLDER_NAME : '' }}
                     </p>
                     <div class="header_pot_image">
-                        <div class="header_pot_image_content" />
+                        <div class="header_pot_image_content" style=" background: linear-gradient(#ad592d, #8a391b);" />
                     </div>
                 </el-col>
                 <el-col>
-                    <el-form :inline="true" size="small" label-width="84px" class="topforms topformsde" style="margin-top: 30px;">
+                    <el-form :inline="true" size="small" label-width="84px" class="topforms topformsde multi_row" style="margin-top: 30px;">
                         <el-form-item label="生产车间：">
                             <p class="el-input">
                                 {{ formData.WORK_SHOP ? formData.WORK_SHOP : '' }}
@@ -239,20 +239,21 @@ export default {
         margin-bottom: 15px;
         color: rgba(102, 102, 102, 1);
         font-weight: 400;
-        font-size: 18px;
+        font-size: 14px;
     }
     &_image {
         display: flex;
         align-items: flex-end;
         justify-content: center;
-        width: 160px;
-        height: 190px;
+        width: 70px;
+        height: 100px;
+        margin-left: 20px;
         background: url("~@/assets/img/ferPot.png") no-repeat center center;
         background-size: contain;
         &_content {
-            width: 84px;
-            height: 90px;
-            margin-bottom: 8px;
+            width: 42px;
+            height: 45px;
+            margin-bottom: 4px;
             background: linear-gradient(#35c3ff, #1890ff);
         }
     }

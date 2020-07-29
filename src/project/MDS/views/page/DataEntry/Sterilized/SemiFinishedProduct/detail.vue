@@ -149,7 +149,7 @@ export default {
         }
     }
     .el-input {
-        width: 145px !important;
+        width: 175px !important;
         overflow: hidden;
         line-height: 32px;
         white-space: nowrap;
