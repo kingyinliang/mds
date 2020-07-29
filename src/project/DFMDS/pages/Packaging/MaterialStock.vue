@@ -235,8 +235,10 @@ export default class MaterialStock extends Vue {
         },
         {
             label: '包材物料',
-            prop: 'materialCode',
-            propList: ['materialCode', 'materialName'],
+            prop: 'materialName',
+            formatter: (row) => {
+                return row.materialCode + ' ' + row.materialName;
+            },
             minwidth: '330'
         },
         {
