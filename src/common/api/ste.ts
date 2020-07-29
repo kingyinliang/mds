@@ -1,10 +1,3 @@
-/*
- * @Description:
- * @Anthor: Telliex
- * @Date: 2020-07-20 10:11:29
- * @LastEditors: Telliex
- * @LastEditTime: 2020-07-26 00:24:52
- */
 import httpProxy from 'utils/net/httpProxy';
 
 const STE_API = {
@@ -28,6 +21,14 @@ const STE_API = {
      * @property {string} STE_SEMI_SUBMIT_API 杀菌车间-半成品领用-提交
      */
     STE_SEMI_SUBMIT_API: params => httpProxy('/ste/steSemiMaterial/submit', 'POST', params),
+    /**
+     * @property {string} STE_SEMI_LIST_API 杀菌车间-辅料添加-查询
+     */
+    STE_ACCE_LIST_API: params => httpProxy('/ste/accessiruesConsume/query', 'POST', params),
+    /**
+     * @property {string} STE_SEMI_LIST_API 杀菌车间-辅料添加-保存
+     */
+    STE_ACCE_SAVE_API: params => httpProxy('/ste/accessiruesConsume/save', 'POST', params),
     /**
      * @property {string} STE_SPLIT_LIST_API 杀菌车间-订单拆分
      */

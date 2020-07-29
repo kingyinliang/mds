@@ -356,25 +356,48 @@ export function dateFormat(date, fmt) {
     }
     return fmtTemp;
 }
-
-export function dataEntryData(formHeader, data, orgData, delArr, insertArr, updateArr) {
+/**
+ * 保存提交数据对比
+ * @param {object} formHeader 表头
+ * @param {array} data 数据
+ * @param {array} orgData 复制数据
+ * @param {array} delArr 删除数据
+ * @param {array} insertArr 新增数据
+ * @param {array} updateArr 修改数据
+ * @param {function} processingData 处理数据
+ */
+export function dataEntryData(formHeader, data: DataEntryDataObj[], orgData: DataEntryDataObj[], delArr: string[], insertArr: DataEntryDataObj[], updateArr: DataEntryDataObj[], processingData?) {
     data.forEach((item, index) => {
         if (item.delFlag === 1) {
             if (item.id) {
                 delArr.push(item.id);
             }
         } else if (item.id) {
-            if (!_.isEqual(orgData[index], item)) {
+            const orgObj = orgData.filter(it => it.id === item.id)[0];
+            if (!_.isEqual(orgObj, item)) {
                 item.orderId = formHeader.id;
+                if (processingData) {
+                    processingData(item)
+                }
                 updateArr.push(item);
             }
         } else {
             item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             item.orderId = formHeader.id;
             item.orderNo = formHeader.orderNo;
+            if (processingData) {
+                processingData(item)
+            }
             insertArr.push(item);
         }
     });
+}
+interface DataEntryDataObj {
+    delFlag? : number;
+    id? : string;
+    orderId?: string;
+    factory?: string;
+    orderNo?: string;
 }
 export function getIsRedact(status) {
     return status !== 'C' && status !== 'D' && status !== 'P';

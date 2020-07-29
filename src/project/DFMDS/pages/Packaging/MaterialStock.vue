@@ -47,16 +47,8 @@
                     <el-table-column label="操作时间" prop="changed" width="160" />
                 </el-table>
                 <el-row v-if="detaileLogData.length !== 0">
-                    <el-pagination :current-page="current" :page-sizes="[10, 20, 50]" :page-size="size" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="current" :page-sizes="[10, 20, 50]" :page-size="size" layout="total, sizes, prev, pager, next, jumper" style="margin-bottom: 15px;" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="visibleDetailLog = false">
-                    取消
-                </el-button>
-                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="visibleDetailLog = false">
-                    确定
-                </el-button>
             </div>
         </el-dialog>
         <el-dialog title="转线" :close-on-click-modal="false" :visible.sync="visibleTransferLine" width="600px" custom-class="dialog__class">

@@ -3,13 +3,13 @@
         <mds-card title="运行情况" :name="'equipment'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewFirstDataRow()">
+                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewFirstDataRowThrottle">
                         新增
                     </el-button>
                 </div>
             </template>
             <el-form ref="ruleFirstForm" :model="ruleFirstForm">
-                <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
+                <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" max-height="300" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                     <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
                     <el-table-column width="130" :show-overflow-tooltip="true">
                         <template slot="header">
@@ -92,13 +92,13 @@
         <mds-card title="停机情况" :name="'equipmentStop'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addSecondDataRow()">
+                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addSecondDataRowThrottle">
                         新增
                     </el-button>
                 </div>
             </template>
             <el-form ref="ruleSecondForm" :model="ruleSecondForm">
-                <el-table ref="exception" class="newTable" :data="secondFormDataGroup" max-height="267" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
+                <el-table ref="exception" class="newTable" :data="secondFormDataGroup" max-height="300" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                     <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
                     <el-table-column min-width="130" :show-overflow-tooltip="true">
                         <template slot="header">
@@ -262,7 +262,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import { COMMON_API, PKG_API, AUDIT_API } from 'common/api/api';
 import { dataEntryData } from 'utils/utils'
-import { dateFormat, getUserNameNumber, accDiv } from 'utils/utils';
+import { dateFormat, getUserNameNumber, accDiv, throttle } from 'utils/utils';
 import _ from 'lodash';
 
 @Component({
@@ -337,6 +337,11 @@ export default class Equipment extends Vue {
     }
 
 
+    // eslint-disable-next-line no-invalid-this
+    addNewFirstDataRowThrottle= throttle(this.addNewFirstDataRow, 500, 800)
+    // eslint-disable-next-line no-invalid-this
+    addSecondDataRowThrottle= throttle(this.addSecondDataRow, 500, 800)
+
     // changeStart(value, index, order) {
     //     if (!value.endDate) {
     //         this.pickerOptionsStart[order][index] = Object.assign({}, this.pickerOptionsStart[order][index], {
@@ -377,6 +382,7 @@ export default class Equipment extends Vue {
         this.getPlanHalt()
 
         this.getAbnormalHalt()
+
 
     }
 
@@ -709,6 +715,7 @@ export default class Equipment extends Vue {
         return num
     }
 
+
     addNewFirstDataRow() {
         const sole: FirstDataTable = {
             classes: '',
@@ -722,6 +729,7 @@ export default class Equipment extends Vue {
             changer: getUserNameNumber(),
             delFlag: 0
         }
+
         this.firstFormDataGroup.push(sole);
         this.setValidate(this.firstFormDataGroup, this.ruleFirstForm)
     }
