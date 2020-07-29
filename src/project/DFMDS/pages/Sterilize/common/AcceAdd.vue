@@ -13,17 +13,17 @@
                         <span class="notNull">* </span>煮料锅/混合罐号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.potNo" placeholder="请选择" size="small" clearable filterable :disabled="!isRedact">
+                        <el-select v-model="scope.row.potNo" placeholder="请选择" size="small" clearable filterable :disabled="!isRedact" @change="getCookingNum(scope.row)">
                             <el-option v-for="(item, optIndex) in holderList" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column min-width="200">
+                <el-table-column min-width="160">
                     <template slot="header">
                         <span class="notNull">* </span>配置日期
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.configDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.configDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" :disabled="!isRedact" size="small" style="width: 130px;" @change="getCookingNum(scope.row)" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="100px">
@@ -31,7 +31,9 @@
                         <span class="notNull">* </span>煮料锅序
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.cookingNum" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-select v-model="scope.row.cookingNum" placeholder="请选择" size="small" clearable filterable :disabled="!isRedact" @change="cookingNumChange(scope.row)">
+                            <el-option v-for="(item, optIndex) in scope.row.cookingNumArr" :key="optIndex" :label="'第'+item.potOrder+'锅'" :value="item.potOrder" />
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column prop="cookingOrderNo" label="煮料锅单" min-width="100px" :show-overflow-tooltip="true" />
@@ -52,12 +54,12 @@
                 </el-table-column>
                 <el-table-column prop="remainderAmount" label="剩余库存" min-width="100px" :show-overflow-tooltip="true" />
                 <el-table-column prop="unit" label="单位" min-width="50px" :show-overflow-tooltip="true" />
-                <el-table-column min-width="100px">
+                <el-table-column min-width="200">
                     <template slot="header">
                         <span class="notNull">* </span>添加时间
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.addDate" size="small" placeholder="请输入" :disabled="!isRedact" />
+                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="transferTank" label="转运罐号" min-width="100px" :show-overflow-tooltip="true" />
@@ -293,7 +295,36 @@
             })
         }
 
-        // 煮料锅/罐下拉
+        // 煮料锅下拉触发
+        getCookingNum(row) {
+            STE_API.STE_COOKINGNO_LIST_API({
+                workShop: this.formHeader.workShop,
+                configStartDate: row.configDate,
+                potNo: row.potNo
+            }).then(({ data }) => {
+                row.cookingNumArr = data.data;
+                row.cookingOrderNo = '';
+                row.cookingMaterialCode = '';
+                row.cookingMaterialName = '';
+                row.remainderPot = '';
+                row.remainderAmount = '';
+            })
+        }
+
+        // 锅序下拉触发
+        cookingNumChange(row) {
+            const cookingNumObj = row.cookingNumArr.filter(it => it.potOrder === row.cookingNum)[0];
+            row.cookingOrderNo = cookingNumObj.cookingNo;
+            row.cookingMaterialCode = cookingNumObj.productMaterial;
+            row.cookingMaterialName = cookingNumObj.productMaterialName;
+            row.remainderPot = cookingNumObj.configPotCount - cookingNumObj.usePotCount;
+            row.remainderAmount = cookingNumObj.remainder;
+            if (this.formHeader.materialCode !== row.cookingMaterialCode || this.formHeader.materialName !== row.cookingMaterialName) {
+                this.$warningToast('请选择生产物料一致的煮料锅！')
+            }
+        }
+
+        // 获取煮料锅/罐下拉
         getHolderList() {
             COMMON_API.HOLDER_DROPDOWN_API({
                 deptId: this.formHeader.workShop,
@@ -308,7 +339,7 @@
             this.steCookingConsume.push({
                 potOrderNo: this.formHeader.potOrderNo,
                 potOrderId: this.formHeader.potOrderId,
-                configDate: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                configDate: dateFormat(new Date(), 'yyyy-MM-dd')
             })
         }
 
@@ -404,6 +435,8 @@
         }
     }
     interface OrderData {
+        materialCode?: string;
+        materialName?: string;
         workShop?: string;
         potOrderNo?: string;
         potOrderId?: string;
