@@ -352,6 +352,7 @@
                             this.$set(this.optionLists, item.prop, dataTemp);
                             if (dataTemp.length > 0 && !item.defaultValue && item.defaultValue !== '') {
                                 this.$set(this.queryForm, item.prop, dataTemp[0][item.resVal.value]);
+                                this.$emit('created-end')
                                 this.$nextTick(() => {
                                     this.$refs[item.prop][0].emitChange(dataTemp[0][item.resVal.value]);
                                 });
@@ -399,6 +400,7 @@
                                             this.$set(this.optionLists, linkagePropItemObj.prop, dataTemp);
                                             if (dataTemp.length > 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
                                                 this.$set(this.queryForm, linkagePropItemObj.prop, dataTemp[0][linkagePropItemObj.resVal.value]);
+                                                this.$emit('created-end')
                                                 this.$nextTick(() => {
                                                     this.$refs[linkagePropItemObj.prop][0].emitChange(dataTemp[0][linkagePropItemObj.resVal.value]);
                                                 });

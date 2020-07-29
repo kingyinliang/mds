@@ -367,7 +367,7 @@ export function dateFormat(date, fmt) {
  * @param {function} processingData 处理数据
  */
 export function dataEntryData(formHeader, data: DataEntryDataObj[], orgData: DataEntryDataObj[], delArr: string[], insertArr: DataEntryDataObj[], updateArr: DataEntryDataObj[], processingData?) {
-    data.forEach((item, index) => {
+    data.forEach((item) => {
         if (item.delFlag === 1) {
             if (item.id) {
                 delArr.push(item.id);
