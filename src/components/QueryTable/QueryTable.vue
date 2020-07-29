@@ -120,14 +120,6 @@
                 <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                 <template v-for="(item, index) in column">
                     <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            <span v-if="item.propList">
-                                <i v-for="(sole, soleIndex) in item.propList" :key="soleIndex">
-                                    {{ scope.row[sole] }}
-                                </i>
-                            </span>
-                            <span v-else>{{ scope.row[item.prop] }}</span>
-                        </template>
                         <template v-if="item.child">
                             <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip" :width="chind.width || ''" />
                         </template>
@@ -352,6 +344,7 @@
                             this.$set(this.optionLists, item.prop, dataTemp);
                             if (dataTemp.length > 0 && !item.defaultValue && item.defaultValue !== '') {
                                 this.$set(this.queryForm, item.prop, dataTemp[0][item.resVal.value]);
+                                this.$emit('created-end')
                                 this.$nextTick(() => {
                                     this.$refs[item.prop][0].emitChange(dataTemp[0][item.resVal.value]);
                                 });
@@ -399,6 +392,7 @@
                                             this.$set(this.optionLists, linkagePropItemObj.prop, dataTemp);
                                             if (dataTemp.length > 0 && !linkagePropItemObj.defaultValue && linkagePropItemObj.defaultValue !== '') {
                                                 this.$set(this.queryForm, linkagePropItemObj.prop, dataTemp[0][linkagePropItemObj.resVal.value]);
+                                                this.$emit('created-end')
                                                 this.$nextTick(() => {
                                                     this.$refs[linkagePropItemObj.prop][0].emitChange(dataTemp[0][linkagePropItemObj.resVal.value]);
                                                 });

@@ -126,9 +126,17 @@ const STE_API = {
      */
     STE_DETAIL_CRAFTEXC_LIST_API: params => httpProxy('/ste/steException/query', 'POST', params),
     /**
-     * @property {string} STE_DETAIL_CRAFTEXC_LIST_API 杀菌车间-杀菌工艺-文本-查询
+     * @property {string} STE_DETAIL_TEXT_API 杀菌车间-杀菌工艺-文本-查询
      */
-    STE_DETAIL_TEXT_API: params => httpProxy('/ste/steText/query', 'POST', params)
+    STE_DETAIL_TEXT_API: params => httpProxy('/ste/steText/query', 'POST', params),
+    /**
+     * @property {string} STE_INSTORAGE_QUERY_API 杀菌车间-入库数据-查询
+     */
+    STE_INSTORAGE_QUERY_API: params => httpProxy('/steInStorage/query', 'POST', params),
+    /**
+     * @property {string} STE_INSTORAGE_SAVE_API 杀菌车间-入库数据-保存
+     */
+    STE_INSTORAGE_SAVE_API: params => httpProxy('/steInStorage/save', 'POST', params)
 };
 
 export default STE_API;

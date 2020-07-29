@@ -136,7 +136,7 @@
                 value: ['planOutput', 'outputUnit']
             },
             {
-                type: 'tooltip',
+                type: 'p',
                 icon: 'factory-riqi1',
                 label: '订单日期',
                 value: 'orderStartDate'
@@ -148,7 +148,7 @@
                 value: 'productDate'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 icon: 'factory-xianchangrenyuan',
                 label: '提交人员', // 操作人员
                 value: 'changer'

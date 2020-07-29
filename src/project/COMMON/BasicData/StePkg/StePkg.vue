@@ -6,35 +6,12 @@
                     <el-select v-model="queryForm.stePotId" size="small" placeholder="杀菌锅" style="width: 160px; margin-right: 10px;" clearable>
                         <el-option v-for="(item, index) in holderList" :key="index" :label="item.holderName" :value="item.id" />
                     </el-select>
-                    <el-button type="primary" size="small" style="margin-right: 10px;" @click="GetData()">
+                    <el-button type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; GetData() }">
                         查询
                     </el-button>
-                    <el-popover
-                        placement="bottom"
-                        width="320"
-                        trigger="click"
-                    >
-                        <el-form :inline="true" size="small" :model="queryForm" label-width="100px">
-                            <el-form-item label="杀菌车间：">
-                                <el-select v-model="queryForm.steWorkShop" placeholder="请选择" style="width: 180px;" clearable>
-                                    <el-option v-for="(item, index) in steWorkShop" :key="index" :label="item.deptName" :value="item.id" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="包装车间：">
-                                <el-select v-model="queryForm.pkgWorkShop" placeholder="请选择" style="width: 180px;" clearable @change="getPkgLine">
-                                    <el-option v-for="(item, index) in pkgWorkShop" :key="index" :label="item.deptName" :value="item.id" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="包装产线：">
-                                <el-select v-model="queryForm.pkgLine" placeholder="请选择" style="width: 180px;" clearable>
-                                    <el-option v-for="(item, index) in pkgLine" :key="index" :label="item.deptName" :value="item.id" />
-                                </el-select>
-                            </el-form-item>
-                        </el-form>
-                        <el-button slot="reference" type="primary" size="small">
-                            高级查询
-                        </el-button>
-                    </el-popover>
+                    <el-button type="primary" size="small" @click="visibleHightLevelQuery = true">
+                        高级查询
+                    </el-button>
                     <el-button type="primary" size="small" style="margin-left: 10px;" @click="AddDate()">
                         新增
                     </el-button>
@@ -55,7 +32,7 @@
                 <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)">
+                        <el-button class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
                             编辑
                         </el-button>
                     </template>
@@ -65,6 +42,29 @@
                 <el-pagination :current-page="queryForm.current" :page-sizes="[10, 20, 50]" :page-size="queryForm.size" layout="total, sizes, prev, pager, next, jumper" :total="queryForm.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
         </mds-card>
+        <el-dialog width="500px" title="高级查询" :close-on-click-modal="false" :visible.sync="visibleHightLevelQuery">
+            <el-form :inline="true" size="small" :model="queryForm" label-width="100px">
+                <el-form-item label="杀菌车间：">
+                    <el-select v-model="queryForm.steWorkShop" placeholder="请选择" style="width: 180px;" clearable>
+                        <el-option v-for="(item, index) in steWorkShop" :key="index" :label="item.deptName" :value="item.id" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="包装车间：">
+                    <el-select v-model="queryForm.pkgWorkShop" placeholder="请选择" style="width: 180px;" clearable @change="getPkgLine">
+                        <el-option v-for="(item, index) in pkgWorkShop" :key="index" :label="item.deptName" :value="item.id" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="包装产线：">
+                    <el-select v-model="queryForm.pkgLine" placeholder="请选择" style="width: 180px;" clearable>
+                        <el-option v-for="(item, index) in pkgLine" :key="index" :label="item.deptName" :value="item.id" />
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visibleHightLevelQuery = false">取消</el-button>
+                <el-button type="primary" @click="() => { queryForm.current = 1; GetData() }">确定</el-button>
+            </span>
+        </el-dialog>
         <ste-pkg-add-or-update v-if="addOrUpdate" ref="addOrUpdate" :ste-work-shop="steWorkShop" :pkg-work-shop="pkgWorkShop" :holder-list="holderList" @refreshDataList="GetData" />
     </div>
 </template>
@@ -99,6 +99,7 @@
             pkgLine: ''
         };
 
+        visibleHightLevelQuery = false;
         addOrUpdate = false;
         steWorkShop = [];
         pkgWorkShop = [];
@@ -130,6 +131,7 @@
             }).then(({ data }) => {
                 this.holderList = data.data.records
             })
+            this.GetData()
         }
 
         getPkgLine(n) {
@@ -162,6 +164,8 @@
 
         GetData() {
             BASIC_API.STEPKG_LIST_API(this.queryForm).then(({ data }) => {
+                this.visibleHightLevelQuery = false;
+                this.addOrUpdate = false;
                 if (data.data.current === 1 && data.data.records.length === 0) {
                     this.$infoToast('暂无任何内容');
                 }

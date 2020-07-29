@@ -79,7 +79,8 @@
 
         init(data) {
             if (data) {
-                this.dataForm = data
+                this.dataForm = JSON.parse(JSON.stringify(data));
+                this.getPkgLine(this.dataForm.pkgWorkShop);
             } else {
                 this.dataForm = {
                     id: '',

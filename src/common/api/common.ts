@@ -416,29 +416,21 @@ const COMMON_API = {
      */
     SPECIAL_MATERIAL_REMOVE_API: params => httpProxy('/ste/steSpeAccessories/remove', 'POST', params),
     /**
-     * @property {string} PERMISSION_GROUP_QUERY_API  RDM 数据集分页列表
-     */
-    PERMISSION_GROUP_QUERY_API: params => httpProxy('/permissionGroup/queryPage', 'GET', params, 'RDM'),
-    /**
-     * @property {string} PERMISSION_LIST_PERMISSIONCODE_API RDM 列出所有权限属性字典
-     */
-    PERMISSION_LIST_PERMISSIONCODE_API: params => httpProxy('/permission/listPermissionCode', 'GET', params, 'RDM'),
-    /**
-     * @property {string} PERMISSION_QUERY_ITEMLIST_API RDM 查询数据集下的权限列表
-     */
-    PERMISSION_QUERY_ITEMLIST_API: params => httpProxy('/permissionGroup/queryItemList', 'GET', params, 'RDM'),
-    /**
-     * @property {string} ERMISSION_SAVE_API RDM 数据集保存
-     */
-    PERMISSION_SAVE_API: params => httpProxy('/permissionGroup/save', 'POST', params, 'RDM'),
-    /**
-     * @property {string} ERMISSION_SAVE_API RDM 数据集删除
-     */
-    PERMISSION_REMOVE_API: params => httpProxy('/permissionGroup/remove', 'GET', params, 'RDM'),
-    /**
      * @property {string} DROPDOWN_UNIT_API 根据物料获取单位
      */
-    DROPDOWN_UNIT_API: params => httpProxy('/sysMaterial/unit/dropDown', 'GET', params)
+    DROPDOWN_UNIT_API: params => httpProxy('/sysMaterial/unit/dropDown', 'GET', params),
+    /**
+     * @property {string} CHECKWORK_QUERY_API 考勤管理-查询
+     */
+    CHECKWORK_QUERY_API: params => httpProxy('/checkWork/query', 'POST', params),
+    /**
+     * @property {string} CHECKWORK_SAVE_API 考勤管理-保存
+     */
+    CHECKWORK_SAVE_API: params => httpProxy('/checkWork/save', 'POST', params),
+    /**
+     * @property {string} CHECKWORK_SUBMIT_API 考勤管理-submit
+     */
+    CHECKWORK_SUBMIT_API: params => httpProxy('/checkWork/submit', 'POST', params)
 };
 
 export default COMMON_API;
