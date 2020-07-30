@@ -3,7 +3,7 @@
         <mds-card title="人员统计" :name="'productPeople'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
+                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewDataRow()">
                         新增
                     </el-button>
                 </div>
@@ -51,7 +51,7 @@
                     </template>
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
-                            <span v-if="!isRedact" style="cursor: pointer;">
+                            <span v-if="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')">
                                 <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
                             </span>
                             <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">

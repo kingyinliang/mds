@@ -25,6 +25,9 @@
                     <el-button type="primary" size="small" @click="btnAddDataRow">
                         新增
                     </el-button>
+                    <el-button type="primary" size="small" @click="btnSaveData">
+                        保存
+                    </el-button>
                     <el-button type="danger" size="small" @click="btnReject">
                         撤回
                     </el-button>
@@ -34,7 +37,7 @@
                 </div>
             </template>
             <el-form ref="dataFormRules" :model="dataFormRules">
-                <el-table class="newTable" :data="currentFormDataGroup" max-height="300" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+                <el-table class="newTable" :data="currentFormDataGroup" max-height="300" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="handleSelectionChange">
                     <el-table-column
                         type="selection"
                         width="55"
@@ -81,7 +84,7 @@
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.team" size="small" clearable :disabled="!isRedact">
                                 <el-option
-                                    v-for="(item,index) in scope.row.teamOptions"
+                                    v-for="(item,index) in scope.row.teamOptionsList"
                                     :key="item.targetCode+index"
                                     :label="item.targetName"
                                     :value="item.targetCode"
@@ -197,7 +200,7 @@
     import OfficialWorker from 'components/OfficialWorker.vue';
     import LoanedPersonnel from 'components/LoanedPersonnel.vue';
     import TemporaryWorker from 'components/TemporaryWorker.vue';
-    // import _ from 'lodash';
+    import _ from 'lodash';
 
 
     @Component({
@@ -231,8 +234,9 @@
         workshopList: OptionsInList[]=[] // 车间清单
         productLineList: OptionsInList[]=[] // 产线清单
         classesOptions: OptionsInList[]=[] // 班次清单
-        // teamOptions: OptionsInList[]=[] // 班组清单
-        userTypeList: UserTypeListObject[] = []; // 人员属性清单
+        userTypeList: UserTypeListObject[] = [] // 人员属性清单
+
+        multipleSelection: CurrentDataTable[]=[] // table 内选中 item
 
         totalCount = 1
         currPage = 1
@@ -248,12 +252,6 @@
         officialWorkerStatus = false;
         loanedPersonnelStatus = false;
         temporaryWorkerStatus = false;
-
-        basicUnitName=''
-        ratio=1
-        readAudit= []
-        ruleForm={
-        }
 
         dataFormRules= {
             workShop: [
@@ -284,6 +282,7 @@
 
 
         mounted() {
+            // 获取车间下拉
             COMMON_API.ORG_QUERY_WORKSHOP_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptType: ['WORK_SHOP']
@@ -294,13 +293,12 @@
                 })
             })
 
-
-            // 人员属性
+            // 获取人员属性下拉
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_USER_TYPE' }).then(({ data }) => {
                 this.userTypeList = data.data
             });
 
-            // 班次
+            // 获取班次下拉
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
                 this.classesOptions = []
                 data.data.forEach((item) => {
@@ -311,11 +309,9 @@
                 })
             });
 
-
         }
 
         getDataList() {
-
             COMMON_API.CHECKWORK_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 productLine: this.currentProductLine,
@@ -335,6 +331,45 @@
             })
         }
 
+        // 表格选中
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+        }
+
+        // 保存
+        btnSaveData() {
+            if (this.ruleSubmit()) {
+                const delIdsTemp: string[] = [];
+                const insertDataTemp: CurrentDataTable[] = [];
+                const updateDataTemp: CurrentDataTable[] = [];
+
+                this.currentFormDataGroup.forEach((item, index) => {
+                    delete item.productLineList
+                    delete item.teamOptionsList
+                    if (item.delFlag === 1) {
+                        if (item.id) {
+                            delIdsTemp.push(item.id)
+                        }
+                    } else if (item.id) {
+                        if (!_.isEqual(this.orgFormDataGroup[index], item)) {
+                            updateDataTemp.push(item)
+                        }
+                    } else {
+                        insertDataTemp.push(item)
+                    }
+                })
+
+                COMMON_API.CHECKWORK_SAVE_API({
+                    delIds: delIdsTemp,
+                    insertData: insertDataTemp,
+                    updateData: updateDataTemp
+                    }).then(({ data }) => {
+                        console.log(data)
+
+                })
+            }
+        }
+
             // 员工确认
         changeUser(userId) {
             this.currentFormDataGroup[this.currentRow].userList = userId
@@ -346,7 +381,8 @@
         eventChangeWorkshopOptions(val) {
             if (val !== '') {
                 COMMON_API.ORG_QUERY_CHILDREN_API({
-                    parentId: val || ''
+                    parentId: val || '',
+                    deptType: 'PRODUCT_LINE'
                 }).then(({ data }) => {
                     this.productLineList = []
                     data.data.forEach(item => {
@@ -359,7 +395,8 @@
         eventChangeRowWorkshopOptions(row) {
             console.log(row)
             COMMON_API.ORG_QUERY_CHILDREN_API({
-                parentId: row.workShop || ''
+                parentId: row.workShop || '',
+                deptType: 'PRODUCT_LINE'
             }).then(({ data }) => {
                 row.productLineList = []
                 data.data.forEach(item => {
@@ -436,7 +473,7 @@
                     changer: getUserNameNumber(),
                     delFlag: 0,
                     productLineList: [],
-                    teamOptions: []
+                    teamOptionsList: []
                 }
             this.currentFormDataGroup.push(sole)
         }
@@ -446,7 +483,19 @@
         }
 
         btnRemoveDataRow() {
-            //
+            if (this.multipleSelection.length === 0) {
+                this.$warningToast('请选择要删除的条目');
+            } else {
+                this.$confirm('是否删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.multipleSelection.forEach(item => {
+                        item.delFlag = 1
+                    })
+                });
+            }
         }
 
         //  RowDelFlag
@@ -461,17 +510,14 @@
         // 班组
         getTeamList(row) {
             const temp: OptionsInList[] = this.workshopList.filter(item => item.targetCode === row.workShop)
-
             COMMON_API.SYS_CHILDTYPE_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptType: ['PRODUCT_TEAM'],
                 deptName: temp[0].targetName
             }).then(({ data }) => {
-                console.log('33333')
-                console.log(data)
-                row.teamOptions = [];
+                row.teamOptionsList = [];
                 data.data.forEach(item => {
-                    row.teamOptions.push({ targetCode: item.deptCode, targetName: item.deptName })
+                    row.teamOptionsList.push({ targetCode: item.deptCode, targetName: item.deptName })
                 });
             });
         }
@@ -486,32 +532,10 @@
             this.getDataList();
         }
 
-        async init() {
-            // PKG_API.PKG_INSTORAGE_QUERY_API({
-            //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-            //     orderNo: formHeader.orderNo,
-            //     materialCode: formHeader.materialCode
-            // }).then(({ data }) => {
-            //     if (data.data.length !== 0) {
-            //         this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data.inStorages))
-            //         this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data.inStorages))
-            //         this.setValidate(this.currentFormDataGroup, this.ruleForm)
-            //     }
-            //     this.basicUnitName = data.data.basicUnitName
-            //     this.ratio = data.data.ratio
-            //     if (this.unitOptions.length === 0) {
-            //         this.unitOptions.push({ key: data.data.basicUnit, value: data.data.basicUnitName })
-            //         this.unitOptions.push({ key: data.data.productUnit, value: data.data.productUnitName })
-            //     }
-
-
-            // });
-        }
 
         // 选择人员 正式借调
         selectUser(row: CurrentDataTable) {
             console.log(row)
-            // this.row = row;
             if (row.userType === 'FORMAL') { // 正式
                 if (row.productLine) {
                     this.officialWorkerStatus = true;
@@ -536,23 +560,18 @@
 
         // 提交时跑校验
         ruleSubmit() {
-            // if (this.currentFormDataGroup.filter(it => it.delFlag !== 1).length === 0) {
-            //     this.$warningToast('请录入生产入库');
-            //     return false
-            // }
-            // for (const item of this.currentFormDataGroup.filter(it => it.delFlag !== 1)) {
-            //     if (!item.productDate || !item.classes || !item.batch || !item.inStorageCount || !item.inStorageUnit) {
-            //         this.$warningToast('请填写生产入库必填项');
-            //         return false
-            //     }
-            // }
-            // return true
+            let currentFormDataGroupNew: CurrentDataTable[] = [];
+            currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
+
+            for (const item of currentFormDataGroupNew) {
+                if (!item.workShop || !item.classes || !item.userType || !item.userList || !item.startTime || !item.endTime || !item.dinner || !item.jobContent) {
+                    this.$warningToast('请填写必填项');
+                    return false
+                }
+            }
+            return true
         }
 
-
-        savedData() {
-            //
-        }
 
         rowDelFlag({ row }) {
             if (row.delFlag === 1) {
@@ -594,7 +613,7 @@ interface CurrentDataTable {
         workShop?: string;
         delFlag?: number;
         productLineList: OptionsInList[];
-        teamOptions: OptionsInList[];
+        teamOptionsList: OptionsInList[];
 }
 interface OptionsInList{
     targetCode?: string;
