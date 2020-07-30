@@ -119,9 +119,9 @@
                 potOrderNo: this.$store.state.sterilize.Craft.potOrderMap.potOrderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
-                this.formHeader.textStage = 'craft';
+                this.formHeader.textStage = 'CRAFT';
                 this.$refs.craft.init(this.formHeader);
-                this.$refs.excRecord.init(this.formHeader, 'craft');
+                this.$refs.excRecord.init(this.formHeader, 'CRAFT');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
             });
         }
@@ -130,7 +130,7 @@
         savedDatas() {
             // this.formHeader.textStage = 'craft';
             const craftRequest = this.$refs.craft.getSavedOrSubmitData(this.formHeader);
-            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'craft');
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'CRAFT');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
             return STE_API.STE_DETAIL_CRAFT_SAVED_API({
@@ -153,7 +153,7 @@
         // 提交
         submitDatas() {
             const craftRequest = this.$refs.craft.getSavedOrSubmitData(this.formHeader);
-            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'craft');
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'CRAFT');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
             return STE_API.STE_DETAIL_CRAFT_SUBMIT_API({

@@ -268,9 +268,6 @@ import _ from 'lodash';
 @Component({
     name: 'Equipment',
     components: {
-        // AuditLog: resolve => {
-        //     require(['@/views/components/AuditLog'], resolve);
-        // }
     }
 })
 
@@ -342,38 +339,6 @@ export default class Equipment extends Vue {
     // eslint-disable-next-line no-invalid-this
     addSecondDataRowThrottle= throttle(this.addSecondDataRow, 500, 800)
 
-    // changeStart(value, index, order) {
-    //     if (!value.endDate) {
-    //         this.pickerOptionsStart[order][index] = Object.assign({}, this.pickerOptionsStart[order][index], {
-    //         disabledDate: () => {
-    //             return false
-    //         }
-    //         })
-    //     } else {
-    //         this.pickerOptionsStart[order][index] = Object.assign({}, this.pickerOptionsStart[order][index], {
-    //         disabledDate: (time) => {
-    //             return time.getTime() > new Date(value.endDate).getTime() - 8.64e6
-    //         }
-    //         })
-    //     }
-    // }
-
-    // changeEnd(value, index, order) {
-    //     if (!value.startDate) {
-    //         this.pickerOptionsEnd[order][index] = Object.assign({}, this.pickerOptionsEnd[order][index], {
-    //         disabledDate: () => {
-    //             return false
-    //             }
-    //         })
-    //     } else {
-    //         this.pickerOptionsEnd[order][index] = Object.assign({}, this.pickerOptionsEnd[order][index], {
-    //         disabledDate: (time) => {
-    //             return time.getTime() < new Date(value.startDate).getTime() - 8.64e7
-    //             }
-    //         })
-    //     }
-    // }
-
     created() {
         this.getStopType() // 停机类型
 
@@ -383,21 +348,15 @@ export default class Equipment extends Vue {
 
         this.getAbnormalHalt()
 
-
     }
 
     async init(formHeader) {
-
-
         PKG_API.PKG_DEVICE_QUERY_API({ // 设备运行-查询
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             orderNo: formHeader.orderNo
         }).then(({ data }) => {
             if (data.data !== null) {
                 this.firstFormDataGroup = JSON.parse(JSON.stringify(data.data));
-                // this.firstFormDataGroup.forEach(item => {
-                //     item.date = [item.startDate as string, item.endDate as string]
-                // });
                 this.orgFirstFormDataGroup = JSON.parse(JSON.stringify(this.firstFormDataGroup));
                 this.setValidate(this.firstFormDataGroup, this.ruleFirstForm)
             } else {
@@ -414,7 +373,6 @@ export default class Equipment extends Vue {
                 this.secondFormDataGroup.forEach(item => {
                     item.fzExceptionCount = false
                     item.fzReasonOptions = false
-                    // item.date = [item.startDate as string, item.endDate as string]
                     this.changeStopModeDefaultOption(item);
                     this.changeStopReasonDefaultOption(item);
                 });
@@ -469,10 +427,6 @@ export default class Equipment extends Vue {
     }
 
     savedData(formHeader) {
-        // this.firstFormDataGroup.forEach(item => {
-        //     item.startDate = item.date[0]
-        //     item.endDate = item.date[1]
-        // })
         const pkgDeviceSaveRequestDto: FristObj = {
             deviceRunTime: this.computedFirstDataTotal,
             ids: [],
@@ -480,10 +434,6 @@ export default class Equipment extends Vue {
             pkgDeviceUpdateDtos: []
         };
 
-        // this.secondFormDataGroup.forEach(item => {
-        //     item.startDate = item.date[0]
-        //     item.endDate = item.date[1]
-        // })
         const pkgExceptionSaveRequestDto: SecondObj = {
             devicePauseTime: this.computedSecondDataTotal,
             ids: [],
@@ -796,11 +746,6 @@ export default class Equipment extends Vue {
 
     get computedFirstDataTotal(): number {
         let total = 0;
-        // const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        // if (this.firstFormDataGroup.length !== 0) {
-        //     total = this.firstFormDataGroup.map(item => Number(item.duration)).reduce(reducer) as number
-        // }
-
 
         this.firstFormDataGroup.map((item) => {
             if (item.delFlag !== 1) {
