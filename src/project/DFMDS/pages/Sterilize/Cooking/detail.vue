@@ -23,7 +23,12 @@
                         <template slot="label">
                             <span class="notNull">*</span>生产物料：
                         </template>
-                        <el-select v-model="formHeaders.productMaterial" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
+                        <el-tooltip v-if="formHeaders.cookingNo !== ''" class="item" effect="dark" :content="formHeaders.productMaterial + ' '+ formHeaders.productMaterialName" placement="top-start">
+                            <el-select v-model="formHeaders.productMaterial" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
+                                <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
+                            </el-select>
+                        </el-tooltip>
+                        <el-select v-else v-model="formHeaders.productMaterial" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
                             <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
                         </el-select>
                     </el-form-item>
@@ -498,7 +503,6 @@ export default class CookingDetail extends Vue {
             this.$warningToast('请完善头部生产车间、煮料锅、生产物料三项信息');
             return false;
         }
-        console.log(this.refactorData());
         STE_API.STE_COOKING_DETAIL_SAVE_API(this.refactorData()).then(({ data }) => {
             this.isRedact = false;
             this.$successToast('保存成功');
@@ -569,8 +573,17 @@ export default class CookingDetail extends Vue {
 
     setRedact() {
         this.isRedact = !this.isRedact
-        if (this.isRedact === false && this.formHeaders.cookingNo !== '') {
-            this.getDetail(this.formHeaders.cookingNo);
+        if (this.isRedact === false) {
+            if (this.formHeaders.cookingNo !== '') {
+                this.getDetail(this.formHeaders.cookingNo);
+            } else {
+                this.accessoriesResponseDtos = [];
+                this.dissolutionResponseDtos = [];
+                if (this.formHeaders.productMaterial) {
+                    this.getAccMaterial(this.formHeaders.productMaterial);
+                }
+                this.getDissolutionPot(this.formHeaders.workShop);
+            }
         }
     }
 
