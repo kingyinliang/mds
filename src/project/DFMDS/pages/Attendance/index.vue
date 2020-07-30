@@ -381,7 +381,8 @@
         eventChangeWorkshopOptions(val) {
             if (val !== '') {
                 COMMON_API.ORG_QUERY_CHILDREN_API({
-                    parentId: val || ''
+                    parentId: val || '',
+                    deptType: 'PRODUCT_LINE'
                 }).then(({ data }) => {
                     this.productLineList = []
                     data.data.forEach(item => {
@@ -394,7 +395,8 @@
         eventChangeRowWorkshopOptions(row) {
             console.log(row)
             COMMON_API.ORG_QUERY_CHILDREN_API({
-                parentId: row.workShop || ''
+                parentId: row.workShop || '',
+                deptType: 'PRODUCT_LINE'
             }).then(({ data }) => {
                 row.productLineList = []
                 data.data.forEach(item => {
