@@ -3,7 +3,7 @@
         <mds-card title="运行情况" :name="'equipment'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewFirstDataRowThrottle">
+                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewFirstDataRowThrottle">
                         新增
                     </el-button>
                 </div>
@@ -92,7 +92,7 @@
         <mds-card title="停机情况" :name="'equipmentStop'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addSecondDataRowThrottle">
+                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addSecondDataRowThrottle">
                         新增
                     </el-button>
                 </div>
@@ -185,7 +185,7 @@
                     </el-table-column>
                     <el-table-column label="时长(MIN)" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-if="scope.row.stopMode!=='CONTINUE_HALT'" v-model.number="scope.row.duration" size="small" clearable :disabled="!isRedact" />
+                            <el-input v-if="scope.row.stopMode!=='CONTINUE_HALT'" v-model.number="scope.row.duration" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                             <span v-else>{{ stopMin(scope.row,scope.$index) }}</span>
                         </template>
                     </el-table-column>
