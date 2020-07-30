@@ -136,7 +136,8 @@
 
         getPkgLine(n) {
             COMMON_API.ORG_QUERY_CHILDREN_API({
-                parentId: n
+                parentId: n,
+                deptType: 'PRODUCT_LINE'
             }).then(({ data }) => {
                 this.pkgLine = data.data
             })

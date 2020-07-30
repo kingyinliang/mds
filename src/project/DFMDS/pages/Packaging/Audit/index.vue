@@ -77,7 +77,8 @@ export default class AuditIndex extends Vue {
             prop: 'productLine',
             optionsFn: val => {
                 return COMMON_API.ORG_QUERY_CHILDREN_API({
-                    parentId: val || ''
+                    parentId: val || '',
+                    deptType: 'PRODUCT_LINE'
                 })
             },
             resVal: {

@@ -13,7 +13,7 @@
                         <span class="notNull">* </span>煮料锅/混合罐号
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.potNo" placeholder="请选择" size="small" clearable filterable :disabled="!isRedact" @change="getCookingNum(scope.row)">
+                        <el-select v-model="scope.row.potNo" placeholder="请选择" size="small" clearable filterable :disabled="!isRedact" @change="getCookingNum(scope.row, scope.$index)">
                             <el-option v-for="(item, optIndex) in holderList" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
                         </el-select>
                     </template>
@@ -23,7 +23,7 @@
                         <span class="notNull">* </span>配置日期
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.configDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" :disabled="!isRedact" size="small" style="width: 130px;" @change="getCookingNum(scope.row)" />
+                        <el-date-picker v-model="scope.row.configDate" type="date" value-format="yyyy-MM-dd" format="yyyy.MM.dd" placeholder="选择" :disabled="!isRedact" size="small" style="width: 130px;" @change="getCookingNum(scope.row, scope.$index)" />
                     </template>
                 </el-table-column>
                 <el-table-column min-width="100px">
@@ -31,7 +31,7 @@
                         <span class="notNull">* </span>煮料锅序
                     </template>
                     <template slot-scope="scope">
-                        <el-select v-model="scope.row.cookingNum" placeholder="请选择" size="small" clearable filterable :disabled="!isRedact" @change="cookingNumChange(scope.row)">
+                        <el-select v-model="scope.row.cookingNum" placeholder="请选择" size="small" clearable filterable :disabled="!isRedact" @change="cookingNumChange(scope.row, scope.$index)">
                             <el-option v-for="(item, optIndex) in scope.row.cookingNumArr" :key="optIndex" :label="'第'+item.potOrder+'锅'" :value="item.potOrder" />
                         </el-select>
                     </template>
@@ -296,32 +296,40 @@
         }
 
         // 煮料锅下拉触发
-        getCookingNum(row) {
+        getCookingNum(row, index) {
             STE_API.STE_COOKINGNO_LIST_API({
                 workShop: this.formHeader.workShop,
                 configStartDate: row.configDate,
                 potNo: row.potNo
             }).then(({ data }) => {
                 row.cookingNumArr = data.data;
+                row.cookingNum = '';
                 row.cookingOrderNo = '';
                 row.cookingMaterialCode = '';
                 row.cookingMaterialName = '';
                 row.remainderPot = '';
                 row.remainderAmount = '';
+                row.unit = '';
+                this.$set(this.steCookingConsume, index, row)
             })
         }
 
         // 锅序下拉触发
-        cookingNumChange(row) {
+        cookingNumChange(row, index) {
             const cookingNumObj = row.cookingNumArr.filter(it => it.potOrder === row.cookingNum)[0];
             row.cookingOrderNo = cookingNumObj.cookingNo;
             row.cookingMaterialCode = cookingNumObj.productMaterial;
             row.cookingMaterialName = cookingNumObj.productMaterialName;
             row.remainderPot = cookingNumObj.configPotCount - cookingNumObj.usePotCount;
             row.remainderAmount = cookingNumObj.remainder;
+            COMMON_API.DROPDOWN_UNIT_API({ materialCode: row.cookingMaterialCode }).then(({ data }) => {
+                row.unit = data.data[0]['unit'];
+                this.$set(this.steCookingConsume, index, row)
+            });
             if (this.formHeader.materialCode !== row.cookingMaterialCode || this.formHeader.materialName !== row.cookingMaterialName) {
                 this.$warningToast('请选择生产物料一致的煮料锅！')
             }
+            this.$set(this.steCookingConsume, index, row)
         }
 
         // 获取煮料锅/罐下拉
@@ -461,6 +469,12 @@
         potOrderNo?: string;
         potOrderId?: string;
         configDate?: string;
+        cookingOrderNo?: string;
+        cookingMaterialCode?: string;
+        cookingMaterialName?: string;
+        remainderPot?: string;
+        remainderAmount?: string;
+        unit?: string;
     }
 </script>
 
