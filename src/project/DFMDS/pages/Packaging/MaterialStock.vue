@@ -312,7 +312,7 @@ export default class MaterialStock extends Vue {
 
     // 拉取所有产线
     getProductline() {
-        COMMON_API.ORG_QUERY_WORKSHOP_API({
+        PKG_API.PKG_MATERIALSTOCK_TRANSFERDEPTNAME_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             deptType: ['PRODUCT_LINE'],
             deptName: '包装'
