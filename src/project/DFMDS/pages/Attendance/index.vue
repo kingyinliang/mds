@@ -53,14 +53,14 @@
                             <span class="notNull">*</span>车间
                         </template>
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.workShop" filterable placeholder="请选择" size="small" :disabled="!isRedact" clearable @change="eventChangeRowWorkshopOptions(scope.row)">
-                                <el-option v-for="(item, index) in workshopList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
+                            <el-select v-model="scope.row.workShop" filterable placeholder="请选择" size="small" :disabled="!scope.row.isRedact" clearable @change="eventChangeRowWorkshopOptions(scope.row)">
+                                <el-option v-for="(item, index) in scope.row.workshopList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </template>
                     </el-table-column>
                     <el-table-column prop="productLine" label="产线/工序" min-width="220" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.productLine" filterable placeholder="请选择" size="small" :disabled="!isRedact" clearable>
+                            <el-select v-model="scope.row.productLine" filterable placeholder="请选择" size="small" :disabled="!scope.row.isRedact" clearable>
                                 <el-option v-for="(item, index) in scope.row.productLineList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </template>
@@ -70,7 +70,7 @@
                             <span class="notNull">*</span>班次
                         </template>
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.classes" size="small" clearable :disabled="!isRedact">
+                            <el-select v-model="scope.row.classes" size="small" clearable :disabled="!scope.row.isRedact">
                                 <el-option
                                     v-for="(item, index) in classesOptions"
                                     :key="item.targetCode+index"
@@ -82,7 +82,7 @@
                     </el-table-column>
                     <el-table-column prop="team" min-width="100" label="班组" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.team" size="small" clearable :disabled="!isRedact">
+                            <el-select v-model="scope.row.team" size="small" clearable :disabled="!scope.row.isRedact" @focus="getTeamList(scope.row)">
                                 <el-option
                                     v-for="(item,index) in scope.row.teamOptionsList"
                                     :key="item.targetCode+index"
@@ -97,7 +97,7 @@
                             <span class="notNull">*</span>人员属性
                         </template>
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!isRedact" clearable>
+                            <el-select v-model="scope.row.userType" filterable placeholder="请选择" size="small" :disabled="!scope.row.isRedact" clearable>
                                 <el-option v-for="(iteam, index) in userTypeList" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
                             </el-select>
                         </template>
@@ -108,14 +108,14 @@
                         </template>
                         <template slot-scope="scope">
                             <div class="required" style="min-height: 32px; line-height: 32px;">
-                                <span v-if="!isRedact" style="cursor: pointer;">
+                                <span v-if="!scope.row.isRedact" style="cursor: pointer;">
                                     <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
                                 </span>
-                                <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
+                                <span v-if="scope.row.isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
                                     <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
                                     <i>点击选择人员</i>
                                 </span>
-                                <span v-if="isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" @click="dayLaborer(scope.row)">
+                                <span v-if="scope.row.isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" @click="dayLaborer(scope.row)">
                                     <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
                                     <i>点击输入人员</i>
                                 </span>
@@ -127,7 +127,7 @@
                             <span class="notNull">*</span>开始时间
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
+                            <el-date-picker v-model="scope.row.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!scope.row.isRedact" style="width: 180px;" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="dinner" width="135" label="用餐时间(MIN)" :show-overflow-tooltip="true">
@@ -135,7 +135,7 @@
                             <span class="notNull">*</span>用餐时间(MIN)
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.dinner" size="small" type="number" min="0" :disabled="!isRedact" />
+                            <el-input v-model.number="scope.row.dinner" size="small" :disabled="!scope.row.isRedact" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="endTime" min-width="210" label="结束时间" :show-overflow-tooltip="true">
@@ -143,7 +143,7 @@
                             <span class="notNull">*</span>结束时间
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!isRedact" style="width: 180px;" />
+                            <el-date-picker v-model="scope.row.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!scope.row.isRedact" style="width: 180px;" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="duration" min-width="80" label="时长(H)" :show-overflow-tooltip="true">
@@ -156,12 +156,12 @@
                             <span class="notNull">*</span>工作内容
                         </template>
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.jobContent" size="small" :disabled="!isRedact" />
+                            <el-input v-model="scope.row.jobContent" size="small" :disabled="!scope.row.isRedact" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="remark" min-width="200" label="备注" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" size="small" :disabled="!isRedact" />
+                            <el-input v-model="scope.row.remark" size="small" :disabled="!scope.row.isRedact" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="changer" min-width="140" label="操作人" :show-overflow-tooltip="true">
@@ -176,7 +176,7 @@
                     </el-table-column>
                     <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disabled="!isRedact" @click="btnEditDataRow(scope.row)">
+                            <el-button type="text" size="small" :disabled="scope.row.isRedact" @click="btnEditDataRow(scope.row)">
                                 编辑
                             </el-button>
                         </template>
@@ -242,7 +242,7 @@
         currPage = 1
         pageSize = 10
 
-        isRedact=true
+        // isRedact=true
 
 
         // 常有变数
@@ -311,6 +311,8 @@
 
         }
 
+
+        // 切换页码
         getDataList() {
             COMMON_API.CHECKWORK_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -322,11 +324,57 @@
                 }).then(({ data }) => {
                     console.log('查寻结果')
                     console.log(data)
-                if (data.data.records !== null || data.data.records.length !== 0) {
+                if (data.data.records && data.data.records.length !== 0) {
                     this.currentFormDataGroup = data.data.records
+
+                    this.currentFormDataGroup.forEach(item => {
+                        item.workshopList = []
+                        item.productLineList = []
+                        item.teamOptionsList = []
+                        item.isRedact = item.status === '已保存'
+                    })
                     this.totalCount = data.data.total
                     this.currPage = data.data.current
                     this.pageSize = data.data.size
+                }
+            })
+        }
+
+        // 点击查询按钮
+        btnGetResult(obj) {
+            COMMON_API.CHECKWORK_QUERY_API({
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                productLine: obj.productLine,
+                workShop: obj.workshop,
+                size: this.pageSize,
+                current: this.totalCount,
+                checkWorkDate: obj.evaluationDate
+                }).then(({ data }) => {
+                    console.log('查寻结果')
+                    console.log(data)
+                if (data.data.records && data.data.records.length !== 0) {
+                    this.currentFormDataGroup = data.data.records
+
+                    this.currentFormDataGroup.forEach(item => {
+                        item.workshopList = []
+                        item.productLineList = []
+                        item.teamOptionsList = []
+                        item.isRedact = item.status === '已保存'
+                    })
+                    this.totalCount = data.data.total
+                    this.currPage = data.data.current
+                    this.pageSize = data.data.size
+
+                    // 存全局变量
+                    this.currentWorkshop = obj.workshop
+                    this.currentProductLine = obj.productLine
+                    this.currentEvaluationDate = obj.evaluationDate
+
+                } else {
+                    this.$infoToast('暂无任何内容');
+                    this.currentWorkshop = ''
+                    this.currentProductLine = ''
+                    this.currentEvaluationDate = ''
                 }
             })
         }
@@ -344,8 +392,10 @@
                 const updateDataTemp: CurrentDataTable[] = [];
 
                 this.currentFormDataGroup.forEach((item, index) => {
+                    delete item.workshopList
                     delete item.productLineList
                     delete item.teamOptionsList
+                    delete item.isRedact
                     if (item.delFlag === 1) {
                         if (item.id) {
                             delIdsTemp.push(item.id)
@@ -408,37 +458,6 @@
             this.getTeamList(row)
         }
 
-        btnGetResult(obj) {
-            COMMON_API.CHECKWORK_QUERY_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                productLine: obj.productLine,
-                workShop: obj.workshop,
-                size: this.pageSize,
-                current: this.totalCount,
-                checkWorkDate: obj.evaluationDate
-                }).then(({ data }) => {
-                    console.log('查寻结果')
-                    console.log(data)
-                if (data.data.records !== null || data.data.records.length !== 0) {
-                    this.currentFormDataGroup = data.data.records
-                    this.totalCount = data.data.total
-                    this.currPage = data.data.current
-                    this.pageSize = data.data.size
-
-                    // 存全局变量
-                    this.currentWorkshop = obj.workshop
-                    this.currentProductLine = obj.productLine
-                    this.currentEvaluationDate = obj.evaluationDate
-
-                } else {
-                    this.$infoToast('暂无任何内容');
-                    this.currentWorkshop = ''
-                    this.currentProductLine = ''
-                    this.currentEvaluationDate = ''
-                }
-            })
-        }
-
         workTime(end, start, row) {
             let diff = '0';
             if (end && start && row.delFlag !== 1) {
@@ -448,8 +467,8 @@
         }
 
         // 编辑
-        btnEditDataRow() {
-            //
+        btnEditDataRow(row) {
+            row.isRedact = true
         }
 
         // 新增
@@ -457,7 +476,7 @@
             const sole: CurrentDataTable = {
                     classes: '',
                     jobContent: '',
-                    productLine: '',
+                    productLine: this.searchForm.productLine,
                     userType: '',
                     userList: [],
                     duration: 0,
@@ -472,14 +491,32 @@
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
                     changer: getUserNameNumber(),
                     delFlag: 0,
-                    productLineList: [],
-                    teamOptionsList: []
+                    productLineList: this.productLineList,
+                    workshopList: this.workshopList,
+                    teamOptionsList: [],
+                    isRedact: true
                 }
             this.currentFormDataGroup.push(sole)
         }
 
         btnReject() {
-            //
+            if (this.multipleSelection.length !== 0) {
+                COMMON_API.CHECKWORK_REJECT_API({
+                    ids: []
+                }).then(({ data }) => {
+                    this.multipleSelection.forEach(item => {
+                        item.delFlag = 1
+                    })
+                    console.log('已撤回')
+                    console.log(data)
+                    this.multipleSelection = []
+                    // reload 页面
+                    this.totalCount = 1
+                    this.currPage = 1
+                    this.pageSize = 10
+                    this.getDataList()
+                });
+            }
         }
 
         btnRemoveDataRow() {
@@ -494,6 +531,7 @@
                     this.multipleSelection.forEach(item => {
                         item.delFlag = 1
                     })
+                    this.multipleSelection = []
                 });
             }
         }
@@ -510,16 +548,18 @@
         // 班组
         getTeamList(row) {
             const temp: OptionsInList[] = this.workshopList.filter(item => item.targetCode === row.workShop)
-            COMMON_API.SYS_CHILDTYPE_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptType: ['PRODUCT_TEAM'],
-                deptName: temp[0].targetName
-            }).then(({ data }) => {
-                row.teamOptionsList = [];
-                data.data.forEach(item => {
-                    row.teamOptionsList.push({ targetCode: item.deptCode, targetName: item.deptName })
+            if (temp.length !== 0) {
+                COMMON_API.SYS_CHILDTYPE_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    deptType: ['PRODUCT_TEAM'],
+                    deptName: temp[0].targetName
+                }).then(({ data }) => {
+                    row.teamOptionsList = [];
+                    data.data.forEach(item => {
+                        row.teamOptionsList.push({ targetCode: item.deptCode, targetName: item.deptName })
+                    });
                 });
-            });
+            }
         }
 
         handleSizeChange(val) {
@@ -555,6 +595,18 @@
                 }
             } else {
                 this.$warningToast('请选择人员属性');
+            }
+        }
+
+            // 临时工
+        dayLaborer(row: CurrentDataTable) {
+
+            const userType: (UserTypeListObject | undefined) = this.userTypeList.find((item: UserTypeListObject) => item.dictCode === row.userType);
+            this.temporaryWorkerStatus = true;
+            if (userType) {
+                this.$nextTick(() => {
+                    this.$refs.temporaryWorker.init(row, userType['dictValue']);
+                });
             }
         }
 
@@ -612,8 +664,10 @@ interface CurrentDataTable {
         userType?: string;
         workShop?: string;
         delFlag?: number;
-        productLineList: OptionsInList[];
-        teamOptionsList: OptionsInList[];
+        productLineList?: OptionsInList[];
+        teamOptionsList?: OptionsInList[];
+        workshopList?: OptionsInList[];
+        isRedact?: boolean;
 }
 interface OptionsInList{
     targetCode?: string;
