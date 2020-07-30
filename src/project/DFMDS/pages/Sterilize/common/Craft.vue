@@ -138,6 +138,7 @@ export default class Crafts extends Vue {
             if (data.data === null) {
                 this.doAction = 'insert';
             } else {
+                this.doAction = 'update';
                 this.craftInfo = data.data
                 this.craftTable = data.data.item
                 this.craftTable.map(item => {

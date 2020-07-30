@@ -440,6 +440,10 @@ export default class Equipment extends Vue {
             pkgExceptionInsertDtos: [],
             pkgExceptionUpdateDtos: []
         };
+        console.log('this.firstFormDataGroup')
+        console.log(this.firstFormDataGroup)
+        console.log('this.orgFirstFormDataGroup')
+        console.log(this.orgFirstFormDataGroup)
 
         dataEntryData(formHeader, this.firstFormDataGroup, this.orgFirstFormDataGroup, pkgDeviceSaveRequestDto.ids, pkgDeviceSaveRequestDto.pkgDeviceInsertDtos, pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos);
         dataEntryData(formHeader, this.secondFormDataGroup, this.orgSecondFormDataGroup, pkgExceptionSaveRequestDto.ids, pkgExceptionSaveRequestDto.pkgExceptionInsertDtos, pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos);
@@ -634,10 +638,10 @@ export default class Equipment extends Vue {
         }
     }
 
-    operationHour(row, index): number {
-        let num
+    operationHour(row, index): string {
+        let num = 0
         if (row.endDate !== '' && row.startDate !== '') {
-            num = accDiv((new Date(row.endDate).getTime() - new Date(row.startDate).getTime()), 3600000).toFixed(2)
+            num = accDiv((new Date(row.endDate).getTime() - new Date(row.startDate).getTime()), 3600000) as number
         } else {
             num = 0
         }
@@ -646,14 +650,13 @@ export default class Equipment extends Vue {
         }
         this.firstFormDataGroup[index].duration = num
 
-        return num
+        return num.toFixed(2)
     }
 
-    stopMin(row, index): number {
-        console.log(row)
-        let num
+    stopMin(row, index): string {
+        let num = 0
         if (row.endDate !== '' && row.startDate !== '') {
-            num = accDiv((new Date(row.endDate).getTime() - new Date(row.startDate).getTime()), 60000).toFixed(2)
+            num = accDiv((new Date(row.endDate).getTime() - new Date(row.startDate).getTime()), 60000) as number
         } else {
             num = 0
         }
@@ -662,7 +665,7 @@ export default class Equipment extends Vue {
         }
         this.secondFormDataGroup[index].duration = num
 
-        return num
+        return num.toFixed(2)
     }
 
 
