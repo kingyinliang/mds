@@ -7,7 +7,7 @@
                         <template slot="label">
                             <span class="notNull">*</span>生产车间：
                         </template>
-                        <el-select v-model="formHeaders.workShop" style="width: 175px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
+                        <el-select v-model="formHeaders.workShop" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
                             <el-option v-for="(item, optIndex) in workShop" :key="optIndex" :label="item.deptName" :value="item.deptCode" />
                         </el-select>
                     </el-form-item>
@@ -15,7 +15,7 @@
                         <template slot="label">
                             <span class="notNull">*</span>煮料锅：
                         </template>
-                        <el-select v-model="formHeaders.potNo" style="width: 175px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
+                        <el-select v-model="formHeaders.potNo" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
                             <el-option v-for="(item, optIndex) in holderList" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
                         </el-select>
                     </el-form-item>
@@ -23,7 +23,12 @@
                         <template slot="label">
                             <span class="notNull">*</span>生产物料：
                         </template>
-                        <el-select v-model="formHeaders.productMaterial" style="width: 175px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
+                        <el-tooltip v-if="formHeaders.cookingNo !== ''" class="item" effect="dark" :content="formHeaders.productMaterial + ' '+ formHeaders.productMaterialName" placement="top-start">
+                            <el-select v-model="formHeaders.productMaterial" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
+                                <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
+                            </el-select>
+                        </el-tooltip>
+                        <el-select v-else v-model="formHeaders.productMaterial" style="width: 180px;" placeholder="请选择" :disabled="formHeaders.cookingNo !== '' || !isRedact">
                             <el-option v-for="(item, optIndex) in materialList" :key="optIndex" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
                         </el-select>
                     </el-form-item>
@@ -31,36 +36,36 @@
                         <template slot="label">
                             <span class="notNull">*</span>配置开始时间：
                         </template>
-                        <el-date-picker v-model="formHeaders.configStartDate" type="datetime" placeholder="请选择" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 175px;" :disabled="!isRedact" />
+                        <el-date-picker v-model="formHeaders.configStartDate" type="datetime" placeholder="请选择" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" :disabled="!isRedact" />
                     </el-form-item>
                     <el-form-item label="配置结束时间：">
                         <template slot="label">
                             <span class="notNull">*</span>配置结束时间：
                         </template>
-                        <el-date-picker v-model="formHeaders.configEndDate" type="datetime" placeholder="请选择" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 175px;" :disabled="!isRedact" />
+                        <el-date-picker v-model="formHeaders.configEndDate" type="datetime" placeholder="请选择" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" :disabled="!isRedact" />
                     </el-form-item>
                     <el-form-item label="配置锅数：">
                         <template slot="label">
                             <span class="notNull">*</span>配置锅数：
                         </template>
-                        <el-input v-model="formHeaders.configPotCount" placeholder="手工录入" style="width: 175px;" :disabled="!isRedact" />
+                        <el-input v-model="formHeaders.configPotCount" placeholder="手工录入" style="width: 180px;" :disabled="!isRedact" />
                     </el-form-item>
                     <el-form-item label="使用日期：">
                         <template slot="label">
                             <span class="notNull">*</span>使用日期：
                         </template>
-                        <el-date-picker v-model="formHeaders.useDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 175px;" :disabled="!isRedact" />
+                        <el-date-picker v-model="formHeaders.useDate" type="date" placeholder="请选择" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 180px;" :disabled="!isRedact" />
                     </el-form-item>
                     <el-form-item label="煮料锅序：">
                         <template slot="label">
                             <span class="notNull">*</span>煮料锅序：
                         </template>
-                        <el-select v-model="formHeaders.potOrder" style="width: 175px;" placeholder="请选择" clearable filterable :disabled="!isRedact">
-                            <el-option v-for="(item, optIndex) in holderNumberList" :key="optIndex" :label="item.name" :value="item.value" style="width: 175px;" />
+                        <el-select v-model="formHeaders.potOrder" style="width: 180px;" placeholder="请选择" clearable filterable :disabled="!isRedact">
+                            <el-option v-for="(item, optIndex) in holderNumberList" :key="optIndex" :label="item.name" :value="item.value" style="width: 180px;" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="备注：">
-                        <el-input v-model="formHeaders.remark" placeholder="手工录入" style="width: 175px;" :disabled="!isRedact" />
+                        <el-input v-model="formHeaders.remark" placeholder="手工录入" style="width: 180px;" :disabled="!isRedact" />
                     </el-form-item>
                 </el-row>
                 <el-row>
@@ -212,6 +217,7 @@ import _ from 'lodash';
 
 export default class CookingDetail extends Vue {
     formHeaders: HeaderInfo = {};
+    productMaterial = '';
 
     workShop = [];
     holderList: HoldList[] = [];
@@ -259,6 +265,12 @@ export default class CookingDetail extends Vue {
     @Watch('formHeaders.productMaterial')
     changeProductMaterial(newVal) {
         this.getAccMaterial(newVal);
+        // if (newVal && this.materialList.length !== 0) {
+        //     const mat = this.materialList.find(item => item.materialCode === newVal)
+        //     this.productMaterial = mat.materialCode + ' ' + mat.materialName;
+        // } else {
+        //     this.productMaterial = '';
+        // }
     }
 
     // 车间下拉
@@ -312,6 +324,11 @@ export default class CookingDetail extends Vue {
                             });
                         })
                     })
+                }
+                if (bool === false && this.materialList.length === 1) {
+                    if (this.materialList[0]['materialCode']) {
+                        this.formHeaders.productMaterial = this.materialList[0]['materialCode']
+                    }
                 }
             }
         }
@@ -486,7 +503,6 @@ export default class CookingDetail extends Vue {
             this.$warningToast('请完善头部生产车间、煮料锅、生产物料三项信息');
             return false;
         }
-        console.log(this.refactorData());
         STE_API.STE_COOKING_DETAIL_SAVE_API(this.refactorData()).then(({ data }) => {
             this.isRedact = false;
             this.$successToast('保存成功');
@@ -557,6 +573,18 @@ export default class CookingDetail extends Vue {
 
     setRedact() {
         this.isRedact = !this.isRedact
+        if (this.isRedact === false) {
+            if (this.formHeaders.cookingNo !== '') {
+                this.getDetail(this.formHeaders.cookingNo);
+            } else {
+                this.accessoriesResponseDtos = [];
+                this.dissolutionResponseDtos = [];
+                if (this.formHeaders.productMaterial) {
+                    this.getAccMaterial(this.formHeaders.productMaterial);
+                }
+                this.getDissolutionPot(this.formHeaders.workShop);
+            }
+        }
     }
 
     // 撤回

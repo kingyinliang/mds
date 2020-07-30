@@ -223,6 +223,11 @@ export default class CookingIndex extends Vue {
                     })
                 })
             }
+            if (this.materialList.length === 1) {
+                if (this.materialList[0]['materialCode']) {
+                    this.formHeader.productMaterial = this.materialList[0]['materialCode']
+                }
+            }
         }
     }
 
