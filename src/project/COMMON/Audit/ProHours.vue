@@ -417,8 +417,8 @@
 
         // 审核日志
         AuditLog(row) {
-            AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: row.orderNo,
+            AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
+                verifyId: row.id,
                 verifyType: 'TIMESHEET'
             }).then(({ data }) => {
                 this.auditLogData = data.data

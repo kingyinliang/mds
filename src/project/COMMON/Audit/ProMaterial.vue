@@ -738,8 +738,8 @@
          // 审核日志
         getAuditLog(row) {
             // console.log(this.$refs.queryTable.activeName)
-            AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: row.orderNo,
+            AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
+                verifyId: row.id,
                 verifyType: 'MATERIAL'
             }).then(({ data }) => {
                 this.auditLogData = data.data

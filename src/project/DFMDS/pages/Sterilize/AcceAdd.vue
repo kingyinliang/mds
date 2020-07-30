@@ -9,6 +9,8 @@
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
+            :submit-rules="submitRules"
+            :saved-rules="savedRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
             @success="getOrderList"
@@ -124,6 +126,15 @@
                 this.$refs.excRecord.init(this.formHeader, 'acceadd');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
             })
+        }
+
+        // 提交校验
+        submitRules(): Function[] {
+            return []
+        }
+
+        savedRules(): Function[] {
+            return [this.$refs.acceadd.ruleSaved]
         }
 
         savedDatas() {

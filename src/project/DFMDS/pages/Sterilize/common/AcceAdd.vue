@@ -59,7 +59,7 @@
                         <span class="notNull">* </span>添加时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 170px;" />
+                        <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!isRedact" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="transferTank" label="转运罐号" min-width="100px" :show-overflow-tooltip="true" />
@@ -239,6 +239,36 @@
         newSteAccessoriesConsume: ACObj[] = [];
         OrgNewSteAccessoriesConsume: ACObj[] = [];
 
+        ruleSaved() {
+            console.log(1);
+            const steCookingConsume = this.steCookingConsume.filter(item => item.delFlag !== 1);
+            const steAccessoriesConsume = this.steAccessoriesConsume.filter(item => item.delFlag !== 1);
+            const newSteAccessoriesConsume = this.newSteAccessoriesConsume.filter(item => item.delFlag !== 1);
+            for (const item of steCookingConsume) {
+                if (!item.consumeAmount || item.consumeAmount === '0') {
+                    this.$warningToast('请填写煮料锅/混合罐领用领用数量');
+                    return false
+                }
+            }
+            for (const item of steAccessoriesConsume) {
+                if (!item.useAmount || item.useAmount === '0') {
+                    this.$warningToast('请填写辅料领用领用数量');
+                    return false
+                }
+                if (!item.addDate) {
+                    this.$warningToast('请填写辅料领用添加时间');
+                    return false
+                }
+            }
+            for (const item of newSteAccessoriesConsume) {
+                if (!item.useMaterialCode) {
+                    this.$warningToast('请填写增补料物料');
+                    return false
+                }
+            }
+            return true
+        }
+
         savedData(formHeader) {
             const steCookingConsumeSaveDto = {
                 delIds: [],
@@ -258,15 +288,17 @@
 
             dataEntryData(formHeader, this.steCookingConsume, this.OrgSteCookingConsume, steCookingConsumeSaveDto.delIds, steCookingConsumeSaveDto.insertData, steCookingConsumeSaveDto.updateData, (item) => {
                 item.potOrderNo = formHeader.potOrderNo;
-                item.potOrderId = formHeader.potOrderId;
+                item.potOrderId = formHeader.id;
             });
             dataEntryData(formHeader, this.steAccessoriesConsume, this.OrgSteAccessoriesConsume, steAccessoriesConsumeSaveDto.delIds, steAccessoriesConsumeSaveDto.insertData, steAccessoriesConsumeSaveDto.updateData, (item) => {
+                item.useType = '1';
                 item.potOrderNo = formHeader.potOrderNo;
-                item.potOrderId = formHeader.potOrderId;
+                item.potOrderId = formHeader.id;
             });
             dataEntryData(formHeader, this.newSteAccessoriesConsume, this.OrgNewSteAccessoriesConsume, newSteAccessoriesConsumeSaveDto.delIds, newSteAccessoriesConsumeSaveDto.insertData, newSteAccessoriesConsumeSaveDto.updateData, (item) => {
+                item.useType = '2';
                 item.potOrderNo = formHeader.potOrderNo;
-                item.potOrderId = formHeader.potOrderId;
+                item.potOrderId = formHeader.id;
             });
             return {
                 steCookingConsumeSaveDto,
@@ -303,6 +335,7 @@
                 potNo: row.potNo
             }).then(({ data }) => {
                 row.cookingNumArr = data.data;
+                row.cookingId = '';
                 row.cookingNum = '';
                 row.cookingOrderNo = '';
                 row.cookingMaterialCode = '';
@@ -317,6 +350,7 @@
         // 锅序下拉触发
         cookingNumChange(row, index) {
             const cookingNumObj = row.cookingNumArr.filter(it => it.potOrder === row.cookingNum)[0];
+            row.cookingId = cookingNumObj.id;
             row.cookingOrderNo = cookingNumObj.cookingNo;
             row.cookingMaterialCode = cookingNumObj.productMaterial;
             row.cookingMaterialName = cookingNumObj.productMaterialName;
@@ -345,6 +379,7 @@
         // 新增  - 煮料锅/混合罐领用
         addDataRowCookingConsume() {
             this.steCookingConsume.push({
+                consumeAmount: '',
                 potOrderNo: this.formHeader.potOrderNo,
                 potOrderId: this.formHeader.potOrderId,
                 configDate: dateFormat(new Date(), 'yyyy-MM-dd')
@@ -358,6 +393,8 @@
                 potOrderId: this.formHeader.potOrderId,
                 useMaterialCode: '',
                 useMaterialName: '',
+                useAmount: '',
+                addDate: '',
                 useUnit: '',
                 splitFlag: 'N'
             })
@@ -374,6 +411,8 @@
                 potOrderId: this.formHeader.potOrderId,
                 useMaterialCode: row.useMaterialCode,
                 useMaterialName: row.useMaterialName,
+                useBatch: '',
+                useAmount: '',
                 useUnit: row.useUnit,
                 splitFlag: 'Y'
             })
@@ -460,6 +499,9 @@
         potOrderId?: string;
         useMaterialCode?: string;
         useMaterialName?: string;
+        useAmount?: string;
+        useBatch?: string;
+        addDate?: string;
         useUnit?: string;
         splitFlag?: string;
     }
@@ -469,6 +511,7 @@
         potOrderNo?: string;
         potOrderId?: string;
         configDate?: string;
+        consumeAmount?: string;
         cookingOrderNo?: string;
         cookingMaterialCode?: string;
         cookingMaterialName?: string;
