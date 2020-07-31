@@ -127,7 +127,7 @@
             },
             {
                 prop: 'entryUom',
-                label: '单位'
+                label: 'entryUomName'
             },
             {
                 prop: 'isSample',
@@ -409,8 +409,8 @@
 
         // 审核日志
         AuditLog(row) {
-            AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: row.orderNo,
+            AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
+                verifyId: row.id,
                 verifyType: 'INSTORAGE'
             }).then(({ data }) => {
                 this.auditLogData = data.data

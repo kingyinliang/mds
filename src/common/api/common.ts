@@ -430,7 +430,11 @@ const COMMON_API = {
     /**
      * @property {string} CHECKWORK_SUBMIT_API 考勤管理-submit
      */
-    CHECKWORK_SUBMIT_API: params => httpProxy('/checkWork/submit', 'POST', params)
+    CHECKWORK_SUBMIT_API: params => httpProxy('/checkWork/submit', 'POST', params),
+    /**
+     * @property {string} CHECKWORK_REJECT_API 考勤管理- reject
+     */
+    CHECKWORK_REJECT_API: params => httpProxy('/v1/checkWork/withdraw', 'POST', params)
 };
 
 export default COMMON_API;

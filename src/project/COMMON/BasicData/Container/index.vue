@@ -44,10 +44,10 @@
                         {{ containerTypeObject[scope.row.holderType] }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="holderNo" label="容器号" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="holderNo" label="容器号" :show-overflow-tooltip="true" width="100" />
                 <el-table-column prop="holderName" :show-overflow-tooltip="true" label="容器描述" />
                 <el-table-column prop="holderVolume" label="容器量" :show-overflow-tooltip="true" width="80" />
-                <el-table-column prop="holderBatch" label="批数" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="holderBatch" label="批数/锅数" :show-overflow-tooltip="true" width="100" />
                 <el-table-column label="状态" width="120">
                     <template slot-scope="scope">
                         {{ holderStatusObject[scope.row.holderStatus] }}
