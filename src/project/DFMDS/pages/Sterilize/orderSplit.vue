@@ -198,13 +198,13 @@
         ];
 
         // 查询请求
-        listInterface = params => {
+        listInterface(params) {
             params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
             params.current = this.currPage; // eslint-disable-line
             params.size = this.pageSize; // eslint-disable-line
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return COMMON_API.ORDER_QUERY_API(params);
-        };
+        }
 
         getData() {
             this.$refs.queryTable.getDataList();
