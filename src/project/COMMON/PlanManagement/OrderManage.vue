@@ -4,7 +4,7 @@
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
                     <el-input v-model.trim="formHeader.orderNo" size="small" placeholder="订单号" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" clearable @clear="getDataList(true)" @blur="formHeader.orderNo===''?getDataList(true):false" />
-                    <el-button type="primary" size="small" @click="getDataList(true)">
+                    <el-button type="primary" size="small" @click="getDataListLow()">
                         查询
                     </el-button>
                     <el-button type="primary" size="small" @click="visible = true">
@@ -107,6 +107,18 @@ export default class OrderManage extends Vue {
 
     get documentClientHeight() {
         return this.$store.state.common.documentClientHeight;
+    }
+
+    getDataListLow() {
+        this.formHeader.material = '';
+        this.formHeader.dispatchMan = '';
+        this.formHeader.orderStartDateBegin = '';
+        this.formHeader.orderStartDateEnd = '';
+        this.formHeader.orderEndDateBegin = '';
+        this.formHeader.orderEndDateEnd = '';
+        this.formHeader.current = 1;
+        this.formHeader.size = 10;
+        this.getDataList(true);
     }
 
     getDataList(st?) {

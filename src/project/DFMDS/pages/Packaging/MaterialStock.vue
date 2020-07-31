@@ -10,6 +10,7 @@
             :custom-data="true"
             :show-operation-column="true"
             :operation-column-width="150"
+            :clear-search="true"
         >
             <template slot="tab-head-main">
                 <div class="box-card-title clearfix">
