@@ -61,7 +61,7 @@
             </el-table-column>
         </el-table>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="visible = false">取消</el-button>
+            <el-button @click="dialogFormVisible = false">取消</el-button>
             <el-button type="primary" @click="SubmitForm()">确定</el-button>
         </span>
     </el-dialog>
@@ -102,12 +102,12 @@
                 productLine: this.orderObj.productLine,
                 orderId: this.orderObj.id,
                 orderNo: this.orderObj.orderNo,
-                orderDate: this.orderObj.orderDate,
+                orderDate: this.orderObj.productDate,
                 materialCode: this.orderObj.materialCode,
                 materialName: this.orderObj.materialName,
                 planOutput: this.orderObj.planOutput,
                 outputUnit: this.orderObj.outputUnit,
-                productDate: '',
+                productDate: this.orderObj.productDate,
                 potNo: '',
                 potCount: '',
                 potAmount: '',

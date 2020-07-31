@@ -126,8 +126,8 @@
                 label: '入库数量'
             },
             {
-                prop: 'entryUom',
-                label: 'entryUomName'
+                prop: 'entryUomName',
+                label: '单位'
             },
             {
                 prop: 'isSample',

@@ -15,6 +15,15 @@ const resolve = dir => {
 module.exports = {
     devServer: {
         proxy: {
+            '/hostDev': {
+                target: 'https://apimarket-dev.shinho.net.cn/', // 目标代理接口地址
+                secure: false,
+                changeOrigin: true, // 开启代理，在本地创建一个虚拟服务端
+                // ws: true, // 是否启用websockets
+                pathRewrite: {
+                    '^/hostDev': '/'
+                }
+            },
             '/lh': {
                 target: 'http://10.10.2.77:8080/', // 目标代理接口地址
                 secure: false,
