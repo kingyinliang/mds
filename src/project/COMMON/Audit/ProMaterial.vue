@@ -384,7 +384,7 @@
                         label: '计划数量'
                     },
                     {
-                        prop: 'outputUnit',
+                        prop: 'outputUnitName',
                         label: '单位'
                     },
                     {
@@ -392,7 +392,7 @@
                         label: '入库数量'
                     },
                     {
-                        prop: 'countOutputUnit',
+                        prop: 'countOutputUnitName',
                         label: '单位'
                     },
                     {
@@ -408,7 +408,7 @@
                         label: '发料数量'
                     },
                     {
-                        prop: 'entryUom',
+                        prop: 'entryUomName',
                         label: '单位'
                     },
                     {

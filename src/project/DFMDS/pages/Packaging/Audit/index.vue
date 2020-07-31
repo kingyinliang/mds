@@ -135,7 +135,7 @@ export default class AuditIndex extends Vue {
             minwidth: '55'
         },
         {
-            prop: 'outputUnit',
+            prop: 'outputUnitName',
             label: '订单单位',
             minwidth: '50'
         },
@@ -187,7 +187,7 @@ export default class AuditIndex extends Vue {
                     minwidth: '55'
                 },
                 {
-                    prop: 'outputUnit',
+                    prop: 'outputUnitName',
                     label: '订单单位',
                     minwidth: '50'
                 },
