@@ -418,9 +418,6 @@
                     }
                 });
                 console.timeEnd('组件初始化');
-                setTimeout(() => {
-                    this.getDataList(true);
-                }, 1500);
             },
             // 清空表格和分页
             clearTableAndPage() {
