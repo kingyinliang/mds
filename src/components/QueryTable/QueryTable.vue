@@ -275,10 +275,6 @@
             tableHeight: {
                 type: Number,
                 default: 405
-            },
-            clearSearch: {
-                type: Boolean,
-                default: false
             }
         },
         data() {
@@ -425,12 +421,12 @@
             },
             // 清空表格和分页
             clearTableAndPage() {
-                this.tableData = [];
+                // this.tableData = [];
                 this.queryForm[this.currpageConfig] = 1;
                 this.queryForm.totalCount = 0;
-                if (this.clearSearch) {
-                    this.getDataList(true);
-                }
+                // if (this.clearSearch) {
+                //     this.getDataList(true);
+                // }
             },
             // 获取table数据
             getDataList(st) {
