@@ -3,7 +3,7 @@
         <mds-card :title="'生产入库'" :name="'productInStore'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
+                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewDataRow()">
                         新增
                     </el-button>
                 </div>
