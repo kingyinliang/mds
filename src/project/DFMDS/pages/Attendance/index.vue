@@ -19,7 +19,7 @@
                         </el-form-item>
                     </el-form>
 
-                    <el-button type="primary" size="small" @click="btnGetResult(searchForm)">
+                    <el-button type="primary" size="small" :disabled="searchForm.workshop===''|| searchForm.productLine===''" @click="btnGetResult(searchForm)">
                         查询
                     </el-button>
                     <el-button type="primary" size="small" @click="btnAddDataRow">
@@ -37,7 +37,7 @@
                 </div>
             </template>
             <el-form ref="dataFormRules" :model="dataFormRules">
-                <el-table class="newTable" :data="currentFormDataGroup" max-height="300" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="handleSelectionChange">
+                <el-table class="newTable" :data="currentFormDataGroup" max-height="300" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="handleSelectionChange">
                     <el-table-column
                         type="selection"
                         width="55"
@@ -227,8 +227,6 @@
             evaluationDate: ''
         }
 
-        searchCard=true
-
         currentRow: CurrentDataTable = {
             userList: []
         }
@@ -237,6 +235,7 @@
         currentProductLine=''
         currentEvaluationDate=''
 
+        selectTree=[]
         workshopList: OptionsInList[]=[] // 车间清单
         productLineList: OptionsInList[]=[] // 产线清单
         classesOptions: OptionsInList[]=[] // 班次清单
@@ -287,35 +286,37 @@
         }
 
 
-        mounted() {
+    mounted() {
             // 获取车间下拉
-            COMMON_API.ORG_QUERY_WORKSHOP_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptType: ['WORK_SHOP']
-            }).then(({ data }) => {
-                this.workshopList = []
-                data.data.forEach(item => {
-                    this.workshopList.push({ targetCode: item.deptCode, targetName: item.deptName })
-                })
+        COMMON_API.ORG_QUERY_WORKSHOP_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            deptType: ['WORK_SHOP']
+        }).then(({ data }) => {
+            this.workshopList = []
+            data.data.forEach(item => {
+                this.workshopList.push({ targetCode: item.deptCode, targetName: item.deptName })
             })
 
-            // 获取人员属性下拉
-            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_USER_TYPE' }).then(({ data }) => {
-                this.userTypeList = data.data
-            });
+        })
 
-            // 获取班次下拉
-            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
-                this.classesOptions = []
-                data.data.forEach((item) => {
-                    this.classesOptions.push({
-                        targetName: item.dictValue,
-                        targetCode: item.dictCode
-                    })
+
+        // 获取人员属性下拉
+        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_USER_TYPE' }).then(({ data }) => {
+            this.userTypeList = data.data
+        });
+
+        // 获取班次下拉
+        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+            this.classesOptions = []
+            data.data.forEach((item) => {
+                this.classesOptions.push({
+                    targetName: item.dictValue,
+                    targetCode: item.dictCode
                 })
-            });
+            })
+        });
 
-        }
+    }
 
 
         // 切换页码
@@ -334,8 +335,19 @@
                     this.currentFormDataGroup = data.data.records
 
                     this.currentFormDataGroup.forEach(item => {
-                        item.tempWorkshopList = []
+                        item.tempWorkshopList = this.workshopList
                         item.tempProductLineList = []
+
+                        // COMMON_API.ORG_QUERY_CHILDREN_API({
+                        //     parentId: item.workShop || '',
+                        //     deptType: 'PRODUCT_LINE'
+                        // }).then(({ data }) => {
+                        //     this.searchForm.productLine = ''
+                        //     this.productLineList = []
+                        //     data.data.forEach(element => {
+                        //         item.tempProductLineList.push({ targetCode: element.deptCode, targetName: element.deptName })
+                        //     })
+                        // })
                         item.tempTeamOptionsList = []
                         item.isRedact = false
                     })
@@ -357,13 +369,15 @@
                 current: this.totalCount,
                 checkWorkDate: obj.evaluationDate
                 }).then(({ data }) => {
+                    this.checkSaveStatus = false
                     console.log('查寻结果')
                     console.log(data)
                 if (data.data.records && data.data.records.length !== 0) {
                     this.currentFormDataGroup = data.data.records
 
                     this.currentFormDataGroup.forEach(item => {
-                        item.tempWorkshopList = []
+                        item.tempWorkshopList = this.workshopList
+
                         item.tempProductLineList = []
                         item.tempTeamOptionsList = []
                         item.isRedact = false
@@ -441,12 +455,14 @@
             this.temporaryWorkerStatus = false;
         }
 
+        // 下拉生产车操作
         eventChangeWorkshopOptions(val) {
             if (val !== '') {
                 COMMON_API.ORG_QUERY_CHILDREN_API({
                     parentId: val || '',
                     deptType: 'PRODUCT_LINE'
                 }).then(({ data }) => {
+                    this.searchForm.productLine = ''
                     this.productLineList = []
                     data.data.forEach(item => {
                         this.productLineList.push({ targetCode: item.deptCode, targetName: item.deptName })
@@ -461,6 +477,7 @@
                 parentId: row.workShop || '',
                 deptType: 'PRODUCT_LINE'
             }).then(({ data }) => {
+                row.productLine = ''
                 row.tempProductLineList = []
                 data.data.forEach(item => {
                     row.tempProductLineList.push({ targetCode: item.deptCode, targetName: item.deptName })
@@ -511,6 +528,7 @@
                     isRedact: true
                 }
             this.currentFormDataGroup.push(sole)
+            this.checkSaveStatus = true
         }
 
         // [BTN]撤回
@@ -557,14 +575,6 @@
             }
         }
 
-        //  RowDelFlag
-        RowDelFlag({ row }) {
-            if (row.delFlag === 1) {
-                return 'rowDel';
-            }
-            return '';
-
-        }
 
         // 班组
         getTeamList(row) {
@@ -647,6 +657,7 @@
         }
 
 
+        //  rowDelFlag
         rowDelFlag({ row }) {
             if (row.delFlag === 1) {
                 return 'rowDel';
