@@ -421,10 +421,12 @@
             },
             // 清空表格和分页
             clearTableAndPage() {
-                this.tableData = [];
+                // this.tableData = [];
                 this.queryForm[this.currpageConfig] = 1;
                 this.queryForm.totalCount = 0;
-                // this.getDataList()
+                // if (this.clearSearch) {
+                //     this.getDataList(true);
+                // }
             },
             // 获取table数据
             getDataList(st) {

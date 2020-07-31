@@ -3,7 +3,7 @@
         <mds-card title="运行情况" :name="'equipment'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewFirstDataRowThrottle">
+                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewFirstDataRowThrottle">
                         新增
                     </el-button>
                 </div>
@@ -92,7 +92,7 @@
         <mds-card title="停机情况" :name="'equipmentStop'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="addSecondDataRowThrottle">
+                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addSecondDataRowThrottle">
                         新增
                     </el-button>
                 </div>
@@ -185,7 +185,7 @@
                     </el-table-column>
                     <el-table-column label="时长(MIN)" width="120" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-input v-if="scope.row.stopMode!=='CONTINUE_HALT'" v-model.number="scope.row.duration" size="small" clearable :disabled="!isRedact" />
+                            <el-input v-if="scope.row.stopMode!=='CONTINUE_HALT'" v-model.number="scope.row.duration" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                             <span v-else>{{ stopMin(scope.row,scope.$index) }}</span>
                         </template>
                     </el-table-column>
@@ -194,7 +194,7 @@
                             <span class="notNull">*</span>次数
                         </template>
                         <template slot-scope="scope">
-                            <!-- <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(!scope.row.fzExceptionCount)" /> -->
+                            <!-- <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(!scope.row.tempFzExceptionCount)" /> -->
                             <el-input v-model.number="scope.row.exceptionCount" size="small" placeholder="输入次数" clearable oninput="value=value.replace(/\D*/g,'')" :disabled="!(scope.row.stopMode!=='CONTINUE_HALT' && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                         </template>
                     </el-table-column>
@@ -206,7 +206,7 @@
                             <el-form-item :prop="'r'+scope.$index+'.stopSituation'" :rules="dataRules.stopSituation">
                                 <el-select v-model="scope.row.stopSituation" size="small" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @change="changeStopReasonOption(scope.row)">
                                     <!-- <el-option v-for="(item) in stopSituationOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" /> -->
-                                    <el-option v-for="(item) in scope.row.stopSituationArray" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                                    <el-option v-for="(item) in scope.row.tempStopSituationArray" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
                         </template>
@@ -216,13 +216,13 @@
                             <span class="notNull">*</span>停机原因
                         </template>
                         <template slot-scope="scope">
-                            <el-form-item v-if="scope.row.fzReasonOptions===false" :prop="'r'+scope.$index+'.stopReason'" :rules="dataRules.stopReason">
-                                <el-select v-model="scope.row.stopReason" size="small" clearable :disabled="!(!scope.row.fzReasonOptions && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                            <el-form-item v-if="scope.row.tempFzReasonOptions===false" :prop="'r'+scope.$index+'.stopReason'" :rules="dataRules.stopReason">
+                                <el-select v-model="scope.row.stopReason" size="small" clearable :disabled="!(!scope.row.tempFzReasonOptions && isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
                                     <!-- <el-option v-for="(item) in stopReasonOptions" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" /> -->
-                                    <el-option v-for="(item) in scope.row.stopReasonArray" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
+                                    <el-option v-for="(item) in scope.row.tempStopReasonArray" :key="item.dictCode" :value="item.dictCode" :label="item.dictValue" />
                                 </el-select>
                             </el-form-item>
-                            <el-form-item v-if="scope.row.fzReasonOptions===true" :prop="'r'+scope.$index+'.exceptionInfo'" :rules="dataRules.exceptionInfo">
+                            <el-form-item v-if="scope.row.tempFzReasonOptions===true" :prop="'r'+scope.$index+'.exceptionInfo'" :rules="dataRules.exceptionInfo">
                                 <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" clearable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                             </el-form-item>
                         </template>
@@ -298,8 +298,8 @@ export default class Equipment extends Vue {
     planHaltOptions: Option[]=[]
     abnormalHaltOptions: Option[]=[]
     stopReasonOptions: Option[]=[]
-    //fzReasonOptions=false
-    // fzExceptionCount=false
+    //tempFzReasonOptions=false
+    // tempFzExceptionCount=false
     ruleFirstForm={
     }
 
@@ -359,6 +359,7 @@ export default class Equipment extends Vue {
                 this.firstFormDataGroup = JSON.parse(JSON.stringify(data.data));
                 this.orgFirstFormDataGroup = JSON.parse(JSON.stringify(this.firstFormDataGroup));
                 this.setValidate(this.firstFormDataGroup, this.ruleFirstForm)
+
             } else {
                 this.firstFormDataGroup = []
                 this.orgFirstFormDataGroup = []
@@ -371,8 +372,8 @@ export default class Equipment extends Vue {
             if (data.data !== null) {
                 this.secondFormDataGroup = JSON.parse(JSON.stringify(data.data));
                 this.secondFormDataGroup.forEach(item => {
-                    item.fzExceptionCount = false
-                    item.fzReasonOptions = false
+                    item.tempFzExceptionCount = false
+                    item.tempFzReasonOptions = false
                     this.changeStopModeDefaultOption(item);
                     this.changeStopReasonDefaultOption(item);
                 });
@@ -380,6 +381,7 @@ export default class Equipment extends Vue {
                 this.orgSecondFormDataGroup = JSON.parse(JSON.stringify(this.secondFormDataGroup));
 
                 this.setValidate(this.secondFormDataGroup, this.ruleSecondForm)
+
             } else {
                 this.secondFormDataGroup = []
                 this.orgSecondFormDataGroup = []
@@ -418,7 +420,7 @@ export default class Equipment extends Vue {
             }
         }
         for (const item of this.secondFormDataGroup.filter(it => it.delFlag !== 1)) {
-            if (!item.classes || !item.stopType || !item.stopMode || !item.startDate || !item.endDate || !item.exceptionCount || !item.stopSituation || (!item.stopReason && !item.fzReasonOptions) || (!item.exceptionInfo && item.fzReasonOptions)) {
+            if (!item.classes || !item.stopType || !item.stopMode || !item.startDate || !item.endDate || !item.exceptionCount || !item.stopSituation || (!item.stopReason && !item.tempFzReasonOptions) || (!item.exceptionInfo && item.tempFzReasonOptions)) {
                 this.$warningToast('请填写停机情况必填项');
                 return false
             }
@@ -444,22 +446,40 @@ export default class Equipment extends Vue {
         console.log(this.firstFormDataGroup)
         console.log('this.orgFirstFormDataGroup')
         console.log(this.orgFirstFormDataGroup)
+        console.log('this.secondFormDataGroup')
+        console.log(this.secondFormDataGroup)
+        console.log('this.orgSecondFormDataGroup')
+        console.log(this.orgSecondFormDataGroup)
+
+        this.secondFormDataGroup.forEach(item => {
+            delete item.tempStopReasonArray
+            delete item.tempStopSituationArray
+            delete item.tempFzExceptionCount
+            delete item.tempFzReasonOptions
+        })
+
+        this.orgSecondFormDataGroup.forEach(item => {
+            delete item.tempStopReasonArray
+            delete item.tempStopSituationArray
+            delete item.tempFzExceptionCount
+            delete item.tempFzReasonOptions
+        })
 
         dataEntryData(formHeader, this.firstFormDataGroup, this.orgFirstFormDataGroup, pkgDeviceSaveRequestDto.ids, pkgDeviceSaveRequestDto.pkgDeviceInsertDtos, pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos);
         dataEntryData(formHeader, this.secondFormDataGroup, this.orgSecondFormDataGroup, pkgExceptionSaveRequestDto.ids, pkgExceptionSaveRequestDto.pkgExceptionInsertDtos, pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos);
 
-        pkgDeviceSaveRequestDto.pkgDeviceInsertDtos.forEach(item => {
-            delete item['stopSituationArray']
-        })
-        pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos.forEach(item => {
-            delete item['stopSituationArray']
-        })
-        pkgExceptionSaveRequestDto.pkgExceptionInsertDtos.forEach(item => {
-            delete item['stopSituationArray']
-        })
-        pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos.forEach(item => {
-            delete item['stopSituationArray']
-        })
+        // pkgDeviceSaveRequestDto.pkgDeviceInsertDtos.forEach(item => {
+        //     delete item['tempStopSituationArray']
+        // })
+        // pkgDeviceSaveRequestDto.pkgDeviceUpdateDtos.forEach(item => {
+        //     delete item['tempStopSituationArray']
+        // })
+        // pkgExceptionSaveRequestDto.pkgExceptionInsertDtos.forEach(item => {
+        //     delete item['tempStopSituationArray']
+        // })
+        // pkgExceptionSaveRequestDto.pkgExceptionUpdateDtos.forEach(item => {
+        //     delete item['tempStopSituationArray']
+        // })
 
         return {
             pkgDeviceSaveRequestDto,
@@ -527,17 +547,17 @@ export default class Equipment extends Vue {
         if (row.stopType === 'PLAN_HALT') {
             row.stopMode = 'CONTINUE_HALT'
             row.exceptionCount = 1
-            row.fzExceptionCount = true
-            row.stopSituationArray = JSON.parse(JSON.stringify(this.planHaltOptions))
-            row.stopReasonArray = []
+            row.tempFzExceptionCount = true
+            row.tempStopSituationArray = JSON.parse(JSON.stringify(this.planHaltOptions))
+            row.tempStopReasonArray = []
             row.stopSituation = ''
             row.stopReason = ''
         } else {
             row.stopMode = ''
             row.exceptionCount = 0
-            row.fzExceptionCount = false
-            row.stopSituationArray = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
-            row.stopReasonArray = []
+            row.tempFzExceptionCount = false
+            row.tempStopSituationArray = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
+            row.tempStopReasonArray = []
             row.stopSituation = ''
             row.stopReason = ''
         }
@@ -547,11 +567,11 @@ export default class Equipment extends Vue {
     changeStopModeDefaultOption(row) {
         if (row.stopType === 'PLAN_HALT') {
             row.stopMode = 'CONTINUE_HALT'
-            row.fzExceptionCount = true
-            row.stopSituationArray = JSON.parse(JSON.stringify(this.planHaltOptions))
+            row.tempFzExceptionCount = true
+            row.tempStopSituationArray = JSON.parse(JSON.stringify(this.planHaltOptions))
         } else {
-            row.fzExceptionCount = false
-            row.stopSituationArray = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
+            row.tempFzExceptionCount = false
+            row.tempStopSituationArray = JSON.parse(JSON.stringify(this.abnormalHaltOptions))
         }
     }
 
@@ -566,10 +586,10 @@ export default class Equipment extends Vue {
     }
 
     changeStopReasonOption(row) {
-        row.stopReasonArray = []
+        row.tempStopReasonArray = []
         row.stopReason = ''
         if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN' || row.stopSituation === 'FAULT') {
-            row.fzReasonOptions = false
+            row.tempFzReasonOptions = false
             COMMON_API.DEVICELIST_API({
                 deptId: this.productLine,
                 current: 1,
@@ -577,7 +597,7 @@ export default class Equipment extends Vue {
                 size: 99999
             }).then(({ data }) => {
                 data.data.records.forEach((item) => {
-                    row.stopReasonArray.push({
+                    row.tempStopReasonArray.push({
                         dictValue: item.deviceName,
                         dictCode: item.deviceNo
                     })
@@ -585,12 +605,12 @@ export default class Equipment extends Vue {
             });
             row.exceptionInfo = ''
         } else if (row.stopSituation === 'EXPERIMENT' || row.stopSituation === 'POOR_PROCESS' || row.stopSituation === 'WAIT' || row.stopSituation === 'ENERGY') {
-            row.fzReasonOptions = false
+            row.tempFzReasonOptions = false
             COMMON_API.DICTQUERY_API({
                 dictType: row.stopSituation
             }).then(({ data }) => {
                 data.data.forEach((item) => {
-                    row.stopReasonArray.push({
+                    row.tempStopReasonArray.push({
                         dictValue: item.dictValue,
                         dictCode: item.dictCode
                     })
@@ -598,15 +618,15 @@ export default class Equipment extends Vue {
             });
             row.exceptionInfo = ''
         } else {
-            row.fzReasonOptions = true
-            row.stopReasonArray = []
+            row.tempFzReasonOptions = true
+            row.tempStopReasonArray = []
         }
     }
 
     changeStopReasonDefaultOption(row) {
-        row.stopReasonArray = []
+        row.tempStopReasonArray = []
         if (row.stopSituation === 'PLAN_HALT' || row.stopSituation === 'MAINTENCE' || row.stopSituation === 'RECOVERY' || row.stopSituation === 'SHUTDOWN' || row.stopSituation === 'FAULT') {
-            row.fzReasonOptions = false
+            row.tempFzReasonOptions = false
             COMMON_API.DEVICELIST_API({
                 deptId: this.productLine,
                 current: 1,
@@ -614,27 +634,27 @@ export default class Equipment extends Vue {
                 size: 99999
             }).then(({ data }) => {
                 data.data.records.forEach((item) => {
-                    row.stopReasonArray.push({
+                    row.tempStopReasonArray.push({
                         dictValue: item.deviceName,
                         dictCode: item.deviceNo
                     })
                 })
             });
         } else if (row.stopSituation === 'EXPERIMENT' || row.stopSituation === 'POOR_PROCESS' || row.stopSituation === 'WAIT' || row.stopSituation === 'ENERGY') {
-            row.fzReasonOptions = false
+            row.tempFzReasonOptions = false
             COMMON_API.DICTQUERY_API({
                 dictType: row.stopSituation
             }).then(({ data }) => {
                 data.data.forEach((item) => {
-                    row.stopReasonArray.push({
+                    row.tempStopReasonArray.push({
                         dictValue: item.dictValue,
                         dictCode: item.dictCode
                     })
                 })
             });
         } else {
-            row.fzReasonOptions = true
-            row.stopReasonArray = []
+            row.tempFzReasonOptions = true
+            row.tempStopReasonArray = []
         }
     }
 
@@ -831,13 +851,13 @@ interface SecondDataTable{
     endDate?: string;
     duration?: number;
     delFlag?: number;
-    fzExceptionCount?: boolean;
-    fzReasonOptions?: boolean;
+    tempFzExceptionCount?: boolean;
+    tempFzReasonOptions?: boolean;
     exceptionCount?: number;
     stopSituation?: string;
     stopReason?: string;
-    stopReasonArray?: Option[];
-    stopSituationArray?: Option[];
+    tempStopReasonArray?: Option[];
+    tempStopSituationArray?: Option[];
     exceptionInfo?: string;
     remark?: string;
     changed?: string;
