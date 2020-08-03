@@ -17,9 +17,9 @@
                                 <img src="@/assets/img/Filtration.png" alt="" style="width: 92%; margin-top: 19px; margin-bottom: 10px;">
                             </el-col>
                         </el-row>
-                        <el-row class="bottom">
+                        <el-row class="bottoms">
                             <el-col>
-                                <el-button class="button" :disabled="!isRedact || soleStatus" @click="ShowDialog(item)">
+                                <el-button class="buttons" size="small" :disabled="!isRedact || soleStatus" @click="ShowDialog(item)">
                                     数据录入
                                 </el-button>
                             </el-col>
@@ -614,7 +614,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .rowDel {
     display: none;
 }
@@ -638,19 +638,25 @@ export default {
         font-size: 12px;
         line-height: 22px;
     }
-    .bottom {
-        width: 100%;
-        background: rgba(247, 249, 250, 1);
-        border-top: 1px solid rgba(233, 233, 233, 1);
-        border-bottom: none;
-        .button {
+    .bottoms {
+        width: 95%;
+        margin: 0 auto;
+        .buttons {
             width: 100%;
             margin: 10px 0;
-            padding: 0;
-            line-height: 20px;
-            background: none;
-            border: none;
-            border-right: 1px solid #e8e8e8;
+            color: #000;
+            background-color: #fff;
+            border-color: #d9d9d9;
+        }
+        .buttons:hover {
+            color: #fff;
+            background-color: #1890ff;
+        }
+        .buttons.is-disabled:hover {
+            color: #000;
+            background-color: #fff;
+            border-color: #d9d9d9;
+            cursor: not-allowed;
         }
     }
 }

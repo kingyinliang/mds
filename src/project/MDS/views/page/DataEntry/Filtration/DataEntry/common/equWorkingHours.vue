@@ -17,19 +17,19 @@
                                 <img src="@/assets/img/Filtration.png" alt="" style="width: 92%; margin-top: 19px; margin-bottom: 10px;">
                             </el-col>
                         </el-row>
-                        <el-row class="bottom">
+                        <el-row class="bottoms">
                             <el-col :span="8">
-                                <el-button class="button" :disabled="!isRedact" @click="ShowDialog(item, '清洗')">
+                                <el-button class="buttons" size="small" :disabled="!isRedact" @click="ShowDialog(item, '清洗')">
                                     清洗
                                 </el-button>
                             </el-col>
                             <el-col :span="8">
-                                <el-button class="button" :disabled="!isRedact" @click="ShowDialog(item, '预涂')">
+                                <el-button class="buttons" size="small" :disabled="!isRedact" @click="ShowDialog(item, '预涂')">
                                     预涂
                                 </el-button>
                             </el-col>
                             <el-col :span="8">
-                                <el-button class="button" :disabled="!isRedact" @click="ShowDialog(item, '过滤')">
+                                <el-button class="buttons" size="small" :disabled="!isRedact" @click="ShowDialog(item, '过滤')">
                                     {{ formHeader.productLineName }}
                                 </el-button>
                             </el-col>
@@ -350,19 +350,25 @@ export default {
         font-size: 12px;
         line-height: 22px;
     }
-    .bottom {
-        width: 100%;
-        background: rgba(247, 249, 250, 1);
-        border-top: 1px solid rgba(233, 233, 233, 1);
-        border-bottom: none;
-        .button {
-            width: 100%;
-            margin: 10px 0;
-            padding: 0;
-            line-height: 20px;
-            background: none;
-            border: none;
-            border-right: 1px solid #e8e8e8;
+    .bottoms {
+        width: 95%;
+        margin: 0 auto;
+        .buttons {
+            width: 98%;
+            margin: 10px 1%;
+            color: #000;
+            background-color: #fff;
+            border-color: #d9d9d9;
+        }
+        .buttons:hover {
+            color: #fff;
+            background-color: #1890ff;
+        }
+        .buttons.is-disabled:hover {
+            color: #000;
+            background-color: #fff;
+            border-color: #d9d9d9;
+            cursor: not-allowed;
         }
     }
 }

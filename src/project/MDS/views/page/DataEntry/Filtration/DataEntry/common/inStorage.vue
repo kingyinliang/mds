@@ -454,6 +454,7 @@
             width: 158px;
             margin-right: 5px;
             padding: 0;
+            text-align: center;
             background: rgba(255, 255, 255, 1);
             border: 1px solid rgba(0, 0, 0, 0.09);
             border-radius: 6px;
@@ -464,12 +465,24 @@
             }
         }
         .button {
-            width: 100%;
+            width: 135px;
+            margin: 10px 0;
             margin-top: 10px;
             padding: 0;
+            color: #000;
             line-height: 32px;
-            background: #f7f9fa;
-            border: none;
+            background-color: #fff;
+            border-color: #d9d9d9;
+        }
+        .button:hover {
+            color: #fff;
+            background-color: #1890ff;
+        }
+        .button.is-disabled:hover {
+            color: #000;
+            background-color: #fff;
+            border-color: #d9d9d9;
+            cursor: not-allowed;
         }
     }
     .inStorage_card_left_btn:hover {
