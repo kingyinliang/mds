@@ -168,7 +168,13 @@ export function isURL(s) {
  * @param {*} key
  */
 export function isAuth(key) {
-    return JSON.parse(sessionStorage.getItem('permissions') || '[]').indexOf(key) !== -1 || false;
+    let authReturn = true
+    if (key === '') {
+        authReturn = true;
+    } else {
+        authReturn = JSON.parse(sessionStorage.getItem('permissions') || '[]').indexOf(key) !== -1 || false;
+    }
+    return authReturn;
 }
 /**
  * 生成id
