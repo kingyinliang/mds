@@ -272,7 +272,7 @@ export default {
                     startColor: '#B58150FF',
                     endColor: '#C67C5AFF',
                     text: '4',
-                    ptext: '120天',
+                    ptext: '130天',
                     numNew: 120,
                     potColor: '#B58150',
                     middleText: '酿造',
