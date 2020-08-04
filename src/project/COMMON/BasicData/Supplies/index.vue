@@ -8,10 +8,10 @@
                             <el-input v-model="controllableForm.param" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.param===''?getItemsList():false" />
                         </el-form-item>
                         <el-form-item style="height: 32px;">
-                            <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
+                            <el-button v-if="isAuth('materialQuery')" type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
                                 查询
                             </el-button>
-                            <el-button type="primary" size="small" @click="syncData">
+                            <el-button v-if="isAuth('materialSync')" type="primary" size="small" @click="syncData">
                                 同步
                             </el-button>
                         </el-form-item>

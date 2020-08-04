@@ -8,13 +8,13 @@
                             <el-input v-model="controllableForm.batch" placeholder="批次" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.batch===''?getItemsList():false" />
                         </el-form-item>
                         <el-form-item style="height: 32px;">
-                            <el-button :disabled="controllableForm.batch.trim()===''" type="primary" size="small" @click="getItemsList(true,'normal')">
+                            <el-button v-if="isAuth('rawQuery')" :disabled="controllableForm.batch.trim()===''" type="primary" size="small" @click="getItemsList(true,'normal')">
                                 查询
                             </el-button>
-                            <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
+                            <el-button v-if="isAuth('rawQuery')" type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
                                 高级查询
                             </el-button>
-                            <el-button type="primary" size="small" @click="syncData()">
+                            <el-button v-if="isAuth('rawSync')" type="primary" size="small" @click="syncData()">
                                 同步
                             </el-button>
                         </el-form-item>
