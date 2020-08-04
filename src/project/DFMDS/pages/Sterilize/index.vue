@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            query-auth="steQuery"
             :type="'home'"
             :rules="rules"
             :query-form-data="queryFormData"
@@ -65,13 +66,13 @@
                                 </div>
                                 <div class="home_card__main__item__footer clearfix">
                                     <div style="float: right;">
-                                        <el-button size="small" @click="goEntry(item, 1)">
+                                        <el-button v-if="isAuth('steMaterial')" size="small" @click="goEntry(item, 1)">
                                             半成品领用
                                         </el-button>
-                                        <el-button size="small" @click="goEntry(item, 2)">
+                                        <el-button v-if="isAuth('steAcc')" size="small" @click="goEntry(item, 2)">
                                             辅料添加
                                         </el-button>
-                                        <el-button size="small" @click="goEntry(item, 3)">
+                                        <el-button v-if="isAuth('steControl')" size="small" @click="goEntry(item, 3)">
                                             工艺控制
                                         </el-button>
                                         <!--<el-button size="small" @click="goEntry(item, 4)">-->

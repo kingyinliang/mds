@@ -2,9 +2,9 @@
     <div>
         <data-entry
             ref="dataEntry"
-            :redact-auth="'pkg:order:update'"
-            :save-auth="'pkg:order:update'"
-            :submit-auth="'pkg:order:update'"
+            redact-auth="steSemiEdit"
+            save-auth="steSemiEdit"
+            submit-auth="steSemiSubmit"
             :order-status="formHeader.orderStatusName"
             :header-base="headerBase"
             :form-header="formHeader"
@@ -115,6 +115,10 @@
 
         // 查询表头
         getOrderList() {
+            if (!this.isAuth('steSemiQuery')) {
+                this.$warningToast('无权限');
+                return false
+            }
             STE_API.STE_DETAIL_CRAFTHEADER_INFO_API({
                 potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
             }).then(({ data }) => {

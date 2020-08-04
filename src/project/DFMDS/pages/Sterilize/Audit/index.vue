@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            query-auth="steCkQuery"
             :factory-type="1"
             :query-form-data="queryFormData"
             :tabs="tabs"
