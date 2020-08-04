@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table ref="queryTable" :rules="rules" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:form:listProductM'" :column="column" :export-excel="true" :export-option="exportOption" @get-data-success="setTable" />
+        <query-table ref="queryTable" table-class="newTable borderTable" :rules="rules" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:form:listProductM'" :column="column" :export-excel="true" :export-option="exportOption" @get-data-success="setTable" />
     </div>
 </template>
 

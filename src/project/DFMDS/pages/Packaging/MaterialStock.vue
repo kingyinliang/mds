@@ -308,7 +308,16 @@ export default class MaterialStock extends Vue {
     mounted() {
         this.getProductline();
         this.getMoveType();
+        // this.$nextTick(() => {
+        //     this.$refs.queryTable.getDataList(true)
+        // })
     }
+
+    updated() {
+        this.$refs.queryTable.getDataList(true)
+    }
+    // createdEnd() {
+    // }
 
     // 拉取所有产线
     getProductline() {
