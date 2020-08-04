@@ -66,18 +66,21 @@
                                 </div>
                                 <div class="home_card__main__item__footer clearfix">
                                     <div style="float: right;">
-                                        <el-button v-if="isAuth('steMaterial')" size="small" @click="goEntry(item, 1)">
-                                            半成品领用
-                                        </el-button>
-                                        <el-button v-if="isAuth('steAcc')" size="small" @click="goEntry(item, 2)">
-                                            辅料添加
-                                        </el-button>
-                                        <el-button v-if="isAuth('steControl')" size="small" @click="goEntry(item, 3)">
-                                            工艺控制
-                                        </el-button>
-                                        <!--<el-button size="small" @click="goEntry(item, 4)">-->
-                                        <!--杀菌入库-->
-                                        <!--</el-button>-->
+                                        <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.semiMaterialStatus : ''" placement="top-start">
+                                            <el-button v-if="isAuth('steMaterial')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot&& item.potOrderMap.steTagPot.semiMaterialStatus === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 1)">
+                                                半成品领用
+                                            </el-button>
+                                        </el-tooltip>
+                                        <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.accessoriesStatus : ''" placement="top-start">
+                                            <el-button v-if="isAuth('steAcc')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot && item.potOrderMap.steTagPot.accessoriesStatus === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 2)">
+                                                辅料添加
+                                            </el-button>
+                                        </el-tooltip>
+                                        <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.controlStatus : ''" placement="top-start">
+                                            <el-button v-if="isAuth('steControl')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot && item.potOrderMap.steTagPot.controlStatus === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 3)">
+                                                工艺控制
+                                            </el-button>
+                                        </el-tooltip>
                                     </div>
                                 </div>
                             </div>

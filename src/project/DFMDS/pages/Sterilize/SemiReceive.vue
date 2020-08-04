@@ -5,10 +5,11 @@
             redact-auth="steSemiEdit"
             save-auth="steSemiEdit"
             submit-auth="steSemiSubmit"
-            :order-status="formHeader.orderStatusName"
+            :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
+            :submit-rules="submitRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
             @success="getOrderList"
@@ -108,6 +109,10 @@
                 label: '文本记录'
             }
         ];
+
+        submitRules(): Function[] {
+            return [this.$refs.semiReceive.ruleSubmit, this.$refs.excRecord.ruleSubmit]
+        }
 
         mounted() {
             this.getOrderList()
