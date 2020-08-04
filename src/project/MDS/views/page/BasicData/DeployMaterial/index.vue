@@ -1,13 +1,16 @@
 <template>
     <div class="header_main">
         <query-table ref="queryTable" :query-auth="'ste:material:list'" :show-operation-column="true" :operation-column-width="70" :show-select-column="true" :list-interface="listInterface" :query-form-data="queryFormData" :column="column">
-            <template slot="mds-button">
-                <el-button v-if="isAuth('ste:material:dataInsert')" type="primary" size="small" @click="addOrupdate()">
-                    新增
-                </el-button>
-                <el-button v-if="isAuth('ste:material:del')" type="danger" size="small" @click="remove">
-                    批量删除
-                </el-button>
+            <template slot="mds-button-middle">
+                <div class="box-card-title clearfix">
+                    <h3> <i class="title-icon" style="background: #487bff;" />调配物料列表</h3>
+                    <el-button v-if="isAuth('ste:material:dataInsert')" type="primary" size="small" @click="addOrupdate()">
+                        新增
+                    </el-button>
+                    <el-button v-if="isAuth('ste:material:del')" type="danger" size="small" @click="remove">
+                        批量删除
+                    </el-button>
+                </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
                 <el-button v-if="isAuth('ste:material:dataInsert')" class="ra_btn" type="primary" round size="mini" @click="addOrupdate(scope.row)">

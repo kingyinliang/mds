@@ -56,11 +56,7 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card v-show="fastS" class="searchCard newCard ferCard" style="margin-top: 5px;">
-            <h3 class="cardTit">
-                <i class="iconfont factory-shujuzonglan" style=" margin-right: 10px; color: #666;" />原汁情况总览
-                <i class="gotop" @click="gotop"><span>收起</span><i class="el-icon-caret-top" /></i>
-            </h3>
+        <mds-card v-show="fastS" title="原汁情况总览" name="potTotal" style="margin-top: 10px;">
             <div class="sumbox">
                 <div class="topBox clearfix">
                     <div v-for="(item, index) in topBox" :key="index" class="clearfix" style="float: left;">
@@ -87,69 +83,89 @@
                     </div>
                 </div>
             </div>
-        </el-card>
-        <el-card v-show="fastS" class="searchCard newCard ferCard" style="margin-top: 5px;">
-            <h3 style=" margin-bottom: 8px; color: black;">
-                <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />原汁罐列表
-                <i v-if="isAuth('juice:pot:juiceStockItem')" class="gotop"><a href="#/DataEntry-Juice-Pot-summary">原汁库存情况>></a></i>
-            </h3>
-            <el-row class="dataList" :gutter="10" style="min-height: 150px;">
-                <el-col v-for="(item, index) in dataList" :key="index" :span="4">
-                    <el-card class="dataList_item" style="padding: 0 !important;">
-                        <h3 class="dataList_item_tit">
-                            {{ item.HOLDER_NO }}
-                            <span style="color: #333; font-weight: 400; font-size: 14px;"> -{{ item.HOLDER_STATUS === '6' ? '空罐' : item.HOLDER_STATUS === '7' ? '入料中' : item.HOLDER_STATUS === '8' ? '沉淀中' : item.HOLDER_STATUS === '9' ? '领用中' : item.HOLDER_STATUS === '10' ? '待清洗' : '' }} </span>
-                            <span v-if="isAuth('juice:pot:juiceItem')" class="dataList_item_a" style="font-size: 14px;" @click="godetails(item)">详情>></span>
-                        </h3>
-                        <div class="dataList_item_pot clearfix" style="position: relative;">
-                            <img v-if="item.IS_F === '1'" src="@/assets/img/F0.png" alt="" style="position: absolute; top: 10px; left: 10px;">
-                            <img v-if="item.isRd === 1" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
-                            <img v-if="item.IS_F === '2'" src="@/assets/img/jbs.png" alt="" style="position: absolute; top: 10px; left: 10px;">
-                            <div class="dataList_item_pot_box">
-                                <div class="dataList_item_pot_box1">
-                                    <div v-if="item.HOLDER_STATUS !== '6'" class="dataList_item_pot_box_item1" :style="`height:${item.AMOUNT ? ((item.AMOUNT * 1000) / item.HOLDER_HOLD) * 100 : 0}%`" />
-                                    <div v-if="item.HOLDER_STATUS !== '6' && item.HOLDER_STATUS !== '10'" class="dataList_item_pot_box_detail">
-                                        <p>{{ item.BATCH }}</p>
-                                        <p>{{ item.TYPE }}</p>
-                                        <p v-if="item.HOLDER_STATUS !== '7'">
-                                            {{ item.days }}天
-                                        </p>
-                                        <p>{{ item.AMOUNT }}方</p>
+        </mds-card>
+        <mds-card v-show="fastS" title="原汁罐列表" name="potTotal" :pack-up="false">
+            <template slot="titleBtn">
+                <div style="float: right; height: 32px; margin-bottom: 10px; line-height: 32px;">
+                    <i v-if="isAuth('juice:pot:juiceStockItem')"><a href="#/DataEntry-Juice-Pot-summary" style="color: #487bff; font-size: 14px;">原汁库存情况>></a></i>
+                </div>
+            </template>
+            <div>
+                <el-row class="potList" :gutter="10" style="min-height: 150px;">
+                    <el-col v-for="(item, index) in dataList" :key="index" :span="4">
+                        <div class="box">
+                            <div class="box_title">
+                                {{ item.HOLDER_NO }}-{{ item.HOLDER_STATUS === '6' ? '空罐' : item.HOLDER_STATUS === '7' ? '入料中' : item.HOLDER_STATUS === '8' ? '沉淀中' : item.HOLDER_STATUS === '9' ? '领用中' : item.HOLDER_STATUS === '10' ? '待清洗' : '' }}
+                                <a v-if="isAuth('juice:pot:juiceItem')" @click="godetails(item)">详情>></a>
+                            </div>
+                            <div class="box_content">
+                                <img v-if="item.IS_F === '1'" src="@/assets/img/F0.png" alt="" style="position: absolute; top: 0; left: 10px; z-index: 101;">
+                                <img v-if="item.isRd === 1" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 28px; left: 10px; z-index: 101;">
+                                <img v-if="item.IS_F === '2'" src="@/assets/img/jbs.png" alt="" style="position: absolute; top: 56px; left: 10px; z-index: 101;">
+                                <div class="box_content_itemPot">
+                                    <div class="pot_border">
+                                        <div class="pot" />
+                                        <div class="pot_water">
+                                            <div
+                                                class="pot_water_sole"
+                                                :style="{'height': (item.HOLDER_STATUS === '6' ? 0 : item.AMOUNT ? ((item.AMOUNT * 1000) / item.HOLDER_HOLD) * 100 : 0) + '%', 'background': item.potColor}"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="box_content_itemButton buttonCss">
+                                    <el-button type="primary" size="small" @click="TransferProp(item)">
+                                        转储
+                                    </el-button>
+                                    <el-button type="primary" size="small" @click="JuiceJudgeProp(item)">
+                                        判定
+                                    </el-button>
+                                    <el-button type="primary" size="small" @click="ClearProp(item)">
+                                        清洗
+                                    </el-button>
+                                    <el-button type="primary" size="small" @click="BringOutProp(item)">
+                                        调整
+                                    </el-button>
+                                </div>
+                            </div>
+                            <div class="box_bottom">
+                                <div v-if="item.HOLDER_STATUS !== '6' && item.HOLDER_STATUS !== '10'">
+                                    <div class="box_bottom_sole">
+                                        {{ item.TYPE }}
+                                    </div>
+                                    <div class="box_bottom_sole">
+                                        {{ item.BATCH }}
+                                    </div>
+                                    <div class="box_bottom_sole">
+                                        {{ item.days }}天
+                                    </div>
+                                    <div class="box_bottom_sole">
+                                        {{ item.AMOUNT }}方
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
+                                    </div>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
+                                    </div>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
+                                    </div>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <el-row class="dataList_item_btn">
-                            <el-col :span="6" class="dataList_item_btn_item">
-                                <p @click="TransferProp(item)">
-                                    转储
-                                </p>
-                            </el-col>
-                            <el-col :span="6" class="dataList_item_btn_item">
-                                <p @click="JuiceJudgeProp(item)">
-                                    判定
-                                </p>
-                            </el-col>
-                            <el-col :span="6" class="dataList_item_btn_item">
-                                <p @click="ClearProp(item)">
-                                    清洗
-                                </p>
-                            </el-col>
-                            <!--<el-col :span="4" class="dataList_item_btn_item"><p @click="AddProp(item)">HD</p></el-col>-->
-                            <el-col :span="6" class="dataList_item_btn_item">
-                                <p @click="BringOutProp(item)">
-                                    调整
-                                </p>
-                            </el-col>
-                        </el-row>
-                        <!-- 转储:沉淀中 领用中 可以。  添加:领用中可添加  判定:空罐，领用中，待清洗不能判定   调拨:空罐跟领用中 不能调拨 -->
-                    </el-card>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-pagination :current-page.sync="pages.currentPage" :page-size="42" layout="total, prev, pager, next" :total="pages.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </el-row>
-        </el-card>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-pagination :current-page.sync="pages.currentPage" :page-size="42" layout="total, prev, pager, next" :total="pages.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                </el-row>
+            </div>
+        </mds-card>
         <el-dialog :visible.sync="TransferDialogTableVisible" :close-on-click-modal="false" width="500px" custom-class="dialog__class">
             <div slot="title">
                 转储
@@ -842,6 +858,9 @@
                     if (data.code === 0) {
                         this.fastS = true;
                         this.dataListAll = data.indexList.potList;
+                        this.dataListAll.map(item => {
+                            item.potColor = '#AD592D';
+                        })
                         this.holderStatus = '';
                         this.days = '';
                         this.GetPageCurrenList(true);
@@ -1284,143 +1303,14 @@
             transition: all 0.5s;
         }
     }
-    .dataList {
-        margin-top: 10px;
-        &_item {
-            margin-bottom: 10px;
-            &_tit {
-                padding: 0 5px;
-                color: black;
-                font-weight: 600;
-                font-size: 14px;
-                line-height: 45px;
-                border-bottom: 1px solid #e8e8e8;
-            }
-            &_a {
-                float: right;
-                color: #1890ff;
-                cursor: pointer;
-            }
-            &_pot {
-                display: flex;
-                align-items: flex-start;
-                justify-content: center;
-                padding: 17px 10px 10px;
-                overflow: hidden;
-                &_box1 {
-                    position: relative;
-                    display: flex;
-                    flex-wrap: wrap;
-                    align-content: flex-end;
-                    width: 102px;
-                    height: 197px;
-                    overflow: hidden;
-                }
-                &_box {
-                    display: flex;
-                    flex-wrap: wrap;
-                    align-content: flex-end;
-                    float: left;
-                    width: 120px;
-                    min-width: 120px;
-                    height: 229px;
-                    padding: 25px 9px 9px;
-                    overflow: hidden;
-                    color: white;
-                    background: url("~@/assets/img/ferPot.png") no-repeat;
-                    background-size: contain;
-                    &_detail {
-                        position: absolute;
-                        top: 70px;
-                        left: 3px;
-                        width: 100%;
-                        color: black;
-                        font-size: 14px;
-                    }
-                    &_item1,
-                    &_item2 {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        width: 100%;
-                        font-size: 14px;
-                    }
-                    &_item2s,
-                    &_item1 {
-                        position: absolute;
-                        bottom: 0;
-                        height: 50px;
-                        overflow: hidden;
-                        background: #69c0ff;
-                        &::before,
-                        &::after {
-                            position: absolute;
-                            left: 50%;
-                            min-width: 175px;
-                            min-height: 165px;
-                            background: #fff;
-                            animation: roateTwo 10s linear infinite;
-                            content: "";
-                        }
-                        &::before {
-                            top: -158px;
-                            border-radius: 45%;
-                        }
-                        &::after {
-                            top: -152px;
-                            border-radius: 47%;
-                            opacity: 0.5;
-                        }
-                    }
-                    &_item2 {
-                        height: 100px;
-                        background: #1890ff;
-                    }
-                    &:hover &_item1::before,
-                    &:hover &_item1::after,
-                    &:hover &_item2s::before,
-                    &:hover &_item2s::after {
-                        animation: roateOne 10s linear infinite;
-                    }
-                }
-                &_detail {
-                    float: left;
-                    max-width: 112px;
-                    height: auto;
-                    margin-top: 25px;
-                    margin-left: 10px;
-                    padding: 5px;
-                    color: #333;
-                    font-size: 14px;
-                    line-height: 18px;
-                    border: 1px solid #1890ff;
-                    border-radius: 4px;
-                }
-            }
-        }
-    }
 
-    @keyframes roateOne {
-        0% {
-            transform: translate(-50%, -0%) rotateZ(0deg);
-        }
-        50% {
-            transform: translate(-50%, -1%) rotateZ(180deg);
-        }
-        100% {
-            transform: translate(-50%, -0%) rotateZ(360deg);
-        }
+    .buttonCss .el-button--primary:first-child {
+        color: #000;
+        background-color: #fff;
+        border-color: #d9d9d9;
     }
-
-    @keyframes roateTwo {
-        0% {
-            transform: translate(-50%, -0%) rotateZ(0deg);
-        }
-        50% {
-            transform: translate(-50%, -0%) rotateZ(0deg);
-        }
-        100% {
-            transform: translate(-50%, -0%) rotateZ(0deg);
-        }
+    .buttonCss .el-button--primary:hover {
+        color: #fff;
+        background-color: #1890ff;
     }
 </style>

@@ -25,125 +25,128 @@
                 </el-button>
             </el-form>
         </el-card>
-        <el-card class="searchCard  newCard" style="min-height: 420px;">
-            <el-row class="dataList" :gutter="6" style="min-height: 150px;">
-                <el-col v-for="(item, index) in dataList" :key="index" :span="6">
-                    <el-card class="dataList_item">
-                        <h3 class="dataList_item_tit">
-                            <span
-                                :style="{
-                                    color: item.steList.filter(it => it.orderStatus === 'noPass').length > 0 ? 'red' : '',
-                                }"
-                            >{{ item.holderName }}</span>
-                            <span
-                                class="dataList_item_tit_right"
-                                :style="{
-                                    color: item.selectOrder.orderStatus === 'noPass' ? 'red' : item.selectOrder.orderStatus === 'checked' ? '#67C23A' : '',
-                                }"
-                            ><i
-                                v-if="item.selectOrder.orderStatus"
-                                class="dataList_item_tit_dian"
-                                :style="{
-                                    background: item.selectOrder.orderStatus === 'noPass' ? 'red' : item.selectOrder.orderStatus === 'checked' ? '#67C23A' : '',
-                                }"
-                            />{{ item.selectOrder.orderStatus === 'submit' ? '已提交' : item.selectOrder.orderStatus === 'checked' ? '审核通过' : item.selectOrder.orderStatus === 'noPass' ? '审核不通过' : item.selectOrder.orderStatus === 'saved' ? '已保存' : item.selectOrder.orderStatus === '已同步' ? '未录入' : item.selectOrder.orderStatus }}</span>
-                        </h3>
-                        <div class="dataList_item_body">
-                            <div class="dataList_item_body_ptobox">
-                                <div class="dataList_item_body_ptobox_pto">
-                                    <div class="dataList_item_body_ptobox_pto_bg" />
+
+        <div>
+            <el-row class="potList" :gutter="10" style="min-height: 150px;">
+                <el-col v-for="(item, index) in dataList" :key="index" :span="8">
+                    <div class="box-item" style="margin-bottom: 10px;">
+                        <div class="box-item-top">
+                            <div class="box-item-title">
+                                <div class="box-item-title-name">
+                                    <i class="title-icon" />{{ item.holderName }}
+                                </div>
+                                <div :class="item.selectOrder.orderStatus === 'noPass' ? 'box-item-title-state-nopass' : 'box-item-title-state'">
+                                    <label style="color: rgba(0, 0, 0, 0.65);">状态：</label>{{ item.selectOrder.orderStatus === 'submit' ? '已提交' : item.selectOrder.orderStatus === 'checked' ? '审核通过' : item.selectOrder.orderStatus === 'noPass' ? '审核不通过' : item.selectOrder.orderStatus === 'saved' ? '已保存' : item.selectOrder.orderStatus === '已同步' ? '未录入' : item.selectOrder.orderStatus }}
                                 </div>
                             </div>
-                            <div class="dataList_item_body_text">
-                                <el-form :inline="true" size="mini">
-                                    <el-form-item label="订单编号：">
-                                        <el-select v-model="item.selectOrderId" class="orderSelect" placeholder="请选择" style="width: 100px;" value-key="orderId" @change="OrderChange($event, item)">
-                                            <el-option v-for="(item1, index1) in item.steList" :key="index1" :label="item1.orderNo" :value="item1.orderId">
-                                                <div
-                                                    :style="{
-                                                        color: item1.orderStatus === 'noPass' ? 'red' : item1.exportMaterial !== '' ? '#FFBF00' : '',
-                                                    }"
-                                                >
-                                                    {{ item1.orderNo }}
-                                                </div>
-                                            </el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                    <el-form-item label="生产品项：" style="line-height: 22px;">
-                                        <el-tooltip class="item" effect="dark" :content="(item.selectOrder.materialCode || '') + ' ' + (item.selectOrder.materialName || '')" placement="top">
-                                            <p class="dataList_item_body_text_tit">
-                                                {{ (item.selectOrder.materialCode || '') + ' ' + (item.selectOrder.materialName || '') }}
-                                            </p>
-                                        </el-tooltip>
-                                    </el-form-item>
-                                    <el-form-item label="订单日期：">
-                                        <p class="dataList_item_body_text_tit">
+                            <div class="box-item-container">
+                                <div class="box-item-container-left">
+                                    <div class="pot_border">
+                                        <div class="pot" />
+                                        <div class="pot_water">
+                                            <div
+                                                class="pot_water_sole"
+                                                :style="{'height': '70%', 'background': item.potColor}"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="box-item-container-right">
+                                    <div class="box-item-container-item">
+                                        <div class="name">
+                                            订单编号：
+                                        </div>
+                                        <div class="detail" style=" padding-left: 0; background: none;">
+                                            <el-select v-model="item.selectOrderId" size="small" class="orderSelect" placeholder="请选择" style="width: 100%;" value-key="orderId" @change="OrderChange($event, item)">
+                                                <el-option v-for="(item1, index1) in item.steList" :key="index1" :label="item1.orderNo" :value="item1.orderId">
+                                                    <div
+                                                        :style="{
+                                                            color: item1.orderStatus === 'noPass' ? 'red' : item1.exportMaterial !== '' ? '#FFBF00' : '',
+                                                        }"
+                                                    >
+                                                        {{ item1.orderNo }}
+                                                    </div>
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
+                                    <div class="box-item-container-item">
+                                        <div class="name">
+                                            生产品项：
+                                        </div>
+                                        <div class="detail">
+                                            <el-tooltip class="item" effect="dark" :content="(item.selectOrder.materialCode || '') + ' ' + (item.selectOrder.materialName || '')" placement="top">
+                                                <p>
+                                                    {{ (item.selectOrder.materialCode || '') + ' ' + (item.selectOrder.materialName || '') }}
+                                                </p>
+                                            </el-tooltip>
+                                        </div>
+                                    </div>
+                                    <div class="box-item-container-item">
+                                        <div class="name">
+                                            订单日期：
+                                        </div>
+                                        <div class="detail">
                                             {{ item.selectOrder.productDate || '' }}
-                                        </p>
-                                    </el-form-item>
-                                    <el-form-item label="计划产量：">
-                                        <p class="dataList_item_body_text_tit">
+                                        </div>
+                                    </div>
+                                    <div class="box-item-container-item">
+                                        <div class="name">
+                                            计划产量：
+                                        </div>
+                                        <div class="detail">
                                             {{ item.selectOrder.planOutput || '' }}
-                                        </p>
-                                    </el-form-item>
-                                </el-form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <img v-if="item.selectOrder.supStatus === '已确认'" src="@/assets/img/zhang.png" alt="" class="dataList_item_body_text_img">
                         </div>
-                        <el-row class="dataList_item_btn">
-                            <el-col :span="6" class="dataList_item_btn_item">
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    :content="item.selectOrder.semiStatus === 'noPass' ? '审核不通过' : item.selectOrder.semiStatus === 'saved' ? '已保存' : item.selectOrder.semiStatus === 'submit' ? '已提交' : item.selectOrder.semiStatus === 'checked' ? '通过' : item.selectOrder.semiStatus === '已同步' ? '未录入' : '未录入'"
-                                    placement="top"
-                                >
-                                    <p @click="toRouter('1', item.selectOrder)">
-                                        半成品领用
-                                    </p>
-                                </el-tooltip>
-                            </el-col>
-                            <el-col :span="6" class="dataList_item_btn_item">
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    :content="item.selectOrder.supmStatus === 'noPass' ? '审核不通过' : item.selectOrder.supmStatus === 'saved' ? '已保存' : item.selectOrder.supmStatus === 'submit' ? '已提交' : item.selectOrder.supmStatus === 'checked' ? '通过' : item.selectOrder.supmStatus === '已同步' ? '未录入' : '未录入'"
-                                    placement="top"
-                                >
-                                    <p @click="toRouter('2', item.selectOrder)">
-                                        辅料添加
-                                    </p>
-                                </el-tooltip>
-                            </el-col>
-                            <el-col :span="6" class="dataList_item_btn_item">
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    :content="item.selectOrder.techStatus === 'noPass' ? '审核不通过' : item.selectOrder.techStatus === 'saved' ? '已保存' : item.selectOrder.techStatus === 'submit' ? '已提交' : item.selectOrder.techStatus === 'checked' ? '通过' : item.selectOrder.techStatus === '已同步' ? '未录入' : '未录入'"
-                                    placement="top"
-                                >
-                                    <p @click="toRouter('3', item.selectOrder)">
-                                        工艺控制
-                                    </p>
-                                </el-tooltip>
-                            </el-col>
-                            <el-col :span="6" class="dataList_item_btn_item">
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    :content="item.selectOrder.insStatus === 'noPass' ? '审核不通过' : item.selectOrder.insStatus === 'saved' ? '已保存' : item.selectOrder.insStatus === 'submit' ? '已提交' : item.selectOrder.insStatus === 'checked' ? '通过' : item.selectOrder.insStatus === '已同步' ? '未录入' : '未录入'"
-                                    placement="top"
-                                >
-                                    <p @click="toRouter('4', item.selectOrder)">
-                                        杀菌入库
-                                    </p>
-                                </el-tooltip>
-                            </el-col>
-                        </el-row>
-                    </el-card>
+                        <div class="buttonCss" style="margin: 0 10px 10px 10px;">
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                :content="item.selectOrder.semiStatus === 'noPass' ? '审核不通过' : item.selectOrder.semiStatus === 'saved' ? '已保存' : item.selectOrder.semiStatus === 'submit' ? '已提交' : item.selectOrder.semiStatus === 'checked' ? '通过' : item.selectOrder.semiStatus === '已同步' ? '未录入' : '未录入'"
+                                placement="top"
+                            >
+                                <el-button type="primary" size="small" style="width: 24%;" @click="toRouter('1', item.selectOrder)">
+                                    半成品领用
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                :content="item.selectOrder.supmStatus === 'noPass' ? '审核不通过' : item.selectOrder.supmStatus === 'saved' ? '已保存' : item.selectOrder.supmStatus === 'submit' ? '已提交' : item.selectOrder.supmStatus === 'checked' ? '通过' : item.selectOrder.supmStatus === '已同步' ? '未录入' : '未录入'"
+                                placement="top"
+                            >
+                                <el-button type="primary" size="small" style="width: 24%; margin-left: 1%;" @click="toRouter('2', item.selectOrder)">
+                                    辅料添加
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                :content="item.selectOrder.techStatus === 'noPass' ? '审核不通过' : item.selectOrder.techStatus === 'saved' ? '已保存' : item.selectOrder.techStatus === 'submit' ? '已提交' : item.selectOrder.techStatus === 'checked' ? '通过' : item.selectOrder.techStatus === '已同步' ? '未录入' : '未录入'"
+                                placement="top"
+                            >
+                                <el-button type="primary" size="small" style="width: 24%; margin-left: 1%;" @click="toRouter('3', item.selectOrder)">
+                                    工艺控制
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                :content="item.selectOrder.insStatus === 'noPass' ? '审核不通过' : item.selectOrder.insStatus === 'saved' ? '已保存' : item.selectOrder.insStatus === 'submit' ? '已提交' : item.selectOrder.insStatus === 'checked' ? '通过' : item.selectOrder.insStatus === '已同步' ? '未录入' : '未录入'"
+                                placement="top"
+                            >
+                                <el-button type="primary" size="small" style="width: 24%; margin-left: 1%;" @click="toRouter('4', item.selectOrder)">
+                                    杀菌入库
+                                </el-button>
+                            </el-tooltip>
+                        </div>
+                    </div>
                 </el-col>
             </el-row>
-        </el-card>
+        </div>
     </div>
 </template>
 
@@ -329,156 +332,211 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
-.dataList {
-    margin-top: 10px;
-    &_item {
-        margin-bottom: 10px;
-        &_tit {
-            padding: 0 10px;
-            color: black;
-            font-weight: 200;
-            font-size: 16px;
-            line-height: 40px;
-            border-bottom: 1px solid #e8e8e8;
-            &_right {
-                position: relative;
-                float: right;
-                padding-left: 8px;
+.box-item {
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(232, 232, 232, 1);
+    border-radius: 6px;
+    .box-item-top {
+        padding: 10px 10px 15px;
+        .box-item-title {
+            display: flex;
+            flex: 1;
+            justify-content: space-between;
+            height: 34px;
+            margin-bottom: 16px;
+            .box-item-title-name {
+                .title-icon {
+                    float: left;
+                    width: 4px;
+                    height: 12px;
+                    margin-top: 5px;
+                    margin-right: 5px;
+                    background: #487bff;
+                    border-radius: 2px;
+                }
+                // display: flex;
+                // flex: 1;
+                // :first-child {
+                //     width: 30px;
+                //     height: 30px;
+                //     color: #fff;
+                //     font-weight: 500;
+                //     font-size: 12px;
+                //     line-height: 30px;
+                //     text-align: center;
+                //     background: #ffbf00;
+                //     border-radius: 15px;
+                // }
+                // :nth-child(2) {
+                margin-top: 4px;
+                margin-left: 5px;
+                color: #717171;
+                font-weight: 400;
                 font-size: 14px;
+                line-height: 22px;
+                // }
             }
-            &_dian {
-                position: absolute;
-                top: 17px;
-                left: 0;
-                width: 6px;
-                height: 6px;
-                background: #1890ff;
-                border-radius: 50%;
+            .box-item-title-state {
+                flex: 1;
+                margin-top: 4px;
+                color: rgba(0, 0, 0, 0.65);
+                font-weight: 500;
+                font-size: 12px;
+                line-height: 20px;
+                text-align: right;
+                &::before {
+                    display: inline-block;
+                    width: 6px;
+                    height: 6px;
+                    margin-right: 10px;
+                    margin-bottom: 2px;
+                    background: rgba(126, 211, 33, 1);
+                    border-radius: 50%;
+                    content: "";
+                }
+            }
+            .box-item-title-state-nopass {
+                flex: 1;
+                margin-top: 4px;
+                color: red;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 20px;
+                text-align: right;
+                &::before {
+                    display: inline-block;
+                    width: 6px;
+                    height: 6px;
+                    margin-right: 10px;
+                    margin-bottom: 2px;
+                    background: red;
+                    border-radius: 50%;
+                    content: "";
+                }
             }
         }
-        &_body {
-            position: relative;
+        .box-item-container {
             display: flex;
-            justify-content: center;
-            padding-top: 10px;
-            &_ptobox {
-                position: relative;
-                width: 100px;
-                min-width: 100px;
-                height: 111px;
-                margin-top: 10px;
-                background: url("~@/assets/img/sterilized.png") no-repeat;
-                background-size: contain;
-                &_pto {
-                    position: absolute;
-                    top: 13px;
-                    left: 28px;
-                    display: flex;
-                    flex-wrap: wrap;
-                    align-content: flex-end;
-                    width: 41px;
-                    height: 53px;
-                    overflow: hidden;
-                    border-bottom-right-radius: 53px 21px;
-                    border-bottom-left-radius: 53px 21px;
-                    &_bg {
-                        position: relative;
-                        flex: 1;
-                        align-items: center;
-                        height: 40px;
-                        overflow: hidden;
-                        background: linear-gradient(#35c3ff, #1890ff);
-                        &::before,
-                        &::after {
+            flex: 1;
+            justify-content: space-between;
+            .box-item-container-left {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40%;
+                // background: rgba(242, 242, 242, 1);
+                // border-radius: 8px;
+                .pot_border {
+                    position: relative;
+                    width: 77px;
+                    .pot {
+                        position: absolute;
+                        top: -70px;
+                        left: -25px;
+                        z-index: 99;
+                        width: 126px;
+                        height: 143px;
+                        background: url("~@/assets/img/sterilized.png") no-repeat;
+                        background-size: contain;
+                    }
+                    .pot_water {
+                        position: absolute;
+                        bottom: -18px;
+                        left: 9px;
+                        width: 58px;
+                        height: 116px;
+                        &_sole {
                             position: absolute;
+                            bottom: 0;
+                            width: 100%;
+                            overflow: hidden;
+                            background-color: skyblue;
+                            border-top: none;
+                        }
+                        &_sole::before,
+                        &_sole::after {
+                            position: absolute;
+                            bottom: 100%;
                             left: 50%;
-                            min-width: 65px;
-                            min-height: 60px;
-                            background: #fff;
-                            animation: roateTwo 10s linear infinite;
+                            width: 300px;
+                            height: 290px;
+                            background-color: #fff;
+                            border-radius: 55% 45%;
+                            transform: translateX(-50%);
                             content: "";
                         }
-                        &::before {
-                            top: -55px;
-                            border-radius: 45%;
+                        &_sole::after {
+                            bottom: 100%;
+                            left: 47%;
+                            border-radius: 45% 50%;
+                            opacity: 0.3;
                         }
-                        &::after {
-                            top: -51px;
-                            border-radius: 47%;
-                            opacity: 0.5;
+                    }
+                    &:hover {
+                        .pot_water_sole::before,
+                        .pot_water_sole::after {
+                            animation: rotate 5s linear infinite;
+                        }
+                    }
+
+                    @keyframes rotate {
+                        0% {
+                            transform: translate(-50%) rotateZ(0deg);
+                        }
+                        100% {
+                            transform: translate(-50%) rotateZ(360deg);
                         }
                     }
                 }
-                &:hover &_pto_bg::before,
-                &:hover &_pto_bg::after {
-                    animation: roateOne 10s linear infinite;
-                }
             }
-            &_text {
-                position: relative;
-                width: 170px;
-                min-width: 170px;
-                .el-form-item {
-                    margin-right: 0 !important;
-                    margin-bottom: 4px !important;
+            .box-item-container-right {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                width: 60%;
+                .btn {
+                    text-align: right;
                 }
-                &_tit {
-                    width: 100px;
-                    min-height: 29px;
-                    overflow: hidden;
-                    font-size: 12px;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    border-bottom: 1px solid #d8d8d8;
-                }
-                &_img {
-                    position: absolute;
-                    top: 10px;
-                    left: 10px;
-                    width: 45px;
-                    height: 45px;
-                    transform: rotateZ(-50deg);
+                .box-item-container-item {
+                    display: flex;
+                    flex: 1;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                    .name {
+                        width: 60px;
+                        color: rgba(0, 0, 0, 0.45);
+                        font-weight: 400;
+                        font-size: 12px;
+                        line-height: 32px;
+                    }
+                    .detail {
+                        flex: 1;
+                        padding-left: 10px;
+                        overflow: hidden;
+                        color: #333;
+                        font-size: 12px;
+                        line-height: 32px;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        background: #f5f5f5;
+                        border-radius: 4px;
+                    }
                 }
             }
         }
     }
 }
-
-@keyframes roateOne {
-    0% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    50% {
-        transform: translate(-50%, -1%) rotateZ(180deg);
-    }
-    100% {
-        transform: translate(-50%, -0%) rotateZ(360deg);
-    }
+.buttonCss .el-button--primary:first-child {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
 }
-
-@keyframes roateTwo {
-    0% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    50% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    100% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
+.buttonCss .el-button--primary:hover {
+    color: #fff;
+    background-color: #1890ff;
 }
-</style>
-<style lang="scss">
 .el-select-dropdown__wrap {
     max-height: 200px;
-}
-.header_main .dataList_item .el-card__body {
-    padding: 0 !important;
-}
-.header_main .dataList_item_body_text .el-form-item {
-    .el-form-item__label {
-        font-size: 12px;
-    }
 }
 </style>

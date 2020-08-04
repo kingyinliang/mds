@@ -1,56 +1,50 @@
 <template>
     <div class="header_main">
         <el-card class="searchCard searchCards">
-            <el-row>
-                <el-col>
-                    <el-form :model="formHeader" size="small" :inline="true" label-width="70px" class="sole_row">
-                        <el-form-item label="生产工厂：">
-                            <el-select v-model="formHeader.factory" class="width150px">
-                                <el-option value="">
-                                    请选择
-                                </el-option>
-                                <el-option v-for="(item, index) in factory" :key="index" :value="item.deptId" :label="item.deptName" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="物料编码：">
-                            <el-select v-model="formHeader.materialCode" filterable style="width: 230px;">
-                                <el-option value="">
-                                    请选择
-                                </el-option>
-                                <el-option v-for="(item, index) in materialList" :key="index" :label="item.MATERIAL_CODE + ` ${item.MATERIAL_NAME}`" :value="item.MATERIAL_CODE" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="大类属性：">
-                            <el-select v-model="formHeader.type" filterable style="width: 230px;">
-                                <el-option value="">
-                                    请选择
-                                </el-option>
-                                <el-option v-for="(item, index) in typeList" :key="index" :label="item.value" :value="item.value" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item class="floatr">
-                            <el-button v-if="isAuth('ste:mid:list')" type="primary" size="small" @click="GetList()">
-                                查询
-                            </el-button>
-                            <el-button v-if="isAuth('ste:mid:save')" type="primary" size="small" @click="AddInfo()">
-                                新增
-                            </el-button>
-                            <el-button v-if="isAuth('ste:mid:delete')" type="primary" size="small" @click="DeleteInfo()">
-                                批量删除
-                            </el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-col>
-            </el-row>
-            <div class="toggleSearchBottom">
-                <i class="el-icon-caret-top" />
-            </div>
+            <el-form :model="formHeader" size="small" :inline="true" label-width="70px" class="sole_row">
+                <el-form-item label="生产工厂：">
+                    <el-select v-model="formHeader.factory" class="width150px">
+                        <el-option value="">
+                            请选择
+                        </el-option>
+                        <el-option v-for="(item, index) in factory" :key="index" :value="item.deptId" :label="item.deptName" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="物料编码：">
+                    <el-select v-model="formHeader.materialCode" filterable style="width: 230px;">
+                        <el-option value="">
+                            请选择
+                        </el-option>
+                        <el-option v-for="(item, index) in materialList" :key="index" :label="item.MATERIAL_CODE + ` ${item.MATERIAL_NAME}`" :value="item.MATERIAL_CODE" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="大类属性：">
+                    <el-select v-model="formHeader.type" filterable style="width: 230px;">
+                        <el-option value="">
+                            请选择
+                        </el-option>
+                        <el-option v-for="(item, index) in typeList" :key="index" :label="item.value" :value="item.value" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item class="floatr">
+                    <el-button v-if="isAuth('ste:mid:list')" type="primary" size="small" @click="GetList()">
+                        查询
+                    </el-button>
+                </el-form-item>
+            </el-form>
         </el-card>
-        <el-card class="tableCard secondcard">
-            <div class="toggleSearchTop">
-                <i class="el-icon-caret-bottom" />
-            </div>
-            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @row-dblclick="EditInfo" @selection-change="handleSelectionChange">
+        <mds-card title="JBS物料对应大类列表" :name="'mid'" :pack-up="false" style=" margin-top: 5px; margin-bottom: 0; background: #fff;">
+            <template slot="titleBtn">
+                <div style="float: right;">
+                    <el-button v-if="isAuth('ste:mid:save')" type="primary" size="small" @click="AddInfo()">
+                        新增
+                    </el-button>
+                    <el-button v-if="isAuth('ste:mid:delete')" type="danger" size="small" @click="DeleteInfo()">
+                        批量删除
+                    </el-button>
+                </div>
+            </template>
+            <el-table :data="dataList" class="newTable" :height="mainClientHeight - 48 - 25 - 34" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%;" @row-dblclick="EditInfo" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" />
                 <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" />
                 <el-table-column label="物料编码" :show-overflow-tooltip="true">
@@ -62,7 +56,7 @@
                 <el-table-column prop="type" label="大类属性" :show-overflow-tooltip="true" />
                 <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" />
             </el-table>
-        </el-card>
+        </mds-card>
         <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisibleAdd" width="400px" custom-class="dialog__class">
             <div slot="title">
                 新增
@@ -101,7 +95,6 @@
 
 <script>
 import { BASICDATA_API } from '@/api/api';
-import { headanimation } from '@/net/validate';
 export default {
     name: 'Index',
     data() {
@@ -129,13 +122,19 @@ export default {
             multipleSelection: []
         };
     },
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            }
+        }
+    },
     watch: {
         'formHeader.factory'(n) {
             this.GetMaterialCodeList(n);
         }
     },
     mounted() {
-        headanimation(this.$);
         this.Getdeptcode();
         this.GetTypeList();
     },

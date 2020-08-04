@@ -1,126 +1,124 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <el-row>
-                    <el-button v-if="isAuth('sys:menu:save')" type="primary" style="margin-bottom: 22px;" size="small" @click="addOrUpdateHandle()">
-                        新增
-                    </el-button>
-                </el-row>
-                <el-row>
-                    <el-table
-                        header-row-class-name="tableHead"
-                        :data="dataList"
-                        border
-                        tooltip-effect="dark"
-                        style="width: 100%;"
-                    >
-                        <el-table-column
-                            prop="menuId"
-                            header-align="left"
-                            align="left"
-                            width="80"
-                            label="ID"
-                        />
-                        <table-tree-column
-                            prop="name"
-                            header-align="left"
-                            tree-key="menuId"
-                            width="150"
-                            :show-overflow-tooltip="true"
-                            label="名称"
-                        />
-                        <el-table-column
-                            prop="parentName"
-                            header-align="left"
-                            align="left"
-                            width="100"
-                            :show-overflow-tooltip="true"
-                            label="上级菜单"
-                        />
-                        <el-table-column
-                            width="80"
-                            header-align="left"
-                            align="left"
-                            :show-overflow-tooltip="true"
-                            label="图标"
-                        >
-                            <template slot-scope="scope">
-                                <i class="iconfont" :class="scope.row.icon" />
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            width="90"
-                            prop="type"
-                            header-align="left"
-                            align="left"
-                            :show-overflow-tooltip="true"
-                            label="类型"
-                        >
-                            <template slot-scope="scope">
-                                <el-tag v-if="scope.row.type === '0'" size="small">
-                                    目录
-                                </el-tag>
-                                <el-tag v-else-if="scope.row.type === '1'" size="small" type="success">
-                                    菜单
-                                </el-tag>
-                                <el-tag v-else-if="scope.row.type === '2'" size="small" type="info">
-                                    按钮
-                                </el-tag>
-                                <el-tag v-else-if="scope.row.type === '3'" size="small" type="success">
-                                    三级页面
-                                </el-tag>
-                                <el-tag v-else-if="scope.row.type === '4'" size="small" type="success">
-                                    看板
-                                </el-tag>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="orderNum"
-                            header-align="left"
-                            align="left"
-                            width="80"
-                            :show-overflow-tooltip="true"
-                            label="排序号"
-                        />
-                        <el-table-column
-                            prop="url"
-                            header-align="left"
-                            align="left"
-                            :show-overflow-tooltip="true"
-                            label="菜单URL"
-                        />
-                        <el-table-column
-                            prop="perms"
-                            header-align="left"
-                            align="left"
-                            width="180"
-                            :show-overflow-tooltip="true"
-                            label="授权标识"
-                        />
-                        <el-table-column
-                            fixed="right"
-                            header-align="left"
-                            align="left"
-                            width="88"
-                            label="操作"
-                        >
-                            <template slot-scope="scope">
-                                <el-button v-if="isAuth('sys:menu:update')" style="padding: 0;" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">
-                                    修改
-                                </el-button>
-                                <el-button v-if="isAuth('sys:menu:delete')" style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.menuId)">
-                                    删除
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-row>
-            </el-card>
-        </div>
+    <div class="header_main">
+        <mds-card title="菜单列表" :name="'menu'" :pack-up="false" style="margin-bottom: 0; background: white;">
+            <template slot="titleBtn">
+                <el-button v-if="isAuth('sys:menu:save')" type="primary" style="float: right; margin-bottom: 12px;" size="small" @click="addOrUpdateHandle()">
+                    新增
+                </el-button>
+            </template>
+            <el-table
+                class="newTable"
+                header-row-class-name="tableHead"
+                :height="mainClientHeight - 64"
+                :data="dataList"
+                border
+                tooltip-effect="dark"
+                style="width: 100%;"
+            >
+                <el-table-column
+                    prop="menuId"
+                    header-align="left"
+                    align="left"
+                    width="80"
+                    label="ID"
+                />
+                <table-tree-column
+                    prop="name"
+                    header-align="left"
+                    tree-key="menuId"
+                    width="150"
+                    :show-overflow-tooltip="true"
+                    label="名称"
+                />
+                <el-table-column
+                    prop="parentName"
+                    header-align="left"
+                    align="left"
+                    width="100"
+                    :show-overflow-tooltip="true"
+                    label="上级菜单"
+                />
+                <el-table-column
+                    width="80"
+                    header-align="left"
+                    align="left"
+                    :show-overflow-tooltip="true"
+                    label="图标"
+                >
+                    <template slot-scope="scope">
+                        <i class="iconfont" :class="scope.row.icon" />
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    width="90"
+                    prop="type"
+                    header-align="left"
+                    align="left"
+                    :show-overflow-tooltip="true"
+                    label="类型"
+                >
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.type === '0'" size="small">
+                            目录
+                        </el-tag>
+                        <el-tag v-else-if="scope.row.type === '1'" size="small" type="success">
+                            菜单
+                        </el-tag>
+                        <el-tag v-else-if="scope.row.type === '2'" size="small" type="info">
+                            按钮
+                        </el-tag>
+                        <el-tag v-else-if="scope.row.type === '3'" size="small" type="success">
+                            三级页面
+                        </el-tag>
+                        <el-tag v-else-if="scope.row.type === '4'" size="small" type="success">
+                            看板
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="orderNum"
+                    header-align="left"
+                    align="left"
+                    width="80"
+                    :show-overflow-tooltip="true"
+                    label="排序号"
+                />
+                <el-table-column
+                    prop="url"
+                    header-align="left"
+                    align="left"
+                    :show-overflow-tooltip="true"
+                    label="菜单URL"
+                />
+                <el-table-column
+                    prop="perms"
+                    header-align="left"
+                    align="left"
+                    width="180"
+                    :show-overflow-tooltip="true"
+                    label="授权标识"
+                />
+                <el-table-column
+                    fixed="right"
+                    header-align="left"
+                    align="left"
+                    width="88"
+                    label="操作"
+                >
+                    <template slot-scope="scope">
+                        <el-button v-if="isAuth('sys:menu:update')" style="padding: 0;" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">
+                            修改
+                        </el-button>
+                        <el-button v-if="isAuth('sys:menu:delete')" style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.menuId)">
+                            删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </mds-card>
         <!-- 弹窗, 新增 / 修改 -->
         <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -140,7 +138,13 @@ export default {
             dataList: []
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            }
+        }
+    },
     mounted() {
         this.getDataList();
     },

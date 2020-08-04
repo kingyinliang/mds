@@ -17,19 +17,19 @@
                                 <img src="@/assets/img/Filtration.png" alt="" style="width: 92%; margin-top: 19px; margin-bottom: 10px;">
                             </el-col>
                         </el-row>
-                        <el-row class="bottom">
+                        <el-row class="bottoms">
                             <el-col :span="8">
-                                <el-button class="button" :disabled="!isRedact" @click="ShowDialog(item, '清洗')">
+                                <el-button class="buttons" size="small" :disabled="!isRedact" @click="ShowDialog(item, '清洗')">
                                     清洗
                                 </el-button>
                             </el-col>
                             <el-col :span="8">
-                                <el-button class="button" :disabled="!isRedact" @click="ShowDialog(item, '预涂')">
+                                <el-button class="buttons" size="small" :disabled="!isRedact" @click="ShowDialog(item, '预涂')">
                                     预涂
                                 </el-button>
                             </el-col>
                             <el-col :span="8">
-                                <el-button class="button" :disabled="!isRedact" @click="ShowDialog(item, '过滤')">
+                                <el-button class="buttons" size="small" :disabled="!isRedact" @click="ShowDialog(item, '过滤')">
                                     {{ formHeader.productLineName }}
                                 </el-button>
                             </el-col>
@@ -42,20 +42,21 @@
                 :row-class-name="rowDelFlag"
                 border
                 header-row-class-name="tableHead"
+                class="newTable"
                 style="margin-top: 10px;"
                 @row-dblclick="EditInfo"
             >
                 >
                 <el-table-column type="index" label="序号" width="50" fixed />
-                <el-table-column label="过滤机号" prop="deviceName" width="120" />
-                <el-table-column label="领用罐号" prop="holderName" width="120" show-overflow-tooltip />
-                <el-table-column label="工作内容" prop="content" />
-                <el-table-column label="开始时间" prop="startTime" width="140" show-overflow-tooltip />
-                <el-table-column label="结束时间" prop="endTime" width="140" show-overflow-tooltip />
-                <el-table-column label="时长(H)" prop="timeLength" />
-                <el-table-column label="备注" prop="remark" />
-                <el-table-column label="操作时间" prop="changed" width="150" show-overflow-tooltip />
-                <el-table-column label="操作人" prop="changer" width="145" show-overflow-tooltip />
+                <el-table-column label="过滤机号" prop="deviceName" min-width="120" />
+                <el-table-column label="领用罐号" prop="holderName" min-width="120" show-overflow-tooltip />
+                <el-table-column label="工作内容" prop="content" min-width="90" />
+                <el-table-column label="开始时间" prop="startTime" min-width="140" show-overflow-tooltip />
+                <el-table-column label="结束时间" prop="endTime" min-width="140" show-overflow-tooltip />
+                <el-table-column label="时长(H)" prop="timeLength" min-width="90" />
+                <el-table-column label="备注" prop="remark" min-width="80" />
+                <el-table-column label="操作时间" prop="changed" min-width="160" show-overflow-tooltip />
+                <el-table-column label="操作人" prop="changer" min-width="145" show-overflow-tooltip />
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || scope.row.status === 'checked' || scope.row.status === 'submit'" @click="DelRow(scope.row)">
@@ -65,9 +66,7 @@
                 </el-table-column>
             </el-table>
         </el-card>
-        <el-card>
-            <audit-log :table-data="recordList" />
-        </el-card>
+        <audit-log :table-data="recordList" />
         <el-dialog :visible.sync="dialogVisible" width="400px" :close-on-click-modal="false" custom-class="dialog__class" @keyup.enter.native="SaveDialog('workInfo')">
             <div slot="title">
                 {{ workInfo.deviceName }}
@@ -351,19 +350,25 @@ export default {
         font-size: 12px;
         line-height: 22px;
     }
-    .bottom {
-        width: 100%;
-        background: rgba(247, 249, 250, 1);
-        border-top: 1px solid rgba(233, 233, 233, 1);
-        border-bottom: none;
-        .button {
-            width: 100%;
-            margin: 10px 0;
-            padding: 0;
-            line-height: 20px;
-            background: none;
-            border: none;
-            border-right: 1px solid #e8e8e8;
+    .bottoms {
+        width: 95%;
+        margin: 0 auto;
+        .buttons {
+            width: 98%;
+            margin: 10px 1%;
+            color: #000;
+            background-color: #fff;
+            border-color: #d9d9d9;
+        }
+        .buttons:hover {
+            color: #fff;
+            background-color: #1890ff;
+        }
+        .buttons.is-disabled:hover {
+            color: #000;
+            background-color: #fff;
+            border-color: #d9d9d9;
+            cursor: not-allowed;
         }
     }
 }

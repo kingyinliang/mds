@@ -6,49 +6,28 @@
                     <form-head :form-header="formHeader" />
                 </el-col>
                 <el-col style="width: 100px;">
-                    <div style=" float: right; padding-top: 0;" :style="{ color: orderStatus === 'noPass' ? 'red' : '' }">
-                        <span style=" float: left; width: 5px; height: 5px; margin-top: 7px; margin-right: 3px; background: #1890ff; border-radius: 50%;" :style="{ background: orderStatus === 'noPass' ? 'red' : '#1890FF' }" />{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : '未录入' }}
+                    <div style=" float: right; padding-top: 0; line-height: 25px;" :style="{ color: orderStatus === 'noPass' ? 'red' : '' }">
+                        <span style=" float: left; width: 5px; height: 5px; margin-top: 10px; margin-right: 3px; background: #1890ff; border-radius: 50%;" :style="{ background: orderStatus === 'noPass' ? 'red' : '#1890FF' }" />{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : '未录入' }}
                     </div>
                 </el-col>
                 <img v-if="supStatus" src="@/assets/img/zhang.png" alt="" class="supStatus">
             </el-row>
-            <el-row style=" position: absolute; right: 20px; bottom: 10px; text-align: right;" class="buttonCss">
-                <template style="float: right; margin-left: 10px;">
-                    <el-button type="primary" class="button" size="small" @click="Refresh">
-                        刷新
-                    </el-button>
-                    <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:supMaterial:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                        {{ isRedact ? '取消' : '编辑' }}
-                    </el-button>
-                </template>
-                <template v-if="isRedact" style="float: right; margin-left: 10px;">
-                    <el-button v-if="isAuth('ste:supMaterial:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                        保存
-                    </el-button>
-                    <el-button v-if="isAuth('ste:supMaterial:submit')" type="primary" size="small" @click="SubmitForm">
-                        提交
-                    </el-button>
-                </template>
-            </el-row>
         </el-card>
-        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card">
+        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
                     辅料添加
                 </span>
-                <el-card class="newCard">
-                    <div class="clearfix" style="padding-top: 5px; padding-bottom: 5px;">
-                        <h3 style="line-height: 32px;">
-                            辅料添加记录
-                        </h3>
+                <mds-card title="辅料添加记录" name="AddSupDate">
+                    <template slot="titleBtn">
                         <el-button v-if="isAuth('ste:supMaterial:mySaveOrUpdate')" type="primary" size="mini" style="float: right;" :disabled="!isRedact" @click="addOver(multipleSelectionAddSup, 'addSup')">
                             添加完成
                         </el-button>
-                    </div>
-                    <el-table header-row-class-name="tableHead" :data="AddSupDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" @selection-change="handleSelectionChangeAddSup">
+                    </template>
+                    <el-table header-row-class-name="tableHead" class="newTable" :data="AddSupDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" @selection-change="handleSelectionChangeAddSup">
                         <el-table-column type="selection" :selectable="CheckBoxA" width="50" fixed />
                         <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" fixed />
-                        <el-table-column label="状态" width="100">
+                        <el-table-column label="状态" min-width="100">
                             <template slot-scope="scope">
                                 <div :class="{ reds: scope.row.status === 'noPass', che: scope.row.status === 'checked' }">
                                     {{ scope.row.status === 'noPass' ? '不通过' : scope.row.status === 'saved' ? scope.row.addStatus : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'checked' ? '通过' : scope.row.addStatus }}
@@ -56,7 +35,7 @@
                             </template>
                         </el-table-column>
                         <!--<el-table-column label="添加状态" width="80" prop="addStatus" :show-overflow-tooltip="true"></el-table-column>-->
-                        <el-table-column label="物料" :show-overflow-tooltip="true">
+                        <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                             </template>
@@ -66,7 +45,7 @@
                                 {{ scope.row.supStatus === '已推送' ? scope.row.adjustAmount : scope.row.supStatus === '已确认' ? scope.row.adjustAmount : scope.row.adjustAmountPro }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true" />
+                        <el-table-column label="单位" min-width="50" prop="unit" :show-overflow-tooltip="true" />
                         <el-table-column label="操作" width="65">
                             <template slot-scope="scope">
                                 <el-button v-if="scope.row.isSplit === '0'" type="text" size="mini" :disabled="!(isRedact && (scope.row.status === 'noPass' || (scope.row.status !== 'submit' && scope.row.status !== 'checked')))" @click="addData(scope.row, scope.$index, AddSupDate)">
@@ -74,7 +53,7 @@
                                 </el-button>
                             </template>
                         </el-table-column>
-                        <el-table-column width="125">
+                        <el-table-column min-width="125">
                             <template slot="header">
                                 <i class="reqI">*</i><span>批次</span>
                             </template>
@@ -82,7 +61,7 @@
                                 <el-input v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="领用数量" width="100">
+                        <el-table-column label="领用数量" min-width="100">
                             <template slot="header">
                                 <i class="reqI">*</i><span>领用数量</span>
                             </template>
@@ -90,7 +69,7 @@
                                 <el-input v-model="scope.row.receiveAmount" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="备注" width="100">
+                        <el-table-column label="备注" min-width="100">
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.remark" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" size="mini" />
                             </template>
@@ -106,32 +85,29 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                </el-card>
-                <el-card class="newCard">
-                    <div class="clearfix" style="padding-top: 5px; padding-bottom: 5px;">
-                        <h3 style="line-height: 32px;">
-                            增补料记录
-                        </h3>
+                </mds-card>
+                <mds-card title="增补料记录" name="SupDate">
+                    <template slot="titleBtn">
                         <el-button v-if="isAuth('ste:supMaterial:mySaveOrUpdate')" type="primary" size="mini" style="float: right;" :disabled="!isRedact" @click="addOver(multipleSelectionSup, 'Sup')">
                             添加完成
                         </el-button>
-                    </div>
-                    <el-table header-row-class-name="tableHead" :data="SupDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" @selection-change="handleSelectionChangeSup">
-                        <el-table-column type="selection" :selectable="CheckBoxA" width="50" fixed />
-                        <el-table-column type="index" width="55" label="序号" fixed />
-                        <el-table-column label="状态" width="100">
+                    </template>
+                    <el-table header-row-class-name="tableHead" class="newTable" :data="SupDate" :row-class-name="RowDelFlag" border tooltip-effect="dark" @selection-change="handleSelectionChangeSup">
+                        <el-table-column type="selection" :selectable="CheckBoxA" min-width="50" fixed />
+                        <el-table-column type="index" min-width="55" label="序号" fixed />
+                        <el-table-column label="状态" min-width="100">
                             <template slot-scope="scope">
                                 {{ scope.row.status === 'noPass' ? '不通过' : scope.row.status === 'saved' ? scope.row.addStatus : scope.row.status === 'submit' ? '已提交' : scope.row.status === 'checked' ? '通过' : scope.row.addStatus }}
                             </template>
                         </el-table-column>
                         <!--<el-table-column label="添加状态" width="80" prop="addStatus" :show-overflow-tooltip="true"></el-table-column>-->
-                        <el-table-column label="物料" :show-overflow-tooltip="true">
+                        <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
                             <template slot-scope="scope">
                                 {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="添加数量" width="80" prop="addAmount" :show-overflow-tooltip="true" />
-                        <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true" />
+                        <el-table-column label="添加数量" min-width="80" prop="addAmount" :show-overflow-tooltip="true" />
+                        <el-table-column label="单位" min-width="50" prop="unit" :show-overflow-tooltip="true" />
                         <el-table-column label="操作" width="65">
                             <template slot-scope="scope">
                                 <el-button v-if="scope.row.isSplit === '0'" type="text" size="mini" :disabled="!(isRedact && (scope.row.status === 'noPass' || (scope.row.status !== 'submit' && scope.row.status !== 'checked')))" @click="addData(scope.row, scope.$index, SupDate)">
@@ -139,7 +115,7 @@
                                 </el-button>
                             </template>
                         </el-table-column>
-                        <el-table-column width="125">
+                        <el-table-column min-width="125">
                             <template slot="header">
                                 <i class="reqI">*</i><span>批次</span>
                             </template>
@@ -147,7 +123,7 @@
                                 <el-input v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="领用数量" width="100">
+                        <el-table-column label="领用数量" min-width="100">
                             <template slot="header">
                                 <i class="reqI">*</i><span>领用数量</span>
                             </template>
@@ -155,7 +131,7 @@
                                 <el-input v-model="scope.row.receiveAmount" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" size="mini" />
                             </template>
                         </el-table-column>
-                        <el-table-column label="备注" width="100">
+                        <el-table-column label="备注" min-width="100">
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.remark" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" size="mini" />
                             </template>
@@ -171,7 +147,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                </el-card>
+                </mds-card>
                 <auditLog :table-data="DataAudit" />
             </el-tab-pane>
             <el-tab-pane name="2">
@@ -201,6 +177,24 @@
                 <el-button type="primary" size="small" @click="addOverTo()">确定</el-button>
             </span>
         </el-dialog>
+        <redact-box>
+            <template slot="button">
+                <el-button type="primary" class="button" size="small" @click="Refresh">
+                    刷新
+                </el-button>
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:supMaterial:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button v-if="isAuth('ste:supMaterial:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('ste:supMaterial:submit')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 

@@ -17,6 +17,12 @@
                     <el-button v-if="isAuth('fer:sort:list')" type="primary" size="small" @click="GetDataList(true)">
                         查 询
                     </el-button>
+                </div>
+            </el-form>
+        </el-card>
+        <mds-card title="类别列表" :name="'type'" :pack-up="false" style=" margin-top: 5px; margin-bottom: 0; background: #fff;">
+            <template slot="titleBtn">
+                <div style="float: right;">
                     <el-button v-if="isAuth('fer:sort:save')" type="primary" size="small" @click="addOrupdate()">
                         新 增
                     </el-button>
@@ -24,10 +30,8 @@
                         批量删除
                     </el-button>
                 </div>
-            </el-form>
-        </el-card>
-        <el-card style="margin-top: 5px;">
-            <el-table ref="table1" header-row-class-name="tableHead" :data="DataList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+            </template>
+            <el-table ref="table1" class="newTable" :height="mainClientHeight - 48 - 25 - 34 - 47" header-row-class-name="tableHead" :data="DataList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50" />
                 <el-table-column label="工厂" prop="factoryName" width="140" :show-overflow-tooltip="true" />
                 <el-table-column label="发酵物料" :show-overflow-tooltip="true">
@@ -53,7 +57,7 @@
             <el-row>
                 <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 50]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-row>
-        </el-card>
+        </mds-card>
         <category-addor-update v-if="visible" ref="addOrupdate" :factory="factory" @refreshDataList="GetDataList" />
     </div>
 </template>
@@ -83,7 +87,13 @@ export default {
             DataList: []
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            }
+        }
+    },
     watch: {
         'formHeader.factory'(n) {
             this.GetMaterial(n);

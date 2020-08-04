@@ -39,34 +39,29 @@
                                 <el-button v-if="isAuth('ste:supMaterialQQA:orderList')" type="primary" size="small" @click="GetDataList(true)">
                                     查询
                                 </el-button>
-                                <el-button v-if="isAuth('ste:supMaterialQQA:mySaveOrUpdate')" type="primary" size="small" @click="isRedact = !isRedact">
+                                <!-- <el-button v-if="isAuth('ste:supMaterialQQA:mySaveOrUpdate')" type="primary" size="small" @click="isRedact = !isRedact">
                                     {{ isRedact?'取消':'编辑' }}
-                                </el-button>
+                                </el-button> -->
                             </template>
-                            <template v-if="isRedact ">
+                            <!-- <template v-if="isRedact ">
                                 <el-button v-if="isAuth('ste:supMaterialQQA:mySaveOrUpdate')" type="primary" size="small" @click="SavedOr('已保存')">
                                     保存
                                 </el-button>
                                 <el-button v-if="isAuth('ste:supMaterialQQA:pushInfo')" type="primary" size="small" @click="pushData('已推送')">
                                     推送
                                 </el-button>
-                                <!--<el-button type="primary" size="small" @click="pushData('已确认')" v-if="isAuth('ste:supMaterialQQA:pushInfo')">确认</el-button>-->
-                            </template>
+                                <el-button type="primary" size="small" @click="pushData('已确认')" v-if="isAuth('ste:supMaterialQQA:pushInfo')">确认</el-button>-->
+                            <!-- </template> -->
                         </el-form-item>
                     </el-form>
                 </el-col>
             </el-row>
         </el-card>
-        <el-card class="searchCard newCard">
-            <div class="clearfix" style="padding-top: 5px; padding-bottom: 5px;">
-                <h3 style="line-height: 32px;">
-                    订单列表
-                </h3>
-            </div>
-            <el-table ref="multipleTable" header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @selection-change="handleSelectionChange" @row-dblclick="Dblckick">
+        <mds-card title="订单列表" name="orderList">
+            <el-table ref="multipleTable" header-row-class-name="tableHead" class="newTable" :data="dataList" border tooltip-effect="dark" @selection-change="handleSelectionChange" @row-dblclick="Dblckick">
                 <el-table-column type="selection" :selectable="CheckBoxOrder" width="50" align="center" fixed />
                 <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" fixed />
-                <el-table-column label="辅料状态" width="80" :show-overflow-tooltip="true">
+                <el-table-column label="辅料状态" min-width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <i v-if="scope.row.orderStatus === 'submit'">已提交</i>
                         <i v-else-if="scope.row.orderStatus === 'checked'">通过</i>
@@ -74,16 +69,16 @@
                         <i v-else>{{ scope.row.supStatus }}</i>
                     </template>
                 </el-table-column>
-                <el-table-column label="订单号" width="120" prop="orderNo" :show-overflow-tooltip="true" />
-                <el-table-column label="杀菌锅" width="100" prop="panName" :show-overflow-tooltip="true" />
+                <el-table-column label="订单号" min-width="120" prop="orderNo" :show-overflow-tooltip="true" />
+                <el-table-column label="杀菌锅" min-width="100" prop="panName" :show-overflow-tooltip="true" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="订单量" width="80" prop="planOutPut" :show-overflow-tooltip="true" />
-                <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true" />
-                <el-table-column label="杀菌状态" width="120" prop="steStatus" :show-overflow-tooltip="true">
+                <el-table-column label="订单量" min-width="80" prop="planOutPut" :show-overflow-tooltip="true" />
+                <el-table-column label="单位" min-width="50" prop="unit" :show-overflow-tooltip="true" />
+                <el-table-column label="杀菌状态" min-width="120" prop="steStatus" :show-overflow-tooltip="true">
                     <template slot="header">
                         <i class="reqI">*</i><span>杀菌状态</span>
                     </template>
@@ -94,14 +89,14 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="状态备注" width="100" prop="steStatusRemake" :show-overflow-tooltip="true">
+                <el-table-column label="状态备注" min-width="100" prop="steStatusRemake" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.steStatusRemake" :disabled="!(scope.row.orderStatus !== 'submit' && scope.row.orderStatus !== 'checked' && isRedact === true)" placeholder="请输入" size="mini" />
                     </template>
                 </el-table-column>
-                <el-table-column label="SAP备注" width="80" prop="sapRemake" :show-overflow-tooltip="true" />
-                <el-table-column label="提交人员" width="120" prop="oprDate" :show-overflow-tooltip="true" />
-                <el-table-column label="提交时间" width="80" prop="oprter" :show-overflow-tooltip="true" />
+                <el-table-column label="SAP备注" min-width="80" prop="sapRemake" :show-overflow-tooltip="true" />
+                <el-table-column label="提交人员" min-width="140" prop="oprDate" :show-overflow-tooltip="true" />
+                <el-table-column label="提交时间" min-width="160" prop="oprter" :show-overflow-tooltip="true" />
             </el-table>
             <el-row>
                 <el-pagination
@@ -114,14 +109,9 @@
                     @current-change="handleCurrentChange"
                 />
             </el-row>
-        </el-card>
-        <el-card class="newCard" style="margin: 5px 0;">
-            <div class="clearfix" style="padding-top: 5px; padding-bottom: 5px;">
-                <h3 style="line-height: 32px;">
-                    辅料添加记录
-                </h3>
-            </div>
-            <el-table header-row-class-name="tableHead" :data="AddSupDate" border tooltip-effect="dark">
+        </mds-card>
+        <mds-card title="辅料添加记录" name="addSupDateList">
+            <el-table header-row-class-name="tableHead" class="newTable" :data="AddSupDate" border tooltip-effect="dark">
                 <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" fixed />
                 <el-table-column label="添加状态" width="80" prop="addStatus" :show-overflow-tooltip="true" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
@@ -149,15 +139,12 @@
                     </template>
                 </el-table-column>
             </el-table>
-        </el-card>
-        <el-card class="newCard">
-            <div class="clearfix" style="padding-top: 5px; padding-bottom: 5px;">
-                <h3 style=" float: left; line-height: 32px;">
-                    增补料记录
-                </h3>
+        </mds-card>
+        <mds-card title="增补料记录" name="supDateList">
+            <template slot="titleBtn">
                 <el-button type="primary" icon="el-icon-plus" circle size="mini" :disabled="!isRedact || !ZengDateButton" style="float: right;" @click="addSup()" />
-            </div>
-            <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="SupDate" border tooltip-effect="dark">
+            </template>
+            <el-table header-row-class-name="tableHead" class="newTable" :row-class-name="RowDelFlag" :data="SupDate" border tooltip-effect="dark">
                 <el-table-column type="index" width="55" label="序号" fixed />
                 <el-table-column label="添加状态" width="80" prop="addStatus" :show-overflow-tooltip="true" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
@@ -209,7 +196,22 @@
                     </template>
                 </el-table-column>
             </el-table>
-        </el-card>
+        </mds-card>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="isAuth('ste:supMaterialQQA:mySaveOrUpdate')" type="primary" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact?'取消':'编辑' }}
+                </el-button>
+                <template v-if="isRedact ">
+                    <el-button v-if="isAuth('ste:supMaterialQQA:mySaveOrUpdate')" type="primary" size="small" @click="SavedOr('已保存')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('ste:supMaterialQQA:pushInfo')" type="primary" size="small" @click="pushData('已推送')">
+                        推送
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 

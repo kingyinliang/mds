@@ -7,6 +7,7 @@ import { isURL } from '@/net/validate';
 Vue.use(Router);
 /* eslint-disable @typescript-eslint/no-var-requires */
 const importTarget = process.env.NODE_ENV !== 'local' ? file => () => import('@/views/' + file + '.vue') : file => require('@/views/' + file + '.vue').default;
+const importWidet = process.env.NODE_ENV !== 'local' ? file => () => import('project/' + file + '.vue') : file => require('project/' + file + '.vue').default;
 /* eslint-enable @typescript-eslint/no-var-requires */
 // const importTarget = import('./import-' + process.env.NODE_ENV);
 // 全局路由(无需嵌套上左右整体布局)
@@ -40,19 +41,19 @@ const mainRoutes = {
         { path: '/', redirect: '/home' },
         {
             path: '/home',
-            component: importTarget('common/home'),
+            component: importWidet('COMMON/home'),
             name: 'home',
             meta: { title: '首页' }
         },
         {
             path: '/404',
-            component: importTarget('common/404'),
+            component: importWidet('COMMON/404'),
             name: '404',
             meta: { title: '404' }
         },
         {
             path: '/500',
-            component: importTarget('common/500'),
+            component: importWidet('COMMON/500'),
             name: '500',
             meta: { title: '500' }
         }

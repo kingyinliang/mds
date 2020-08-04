@@ -1,134 +1,102 @@
 <template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-form :model="formHeader" :inline="true" size="small" label-width="75px">
-                    <el-row>
-                        <el-col :span="21">
-                            <el-form-item label="生产工厂：">
-                                <el-tooltip class="item" effect="dark" :content="formHeader.factory" placement="top-start">
-                                    <p class="input_bottom">
-                                        {{ formHeader.factory }}
-                                    </p>
-                                </el-tooltip>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <p class="input_bottom">
-                                    {{ formHeader.workshop }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item :label="typeString + '单号：'">
-                                <p class="input_bottom">
-                                    &nbsp;{{ formHeaders.ORDER_NO }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item v-if="typeString === '调配'" :label="typeString + '罐号：'">
-                                <p class="input_bottom">
-                                    &nbsp;{{ formHeaders.HOLDER_ID }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="提交人员：">
-                                <p class="input_bottom">
-                                    &nbsp;{{ formHeaders.CREATOR }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="提交日期：">
-                                <p class="input_bottom">
-                                    &nbsp;{{ formHeaders.CREATED }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item :label="typeString + '日期：'">
-                                <el-date-picker v-model="formHeaders.ALLOCATE_DATE" type="date" :disabled="!isRedact" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 145px;" />
-                            </el-form-item>
-                            <el-form-item label="杀菌物料：">
-                                <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + `${formHeader.materialName}`" placement="top-start">
-                                    <p class="input_bottom">
-                                        {{ formHeader.materialCode }}{{ formHeader.materialName }}
-                                    </p>
-                                </el-tooltip>
-                            </el-form-item>
-                            <el-form-item label="订单状态：">
-                                <p class="input_bottom">
-                                    &nbsp;{{ formHeaders.STATUS }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item>
-                                <span v-if="typeString === '调配'" style=" float: left; margin-left: 5px; color: #606266;">
-                                    计划BL原汁总量（L）：
-                                </span>
-                                <span v-else style=" float: left; margin-left: 5px; color: #606266;">
-                                    原汁总量（L）：
-                                </span>
-                                <p style="float: left;" class="input_bottom">
-                                    {{ planOutputTotal }}
-                                </p>
-                            </el-form-item>
-                            <el-form-item label="备注：">
-                                <textarea v-model="remark" :disabled="!isRedact" style="width: 850px; height: 50px; background: rgba(255, 255, 255, 1); border: 1px solid rgba(217, 217, 217, 1); border-radius: 4px;" />
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="3" style="text-align: right;">
-                            <div style="width: 100%;">
-                                <el-button v-if="isAuth('ste:allocate:allocateOrderSave')" type="primary" size="small" :disabled="formHeaders.STATUS !== '已保存' && formHeaders.STATUS !== ''" @click="isRedact = !isRedact">
-                                    {{ isRedact === false ? '编辑' : '取消' }}
-                                </el-button>
-                                <el-button type="primary" size="small" :disabled="revocation === 1" style="margin-left: 5px;" @click="ReCall(true)">
-                                    撤回
-                                </el-button>
-                            </div>
-                            <div v-if="isRedact" style="margin-top: 15px;">
-                                <el-button type="primary" size="small" style="margin-left: 0;" @click="SaveOrderNo(true)">
-                                    保存
-                                </el-button>
-                                <el-button type="primary" size="small" style="margin-left: 5px;" @click="CreateOrder(true)">
-                                    生成
-                                </el-button>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-form>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <div class="tableCard">
-                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-            </div>
-            <el-card>
+    <div class="header_main">
+        <el-card class="searchCard">
+            <el-form :model="formHeader" :inline="true" size="small" label-width="75px">
                 <el-row>
-                    <el-col style="text-align: right;">
-                        <el-button type="primary" size="small" :disabled="!isRedact" @click="AddOrderNo">
-                            新增
-                        </el-button>
+                    <el-col :span="24">
+                        <el-form-item label="生产工厂：">
+                            <el-tooltip class="item" effect="dark" :content="formHeader.factory" placement="top-start">
+                                <p class="input_bottom">
+                                    {{ formHeader.factory }}
+                                </p>
+                            </el-tooltip>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <p class="input_bottom">
+                                {{ formHeader.workshop }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item :label="typeString + '单号：'">
+                            <p class="input_bottom">
+                                &nbsp;{{ formHeaders.ORDER_NO }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item v-if="typeString === '调配'" :label="typeString + '罐号：'">
+                            <p class="input_bottom">
+                                &nbsp;{{ formHeaders.HOLDER_ID }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="提交人员：">
+                            <p class="input_bottom">
+                                &nbsp;{{ formHeaders.CREATOR }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="提交日期：">
+                            <p class="input_bottom">
+                                &nbsp;{{ formHeaders.CREATED }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item :label="typeString + '日期：'">
+                            <el-date-picker v-model="formHeaders.ALLOCATE_DATE" type="date" :disabled="!isRedact" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 145px;" />
+                        </el-form-item>
+                        <el-form-item label="杀菌物料：">
+                            <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + `${formHeader.materialName}`" placement="top-start">
+                                <p class="input_bottom">
+                                    {{ formHeader.materialCode }}{{ formHeader.materialName }}
+                                </p>
+                            </el-tooltip>
+                        </el-form-item>
+                        <el-form-item label="订单状态：">
+                            <p class="input_bottom">
+                                &nbsp;{{ formHeaders.STATUS }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item>
+                            <span v-if="typeString === '调配'" style=" float: left; margin-left: 5px; color: #606266;">
+                                计划BL原汁总量（L）：
+                            </span>
+                            <span v-else style=" float: left; margin-left: 5px; color: #606266;">
+                                原汁总量（L）：
+                            </span>
+                            <p style="float: left;" class="input_bottom">
+                                {{ planOutputTotal }}
+                            </p>
+                        </el-form-item>
+                        <el-form-item label="备注：">
+                            <textarea v-model="remark" :disabled="!isRedact" style="width: 850px; height: 50px; background: rgba(255, 255, 255, 1); border: 1px solid rgba(217, 217, 217, 1); border-radius: 4px;" />
+                        </el-form-item>
                     </el-col>
                 </el-row>
-                <el-table :data="orderList" border header-row-class-name="tableHead" style="margin-top: 10px;">
-                    <el-table-column label="序号" type="index" width="50" fixed />
-                    <el-table-column label="订单号" prop="orderNo" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialCode }}{{ scope.row.materialName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="订单数量" prop="planOutput" width="80" />
-                    <el-table-column label="订单单位" prop="outputUnit" width="80" />
-                    <el-table-column label="订单开始日期" prop="productDate" />
-                    <el-table-column label="生产调度员" prop="dispatchMan" />
-                    <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
-                    <el-table-column label="操作" width="70">
-                        <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="DelOrderNo(scope.row)">
-                                删除
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </el-card>
-        </div>
+            </el-form>
+        </el-card>
+        <mds-card title="调配/分配" name="deployment" style="margin-top: 10px;">
+            <template slot="titleBtn">
+                <el-button type="primary" size="small" :disabled="!isRedact" style="float: right;" @click="AddOrderNo">
+                    新增
+                </el-button>
+            </template>
+            <el-table :data="orderList" border class="newTable" header-row-class-name="tableHead">
+                <el-table-column label="序号" type="index" width="50" fixed />
+                <el-table-column label="订单号" prop="orderNo" />
+                <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialCode }}{{ scope.row.materialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单数量" prop="planOutput" width="80" />
+                <el-table-column label="订单单位" prop="outputUnit" width="80" />
+                <el-table-column label="订单开始日期" prop="productDate" />
+                <el-table-column label="生产调度员" prop="dispatchMan" />
+                <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
+                <el-table-column label="操作" width="70">
+                    <template slot-scope="scope">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="DelOrderNo(scope.row)">
+                            删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </mds-card>
         <el-dialog :close-on-click-modal="false" :visible.sync="dialogTableVisible" width="1000px" custom-class="dialog__class">
             <div slot="title">
                 订单分配
@@ -162,6 +130,24 @@
                 </el-col>
             </el-row>
         </el-dialog>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="isAuth('ste:allocate:allocateOrderSave')" type="primary" size="small" :disabled="formHeaders.STATUS !== '已保存' && formHeaders.STATUS !== ''" @click="isRedact = !isRedact">
+                    {{ isRedact === false ? '编辑' : '取消' }}
+                </el-button>
+                <el-button type="primary" size="small" :disabled="revocation === 1" @click="ReCall(true)">
+                    撤回
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button type="primary" size="small" @click="SaveOrderNo(true)">
+                        保存
+                    </el-button>
+                    <el-button type="primary" size="small" @click="CreateOrder(true)">
+                        生成
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 
@@ -237,6 +223,9 @@ export default {
             this.GetInfoList(this.$store.state.common.Sterilized.orderNo);
         } else {
             this.GetorderNo(this.orderArray);
+        }
+        if (this.$store.state.common.Sterilized.isRedact === true) {
+            this.isRedact = this.$store.state.common.Sterilized.isRedact
         }
         // this.GetInfoList('C57A2AE171024496AD26B0BEE8B0ACAD')
     },
