@@ -2,6 +2,9 @@
     <div>
         <data-entry
             ref="dataEntry"
+            redact-auth="pkgPdEdit"
+            save-auth="pkgPdEdit"
+            submit-auth="pkgPdSubmit"
             :order-status="formHeader.orderStatusName"
             :header-base="headerBase"
             :form-header="formHeader"
@@ -368,6 +371,10 @@
         }
 
         mounted() {
+            if (!this.isAuth('pkgPdQuery')) {
+                this.$warningToast('无权限');
+                return false
+            }
             this.getOrderList()
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
                 this.classesOptions = []

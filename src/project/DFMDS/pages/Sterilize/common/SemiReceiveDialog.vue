@@ -99,26 +99,31 @@
             })
         }
 
-        init() {
+        init(data) {
             this.visible = true;
-            this.dataForm = {
-                id: '',
-                stePotNo: this.$store.state.sterilize.SemiReceive.potNo,
-                potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrder,
-                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
-                consumeType: '1',
-                fermentPotNo: '',
-                materialCode: '',
-                materialName: '',
-                consumeUnit: '',
-                consumeAmount: '',
-                consumeBatch: '',
-                fermentStorage: '',
-                tankNo: '',
-                remark: '',
-                changer: getUserNameNumber(),
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            if (data) {
+                this.dataForm = data
+            } else {
+                this.dataForm = {
+                    id: '',
+                    stePotNo: this.$store.state.sterilize.SemiReceive.potNo,
+                    potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrder,
+                    potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
+                    consumeType: '1',
+                    fermentPotNo: '',
+                    materialCode: '',
+                    materialName: '',
+                    consumeUnit: '',
+                    consumeAmount: '',
+                    consumeBatch: '',
+                    fermentStorage: '',
+                    tankNo: '',
+                    remark: '',
+                    changer: getUserNameNumber(),
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                }
             }
+
         }
 
         setUtil() {

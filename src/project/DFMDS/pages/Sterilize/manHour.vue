@@ -49,7 +49,7 @@
                     <div style="clear: both;" />
                     <div style="width: 100%; margin-top: 10px; text-align: right;">
                         <template style="float: right; margin-left: 10px;">
-                            <el-button type="primary" size="small" @click="getList()">
+                            <el-button v-if="isAuth('steTimeQuery')" type="primary" size="small" @click="getList()">
                                 查询
                             </el-button>
                         </template>
@@ -63,14 +63,14 @@
             <audit-log :table-data="productPeopleAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
             <redact-box>
                 <template slot="button">
-                    <el-button v-if="searchCard" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    <el-button v-if="searchCard && isAuth('steTimeEdit')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                         {{ isRedact ? '取消' : '编辑' }}
                     </el-button>
                     <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
-                        <el-button type="primary" size="small" @click="savedDatas()">
+                        <el-button v-if="isAuth('steTimeEdit')" type="primary" size="small" @click="savedDatas()">
                             保存
                         </el-button>
-                        <el-button type="primary" size="small" @click="submitDatas()">
+                        <el-button v-if="isAuth('steTimeSubmit')" type="primary" size="small" @click="submitDatas()">
                             提交
                         </el-button>
                     </template>

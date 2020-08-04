@@ -13,8 +13,8 @@
                         </el-button>
                     </div>
                 </div>
-                <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="semiTable" :row-class-name="rowDelFlag" :height="semiTable.length>4? '' : '196'" border tooltip-effect="dark">
-                    <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="semiTable" :row-class-name="rowDelFlag" :height="semiTable.length>4? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditRow">
+                    <el-table-column :index="indexMethod" type="index" label="序号" width="50px" fixed />
                     <el-table-column prop="stePotNo" label="生产锅号" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="aiShelves" label="发酵罐领用" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="fermentPotNo" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
@@ -66,6 +66,10 @@
         orgSemiTable: SemiObj[] = [];
         visible = false;
 
+        indexMethod(index) {
+            return index + 1
+        }
+
         init(formHeader) {
             STE_API.STE_SEMI_LIST_API({
                 orderNo: formHeader.orderNo,
@@ -74,6 +78,16 @@
                 this.semiTable = data.data;
                 this.orgSemiTable = data.data;
             })
+        }
+
+        ruleSubmit(): boolean {
+            // for (const item of this.semiTable.filter(it => it.delFlag !== 1)) {
+            //     if (!item.realUseAmount) {
+            //         this.$warningToast('请填写半成品领用页签必填项');
+            //         return false
+            //     }
+            // }
+            return true
         }
 
         savedData(formHeader) {
@@ -108,9 +122,25 @@
             });
         }
 
+        EditRow(row) {
+            row.modifiedId = 1;
+            if (!this.isRedact) {
+                return false
+            }
+            this.visible = true;
+            this.$nextTick(() => {
+                this.$refs.SemiReceiveDialog.init(row)
+            });
+        }
+
         dataPush(data: SemiObj) {
+            if (data.modifiedId === 1) {
+                this.semiTable.filter(it => it.modifiedId === 1)[0] = data;
+                this.semiTable.filter(it => it.modifiedId === 1)[0].modifiedId = 0
+            } else {
+                this.semiTable.push(data);
+            }
             this.visible = false;
-            this.semiTable.push(data); //测试
         }
 
         removeDataRow(row) {
@@ -132,6 +162,7 @@
     }
     interface SemiObj {
         delFlag?: number;
+        modifiedId?: number;
         id?: string;
         orderId?: string;
         factory?: string;

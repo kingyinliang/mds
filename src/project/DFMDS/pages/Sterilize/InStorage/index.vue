@@ -70,14 +70,14 @@
 
                 <redact-box>
                     <template slot="button">
-                        <el-button v-if="searchCard" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                        <el-button v-if="isAuth('steStgEdit') && searchCard" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                             {{ isRedact ? '取消' : '编辑' }}
                         </el-button>
                         <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
-                            <el-button type="primary" size="small" @click="savedDatas()">
+                            <el-button v-if="isAuth('steStgEdit')" type="primary" size="small" @click="savedDatas()">
                                 保存
                             </el-button>
-                            <el-button type="primary" size="small" @click="submitDatas()">
+                            <el-button v-if="isAuth('steStgSubmit')" type="primary" size="small" @click="submitDatas()">
                                 提交
                             </el-button>
                         </template>
@@ -168,6 +168,10 @@
         ];
 
         mounted() {
+            if (!this.isAuth('steStgQuery')) {
+                this.$warningToast('无权限');
+                return false
+            }
             this.getWorkshopList();
         }
 

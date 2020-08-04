@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            query-auth="steDisQuery"
             :type="'home'"
             :rules="queryTableFormRules"
             :query-form-data="queryTableFormData"
@@ -33,17 +34,17 @@
                                         </div>
                                     </div>
                                     <div class="btn-group">
-                                        <el-button size="small" plain :disabled="!(item.potStatus==='E'||item.potStatus==='R')" @click="btnImportBucket(item,)">
+                                        <el-button v-if="isAuth('steDisIn')" size="small" plain :disabled="!(item.potStatus==='E'||item.potStatus==='R')" @click="btnImportBucket(item,)">
                                             入罐
                                         </el-button>
-                                        <el-button v-if="item.potStatus!=='M'" size="small" plain :disabled="item.potStatus!=='R'" @click="btnFillBucket(item)">
+                                        <el-button v-if="item.potStatus!=='M' && isAuth('steDisFull')" size="small" plain :disabled="item.potStatus!=='R'" @click="btnFillBucket(item)">
                                             <!-- <el-button v-if="item.potStatus!=='M'" size="small" plain @click="btnFillBucket(item)"> -->
                                             满罐
                                         </el-button>
-                                        <el-button v-else size="small" plain @click="btnCannelFillBucket(item)">
+                                        <el-button v-else-if="isAuth('steDisFull')" size="small" plain @click="btnCannelFillBucket(item)">
                                             取消<br>满罐
                                         </el-button>
-                                        <el-button size="small" plain :disabled="!(item.potStatus==='C')" @click="btnClearBucket(item)">
+                                        <el-button v-if="isAuth('steDisClear')" size="small" plain :disabled="!(item.potStatus==='C')" @click="btnClearBucket(item)">
                                             <!-- <el-button size="small" plain @click="btnClearBucket(item)"> -->
                                             清罐
                                         </el-button>
