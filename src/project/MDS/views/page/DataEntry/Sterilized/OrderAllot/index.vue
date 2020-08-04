@@ -1,123 +1,125 @@
 <template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCards searchCard">
-                <el-row>
-                    <el-col>
-                        <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="formHeader.factory" placeholder="请选择" class="width180px">
-                                    <el-option value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="formHeader.workShop" palceholder="请选择" class="width180px">
-                                    <el-option value="">
-                                        请选择
-                                    </el-option>
-                                    <el-option v-for="(item, index) in workshop" :key="index" :value="item.deptId" :label="item.deptName" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="订单号：">
-                                <el-input v-model="formHeader.orderNo" />
-                            </el-form-item>
-                            <el-form-item label="订单状态：">
-                                <el-select v-model="formHeader.orderStatus" placeholder="请选择" style="width: 160px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option label="未录入" value="未录入" />
-                                    <el-option label="已同步" value="已同步" />
-                                    <el-option label="已保存" value="saved" />
-                                    <el-option label="已提交" value="submit" />
-                                    <el-option label="审核通过" value="checked" />
-                                    <el-option label="审核不通过" value="noPass" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产日期：">
-                                <el-date-picker v-model="formHeader.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="请选择" style="width: 180px;" />
-                            </el-form-item>
-                            <el-form-item class="floatr">
-                                <template>
-                                    <el-button v-if="isAuth('ste:allot:list')" type="primary" size="small" @click="GetList(true)">
-                                        查询
-                                    </el-button>
-                                    <el-button v-if="isAuth('ste:allot:update')" type="primary" size="small" @click="isRedact = !isRedact">
-                                        {{ isRedact === false ? '编辑' : '取消' }}
-                                    </el-button>
-                                </template>
-                                <template v-if="isRedact">
-                                    <el-button type="primary" size="small" @click="SaveForm()">
-                                        保存
-                                    </el-button>
-                                    <!-- <el-button type="primary" size="small" @click="SaveForm()">提交</el-button> -->
-                                </template>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <div class="tableCard">
-                <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-            </div>
-            <el-card>
-                <el-table :data="dataList" :span-method="objectSpanMethod" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
-                    >
-                    <el-table-column type="selection" width="50" :selectable="CheckBoxInit" fixed="left" />
-                    <el-table-column label="订单状态" width="100" prop="orderStatus" show-overflow-tooltip>
-                        <template slot-scope="scope">
-                            {{ scope.row.orderStatus === 'saved' ? '已保存' : scope.row.orderStatus === 'submit' ? '已提交' : scope.row.orderStatus === 'checked' ? '审核通过' : scope.row.orderStatus === 'noPass' ? '审核不通过' : scope.row.orderStatus }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="订单号" width="120" prop="orderNo" />
-                    <el-table-column label="品项" :show-overflow-tooltip="true" width="180">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="数量" prop="planOutput" />
-                    <el-table-column label="单位" width="50" prop="outputUnit" />
-                    <el-table-column label="订单开始日期" width="110" prop="startDate" />
-                    <el-table-column label="订单结束日期" width="110" prop="commitDate" />
-                    <el-table-column label="调配/分配单号" width="130" prop="allocateNo" />
-                    <el-table-column label="调配罐号" width="120" prop="holderName" />
-                    <el-table-column label="BL原汁量" width="100" prop="amount" />
-                    <el-table-column width="160" prop="productDate">
-                        <template slot="header">
-                            <i class="reqI">*</i>
-                            <span>生产日期</span>
-                        </template>
-                        <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :disabled="ReturnStatus(scope.row)" size="small" type="date" placeholder="请选择" style="width: 140px;" />
-                        </template>
-                    </el-table-column>
-                    <el-table-column width="140" label="锅号">
-                        <template slot-scope="scope">
-                            <el-select v-model="scope.row.panId" :disabled="ReturnStatus(scope.row)" size="small" placeholder="请选择">
+    <div class="header_main">
+        <el-card class="searchCards searchCard">
+            <el-row>
+                <el-col>
+                    <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="formHeader.factory" placeholder="请选择" class="width180px">
                                 <el-option value="">
                                     请选择
                                 </el-option>
-                                <el-option v-for="(item, index) of holderList" :key="index" :value="item.holderId" :label="item.holderName" />
+                                <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
                             </el-select>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="备注" width="110" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            <el-input v-model="scope.row.remark" :disabled="ReturnStatus(scope.row)" size="small" />
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 50]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </el-card>
-        </div>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="formHeader.workShop" palceholder="请选择" class="width180px">
+                                <el-option value="">
+                                    请选择
+                                </el-option>
+                                <el-option v-for="(item, index) in workshop" :key="index" :value="item.deptId" :label="item.deptName" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单号：">
+                            <el-input v-model="formHeader.orderNo" />
+                        </el-form-item>
+                        <el-form-item label="订单状态：">
+                            <el-select v-model="formHeader.orderStatus" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option label="未录入" value="未录入" />
+                                <el-option label="已同步" value="已同步" />
+                                <el-option label="已保存" value="saved" />
+                                <el-option label="已提交" value="submit" />
+                                <el-option label="审核通过" value="checked" />
+                                <el-option label="审核不通过" value="noPass" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产日期：">
+                            <el-date-picker v-model="formHeader.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="请选择" style="width: 180px;" />
+                        </el-form-item>
+                        <el-form-item class="floatr">
+                            <template>
+                                <el-button v-if="isAuth('ste:allot:list')" type="primary" size="small" @click="GetList(true)">
+                                    查询
+                                </el-button>
+                                <!-- <el-button v-if="isAuth('ste:allot:update')" type="primary" size="small" @click="isRedact = !isRedact">
+                                    {{ isRedact === false ? '编辑' : '取消' }}
+                                </el-button> -->
+                            </template>
+                            <!-- <template v-if="isRedact">
+                                <el-button type="primary" size="small" @click="SaveForm()">
+                                    保存
+                                </el-button> -->
+                            <!-- <el-button type="primary" size="small" @click="SaveForm()">提交</el-button> -->
+                            <!-- </template> -->
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+            <!-- <div class="toggleSearchBottom">
+                <i class="el-icon-caret-top" />
+            </div> -->
+        </el-card>
+        <mds-card title="订单分配" name="dataList" :pack-up="false" style="margin-top: 10px;">
+            <el-table :data="dataList" :span-method="objectSpanMethod" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="50" :selectable="CheckBoxInit" fixed="left" />
+                <el-table-column label="订单状态" min-width="100" prop="orderStatus" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        {{ scope.row.orderStatus === 'saved' ? '已保存' : scope.row.orderStatus === 'submit' ? '已提交' : scope.row.orderStatus === 'checked' ? '审核通过' : scope.row.orderStatus === 'noPass' ? '审核不通过' : scope.row.orderStatus }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="订单号" min-width="120" prop="orderNo" />
+                <el-table-column label="品项" :show-overflow-tooltip="true" min-width="220">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="数量" min-width="100" prop="planOutput" />
+                <el-table-column label="单位" min-width="50" prop="outputUnit" />
+                <el-table-column label="订单开始日期" min-width="110" prop="startDate" />
+                <el-table-column label="订单结束日期" min-width="110" prop="commitDate" />
+                <el-table-column label="调配/分配单号" min-width="130" prop="allocateNo" />
+                <el-table-column label="调配罐号" min-width="120" prop="holderName" />
+                <el-table-column label="BL原汁量" min-width="100" prop="amount" />
+                <el-table-column min-width="170" prop="productDate">
+                    <template slot="header">
+                        <i class="reqI">*</i>
+                        <span>生产日期</span>
+                    </template>
+                    <template slot-scope="scope">
+                        <el-date-picker v-model="scope.row.productDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :disabled="ReturnStatus(scope.row)" size="small" type="date" placeholder="请选择" style="width: 140px;" />
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="150" label="锅号">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.panId" :disabled="ReturnStatus(scope.row)" size="small" placeholder="请选择">
+                            <el-option value="">
+                                请选择
+                            </el-option>
+                            <el-option v-for="(item, index) of holderList" :key="index" :value="item.holderId" :label="item.holderName" />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注" min-width="120" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.remark" :disabled="ReturnStatus(scope.row)" size="small" />
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination :current-page="formHeader.currPage" :page-sizes="[10, 20, 50]" :page-size="formHeader.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="formHeader.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+        </mds-card>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="isAuth('ste:allot:update')" type="primary" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact === false ? '编辑' : '取消' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button type="primary" size="small" @click="SaveForm()">
+                        保存
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 

@@ -27,69 +27,83 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card v-show="fastS" class="searchCard newCard ferCard" style="margin-top: 5px;">
-            <h3 style=" margin-bottom: 8px; color: black;">
-                <i class="iconfont factory-liebiao" style=" margin-right: 10px; color: #666;" />成品罐区
-                <i v-if="isAuth('ste:semi:reportForm')" class="gotop" @click="goPot"><a>杀菌罐区库存情况>></a></i>
-            </h3>
-            <el-row class="dataList" :gutter="10" style="min-height: 150px;">
-                <el-col v-for="(item, index) in dataList" :key="index" :span="4">
-                    <el-card class="dataList_item">
-                        <h3 class="dataList_item_tit">
-                            {{ item.holderNo }}
-                            <span style="color: #333; font-weight: 400; font-size: 14px;">
-                                -{{ item.holderStatus === '0' ? '空罐' : item.holderStatus === '1' ? '入库中' : item.holderStatus === '2' ? '满罐' : item.holderStatus === '3' ? '领用中' : item.holderStatus === '4' ? '领用完' : '' }}
-                            </span>
-                            <span v-if="isAuth('filter:holder:list')" class="dataList_item_a" style="font-size: 14px;" @click="godetails(item)">详情>></span>
-                        </h3>
-                        <div class="dataList_item_pot clearfix" style="position: relative;">
-                            <img v-if="item.isRdSign === '1'" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 10px; left: 10px;">
-                            <img v-if="item.exportMaterial !== ''" src="@/assets/img/CK.png" alt="" style="position: absolute; top: 40px; left: 10px;">
-                            <div class="dataList_item_pot_box">
-                                <div class="dataList_item_pot_box1">
-                                    <div class="dataList_item_pot_box_item2" :style="`height:${item.holderStatus === '0' ? 0 : item.amount < 0 ? 0 : ((item.amount * 1) / (item.holderHold * 1)) * 100}%`" />
-                                    <div v-if="item.holderStatus !== '0'" class="dataList_item_pot_box_detail">
-                                        <p>{{ item.batch || '' }}</p>
-                                        <p>
-                                            {{ (item.materialCode || '') + ' ' + (item.materialName || '') }}
-                                        </p>
-                                        <p v-if="item.amount">
-                                            {{ (item.amount * 10) / 10000 || '' }}方
-                                        </p>
-                                        <p v-if="item.timeLength">
-                                            {{ item.timeLength || '' }}H
-                                        </p>
+        <mds-card v-show="fastS" title="成品罐区" name="potTotal" :pack-up="false" style="margin-top: 10px;">
+            <template slot="titleBtn">
+                <div style="float: right; height: 32px; margin-bottom: 10px; line-height: 32px;">
+                    <i v-if="isAuth('ste:semi:reportForm')"><a style="color: #487bff; font-size: 14px;" @click="goPot">杀菌罐区库存情况>></a></i>
+                </div>
+            </template>
+            <div>
+                <el-row class="potList" :gutter="10" style="min-height: 150px;">
+                    <el-col v-for="(item, index) in dataList" :key="index" :span="4">
+                        <div class="box">
+                            <div class="box_title">
+                                {{ item.holderNo }}-{{ item.holderStatus === '0' ? '空罐' : item.holderStatus === '1' ? '入库中' : item.holderStatus === '2' ? '满罐' : item.holderStatus === '3' ? '领用中' : item.holderStatus === '4' ? '领用完' : '' }}
+                                <a v-if="isAuth('filter:holder:list')" @click="godetails(item)">详情>></a>
+                            </div>
+                            <div class="box_content">
+                                <img v-if="item.isRdSign === '1'" src="@/assets/img/RD.png" alt="" style="position: absolute; top: 0; left: 10px; z-index: 101;">
+                                <img v-if="item.exportMaterial !== ''" src="@/assets/img/CK.png" alt="" style="position: absolute; top: 28px; left: 10px; z-index: 101;">
+                                <div class="box_content_itemPot">
+                                    <div class="pot_border">
+                                        <div class="pot" />
+                                        <div class="pot_water">
+                                            <div
+                                                class="pot_water_sole"
+                                                :style="{'height': (item.holderStatus === '0' ? 0 : item.amount < 0 ? 0 : ((item.amount * 1) / (item.holderHold * 1)) * 100) + '%', 'background': '#AD592D'}"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="box_content_itemButton buttonCss">
+                                    <el-button type="primary" size="small" @click="clearPot(item)">
+                                        清罐
+                                    </el-button>
+                                    <el-button type="primary" size="small" @click="JBSdialog(item)">
+                                        JBS出库
+                                    </el-button>
+                                    <el-button type="primary" size="small" @click="TurnSavedialog(item)">
+                                        转储
+                                    </el-button>
+                                </div>
+                            </div>
+                            <div class="box_bottom" style="height: 90px;">
+                                <div v-if="item.holderStatus !== '0'">
+                                    <div class="box_bottom_sole">
+                                        {{ item.batch || '' }}
+                                    </div>
+                                    <div class="box_bottom_sole">
+                                        {{ item.timeLength || '' }}H
+                                    </div>
+                                    <div class="box_bottom_sole">
+                                        {{ (item.amount * 10) / 10000 || '' }}方
+                                    </div>
+                                    <div class="box_bottom_sole" />
+                                    <div style="width: 100%; overflow: hidden; white-space: nowrap;">
+                                        {{ (item.materialCode || '') + ' ' + (item.materialName || '') }}
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
+                                    </div>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
+                                    </div>
+                                    <div class="box_bottom_sole colorGray">
+                                        暂无数据
+                                    </div>
+                                    <div class="box_bottom_sole colorGray" />
+                                    <div class="colorGray" style="width: 100%;">
+                                        暂无数据
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <el-row class="dataList_item_btn">
-                            <el-col :span="8" class="dataList_item_btn_item">
-                                <p @click="clearPot(item)">
-                                    清罐
-                                </p>
-                            </el-col>
-                            <el-col
-                                :span="8"
-                                class="dataList_item_btn_item"
-                            >
-                                <p @click="JBSdialog(item)">
-                                    <i class="dataList_item_btn_item_bor" />JBS出库
-                                </p>
-                            </el-col>
-                            <el-col
-                                :span="8"
-                                class="dataList_item_btn_item"
-                            >
-                                <p @click="TurnSavedialog(item)">
-                                    <i class="dataList_item_btn_item_bor" />转储
-                                </p>
-                            </el-col>
-                        </el-row>
-                    </el-card>
-                </el-col>
-            </el-row>
-        </el-card>
+                    </el-col>
+                </el-row>
+            </div>
+        </mds-card>
         <el-dialog width="400px" title="JBS出库" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="JBSVisible">
             <el-form ref="JBSdataForm" :model="JBSdataForm" :rules="JBSdataRule" label-width="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="JBS()" @submit.native.prevent>
                 <el-form-item label="领用罐号：" prop="receiveHolderId">
@@ -554,140 +568,19 @@ export default {
         }
     }
 }
-.dataList {
-    margin-top: 10px;
-    &_item {
-        margin-bottom: 10px;
-        &_tit {
-            padding: 0 10px;
-            color: black;
-            font-weight: 600;
-            font-size: 16px;
-            line-height: 45px;
-            border-bottom: 1px solid #e8e8e8;
-        }
-        &_a {
-            float: right;
-            color: #1890ff;
-            cursor: pointer;
-        }
-        &_pot {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 17px 10px 10px;
-            overflow: hidden;
-            &_box1 {
-                position: relative;
-                display: flex;
-                flex-wrap: wrap;
-                align-content: flex-end;
-                width: 102px;
-                height: 197px;
-                overflow: hidden;
-            }
-            &_box {
-                display: flex;
-                flex-wrap: wrap;
-                align-content: flex-end;
-                float: left;
-                width: 120px;
-                min-width: 120px;
-                height: 229px;
-                padding: 25px 9px 9px;
-                overflow: hidden;
-                color: white;
-                background: url("~@/assets/img/ferPot.png") no-repeat;
-                background-size: contain;
-                &_detail {
-                    position: absolute;
-                    top: 70px;
-                    left: 3px;
-                    width: 100%;
-                    color: black;
-                    font-size: 14px;
-                }
-                &_item2,
-                &_item1 {
-                    position: absolute;
-                    bottom: 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 100%;
-                    height: 50px;
-                    overflow: hidden;
-                    font-size: 14px;
-                    background: #69c0ff;
-                    &::before,
-                    &::after {
-                        position: absolute;
-                        left: 50%;
-                        min-width: 175px;
-                        min-height: 165px;
-                        background: #fff;
-                        animation: roateTwo 10s linear infinite;
-                        content: "";
-                    }
-                    &::before {
-                        top: -158px;
-                        border-radius: 45%;
-                    }
-                    &::after {
-                        top: -152px;
-                        border-radius: 47%;
-                        opacity: 0.5;
-                    }
-                }
-                &_item2 {
-                    height: 100px;
-                    background: #1890ff;
-                }
-                &:hover &_item1::before,
-                &:hover &_item1::after,
-                &:hover &_item2::before,
-                &:hover &_item2::after {
-                    animation: roateOne 10s linear infinite;
-                }
-            }
-            &_detail {
-                float: left;
-                max-width: 112px;
-                height: auto;
-                margin-top: 25px;
-                margin-left: 10px;
-                padding: 5px;
-                color: #333;
-                font-size: 14px;
-                line-height: 18px;
-                border: 1px solid #1890ff;
-                border-radius: 4px;
-            }
-        }
-    }
-}
 
-@keyframes roateOne {
-    0% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    50% {
-        transform: translate(-50%, -1%) rotateZ(180deg);
-    }
-    100% {
-        transform: translate(-50%, -0%) rotateZ(360deg);
-    }
+.buttonCss .el-button--primary {
+    width: 57px;
+    padding: 9px 0;
+    text-align: center;
 }
-
-@keyframes roateTwo {
-    0% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    50% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
-    100% {
-        transform: translate(-50%, -0%) rotateZ(0deg);
-    }
+.buttonCss .el-button--primary:first-child {
+    color: #000;
+    background-color: #fff;
+    border-color: #d9d9d9;
+}
+.buttonCss .el-button--primary:hover {
+    color: #fff;
+    background-color: #1890ff;
 }
 </style>

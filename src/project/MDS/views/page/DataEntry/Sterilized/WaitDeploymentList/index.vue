@@ -2,7 +2,7 @@
     <div class="header_main">
         <el-card class="searchCard">
             <el-row>
-                <el-col style=" float: left; width: 1133px;">
+                <el-col>
                     <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="sole_row">
                         <el-form-item label="生产工厂：">
                             <el-select v-model="formHeader.factory" placeholder="请选择" class="width150px">
@@ -34,84 +34,102 @@
                         <el-form-item label="订单：" label-width="45px">
                             <el-input v-model="formHeader.pkgOrderNo" clearable placeholder="请选择" style="width: 140px;" />
                         </el-form-item>
+                        <el-form-item style="float: right;">
+                            <el-button v-if="isAuth('ste:pkgOrder:orderList')" type="primary" size="small" @click="GetList(true)">
+                                查询
+                            </el-button>
+                        </el-form-item>
                     </el-form>
                 </el-col>
-                <el-col style=" float: right; width: 127px;">
+                <!-- <el-col style=" float: right; width: 127px;">
                     <el-button v-if="isAuth('ste:pkgOrder:orderList')" type="primary" size="small" @click="GetList(true)">
                         查询
                     </el-button>
-                    <el-button v-if="isAuth('ste:allocate:allocateOrderSave')" type="primary" size="small" @click="isRedact = !isRedact">
-                        {{ isRedact === false? '编辑' : '取消' }}
-                    </el-button>
-                </el-col>
+                </el-col> -->
             </el-row>
         </el-card>
-        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs secondcard" type="border-card" style=" overflow: hidden; border-radius: 15px;" @tab-click="handleClick">
+        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" style=" overflow: hidden; border-radius: 15px;" @tab-click="handleClick">
             <el-tab-pane name="BL">
                 <span slot="label" class="spanview">
                     <el-button>待调配</el-button>
                 </span>
-                <el-row>
-                    <el-col style="text-align: right;">
-                        <el-button type="primary" size="small" :disabled="!isRedact" @click="DoDeploy">
+                <mds-card title="待调配报表" name="dataList" :pack-up="false">
+                    <template slot="titleBtn">
+                        <el-button type="primary" style="float: right;" size="small" :disabled="!isRedact" @click="DoDeploy">
                             调配
                         </el-button>
-                    </el-col>
-                </el-row>
-                <el-table :data="dataList" :row-key="getRowKeys" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
-                    <el-table-column label="订单号" prop="orderNo" width="120" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="订单数量" prop="planOutput" width="80" />
-                    <el-table-column label="订单单位" prop="outputUnit" width="80" />
-                    <el-table-column label="订单开始日期" prop="productDate" />
-                    <!-- <el-table-column label="订单结束日期"></el-table-column> -->
-                    <el-table-column label="生产调度员" prop="dispatchMan" />
-                    <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
-                    <el-table-column label="操作" />
-                </el-table>
+                    </template>
+                    <el-table :data="dataList" :row-key="getRowKeys" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
+                        <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
+                        <el-table-column label="订单号" prop="orderNo" min-width="120" />
+                        <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
+                            <template slot-scope="scope">
+                                {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="订单数量" prop="planOutput" min-width="80" />
+                        <el-table-column label="订单单位" prop="outputUnit" min-width="80" />
+                        <el-table-column label="订单开始日期" prop="productDate" min-width="160" />
+                        <!-- <el-table-column label="订单结束日期"></el-table-column> -->
+                        <el-table-column label="生产调度员" prop="dispatchMan" min-width="160" />
+                        <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" min-width="160" />
+                        <el-table-column label="操作" min-width="160" />
+                    </el-table>
+                    <el-pagination
+                        :current-page="formHeader.currPage"
+                        :page-sizes="[10, 20, 50]"
+                        :page-size="formHeader.pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="formHeader.totalCount"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                    />
+                </mds-card>
             </el-tab-pane>
             <el-tab-pane name="LY">
                 <span slot="label" class="spanview">
                     <el-button>待分配</el-button>
                 </span>
-                <el-row>
-                    <el-col style="text-align: right;">
-                        <el-button type="primary" size="small" :disabled="!isRedact" @click="DoDeploy">
+                <mds-card title="待分配报表" name="dataList" :pack-up="false">
+                    <template slot="titleBtn">
+                        <el-button type="primary" size="small" style="float: right;" :disabled="!isRedact" @click="DoDeploy">
                             分配
                         </el-button>
-                    </el-col>
-                </el-row>
-                <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
-                    <el-table-column label="订单号" prop="orderNo" width="120" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="订单数量" prop="planOutput" width="80" />
-                    <el-table-column label="订单单位" prop="outputUnit" width="80" />
-                    <el-table-column label="订单开始日期" prop="productDate" />
-                    <el-table-column label="生产调度员" prop="dispatchMan" />
-                    <el-table-column label="订单备注" prop="remark" :show-overflow-tooltip="true" />
-                    <el-table-column label="操作" />
-                </el-table>
+                    </template>
+                    <el-table :data="dataList" border header-row-class-name="tableHead" class="newTable" style="margin-top: 10px;" @selection-change="handleSelectionChange">
+                        <el-table-column type="selection" width="50" :selectable="CheckBoxInit" />
+                        <el-table-column label="订单号" prop="orderNo" min-width="120" />
+                        <el-table-column label="物料" :show-overflow-tooltip="true" min-width="220">
+                            <template slot-scope="scope">
+                                {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="订单数量" prop="planOutput" min-width="80" />
+                        <el-table-column label="订单单位" prop="outputUnit" min-width="80" />
+                        <el-table-column label="订单开始日期" prop="productDate" min-width="160" />
+                        <el-table-column label="生产调度员" prop="dispatchMan" min-width="90" />
+                        <el-table-column label="订单备注" prop="remark" min-width="160" :show-overflow-tooltip="true" />
+                        <el-table-column label="操作" min-width="160" />
+                    </el-table>
+                    <el-pagination
+                        :current-page="formHeader.currPage"
+                        :page-sizes="[10, 20, 50]"
+                        :page-size="formHeader.pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="formHeader.totalCount"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                    />
+                </mds-card>
             </el-tab-pane>
-            <el-pagination
-                :current-page="formHeader.currPage"
-                :page-sizes="[10, 20, 50]"
-                :page-size="formHeader.pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="formHeader.totalCount"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-            />
         </el-tabs>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="isAuth('ste:allocate:allocateOrderSave')" type="primary" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact === false? '编辑' : '取消' }}
+                </el-button>
+            </template>
+        </redact-box>
     </div>
 </template>
 
@@ -297,7 +315,8 @@ export default {
                     planOutputTotal: planOutputTotal,
                     materialCode: materialCode,
                     materialName: this.multipleSelection[0].materialName,
-                    type: this.activeName
+                    type: this.activeName,
+                    isRedact: true
                 };
                 // console.log(this.Sterilized);
                 this.mainTabs = this.mainTabs.filter(item => item.name !== 'DataEntry-Sterilized-WaitDeploymentList-doDeployment');

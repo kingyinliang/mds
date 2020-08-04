@@ -1,61 +1,51 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <div class="clearfix">
-                    <el-row style="float: right;">
-                        <el-form :inline="true" :model="form" size="small" label-width="68px" class="topforms2" @keyup.enter.native="getList(true)" @submit.native.prevent>
-                            <el-form-item>
-                                <el-input v-model="form.materialCode" placeholder="物料" suffix-icon="el-icon-search" />
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button v-if="isAuth('sys:spec:listSpec')" type="primary" size="small" @click="getList(true)">
-                                    查询
-                                </el-button>
-                                <el-button v-if="isAuth('sys:spec:listSpec')" type="primary" size="small" @click="visible1 = true">
-                                    高级查询
-                                </el-button>
-                                <el-button v-if="isAuth('sys:spec:saveSpec')" type="primary" size="small" @click="addOrupdate()">
-                                    新增
-                                </el-button>
-                                <el-button v-if="isAuth('sys:spec:delSpec')" type="danger" size="small" @click="remove()">
-                                    批量删除
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
+    <div class="header_main">
+        <mds-card title="规格列表" :name="'role'" :pack-up="false" style="background: #fff;">
+            <template slot="titleBtn">
+                <div style="float: right; height: 32px; margin-bottom: 10px;">
+                    <el-input v-model="form.materialCode" placeholder="物料" size="small" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
+                    <el-button v-if="isAuth('sys:spec:listSpec')" type="primary" size="small" @click="getList(true)">
+                        查询
+                    </el-button>
+                    <el-button v-if="isAuth('sys:spec:listSpec')" type="primary" size="small" @click="visible1 = true">
+                        高级查询
+                    </el-button>
+                    <el-button v-if="isAuth('sys:spec:saveSpec')" type="primary" size="small" @click="addOrupdate()">
+                        新增
+                    </el-button>
+                    <el-button v-if="isAuth('sys:spec:delSpec')" type="danger" size="small" @click="remove()">
+                        批量删除
+                    </el-button>
                 </div>
-                <el-row>
-                    <el-table ref="table1" class="orderTable" border header-row-class-name="tableHead" :data="SpecificationList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="50" fixed />
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
-                        <el-table-column width="230" label="工厂" :show-overflow-tooltip="true" prop="factoryName" />
-                        <el-table-column label="物料" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="brand" label="品牌" width="80" :show-overflow-tooltip="true" />
-                        <el-table-column prop="largeClassName" label="大类" width="80" :show-overflow-tooltip="true" />
-                        <el-table-column prop="boxSpec" width="70" label="箱规格" :show-overflow-tooltip="true" />
-                        <el-table-column prop="boxSpecUnitName" label="单位" width="70" :show-overflow-tooltip="true" />
-                        <el-table-column prop="productSpec" width="70" label="瓶规格" :show-overflow-tooltip="true" />
-                        <el-table-column prop="productSpecUnitName" label="单位" width="70" :show-overflow-tooltip="true" />
-                        <el-table-column prop="changer" label="维护人" width="120" :show-overflow-tooltip="true" />
-                        <el-table-column width="60" label="操作">
-                            <template slot-scope="scope">
-                                <el-button v-if="isAuth('sys:spec:updateSpec')" style="padding: 0;" type="text" @click="addOrupdate(scope.row)">
-                                    编辑
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-row>
-                <el-row>
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+            </template>
+            <el-table ref="table1" class="newTable" :height="mainClientHeight - 30 - 42 - 47" border header-row-class-name="tableHead" :data="SpecificationList" tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="50" fixed />
+                <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
+                <el-table-column width="230" label="工厂" :show-overflow-tooltip="true" prop="factoryName" />
+                <el-table-column label="物料" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="brand" label="品牌" width="80" :show-overflow-tooltip="true" />
+                <el-table-column prop="largeClassName" label="大类" width="80" :show-overflow-tooltip="true" />
+                <el-table-column prop="boxSpec" width="70" label="箱规格" :show-overflow-tooltip="true" />
+                <el-table-column prop="boxSpecUnitName" label="单位" width="70" :show-overflow-tooltip="true" />
+                <el-table-column prop="productSpec" width="70" label="瓶规格" :show-overflow-tooltip="true" />
+                <el-table-column prop="productSpecUnitName" label="单位" width="70" :show-overflow-tooltip="true" />
+                <el-table-column prop="changer" label="维护人" width="120" :show-overflow-tooltip="true" />
+                <el-table-column width="60" label="操作">
+                    <template slot-scope="scope">
+                        <el-button v-if="isAuth('sys:spec:updateSpec')" style="padding: 0;" type="text" @click="addOrupdate(scope.row)">
+                            编辑
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-row>
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <specification-add-or-update v-if="visible" ref="SpecificationAddOrUpdate" :serch-sap-list="SerchSapList" @refreshDataList="getList" />
         <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="visible1">
             <div class="formdata">
@@ -87,7 +77,7 @@
                 <el-button type="primary" @click="getList(true)">确定</el-button>
             </span>
         </el-dialog>
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -119,7 +109,13 @@
                 totalCount: 1
             };
         },
-        computed: {},
+        computed: {
+            mainClientHeight: {
+                get() {
+                    return this.$store.state.common.mainClientHeight;
+                }
+            }
+        },
         mounted() {
             this.Getdeptcode();
             this.getList();

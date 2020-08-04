@@ -1,54 +1,54 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <el-row type="flex">
-                    <el-col>
-                        <el-form :inline="true" :model="form" size="small" label-width="85px" class="topforms" @keyup.enter.native="GetRoleList(true)">
-                            <el-form-item label="角色名称：">
-                                <el-input v-model="form.username" placeholder="角色名称" />
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                    <el-col style="width: 200px;">
-                        <el-button v-if="isAuth('sys:role:list')" type="primary" size="small" @click="GetRoleList(true)">
-                            查询
+    <div class="header_main">
+        <mds-card title="角色信息列表" :name="'role'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
+            <template slot="titleBtn">
+                <div style="float: right; height: 32px; margin-bottom: 10px;">
+                    <el-input v-model="form.username" placeholder="角色名称" size="small" clearable style="width: 180px; margin-right: 16px;" />
+                    <el-button v-if="isAuth('sys:role:list')" type="primary" size="small" @click="GetRoleList(true)">
+                        查询
+                    </el-button>
+                    <el-button v-if="isAuth('sys:role:save')" type="primary" size="small" @click="roleAddOrUpdate()">
+                        新增
+                    </el-button>
+                </div>
+            </template>
+            <el-table ref="userlist" class="newTable" header-row-class-name="tableHead" :data="role" :height="mainClientHeight - 62 - 47" border tooltip-effect="dark" style="width: 100%;">
+                <el-table-column type="selection" width="50" fixed />
+                <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
+                <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" min-width="300" />
+                <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="150" />
+                <el-table-column prop="created" label="创建时间" width="180" />
+                <el-table-column prop="changer" label="修改人" :show-overflow-tooltip="true" width="150" />
+                <el-table-column prop="changed" label="修改时间" width="180" />
+                <el-table-column label="操作" min-width="360" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button v-if="isAuth('sys:role:updateuser')" type="text" class="role__btn" @click="userManage(scope.row.roleId)">
+                            人员管理
                         </el-button>
-                        <el-button v-if="isAuth('sys:role:save')" type="primary" size="small" @click="roleAddOrUpdate()">
-                            新增
+                        <el-button v-if="isAuth('sys:role:updatemenu')" type="text" class="role__btn" @click="fnManage(scope.row.roleId)">
+                            功能分配
                         </el-button>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-table ref="userlist" header-row-class-name="tableHead" :data="role" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column type="selection" width="50" fixed />
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
-                        <el-table-column prop="roleName" label="角色名称" :show-overflow-tooltip="true" width="" />
-                        <el-table-column label="操作" width="320">
-                            <template slot-scope="scope">
-                                <a v-if="isAuth('sys:role:updateuser')" style="margin-right: 5px;" @click="userManage(scope.row.roleId)">人员管理</a>
-                                <a v-if="isAuth('sys:role:updatemenu')" style="margin-right: 5px;" @click="fnManage(scope.row.roleId)">功能分配</a>
-                                <a v-if="isAuth('sys:role:updatedept')" style="margin-right: 5px;" @click="roleDept(scope.row.roleId)">部门分配</a>
-                                <a v-if="isAuth('sys:role:update')" style="margin-right: 5px;" @click="roleAddOrUpdate(scope.row)">修改角色</a>
-                                <a v-if="isAuth('sys:role:delete')" @click="removes(scope.row.roleId)">删除角色</a>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="creator" label="创建人" :show-overflow-tooltip="true" width="" />
-                        <el-table-column prop="created" label="创建时间" width="160" />
-                        <el-table-column prop="changer" label="修改人" :show-overflow-tooltip="true" width="" />
-                        <el-table-column prop="changed" label="修改时间" width="160" />
-                    </el-table>
-                </el-row>
-                <el-row>
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+                        <el-button v-if="isAuth('sys:role:updatedept')" type="text" class="role__btn" @click="roleDept(scope.row.roleId)">
+                            部门分配
+                        </el-button>
+                        <el-button v-if="isAuth('sys:role:update')" type="text" class="role__btn" @click="roleAddOrUpdate(scope.row)">
+                            修改角色
+                        </el-button>
+                        <el-button v-if="isAuth('sys:role:delete')" type="text" class="role__btn" @click="removes(scope.row.roleId)">
+                            删除角色
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-row>
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <role-add v-if="addOrUpdateVisible1" ref="addOrUpdate" @refreshDataList="GetRoleList()" />
         <user-manage v-if="addOrUpdateVisible2" ref="usermanage" @refreshDataList="GetRoleList()" />
         <role-dept v-if="addOrUpdateVisible3" ref="roleDept" @refreshDataList="GetRoleList()" />
         <role-add-or-update v-if="addOrUpdateVisible4" ref="roleaddorupdate" @refreshDataList="GetRoleList()" />
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -81,7 +81,16 @@ export default {
             role: []
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            },
+            set(val) {
+                this.$store.commit('common/updateMainClientHeight', val);
+            }
+        }
+    },
     mounted() {
         this.GetRoleList();
     },

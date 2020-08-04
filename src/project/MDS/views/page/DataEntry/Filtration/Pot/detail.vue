@@ -7,7 +7,7 @@
                         罐号：{{ formData.holderName ? formData.holderName : '' }}
                     </p>
                     <div class="header_pot_image">
-                        <div class="header_pot_image_content" />
+                        <div class="header_pot_image_content" style=" background: linear-gradient(#ad592d, #8a391b);" />
                     </div>
                 </el-col>
                 <el-col>
@@ -45,13 +45,13 @@
                 </el-col>
             </el-row>
         </el-card>
-        <el-tabs v-model="activeName" class="NewDaatTtabs" type="border-card" style="margin-top: 5px;">
+        <el-tabs v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" style="margin-top: 5px;">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">当前数据</span>
-                <el-table header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="dataList" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="成品罐号" :show-overflow-tooltip="true" prop="holderNo" width="80" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" width="160">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" min-width="220">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
                             {{ scope.row.materialName }}
@@ -65,16 +65,16 @@
                     <el-table-column label="出/入罐类别" :show-overflow-tooltip="true" prop="inHolderType" width="110" />
                     <el-table-column label="出/入罐号" :show-overflow-tooltip="true" prop="inHolderNo" width="110" />
                     <el-table-column label="备注" :show-overflow-tooltip="true" prop="remark" width="100" />
-                    <el-table-column label="操作时间" :show-overflow-tooltip="true" prop="changed" width="110" />
-                    <el-table-column label="操作人" :show-overflow-tooltip="true" prop="changer" width="110" />
+                    <el-table-column label="操作时间" :show-overflow-tooltip="true" prop="changed" width="160" />
+                    <el-table-column label="操作人" :show-overflow-tooltip="true" prop="changer" width="150" />
                 </el-table>
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">历史数据</span>
-                <el-table header-row-class-name="tableHead" :data="dataListRe" border tooltip-effect="dark">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="dataListRe" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="成品罐号" :show-overflow-tooltip="true" prop="holderNo" width="80" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" width="160">
+                    <el-table-column label="物料" :show-overflow-tooltip="true" prop="orderNo" min-width="220">
                         <template slot-scope="scope">
                             {{ scope.row.materialCode }}
                             {{ scope.row.materialName }}
@@ -88,8 +88,8 @@
                     <el-table-column label="出/入罐类别" :show-overflow-tooltip="true" prop="inHolderType" width="110" />
                     <el-table-column label="出/入罐号" :show-overflow-tooltip="true" prop="inHolderNo" width="110" />
                     <el-table-column label="备注" :show-overflow-tooltip="true" prop="remark" width="100" />
-                    <el-table-column label="操作时间" :show-overflow-tooltip="true" prop="changed" width="110" />
-                    <el-table-column label="操作人" :show-overflow-tooltip="true" prop="changer" width="110" />
+                    <el-table-column label="操作时间" :show-overflow-tooltip="true" prop="changed" width="160" />
+                    <el-table-column label="操作人" :show-overflow-tooltip="true" prop="changer" width="150" />
                 </el-table>
             </el-tab-pane>
         </el-tabs>

@@ -1,26 +1,28 @@
 <template>
     <div>
         <div class="inStorage_card">
-            <div style="width: 138px;" class="inStorage_card_left">
-                <p>过滤罐</p>
-                <div style=" position: relative; padding: 0 10px; text-align: center;">
-                    <img src="@/assets/img/ferPot.png" alt="" style="width: 112px; height: 190px;">
-                    <div class="potDetail">
-                        <p>{{ PotDetail.batch }}</p>
-                        <p>{{ PotDetail.amount }}</p>
-                        <p>{{ PotDetail.material }}</p>
+            <div class="instorage-card">
+                <div style="width: 158px;" class="inStorage_card_left">
+                    <p>过滤罐</p>
+                    <div style="position: relative; padding: 0 20px; text-align: center;">
+                        <img src="@/assets/img/ferPot.png" alt="" style="width: 112px; height: 210px;">
+                        <div class="potDetail">
+                            <p>{{ PotDetail.batch }}</p>
+                            <p>{{ PotDetail.amount }}</p>
+                            <p>{{ PotDetail.material }}</p>
+                        </div>
                     </div>
+                    <el-button type="text" class="button" size="small" :disabled="!isRedact" @click="showDialog()">
+                        入罐
+                    </el-button>
                 </div>
-                <el-button type="text" class="inStorage_card_left_btn" size="small" :disabled="!isRedact" @click="showDialog()">
-                    入罐
-                </el-button>
             </div>
-            <div style="flex: 1;">
-                <el-table header-row-class-name="tableHead" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow">
+            <div style="flex: 1; min-width: 1095px;">
+                <el-table header-row-class-name="tableHead" class="newTable" :data="InStorageDate" border tooltip-effect="dark" :row-class-name="RowDelFlag" @row-dblclick="updateRow">
                     <el-table-column type="index" width="50" label="序号" :show-overflow-tooltip="true" fixed />
-                    <el-table-column label="日期" width="80" prop="created" :show-overflow-tooltip="true" />
-                    <el-table-column label="罐号" width="80" prop="holderName" :show-overflow-tooltip="true" />
-                    <el-table-column label="批次" width="80" prop="batch" :show-overflow-tooltip="true" />
+                    <el-table-column label="日期" min-width="165" prop="created" :show-overflow-tooltip="true" />
+                    <el-table-column label="罐号" width="140" prop="holderName" :show-overflow-tooltip="true" />
+                    <el-table-column label="批次" width="110" prop="batch" :show-overflow-tooltip="true" />
                     <el-table-column label="入罐数量" width="80" prop="inAmount" :show-overflow-tooltip="true" />
                     <el-table-column label="单位" width="50" prop="unit" :show-overflow-tooltip="true" />
                     <el-table-column label="是否满罐" width="90" prop="isFull" :show-overflow-tooltip="true">
@@ -31,8 +33,8 @@
                     <el-table-column label="满罐时间" width="90" prop="fullDate" :show-overflow-tooltip="true" />
                     <el-table-column label="罐内库存" width="80" prop="holderRemaining" :show-overflow-tooltip="true" />
                     <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
-                    <el-table-column label="操作时间" width="100" prop="changed" :show-overflow-tooltip="true" />
-                    <el-table-column label="操作人" width="80" prop="changer" :show-overflow-tooltip="true" />
+                    <el-table-column label="操作时间" min-width="165" prop="changed" :show-overflow-tooltip="true" />
+                    <el-table-column label="操作人" min-width="160" prop="changer" :show-overflow-tooltip="true" />
                     <el-table-column label="操作" width="70" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delRow(scope.row)">
@@ -46,9 +48,7 @@
                 </div>
             </div>
         </div>
-        <el-card style="margin-top: 10px;">
-            <auditLog :table-data="DataAudit" />
-        </el-card>
+        <auditLog :table-data="DataAudit" style="margin-top: 10px;" />
         <el-dialog width="400px" title="入罐" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible">
             <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="addIn()" @submit.native.prevent>
                 <el-form-item label="罐号：" prop="holderId">
@@ -454,6 +454,7 @@
             width: 158px;
             margin-right: 5px;
             padding: 0;
+            text-align: center;
             background: rgba(255, 255, 255, 1);
             border: 1px solid rgba(0, 0, 0, 0.09);
             border-radius: 6px;
@@ -463,6 +464,26 @@
                 font-size: 14px;
             }
         }
+        .button {
+            width: 135px;
+            margin: 10px 0;
+            margin-top: 10px;
+            padding: 0;
+            color: #000;
+            line-height: 32px;
+            background-color: #fff;
+            border-color: #d9d9d9;
+        }
+        .button:hover {
+            color: #fff;
+            background-color: #1890ff;
+        }
+        .button.is-disabled:hover {
+            color: #000;
+            background-color: #fff;
+            border-color: #d9d9d9;
+            cursor: not-allowed;
+        }
     }
     .inStorage_card_left_btn:hover {
         color: #fff !important;
@@ -471,7 +492,7 @@
     .potDetail {
         position: absolute;
         top: 40px;
-        left: 20px;
+        left: 30px;
         width: 92px;
         p {
             padding: 0;
