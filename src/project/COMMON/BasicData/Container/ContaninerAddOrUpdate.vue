@@ -32,7 +32,7 @@
                     <el-option
                         v-for="item in materialList"
                         :key="item.materialCode"
-                        :label="item.materialName+' '+item.materialCode"
+                        :label="item.materialCode+' '+item.materialName"
                         :value="item.materialCode"
                     />
                 </el-select>

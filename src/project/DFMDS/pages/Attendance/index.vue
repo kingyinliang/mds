@@ -6,7 +6,7 @@
                     <el-form :model="searchForm" size="small" :inline="true" label-position="right" label-width="100px" class="sole_row" style="margin-right: 30px;">
                         <el-form-item label="生产车间：">
                             <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 140px;" clearable @change="eventChangeWorkshopOptions">
-                                <el-option v-for="(item,index) in workshopList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
+                                <el-option v-for="(item,index) in selectTree" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
                         <el-form-item label="产线工序：">
@@ -19,7 +19,7 @@
                         </el-form-item>
                     </el-form>
 
-                    <el-button type="primary" size="small" @click="btnGetResult(searchForm)">
+                    <el-button type="primary" size="small" :disabled="searchForm.workshop===''|| searchForm.productLine===''" @click="btnGetResult(searchForm)">
                         查询
                     </el-button>
                     <el-button type="primary" size="small" @click="btnAddDataRow">
@@ -37,17 +37,12 @@
                 </div>
             </template>
             <el-form ref="dataFormRules" :model="dataFormRules">
-                <el-table class="newTable" :data="currentFormDataGroup" max-height="300" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="handleSelectionChange">
+                <el-table class="newTable" :data="currentFormDataGroup" :height="mainClientHeight - 52 - 39 - 47" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="handleSelectionChange">
                     <el-table-column
                         type="selection"
                         width="55"
                     />
                     <el-table-column label="序号" type="index" width="60" fixed align="center" />
-                    <!-- <el-table-column prop="status" min-width="160" label="状态" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            {{ scope.row.status }}
-                        </template>
-                    </el-table-column> -->
                     <el-table-column prop="workShop" min-width="160" label="车间" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>车间
@@ -80,9 +75,9 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="team" min-width="100" label="班组" :show-overflow-tooltip="true">
+                    <el-table-column prop="team" min-width="160" label="班组" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-select v-model="scope.row.team" size="small" clearable :disabled="!scope.row.isRedact" @focus="getTeamList(scope.row)">
+                            <el-select v-model="scope.row.team" size="small" clearable :disabled="!scope.row.isRedact">
                                 <el-option
                                     v-for="(item,index) in scope.row.tempTeamOptionsList"
                                     :key="item.targetCode+index"
@@ -148,7 +143,7 @@
                     </el-table-column>
                     <el-table-column prop="duration" min-width="80" label="时长(H)" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <p> {{ scope.row.duration = Number(workTime(scope.row.endTime, scope.row.startTime, scope.row)) }} H </p>
+                            <p> {{ workTimeCount(scope.row,scope.$index) }} H </p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="jobContent" min-width="200" label="工作内容" :show-overflow-tooltip="true">
@@ -227,8 +222,6 @@
             evaluationDate: ''
         }
 
-        searchCard=true
-
         currentRow: CurrentDataTable = {
             userList: []
         }
@@ -237,6 +230,7 @@
         currentProductLine=''
         currentEvaluationDate=''
 
+        selectTree: OptionsTreeList[]=[] // 选单结构树
         workshopList: OptionsInList[]=[] // 车间清单
         productLineList: OptionsInList[]=[] // 产线清单
         classesOptions: OptionsInList[]=[] // 班次清单
@@ -244,11 +238,12 @@
 
         multipleSelection: CurrentDataTable[]=[] // table 内选中 item
 
+
         totalCount = 1
         currPage = 1
         pageSize = 10
 
-        // isRedact=true
+        // isRedact=true 保存按钮状态激活
         checkSaveStatus=false
 
         // 常有变数
@@ -287,36 +282,68 @@
         }
 
 
-        mounted() {
-            // 获取车间下拉
-            COMMON_API.ORG_QUERY_WORKSHOP_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptType: ['WORK_SHOP']
-            }).then(({ data }) => {
-                this.workshopList = []
-                data.data.forEach(item => {
-                    this.workshopList.push({ targetCode: item.deptCode, targetName: item.deptName })
+    mounted() {
+        // 获取车间下拉
+        COMMON_API.ORG_QUERY_WORKSHOP_API({
+            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+            deptType: ['WORK_SHOP']
+        }).then(({ data }) => {
+            this.workshopList = []
+            data.data.forEach(item => {
+                this.workshopList.push({ targetCode: item.deptCode, targetName: item.deptName })
+                this.selectTree.push({ targetCode: item.deptCode, targetName: item.deptName, productLine: [], team: [] })
+
+                this.selectTree.forEach(element => {
+
+                        COMMON_API.ORG_QUERY_CHILDREN_API({
+                            parentId: element.targetCode || '',
+                            deptType: 'PRODUCT_LINE'
+
+                        }).then(({ data: target }) => {
+                            target.data.forEach(items => {
+                                element.productLine.push({ targetCode: items.deptCode, targetName: items.deptName })
+                            })
+                        })
+
+                        if (element.targetName !== '发酵车间') {
+                            COMMON_API.SYS_CHILDTYPE_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                deptType: ['PRODUCT_TEAM'],
+                                deptName: element.targetName
+
+                            }).then(({ data: target }) => {
+                                target.data.forEach(items => {
+                                    element.team.push({ targetCode: items.deptCode, targetName: items.deptName })
+                                });
+                            });
+                        }
                 })
             })
 
-            // 获取人员属性下拉
-            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_USER_TYPE' }).then(({ data }) => {
-                this.userTypeList = data.data
-            });
+        })
 
-            // 获取班次下拉
-            COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
-                this.classesOptions = []
-                data.data.forEach((item) => {
-                    this.classesOptions.push({
-                        targetName: item.dictValue,
-                        targetCode: item.dictCode
-                    })
+
+        // 获取人员属性下拉
+        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_USER_TYPE' }).then(({ data }) => {
+            this.userTypeList = data.data
+        });
+
+        // 获取班次下拉
+        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
+            this.classesOptions = []
+            data.data.forEach((item) => {
+                this.classesOptions.push({
+                    targetName: item.dictValue,
+                    targetCode: item.dictCode
                 })
-            });
+            })
+        });
 
+    }
+
+        get mainClientHeight() {
+            return this.$store.state.common.mainClientHeight;
         }
-
 
         // 切换页码
         getDataList() {
@@ -333,10 +360,11 @@
                 if (data.data.records && data.data.records.length !== 0) {
                     this.currentFormDataGroup = data.data.records
 
+                    // 对回传参数加工
                     this.currentFormDataGroup.forEach(item => {
-                        item.tempWorkshopList = []
-                        item.tempProductLineList = []
-                        item.tempTeamOptionsList = []
+                        item.tempWorkshopList = this.selectTree
+                        item.tempProductLineList = this.selectTree.filter(element => element.targetCode === this.currentWorkshop)[0].productLine
+                        item.tempTeamOptionsList = this.selectTree.filter(element => element.targetCode === this.currentWorkshop)[0].team
                         item.isRedact = false
                     })
                     this.totalCount = data.data.total
@@ -357,15 +385,17 @@
                 current: this.totalCount,
                 checkWorkDate: obj.evaluationDate
                 }).then(({ data }) => {
+                    this.checkSaveStatus = false
                     console.log('查寻结果')
                     console.log(data)
                 if (data.data.records && data.data.records.length !== 0) {
                     this.currentFormDataGroup = data.data.records
-
+                    this.orgFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
+                    // 对回传参数加工
                     this.currentFormDataGroup.forEach(item => {
-                        item.tempWorkshopList = []
-                        item.tempProductLineList = []
-                        item.tempTeamOptionsList = []
+                        item.tempWorkshopList = this.selectTree
+                        item.tempProductLineList = this.selectTree.filter(element => element.targetCode === obj.workshop)[0].productLine
+                        item.tempTeamOptionsList = this.selectTree.filter(element => element.targetCode === obj.workshop)[0].team
                         item.isRedact = false
                     })
                     this.totalCount = data.data.total
@@ -387,7 +417,7 @@
             })
         }
 
-        // 表格选中
+        // 表格 row 选中
         handleSelectionChange(val) {
             this.multipleSelection = val;
         }
@@ -399,6 +429,7 @@
                 const insertDataTemp: CurrentDataTable[] = [];
                 const updateDataTemp: CurrentDataTable[] = [];
                 const tempCurrentFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
+                // 除去加工变数
                 tempCurrentFormDataGroup.forEach((item, index) => {
                     delete item.tempWorkshopList
                     delete item.tempProductLineList
@@ -417,19 +448,26 @@
                     }
                 })
 
-                COMMON_API.CHECKWORK_SAVE_API({
-                    delIds: delIdsTemp,
-                    insertData: insertDataTemp,
-                    updateData: updateDataTemp
-                    }).then(({ data }) => {
-                        console.log(data)
-                        this.$successToast('保存成功');
+                if (!(delIdsTemp.length === 0 && insertDataTemp.length === 0 && updateDataTemp.length === 0)) {
+                    COMMON_API.CHECKWORK_SAVE_API({
+                        delIds: delIdsTemp,
+                        insertData: insertDataTemp,
+                        updateData: updateDataTemp
+                        }).then(() => {
+                            this.$successToast('保存成功');
+                            this.checkSaveStatus = false
+                            this.currPage = 1;
+                            this.totalCount = 1
+                            this.pageSize = 10
+                            this.getDataList()
+                    })
+                } else {
                         this.checkSaveStatus = false
                         this.currPage = 1;
                         this.totalCount = 1
                         this.pageSize = 10
                         this.getDataList()
-                })
+                }
             }
         }
 
@@ -441,48 +479,36 @@
             this.temporaryWorkerStatus = false;
         }
 
+        // 标头下拉生产车间操作
         eventChangeWorkshopOptions(val) {
             if (val !== '') {
-                COMMON_API.ORG_QUERY_CHILDREN_API({
-                    parentId: val || '',
-                    deptType: 'PRODUCT_LINE'
-                }).then(({ data }) => {
-                    this.productLineList = []
-                    data.data.forEach(item => {
-                        this.productLineList.push({ targetCode: item.deptCode, targetName: item.deptName })
-                    })
-                })
+                this.productLineList = this.selectTree.filter(item => item.targetCode === val)[0].productLine
             }
         }
 
+        // table 下拉生产车间操作
         eventChangeRowWorkshopOptions(row) {
-            console.log(row)
-            COMMON_API.ORG_QUERY_CHILDREN_API({
-                parentId: row.workShop || '',
-                deptType: 'PRODUCT_LINE'
-            }).then(({ data }) => {
-                row.tempProductLineList = []
-                data.data.forEach(item => {
-                    row.tempProductLineList.push({ targetCode: item.deptCode, targetName: item.deptName })
-                })
-            })
+            row.tempProductLineList = []
+            row.tempProductLineList = this.selectTree.filter(item => item.targetCode === row.workShop)[0].productLine
 
             // 获取班组
             this.getTeamList(row)
         }
 
-        workTime(end, start, row) {
-            let diff = '0';
-            if (end && start && row.delFlag !== 1) {
-                diff = getDateDiff(start, end, 'hour');
+        // 计算时长
+        workTimeCount(row, index) {
+            let num = this.currentFormDataGroup[index].duration;
+            if (row.delFlag !== 1 && row.isRedact === true) { // 避免锅次呼叫，增加判断，若不是新增的 row 且编辑状态
+                num = Number(getDateDiff(row.startTime, row.endTime, 'hour'))
+                this.currentFormDataGroup[index].duration = num
             }
-            return diff;
+            return num;
         }
 
         // 编辑
         btnEditDataRow(row) {
             row.isRedact = true
-            this.checkSaveStatus = true
+            this.checkSaveStatus = true // 保存按钮状态激活
         }
 
         // 新增
@@ -507,10 +533,11 @@
                     delFlag: 0,
                     tempProductLineList: this.productLineList,
                     tempWorkshopList: this.workshopList,
-                    tempTeamOptionsList: [],
+                    tempTeamOptionsList: this.searchForm.workshop !== '' ? this.selectTree.filter(item => item.targetCode === this.searchForm.workshop)[0].team : [],
                     isRedact: true
                 }
             this.currentFormDataGroup.push(sole)
+            this.checkSaveStatus = true
         }
 
         // [BTN]撤回
@@ -537,8 +564,10 @@
         // [BTN]删除
         btnRemoveDataRow() {
 
+            const tempCurrentFormDataGroup = this.currentFormDataGroup.filter(item => item.isRedact === true)
+            const tempMultipleSelection = this.multipleSelection.filter(item => item.isRedact === true)
 
-            if (this.currentFormDataGroup.filter(item => item.isRedact === true).length !== 0) {
+            if (_.isEqual(_.sortBy(tempCurrentFormDataGroup, ['id']), _.sortBy(tempMultipleSelection, ['id'])) !== true) {
                 this.$warningToast('请先对已编辑栏位保存');
             } else {
                 this.$confirm('是否删除?', '提示', {
@@ -551,36 +580,16 @@
                     })
                     this.$successToast('删除成功');
                     this.multipleSelection = []
-
                     this.btnSaveData()
                 });
             }
         }
 
-        //  RowDelFlag
-        RowDelFlag({ row }) {
-            if (row.delFlag === 1) {
-                return 'rowDel';
-            }
-            return '';
-
-        }
 
         // 班组
         getTeamList(row) {
-            const temp: OptionsInList[] = this.workshopList.filter(item => item.targetCode === row.workShop)
-            if (temp.length !== 0) {
-                COMMON_API.SYS_CHILDTYPE_API({
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    deptType: ['PRODUCT_TEAM'],
-                    deptName: temp[0].targetName
-                }).then(({ data }) => {
-                    row.tempTeamOptionsList = [];
-                    data.data.forEach(item => {
-                        row.tempTeamOptionsList.push({ targetCode: item.deptCode, targetName: item.deptName })
-                    });
-                });
-            }
+            row.tempTeamOptionsList = []
+            row.tempTeamOptionsList = this.selectTree.filter(item => item.targetCode === row.workShop)[0].team
         }
 
         handleSizeChange(val) {
@@ -647,6 +656,7 @@
         }
 
 
+        //  rowDelFlag
         rowDelFlag({ row }) {
             if (row.delFlag === 1) {
                 return 'rowDel';
@@ -695,6 +705,14 @@ interface OptionsInList{
     targetCode?: string;
     targetName?: string;
 }
+
+interface OptionsTreeList{
+    targetCode?: string;
+    targetName?: string;
+    productLine: OptionsInList[];
+    team: OptionsInList[];
+}
+
 interface UserTypeListObject {
     dictCode?: string;
     dictId?: string;
