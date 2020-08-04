@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            query-auth="ckTimeQuery"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             :custom-data="true"
@@ -19,10 +20,10 @@
                     <span>报工列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
-                        <el-button type="primary" size="small" @click="pass">
+                        <el-button v-if="isAuth('ckTimePost')" type="primary" size="small" @click="pass">
                             过账
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-red" @click="refuseDialog">
+                        <el-button v-if="isAuth('ckTimeReturn')" type="primary" size="small" class="sub-red" @click="refuseDialog">
                             退回
                         </el-button>
                     </div>
@@ -34,17 +35,17 @@
                     <span>报工列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
-                        <el-button type="primary" size="small" class="sub-yellow" @click="writeOffsDialog">
+                        <el-button v-if="isAuth('ckTimeRevert')" type="primary" size="small" class="sub-yellow" @click="writeOffsDialog">
                             反审
                         </el-button>
                     </div>
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
+                <el-button v-if="isAuth('ckTimeEdit')" class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
                     {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
-                <el-button class="ra_btn" type="text" round size="mini" @click="AuditLog(scope.row)">
+                <el-button v-if="isAuth('ckTimeRecord')" class="ra_btn" type="text" round size="mini" @click="AuditLog(scope.row)">
                     审核日志
                 </el-button>
             </template>
@@ -71,7 +72,7 @@
                 </el-button>
             </div>
         </el-dialog>
-        <el-dialog title="审核日志" width="600px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
+        <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
             <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
             <div slot="footer" class="dialog-footer" />
         </el-dialog>

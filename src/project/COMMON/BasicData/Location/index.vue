@@ -9,16 +9,16 @@
                                 <el-input v-model="form.deptName" placeholder="车间" suffix-icon="el-icon-search" clearable @clear="getQueryItemList()" @keyup.enter.native="getQueryItemList()" />
                             </el-form-item>
                             <el-form-item style="height: 32px;">
-                                <el-button type="primary" size="small" :disabled="form.deptName.trim() === ''" @click="getQueryItemList()">
+                                <el-button v-if="isAuth('stgcQuery')" type="primary" size="small" :disabled="form.deptName.trim() === ''" @click="getQueryItemList()">
                                     查询
                                 </el-button>
-                                <el-button type="primary" size="small" @click="isAdvanceSearchDialogShow = true">
+                                <el-button v-if="isAuth('stgcQuery')" type="primary" size="small" @click="isAdvanceSearchDialogShow = true">
                                     高级查询
                                 </el-button>
-                                <el-button type="primary" size="small" @click="addOrUpdateItem()">
+                                <el-button v-if="isAuth('stgcEdit')" type="primary" size="small" @click="addOrUpdateItem()">
                                     新增
                                 </el-button>
-                                <el-button type="danger" size="small" :disabled="itemList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
+                                <el-button v-if="isAuth('stgcEdit')" type="danger" size="small" :disabled="itemList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>
@@ -52,7 +52,7 @@
                     </el-table-column>
                     <el-table-column width="54" label="操作">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="addOrUpdateItem(scope.row)">
+                            <el-button v-if="isAuth('stgcEdit')" type="text" size="small" @click="addOrUpdateItem(scope.row)">
                                 编辑
                             </el-button>
                         </template>

@@ -8,16 +8,16 @@
                             <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.materialCode===''?getItemsList():false" />
                         </el-form-item>
                         <el-form-item style="height: 32px;">
-                            <el-button type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')">
+                            <el-button v-if="isAuth('specQuery')" type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')">
                                 查询
                             </el-button>
-                            <el-button type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
+                            <el-button v-if="isAuth('specQuery')" type="primary" size="small" @click="isAdvanceSearchDailogShow = true">
                                 高级查询
                             </el-button>
-                            <el-button type="primary" size="small" @click="addOrupdateItem()">
+                            <el-button v-if="isAuth('specEdit')" type="primary" size="small" @click="addOrupdateItem()">
                                 新增
                             </el-button>
-                            <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
+                            <el-button v-if="isAuth('specEdit')" type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                                 批量删除
                             </el-button>
                         </el-form-item>
@@ -53,7 +53,7 @@
                 <el-table-column prop="changer" label="维护人" width="160" :show-overflow-tooltip="true" />
                 <el-table-column width="60" label="操作" fixed="right">
                     <template slot-scope="scope">
-                        <el-button style="padding: 0;" type="text" @click="addOrupdateItem(scope.row)">
+                        <el-button v-if="isAuth('specEdit')" style="padding: 0;" type="text" @click="addOrupdateItem(scope.row)">
                             编辑
                         </el-button>
                     </template>

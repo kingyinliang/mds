@@ -10,13 +10,13 @@
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
                     <el-input v-model="materialCode" size="small" placeholder="物料" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
-                    <el-button type="primary" size="small" @click="getData(false, true)">
+                    <el-button v-if="isAuth('capacityQuery')" type="primary" size="small" @click="getData(false, true)">
                         查询
                     </el-button>
-                    <el-button type="primary" size="small" @click="addOrupdate()">
+                    <el-button v-if="isAuth('capacityEdit')" type="primary" size="small" @click="addOrupdate()">
                         增加
                     </el-button>
-                    <el-button type="danger" size="small" @click="remove()">
+                    <el-button v-if="isAuth('capacityEdit')" type="danger" size="small" @click="remove()">
                         批量删除
                     </el-button>
                 </div>
@@ -52,7 +52,7 @@
                     <el-table-column prop="changed" label="操作时间" width="120" :show-overflow-tooltip="true" />
                     <el-table-column label="操作" width="50" fixed="right">
                         <template slot-scope="scope">
-                            <el-button style="padding: 0;" type="text" @click="addOrupdate(scope.row)">
+                            <el-button v-if="isAuth('capacityEdit')" style="padding: 0;" type="text" @click="addOrupdate(scope.row)">
                                 编辑
                             </el-button>
                         </template>
@@ -102,6 +102,10 @@
         }
 
         getData(row = false, first = false) {
+            if (!this.isAuth('capacityQuery')) {
+                this.$warningToast('无权限');
+                return false
+            }
             if (row) {
                 this.deptId = row['id'];
             }
