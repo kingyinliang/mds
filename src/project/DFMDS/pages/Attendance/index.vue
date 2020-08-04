@@ -178,7 +178,7 @@
                     </el-table-column>
                 </el-table>
             </el-form>
-            <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            <el-pagination v-if="currentFormDataGroup.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
 
         <official-worker v-if="officialWorkerStatus" ref="officialWorker" @changeUser="changeUser" />
