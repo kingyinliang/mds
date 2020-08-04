@@ -633,7 +633,7 @@ export default {
                 //     return false;
                 // }
                 InDateArray.map((item) => {
-                    if (this.InVlist.find(inItem => inItem.batch === item.batch).jwzAcount !== item.aiShelves) {
+                    if (this.InVlist.find(inItem => inItem.batch === item.batch) && this.InVlist.find(inItem => inItem.batch === item.batch).jwzAcount !== item.aiShelves) {
                         ty = false;
                         this.$warningToast('生产入库机维组确认数不一致，请确认');
                         return false;
