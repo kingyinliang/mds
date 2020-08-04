@@ -63,7 +63,7 @@
         <el-dialog title="反审原因" :close-on-click-modal="false" :visible.sync="visibleBack">
             <el-input v-model="BackText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
             <div slot="footer" class="dialog-footer">
-                <el-button @click="visibleWriteOffs = false">
+                <el-button @click="visibleBack = false">
                     取消
                 </el-button>
                 <el-button type="primary" @click="writeOffs()">
@@ -219,7 +219,7 @@
             {
                 type: 'select',
                 label: '生产车间',
-                prop: 'workShop',
+                prop: 'workshop',
                 defaultOptionsFn: () => {
                     return COMMON_API.ORG_QUERY_WORKSHOP_API({
                         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -239,7 +239,8 @@
                 prop: 'productLine',
                 optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
-                        parentId: val || ''
+                        parentId: val || '',
+                        deptType: 'PRODUCT_LINE'
                     })
                 },
                 defaultValue: '',
@@ -278,6 +279,9 @@
                 defaultOptionsFn: () => {
                     return COMMON_API.DICTQUERY_API({
                         dictType: 'COMMON_CHECK_STATUS'
+                    }).then((data) => {
+                        data.data.data = data.data.data.filter(it => it.dictValue === '已审核' || it.dictValue === '已退回' || it.dictValue === '接口失败' || it.dictValue === '反审');
+                        return data
                     })
                 },
                 defaultValue: '',
@@ -413,8 +417,8 @@
 
         // 审核日志
         AuditLog(row) {
-            AUDIT_API.AUDIT_LOG_LIST_API({
-                orderNo: row.orderNo,
+            AUDIT_API.AUDIT_DIALOG_LOG_LIST_API({
+                verifyId: row.id,
                 verifyType: 'TIMESHEET'
             }).then(({ data }) => {
                 this.auditLogData = data.data
@@ -463,7 +467,8 @@
         refuseDialog() {
             if (this.$refs.queryTable.tabs[0].multipleSelection && this.$refs.queryTable.tabs[0].multipleSelection.length) {
                 if (this.postingDate) {
-                    this.visibleRefuse = true
+                    this.visibleRefuse = true;
+                    this.ReText = ''
                 } else {
                     this.$warningToast('请选择过账日期')
                 }
@@ -500,7 +505,8 @@
         writeOffsDialog() {
             if (this.$refs.queryTable.tabs[1].multipleSelection && this.$refs.queryTable.tabs[1].multipleSelection.length) {
                 if (this.postingDate) {
-                    this.visibleBack = true
+                    this.visibleBack = true;
+                    this.BackText = ''
                 } else {
                     this.$warningToast('请选择过账日期')
                 }

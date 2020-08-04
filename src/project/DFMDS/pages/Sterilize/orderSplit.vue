@@ -17,7 +17,7 @@
                                 <el-table-column type="index" width="55" label="序号" fixed />
                                 <el-table-column label="订单状态" width="80" :show-overflow-tooltip="true">
                                     <template slot-scope="scope">
-                                        <label :style="{ color: scope.row.orderStatus === '不通过' ? 'red' : scope.row.orderStatus === '通过' ? 'rgb(103, 194, 58)' : '',}">{{ scope.row.orderStatus }}</label>
+                                        <label :style="{ color: scope.row.orderStatusName === '不通过' ? 'red' : scope.row.orderStatusName === '通过' ? 'rgb(103, 194, 58)' : '',}">{{ scope.row.orderStatusName }}</label>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="订单日期" width="100" prop="orderStartDate" :show-overflow-tooltip="true" />
@@ -48,8 +48,9 @@
                             <template slot="titleBtn">
                                 <el-form :inline="true" :model="splitForm" size="small" label-width="125px" style="float: right; height: 42px;">
                                     <el-form-item label="锅号：" style="margin-bottom: 10px;">
-                                        <el-select v-model="splitForm.potNo" placeholder="请选择">
-                                            <el-option label="白班" value="白班" />
+                                        <el-select v-model="splitForm.potNo" placeholder="请选择" clearable>
+                                            <el-option label="请选择" value="" />
+                                            <el-option v-for="(subItem, subIndex) in holder" :key="subIndex" :label="subItem.holderName" :value="subItem.holderNo" />
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item style="margin-bottom: 10px;">
@@ -140,6 +141,7 @@
             potNo: ''
         };
 
+        holder = [];
         queryResultList: SteObj[] = [];
         splitTable: SteObj[] = [];
         rules = [
@@ -198,28 +200,44 @@
         ];
 
         // 查询请求
-        listInterface = params => {
-            params.orderStatus = [params.OrgOrderStatus];
+        listInterface(params) {
+            params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
             params.current = this.currPage; // eslint-disable-line
             params.size = this.pageSize; // eslint-disable-line
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return COMMON_API.ORDER_QUERY_API(params);
-        };
+        }
 
         getData() {
             this.$refs.queryTable.getDataList();
         }
 
         setData(data) {
-            this.queryResultList = data.data.records;
-            this.currPage = data.data.current;
-            this.pageSize = data.data.size;
-            this.totalCount = data.data.total;
+            if (data.data.records.length) {
+                this.queryResultList = data.data.records;
+                this.currPage = data.data.current;
+                this.pageSize = data.data.size;
+                this.totalCount = data.data.total;
+            } else {
+                this.$infoToast('暂无任何内容');
+            }
+        }
+
+        getHolder(params) {
+            COMMON_API.HOLDER_QUERY_API({
+                deptId: params.workShop,
+                holderType: '014',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.holder = data.data.records
+            })
         }
 
         // 表格双击
         showSplitTable(row) {
             this.splitForm.orderNo = row.orderNo;
+            this.getHolder(row)
             this.getSplitTable()
         }
 
@@ -230,10 +248,14 @@
                 return false
             }
             STE_API.STE_SPLIT_LIST_API(this.splitForm).then(({ data }) => {
-                this.splitTable = data.data.records
-                this.splitForm.current = data.data.current;
-                this.splitForm.size = data.data.size;
-                this.splitForm.total = data.data.total;
+                if (data.data.records.length) {
+                    this.splitTable = data.data.records
+                    this.splitForm.current = data.data.current;
+                    this.splitForm.size = data.data.size;
+                    this.splitForm.total = data.data.total;
+                } else {
+                    this.$infoToast('暂无任何内容');
+                }
             })
         }
 

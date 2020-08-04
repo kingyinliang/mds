@@ -2,10 +2,7 @@
     <div>
         <data-entry
             ref="dataEntry"
-            :redact-auth="'pkg:order:update'"
-            :save-auth="'pkg:order:update'"
-            :submit-auth="'pkg:order:update'"
-            :order-status="formHeader.orderStatus"
+            :order-status="formHeader.orderStatusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
@@ -136,7 +133,7 @@
                 value: ['planOutput', 'outputUnit']
             },
             {
-                type: 'tooltip',
+                type: 'p',
                 icon: 'factory-riqi1',
                 label: '订单日期',
                 value: 'orderStartDate'
@@ -148,7 +145,7 @@
                 value: 'productDate'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 icon: 'factory-xianchangrenyuan',
                 label: '提交人员', // 操作人员
                 value: 'changer'
@@ -404,6 +401,7 @@ interface OrderData{
     orderNo?: string;
     orderStartDate?: string;
     orderStatus?: string;
+    orderStatusName?: string;
     orderType?: string;
     outputUnit?: string;
     planOutput?: number;

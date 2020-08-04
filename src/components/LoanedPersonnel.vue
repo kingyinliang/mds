@@ -6,7 +6,7 @@
                     <el-row style=" margin-bottom: 10px; color: black; font-size: 16px;">
                         组织架构
                     </el-row>
-                    <el-tree ref="orgtree" :data="orgTree" node-key="id" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
+                    <el-tree ref="orgtree" :data="orgTree" highlight-current node-key="id" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
                 </el-card>
             </el-col>
             <el-col style="width: 250px;">
@@ -101,6 +101,10 @@ export default {
                     this.selctId.push({ label: item });
                 });
             }
+            if (this.orgTree.length !== 0) {
+                this.setdetail(this.orgTree[0], true);
+                // this.$refs.orgtree.setCurrentKey(1);
+            }
         },
         getTree() {
             COMMON_API.ORGSTRUCTURE_API({
@@ -108,11 +112,19 @@ export default {
             }).then(({ data }) => {
                 this.orgTree = data.data;
                 this.arrList = [this.orgTree[0].children[0].id];
+                this.setdetail(this.orgTree[0], true);
+                // this.$nextTick(() => {
+                //     this.$refs.orgtree.setCurrentKey(1);
+                // })
             });
         },
         // 根据组织架构查人
-        setdetail(dataObj) {
-            console.log(dataObj.deptName)
+        setdetail(dataObj, inits = false) {
+            if (inits) {
+                this.$nextTick(() => {
+                    this.$refs.orgtree.setCurrentKey(dataObj['id']);
+                })
+            }
             COMMON_API.USER_ROLE_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: dataObj.id,

@@ -159,9 +159,11 @@
                     .then(() => {
                         COMMON_API.ROLE_REMOVE_API({ id: id }).then(() => {
                             this.getItemsList();
-                        }).catch(() => {
-                            //
-                        });
+                        }).catch((err) => {
+                            if (err.data.code === 201) {
+                                this.$errorToast(err.data.msg);
+                            }
+                        })
                     })
                     .catch(() => {
                         //

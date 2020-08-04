@@ -79,7 +79,8 @@
 
         init(data) {
             if (data) {
-                this.dataForm = data
+                this.dataForm = JSON.parse(JSON.stringify(data));
+                this.getPkgLine(this.dataForm.pkgWorkShop);
             } else {
                 this.dataForm = {
                     id: '',
@@ -97,7 +98,8 @@
 
         getPkgLine(n) {
             COMMON_API.ORG_QUERY_CHILDREN_API({
-                parentId: n
+                parentId: n,
+                deptType: 'PRODUCT_LINE'
             }).then(({ data }) => {
                 this.pkgLine = data.data
             })

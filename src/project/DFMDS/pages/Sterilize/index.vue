@@ -8,6 +8,7 @@
             :list-interface="listInterface"
             :custom-data="true"
             @get-data-success="setData"
+            @created-end="createdEnd"
         >
             <template slot="home">
                 <el-row class="home_card__main" :gutter="10">
@@ -19,7 +20,7 @@
                                         锅号：<span class="home_card__main__item__title__left__proLine">{{ item.potNo }}</span>锅
                                     </p>
                                     <p v-if="item.activeOrderNo!==''" class="home_card__main__item__title__right">
-                                        <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatusValue : '' }}</span>
+                                        <span>状态：{{ item.potOrderMap? item.potOrderMap.statusName : '' }}</span>
                                     </p>
                                 </div>
                                 <div class="home_card__main__item__main">
@@ -73,9 +74,9 @@
                                         <el-button size="small" @click="goEntry(item, 3)">
                                             工艺控制
                                         </el-button>
-                                        <el-button size="small" @click="goEntry(item, 4)">
-                                            杀菌入库
-                                        </el-button>
+                                        <!--<el-button size="small" @click="goEntry(item, 4)">-->
+                                        <!--杀菌入库-->
+                                        <!--</el-button>-->
                                     </div>
                                 </div>
                             </div>
@@ -95,6 +96,10 @@
 
     @Component
     export default class Sterilize extends Vue {
+        $refs: {
+            queryTable: HTMLFormElement;
+        };
+
         queryResultList: SteObj[] = [];
         rules = [
             {
@@ -142,11 +147,25 @@
 
         // 查询请求
         listInterface = params => {
+            if ((params.productDate === '' || !params.productDate) && params.orderNo === '') {
+                this.$warningToast('日期或订单请选填一项');// eslint-disable-line
+                return new Promise((resolve, reject) => {
+                    reject('error') // eslint-disable-line
+                });
+            }
             params.current = 1;
             params.size = 10;
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return STE_API.STE_HOME_LIST_API(params);
         };
+
+        createdEnd() {
+            this.$nextTick(() => {
+                if (this.$refs.queryTable.queryForm.workShop !== '' && this.$refs.queryTable.queryForm.workShop.productDate !== '') {
+                    this.$refs.queryTable.getDataList(true)
+                }
+            })
+        }
 
         setData(data) {
             if (data.data) {

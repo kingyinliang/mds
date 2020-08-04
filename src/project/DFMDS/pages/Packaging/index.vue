@@ -8,6 +8,7 @@
             :list-interface="listInterface"
             :custom-data="true"
             @get-data-success="setData"
+            @created-end="createdEnd"
         >
             <template slot="home">
                 <el-row class="home_card__main" :gutter="10">
@@ -18,7 +19,7 @@
                                     <p class="home_card__main__item__title__left">
                                         产线：<span class="home_card__main__item__title__left__proLine">{{ item.productLineName }}</span>
                                     </p>
-                                    <p v-if="item.activeOrderNo!==''" class="home_card__main__item__title__right">
+                                    <p v-if="item.activeOrderNo!==''" class="home_card__main__item__title__right" :class="{'home_card__main__item__title__right--R': item.activeOrderMap.orderStatusValue === '已退回'}">
                                         <span>状态：{{ item.activeOrderMap? item.activeOrderMap.orderStatusValue : '' }}</span>
                                     </p>
                                 </div>
@@ -118,7 +119,8 @@
                 prop: 'productLine',
                 optionsFn: val => {
                     return COMMON_API.ORG_QUERY_CHILDREN_API({
-                        parentId: val || ''
+                        parentId: val || '',
+                        deptType: 'PRODUCT_LINE'
                     })
                 },
                 defaultValue: '',
@@ -149,12 +151,12 @@
             }
         ];
 
-        mounted() {
-            setTimeout(() => {
-                this.$nextTick(() => {
+        createdEnd() {
+            this.$nextTick(() => {
+                if (this.$refs.queryTable.queryForm.workShop !== '' && this.$refs.queryTable.queryForm.workShop.productDate !== '') {
                     this.$refs.queryTable.getDataList(true)
-                })
-            }, 2000);
+                }
+            })
         }
 
         // 查询请求

@@ -262,6 +262,7 @@
                                 checkStatus: item.checkStatus,
                                 delFlag: item.delFlag,
                                 endStocks: item.endStocks,
+                                materialType: item.materialType,
                                 materialCode: item.materialCode,
                                 materialName: item.materialName,
                                 materialStatus: item.materialStatus,
@@ -291,6 +292,7 @@
                         checkStatus: item.checkStatus,
                         delFlag: item.delFlag,
                         endStocks: item.endStocks,
+                        materialType: item.materialType,
                         materialCode: item.materialCode,
                         materialName: item.materialName,
                         materialStatus: item.materialStatus,
@@ -327,6 +329,7 @@
                                 mainId: item.mainId,
                                 id: item.mainId,
                                 checkStatus: item.checkStatus,
+                                materialType: item.materialType,
                                 materialCode: item.materialCode,
                                 materialName: item.materialName,
                                 materialUnit: item.materialUnit,
@@ -350,6 +353,7 @@
                         id: item.mainId,
                         checkStatus: item.checkStatus,
                         delFlag: item.delFlag,
+                        materialType: item.materialType,
                         materialCode: item.materialCode,
                         materialName: item.materialName,
                         materialUnit: item.materialUnit,
@@ -414,12 +418,13 @@
                         posnr: item.posnr,
                         materialCode: item.materialCode,
                         materialName: item.materialName,
-                        materialStatus: item.materialStatus,
                         materialUnit: item.materialUnit,
                         needNum: item.needNum,
-                        startStocks: item.startStocks,
-                        endStocks: item.endStocks,
-                        receiveMaterial: item.receiveMaterial,
+                        materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : null,
+                        materialType: dataGroup === 'currentDataTable' ? item.materialType : null,
+                        startStocks: dataGroup === 'currentDataTable' ? item.startStocks : null,
+                        endStocks: dataGroup === 'currentDataTable' ? item.endStocks : null,
+                        receiveMaterial: dataGroup === 'currentDataTable' ? item.receiveMaterial : null,
                         changer: item.changer,
                         changed: item.changed
                     };
@@ -485,6 +490,7 @@
                 orderNo: row.orderNo,
                 posnr: row.posnr,
                 mainId: row.mainId,
+                materialType: row.materialType,
                 materialCode: row.materialCode,
                 materialName: row.materialName,
                 materialStatus: row.materialStatus,
@@ -517,6 +523,7 @@
                 orderNo: row.orderNo,
                 posnr: row.posnr,
                 mainId: row.mainId,
+                materialType: row.materialType,
                 materialCode: row.materialCode,
                 materialName: row.materialName,
                 materialStatus: row.materialStatus,
@@ -567,7 +574,10 @@
                 const num = dataArr.reduce((total, currentValue: MaterialMap) => {
                     return total + Number(currentValue.realUseAmount)
                 }, 0);
-                const sumnum = Number(row.startStocks) + Number(row.receiveMaterial) - Number(num) - Number(row.realLoss);
+                const realLossNum = dataArr.reduce((total, currentValue: MaterialMap) => {
+                    return total + (currentValue.realLoss ? Number(currentValue.realLoss) : 0)
+                }, 0);
+                const sumnum = Number(row.startStocks) + Number(row.receiveMaterial) - Number(num) - Number(realLossNum);
                 dataArr.forEach(item => {
                     item.endStocks = sumnum
                 })
@@ -597,6 +607,7 @@ interface MaterialMap{
     factory?: string;
     realLoss?: string | number;
     checkStatus?: string;
+    materialType?: string;
     materialCode?: string;
     materialName?: string;
     materialStatus?: string;

@@ -49,6 +49,7 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { STE_API } from 'common/api/api';
     import SemiReceiveDialog from './SemiReceiveDialog.vue'
+    import { dataEntryData } from 'utils/utils';
 
     @Component({
         components: {
@@ -58,23 +59,46 @@
     export default class SemiReceive extends Vue {
         @Prop({ default: false }) isRedact: boolean;
 
-        $refs: {SemiReceiveDialog: HTMLFormElement}
+        $refs: {SemiReceiveDialog: HTMLFormElement};
 
         semiAudit = [];
         semiTable: SemiObj[] = [];
+        orgSemiTable: SemiObj[] = [];
         visible = false;
 
-        init() {
+        init(formHeader) {
             STE_API.STE_SEMI_LIST_API({
-                orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
-                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
+                orderNo: formHeader.orderNo,
+                potOrderNo: formHeader.potOrderNo
             }).then(({ data }) => {
-                this.semiTable = data.data
+                this.semiTable = data.data;
+                this.orgSemiTable = data.data;
             })
         }
 
+        savedData(formHeader) {
+            const delIds = [];
+            const insertData = [];
+            const updateData = [];
+
+            dataEntryData(formHeader, this.semiTable, this.orgSemiTable, delIds, insertData, updateData);
+
+            return {
+                orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
+                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
+                delIds,
+                insertData,
+                updateData
+            }
+        }
+
         semiCopy() {
-            STE_API.STE_SEMI_COPY_API({})
+            STE_API.STE_SEMI_COPY_API({
+                orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
+                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
+            }).then(({ data }) => {
+                this.semiTable = this.semiTable.concat(data.data);
+            })
         }
 
         receive() {
@@ -107,6 +131,11 @@
         }
     }
     interface SemiObj {
+        delFlag?: number;
+        id?: string;
+        orderId?: string;
+        factory?: string;
+        orderNo?: string;
         factoryName?: string;
         potNo?: string;
         potOrder?: string;

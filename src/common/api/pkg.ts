@@ -78,6 +78,10 @@ const PKG_API = {
      */
     PKG_MATERIALSTOCK_TRANSFER_API: params => httpProxy('/pkg/packageStorage/transfer', 'POST', params),
     /**
+     * @property {string}  PKG_MATERIALSTOCK_TRANSFERDEPTNAME_API 包材库存-产线拉取
+     */
+    PKG_MATERIALSTOCK_TRANSFERDEPTNAME_API: params => httpProxy('/sysDept/childrenListByParentDeptName', 'POST', params),
+    /**
      * @property {string}  包材库存-调整保存
      */
     PKG_MATERIALSTOCK_ADJUST_API: params => httpProxy('/pkg/packageStorage/adjust', 'POST', params),

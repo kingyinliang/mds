@@ -59,7 +59,7 @@
                 value: 'workShopName'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 label: '生产产线',
                 value: 'productLineName'
             },

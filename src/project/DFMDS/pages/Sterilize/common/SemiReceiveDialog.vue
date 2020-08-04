@@ -5,15 +5,22 @@
                 <el-input v-model="dataForm.stePotNo" placeholder="手动输入" disabled />
             </el-form-item>
             <el-form-item label="发酵罐领用：">
-                <el-input v-model="dataForm.consumeType" placeholder="手动输入" />
+                <el-radio v-model="dataForm.consumeType" label="1">
+                    是
+                </el-radio>
+                <el-radio v-model="dataForm.consumeType" label="0">
+                    否
+                </el-radio>
             </el-form-item>
-            <el-form-item label="发酵罐号：" prop="fermentPotNo">
-                <el-select v-model="dataForm.fermentPotNo" placeholder="请选择" clearable>
+            <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐号：" prop="fermentPotNo">
+                <el-select v-model="dataForm.fermentPotNo" placeholder="请选择" style="width: 100%;" clearable>
                     <el-option v-for="(item, index) in potArr" :key="index" :label="item.holderName" :value="item.holderNo" />
                 </el-select>
             </el-form-item>
             <el-form-item label="领用物料：" prop="">
-                <el-input v-model="dataForm.materialCode" placeholder="手动输入" />
+                <el-select v-model="dataForm.materialCode" placeholder="请选择" style="width: 100%;" clearable @change="setUtil">
+                    <el-option v-for="(item, index) in materialArr" :key="index" :label="item.matnr + ' ' + item.materialName" :value="item.matnr" />
+                </el-select>
             </el-form-item>
             <el-form-item label="单位：" prop="consumeUnit">
                 <el-input v-model="dataForm.consumeUnit" placeholder="手动输入" disabled />
@@ -24,7 +31,7 @@
             <el-form-item label="领用批次：" prop="consumeBatch">
                 <el-input v-model="dataForm.consumeBatch" placeholder="手动输入" />
             </el-form-item>
-            <el-form-item label="发酵罐库存：">
+            <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐库存：">
                 <el-input v-model="dataForm.fermentStorage" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="转运罐号：">
@@ -53,14 +60,15 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { COMMON_API } from 'common/api/api';
+    import { COMMON_API, ORDER_API } from 'common/api/api';
+    import { dateFormat, getUserNameNumber } from 'utils/utils';
 
     @Component
     export default class SemiReceiveDialog extends Vue {
         $refs: {dataForm: HTMLFormElement};
         visible = false;
         potArr = [];
-        dataForm: DataObj = {};
+        materialArr: MaterialObj[] = [];
         dataRule = {
             stePotNo: [{ required: true, message: '生产锅号不能为空', trigger: 'blur' }],
             fermentPotNo: [{ required: true, message: '发酵罐号不能为空', trigger: 'blur' }],
@@ -68,6 +76,10 @@
             consumeUnit: [{ required: true, message: '单位不能为空', trigger: 'blur' }],
             consumeAmount: [{ required: true, message: '领用数量不能为空', trigger: 'blur' }],
             consumeBatch: [{ required: true, message: '领用批次不能为空', trigger: 'blur' }]
+        };
+
+        dataForm: DataObj = {
+            consumeType: '1'
         };
 
         mounted() {
@@ -79,24 +91,77 @@
             }).then(({ data }) => {
                 this.potArr = data.data.records
             })
+            ORDER_API.ORDER_BOOM_LIST_API({
+                materialType: 'ZHAL',
+                orderNoList: [this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo]
+            }).then(({ data }) => {
+                this.materialArr = data.data
+            })
         }
 
         init() {
             this.visible = true;
-            this.dataForm.stePotNo = this.$store.state.sterilize.SemiReceive.potNo
+            this.dataForm = {
+                id: '',
+                stePotNo: this.$store.state.sterilize.SemiReceive.potNo,
+                potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrder,
+                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
+                consumeType: '1',
+                fermentPotNo: '',
+                materialCode: '',
+                materialName: '',
+                consumeUnit: '',
+                consumeAmount: '',
+                consumeBatch: '',
+                fermentStorage: '',
+                tankNo: '',
+                remark: '',
+                changer: getUserNameNumber(),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
+        }
+
+        setUtil() {
+            const filterArr1: (any) = this.materialArr.filter(it => it.matnr === this.dataForm.materialCode);// eslint-disable-line
+            this.dataForm.consumeUnit = filterArr1[0].erfme;
+            this.dataForm.materialName = filterArr1[0].materialName
         }
 
         dataFormSubmit() {
             this.$refs.dataForm.validate(valid => {
                 if (valid) {
+                    if (this.dataForm.consumeType === '0') {
+                        this.dataForm.fermentPotNo = '';
+                        this.dataForm.fermentStorage = '';
+                    }
                     this.visible = false;
                     this.$emit('success', this.dataForm)
                 }
             })
         }
     }
+    interface MaterialObj {
+        matnr?: string;
+        materialName?: string;
+        erfme?: string;
+    }
     interface DataObj {
+        id?: string;
+        consumeType?: string;
         stePotNo?: string;
+        potOrderId?: string;
+        potOrderNo?: string;
+        fermentPotNo?: string;
+        materialCode?: string;
+        materialName?: string;
+        consumeUnit?: string;
+        consumeAmount?: string;
+        consumeBatch?: string;
+        fermentStorage?: string;
+        tankNo?: string;
+        remark?: string;
+        changer?: string;
+        changed?: string;
     }
 </script>
 

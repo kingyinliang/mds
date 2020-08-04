@@ -6,6 +6,10 @@ const STE_API = {
      */
     STE_HOME_LIST_API: params => httpProxy('/ste/query', 'POST', params),
     /**
+     * @property {string} STE_HOME_LIST_API 杀菌车间-煮料列表查询
+     */
+    STE_COOKINGNO_LIST_API: params => httpProxy('/ste/steCookingPot/listBycookingNo', 'POST', params),
+    /**
      * @property {string} STE_SEMI_LIST_API 杀菌车间-半成品领用-查询
      */
     STE_SEMI_LIST_API: params => httpProxy('/ste/steSemiMaterial/query', 'POST', params),
@@ -21,6 +25,14 @@ const STE_API = {
      * @property {string} STE_SEMI_SUBMIT_API 杀菌车间-半成品领用-提交
      */
     STE_SEMI_SUBMIT_API: params => httpProxy('/ste/steSemiMaterial/submit', 'POST', params),
+    /**
+     * @property {string} STE_SEMI_LIST_API 杀菌车间-辅料添加-查询
+     */
+    STE_ACCE_LIST_API: params => httpProxy('/ste/accessiruesConsume/query', 'POST', params),
+    /**
+     * @property {string} STE_SEMI_LIST_API 杀菌车间-辅料添加-保存
+     */
+    STE_ACCE_SAVE_API: params => httpProxy('/ste/accessiruesConsume/save', 'POST', params),
     /**
      * @property {string} STE_SPLIT_LIST_API 杀菌车间-订单拆分
      */
@@ -42,12 +54,20 @@ const STE_API = {
      */
     STE_COOKING_DETAIL_SAVE_API: params => httpProxy('/ste/steCookingPot/save', 'POST', params),
     /**
+     * @property {string} STE_COOKING_DETAIL_SUBMIT_API 杀菌车间-煮料详情-提交
+     */
+    STE_COOKING_DETAIL_SUBMIT_API: params => httpProxy('/ste/steCookingPot/submit', 'POST', params),
+    /**
+     * @property {string} STE_COOKING_DETAIL_ROLLBACK_API 杀菌车间-煮料详情-撤回
+     */
+    STE_COOKING_DETAIL_ROLLBACK_API: params => httpProxy('/ste/steCookingPot/rollback', 'POST', params),
+    /**
      * @property {string} STE_COOKING_DETAIL_CLEAR_API 杀菌车间-煮料详情-清罐
      */
     STE_COOKING_DETAIL_CLEAR_API: params => httpProxy('/ste/steCookingPot/clean', 'POST', params),
     /**
      * @property {string} STE_COOKING_DETAIL_ACCMATERIAL_API 杀菌车间-煮料详情-根据生产物料拉取辅料
-    */
+     */
     STE_COOKING_DETAIL_ACCMATERIAL_API: params => httpProxy('/ste/steCookingPot/getAccMaterial', 'POST', params),
     /**
      * @property {string} STE_DISSOLUTIONBUCKET_QUERY_API 杀菌车间-溶解罐管理-查询
@@ -61,6 +81,10 @@ const STE_API = {
      * @property {string} STE_DISSOLUTIONBUCKET_ITEM_QUERY_API 杀菌车间-溶解罐管理-满罐、取消满罐
      */
     STE_DISSOLUTIONBUCKET_FULL_API: params => httpProxy('/steDissolutionPot/full', 'POST', params),
+    /**
+     * @property {string} STE_DISSOLUTIONBUCKET_CLEAN_API 杀菌车间-溶解罐管理-清罐
+     */
+    STE_DISSOLUTIONBUCKET_CLEAN_API: params => httpProxy('/steDissolutionPot/clean', 'POST', params),
     /**
      * @property {string} STE_DISSOLUTIONBUCKET_ITEM_QUERY_API 杀菌车间-溶解罐管理-入罐
      */
@@ -84,7 +108,39 @@ const STE_API = {
     /**
      * @property {string} STE_PREACCESSORIES_LIST_API 杀菌车间-辅料前处理-查询不带分页
      */
-    STE_PREACCESSORIES_LIST_API: params => httpProxy('/ste/stePreAccessories/listByType', 'POST', params)
+    STE_PREACCESSORIES_LIST_API: params => httpProxy('/ste/stePreAccessories/listByType', 'POST', params),
+    /**
+     * @property {string}   STE_DETAIL_CRAFT_INFO_API 杀菌车间-杀菌工艺-查询
+     */
+    STE_DETAIL_CRAFT_INFO_API: params => httpProxy('/ste/steProcessorControl/query', 'POST', params),
+    /**
+     * @property {string} STE_DETAIL_CRAFTHEADER_INFO_API 杀菌车间-杀菌工艺-头部查询
+     */
+    STE_DETAIL_CRAFTHEADER_INFO_API: params => httpProxy('/steOrderSplit/potOrder/queryByPortOrderNo', 'GET', params),
+    /**
+     * @property {string} STE_DETAIL_CRAFT_SAVED_API 杀菌车间-杀菌工艺-保存
+     */
+    STE_DETAIL_CRAFT_SAVED_API: params => httpProxy('/ste/steProcessorControl/save', 'POST', params),
+    /**
+     * @property {string} STE_DETAIL_CRAFT_SUBMIT_API 杀菌车间-杀菌工艺-提交
+     */
+    STE_DETAIL_CRAFT_SUBMIT_API: params => httpProxy('/ste/steProcessorControl/submit', 'POST', params),
+    /**
+     * @property {string} STE_DETAIL_CRAFTEXC_LIST_API 杀菌车间-杀菌工艺-异常-查询
+     */
+    STE_DETAIL_CRAFTEXC_LIST_API: params => httpProxy('/ste/steException/query', 'POST', params),
+    /**
+     * @property {string} STE_DETAIL_TEXT_API 杀菌车间-杀菌工艺-文本-查询
+     */
+    STE_DETAIL_TEXT_API: params => httpProxy('/ste/steText/query', 'POST', params),
+    /**
+     * @property {string} STE_INSTORAGE_QUERY_API 杀菌车间-入库数据-查询
+     */
+    STE_INSTORAGE_QUERY_API: params => httpProxy('/steInStorage/query', 'POST', params),
+    /**
+     * @property {string} STE_INSTORAGE_SAVE_API 杀菌车间-入库数据-保存
+     */
+    STE_INSTORAGE_SAVE_API: params => httpProxy('/steInStorage/save', 'POST', params)
 };
 
 export default STE_API;

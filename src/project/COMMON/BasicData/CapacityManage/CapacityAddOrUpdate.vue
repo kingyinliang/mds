@@ -3,7 +3,7 @@
         <div>
             <el-form ref="dataForm" :model="dataForm" status-icon :rules="dataRule" label-width="125px" size="small" @keyup.enter.native="dataFormSubmit()">
                 <el-form-item label="物料：" prop="material">
-                    <el-select v-model="dataForm.materialCode" filterable placeholder="请选择" :disabled="CapacityId !== ''">
+                    <el-select v-model="dataForm.materialCode" filterable remote placeholder="请输入物料" :remote-method="remoteMethod" :loading="loading" :disabled="CapacityId !== ''">
                         <el-option v-for="(item, index) in serchSapList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
                     </el-select>
                 </el-form-item>
@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Vue, Component } from 'vue-property-decorator';
 import { COMMON_API } from 'common/api/api';
 
 @Component({
@@ -73,12 +73,13 @@ import { COMMON_API } from 'common/api/api';
     }
 })
 export default class CapacityAddOrUpdate extends Vue {
-    @Prop({ default: [] }) serchSapList: SapObj[];
 
     $refs: {dataForm: HTMLFormElement}
+    serchSapList: SapObj[] = [];
     Unit = [];
     CapacityId = '';
     deptId = '';
+    loading = false;
     visible = false;
     dataForm: CapacityObj = {
         factory: '',
@@ -109,6 +110,23 @@ export default class CapacityAddOrUpdate extends Vue {
 
     mounted() {
         this.GetUnit();
+    }
+
+    remoteMethod(query) {
+        if (query !== '' && query.length > 1) {
+            this.loading = true;
+            COMMON_API.ALLMATERIAL_API({
+                materialTypes: ['ZFER'],
+                material: query
+            }).then(({ data }) => {
+                this.loading = false;
+                this.serchSapList = data.data
+            }).catch(() => {
+                this.loading = false;
+            })
+        } else {
+            this.serchSapList = [];
+        }
     }
 
     // 获取单位下拉
