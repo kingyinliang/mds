@@ -102,17 +102,17 @@ export default (url: string, method: string = HTTP_METHOD.GET, data = {}, bussin
     if (bussiness === 'RDM') {
         if (process.env.VUE_APP_ENV === 'development') {
             // dev
-            HOST = 'https://plnn08je41.execute-api.cn-north-1.amazonaws.com.cn/dev/rdm-common';
+            HOST = 'https://alb01-in-uat-vpc03.shinho.net.cn/rdm-common';
             // HOST = 'http://10.10.2.254:8081/rdm-common';
         } else if (process.env.VUE_APP_ENV === 'test') {
             // test
-            HOST = 'https://mrqak4b6gk.execute-api.cn-north-1.amazonaws.com.cn/test/rdm-common';
+            HOST = 'https://alb02-in-uat-vpc03.shinho.net.cn/rdm-common';
         } else if (process.env.VUE_APP_BASE_API === 'production') {
             //prd
             HOST = '';
         } else {
             // pre
-            HOST = 'https://ok6nlm514l.execute-api.cn-north-1.amazonaws.com.cn/pre/rdm-common';
+            HOST = 'https://alb03-in-uat-vpc03.shinho.net.cn/rdm-common';
         }
     } else {
         HOST = process.env.VUE_APP_BASE_API + process.env.VUE_APP_API_V;
