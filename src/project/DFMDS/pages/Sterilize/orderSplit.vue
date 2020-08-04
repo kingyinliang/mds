@@ -48,8 +48,9 @@
                             <template slot="titleBtn">
                                 <el-form :inline="true" :model="splitForm" size="small" label-width="125px" style="float: right; height: 42px;">
                                     <el-form-item label="锅号：" style="margin-bottom: 10px;">
-                                        <el-select v-model="splitForm.potNo" placeholder="请选择">
-                                            <el-option label="白班" value="白班" />
+                                        <el-select v-model="splitForm.potNo" placeholder="请选择" clearable>
+                                            <el-option label="请选择" value="" />
+                                            <el-option v-for="(subItem, subIndex) in holder" :key="subIndex" :label="subItem.holderName" :value="subItem.holderNo" />
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item style="margin-bottom: 10px;">
@@ -140,6 +141,7 @@
             potNo: ''
         };
 
+        holder = [];
         queryResultList: SteObj[] = [];
         splitTable: SteObj[] = [];
         rules = [
@@ -198,13 +200,13 @@
         ];
 
         // 查询请求
-        listInterface = params => {
+        listInterface(params) {
             params.OrgOrderStatus ? params.orderStatus = [params.OrgOrderStatus] : params.orderStatus = [];
             params.current = this.currPage; // eslint-disable-line
             params.size = this.pageSize; // eslint-disable-line
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
             return COMMON_API.ORDER_QUERY_API(params);
-        };
+        }
 
         getData() {
             this.$refs.queryTable.getDataList();
@@ -221,9 +223,21 @@
             }
         }
 
+        getHolder(params) {
+            COMMON_API.HOLDER_QUERY_API({
+                deptId: params.workShop,
+                holderType: '014',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.holder = data.data.records
+            })
+        }
+
         // 表格双击
         showSplitTable(row) {
             this.splitForm.orderNo = row.orderNo;
+            this.getHolder(row)
             this.getSplitTable()
         }
 

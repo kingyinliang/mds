@@ -9,12 +9,16 @@
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
+            :submit-rules="submitRules"
+            :saved-datas="savedDatas"
+            :submit-datas="submitDatas"
+            @success="getList"
         >
             <template slot="1" slot-scope="data">
                 <craft ref="craft" :is-redact="data.isRedact" />
             </template>
             <template slot="2" slot-scope="data">
-                <exc-record ref="ExcRecord" :is-redact="data.isRedact" />
+                <exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
             </template>
             <template slot="3" slot-scope="data">
                 <text-record ref="textRecord" :is-redact="data.isRedact" />
@@ -26,6 +30,7 @@
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
     import Craft from './common/Craft.vue';
+    import { STE_API } from 'common/api/api';
 
     @Component({
         name: 'CraftIndex',
@@ -34,7 +39,13 @@
         }
     })
     export default class CraftIndex extends Vue {
-        formHeader = {};
+        $refs: {
+            craft: HTMLFormElement;
+            excRecord: HTMLFormElement;
+            textRecord: HTMLFormElement;
+        }
+
+        formHeader: FormHeader = {};
         headerBase = [
             {
                 type: 'p',
@@ -46,7 +57,7 @@
                 type: 'p',
                 label: '生产锅号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'workShopName'
+                value: 'potNo'
             },
             {
                 type: 'tooltip',
@@ -58,19 +69,13 @@
                 type: 'p',
                 label: '生产锅序',
                 icon: 'factory-bianhao',
-                value: 'workShopName'
+                value: 'potOrder'
             },
             {
                 type: 'p',
                 label: '生产产量',
                 icon: 'factory--meirijihuachanliangpeizhi',
-                value: 'workShopName'
-            },
-            {
-                type: 'p',
-                label: '生产产量',
-                icon: 'factory--meirijihuachanliangpeizhi',
-                value: 'workShopName'
+                value: 'potAmount'
             },
             {
                 type: 'p',
@@ -104,7 +109,90 @@
                 label: '文本记录'
             }
         ];
+
+        mounted() {
+            this.getDetailInfo();
+        }
+
+        getDetailInfo() {
+            STE_API.STE_DETAIL_CRAFTHEADER_INFO_API({
+                potOrderNo: this.$store.state.sterilize.Craft.potOrderMap.potOrderNo
+            }).then(({ data }) => {
+                this.formHeader = data.data;
+                this.formHeader.textStage = 'CRAFT';
+                this.$refs.craft.init(this.formHeader);
+                this.$refs.excRecord.init(this.formHeader, 'CRAFT');
+                this.$refs.textRecord.init(this.formHeader, 'sterilize');
+            });
+        }
+
+        // 保存
+        savedDatas() {
+            // this.formHeader.textStage = 'craft';
+            const craftRequest = this.$refs.craft.getSavedOrSubmitData(this.formHeader);
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'CRAFT');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
+
+            return STE_API.STE_DETAIL_CRAFT_SAVED_API({
+                steControlInsertDto: craftRequest.steControlInsertDto,
+                steControlUpdateDto: craftRequest.steControlUpdateDto,
+                steItemRemoveDto: craftRequest.ids,
+                steExceptionInsertDtos: excRequest.InsertDto,
+                steExceptionUpdateDtos: excRequest.UpdateDto,
+                steExceptionRemoveDto: excRequest.ids,
+                steTextInsertDto: textRequest.pkgTextInsert,
+                steTextUpdateDto: textRequest.pkgTextUpdate
+            })
+        }
+
+        // 提交校验
+        submitRules(): Function[] {
+            return [this.$refs.craft.ruleSubmit, this.$refs.excRecord.ruleSubmit]
+        }
+
+        // 提交
+        submitDatas() {
+            const craftRequest = this.$refs.craft.getSavedOrSubmitData(this.formHeader);
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'CRAFT');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
+
+            return STE_API.STE_DETAIL_CRAFT_SUBMIT_API({
+                steControlInsertDto: craftRequest.steControlInsertDto,
+                steControlUpdateDto: craftRequest.steControlUpdateDto,
+                steExceptionInsertDtos: excRequest.InsertDto,
+                steExceptionUpdateDtos: excRequest.UpdateDto,
+                steExceptionRemoveDto: excRequest.ids,
+                steTextInsertDto: textRequest.pkgTextInsert,
+                steTextUpdateDto: textRequest.pkgTextUpdate
+            })
+        }
+
+        // 数据拉取
+        getList() {
+            this.getDetailInfo();
+        }
     }
+interface FormHeader{
+    textStage?: string;
+    changed?: string;
+    changer?: string;
+    factory?: string;
+    factoryName?: string;
+    id?: string;
+    materialCode?: string;
+    materialName?: string;
+    orderId?: string;
+    orderNo?: string;
+    potAmount?: string;
+    potNo?: string;
+    potOrder?: string;
+    potOrderNo?: string;
+    potUnit?: string;
+    productDate?: string;
+    status?: string;
+    workShop?: string;
+    workShopName?: string;
+}
 </script>
 
 <style scoped>

@@ -92,7 +92,7 @@ export default {
             COMMON_API.ROLE_MENU_INSERT_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 roleId: this.roleID,
-                menuId: [].concat(this.$refs.menuListTree.getCheckedKeys())
+                menuId: [].concat(this.$refs.menuListTree.getCheckedKeys()).concat(this.$refs.menuListTree.getHalfCheckedKeys())
             }).then(() => {
                 this.isDialogShow = false;
                 this.$emit('refreshDataList');

@@ -21,9 +21,6 @@
                     box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
                     content: "";
                 }
-                &__proLine {
-                    color: #f05c4a;
-                }
             }
             &__right {
                 position: relative;
@@ -41,6 +38,14 @@
                     border-radius: 50%;
                     box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.1);
                     content: "";
+                }
+            }
+            &__right--R {
+                span {
+                    color: #f05c4a;
+                }
+                &::before {
+                    background: #f05c4a;
                 }
             }
         }

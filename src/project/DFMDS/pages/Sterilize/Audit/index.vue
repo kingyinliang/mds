@@ -61,7 +61,7 @@ export default class AuditIndex extends Vue {
                 return COMMON_API.ORG_QUERY_WORKSHOP_API({
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                     deptType: ['WORK_SHOP'],
-                    deptName: '包装'
+                    deptName: '杀菌'
                 })
             },
             resVal: {
@@ -135,7 +135,7 @@ export default class AuditIndex extends Vue {
             minwidth: '55'
         },
         {
-            prop: 'outputUnitName',
+            prop: 'outputUnit',
             label: '订单单位',
             minwidth: '50'
         },
@@ -187,7 +187,7 @@ export default class AuditIndex extends Vue {
                     minwidth: '55'
                 },
                 {
-                    prop: 'outputUnitName',
+                    prop: 'outputUnit',
                     label: '订单单位',
                     minwidth: '50'
                 },
@@ -324,11 +324,11 @@ export default class AuditIndex extends Vue {
     }
 
     getLineClick(row: object) {
-        this.$store.commit('packaging/updateAuditDetail', row);
-        this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Packaging-Audit-AuditDetail'))
+        this.$store.commit('Sterilize/updateAuditDetail', row);
+        this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(subItem => subItem.name !== 'DFMDS-pages-Sterilize-Audit-AuditDetail'))
         setTimeout(() => {
             this.$router.push({
-                name: `DFMDS-pages-Packaging-Audit-AuditDetail`
+                name: `DFMDS-pages-Sterilize-Audit-AuditDetail`
             });
         }, 100);
 

@@ -18,7 +18,7 @@
                                     溶解罐号
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-form-item prop="">
+                                    <el-form-item prop="potNo">
                                         {{ scope.row.potNo }}
                                     </el-form-item>
                                 </template>
@@ -28,11 +28,11 @@
                                     <span class="notNull">*</span>生产物料
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-form-item prop="">
+                                    <el-form-item prop="prodcutMaterial">
                                         <el-select v-model="scope.row.prodcutMaterial" size="small" clearable>
                                             <el-option
-                                                v-for="item in productMateriallList"
-                                                :key="item.dictCode"
+                                                v-for="item in productMaterialList"
+                                                :key="'b'+item.dictCode"
                                                 :label="item.dictValue"
                                                 :value="item.dictCode"
                                             />
@@ -45,7 +45,7 @@
                                     <span class="notNull">*</span>配置锅数
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-form-item prop="">
+                                    <el-form-item prop="potCount">
                                         <el-input v-model.trim="scope.row.potCount" size="small" placeholder="输入锅数" clearable />
                                     </el-form-item>
                                 </template>
@@ -55,11 +55,11 @@
                                     <span class="notNull">*</span>投料物料
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-form-item prop="">
+                                    <el-form-item prop="feedMaterial">
                                         <el-select v-model="scope.row.feedMaterial" size="small" clearable>
                                             <el-option
                                                 v-for="item in feedMateriallList"
-                                                :key="item.dictCode"
+                                                :key="item.id"
                                                 :label="item.dictValue"
                                                 :value="item.dictCode"
                                             />
@@ -67,20 +67,22 @@
                                     </el-form-item>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="单位" prop="inStorageUnit" width="140">
+                            <el-table-column :show-overflow-tooltip="true" width="140">
                                 <template slot="header">
                                     <span class="notNull">* </span>单位
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-form-item prop="">
-                                        <el-select v-model="scope.row.feedUnit" placeholder="请选择" size="small">
+                                    <el-form-item prop="feedUnit">
+                                        <!-- <el-input v-model.trim="scope.row.feedUnit" size="small" placeholder="输入锅数" clearable /> -->
+                                        {{ scope.row.feedUnit }}
+                                        <!-- <el-select v-model="scope.row.feedUnit" placeholder="请选择" size="small">
                                             <el-option
                                                 v-for="item in 10"
                                                 :key="item.key"
                                                 :label="item.value"
                                                 :value="item.key"
                                             />
-                                        </el-select>
+                                        </el-select> -->
                                     </el-form-item>
                                 </template>
                             </el-table-column>
@@ -89,7 +91,7 @@
                                     <span class="notNull">*</span>投料数量
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-form-item prop="">
+                                    <el-form-item prop="feedAmount">
                                         <el-input v-model.trim="scope.row.feedAmount" size="small" placeholder="输入数量" />
                                     </el-form-item>
                                 </template>
@@ -99,7 +101,7 @@
                                     <span class="notNull">*</span>投料批次
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-form-item prop="">
+                                    <el-form-item prop="feedBatch">
                                         <el-input v-model.trim="scope.row.feedBatch" size="small" placeholder="输入批次" />
                                     </el-form-item>
                                 </template>
@@ -109,13 +111,13 @@
                                     <span class="notNull">*</span>投料人
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-form-item prop="">
+                                    <el-form-item prop="feedMan">
                                         <div class="required" style="min-height: 32px; line-height: 32px;">
                                             <!-- <span style="cursor: pointer;">
-                                                    <i v-for="(item, index) in scope.row.feedMan" :key="index">{{ item }}，</i>
-                                                </span> -->
-                                            <span style="cursor: pointer;" @click="selectUser(scope.row)">
-                                                <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
+                                                <i v-for="(item, index) in scope.row.feedMan.split(',')" :key="index">{{ item }}，</i>
+                                            </span> -->
+                                            <span style="cursor: pointer;" @click="selectUser(scope.row,scope.$index)">
+                                                <i v-for="(item, index) in splitString(scope.row.feedMan)" :key="index">{{ item }}，</i>
                                                 <i>点击选择人员</i>
                                             </span>
                                         </div>
@@ -127,14 +129,14 @@
                                     <span class="notNull">* </span>投料时间
                                 </template>
                                 <template slot-scope="scope">
-                                    <el-form-item prop="">
+                                    <el-form-item prop="feedDate">
                                         <el-date-picker
                                             v-model="scope.row.feedDate"
                                             type="datetime"
                                             placeholder="选择日期时间"
                                             style="width: 220px;"
-                                            value-format="yyyy-MM-dd HH:mm"
-                                            format="yyyy-MM-dd HH:mm"
+                                            value-format="yyyy-MM-dd HH:mm:ss"
+                                            format="yyyy-MM-dd HH:mm:ss"
                                             size="small"
                                         />
                                     </el-form-item>
@@ -155,8 +157,8 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <el-form-item label="满罐选项: " prop="">
-                            <el-checkbox v-model="importBucketForm.filled" />
+                        <el-form-item v-if="importBucketInfo.length>=1" label="满罐选项: " prop="">
+                            <el-checkbox v-model="importBucketStatus" style="margin-left: 10px;" />
                         </el-form-item>
                     </el-form>
                 </div>
@@ -193,163 +195,36 @@
         }
     })
     export default class ImportBucketIndex extends Vue {
-
         $refs: {
             loanedPersonnel: HTMLFormElement;
         }
 
-        // 点击赋予 item info
-        currentPotNo=''
+
         currentWorkShop=''
 
-        productMateriallList: object[]=[] // 生产物料清单
+
+        // 点击赋予 item info
+        currentPotNo=''
+        currentPotId=''
+        currentPotStatus='E' // 罐状态
+        currentCycle=''
+
+        productMaterialList: ProductMaterial[]=[] // 生产物料清单
         feedMateriallList: object[]=[] // 投料物料清单
 
+        importBucketStatus=false // 是否满罐
 
-        // 当前处理的 bucket index
-        nowBucketNo=0
-
-
-        holderStatus: HolderStatus[]=[]
-
-        dataList = []
-        totalCount = 1
-        currPage = 1
-        pageSize = 10
+        currentRowIndex=0
         dissolveBucketCode = ''
 
-        bucketDataList=[
-            {
-                id: 1,
-                bucketNo: 4,
-                bucketStatus: 'R',
-                filled: false,
-                cleared: false
-            }
-        ]
 
-        bucketDataList1: BucketDataListObj[] = []
         importBucketInfo: CurrentDataTable[]=[] // 主 data
         orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
-        orgArrList: string[] = []
-
-        isBucketDialogVisible = false;
-        isTableDialogVisible = false;
-        dialogType='filled'
-        dialogForm = {
-            filled: {
-                title: '溶解罐满罐',
-                form: {
-                    number: 'a22',
-                    status: 'U',
-                    doit: false,
-                    changer: getUserNameNumber(),
-                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
-                }
-            },
-            clear: {
-                title: '溶解罐清洗',
-                form: {
-                    number: 'a23',
-                    status: 'C',
-                    doit: false,
-                    changer: getUserNameNumber(),
-                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
-                }
-            }
-        };
-
-
         // 入罐表单数据
         importBucketForm= {}
-        queryTableFormData = [
-            {
-                type: 'select',
-                label: '生产车间',
-                prop: 'workShop',
-                defaultOptionsFn: () => {
 
-                    return new Promise((resolve) => {
-                        COMMON_API.ORG_QUERY_WORKSHOP_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptType: ['WORK_SHOP'],
-                            deptName: '杀菌'
-                        }).then((res) => {
-                            resolve(res)
-                        })
-                    })
-                },
-                resVal: {
-                    resData: 'data',
-                    label: ['deptName'],
-                    value: 'id'
-                },
-                linkageProp: ['potId']
-            },
-            {
-                type: 'select',
-                label: '溶解罐号',
-                prop: 'potId',
-                optionsFn: val => {
-                    return new Promise((resolve) => {
-                        COMMON_API.HOLDER_QUERY_API({
-                            factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                            deptId: val,
-                            current: 1,
-                            size: 9999,
-                            holderType: '019' // 溶解罐参数编码
-                        }).then((res) => {
-                            // eslint-disable-next-line no-invalid-this
-                            this.currentWorkShop = val
-                            resolve(res)
-                        })
-                    })
-
-                },
-                resVal: {
-                    resData: 'data.records',
-                    label: ['holderName'],
-                    value: 'holderNo'
-                }
-            },
-            {
-                type: 'select',
-                label: '状态',
-                prop: 'potStatus',
-                defaultOptionsFn: () => {
-                    return new Promise((resolve) => {
-                        COMMON_API.DICTQUERY_API({ dictType: 'COMMON_HOLDER_STATUS' }).then((res) => {
-                            const temp = res
-                            temp.data.data = temp.data.data.filter(element => element.dictValue !== '发酵')
-                            temp.data.data.forEach(item => {
-                                if (item.dictValue === '投料') {
-                                    item.dictValue = '入料中'
-                                } else if (item.dictValue === '领用') {
-                                    item.dictValue = '领用中'
-                                } else if (item.dictValue === '清洗') {
-                                    item.dictValue = '待清洗'
-                                }
-                            })
-                            resolve(temp)
-                        })
-                    })
-                },
-                resVal: {
-                    resData: 'data',
-                    label: ['dictValue'],
-                    value: 'dictCode'
-                }
-            }
-        ]
-
-        queryTableRules = [
-            {
-                prop: 'workShop',
-                text: '请选择生产车间'
-            }
-        ]
-
-        isLoanedPersonnelStatusDialogVisible = false;
+        isTableDialogVisible = false;
+        isLoanedPersonnelStatusDialogVisible = false; // 选人
         orgTree: object[] = [];
         arrList: string[] = [];
 
@@ -357,52 +232,72 @@
             this.getTree()
         }
 
+        totalNum(target) {
+            let result = 0
+            target.forEach(item => {
+                result = _.add(result, Number(item.feedAmount))
+            })
+            return result
+
+        }
+
+        splitString(str) {
+            if (str !== '') {
+                return str.split(',')
+            }
+            return []
+        }
+
         // 入罐
-        init(item) {
-            console.log('入罐item')
-            console.log(item)
+        init(item, workshop) {
             this.isTableDialogVisible = true
-            this.nowBucketNo = item.potId
-            this.currentPotNo = item.potId
-            // 溶解罐管理-查询入罐信息
+            this.currentPotId = item.potId
+            this.currentPotNo = item.potNo
+            this.currentPotStatus = item.potStatus
+            this.currentWorkShop = workshop
+            this.currentCycle = item.cycle
+            // API 溶解罐管理-查询入罐信息
             STE_API.STE_DISSOLUTIONBUCKET_ENTER_QUERY_API({
+                cycle: item.cycle,
+                id: item.id,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                holderId: this.currentPotNo
+                potId: this.currentPotId,
+                potStatus: this.currentPotStatus,
+                potNo: this.currentPotNo,
+                workShop: this.currentWorkShop
             }).then(({ data }) => {
                 console.log('查询入罐信息')
                 console.log(data)
+                this.importBucketInfo = []
                 if (data.data) {
                     this.importBucketInfo = data.data
                     this.orgFormDataGroup = JSON.parse(JSON.stringify(this.importBucketInfo))
-                } else {
-                    this.importBucketInfo = []
                 }
             });
 
-            // 容器管理-查询生产物料
+            // API 容器管理-分页查询-查询生产物料
             COMMON_API.HOLDER_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptId: this.currentWorkShop,
                 current: 1,
                 size: 9999,
-                holderNo: item.potNo,
+                holderNo: this.currentPotNo,
                 holderType: '019' // 溶解罐参数编码
             }).then(({ data }) => {
-                this.productMateriallList = []
                 console.log('查询生产物料')
                 console.log(data)
-                    if (data.data.records[0].material) {
-                        const temp = data.data.records[0].material.split(',')
-                        console.log(temp)
-                        temp.forEach(element => {
-                            this.productMateriallList.push({ dictCode: element, dictValue: element })
-                        })
-                    }
+                this.productMaterialList = []
+                if (data.data.records[0].material) {
+                    data.data.records[0].material.forEach(element => {
+                        this.productMaterialList.push({ dictCode: element.materialCode, dictValue: element.materialName, id: element.id })
+                    })
+                }
             });
 
-            // 辅料前处理-查询不带分页 (查询生产物料)
+            // API 辅料前处理-查询不带分页 (查询生产物料)
             STE_API.STE_PREACCESSORIES_LIST_API({
-                preStage: 'DISSOLUTION'
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
+                // preStage: 'DISSOLUTION'
             }).then(({ data }) => {
                 console.log('辅料前处理')
                 console.log(data)
@@ -412,7 +307,6 @@
                         this.feedMateriallList.push({ dictCode: element.productMaterial, dictValue: element.productMaterialName })
                     })
                 }
-
             });
         }
 
@@ -437,17 +331,14 @@
 
         // 员工确认
         changeUser(item) {
-            console.log('人员是哪些呢？')
-            console.log(item)
-            // this.row.userList = userId;
+            this.importBucketInfo[this.currentRowIndex].feedMan = item.join(',')
             this.isLoanedPersonnelStatusDialogVisible = false;
-
-
         }
 
         // 选择人员 正式借调
-        selectUser(row) {
+        selectUser(row, index) {
             this.isLoanedPersonnelStatusDialogVisible = true;
+            this.currentRowIndex = index
             this.$nextTick(() => {
                 this.$refs.loanedPersonnel.init(row.feedMan, '投料人员');
             });
@@ -456,27 +347,53 @@
 
         // 新增行
         addNewDataRow() {
-            console.log(this.importBucketInfo)
-            const sole: CurrentDataTable = {
-                delFlag: 0,
-                potNo: this.currentPotNo, // 溶解罐号
-                prodcutMaterial: '', // 生产物料
-                potCount: 0, // 配置锅数
-                feedMaterial: '', // 投料物料
-                feedUnit: '', // 投料物料单位
-                feedAmount: 0, // 投料数量
-                feedBatch: '', // 投料批次
-                feedMan: '', // 投料人
-                feedDate: '', // 投料时间
-                remark: '',
-                changer: getUserNameNumber(),
-                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
-                // feedMaterialName?: string;
-                // id?: string;
-                // productMaterialName?: string;
+            let sole: CurrentDataTable = {}
+            const itemSize = this.importBucketInfo.length
+            if (itemSize !== 0) {
+                const tempProductMaterial = this.productMaterialList.filter(item => item.dictCode === this.importBucketInfo[itemSize - 1].prodcutMaterial) as ProductMaterial
+                sole = {
+                    cycle: this.currentCycle,
+                    delFlag: 0,
+                    potNo: this.currentPotNo, // 溶解罐号
+                    prodcutMaterial: this.importBucketInfo[itemSize - 1].prodcutMaterial, // 生产物料
+                    potCount: this.importBucketInfo[itemSize - 1].potCount, // 配置锅数
+                    feedMaterial: this.importBucketInfo[itemSize - 1].feedMaterial, // 投料物料
+                    feedUnit: 'KG', // 投料物料单位
+                    feedAmount: 0, // 投料数量
+                    feedBatch: '', // 投料批次
+                    feedMan: '', // 投料人
+                    feedDate: '', // 投料时间
+                    remark: '',
+                    changer: getUserNameNumber(),
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                    feedMaterialName: this.importBucketInfo[itemSize - 1].feedMaterialName,
+                    potStatus: this.currentPotStatus,
+                    potId: this.currentPotId,
+                    productMaterialName: tempProductMaterial.dictValue
+                }
+            } else {
+                sole = {
+                    cycle: this.currentCycle,
+                    delFlag: 0,
+                    potNo: this.currentPotNo, // 溶解罐号
+                    prodcutMaterial: '', // 生产物料
+                    potCount: 0, // 配置锅数
+                    feedMaterial: '', // 投料物料
+                    feedUnit: 'KG', // 投料物料单位
+                    feedAmount: 0, // 投料数量
+                    feedBatch: '', // 投料批次
+                    feedMan: '', // 投料人
+                    feedDate: '', // 投料时间
+                    remark: '',
+                    changer: getUserNameNumber(),
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+                    feedMaterialName: '',
+                    potStatus: this.currentPotStatus,
+                    potId: this.currentPotId,
+                    productMaterialName: ''
+                }
             }
             this.importBucketInfo.push(sole)
-            console.log(this.importBucketInfo)
             // this.setValidate(this.currentFormDataGroup, this.ruleForm)
         }
 
@@ -506,10 +423,11 @@
         comfirmImportBucket() {
             if (this.ruleSubmit()) {
 
-                if (this.bucketDataList[this.nowBucketNo].filled === true) {
-                    this.bucketDataList[this.nowBucketNo].bucketStatus = 'M'
+                const obj = {}
+                if (this.importBucketStatus === true) { // 满罐
+                    this.currentPotStatus = 'M'
                 } else {
-                    this.bucketDataList[this.nowBucketNo].bucketStatus = 'R'
+                    this.currentPotStatus = 'R'
                 }
 
                 const delIdsArray: string[] = []
@@ -517,6 +435,8 @@
                 const updateDtosArray: CurrentDataTable[] = []
 
                 this.importBucketInfo.forEach((item: CurrentDataTable, index) => {
+                    item.potStatus = this.currentPotStatus
+                    item.workShop = this.currentWorkShop
                     if (item.delFlag === 1) {
                         if (item.id) {
                             delIdsArray.push(item.id)
@@ -529,14 +449,20 @@
                         insertDtosArray.push(item)
                     }
                 })
-
-
+                console.log('delIdsArray')
+                console.log(delIdsArray)
+                console.log('insertDtosArray')
+                console.log(insertDtosArray)
+                console.log('updateDtosArray')
+                console.log(updateDtosArray)
                 STE_API.STE_DISSOLUTIONBUCKET_SAVE_API({
                     delIds: delIdsArray,
                     insertDtos: insertDtosArray,
                     updateDtos: updateDtosArray
                 }).then(({ data }) => {
                     console.log(data)
+                    this.$emit('importBucketFinish', obj);
+                    this.isTableDialogVisible = false
                 });
             }
         }
@@ -581,6 +507,8 @@ interface HolderStatus{
 }
 
 interface CurrentDataTable{
+    cycle?: string;
+    potId?: string;
     changed?: string;
     changer?: string;
     feedAmount?: number;
@@ -592,14 +520,38 @@ interface CurrentDataTable{
     feedUnit?: string;
     id?: string;
     potCount?: number;
+    potStatus?: string;
     potNo?: string;
     prodcutMaterial?: string;
     productMaterialName?: string;
     remark?: string;
     delFlag?: number;
-    userList?: object[];
+    workShop?: string;
+}
+interface FinalDataTable{
+    changed?: string;
+    changer?: string;
+    feedAmount?: number;
+    feedBatch?: string;
+    feedDate?: string;
+    feedMan?: string;
+    feedMaterial?: string;
+    feedMaterialName?: string;
+    feedUnit?: string[]; // <-----------
+    id?: string;
+    potCount?: number;
+    potNo?: string;
+    prodcutMaterial?: string;
+    productMaterialName?: string;
+    remark?: string;
+    delFlag?: number;
 }
 
+interface ProductMaterial{
+    dictCode?: string;
+    dictValue?: string;
+    id?: string;
+}
 </script>
 <style scoped>
 .el-pagination >>> .el-pager li.active {
@@ -621,21 +573,37 @@ interface CurrentDataTable{
     background: transparent;
 }
 
-/* .header_main >>> .el-checkbox__inner {
-    -webkit-box-sizing: border-box;
+.inner-area__body >>> .el-checkbox__inner {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
     box-sizing: border-box;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: #fff;
-    border: 1px solid #dcdfe6;
-    border-radius: 100%;
-    cursor: pointer;
-} */
+    border: 1px solid #1b91ff;
+    border-radius: 10px;
+    transition: border-color 0.25s cubic-bezier(0.71, -0.46, 0.29, 1.46), background-color 0.25s cubic-bezier(0.71, -0.46, 0.29, 1.46);
+}
+.inner-area__body >>> .el-checkbox__inner::after {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    height: 8px;
+    background: #1b91ff;
+    border: none;
+    border: 0;
+    border-radius: 4px;
+    transform: rotate(0deg) scaleY(0);
+    transform-origin: center;
+    transition: transform 0.15s ease-in 0.05s;
+    content: "";
+}
 
-/* .el-checkbox__input.is-checked .el-checkbox__inner::after {
-    -webkit-transform: rotate(45deg) scaleY(1);
-    transform: rotate(45deg) scaleY(1);
-} */
+.inner-area__body >>> .el-checkbox__input.is-checked .el-checkbox__inner::after {
+    transform: rotate(0deg) scaleY(1);
+}
 </style>
 
 <style lang="scss" scoped>
@@ -853,6 +821,7 @@ interface CurrentDataTable{
 }
 
 .dialog-footer {
+    margin-top: 10px;
     text-align: right;
 }
 

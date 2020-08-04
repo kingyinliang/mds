@@ -7,13 +7,13 @@
                 </el-col>
                 <el-col style="width: 100px;">
                     <div
-                        style=" float: right; padding-top: 0;"
+                        style=" float: right; padding-top: 0; line-height: 25px;"
                         :style="{
                             color: orderStatus === 'noPass' ? 'red' : '',
                         }"
                     >
                         <span
-                            style=" float: left; width: 5px; height: 5px; margin-top: 7px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
+                            style=" float: left; width: 5px; height: 5px; margin-top: 10px; margin-right: 3px; background: #1890ff; border-radius: 50%;"
                             :style="{
                                 background: orderStatus === 'noPass' ? 'red' : '#1890FF',
                             }"
@@ -21,23 +21,8 @@
                     </div>
                 </el-col>
             </el-row>
-            <el-row style=" position: absolute; right: 20px; bottom: 10px; text-align: right;" class="buttonCss">
-                <template style="float: right; margin-left: 10px;">
-                    <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:tec:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                        {{ isRedact ? '取消' : '编辑' }}
-                    </el-button>
-                </template>
-                <template v-if="isRedact" style="float: right; margin-left: 10px;">
-                    <el-button v-if="isAuth('ste:tec:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                        保存
-                    </el-button>
-                    <el-button v-if="isAuth('ste:tec:mySaveOrUpdate')" type="primary" size="small" @click="SubmitForm">
-                        提交
-                    </el-button>
-                </template>
-            </el-row>
         </el-card>
-        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card">
+        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
                     工艺控制
@@ -77,39 +62,40 @@
                         <el-form-item label="数显温度：" label-width="108px">
                             <el-input v-model="crafData.displayTemp" :disabled="!isRedact" placeholder="手工录入" size="small" style="width: 180px;" />
                         </el-form-item>
-                        <el-row>
-                            <h3> <i class="iconfont factory-shezhi" />保温时间及屏显温度 </h3>
-                            <el-button type="primary" size="small" style="float: right;" :disabled="!isRedact" @click="addresult()">
-                                新增
-                            </el-button>
-                        </el-row>
-                        <el-table header-row-class-name="tableHead" :data="crafData.result" :row-class-name="RowDelFlag" border tooltip-effect="dark">
-                            <el-table-column width="55" label="序号" type="index" fixed />
-                            <el-table-column label="屏显温度(℃)">
-                                <template slot-scope="scope">
-                                    <el-input v-model="scope.row.temp" :disabled="!isRedact" placeholder="手工录入" size="small" />
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="记录时间">
-                                <template slot-scope="scope">
-                                    <el-date-picker v-model="scope.row.logTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" size="small" placeholder="选择日期" :disabled="!isRedact" @change="changeDate(scope.row)" />
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="备注">
-                                <template slot-scope="scope">
-                                    <el-input v-model="scope.row.remark" :disabled="!isRedact" placeholder="手工录入" size="small" />
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="操作" width="80">
-                                <template slot-scope="scope">
-                                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="dellist(scope.row)">
-                                        删除
-                                    </el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
                     </div>
                 </el-form>
+                <mds-card title="保温时间及屏显温度" name="crafData">
+                    <template slot="titleBtn">
+                        <el-button type="primary" size="small" style="float: right;" :disabled="!isRedact" @click="addresult()">
+                            新增
+                        </el-button>
+                    </template>
+                    <el-table header-row-class-name="tableHead" class="newTable" :data="crafData.result" :row-class-name="RowDelFlag" border tooltip-effect="dark">
+                        <el-table-column width="55" label="序号" type="index" fixed />
+                        <el-table-column label="屏显温度(℃)">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.temp" :disabled="!isRedact" placeholder="手工录入" size="small" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="记录时间">
+                            <template slot-scope="scope">
+                                <el-date-picker v-model="scope.row.logTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" size="small" placeholder="选择日期" :disabled="!isRedact" @change="changeDate(scope.row)" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="备注">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.remark" :disabled="!isRedact" placeholder="手工录入" size="small" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" width="80">
+                            <template slot-scope="scope">
+                                <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!isRedact" @click="dellist(scope.row)">
+                                    删除
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </mds-card>
                 <audit-log :table-data="DataAudit" />
             </el-tab-pane>
             <el-tab-pane name="2">
@@ -125,6 +111,21 @@
                 <text-record ref="textrecord" :is-redact="isRedact" />
             </el-tab-pane>
         </el-tabs>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('ste:tec:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button v-if="isAuth('ste:tec:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('ste:tec:mySaveOrUpdate')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 

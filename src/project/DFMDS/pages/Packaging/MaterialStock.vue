@@ -9,7 +9,7 @@
             :list-interface="listInterface"
             :custom-data="true"
             :show-operation-column="true"
-            :operation-column-width="160"
+            :operation-column-width="150"
         >
             <template slot="tab-head-main">
                 <div class="box-card-title clearfix">
@@ -47,57 +47,49 @@
                     <el-table-column label="操作时间" prop="changed" width="160" />
                 </el-table>
                 <el-row v-if="detaileLogData.length !== 0">
-                    <el-pagination :current-page="current" :page-sizes="[10, 20, 50]" :page-size="size" layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    <el-pagination :current-page="current" :page-sizes="[10, 20, 50]" :page-size="size" layout="total, sizes, prev, pager, next, jumper" style="margin-bottom: 15px;" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
             </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" style="color: #000; background-color: #fff; border-color: #d9d9d9;" @click="visibleDetailLog = false">
-                    取消
-                </el-button>
-                <el-button type="primary" size="small" style=" color: #fff; background-color: #1890ff; border-color: #1890ff;" @click="visibleDetailLog = false">
-                    确定
-                </el-button>
-            </div>
         </el-dialog>
-        <el-dialog title="转线" :close-on-click-modal="false" :visible.sync="visibleTransferLine" width="500px" custom-class="dialog__class">
+        <el-dialog title="转线" :close-on-click-modal="false" :visible.sync="visibleTransferLine" width="600px" custom-class="dialog__class">
             <div>
                 <el-form ref="transferForm" :model="transferForm" :rules="transferFormRules" label-width="100px" size="small">
                     <el-form-item label="转出线：">
-                        <p class="disabled-text" style="width: 320px;">
+                        <p class="disabled-text" style="width: 380px;">
                             {{ transferForm.productLineOutName }}
                         </p>
                     </el-form-item>
                     <el-form-item label="包材物料：">
-                        <p class="disabled-text" style="width: 320px;">
+                        <p class="disabled-text" style="width: 380px;">
                             {{ transferForm.materialCode + ' ' + transferForm.materialName }}
                         </p>
                     </el-form-item>
                     <el-form-item label="数量：" prop="amount">
-                        <el-input v-model="transferForm.amount" type="number" style="width: 320px;" />
+                        <el-input v-model="transferForm.amount" type="number" style="width: 380px;" />
                     </el-form-item>
                     <el-form-item label="单位：" prop="storageUnit">
-                        <p class="disabled-text" style="width: 320px;">
+                        <p class="disabled-text" style="width: 380px;">
                             {{ transferForm.storageUnit }}
                         </p>
                     </el-form-item>
                     <el-form-item label="批次：">
-                        <el-input v-model="transferForm.batch" type="text" maxlength="10" style="width: 320px;" />
+                        <el-input v-model="transferForm.batch" type="text" maxlength="10" style="width: 380px;" />
                     </el-form-item>
                     <el-form-item label="转入线：" prop="productLineIn">
-                        <el-select v-model="transferForm.productLineIn" filterable placeholder="请选择" style="width: 320px;">
+                        <el-select v-model="transferForm.productLineIn" filterable placeholder="请选择" style="width: 380px;">
                             <el-option v-for="(item, index) in productlineListFilter" :key="index" :label="item.deptName" :value="item.id" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="备注：">
-                        <el-input v-model="transferForm.remark" type="text" style="width: 320px;" />
+                        <el-input v-model="transferForm.remark" type="text" style="width: 380px;" />
                     </el-form-item>
                     <el-form-item label="操作人：">
-                        <p class="disabled-text" style="width: 320px;">
+                        <p class="disabled-text" style="width: 380px;">
                             {{ transferForm.changer }}
                         </p>
                     </el-form-item>
                     <el-form-item label="操作时间：">
-                        <p class="disabled-text" style="width: 320px;">
+                        <p class="disabled-text" style="width: 380px;">
                             {{ transferForm.changed }}
                         </p>
                     </el-form-item>
@@ -112,40 +104,40 @@
                 </el-button>
             </div>
         </el-dialog>
-        <el-dialog title="调整" :close-on-click-modal="false" :visible.sync="visibleAdjust" width="500px" custom-class="dialog__class">
+        <el-dialog title="调整" :close-on-click-modal="false" :visible.sync="visibleAdjust" width="600px" custom-class="dialog__class">
             <div>
                 <el-form ref="adjustForm" :model="adjustForm" :rules="adjustFormRules" label-width="100px" size="small">
                     <el-form-item label="包材物料：">
-                        <p class="disabled-text" style="width: 320px;">
+                        <p class="disabled-text" style="width: 380px;">
                             {{ adjustForm.materialCode + ' ' + adjustForm.materialName }}
                         </p>
                     </el-form-item>
                     <el-form-item label="批次：">
-                        <el-input v-model="adjustForm.batch" type="text" maxlength="10" style="width: 320px;" />
+                        <el-input v-model="adjustForm.batch" type="text" maxlength="10" style="width: 380px;" />
                     </el-form-item>
                     <el-form-item label="调整类型：" prop="moveType">
-                        <el-select v-model="adjustForm.moveType" filterable placeholder="请选择" style="width: 320px;">
+                        <el-select v-model="adjustForm.moveType" filterable placeholder="请选择" style="width: 380px;">
                             <el-option v-for="(item, index) in moveTypeList" :key="index" :label="item.dictValue" :value="item.dictCode" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="调整量：" prop="amount">
-                        <el-input v-model="adjustForm.amount" type="number" style="width: 320px;" />
+                        <el-input v-model="adjustForm.amount" type="number" style="width: 380px;" />
                     </el-form-item>
                     <el-form-item label="单位：" prop="storageUnit">
-                        <p class="disabled-text" style="width: 320px;">
+                        <p class="disabled-text" style="width: 380px;">
                             {{ adjustForm.storageUnit }}
                         </p>
                     </el-form-item>
                     <el-form-item label="说明：">
-                        <el-input v-model="adjustForm.remark" type="text" style="width: 320px;" />
+                        <el-input v-model="adjustForm.remark" type="text" style="width: 380px;" />
                     </el-form-item>
                     <el-form-item label="操作人：">
-                        <p class="disabled-text" style="width: 320px;">
+                        <p class="disabled-text" style="width: 380px;">
                             {{ adjustForm.changer }}
                         </p>
                     </el-form-item>
                     <el-form-item label="操作时间：">
-                        <p class="disabled-text" style="width: 320px;">
+                        <p class="disabled-text" style="width: 380px;">
                             {{ adjustForm.changed }}
                         </p>
                     </el-form-item>
@@ -200,12 +192,14 @@ export default class MaterialStock extends Vue {
         {
             type: 'select',
             label: '生产产线',
+            width: '220',
             prop: 'productLine',
             defaultValue: '',
             filterable: true,
             optionsFn: val => {
                 return COMMON_API.ORG_QUERY_CHILDREN_API({
-                    parentId: val || ''
+                    parentId: val || '',
+                    deptType: 'PRODUCT_LINE'
                 })
             },
             resVal: {
@@ -238,12 +232,14 @@ export default class MaterialStock extends Vue {
         {
             label: '生产产线',
             prop: 'productLineName',
-            minwidth: '140'
+            minwidth: '160'
         },
         {
             label: '包材物料',
-            prop: 'materialCode',
-            propList: ['materialCode', 'materialName'],
+            prop: 'materialName',
+            formatter: (row) => {
+                return row.materialCode + ' ' + row.materialName;
+            },
             minwidth: '330'
         },
         {
@@ -312,11 +308,20 @@ export default class MaterialStock extends Vue {
     mounted() {
         this.getProductline();
         this.getMoveType();
+        // this.$nextTick(() => {
+        //     this.$refs.queryTable.getDataList(true)
+        // })
     }
+
+    updated() {
+        this.$refs.queryTable.getDataList(true)
+    }
+    // createdEnd() {
+    // }
 
     // 拉取所有产线
     getProductline() {
-        COMMON_API.ORG_QUERY_WORKSHOP_API({
+        PKG_API.PKG_MATERIALSTOCK_TRANSFERDEPTNAME_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
             deptType: ['PRODUCT_LINE'],
             deptName: '包装'

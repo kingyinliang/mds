@@ -19,7 +19,7 @@
                 <el-table-column prop="created" label="创建时间" width="180" />
                 <el-table-column prop="changer" label="修改人" :show-overflow-tooltip="true" width="150" />
                 <el-table-column prop="changed" label="修改时间" width="180" />
-                <el-table-column label="操作" width="360" fixed="right">
+                <el-table-column label="操作" min-width="360" fixed="right">
                     <template slot-scope="scope">
                         <el-button type="text" class="role__btn" @click="manageUser(scope.row.id)">
                             人员管理
@@ -159,9 +159,11 @@
                     .then(() => {
                         COMMON_API.ROLE_REMOVE_API({ id: id }).then(() => {
                             this.getItemsList();
-                        }).catch(() => {
-                            //
-                        });
+                        }).catch((err) => {
+                            if (err.data.code === 201) {
+                                this.$errorToast(err.data.msg);
+                            }
+                        })
                     })
                     .catch(() => {
                         //

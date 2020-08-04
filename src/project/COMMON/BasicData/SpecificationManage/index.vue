@@ -61,7 +61,7 @@
             </el-table>
             <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
-        <specification-add-or-update v-if="isAddOrUpdateDailogShow" ref="SpecificationAddOrUpdate" :large-class="largeClass" :unit-class="unitClass" :serch-spec-list="serchSpecList" @refreshDataList="getItemsList" />
+        <specification-add-or-update v-if="isAddOrUpdateDailogShow" ref="SpecificationAddOrUpdate" :large-class="largeClass" :unit-class="unitClass" @refreshDataList="getItemsList" />
         <el-dialog title="高级查询" :close-on-click-modal="false" :visible.sync="isAdvanceSearchDailogShow" @close="closeDialog">
             <div class="formdata">
                 <el-form :model="controllableForm" size="small" label-width="110px" class="orderdialog" :rules="checkRules">
@@ -101,7 +101,6 @@
         },
         data() {
             return {
-                serchSpecList: [], // 物料缓存
                 serchSpecListObject: {},
                 unitClass: [], // 单位缓存
                 unitClassObject: {},
@@ -214,16 +213,6 @@
                 val.forEach((item) => {
                     this.multipleSelection.push(item.id);
                 });
-            },
-            // 物料下拉
-            getMaterial() {
-                // if (this.serchSpecList.length === 0) {
-                    COMMON_API.ALLMATERIAL_API({
-                        factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-                        }).then(({ data }) => {
-                            this.serchSpecList = data.data;
-                        });
-                // }
             },
             // 大类下拉
             getLargeClass() {

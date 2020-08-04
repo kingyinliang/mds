@@ -17,9 +17,9 @@
                                 <img src="@/assets/img/Filtration.png" alt="" style="width: 92%; margin-top: 19px; margin-bottom: 10px;">
                             </el-col>
                         </el-row>
-                        <el-row class="bottom">
+                        <el-row class="bottoms">
                             <el-col>
-                                <el-button class="button" :disabled="!isRedact || soleStatus" @click="ShowDialog(item)">
+                                <el-button class="buttons" size="small" :disabled="!isRedact || soleStatus" @click="ShowDialog(item)">
                                     数据录入
                                 </el-button>
                             </el-col>
@@ -27,7 +27,7 @@
                     </div>
                 </el-col>
             </el-row>
-            <el-table :data="techList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;" @row-dblclick="EditTechInfo">
+            <el-table :data="techList" :row-class-name="rowDelFlag" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;" @row-dblclick="EditTechInfo">
                 <el-table-column type="index" label="序号" width="50" fixed />
                 <el-table-column label="过滤机号" show-overflow-tooltip width="120" prop="deviceName" />
                 <el-table-column label="过滤前温度(°C)" prop="filterBefTem" />
@@ -37,9 +37,9 @@
                 <el-table-column label="回压数量(方)" prop="backPreNum" />
                 <el-table-column label="助滤剂预涂量(kg) " prop="filterAidBef" />
                 <el-table-column label="助滤剂添加量(kg)" prop="filterAidAdd" />
-                <el-table-column label="备注" show-overflow-tooltip width="120" prop="remark" />
-                <el-table-column label="操作时间" show-overflow-tooltip width="150" prop="changed" />
-                <el-table-column label="操作人" show-overflow-tooltip width="100" prop="changer" />
+                <el-table-column label="备注" show-overflow-tooltip prop="remark" />
+                <el-table-column label="操作时间" show-overflow-tooltip width="165" prop="changed" />
+                <el-table-column label="操作人" show-overflow-tooltip width="140" prop="changer" />
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!isRedact || soleStatus" size="mini" @click="DelRow(scope.row)">
@@ -49,14 +49,11 @@
                 </el-table-column>
             </el-table>
         </el-card>
-        <el-card>
-            <div class="audit">
-                <i class="iconfont factory-shouqicaidan" /><span>辅料领用</span>
-            </div>
-            <el-table :data="supMaterialList" border header-row-class-name="tableHead" style="margin-top: 10px;">
+        <mds-card title="辅料领用" name="supMaterialList">
+            <el-table :data="supMaterialList" border class="newTable" header-row-class-name="tableHead">
                 <el-table-column type="index" label="序号" width="50" fixed />
-                <el-table-column label="过滤机号" show-overflow-tooltip width="120" prop="deviceName" />
-                <el-table-column label="物料" show-overflow-tooltip width="200">
+                <el-table-column label="过滤机号" show-overflow-tooltip min-width="120" prop="deviceName" />
+                <el-table-column label="物料" show-overflow-tooltip min-width="200">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.materialCode" :disabled="!isRedact || soleStatus" size="small">
                             <el-option v-for="(item, index) in filterAidMaterialList" :key="index" :label="item.CODE + ' ' + item.VALUE" :value="item.CODE" />
@@ -71,7 +68,7 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column width="110">
+                <el-table-column min-width="110">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>过滤剂用量</span>
@@ -80,8 +77,8 @@
                         <el-input v-model="scope.row.filterAidAmount" :disabled="!isRedact || soleStatus" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="单位" prop="unit" width="50" />
-                <el-table-column width="140">
+                <el-table-column label="单位" prop="unit" min-width="50" />
+                <el-table-column min-width="140">
                     <template slot="header">
                         <i class="reqI">*</i>
                         <span>批次</span>
@@ -90,21 +87,21 @@
                         <el-input v-model="scope.row.batch" :disabled="!isRedact || soleStatus" maxlength="10" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="助滤剂型号" width="130">
+                <el-table-column label="助滤剂型号" min-width="130">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.filterAidModel" :disabled="!isRedact || soleStatus" size="small">
                             <el-option v-for="(item, index) in filterAidModelList" :key="index" :label="item.VALUE" :value="item.VALUE" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="助滤剂厂家" show-overflow-tooltip width="140">
+                <el-table-column label="助滤剂厂家" show-overflow-tooltip min-width="140">
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.filterAidVender" :disabled="!isRedact || soleStatus" size="small">
                             <el-option v-for="(item, index) in filterAidVenderList" :key="index" :label="item.VALUE" :value="item.VALUE" />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" show-overflow-tooltip width="120" prop="remark" />
+                <el-table-column label="备注" show-overflow-tooltip min-width="120" prop="remark" />
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.isSplit === '1'" class="delBtn" type="text" icon="el-icon-delete" size="mini" circle :disabled="!isRedact || soleStatus" @click="DelMaterial(scope.row)">
@@ -113,7 +110,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-        </el-card>
+        </mds-card>
         <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="450px" custom-class="dialog__class">
             <div slot="title">
                 {{ techInfo.deviceName }}
@@ -617,7 +614,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .rowDel {
     display: none;
 }
@@ -641,19 +638,25 @@ export default {
         font-size: 12px;
         line-height: 22px;
     }
-    .bottom {
-        width: 100%;
-        background: rgba(247, 249, 250, 1);
-        border-top: 1px solid rgba(233, 233, 233, 1);
-        border-bottom: none;
-        .button {
+    .bottoms {
+        width: 95%;
+        margin: 0 auto;
+        .buttons {
             width: 100%;
             margin: 10px 0;
-            padding: 0;
-            line-height: 20px;
-            background: none;
-            border: none;
-            border-right: 1px solid #e8e8e8;
+            color: #000;
+            background-color: #fff;
+            border-color: #d9d9d9;
+        }
+        .buttons:hover {
+            color: #fff;
+            background-color: #1890ff;
+        }
+        .buttons.is-disabled:hover {
+            color: #000;
+            background-color: #fff;
+            border-color: #d9d9d9;
+            cursor: not-allowed;
         }
     }
 }

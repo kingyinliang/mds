@@ -6,6 +6,10 @@ const AUDIT_API = {
      */
     AUDIT_LOG_LIST_API: params => httpProxy('/verifyRecord/queryByNo', 'GET', params),
     /**
+     * @property {string} INLIST_API 生管审核审核日志  orderNo
+     */
+    AUDIT_DIALOG_LOG_LIST_API: params => httpProxy('/verifyRecord/queryByVerifyId', 'GET', params),
+    /**
      * @property {string} INLIST_API 入库审核列表
      */
     INLIST_API: params => httpProxy('/verifyInStorage/query', 'POST', params),

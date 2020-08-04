@@ -1,5 +1,5 @@
 <template>
-    <main class="site-content" :class="{ 'site-content--tabs': $route.meta.isTab }">
+    <main :style="{ 'min-height': (documentClientHeight - 32) + 'px' }" class="site-content" :class="{ 'site-content--tabs': $route.meta.isTab }">
         <!-- 主入口标签页 s -->
         <el-tabs v-if="$route.meta.isTab" v-model="mainTabsActiveName" :closable="true" @tab-click="selectedTabHandle" @tab-remove="removeTabHandle">
             <el-dropdown class="site-tabs__tools" :show-timeout="0">
@@ -177,20 +177,6 @@
     };
 </script>
 <style lang="scss" scoped>
-    .footer {
-        position: absolute;
-        bottom: 7px;
-        width: 100%;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 12px;
-        line-height: 20px;
-        text-align: center;
-        a {
-            margin: 0 10px;
-            color: rgba(0, 0, 0, 0.45);
-            font-size: 14px;
-        }
-    }
 
     @keyframes rollin {
         0% {

@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table ref="queryTable" :rules="rules" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:form:listProductM'" :column="column" :export-excel="true" :export-option="exportOption" @get-data-success="setTable" />
+        <query-table ref="queryTable" :table-class="tableClass" :rules="rules" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:form:listProductM'" :column="column" :export-excel="true" :export-option="exportOption" @get-data-success="setTable" />
     </div>
 </template>
 
@@ -10,6 +10,7 @@ export default {
     name: 'Index',
     data() {
         return {
+            tableClass: '',
             queryFormData: [
                 {
                     type: 'select',
@@ -218,6 +219,7 @@ export default {
                     ]
                 });
             });
+            this.tableClass = 'borderTable'
         }
     }
 };

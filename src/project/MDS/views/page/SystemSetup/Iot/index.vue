@@ -13,18 +13,21 @@
             :export-option="exportOption"
         >
             <template slot="mds-button-middle">
-                <div style=" float: right; width: 220px;">
-                    <el-upload class="upload-demo" style=" float: left; width: 56px;" :action="uploadApi" :show-file-list="false" :headers="myHeaders" :before-upload="beforeUp" :on-success="importSuccess" :on-error="improtError">
-                        <el-button size="small" type="primary">
-                            导入
+                <div class="box-card-title clearfix">
+                    <h3> <i class="title-icon" style="background: #487bff;" />IOT换算列表</h3>
+                    <div style=" float: right; width: 220px;">
+                        <el-upload class="upload-demo" style=" float: left; width: 56px;" :action="uploadApi" :show-file-list="false" :headers="myHeaders" :before-upload="beforeUp" :on-success="importSuccess" :on-error="improtError">
+                            <el-button size="small" type="primary">
+                                导入
+                            </el-button>
+                        </el-upload>
+                        <el-button type="primary" size="small" @click="exportData()">
+                            导出
                         </el-button>
-                    </el-upload>
-                    <el-button type="primary" size="small" @click="exportData()">
-                        导出
-                    </el-button>
-                    <el-button type="danger" size="small" @click="remove">
-                        批量删除
-                    </el-button>
+                        <el-button type="danger" size="small" @click="remove">
+                            批量删除
+                        </el-button>
+                    </div>
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">

@@ -29,7 +29,9 @@
                     <span class="notNull">* </span>锅号
                 </template>
                 <template slot-scope="scope">
-                    <el-input v-model="scope.row.potNo" size="small" placeholder="请输入" />
+                    <el-select v-model="scope.row.potNo" size="small" placeholder="请选择" @change="potNoChange(scope.row)">
+                        <el-option v-for="(subItem, subIndex) in holder" :key="subIndex" :label="subItem.holderName" :value="subItem.holderNo" />
+                    </el-select>
                 </template>
             </el-table-column>
             <el-table-column label="锅数" width="100" prop="potCount" :show-overflow-tooltip="true">
@@ -41,6 +43,9 @@
                 </template>
             </el-table-column>
             <el-table-column label="每锅数量" width="100" prop="potAmount" :show-overflow-tooltip="true">
+                <template slot="header">
+                    <span class="notNull">* </span>每锅数量
+                </template>
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.potAmount" size="small" placeholder="请输入" />
                 </template>
@@ -61,7 +66,7 @@
             </el-table-column>
         </el-table>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="visible = false">取消</el-button>
+            <el-button @click="dialogFormVisible = false">取消</el-button>
             <el-button type="primary" @click="SubmitForm()">确定</el-button>
         </span>
     </el-dialog>
@@ -69,13 +74,14 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import { STE_API } from 'common/api/api';
+    import { COMMON_API, STE_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
     import _ from 'lodash';
 
     @Component
     export default class OrderSplitDialog extends Vue {
         dialogFormVisible = false;
+        holder: HolderObj[] = [];
         splitTable: SplitObj[] = [];
         orgSplitTable: SplitObj[] = [];
         orderObj: SplitObj = {};
@@ -83,7 +89,7 @@
         init(row) {
             STE_API.STE_SPLIT_LIST_API({
                 current: 1,
-                size: 999,
+                size: 9999,
                 orderNo: row.orderNo
             }).then(({ data }) => {
                 this.orderObj = row;
@@ -91,6 +97,24 @@
                 this.splitTable = JSON.parse(JSON.stringify(data.data.records))
                 this.orgSplitTable = JSON.parse(JSON.stringify(data.data.records))
             })
+            this.getHolder(row)
+        }
+
+        getHolder(params) {
+            COMMON_API.HOLDER_QUERY_API({
+                deptId: params.workShop,
+                holderType: '014',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.holder = data.data.records
+            })
+        }
+
+        potNoChange(row) {
+            const holderObj: (any) = this.holder.filter(it => it.holderNo === row.potNo);// eslint-disable-line
+            row.potCount = holderObj[0].holderBatch;
+            row.potAmount = holderObj[0].holderVolume;
         }
 
         addSplitTable() {
@@ -102,12 +126,12 @@
                 productLine: this.orderObj.productLine,
                 orderId: this.orderObj.id,
                 orderNo: this.orderObj.orderNo,
-                orderDate: this.orderObj.orderDate,
+                orderDate: this.orderObj.productDate,
                 materialCode: this.orderObj.materialCode,
                 materialName: this.orderObj.materialName,
                 planOutput: this.orderObj.planOutput,
                 outputUnit: this.orderObj.outputUnit,
-                productDate: '',
+                productDate: this.orderObj.productDate,
                 potNo: '',
                 potCount: '',
                 potAmount: '',
@@ -118,9 +142,15 @@
         }
 
         SubmitForm() {
-            for (const item of this.splitTable.filter(it => it.delFlag !== 1)) {
-                if (!item.productDate || !item.potNo || !item.potCount) {
+            const dataArr = this.splitTable.filter(it => it.delFlag !== 1)
+            for (let i = 0; i < dataArr.length; i++) {
+                if (!dataArr[i].productDate || !dataArr[i].potNo || !dataArr[i].potCount || !dataArr[i].potAmount || dataArr[i].potAmount === '0') {
                     this.$warningToast('请填写必填项');
+                    return false
+                }
+                console.log(dataArr[i + 1].productDate)
+                if (dataArr[i].productDate !== dataArr[i + 1].productDate) {
+                    this.$warningToast('同一订单不允许跨天生产');
                     return false
                 }
             }
@@ -159,6 +189,9 @@
             }
             return '';
         }
+    }
+    interface HolderObj {
+        holderNo?: string;
     }
     interface SubmitObj {
         deletes: string[];

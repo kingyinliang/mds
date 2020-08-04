@@ -3,7 +3,7 @@
         <template v-if="!loading">
             <main-navbar :update-password="updatePassword" :select-factory="SelectFactory" />
             <main-sidebar />
-            <div class="site-content__wrapper" :style="{ 'min-height': documentClientHeight + 'px' }">
+            <div class="site-content__wrapper SelfScrollbar" :style="{ 'min-height': documentClientHeight + 'px' }">
                 <main-content />
             </div>
             <scroll-top />
@@ -47,6 +47,14 @@ export default {
             },
             set(val) {
                 this.$store.commit('common/updateDocumentClientHeight', val);
+            }
+        },
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            },
+            set(val) {
+                this.$store.commit('common/updateMainClientHeight', val);
             }
         },
         sidebarFold: {
@@ -108,8 +116,10 @@ export default {
         // 重置窗口可视高度
         resetDocumentClientHeight() {
             this.documentClientHeight = document.documentElement['clientHeight'];
+            this.mainClientHeight = document.documentElement['clientHeight'] - 32 - 40 - 56;
             window.onresize = () => {
                 this.documentClientHeight = document.documentElement['clientHeight'];
+                this.mainClientHeight = document.documentElement['clientHeight'] - 32 - 40 - 56;
             };
         },
         // 获取当前管理员信息

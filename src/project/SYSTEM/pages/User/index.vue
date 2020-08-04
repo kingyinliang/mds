@@ -41,7 +41,7 @@
             </el-table>
             <el-pagination :current-page="dataForm.current" :page-sizes="[10, 20, 50]" :page-size="dataForm.size" layout="total, sizes, prev, pager, next, jumper" :total="dataForm.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
-        <el-dialog :title="`${selctUser.realName}（${selctUser.workNum}）角色选择`" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible" width="540px">
+        <el-dialog :title="`${selctUser.realName}（${selctUser.workNum}）角色选择`" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible" width="740px">
             <div class="uaer-detail">
                 <el-transfer
                     v-model="selctRoleId"
@@ -194,6 +194,10 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+    .uaer-detail {
+        ::v-deep .el-transfer-panel {/* stylelint-disable-line */
+            width: 300px;
+        }
+    }
 </style>

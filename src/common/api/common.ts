@@ -232,7 +232,11 @@ const COMMON_API = {
      */
     DEVICELIST_API: params => httpProxy('/sysDevice/query', 'POST', params),
     /**
-     * @property {string} DEVICELIST_API 设备管理新增
+     * @property {string} DEVICE_LISTBYTYPE_API 设备管理列表 - 不翻页
+     */
+    DEVICE_LISTBYTYPE_API: params => httpProxy('/sysDevice/listByType', 'POST', params),
+    /**
+     * @property {string} DEVICEADD_API 设备管理新增
      */
     DEVICEADD_API: params => httpProxy('/sysDevice/insert', 'POST', params),
     /**
@@ -240,21 +244,21 @@ const COMMON_API = {
      */
     DEVICECONFIG_API: params => httpProxy('/sysDevice/updateStatus', 'POST', params),
     /**
-     * @property {string} DEVICELIST_API 设备管理修改
+     * @property {string} DEVICEUPDATA_API 设备管理修改
      */
     DEVICEUPDATA_API: params => httpProxy('/sysDevice/update', 'POST', params),
     /**
-     * @property {string} DEVICELIST_API 设备管理删除
+     * @property {string} DEVICEDEL_API 设备管理删除
      */
     DEVICEDEL_API: params => httpProxy('/sysDevice/remove', 'POST', params),
     /**
-     * @property {string} ALLMATERIAL_API 物料管理拿全部物料
+     * @property {string} ALLMATERIAL_API 物料管理拿全部物料 模糊查询
      */
-    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'GET', params, false),
+    ALLMATERIAL_API: params => httpProxy('/sysMaterial/dropDown', 'POST', params, 'MDS', false),
     /**
      * @property {string} 根据编码查物料
      */
-    SEARCH_MATERIAL_API: params => httpProxy('/sysMaterial/queryListByType', 'POST', params, false),
+    SEARCH_MATERIAL_API: params => httpProxy('/sysMaterial/queryListByType', 'POST', params, 'MDS', false),
     /**
      * @property {string} SPECS_DROPDOWN_API 基础数据--规格管理-下拉列表
      */
@@ -410,7 +414,27 @@ const COMMON_API = {
     /**
      * @property {string} 特殊辅料属性 - 删除
      */
-    SPECIAL_MATERIAL_REMOVE_API: params => httpProxy('/ste/steSpeAccessories/remove', 'POST', params)
+    SPECIAL_MATERIAL_REMOVE_API: params => httpProxy('/ste/steSpeAccessories/remove', 'POST', params),
+    /**
+     * @property {string} DROPDOWN_UNIT_API 根据物料获取单位
+     */
+    DROPDOWN_UNIT_API: params => httpProxy('/sysMaterial/unit/dropDown', 'GET', params),
+    /**
+     * @property {string} CHECKWORK_QUERY_API 考勤管理-查询
+     */
+    CHECKWORK_QUERY_API: params => httpProxy('/checkWork/query', 'POST', params),
+    /**
+     * @property {string} CHECKWORK_SAVE_API 考勤管理-保存
+     */
+    CHECKWORK_SAVE_API: params => httpProxy('/checkWork/save', 'POST', params),
+    /**
+     * @property {string} CHECKWORK_SUBMIT_API 考勤管理-submit
+     */
+    CHECKWORK_SUBMIT_API: params => httpProxy('/checkWork/submit', 'POST', params),
+    /**
+     * @property {string} CHECKWORK_REJECT_API 考勤管理- reject
+     */
+    CHECKWORK_REJECT_API: params => httpProxy('/v1/checkWork/withdraw', 'POST', params)
 };
 
 export default COMMON_API;

@@ -1,57 +1,48 @@
 <template>
-    <el-col>
-        <div class="main">
-            <el-card>
-                <el-row>
-                    <el-form :inline="true" :model="dataForm" size="small" label-width="68px">
-                        <el-form-item>
-                            <el-input v-model="dataForm.workNum" placeholder="用户名" class="input-with-select">
-                                <el-select slot="prepend" v-model="dataForm.isPermis" placeholder="请选择" style="width: 90px;">
-                                    <el-option label="有权限" value="0" />
-                                    <el-option label="无权限" value="1" />
-                                </el-select>
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button v-if="isAuth('sys:user:userManagementList')" type="primary" size="small" @click="GetList(true)">
-                                查询
-                            </el-button>
-                            <el-button type="primary" size="small" @click="outPut()">
-                                导出
-                            </el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-row>
-                <el-row>
-                    <el-table ref="table1" class="orderTable" border header-row-class-name="tableHead" :data="UserList" tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
-                        <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
-                        <el-table-column label="用户名" width="200" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">
-                                {{ `${scope.row.realName}（${scope.row.workNum}）` }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="角色名称" :show-overflow-tooltip="true">
-                            <template slot-scope="scope">
-                                <el-button v-if="isAuth('sys:user:userManagementList')" style="padding: 0;" type="text" @click="updateRole(scope.row)">
-                                    <span v-for="(item, index) in scope.row.roleName" :key="index">{{ item.roleName + ' ' }}</span>
-                                    <span v-if="scope.row.roleName.length === 0">点击分配角色</span>
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="80" label="操作">
-                            <template slot-scope="scope">
-                                <el-button v-if="isAuth('sys:user:reset')" style="padding: 0;" type="text" @click="PasswordReset(scope.row.userId)">
-                                    重置密码
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-row>
-                <el-row>
-                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+    <div class="header_main">
+        <mds-card title="用户列表" :name="'user'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
+            <template slot="titleBtn">
+                <el-form :inline="true" :model="dataForm" size="small" label-width="68px" style="float: right; height: 32px; margin-bottom: 10px;">
+                    <el-form-item>
+                        <el-input v-model="dataForm.workNum" placeholder="用户名" class="input-with-select" size="small" style="width: 280px; margin-right: 16px;">
+                            <el-select slot="prepend" v-model="dataForm.isPermis" placeholder="请选择" style="width: 90px;">
+                                <el-option label="有权限" value="0" />
+                                <el-option label="无权限" value="1" />
+                            </el-select>
+                        </el-input>
+                        <el-button v-if="isAuth('sys:user:userManagementList')" type="primary" size="small" @click="GetList(true)">
+                            查询
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </template>
+            <el-table ref="table1" class="newTable" :height="mainClientHeight - 72 - 47" border header-row-class-name="tableHead" :data="UserList" tooltip-effect="dark" style="width: 100%;">
+                <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
+                <el-table-column label="用户名" width="200" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ `${scope.row.realName}（${scope.row.workNum}）` }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="角色名称" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-button v-if="isAuth('sys:user:userManagementList')" style="padding: 0;" type="text" @click="updateRole(scope.row)">
+                            <span v-for="(item, index) in scope.row.roleName" :key="index">{{ item.roleName + ' ' }}</span>
+                            <span v-if="scope.row.roleName.length === 0">点击分配角色</span>
+                        </el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column width="80" label="操作">
+                    <template slot-scope="scope">
+                        <el-button v-if="isAuth('sys:user:reset')" style="padding: 0;" type="text" @click="PasswordReset(scope.row.userId)">
+                            重置密码
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-row>
+                <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <el-dialog :title="`${selctUser.realName}（${selctUser.workNum}）角色选择`" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible" width="740px">
             <div class="uaer-detail">
                 <el-transfer
@@ -72,7 +63,7 @@
                 <el-button type="primary" size="small" @click="UpdateUserRole">确定</el-button>
             </span>
         </el-dialog>
-    </el-col>
+    </div>
 </template>
 
 <script>
@@ -101,18 +92,21 @@ export default {
             totalCount: 1
         };
     },
-    computed: {},
+    computed: {
+        mainClientHeight: {
+            get() {
+                return this.$store.state.common.mainClientHeight;
+            },
+            set(val) {
+                this.$store.commit('common/updateMainClientHeight', val);
+            }
+        }
+    },
     mounted() {
         this.GetList();
         this.getRoleList();
     },
     methods: {
-        outPut() {
-            this.$notify.error({ title: '错误', message: '敬请期待' });
-            return false;
-            // let that = this
-            // exportFile(`${REP_API.REPOUT_API}`, '用户表导出', that)
-        },
         updateRole(row) {
             this.selctUser = row;
             this.selctRoleId = [];
@@ -225,11 +219,10 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.uaer-detail {
-    .el-transfer-panel {
-        width: 300px;
+<style lang="scss" scoped>
+    .uaer-detail {
+        ::v-deep .el-transfer-panel {/* stylelint-disable-line */
+            width: 300px;
+        }
     }
-}
 </style>
-<style scoped></style>

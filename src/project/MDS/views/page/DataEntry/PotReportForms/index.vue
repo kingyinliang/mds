@@ -1,62 +1,66 @@
 <template>
     <div class="header_main">
-        <el-tabs v-model="activeName" class="NewDaatTtabs" type="border-card" @tab-click="setType">
+        <el-tabs v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" @tab-click="setType">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">半成品罐区报表</span>
-                <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />半成品罐区报表
-                    <el-button v-if="isAuth('ste:semi:reportFormExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
-                        导出
-                    </el-button>
-                </div>
-                <el-table :data="tableData1" :row-class-name="tableRowClassName" header-row-class-name="tableHead" border tooltip-effect="dark">
-                    <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
-                </el-table>
-                <el-row>
-                    <el-pagination :current-page="queryForm1.currPage" :page-sizes="[10, 20, 50]" :page-size="queryForm1.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="queryForm1.totalCount" @size-change="handleSizeChange1" @current-change="handleCurrentChange1" />
-                </el-row>
+                <mds-card title="半成品罐区报表" name="tableData1" :pack-up="false">
+                    <template slot="titleBtn">
+                        <el-button v-if="isAuth('ste:semi:reportFormExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
+                            导出
+                        </el-button>
+                    </template>
+                    <el-table :data="tableData1" class="newTable" :row-class-name="tableRowClassName" header-row-class-name="tableHead" border tooltip-effect="dark">
+                        <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :min-width="item.width || '160'" :formatter="item.formatter" :show-overflow-tooltip="true" />
+                    </el-table>
+                    <el-row>
+                        <el-pagination :current-page="queryForm1.currPage" :page-sizes="[10, 20, 50]" :page-size="queryForm1.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="queryForm1.totalCount" @size-change="handleSizeChange1" @current-change="handleCurrentChange1" />
+                    </el-row>
+                </mds-card>
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">成品罐区报表</span>
-                <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />成品罐区报表
-                    <el-button v-if="isAuth('ste:semi:reportFormExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
-                        导出
-                    </el-button>
-                </div>
-                <el-table :data="tableData2" :row-class-name="tableRowClassName" header-row-class-name="tableHead" border tooltip-effect="dark">
-                    <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
-                </el-table>
-                <el-row>
-                    <el-pagination :current-page="queryForm2.currPage" :page-sizes="[10, 20, 50]" :page-size="queryForm2.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="queryForm2.totalCount" @size-change="handleSizeChange2" @current-change="handleCurrentChange2" />
-                </el-row>
+                <mds-card title="成品罐区报表" name="tableData1" :pack-up="false">
+                    <template slot="titleBtn">
+                        <el-button v-if="isAuth('ste:semi:reportFormExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
+                            导出
+                        </el-button>
+                    </template>
+                    <el-table :data="tableData2" :row-class-name="tableRowClassName" class="newTable" header-row-class-name="tableHead" border tooltip-effect="dark">
+                        <el-table-column v-for="(item, index) in column" :key="index" :prop="item.prop" :label="item.label" :min-width="item.width || '160'" :formatter="item.formatter" :show-overflow-tooltip="true" />
+                    </el-table>
+                    <el-row>
+                        <el-pagination :current-page="queryForm2.currPage" :page-sizes="[10, 20, 50]" :page-size="queryForm2.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="queryForm2.totalCount" @size-change="handleSizeChange2" @current-change="handleCurrentChange2" />
+                    </el-row>
+                </mds-card>
             </el-tab-pane>
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">半成品库存汇总</span>
-                <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />半成品库存汇总
-                    <el-button v-if="isAuth('ste:semi:steStock')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
-                        导出
-                    </el-button>
-                </div>
-                <el-table :data="tableData3Top" :row-class-name="tableRowClassName" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-bottom: 10px;">
-                    <el-table-column v-for="(item, index) in column1" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
-                </el-table>
-                <el-table :data="tableData3Bottom" header-row-class-name="tableHead" border tooltip-effect="dark">
-                    <el-table-column v-for="(item, index) in column2" :key="index" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
-                </el-table>
+                <mds-card title="半成品库存汇总" name="tableData1" :pack-up="false">
+                    <template slot="titleBtn">
+                        <el-button v-if="isAuth('ste:semi:steStock')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
+                            导出
+                        </el-button>
+                    </template>
+                    <el-table :data="tableData3Top" :row-class-name="tableRowClassName" class="newTable" header-row-class-name="tableHead" border tooltip-effect="dark" style="margin-bottom: 10px;">
+                        <el-table-column v-for="(item, index) in column1" :key="index" :prop="item.prop" :label="item.label" :min-width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
+                    </el-table>
+                    <el-table :data="tableData3Bottom" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
+                        <el-table-column v-for="(item, index) in column2" :key="index" :prop="item.prop" :label="item.label" :min-width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
+                    </el-table>
+                </mds-card>
             </el-tab-pane>
             <el-tab-pane name="4">
                 <span slot="label" class="spanview">成品库存汇总</span>
-                <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />成品库存汇总
-                    <el-button v-if="isAuth('ste:semi:steStock')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
-                        导出
-                    </el-button>
-                </div>
-                <el-table :data="tableData4" :row-class-name="tableRowClassName" header-row-class-name="tableHead" border tooltip-effect="dark">
-                    <el-table-column v-for="(item, index) in column3" :key="index" :class="{ bg: item.classSt }" :prop="item.prop" :label="item.label" :width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
-                </el-table>
+                <mds-card title="成品库存汇总" name="tableData1" :pack-up="false">
+                    <template slot="titleBtn">
+                        <el-button v-if="isAuth('ste:semi:steStock')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
+                            导出
+                        </el-button>
+                    </template>
+                    <el-table :data="tableData4" :row-class-name="tableRowClassName" class="newTable" header-row-class-name="tableHead" border tooltip-effect="dark">
+                        <el-table-column v-for="(item, index) in column3" :key="index" :class="{ bg: item.classSt }" :prop="item.prop" :label="item.label" :min-width="item.width || ''" :formatter="item.formatter" :show-overflow-tooltip="true" />
+                    </el-table>
+                </mds-card>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -96,47 +100,47 @@ export default {
                 {
                     label: '车间',
                     prop: 'DEPT_NAME',
-                    width: ''
+                    width: '100'
                 },
                 {
                     label: '罐号',
                     prop: 'HOLDER_NO',
-                    width: ''
+                    width: '100'
                 },
                 {
                     label: '物料编码',
                     prop: 'MATERIAL_CODE',
-                    width: ''
+                    width: '120'
                 },
                 {
                     label: '物料名称',
                     prop: 'MATERIAL_NAME',
-                    width: ''
+                    width: '160'
                 },
                 {
                     label: '批次',
                     prop: 'BATCH',
-                    width: ''
+                    width: '110'
                 },
                 {
                     label: '数量',
                     prop: 'AMOUNT',
-                    width: ''
+                    width: '90'
                 },
                 {
                     label: '单位',
                     prop: 'UNIT',
-                    width: ''
+                    width: '70'
                 },
                 {
                     label: '存储时间（H）',
                     prop: 'STORAGE_DATE',
-                    width: '150px'
+                    width: '120'
                 },
                 {
                     label: '状态',
                     prop: 'HOLDER_STATUS',
-                    width: ''
+                    width: '80'
                 },
                 {
                     label: this.$store.state.common.PotReportForms.type === 'filterHolder' ? '满罐' : '搅罐',
@@ -146,12 +150,12 @@ export default {
                 {
                     label: '超期时间',
                     prop: 'OVERDUE_DATE',
-                    width: ''
+                    width: '160'
                 },
                 {
                     label: '是否超期',
                     prop: 'IS_OVERDUE',
-                    width: ''
+                    width: '80'
                 }
             ],
             column1: [
