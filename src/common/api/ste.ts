@@ -140,7 +140,11 @@ const STE_API = {
     /**
      * @property {string} STE_INSTORAGE_SAVE_API 杀菌车间-入库数据-保存
      */
-    STE_INSTORAGE_SAVE_API: params => httpProxy('/steInStorage/save', 'POST', params)
+    STE_INSTORAGE_SAVE_API: params => httpProxy('/steInStorage/save', 'POST', params),
+    /**
+     * @property {string} STE_INSTORAGE_SUBMIT_API 杀菌车间-入库数据-提交
+     */
+    STE_INSTORAGE_SUBMIT_API: params => httpProxy('/steInStorage/submit', 'POST', params)
 };
 
 export default STE_API;

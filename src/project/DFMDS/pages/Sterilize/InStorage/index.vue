@@ -2,7 +2,7 @@
     <div>
         <div class="header_main">
             <el-card class="searchCard">
-                <el-form :inline="true" :model="formHeader" size="small" label-width="100px" class="topform multi_row searchCard__form">
+                <el-form :inline="true" :model="formHeader" size="small" label-width="85px" class="topform multi_row searchCard__form">
                     <el-form-item label="生产车间：" class="must-fill">
                         <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;" clearable>
                             <el-option v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id" />
@@ -56,9 +56,9 @@
 
 
             <div v-show="searchCard">
-                <data-tabs>
+                <tie-tabs :tab-titles="tabTitles">
                     <template slot="1" slot-scope="data">
-                        <in-storage ref="inStorage" :is-redact="data.isRedact" :data="currentFormDataGroup" />
+                        <in-storage ref="inStorage" :is-redact="data.isRedact" :data="currentFormDataGroup" card-title="入库列表" :table-data="tableData" />
                     </template>
                     <template slot="2" slot-scope="data">
                         <exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
@@ -66,7 +66,7 @@
                     <template slot="3" slot-scope="data">
                         <text-record ref="textRecord" :is-redact="data.isRedact" />
                     </template>
-                </data-tabs>
+                </tie-tabs>
 
                 <redact-box>
                     <template slot="button">
@@ -120,13 +120,13 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, STE_API } from 'common/api/api';
     import { dateFormat } from 'utils/utils';
-    import DataTabs from './DataTabs.vue';
+    import TieTabs from './DataTabs.vue';
     import InStorage from './InStorage.vue'
 
     @Component({
         name: 'Instorage',
         components: {
-            DataTabs,
+            TieTabs,
             InStorage
         }
     })
@@ -154,7 +154,7 @@
         searchCard = true;
         currentFormDataGroup: CurrentDataTable[] = [] // 主 data
 
-        tabs = [
+        tabTitles = [
             {
                 label: '杀菌入库',
                 status: '未录入'
@@ -166,6 +166,34 @@
                 label: '文本记录'
             }
         ];
+
+        tableData=[
+            {
+                type: 'string',
+                prop: 'normalFlag',
+                label: '正常入库',
+                width: 100,
+                minWidth: 100,
+                content: []
+            },
+            {
+                type: 'string',
+                prop: 'packageLine',
+                label: '包装产线',
+                width: 100,
+                minWidth: 100,
+                content: []
+            }
+
+            // {
+            //     type: 'button',
+            //     prop: 'normalFlag',
+            //     label: '正常入库',
+            //     width: 100,
+            //     minWidth: 100,
+            //     content: []
+            // }
+        ]
 
         mounted() {
             if (!this.isAuth('steStgQuery')) {
@@ -243,17 +271,25 @@
         }
 
         savedDatas() {
-            // const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
-            // const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'semiReceive');
-            // const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
+            let exceptionDeleteTemp
+            let exceptionInsertTemp
+            let exceptionUpdateTemp
+            let instorageDeleteTemp
+            let instorageInsertTemp
+            let instorageUpdateTemp
 
-            return STE_API.STE_SEMI_SAVE_API({
-                // ...steSemi,
-                // steExceptionInsertDtos: excRequest.InsertDto,
-                // steExceptionUpdateDtos: excRequest.UpdateDto,
-                // steExceptionRemoveDto: excRequest.ids,
-                // steTextInsertDto: textRequest.pkgTextInsert,
-                // steTextUpdateDto: textRequest.pkgTextUpdate
+            STE_API.STE_INSTORAGE_SAVE_API({
+                exceptionDelete: exceptionDeleteTemp,
+                exceptionInsert: exceptionInsertTemp,
+                exceptionUpdate: exceptionUpdateTemp,
+                instorageDelete: instorageDeleteTemp,
+                instorageInsert: instorageInsertTemp,
+                instorageUpdate: instorageUpdateTemp,
+                steOrderUpdateDto: '',
+                textInsert: '',
+                textUpdate: ''
+            }).then(() => {
+                this.$successToast('保存成功');
             })
         }
 
