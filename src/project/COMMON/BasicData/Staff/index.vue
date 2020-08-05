@@ -14,10 +14,10 @@
                     <el-button v-if="isAuth('userQuery')" type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
                         查询
                     </el-button>
-                    <el-button v-if="isAuth('userEdit')" type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
+                    <el-button v-if="isAuth('userDel')" type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                         批量删除
                     </el-button>
-                    <el-button v-if="isAuth('userEdit')" type="primary" size="small" @click="addOrUpdateItem()">
+                    <el-button v-if="isAuth('userInsert')" type="primary" size="small" @click="addOrUpdateItem()">
                         增加
                     </el-button>
                 </div>

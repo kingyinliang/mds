@@ -10,10 +10,10 @@
                     <el-button v-if="isAuth('craftQuery')" type="primary" size="small" @click="visibleHightLevelQuery = true">
                         高级查询
                     </el-button>
-                    <el-button v-if="isAuth('craftEdit')" type="primary" size="small" style="margin-left: 10px;" @click="AddDate()">
+                    <el-button v-if="isAuth('craftInsert')" type="primary" size="small" style="margin-left: 10px;" @click="AddDate()">
                         新增
                     </el-button>
-                    <el-button v-if="isAuth('craftEdit')" type="danger" size="small" @click="remove">
+                    <el-button v-if="isAuth('craftDel')" type="danger" size="small" @click="remove">
                         批量删除
                     </el-button>
                 </div>
@@ -37,7 +37,7 @@
                 <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button v-if="isAuth('ckTimePost')" class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
+                        <el-button v-if="isAuth('craftEdit')" class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
                             编辑
                         </el-button>
                     </template>

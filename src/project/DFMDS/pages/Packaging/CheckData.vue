@@ -2,7 +2,7 @@
     <data-entry
         ref="dataEntry"
         redact-auth="pkgCkdEdit"
-        save-auth="pkgCkdEdit"
+        save-auth="pkgCkdSave"
         :order-status-show="false"
         :header-base="headerBase"
         :form-header="formHeader"

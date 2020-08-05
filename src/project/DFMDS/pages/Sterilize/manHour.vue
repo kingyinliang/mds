@@ -67,7 +67,7 @@
                         {{ isRedact ? '取消' : '编辑' }}
                     </el-button>
                     <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
-                        <el-button v-if="isAuth('steTimeEdit')" type="primary" size="small" @click="savedDatas()">
+                        <el-button v-if="isAuth('steTimeSave')" type="primary" size="small" @click="savedDatas()">
                             保存
                         </el-button>
                         <el-button v-if="isAuth('steTimeSubmit')" type="primary" size="small" @click="submitDatas()">

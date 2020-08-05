@@ -2,7 +2,7 @@
     <mds-card title="待处理数量(单位：KG)" :name="'productPeople'">
         <template slot="titleBtn">
             <div style="float: right;">
-                <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
+                <el-button v-if="isAuth('pkgPdInsert')" type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
                     新增
                 </el-button>
             </div>
@@ -58,7 +58,7 @@
             <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" min-width="160" />
             <el-table-column fixed="right" label="操作" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
+                    <el-button v-if="isAuth('pkgPdDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>

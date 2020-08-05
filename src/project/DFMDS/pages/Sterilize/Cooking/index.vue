@@ -37,7 +37,7 @@
                     <el-button v-if="isAuth('steCookQuery')" type="primary" size="small" @click="getDataList(true)">
                         查询
                     </el-button>
-                    <el-button v-if="isAuth('steCookEdit')" type="primary" size="small" @click="insertItem()">
+                    <el-button v-if="isAuth('steCookInsert')" type="primary" size="small" @click="insertItem()">
                         新增
                     </el-button>
                 </el-form-item>

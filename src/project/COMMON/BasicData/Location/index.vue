@@ -12,13 +12,13 @@
                                 <el-button v-if="isAuth('stgcQuery')" type="primary" size="small" :disabled="form.deptName.trim() === ''" @click="getQueryItemList()">
                                     查询
                                 </el-button>
-                                <el-button v-if="isAuth('stgcQuery')" type="primary" size="small" @click="isAdvanceSearchDialogShow = true">
+                                <el-button v-if="isAuth('stgcInsert')" type="primary" size="small" @click="isAdvanceSearchDialogShow = true">
                                     高级查询
                                 </el-button>
                                 <el-button v-if="isAuth('stgcEdit')" type="primary" size="small" @click="addOrUpdateItem()">
                                     新增
                                 </el-button>
-                                <el-button v-if="isAuth('stgcEdit')" type="danger" size="small" :disabled="itemList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
+                                <el-button v-if="isAuth('stgcDel')" type="danger" size="small" :disabled="itemList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
                                     批量删除
                                 </el-button>
                             </el-form-item>

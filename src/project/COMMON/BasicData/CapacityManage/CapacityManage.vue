@@ -13,10 +13,10 @@
                     <el-button v-if="isAuth('capacityQuery')" type="primary" size="small" @click="getData(false, true)">
                         查询
                     </el-button>
-                    <el-button v-if="isAuth('capacityEdit')" type="primary" size="small" @click="addOrupdate()">
+                    <el-button v-if="isAuth('capacityInsert')" type="primary" size="small" @click="addOrupdate()">
                         增加
                     </el-button>
-                    <el-button v-if="isAuth('capacityEdit')" type="danger" size="small" @click="remove()">
+                    <el-button v-if="isAuth('capacityDel')" type="danger" size="small" @click="remove()">
                         批量删除
                     </el-button>
                 </div>
