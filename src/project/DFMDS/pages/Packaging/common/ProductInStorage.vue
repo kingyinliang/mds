@@ -118,7 +118,7 @@
                     </el-table-column>
                     <el-table-column label="样品" prop="sampleCount" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!isRedact || !(scope.row.sampleStatus==='S'||scope.row.sampleStatus==='R'||scope.row.sampleStatus==='')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                            <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="sampleUnit" width="100">

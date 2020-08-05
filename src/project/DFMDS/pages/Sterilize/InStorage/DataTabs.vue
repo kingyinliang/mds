@@ -3,31 +3,29 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 17:11:48
  * @LastEditors: Telliex
- * @LastEditTime: 2020-08-03 18:24:14
+ * @LastEditTime: 2020-08-04 18:28:17
 -->
 <template>
-    <div>
-        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
-            <el-tab-pane v-for="(item, index) in tabs" :key="index" :name="setKey(index)">
-                <span v-if="item.status !== undefined" slot="label" class="spanview">
-                    <el-tooltip class="item" effect="dark" :content="getTagStatus(item.status)" placement="top-start">
-                        <span
-                            :style="{
-                                color: item.status === 'noPass' ? 'red' : item.status === 'R' ? 'red' : ''
-                            }"
-                        >{{ item.label }}</span>
-                    </el-tooltip>
-                </span>
-                <span v-if="item.status === undefined" slot="label" class="spanview">
-                    {{ item.label }}
-                </span>
-                <slot :name="setKey(index)" :isRedact="isRedact" />
-            </el-tab-pane>
-        </el-tabs>
-    </div>
+    <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
+        <el-tab-pane v-for="(item, index) in tabTitles" :key="index" :name="setKey(index)">
+            <span v-if="item.status !== undefined" slot="label" class="spanview">
+                <el-tooltip effect="dark" :content="getTagStatus(item.status)" placement="top-start">
+                    <span
+                        :style="{
+                            color: item.status === 'noPass' ? 'red' : item.status === 'R' ? 'red' : ''
+                        }"
+                    >{{ item.label }}</span>
+                </el-tooltip>
+            </span>
+            <span v-if="item.status === undefined" slot="label" class="spanview">
+                {{ item.label }}
+            </span>
+            <slot :name="setKey(index)" :isRedact="isRedact" />
+        </el-tab-pane>
+    </el-tabs>
 </template>
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
     // import { COMMON_API, STE_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
@@ -44,34 +42,24 @@
             // textRecord: HTMLFormElement;
         }
 
+        @Prop({ default: [] }) tabTitles: object[];
+
         activeName= '1'
         isRedact= false
-        tabs = [
-            {
-                label: '半成品领用',
-                status: '未录入'
-            },
-            {
-                label: '异常记录'
-            },
-            {
-                label: '文本记录'
-            }
-        ];
 
         mounted() {
            //
         }
 
         beforeLeave() {
-            //
+            // 切换标签之前的钩子，若返回 false 或者返回 Promise 且被 reject，则阻止切换。
         }
 
         tabClick() {
-            //
+            // tab 被选中时触发
         }
 
-        // 设置tabs的绑定
+        // 设置 tabs 的绑定
         setKey(index) {
             return (index + 1).toString();
         }
@@ -128,23 +116,6 @@
                 }
             }
     }
-    interface FormHeader{
-            workShop?: string;
-            inKjmDate?: string;
-            orderNo?: string;
-            material?: string;
-            changer?: string;
-            changed?: string;
-            status?: string;
-    }
-
-    interface OrderData {
-        textStage?: string;
-        factoryName?: string;
-        potNo?: string;
-        potOrder?: string;
-    }
-
 
 </script>
 
