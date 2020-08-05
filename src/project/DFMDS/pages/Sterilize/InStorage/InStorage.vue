@@ -1,17 +1,32 @@
 <template>
     <div>
-        <mds-card title="入库列表">
+        <mds-card :title="cardTitle">
             <template slot="titleBtn">
                 <el-button type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="btnAddOrEditDataRow">
                     新增
                 </el-button>
             </template>
 
-            <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" max-height="400px" :data="semiTable" size="small" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="min-height: 90px;" @cell-dblclick="btnAddOrEditDataRow">
+            <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" max-height="400px" :data="currentFormDataGroup" size="small" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="min-height: 90px;" @cell-dblclick="btnAddOrEditDataRow">
                 <el-table-column type="index" label="序号" width="50px" fixed />
-                <el-table-column prop="normalFlag" label="正常入库" width="100" :show-overflow-tooltip="true" />
-                <el-table-column prop="packageLine" label="包装产线" min-width="100" :show-overflow-tooltip="true" />
-                <el-table-column prop="packageOrderNo" label="包装订单" width="100" :show-overflow-tooltip="true" />
+                <template v-for="(item,index) in tableData">
+                    <el-table-column :key="index" :prop="item.prop" :label="item.label" :width="item.width" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            {{ scope.row.content }}
+                        </template>
+                    </el-table-column>
+                </template>
+
+                <el-table-column prop="packageLine" label="包装产线" min-width="100" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.packageLine }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="packageOrderNo" label="包装订单" width="100" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        {{ scope.row.packageOrderNo }}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="material" label="入库物料" min-width="120" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode }} {{ scope.row.materialName }}
@@ -25,7 +40,7 @@
                 <el-table-column prop="changed" label="操作时间" width="180" />
                 <el-table-column width="70" label="操作" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
+                        <el-button class="delBtn" type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -52,6 +67,8 @@
     })
     export default class SemiReceive extends Vue {
         @Prop({ default: false }) isRedact: boolean;
+        @Prop({ default: '' }) cardTitle: string;
+        @Prop({ default: [] }) tableData: object[];
 
         $refs: {
             inStorageDialogForAdd: HTMLFormElement;
@@ -59,7 +76,7 @@
         }
 
         semiAudit = [];
-        semiTable: SemiObj[] = [];
+        currentFormDataGroup: CurrentDataTable[] = [];
         orgSemiTable: SemiObj[] = [];
         visible=false
         isShowInStorageDialog=false
@@ -69,7 +86,7 @@
                 orderNo: formHeader.orderNo,
                 potOrderNo: formHeader.potOrderNo
             }).then(({ data }) => {
-                this.semiTable = data.data;
+                this.currentFormDataGroup = data.data;
                 this.orgSemiTable = data.data;
             })
         }
@@ -79,7 +96,7 @@
             const insertData = [];
             const updateData = [];
 
-            dataEntryData(formHeader, this.semiTable, this.orgSemiTable, delIds, insertData, updateData);
+            dataEntryData(formHeader, this.currentFormDataGroup, this.orgSemiTable, delIds, insertData, updateData);
 
             return {
                 orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
@@ -110,7 +127,7 @@
 
         dataPush(data: SemiObj) {
             this.visible = false;
-            this.semiTable.push(data); //测试
+            this.currentFormDataGroup.push(data); //测试
         }
 
         removeDataRow(row) {
@@ -139,6 +156,27 @@
         factoryName?: string;
         potNo?: string;
         potOrder?: string;
+    }
+
+    interface CurrentDataTable{
+        changed?: string;
+        changer?: string;
+        checkStatus?: string;
+        id?: string;
+        inStorageAmount?: number;
+        inStorageBatch?: string;
+        inStoragePot?: number;
+        materialCode?: string;
+        materialName?: string;
+        materialUnit?: string;
+        materialUnitName?: string;
+        normalFlag?: string;
+        orderId?: string;
+        orderNo?: string;
+        packageLine?: string;
+        packageOrderNo?: string;
+        productDate?: string;
+        workShop?: string;
     }
 </script>
 

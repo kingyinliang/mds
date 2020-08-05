@@ -112,7 +112,7 @@
                 containerTypeList: [],
                 containerTypeObject: {},
                 targetInfoList: [],
-                holderStatusObject: { E: '空', R: '投料', F: '发酵', U: '领用', C: '清洗' }
+                holderStatusObject: { E: '空罐', R: '投料', F: '发酵', U: '领用', C: '清洗' }
             };
         },
         computed: {
