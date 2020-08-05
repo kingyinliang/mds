@@ -368,6 +368,10 @@ const COMMON_API = {
      */
     ORDER_QUERY_API: params => httpProxy('/order/query', 'POST', params),
     /**
+     * @property {string} ORDER_LIST_QUERY_API
+     */
+    ORDER_LIST_QUERY_API: params => httpProxy('/order/list/query', 'POST', params),
+    /**
      * @property {string} OREDER_SYNC_API 计划管理--计划订单-订单同步（增量）
      */
     OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params),

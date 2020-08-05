@@ -172,17 +172,29 @@
                 type: 'string',
                 prop: 'normalFlag',
                 label: '正常入库',
-                width: 100,
                 minWidth: 100,
-                content: []
+                content: ['normalFlag']
             },
             {
                 type: 'string',
                 prop: 'packageLine',
                 label: '包装产线',
-                width: 100,
                 minWidth: 100,
-                content: []
+                content: ['packageLine']
+            },
+            {
+                type: 'string',
+                prop: 'packageOrderNo',
+                label: '包装订单',
+                minWidth: 100,
+                content: ['packageOrderNo']
+            },
+            {
+                type: 'string',
+                prop: 'material',
+                label: '入库物料"',
+                minWidth: 120,
+                content: ['materialCode', 'materialName']
             }
 
             // {

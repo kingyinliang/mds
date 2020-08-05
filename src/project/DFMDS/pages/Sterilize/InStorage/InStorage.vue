@@ -10,7 +10,7 @@
             <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" max-height="400px" :data="currentFormDataGroup" size="small" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="min-height: 90px;" @cell-dblclick="btnAddOrEditDataRow">
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <template v-for="(item,index) in tableData">
-                    <el-table-column :key="index" :prop="item.prop" :label="item.label" :width="item.width" :show-overflow-tooltip="true">
+                    <el-table-column :key="index" :prop="item.prop" :label="item.label" :width="item.width" :min-width="item.minWidth" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             {{ scope.row.content }}
                         </template>

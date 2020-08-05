@@ -129,7 +129,8 @@
                     task: [],
                     standard: [],
                     formula: [],
-                    bluePrint: []
+                    bluePrint: [],
+                    id: ''
                 },
                 checkRules: {
                     dataSetDescribe: [
@@ -143,10 +144,6 @@
         },
         methods: {
             init(obj, title) {
-                console.log('this.permissionItemList')
-                console.log(this.permissionItemList)
-                console.log('obj')
-                console.log(obj)
                 if (title === '复制数据集') {
                     this.dialogTitle = title + '(' + obj.groupCode + ')';
                 } else {
@@ -173,16 +170,16 @@
                     RDM_API.PERMISSION_QUERY_ITEMLIST_API({
                         groupCode: obj.groupCode
                     }).then(({ data }) => {
-
-
                         if (title === '编辑数据集') {
                             this.dataForm.dataSetCode = obj.groupCode
                             this.dataForm.dataSetDescribe = obj.remark
                             this.dataForm.dataSetOwner = obj.realName + ' ' + obj.workNum
+                            this.dataForm.id = obj.id
                         } else { // 复制
                             this.dataForm.dataSetCode = ''
                             this.dataForm.dataSetDescribe = obj.remark
                             this.dataForm.dataSetOwner = ''
+                            this.dataForm.id = ''
                         }
 
                         this.dataForm.project = []
@@ -267,7 +264,8 @@
                         task: [],
                         standard: [],
                         formula: [],
-                        bluePrint: []
+                        bluePrint: [],
+                        id: ''
                     }
             },
             submitDataForm() {
@@ -298,12 +296,21 @@
                             });
                         } else if (this.dialogTitle === '编辑数据集') {
                             console.log('提交修改')
+                            const tempOwner = this.dataForm.dataSetOwner.split(' ')
                             // 修改
-                            RDM_API.ROLE_INSERT_API({
-                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                                roleCode: this.dataForm.roleCode,
-                                roleName: this.dataForm.roleName,
-                                remark: this.dataForm.roleDescribe
+                            RDM_API.PERMISSION_DATASET_SAVE_API({
+                                id: this.dataForm.id,
+                                groupCode: this.dataForm.dataSetCode,
+                                permissionItemList: {
+                                    project: this.dataForm.project,
+                                    task: this.dataForm.task,
+                                    productsAndStrands: this.dataForm.standard,
+                                    recipe: this.dataForm.formula,
+                                    blueprint: this.dataForm.bluePrint
+                                },
+                                remark: this.dataForm.dataSetDescribe,
+                                realName: tempOwner[0],
+                                workNum: tempOwner[1]
                             }).then(() => {
                                 this.$successToast('编辑成功');
                                 this.$emit('refreshDataList');

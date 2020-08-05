@@ -19,33 +19,25 @@
                         </template>
                         <el-input v-model.number="currentFormDataGroup.dayUser" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                     </el-form-item>
-                    <el-form-item
-                        prop="dayShift"
-                    >
+                    <el-form-item prop="dayShift">
                         <template slot="label">
                             <span class="notNull">*</span>交接班：
                         </template>
                         <el-input v-model.number="currentFormDataGroup.dayShift" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                     </el-form-item>
-                    <el-form-item
-                        prop="dayMeeting"
-                    >
+                    <el-form-item prop="dayMeeting">
                         <template slot="label">
                             <span class="notNull">*</span>班前会：
                         </template>
                         <el-input v-model.number="currentFormDataGroup.dayMeeting" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                     </el-form-item>
-                    <el-form-item
-                        prop="dayPrepaired"
-                    >
+                    <el-form-item prop="dayPrepaired">
                         <template slot="label">
                             <span class="notNull">*</span>生产前准备：
                         </template>
                         <el-input v-model.number="currentFormDataGroup.dayPrepaired" placeholder="请输入" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                     </el-form-item>
-                    <el-form-item
-                        prop="dayClear"
-                    >
+                    <el-form-item prop="dayClear">
                         <template slot="label">
                             <span class="notNull">*</span>生产后清场：
                         </template>
@@ -164,9 +156,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 import { COMMON_API } from 'common/api/api';
-import _ from 'lodash';
 
 @Component({
     name: 'ReadyTimes'
@@ -176,7 +167,15 @@ export default class ReadyTimes extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact;
     @Prop({ type: String, default: '' }) status;
 
-    currentFormDataGroup: ReadyTimesData = {};
+    currentFormDataGroup: ReadyTimesData = {
+        classes: '',
+        dayQuality: null,
+        dayChange: null,
+        midQualiry: null,
+        midChange: null,
+        nightQuality: null,
+        nightChange: null
+    };
 
     orgFormDataGroup: ReadyTimesData= {} // 用于比对的原始 data object
     readAudit= []
@@ -185,9 +184,46 @@ export default class ReadyTimes extends Vue {
     readyTimesAudit = [];
     classesOptions: ClassesOptions[] = [];
 
+    @Watch('currentFormDataGroup.classes')
+    WatchClass() {
+        if (!this.currentFormDataGroup.dayQuality) {
+            this.currentFormDataGroup.dayQuality = 0;
+        }
+        if (!this.currentFormDataGroup.dayChange) {
+            this.currentFormDataGroup.dayChange = 0;
+        }
+        if (!this.currentFormDataGroup.midQualiry) {
+            this.currentFormDataGroup.midQualiry = 0;
+        }
+        if (!this.currentFormDataGroup.midChange) {
+            this.currentFormDataGroup.midChange = 0;
+        }
+        if (!this.currentFormDataGroup.nightQuality) {
+            this.currentFormDataGroup.nightQuality = 0;
+        }
+        if (!this.currentFormDataGroup.nightChange) {
+            this.currentFormDataGroup.nightChange = 0;
+        }
+    }
 
     init() {
-        this.currentFormDataGroup['classes'] = 'M';
+        this.currentFormDataGroup['classes'] = '';
+        this.getClassesList();
+    }
+
+    changeList(dataList) {
+        this.currentFormDataGroup = dataList;
+        if (dataList === null) {
+            this.currentFormDataGroup = {
+                classes: '',
+                dayQuality: null,
+                dayChange: null,
+                midQualiry: null,
+                midChange: null,
+                nightQuality: null,
+                nightChange: null
+            }
+        }
     }
 
     // 班次
@@ -198,22 +234,11 @@ export default class ReadyTimes extends Vue {
     }
 
     savedData(formHeader) {
-        let pkgTimeSheetInsertDto: ReadyTimesData = {};
-        let pkgTimeSheetUpdateDto: ReadyTimesData = {};
-        if (!_.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)) {
-            this.currentFormDataGroup.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            this.currentFormDataGroup.orderId = formHeader.id;
-            this.currentFormDataGroup.orderNo = formHeader.orderNo;
-            if (this.isNewForm) {
-                pkgTimeSheetInsertDto = this.returnDataGroup()
-            } else {
-                pkgTimeSheetUpdateDto = this.returnDataGroup()
-            }
-        }
-        return {
-            pkgTimeSheetInsertDto,
-            pkgTimeSheetUpdateDto
-        }
+        let pkgTimeSheetDto: ReadyTimesData = {};
+        this.currentFormDataGroup.orderNo = formHeader.orderNo;
+        this.currentFormDataGroup.orderId = formHeader.orderId;
+        pkgTimeSheetDto = this.returnDataGroup()
+        return pkgTimeSheetDto
     }
 
     returnDataGroup() {
@@ -276,7 +301,7 @@ export default class ReadyTimes extends Vue {
                 return false
             }
         }
-        if (this.currentFormDataGroup.classes === 'A' || this.currentFormDataGroup.classes === 'D') { // 中
+        if (this.currentFormDataGroup.classes === 'A') { // 中
             if (!this.currentFormDataGroup.midUser || !this.currentFormDataGroup.midShift || !this.currentFormDataGroup.midMeeting || !this.currentFormDataGroup.midPrepaired || !this.currentFormDataGroup.midClear) {
                 this.$warningToast('请填写准备时间必填项')
                 return false
@@ -293,6 +318,7 @@ export default class ReadyTimes extends Vue {
 }
 interface ReadyTimesData {
     checkStatus?: string; //审核状态(T:已同步，N:未录入、S:已保存、P:待审核、C:已审核、P:已过账、R:已退回)
+    checkStatusName?: string;
     classes?: string; // 班次
     dayChange?: number | null; // 白班切换时间
     dayClear?: number | null; // 生产后清场
