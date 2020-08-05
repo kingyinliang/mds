@@ -41,7 +41,7 @@
             </div>
         </mds-card>
         <audit-log :table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
-        <semi-receive-dialog v-if="visible" ref="SemiReceiveDialog" @success="dataPush" />
+        <semi-receive-dialog v-if="visible" ref="SemiReceiveDialog" :form-header="formHeader" @success="dataPush" />
     </div>
 </template>
 
@@ -61,6 +61,7 @@
 
         $refs: {SemiReceiveDialog: HTMLFormElement};
 
+        formHeader = {};
         semiAudit = [];
         semiTable: SemiObj[] = [];
         orgSemiTable: SemiObj[] = [];
@@ -74,6 +75,7 @@
         // }
 
         init(formHeader) {
+            this.formHeader = formHeader
             STE_API.STE_SEMI_LIST_API({
                 orderNo: formHeader.orderNo,
                 potOrderNo: formHeader.potOrderNo

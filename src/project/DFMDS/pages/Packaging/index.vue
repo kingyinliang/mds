@@ -56,7 +56,7 @@
                                                 生产数据
                                             </el-button>
                                             <el-button v-if="isAuth('pkgCkd')" :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goCheckData(item)">
-                                                检查数据
+                                                检测数据
                                             </el-button>
                                         </div>
                                     </div>
