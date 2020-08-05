@@ -6,8 +6,8 @@
                     新增
                 </el-button>
             </template>
-            <el-table header-row-class-name="tableHead" class="newTable" :data="steCookingConsume" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" fixed />
+            <el-table header-row-class-name="tableHead" class="newTable" :data="steCookingConsume" :row-class-name="rowDelFlag" border tooltip-effect="dark">
+                <el-table-column :index="index => getIndexMethod(index, steCookingConsume)" type="index" label="序号" width="50px" fixed />
                 <el-table-column min-width="140px">
                     <template slot="header">
                         <span class="notNull">* </span>煮料锅/混合罐号
@@ -62,7 +62,13 @@
                         <el-date-picker v-model="scope.row.addDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" size="small" style="width: 170px;" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="transferTank" label="转运罐号" min-width="100px" :show-overflow-tooltip="true" />
+                <el-table-column prop="transferTank" label="转运罐号" min-width="100px" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.transferTank" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                            <el-option v-for="(item, optIndex) in transferTank" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
+                        </el-select>
+                    </template>
+                </el-table-column>
                 <el-table-column label="备注">
                     <template slot-scope="scope">
                         <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
@@ -72,7 +78,7 @@
                 <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" />
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeDataRow(scope.row)">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeDataRow(scope.row, scope.$index)">
                             删除
                         </el-button>
                     </template>
@@ -81,7 +87,7 @@
         </mds-card>
         <mds-card title="辅料领用" name="table1" icon-bg="#ffbf00">
             <el-table header-row-class-name="tableHead" class="newTable" :data="steAccessoriesConsume" :span-method="spanMethod" :row-class-name="rowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column prop="rowIndex" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" min-width="160" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.useMaterialCode + ' ' + scope.row.useMaterialName }}
@@ -121,7 +127,9 @@
                 </el-table-column>
                 <el-table-column min-width="140" label="称取盒编号">
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.useBoxNo" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        <el-select v-model="scope.row.useBoxNo" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                            <el-option v-for="(item, optIndex) in useBoxNo" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" min-width="100">
@@ -141,7 +149,7 @@
                 </el-table-column>
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.splitFlag === 'Y'" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeDataRow(scope.row, 'steAccessoriesConsume')">
+                        <el-button v-if="scope.row.splitFlag === 'Y'" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeDataRow(scope.row, scope.$index, 'steAccessoriesConsume')">
                             删除
                         </el-button>
                     </template>
@@ -155,13 +163,15 @@
                 </el-button>
             </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="newSteAccessoriesConsume" :span-method="spanTwoMethod" :row-class-name="rowDelFlag" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table-column prop="rowIndex" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" width="140">
                     <template slot="header">
                         <span class="notNull">* </span>领用物料
                     </template>
                     <template slot-scope="scope">
-                        <el-input v-model.trim="scope.row.useMaterialCode" size="small" placeholder="请输入" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                        <el-select v-model="scope.row.useMaterialCode" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                            <el-option v-for="(iteam, index) in ACMaterial" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column prop="useUnit" label="单位" :show-overflow-tooltip="true" />
@@ -205,7 +215,7 @@
                 <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" />
                 <el-table-column width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeDataRow(scope.row, 'newSteAccessoriesConsume')">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeDataRow(scope.row, scope.$index, 'newSteAccessoriesConsume')">
                             删除
                         </el-button>
                     </template>
@@ -230,6 +240,9 @@
         spanOneArr = {};
         spanTwoArr = {};
         holderList = [];
+        transferTank = [];
+        useBoxNo = [];
+        ACMaterial = [];
         materialList = [];
         formHeader: OrderData = {};
         steCookingConsume: CCObj[] = [];
@@ -313,6 +326,7 @@
         init(formHeader) {
             this.formHeader = formHeader;
             this.getHolderList();
+            this.getMaterial();
             STE_API.STE_ACCE_LIST_API({
                 materialCode: formHeader.materialCode,
                 orderNo: formHeader.orderNo,
@@ -369,7 +383,7 @@
             this.$set(this.steCookingConsume, index, row)
         }
 
-        // 获取煮料锅/罐下拉
+        // 获取   煮料锅/罐下拉  煮料锅/罐下拉 转运罐号下拉  称取盒编号下拉
         getHolderList() {
             COMMON_API.HOLDER_DROPDOWN_API({
                 deptId: this.formHeader.workShop,
@@ -377,6 +391,28 @@
             }).then(({ data }) => {
                 this.holderList = data.data
             })
+            COMMON_API.HOLDER_QUERY_API({
+                deptId: this.formHeader.workShop,
+                holderType: '022',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.transferTank = data.data.records
+            })
+            COMMON_API.HOLDER_QUERY_API({
+                deptId: this.formHeader.workShop,
+                holderType: '023',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.useBoxNo = data.data.records
+            })
+        }
+
+        getMaterial() {
+            COMMON_API.DICTQUERY_API({ dictType: 'STE_SUP_MATERIAL' }).then(({ data }) => {
+                this.ACMaterial = data.data
+            });
         }
 
         // 新增  - 煮料锅/混合罐领用
@@ -426,15 +462,20 @@
         merge(tableData, Data) {
             const spanOneArr: number[] = [];
             let concatOne = 0;
+            let rowIndex = 1;
             tableData.forEach((item, index) => {
                 if (index === 0) {
+                    item.rowIndex = rowIndex
                     spanOneArr.push(1);
                 } else if (item.useMaterialCode === tableData[index - 1].useMaterialCode && item.useMaterialCode) {
+                    item.rowIndex = rowIndex
                     if (item.delFlag !== 1) {
                         spanOneArr[concatOne] += 1;
                     }
                     spanOneArr.push(0);
                 } else {
+                    rowIndex++;
+                    item.rowIndex = rowIndex
                     spanOneArr.push(1);
                     concatOne = index;
                 }
@@ -473,13 +514,19 @@
             return '';
         }
 
-        removeDataRow(row, str) {
+        removeDataRow(row, index, str) {
             this.$confirm('是否删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 row.delFlag = 1;
+                if (str) {
+                    this.$set(this[str], index, row)
+                } else {
+                    this.$set(this.steCookingConsume, index, row)
+                }
+
                 this.merge(this[str], str)
             });
         }

@@ -35,7 +35,9 @@
                 <el-input v-model="dataForm.fermentStorage" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="转运罐号：">
-                <el-input v-model="dataForm.tankNo" placeholder="手动输入" />
+                <el-select v-model="dataForm.tankNo" placeholder="请选择" size="small" clearable filterable style="width: 100%;">
+                    <el-option v-for="(item, optIndex) in transferTank" :key="optIndex" :label="item.holderName" :value="item.holderNo" />
+                </el-select>
             </el-form-item>
             <el-form-item label="备注：">
                 <el-input v-model="dataForm.remark" placeholder="手动输入" />
@@ -59,15 +61,18 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Component } from 'vue-property-decorator';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
     import { COMMON_API, ORDER_API } from 'common/api/api';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
 
     @Component
     export default class SemiReceiveDialog extends Vue {
+        @Prop({ default: { workShop: '' } }) formHeader: FormHeaderobj;
+
         $refs: {dataForm: HTMLFormElement};
         visible = false;
         potArr = [];
+        transferTank = [];
         materialArr: MaterialObj[] = [];
         dataRule = {
             stePotNo: [{ required: true, message: '生产锅号不能为空', trigger: 'blur' }],
@@ -99,10 +104,18 @@
             })
         }
 
-        init(data) {
+        init(Data) {
+            COMMON_API.HOLDER_QUERY_API({
+                deptId: this.formHeader.workShop,
+                holderType: '022',
+                size: 99999,
+                current: 1
+            }).then(({ data }) => {
+                this.transferTank = data.data.records
+            })
             this.visible = true;
-            if (data) {
-                this.dataForm = data
+            if (Data) {
+                this.dataForm = Data
             } else {
                 this.dataForm = {
                     id: '',
@@ -144,6 +157,9 @@
                 }
             })
         }
+    }
+    interface FormHeaderobj {
+        workShop?: string;
     }
     interface MaterialObj {
         matnr?: string;

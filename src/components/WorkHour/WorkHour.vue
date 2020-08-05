@@ -70,7 +70,7 @@
                         <span class="notNull">*</span>开始时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" width="140" :show-overflow-tooltip="true">
@@ -86,7 +86,7 @@
                         <span class="notNull">*</span>结束时间
                     </template>
                     <template slot-scope="scope">
-                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy.MM.dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
+                        <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" style="width: 180px;" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="verify_date" min-width="90" label="时长(H)" :show-overflow-tooltip="true">
@@ -153,6 +153,7 @@ import _ from 'lodash';
 export default class ProductPeople extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact;
     @Prop({ type: String, default: '' }) status;
+    // @Prop({ type: Array, default: () => [] }) userResponseDto;
 
     $refs: {
         officialWorker: HTMLFormElement;
@@ -181,23 +182,15 @@ export default class ProductPeople extends Vue {
     arrList = [];
 
     init() {
-        // PKG_API.PKG_USER_QUERY_API({
-        //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-        //     orderNo: formHeader.orderNo
-        // }).then(({ data }) => {
-        //     if (data.data !== null) {
-        //         this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data));
-        //         this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data));
-        //     }
-        // });
-        // 工序
+        this.getClassesList();
         this.getTeamList()
-
-        // 人员属性
         this.getUserTypeList()
-
-        // 获取组织结构树
         this.getTree()
+    }
+
+    changeList(dataList) {
+        this.currentFormDataGroup = JSON.parse(JSON.stringify(dataList));
+        this.orgFormDataGroup = JSON.parse(JSON.stringify(dataList));
     }
 
     // 班次
@@ -209,10 +202,9 @@ export default class ProductPeople extends Vue {
 
     // 保存
     savedData(formHeader) {
-        const countMan = this.actualNumber;
         const ids: string[] = [];
-        const pkgUserInsertDto: CurrentDataTable[] = [];
-        const pkgUserUpdateDto: CurrentDataTable[] = [];
+        const userInsertDto: CurrentDataTable[] = [];
+        const userUpdateDto: CurrentDataTable[] = [];
         this.currentFormDataGroup.forEach((item, index) => {
             if (item.delFlag === 1) {
                 if (item.id) {
@@ -221,20 +213,19 @@ export default class ProductPeople extends Vue {
             } else if (item.id) {
                 if (!_.isEqual(this.orgFormDataGroup[index], item)) {
                     item.orderId = formHeader.id;
-                    pkgUserUpdateDto.push(item)
+                    userUpdateDto.push(item)
                 }
             } else {
                 item.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                item.orderId = formHeader.id;
+                item.orderId = formHeader.orderId;
                 item.orderNo = formHeader.orderNo;
-                pkgUserInsertDto.push(item)
+                userInsertDto.push(item)
             }
         })
         return {
-            countMan,
             ids,
-            pkgUserInsertDto,
-            pkgUserUpdateDto
+            userInsertDto,
+            userUpdateDto
         }
     }
 
@@ -264,21 +255,6 @@ export default class ProductPeople extends Vue {
             this.orgTree = data.data;
         });
     }
-
-    // 获取产能
-    // getStandardManPower(formHeader: object) {
-    //     COMMON_API.CAPACITYLIST_API({
-    //         factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-    //         deptId: formHeader['productLine'],
-    //         queryDate: formHeader['productDate'],
-    //         current: 1,
-    //         size: 10
-    //     }).then(({ data }) => {
-    //         if (data.data.records.length !== 0) {
-    //             this.standardManpower = data.data.records[0]['standardManpower'];
-    //         }
-    //     });
-    // }
 
     // 新增
     addNewDataRow() {
@@ -397,26 +373,34 @@ export default class ProductPeople extends Vue {
 
     ruleSubmit() {
         let currentFormDataGroupNew: CurrentDataTable[] = [];
-        currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
+        currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag !== 1);
         if (currentFormDataGroupNew.length === 0) {
-            this.$warningToast('人员统计');
+            this.$warningToast('请录入人员统计数据');
             return false
         }
         for (const item of currentFormDataGroupNew) {
             if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || !item.dinner || Number(item.dinner) === 0 || !item.endDate || item.endDate === '') {
-                this.$warningToast('请填写人员统计必填项');
+                this.$warningToast('请录入人员统计必填项');
                 return false
             }
         }
         return true
     }
 
+    uniquenessClasses() {
+        const classesMap: string[] = [];
+        this.currentFormDataGroup.map((item: CurrentDataTable) => {
+            if (item.classes && item.delFlag !== 1) {
+                classesMap.push(item.classes);
+            }
+        })
+        return [...new Set(classesMap)];
+    }
+
     get actualNumber() {
         let scrapNum = 0
-        this.currentFormDataGroup.map((item: CurrentDataTable) => {
-            if (item.delFlag === 0) {
-                scrapNum = accAdd(scrapNum, item.userList.length);
-            }
+        this.currentFormDataGroup.filter(item => item.delFlag !== 1).map((item: CurrentDataTable) => {
+            scrapNum = accAdd(scrapNum, item.userList.length);
         });
         return scrapNum;
     }
