@@ -140,7 +140,19 @@ const STE_API = {
     /**
      * @property {string} STE_INSTORAGE_SAVE_API 杀菌车间-入库数据-保存
      */
-    STE_INSTORAGE_SAVE_API: params => httpProxy('/steInStorage/save', 'POST', params)
+    STE_INSTORAGE_SAVE_API: params => httpProxy('/steInStorage/save', 'POST', params),
+    /**
+     * @property {string} STE_TIMESHEET_QUERY_API 杀菌车间-杀菌工时-查询
+     */
+    STE_TIMESHEET_QUERY_API: params => httpProxy('/ste/steTimeSheet/query', 'POST', params),
+    /**
+     * @property {string} STE_TIMESHEET_SAVE_API 杀菌车间-杀菌工时-保存
+     */
+    STE_TIMESHEET_SAVE_API: params => httpProxy('/ste/steTimeSheet/save', 'POST', params),
+    /**
+     * @property {string} STE_TIMESHEET_SUBMIT_API 杀菌车间-杀菌工时-提交
+     */
+    STE_TIMESHEET_SUBMIT_API: params => httpProxy('/ste/steTimeSheet/submit', 'POST', params)
 };
 
 export default STE_API;
