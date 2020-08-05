@@ -28,10 +28,10 @@
                         >
                             查询
                         </el-button>
-                        <el-button v-if="isAuth('holderEdit')" type="primary" size="small" @click="addOrUpdateItem()">
+                        <el-button v-if="isAuth('holderInsert')" type="primary" size="small" @click="addOrUpdateItem()">
                             新增
                         </el-button>
-                        <el-button v-if="isAuth('holderEdit')" type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
+                        <el-button v-if="isAuth('holderDel')" type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                             批量删除
                         </el-button>
                     </el-form-item>

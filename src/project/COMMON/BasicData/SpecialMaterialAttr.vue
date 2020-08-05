@@ -10,10 +10,10 @@
                     <el-button v-if="isAuth('propQuery')" type="primary" size="small" @click="isSearchDialogShow = true">
                         高级查询
                     </el-button>
-                    <el-button v-if="isAuth('propEdit')" type="primary" size="small" @click="addorUpdateItem()">
+                    <el-button v-if="isAuth('propInsert')" type="primary" size="small" @click="addorUpdateItem()">
                         新增
                     </el-button>
-                    <el-button v-if="isAuth('propEdit')" type="danger" size="small" :disabled="dataList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
+                    <el-button v-if="isAuth('propDel')" type="danger" size="small" :disabled="dataList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
                         批量删除
                     </el-button>
                 </el-row>

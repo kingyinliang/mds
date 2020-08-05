@@ -6,7 +6,7 @@
                     <div class="org-card">
                         <h4 class="org-card_title">
                             <span>参数类型</span>
-                            <el-button v-if="isAuth('dictEdit')" type="text" icon="el-icon-plus" style="margin-right: 10px; color: #fff; font-weight: 800;" @click="addOrUpdateItem('type')" />
+                            <el-button v-if="isAuth('dictInsert')" type="text" icon="el-icon-plus" style="margin-right: 10px; color: #fff; font-weight: 800;" @click="addOrUpdateItem('type')" />
                         </h4>
                         <div class="search-bar">
                             <el-select v-model="factoryForSearch" size="small" clearable placeholder="请选择" @clear="stringForSearch===''?getParentItemsList(true):false">
@@ -37,7 +37,7 @@
                                 <el-table-column prop="dictName" :show-overflow-tooltip="true" label="参数类型名称" width="110" />
                                 <el-table-column width="96" label="操作" fixed="right">
                                     <template slot-scope="scope">
-                                        <el-button v-if="isAuth('dictEdit')" type="text" @click="removeItems(scope.row)">
+                                        <el-button v-if="isAuth('dictDel')" type="text" @click="removeItems(scope.row)">
                                             删除
                                         </el-button>
                                         <el-button v-if="isAuth('dictEdit')" type="text" @click="addOrUpdateItem('type', scope.row)">
@@ -57,7 +57,7 @@
                         </h4>
                         <h5>
                             <span><i class="title-icon" style="background: #487bff;" />详细参数</span>
-                            <el-button v-if="isFocusChild && isAuth('dictEdit')" size="small" type="primary" @click="addOrUpdateItem('param',tempParentRow)">
+                            <el-button v-if="isFocusChild && isAuth('dictInsert')" size="small" type="primary" @click="addOrUpdateItem('param',tempParentRow)">
                                 新增
                             </el-button>
                         </h5>
@@ -79,10 +79,10 @@
                                 <el-table-column prop="dictValue" :show-overflow-tooltip="true" label="参数名称" />
                                 <el-table-column v-if="targetParameterList.length!==0" width="96" label="操作" fixed="right">
                                     <template slot-scope="scope">
-                                        <el-button type="text" @click="removeItems(scope.row)">
+                                        <el-button v-if="isAuth('dictDel')" type="text" @click="removeItems(scope.row)">
                                             删除
                                         </el-button>
-                                        <el-button type="text" @click="addOrUpdateItem('param', tempParentRow, scope.row)">
+                                        <el-button v-if="isAuth('dictEdit')" type="text" @click="addOrUpdateItem('param', tempParentRow, scope.row)">
                                             编辑
                                         </el-button>
                                     </template>

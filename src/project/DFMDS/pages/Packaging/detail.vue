@@ -3,7 +3,7 @@
         <data-entry
             ref="dataEntry"
             redact-auth="pkgPdEdit"
-            save-auth="pkgPdEdit"
+            save-auth="pkgPdSave"
             submit-auth="pkgPdSubmit"
             :order-status="formHeader.orderStatusName"
             :header-base="headerBase"

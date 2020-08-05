@@ -77,7 +77,7 @@
                         <el-button v-if="!isRedact && isAuth('deptEdit')" type="primary" size="small" @click="savedatail">
                             保存
                         </el-button>
-                        <el-button v-if="!isRedact && isAuth('deptEdit')" type="danger" size="small" @click="deleteorg">
+                        <el-button v-if="!isRedact && isAuth('deptDel')" type="danger" size="small" @click="deleteorg">
                             删除
                         </el-button>
                     </div>
@@ -156,10 +156,10 @@
             </div>
         </el-dialog>
         <ul v-show="menuVisible" id="menu">
-            <li v-if="isAuth('deptEdit')" class="menuli" @click="menuClick(true, clickTreeNode.parentName, clickTreeNode.parentId)">
+            <li v-if="isAuth('deptInsert')" class="menuli" @click="menuClick(true, clickTreeNode.parentName, clickTreeNode.parentId)">
                 新增同级
             </li>
-            <li v-if="isAuth('deptEdit')" class="menuli" @click="menuClick(false, clickTreeNode.deptName, clickTreeNode.id)">
+            <li v-if="isAuth('deptInsert')" class="menuli" @click="menuClick(false, clickTreeNode.deptName, clickTreeNode.id)">
                 新增下级
             </li>
         </ul>

@@ -13,10 +13,10 @@
                     <el-button v-if="isAuth('devQuery')" type="primary" size="small" @click="getData(false, true)">
                         查询
                     </el-button>
-                    <el-button v-if="isAuth('devEdit')" type="primary" size="small" @click="addOrupdate()">
+                    <el-button v-if="isAuth('devInsert')" type="primary" size="small" @click="addOrupdate()">
                         增加
                     </el-button>
-                    <el-button v-if="isAuth('devEdit')" type="danger" size="small" @click="remove()">
+                    <el-button v-if="isAuth('devDel')" type="danger" size="small" @click="remove()">
                         批量删除
                     </el-button>
                 </div>

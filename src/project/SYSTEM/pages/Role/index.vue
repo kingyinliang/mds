@@ -7,7 +7,7 @@
                     <el-button v-if="isAuth('roleQuery')" type="primary" size="small" :disabled="controllableForm.username.trim()===''" @click="getItemsList(true,controllableForm.username)">
                         查询
                     </el-button>
-                    <el-button v-if="isAuth('roleEdit')" type="primary" size="small" @click="addOrUpdateItem()">
+                    <el-button v-if="isAuth('roleInsert')" type="primary" size="small" @click="addOrUpdateItem()">
                         新增
                     </el-button>
                 </div>
@@ -33,7 +33,7 @@
                         <el-button v-if="isAuth('roleEdit')" type="text" class="role__btn" @click="addOrUpdateItem(scope.row)">
                             修改角色
                         </el-button>
-                        <el-button v-if="isAuth('roleEdit')" type="text" class="role__btn" @click="removeItems(scope.row.id)">
+                        <el-button v-if="isAuth('roleDel')" type="text" class="role__btn" @click="removeItems(scope.row.id)">
                             删除角色
                         </el-button>
                     </template>
