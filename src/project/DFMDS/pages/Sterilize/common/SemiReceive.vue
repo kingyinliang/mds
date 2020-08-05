@@ -14,7 +14,7 @@
                     </div>
                 </div>
                 <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="semiTable" :row-class-name="rowDelFlag" :height="semiTable.length>4? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditRow">
-                    <el-table-column :index="indexMethod" type="index" label="序号" width="50px" fixed />
+                    <el-table-column :index="index => indexMethod(index, semiTable)" type="index" label="序号" width="50px" fixed />
                     <el-table-column prop="stePotNo" label="生产锅号" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="aiShelves" label="发酵罐领用" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="fermentPotNo" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
@@ -32,7 +32,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column width="70" label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index)">
                                 删除
                             </el-button>
                         </template>
@@ -66,9 +66,12 @@
         orgSemiTable: SemiObj[] = [];
         visible = false;
 
-        indexMethod(index) {
-            return index + 1
-        }
+        // indexMethod(tableIndex) {
+        //     const num = this.semiTable.reduce((total, currentValue: SemiObj, index) => {
+        //         return total + (tableIndex < index ? 0 : currentValue.delFlag === 1 ? 1 : 0)
+        //     }, 0);
+        //     return tableIndex + 1 - num
+        // }
 
         init(formHeader) {
             STE_API.STE_SEMI_LIST_API({
@@ -143,13 +146,14 @@
             this.visible = false;
         }
 
-        removeDataRow(row) {
+        removeDataRow(row, index) {
             this.$confirm('是否删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 row.delFlag = 1;
+                this.$set(this.semiTable, index, row)
             });
         }
 

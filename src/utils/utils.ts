@@ -613,3 +613,14 @@ export function recombineField(arr, field) {
     }
     return newField;
 }
+
+/**
+ * 除去删除的数据的序号位
+ *
+ */
+export function indexMethod(tableIndex, data): number {
+    const num = data.reduce((total, currentValue, index) => {
+        return total + (tableIndex < index ? 0 : currentValue.delFlag === 1 ? 1 : 0)
+    }, 0);
+    return tableIndex + 1 - num
+}
