@@ -618,7 +618,7 @@ export function recombineField(arr, field) {
  * 除去删除的数据的序号位
  *
  */
-export function indexMethod(tableIndex, data): number {
+export function getIndexMethod(tableIndex, data): number {
     const num = data.reduce((total, currentValue, index) => {
         return total + (tableIndex < index ? 0 : currentValue.delFlag === 1 ? 1 : 0)
     }, 0);
