@@ -3,7 +3,7 @@
         <mds-card title="人员统计" :name="'productPeople'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewDataRow()">
+                    <el-button v-if="isAuth('pkgPdInsert')" type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewDataRow()">
                         新增
                     </el-button>
                 </div>
@@ -111,7 +111,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="removeDataRow(scope.row)">
+                        <el-button v-if="isAuth('pkgPdDel')" class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="removeDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>

@@ -12,10 +12,10 @@
                     <el-button v-if="isAuth('stePkgQuery')" type="primary" size="small" @click="visibleHightLevelQuery = true">
                         高级查询
                     </el-button>
-                    <el-button v-if="isAuth('stePkgEdit')" type="primary" size="small" style="margin-left: 10px;" @click="AddDate()">
+                    <el-button v-if="isAuth('stePkgInsert')" type="primary" size="small" style="margin-left: 10px;" @click="AddDate()">
                         新增
                     </el-button>
-                    <el-button v-if="isAuth('stePkgEdit')" type="danger" size="small" @click="remove">
+                    <el-button v-if="isAuth('stePkgDel')" type="danger" size="small" @click="remove">
                         批量删除
                     </el-button>
                 </div>
