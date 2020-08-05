@@ -11,13 +11,13 @@
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
                     <el-input v-model="controllableForm.param" placeholder="工号/姓名" size="small" suffix-icon="el-icon-search" clearable style="width: 180px; margin-right: 16px;" @clear="getItemsList()" />
-                    <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
+                    <el-button v-if="isAuth('userQuery')" type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
                         查询
                     </el-button>
-                    <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
+                    <el-button v-if="isAuth('userDel')" type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                         批量删除
                     </el-button>
-                    <el-button type="primary" size="small" @click="addOrUpdateItem()">
+                    <el-button v-if="isAuth('userInsert')" type="primary" size="small" @click="addOrUpdateItem()">
                         增加
                     </el-button>
                 </div>
@@ -34,7 +34,7 @@
                     <el-table-column prop="created" label="创建日期" width="180" />
                     <el-table-column v-if="targetInfoList.length!==0" label="操作" fixed="right" width="65">
                         <template slot-scope="scope">
-                            <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
+                            <el-button v-if="isAuth('userEdit')" style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
                                 编辑
                             </el-button>
                         </template>
@@ -92,6 +92,10 @@ export default {
         },
         // 根据deptId查询用户
         showOrgDetail(data) {
+            if (!this.isAuth('userQuery')) {
+                this.$warningToast('无权限');
+                return false
+            }
             this.deptID = data.id;
             this.deptName = data.deptName;
             this.getItemsList();

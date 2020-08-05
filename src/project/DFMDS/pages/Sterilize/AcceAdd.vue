@@ -2,15 +2,14 @@
     <div>
         <data-entry
             ref="dataEntry"
-            :redact-auth="'pkg:order:update'"
-            :save-auth="'pkg:order:update'"
-            :submit-auth="'pkg:order:update'"
-            :order-status="formHeader.orderStatusName"
+            redact-auth="steAccEdit"
+            save-auth="steAccEdit"
+            submit-auth="steAccSubmit"
+            :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
             :submit-rules="submitRules"
-            :saved-rules="savedRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
             @success="getOrderList"
@@ -117,6 +116,10 @@
 
         // 查询表头
         getOrderList() {
+            if (!this.isAuth('steAccQuery')) {
+                this.$warningToast('无权限');
+                return false
+            }
             STE_API.STE_DETAIL_CRAFTHEADER_INFO_API({
                 potOrderNo: this.$store.state.sterilize.AcceAdd.potOrderMap.potOrderNo
             }).then(({ data }) => {
@@ -130,11 +133,7 @@
 
         // 提交校验
         submitRules(): Function[] {
-            return []
-        }
-
-        savedRules(): Function[] {
-            return [this.$refs.acceadd.ruleSaved]
+            return [this.$refs.acceadd.ruleSubmit, this.$refs.excRecord.ruleSubmit]
         }
 
         savedDatas() {

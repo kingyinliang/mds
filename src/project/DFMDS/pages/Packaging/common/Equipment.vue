@@ -3,7 +3,7 @@
         <mds-card title="运行情况" :name="'equipment'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewFirstDataRowThrottle">
+                    <el-button v-if="isAuth('pkgPdInsert')" type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewFirstDataRowThrottle">
                         新增
                     </el-button>
                 </div>
@@ -73,7 +73,7 @@
                     <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeFirstDataRow(scope.row)">
+                            <el-button v-if="isAuth('pkgPdDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeFirstDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -92,7 +92,7 @@
         <mds-card title="停机情况" :name="'equipmentStop'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addSecondDataRowThrottle">
+                    <el-button v-if="isAuth('pkgPdInsert')" type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addSecondDataRowThrottle">
                         新增
                     </el-button>
                 </div>
@@ -237,7 +237,7 @@
                     <el-table-column prop="changed" label="操作时间" min-width="180" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeSecondDataRow(scope.row)">
+                            <el-button v-if="isAuth('pkgPdDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeSecondDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>

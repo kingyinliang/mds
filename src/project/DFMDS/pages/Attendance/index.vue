@@ -19,19 +19,19 @@
                         </el-form-item>
                     </el-form>
 
-                    <el-button type="primary" size="small" :disabled="searchForm.workshop===''|| searchForm.productLine===''" @click="btnGetResult(searchForm)">
+                    <el-button v-if="isAuth('kqQuery')" type="primary" size="small" :disabled="searchForm.workshop===''|| searchForm.productLine===''" @click="btnGetResult(searchForm)">
                         查询
                     </el-button>
-                    <el-button type="primary" size="small" @click="btnAddDataRow">
+                    <el-button v-if="isAuth('kqInsert')" type="primary" size="small" @click="btnAddDataRow">
                         新增
                     </el-button>
-                    <el-button type="primary" size="small" :disabled="currentFormDataGroup.length===0||!checkSaveStatus" @click="btnSaveData">
+                    <el-button v-if="isAuth('kqSave')" type="primary" size="small" :disabled="currentFormDataGroup.length===0||!checkSaveStatus" @click="btnSaveData">
                         保存
                     </el-button>
                     <!-- <el-button type="danger" size="small" @click="btnReject">
                         撤回
                     </el-button>-->
-                    <el-button type="danger" size="small" :disabled="multipleSelection.length===0" @click="btnRemoveDataRow">
+                    <el-button v-if="isAuth('kqDel')" type="danger" size="small" :disabled="multipleSelection.length===0" @click="btnRemoveDataRow">
                         删除
                     </el-button>
                 </div>
@@ -171,14 +171,14 @@
                     </el-table-column>
                     <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disabled="scope.row.isRedact" @click="btnEditDataRow(scope.row)">
+                            <el-button v-if="isAuth('kqSave')" type="text" size="small" :disabled="scope.row.isRedact" @click="btnEditDataRow(scope.row)">
                                 编辑
                             </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-form>
-            <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            <el-pagination v-if="currentFormDataGroup.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
 
         <official-worker v-if="officialWorkerStatus" ref="officialWorker" @changeUser="changeUser" />

@@ -142,6 +142,10 @@ const STE_API = {
      */
     STE_INSTORAGE_SAVE_API: params => httpProxy('/steInStorage/save', 'POST', params),
     /**
+     * @property {string} STE_INSTORAGE_SUBMIT_API 杀菌车间-入库数据-提交
+     */
+    STE_INSTORAGE_SUBMIT_API: params => httpProxy('/steInStorage/submit', 'POST', params),
+    /**
      * @property {string} STE_TIMESHEET_QUERY_API 杀菌车间-杀菌工时-查询
      */
     STE_TIMESHEET_QUERY_API: params => httpProxy('/ste/steTimeSheet/query', 'POST', params),

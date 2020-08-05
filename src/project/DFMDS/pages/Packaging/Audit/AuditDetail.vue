@@ -182,7 +182,7 @@
                         <el-button type="primary" size="small" @click="goDetail">
                             详情
                         </el-button>
-                        <el-button v-if="formHeader.orderStatusName === '待审核'" type="primary" size="small" @click="pass()">
+                        <el-button v-if="formHeader.orderStatusName === '待审核' && isAuth('pkgCkPass')" type="primary" size="small" @click="pass()">
                             审核通过
                         </el-button>
                     </div>

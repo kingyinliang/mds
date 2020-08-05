@@ -10,7 +10,7 @@
                                 <el-option label="无权限" :value="0" />
                             </el-select>
                         </el-input>
-                        <el-button type="primary" size="small" @click="GetList(true)">
+                        <el-button v-if="isAuth('userQuery')" type="primary" size="small" @click="GetList(true)">
                             查询
                         </el-button>
                     </el-form-item>
@@ -33,7 +33,7 @@
                 </el-table-column>
                 <el-table-column width="80" label="操作">
                     <template slot-scope="scope">
-                        <el-button style="padding: 0;" type="text" @click="PasswordReset(scope.row.id)">
+                        <el-button v-if="isAuth('userReset')" style="padding: 0;" type="text" @click="PasswordReset(scope.row.id)">
                             重置密码
                         </el-button>
                     </template>

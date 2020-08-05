@@ -1,7 +1,7 @@
 <template>
     <el-dialog title="订单拆分" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="1200px" custom-class="dialog__class">
         <div style="text-align: right;">
-            <el-button type="primary" size="small" @click="addSplitTable">
+            <el-button v-if="isAuth('steSplit')" type="primary" size="small" @click="addSplitTable">
                 新增
             </el-button>
         </div>
@@ -59,7 +59,7 @@
             <el-table-column label="操作时间" width="100" prop="changed" :show-overflow-tooltip="true" />
             <el-table-column label="操作" fixed="right" align="center" width="80">
                 <template slot-scope="scope">
-                    <el-button type="text" icon="el-icon-delete" @click="removeDataRow(scope.row)">
+                    <el-button v-if="isAuth('steSplit')" type="text" icon="el-icon-delete" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>

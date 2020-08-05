@@ -10,13 +10,13 @@
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
                     <el-input v-model="deviceNo" size="small" placeholder="设备编号/设备描述" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" />
-                    <el-button type="primary" size="small" @click="getData(false, true)">
+                    <el-button v-if="isAuth('devQuery')" type="primary" size="small" @click="getData(false, true)">
                         查询
                     </el-button>
-                    <el-button type="primary" size="small" @click="addOrupdate()">
+                    <el-button v-if="isAuth('devInsert')" type="primary" size="small" @click="addOrupdate()">
                         增加
                     </el-button>
-                    <el-button type="danger" size="small" @click="remove()">
+                    <el-button v-if="isAuth('devDel')" type="danger" size="small" @click="remove()">
                         批量删除
                     </el-button>
                 </div>
@@ -28,10 +28,10 @@
                     <el-table-column prop="deviceName" label="设备描述" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="120">
                         <template slot-scope="scope">
-                            <el-button type="text" @click="addOrupdate(scope.row)">
+                            <el-button v-if="isAuth('devEdit')" type="text" @click="addOrupdate(scope.row)">
                                 编辑
                             </el-button>
-                            <el-button type="text" @click="setConfigDiglog(scope.row)">
+                            <el-button v-if="isAuth('devCfg')" type="text" @click="setConfigDiglog(scope.row)">
                                 {{ scope.row.deviceConfig === 'A' ? '取消配置' : '配置' }}
                             </el-button>
                         </template>
@@ -106,6 +106,10 @@
         }
 
         getData(row = false, first = false) {
+            if (!this.isAuth('devQuery')) {
+                this.$warningToast('无权限');
+                return false
+            }
             if (row) {
                 this.deptId = row['id'];
             }

@@ -1,6 +1,8 @@
 <template>
     <data-entry
         ref="dataEntry"
+        redact-auth="pkgCkdEdit"
+        save-auth="pkgCkdSave"
         :order-status-show="false"
         :header-base="headerBase"
         :form-header="formHeader"
@@ -129,6 +131,10 @@
         }
 
         initData() {
+            if (!this.isAuth('pkgCkdQuery')) {
+                this.$warningToast('无权限');
+                return false
+            }
             this.$refs.seal.init(this.formHeader)
             this.$refs.weight.init(this.formHeader)
             this.$refs.nr.init(this.formHeader)

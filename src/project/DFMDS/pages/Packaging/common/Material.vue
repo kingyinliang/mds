@@ -23,7 +23,7 @@
                 </el-table-column>
                 <el-table-column width="70">
                     <template slot-scope="scope">
-                        <el-button type="text" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3') || scope.row.materialStatus === '3'" @click="SplitDate('currentDataTable', scope.row, scope.$index)">
+                        <el-button v-if="isAuth('pkgPdInsert')" type="text" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3') || scope.row.materialStatus === '3'" @click="SplitDate('currentDataTable', scope.row, scope.$index)">
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
@@ -78,7 +78,7 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row, 'currentDataTable')">
+                        <el-button v-if="scope.row.splitFlag === 'Y' && isAuth('pkgPdDel')" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row, 'currentDataTable')">
                             删除
                         </el-button>
                     </template>
@@ -97,7 +97,7 @@
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column width="70">
                     <template slot-scope="scope">
-                        <el-button type="text" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS('materialS', scope.row, scope.$index)">
+                        <el-button v-if="isAuth('pkgPdInsert')" type="text" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS('materialS', scope.row, scope.$index)">
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>

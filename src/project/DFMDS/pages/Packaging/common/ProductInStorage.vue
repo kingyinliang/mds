@@ -3,7 +3,7 @@
         <mds-card :title="'生产入库'" :name="'productInStore'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewDataRow()">
+                    <el-button v-if="isAuth('pkgPdInsert')" type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewDataRow()">
                         新增
                     </el-button>
                 </div>
@@ -118,7 +118,7 @@
                     </el-table-column>
                     <el-table-column label="样品" prop="sampleCount" width="140">
                         <template slot-scope="scope">
-                            <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!isRedact || !(scope.row.sampleStatus==='S'||scope.row.sampleStatus==='R'||scope.row.sampleStatus==='')" clearable oninput="value=value.replace(/\D*/g,'')" />
+                            <el-input v-model.number="scope.row.sampleCount" size="small" placeholder="输入数量" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" clearable oninput="value=value.replace(/\D*/g,'')" />
                         </template>
                     </el-table-column>
                     <el-table-column label="单位" prop="sampleUnit" width="100">
@@ -167,7 +167,7 @@
                     </el-table-column>
                     <el-table-column width="70" fixed="right">
                         <template slot-scope="scope">
-                            <el-button v-if="!scope.row.original" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || !(scope.row.checkStatus==='S' || scope.row.checkStatus==='R' ||scope.row.checkStatus==='')" @click="removeDataRow(scope.row)">
+                            <el-button v-if="!scope.row.original && isAuth('pkgPdDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact || !(scope.row.checkStatus==='S' || scope.row.checkStatus==='R' ||scope.row.checkStatus==='')" @click="removeDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>

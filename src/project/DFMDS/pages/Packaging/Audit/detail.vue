@@ -31,7 +31,7 @@
                 <text-record ref="textRecord" :is-redact="data.isRedact" />
             </template>
             <template slot="custom_btn">
-                <el-button v-if="passBtn === 'D'" type="primary" size="small" class="sub-red" @click="pass()">
+                <el-button v-if="passBtn === 'D' && isAuth('pkgCkRefuse')" type="primary" size="small" class="sub-red" @click="pass()">
                     审核不通过
                 </el-button>
             </template>

@@ -4,7 +4,7 @@
             <i class="title-icon" />
             <span>密封度：Kpa</span>
             <div style="float: right;">
-                <el-button :disabled="!isRedact" type="primary" size="small" @click="sealAddRow()">
+                <el-button v-if="isAuth('pkgCkdInsert')" :disabled="!isRedact" type="primary" size="small" @click="sealAddRow()">
                     新增
                 </el-button>
             </div>
@@ -51,7 +51,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
-                    <el-button :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="sealDelRow(scope.row,scope.$index)">
+                    <el-button v-if="isAuth('pkgCkdDel')" :disabled="!isRedact" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="sealDelRow(scope.row,scope.$index)">
                         删除
                     </el-button>
                 </template>

@@ -424,6 +424,10 @@ const COMMON_API = {
      */
     DROPDOWN_UNIT_API: params => httpProxy('/sysMaterial/unit/dropDown', 'GET', params),
     /**
+     * @property {string} DROPDOWN_UNIT_API 基础数据-订单管理-列表查询（非分页）
+     */
+    ORDER_LIST_API: params => httpProxy('/order/list/query', 'POST', params),
+    /**
      * @property {string} CHECKWORK_QUERY_API 考勤管理-查询
      */
     CHECKWORK_QUERY_API: params => httpProxy('/checkWork/query', 'POST', params),

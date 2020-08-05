@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            query-auth="ckMatQuery"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             :custom-data="true"
@@ -20,10 +21,10 @@
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="pstngDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input v-model="headerText" placeholder="抬头文本" size="small" style="width: 190px; margin-right: 10px;" />
-                        <el-button type="primary" size="small" @click="getPass">
+                        <el-button v-if="isAuth('ckMatPost')" type="primary" size="small" @click="getPass">
                             过账
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-red" @click="refuseDialogShow(true)">
+                        <el-button v-if="isAuth('ckMatReturn')" type="primary" size="small" class="sub-red" @click="refuseDialogShow(true)">
                             退回
                         </el-button>
                     </div>
@@ -36,17 +37,17 @@
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="pstngDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input v-model="headerText" placeholder="抬头文本" size="small" style="width: 190px; margin-right: 10px;" />
-                        <el-button type="primary" size="small" class="sub-yellow" @click="refuseDialogShow(false)">
+                        <el-button v-if="isAuth('ckMatRevert')" type="primary" size="small" class="sub-yellow" @click="refuseDialogShow(false)">
                             反审
                         </el-button>
                     </div>
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
+                <el-button v-if="isAuth('ckMatEdit')" class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
                     {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
-                <el-button class="ra_btn" type="text" round size="mini" @click="getAuditLog(scope.row)">
+                <el-button v-if="isAuth('ckMatRecord')" class="ra_btn" type="text" round size="mini" @click="getAuditLog(scope.row)">
                     审核日志
                 </el-button>
             </template>
@@ -63,7 +64,7 @@
                 </el-button>
             </span>
         </el-dialog>
-        <el-dialog title="审核日志" width="600px" :close-on-click-modal="false" :visible.sync="isAuditLogDialogShow">
+        <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="isAuditLogDialogShow">
             <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
             <div slot="footer" class="dialog-footer" />
         </el-dialog>

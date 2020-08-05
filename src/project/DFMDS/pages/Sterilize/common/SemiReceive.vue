@@ -13,8 +13,8 @@
                         </el-button>
                     </div>
                 </div>
-                <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="semiTable" :row-class-name="rowDelFlag" :height="semiTable.length>4? '' : '196'" border tooltip-effect="dark">
-                    <el-table-column type="index" label="序号" width="50px" fixed />
+                <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" :data="semiTable" :row-class-name="rowDelFlag" :height="semiTable.length>4? '' : '196'" border tooltip-effect="dark" @row-dblclick="EditRow">
+                    <el-table-column :index="index => getIndexMethod(index, semiTable)" type="index" label="序号" width="50px" fixed />
                     <el-table-column prop="stePotNo" label="生产锅号" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="aiShelves" label="发酵罐领用" min-width="100" :show-overflow-tooltip="true" />
                     <el-table-column prop="fermentPotNo" label="发酵罐号" min-width="100" :show-overflow-tooltip="true" />
@@ -32,7 +32,7 @@
                     <el-table-column label="操作时间" prop="changed" width="180" />
                     <el-table-column width="70" label="操作" fixed="right">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
+                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row, scope.$index)">
                                 删除
                             </el-button>
                         </template>
@@ -66,6 +66,13 @@
         orgSemiTable: SemiObj[] = [];
         visible = false;
 
+        // indexMethod(tableIndex) {
+        //     const num = this.semiTable.reduce((total, currentValue: SemiObj, index) => {
+        //         return total + (tableIndex < index ? 0 : currentValue.delFlag === 1 ? 1 : 0)
+        //     }, 0);
+        //     return tableIndex + 1 - num
+        // }
+
         init(formHeader) {
             STE_API.STE_SEMI_LIST_API({
                 orderNo: formHeader.orderNo,
@@ -74,6 +81,16 @@
                 this.semiTable = data.data;
                 this.orgSemiTable = data.data;
             })
+        }
+
+        ruleSubmit(): boolean {
+            // for (const item of this.semiTable.filter(it => it.delFlag !== 1)) {
+            //     if (!item.realUseAmount) {
+            //         this.$warningToast('请填写半成品领用页签必填项');
+            //         return false
+            //     }
+            // }
+            return true
         }
 
         savedData(formHeader) {
@@ -108,18 +125,35 @@
             });
         }
 
-        dataPush(data: SemiObj) {
-            this.visible = false;
-            this.semiTable.push(data); //测试
+        EditRow(row) {
+            row.modifiedId = 1;
+            if (!this.isRedact) {
+                return false
+            }
+            this.visible = true;
+            this.$nextTick(() => {
+                this.$refs.SemiReceiveDialog.init(row)
+            });
         }
 
-        removeDataRow(row) {
+        dataPush(data: SemiObj) {
+            if (data.modifiedId === 1) {
+                this.semiTable.filter(it => it.modifiedId === 1)[0] = data;
+                this.semiTable.filter(it => it.modifiedId === 1)[0].modifiedId = 0
+            } else {
+                this.semiTable.push(data);
+            }
+            this.visible = false;
+        }
+
+        removeDataRow(row, index) {
             this.$confirm('是否删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 row.delFlag = 1;
+                this.$set(this.semiTable, index, row)
             });
         }
 
@@ -132,6 +166,7 @@
     }
     interface SemiObj {
         delFlag?: number;
+        modifiedId?: number;
         id?: string;
         orderId?: string;
         factory?: string;

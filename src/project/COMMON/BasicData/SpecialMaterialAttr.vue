@@ -4,16 +4,16 @@
             <template slot="titleBtn">
                 <el-row style="margin-bottom: 5px; text-align: right;">
                     <el-input v-model="form.useMaterial" size="small" placeholder="领用物料" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" clearable @clear="getDataList()" @keyup.enter.native="getDataList()" />
-                    <el-button type="primary" size="small" @click="getDataList(true)">
+                    <el-button v-if="isAuth('propQuery')" type="primary" size="small" @click="getDataList(true)">
                         查询
                     </el-button>
-                    <el-button type="primary" size="small" @click="isSearchDialogShow = true">
+                    <el-button v-if="isAuth('propQuery')" type="primary" size="small" @click="isSearchDialogShow = true">
                         高级查询
                     </el-button>
-                    <el-button type="primary" size="small" @click="addorUpdateItem()">
+                    <el-button v-if="isAuth('propInsert')" type="primary" size="small" @click="addorUpdateItem()">
                         新增
                     </el-button>
-                    <el-button type="danger" size="small" :disabled="dataList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
+                    <el-button v-if="isAuth('propDel')" type="danger" size="small" :disabled="dataList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
                         批量删除
                     </el-button>
                 </el-row>
@@ -39,7 +39,7 @@
                 <el-table-column min-width="150" label="操作时间" prop="changed" />
                 <el-table-column width="60" label="操作">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="addorUpdateItem(scope.row)">
+                        <el-button v-if="isAuth('propEdit')" type="text" size="small" @click="addorUpdateItem(scope.row)">
                             编辑
                         </el-button>
                     </template>

@@ -179,10 +179,10 @@
                         <span>生管审核</span>
                     </div>
                     <div class="redact_btn">
-                        <el-button type="primary" size="small" @click="goDetail">
+                        <el-button v-if="isAuth('steCkRefuse')" type="primary" size="small" @click="goDetail">
                             详情
                         </el-button>
-                        <el-button v-if="formHeader.orderStatusName === '待审核'" type="primary" size="small" @click="pass()">
+                        <el-button v-if="formHeader.orderStatusName === '待审核' && isAuth('steCkPass')" type="primary" size="small" @click="pass()">
                             审核通过
                         </el-button>
                     </div>

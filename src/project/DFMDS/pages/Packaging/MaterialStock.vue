@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            query-auth="pkgPackQuery"
             :factory-type="1"
             :query-form-data="queryFormData"
             :show-table="true"
@@ -17,13 +18,13 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="getDetailLog(scope.row, true)">
+                <el-button v-if="isAuth('pkgPackQuery')" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="getDetailLog(scope.row, true)">
                     明细
                 </el-button>
-                <el-button class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="changeTransferLine(scope.row)">
+                <el-button v-if="isAuth('pkgPackTrans')" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="changeTransferLine(scope.row)">
                     转线
                 </el-button>
-                <el-button class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="doAdjust(scope.row)">
+                <el-button v-if="isAuth('pkgPackAdjust')" class="ra_btn" type="text" round size="mini" style="margin-left: 0;" @click="doAdjust(scope.row)">
                     调整
                 </el-button>
             </template>

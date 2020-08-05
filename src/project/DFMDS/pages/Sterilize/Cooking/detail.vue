@@ -87,7 +87,7 @@
         <mds-card v-if="dissolutionPhase" title="溶解罐领用" name="dissolvingTank">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!isRedact" @click="insertItem()">
+                    <el-button v-if="isAuth('steCookMxInsert')" type="primary" size="small" :disabled="!isRedact" @click="insertItem()">
                         新增
                     </el-button>
                 </div>
@@ -129,7 +129,7 @@
                 <el-table-column label="操作时间" min-width="160" prop="changed" />
                 <el-table-column label="操作" min-width="70">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataDissRow(scope.row)">
+                        <el-button v-if="isAuth('steCookMxDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataDissRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -147,7 +147,7 @@
                 <el-table-column label="单位" min-width="55" prop="useUnit" />
                 <el-table-column min-width="55">
                     <template slot-scope="scope">
-                        <el-button type="text" :disabled="!isRedact" @click="accSplit(scope.row, scope.$index)">
+                        <el-button v-if="isAuth('steCookMxInsert')" type="text" :disabled="!isRedact" @click="accSplit(scope.row, scope.$index)">
                             <i class="iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
@@ -177,7 +177,7 @@
                 <el-table-column label="操作时间" min-width="160" prop="changed" />
                 <el-table-column label="操作" min-width="70">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" :disabled="scope.row.splitFlag === 'N' || !isRedact" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.row)">
+                        <el-button v-if="isAuth('steCookMxDel')" class="delBtn" :disabled="scope.row.splitFlag === 'N' || !isRedact" type="text" icon="el-icon-delete" size="mini" @click="removeDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -187,18 +187,18 @@
         <redact-box>
             <template slot="button">
                 <template v-if="formHeaders.potStatus === 'M'">
-                    <el-button type="primary" size="small" @click="rollBack()">
+                    <el-button v-if="isAuth('steCookMxRevert')" type="primary" size="small" @click="rollBack()">
                         撤回
                     </el-button>
                 </template>
                 <template v-if="formHeaders.potStatus !== 'M'">
-                    <el-button v-if="formHeaders.potStatus !== 'M'" type="primary" size="small" @click="setRedact">
+                    <el-button v-if="formHeaders.potStatus !== 'M' && isAuth('steCookMxEdit')" type="primary" size="small" @click="setRedact">
                         {{ isRedact ? '取消' : '编辑' }}
                     </el-button>
-                    <el-button v-if="isRedact" type="primary" size="small" @click="saveDatas()">
+                    <el-button v-if="isRedact && isAuth('steCookMxSave')" type="primary" size="small" @click="saveDatas()">
                         保存
                     </el-button>
-                    <el-button type="primary" size="small" @click="submitDatas()">
+                    <el-button v-if="isAuth('steCookMxSumbit')" type="primary" size="small" @click="submitDatas()">
                         提交
                     </el-button>
                 </template>
@@ -237,6 +237,10 @@ export default class CookingDetail extends Vue {
     dissolutionPhase = true;
 
     mounted() {
+        if (!this.isAuth('steCookMxQuery')) {
+            this.$warningToast('无权限');
+            return false
+        }
         this.getWorkShop();
         this.getHolderNumber();
         this.formHeaders = this.$store.state.sterilize.Cooking;

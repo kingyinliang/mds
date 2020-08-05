@@ -107,6 +107,7 @@
                 v-if="showTable"
                 ref="table"
                 class="newTable"
+                :class="tableClass"
                 :data="tableData"
                 :height="tableHeightSet"
                 :span-method="spanMethod"
@@ -146,6 +147,10 @@
         name: 'QueryTable',
         components: {},
         props: {
+            tableClass: {
+                type: String,
+                default: 'newTable'
+            },
             factoryType: {
                 type: Number,
                 default: 0
