@@ -1,57 +1,41 @@
-<template>
-    <div>
-        <mds-card :title="cardTitle">
-            <template slot="titleBtn">
-                <el-button type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="btnAddOrEditDataRow">
-                    新增
-                </el-button>
-            </template>
-
-            <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" max-height="400px" :data="currentFormDataGroup" size="small" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="min-height: 90px;" @cell-dblclick="btnAddOrEditDataRow">
-                <el-table-column type="index" label="序号" width="50px" fixed />
-                <template v-for="(item,index) in tableData">
-                    <el-table-column :key="index" :prop="item.prop" :label="item.label" :width="item.width" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            {{ scope.row.content }}
-                        </template>
-                    </el-table-column>
-                </template>
-
-                <el-table-column prop="packageLine" label="包装产线" min-width="100" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.packageLine }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="packageOrderNo" label="包装订单" width="100" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.packageOrderNo }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="material" label="入库物料" min-width="120" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="materialUnit" label="单位" width="70" :show-overflow-tooltip="true" />
-                <el-table-column prop="inStorageAmount" label="入库数量" width="100" :show-overflow-tooltip="true" />
-                <el-table-column prop="inStorageBatch" label="入库批次" width="100" :show-overflow-tooltip="true" />
-                <el-table-column prop="remark" label="备注" width="100" :show-overflow-tooltip="true" />
-                <el-table-column prop="changer" label="操作人" width="140" />
-                <el-table-column prop="changed" label="操作时间" width="180" />
-                <el-table-column width="70" label="操作" fixed="right">
-                    <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </mds-card>
-        <audit-log :table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
-        <in-storage-dialog ref="inStorageDialogForAdd" width="40%" title="新增入库" />
-        <in-storage-dialog ref="inStorageDialogForEdit" width="40%" title="编辑入库" />
-        <!-- v-if="isShowInStorageDialog" -->
-    </div>
+<template lang="pug">
+div
+    mds-card(:title="cardTitle")
+        template(slot="titleBtn")
+            el-button(type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="btnAddOrEditDataRow") 新增
+        el-table.newTable.semi__pot_table(header-row-class-name="tableHead" max-height="400px" :data="currentFormDataGroup" size="small" :row-class-name="rowDelFlag" border="" tooltip-effect="dark" style="min-height: 90px;" @cell-dblclick="btnAddOrEditDataRow")
+            el-table-column(type="index" label="序号" width="50px" fixed)
+            el-table-column(
+                v-for="(item,index) in tableData"
+                :key="index"
+                :prop="item.prop"
+                :label="item.label"
+                :min-width="item.minWidth"
+                :show-overflow-tooltip="true"
+                )
+                template(slot-scope="scope")
+                each val in item.content
+                    | {{ scope.row[val] }}
+            //- el-table-column(prop="normalFlag" label="正常入库" width="100" :show-overflow-tooltip="true")
+            //-     template(slot-scope="scope") {{ scope.row.normalFlag }}
+            //- el-table-column(prop="packageLine" label="包装产线" min-width="100" :show-overflow-tooltip="true")
+            //-     template(slot-scope="scope")
+            //- el-table-column(prop="packageOrderNo" label="包装订单" width="100" :show-overflow-tooltip="true")
+            //-     template(slot-scope="scope")
+            el-table-column(prop="material" label="入库物料" min-width="120" :show-overflow-tooltip="true")
+                template(slot-scope="scope") {{ scope.row.materialCode }} {{ scope.row.materialName }}
+            el-table-column(prop="materialUnit" label="单位" width="70" :show-overflow-tooltip="true")
+            el-table-column(prop="inStorageAmount" label="入库数量" width="100" :show-overflow-tooltip="true")
+            el-table-column(prop="inStorageBatch" label="入库批次" width="100" :show-overflow-tooltip="true")
+            el-table-column(prop="remark" label="备注" width="100" :show-overflow-tooltip="true")
+            el-table-column(prop="changer" label="操作人" width="140")
+            el-table-column(prop="changed" label="操作时间" width="180")
+            el-table-column(width="70" label="操作" fixed="right")
+                template(slot-scope="scope")
+                    el-button.delBtn(type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)") 删除
+    audit-log(:table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
+    in-storage-dialog(ref="inStorageDialogForAdd" width="40%" title="新增入库")
+    in-storage-dialog(ref="inStorageDialogForEdit" width="40%" title="编辑入库")
 </template>
 
 <script lang="ts">
@@ -77,6 +61,7 @@
 
         semiAudit = [];
         currentFormDataGroup: CurrentDataTable[] = [];
+
         orgSemiTable: SemiObj[] = [];
         visible=false
         isShowInStorageDialog=false
