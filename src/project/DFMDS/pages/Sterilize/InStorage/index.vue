@@ -59,8 +59,8 @@
                     <template slot="1">
                         <in-storage ref="inStorage" :is-redact="isRedact" card-title="入库列表" :table-data="tableData" :order-info="orderData" :pkg-work-shop-list="pkgWorkShopList" />
                     </template>
-                    <template slot="2" slot-scope="data">
-                        <exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
+                    <template slot="2">
+                        <exc-record ref="excRecord" :is-redact="isRedact" :form-header="formHeader" />
                     </template>
                     <template slot="3">
                         <text-record ref="textRecord" :is-redact="isRedact" />
@@ -97,13 +97,16 @@
     import { dateFormat } from 'utils/utils';
     import TieTabs from './DataTabs.vue';
     import InStorage from './InStorage.vue'
+    import ExcRecord from './ExcRecord.vue' // tab3 文本记录
     import TextRecord from './TextRecord.vue' // tab3 文本记录
+
 
     @Component({
         name: 'Instorage',
         components: {
             TieTabs,
             InStorage,
+            ExcRecord,
             TextRecord
         }
     })
@@ -125,7 +128,13 @@
             status: '',
             outputUnit: '',
             outputUnitName: '',
-            workShopName: ''
+            workShopName: '',
+            factory: '',
+            orderId: '',
+            orderStatus: '',
+            orderType: '',
+            productDate: '',
+            productLine: ''
         }
 
         orderData: OptionsInList={}
@@ -321,6 +330,12 @@
                 this.formHeader.materialName = ''
                 this.formHeader.outputUnit = ''
                 this.formHeader.outputUnitName = ''
+                this.formHeader.factory = ''
+                this.formHeader.orderId = ''
+                this.formHeader.orderStatus = ''
+                this.formHeader.orderType = ''
+                this.formHeader.productDate = ''
+                this.formHeader.productLine = ''
                 return false
             }
             this.orderData = this.orderNoList.filter(item => item.orderNo === val)[0]
@@ -333,6 +348,14 @@
             this.formHeader.outputUnit = this.orderData.outputUnit
             this.formHeader.outputUnitName = this.orderData.outputUnitName
             this.formHeader.workShopName = this.orderData.workShopName
+            this.formHeader.factory = this.orderData.factory
+            this.formHeader.orderId = this.orderData.id
+            this.formHeader.orderStatus = this.orderData.orderStatus
+            this.formHeader.orderType = this.orderData.orderType
+            this.formHeader.productDate = this.orderData.productDate
+            this.formHeader.productLine = this.orderData.productLine
+
+
         }
 
         // 查询包装产线
@@ -374,27 +397,24 @@
                     this.$refs.inStorage.init(data.data, this.formHeader)
                 }
                 this.getPkgWorkShopList()
+                this.$refs.excRecord.init(this.formHeader, 'instorage');
                 this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize');
             })
         }
 
         savedDatas() {
-            let exceptionDeleteTemp
-            let exceptionInsertTemp
-            let exceptionUpdateTemp
-            let instorageDeleteTemp
-            let instorageInsertTemp
-            let instorageUpdateTemp
-            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
+            const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'instorage');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader.orderNo, 'sterilize');
 
             STE_API.STE_INSTORAGE_SAVE_API({
-                exceptionDelete: exceptionDeleteTemp,
-                exceptionInsert: exceptionInsertTemp,
-                exceptionUpdate: exceptionUpdateTemp,
-                instorageDelete: instorageDeleteTemp,
-                instorageInsert: instorageInsertTemp,
-                instorageUpdate: instorageUpdateTemp,
-                steOrderUpdateDto: '',
+                exceptionDelete: inStorageRequest.ids,
+                exceptionInsert: inStorageRequest.steControlInsertDto,
+                exceptionUpdate: inStorageRequest.steControlUpdateDto,
+                instorageDelete: excRequest.ids,
+                instorageInsert: excRequest.UpdateDto,
+                instorageUpdate: excRequest.UpdateDto,
+                steOrderUpdateDto: this.formHeader,
                 textInsert: textRequest.pkgTextInsert,
                 textUpdate: textRequest.pkgTextUpdate
             }).then(() => {
@@ -403,18 +423,23 @@
         }
 
         submitDatas() {
-            // const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
-            // const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'semiReceive');
-            // const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
+            const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'instorage');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader.orderNo, 'sterilize');
 
-            // return STE_API.STE_SEMI_SUBMIT_API({
-            //     ...steSemi,
-            //     steExceptionInsertDtos: excRequest.InsertDto,
-            //     steExceptionUpdateDtos: excRequest.UpdateDto,
-            //     steExceptionRemoveDto: excRequest.ids,
-            //     steTextInsertDto: textRequest.pkgTextInsert,
-            //     steTextUpdateDto: textRequest.pkgTextUpdate
-            // })
+            STE_API.STE_INSTORAGE_SUBMIT_API({
+                exceptionDelete: inStorageRequest.ids,
+                exceptionInsert: inStorageRequest.steControlInsertDto,
+                exceptionUpdate: inStorageRequest.steControlUpdateDto,
+                instorageDelete: excRequest.ids,
+                instorageInsert: excRequest.UpdateDto,
+                instorageUpdate: excRequest.UpdateDto,
+                steOrderUpdateDto: this.formHeader,
+                textInsert: textRequest.pkgTextInsert,
+                textUpdate: textRequest.pkgTextUpdate
+            }).then(() => {
+                this.$successToast('提交成功');
+            })
         }
     }
 
@@ -431,7 +456,12 @@
             materialName?: string;
             outputUnit?: string;
             outputUnitName?: string;
-
+            factory?: string;
+            orderId?: string;
+            orderStatus?: string;
+            orderType?: string;
+            productDate?: string;
+            productLine?: string;
     }
 
     interface OptionsInList{
@@ -443,10 +473,10 @@
         // deviceTime: null;
         // dispatchMan: 'S01';
         // exceptionDateCount: null;
-        // factory: '4F8122C62C6D6C6999';
+        factory?: string;
         // factoryName: '(8300)济南欣昌';
         // germs: null;
-        // id: '494837770712338449';
+        id?: string;
         materialCode?: string;
         materialName?: string;
         // operator: '';
@@ -456,12 +486,12 @@
         // orderStartDate: '2020-08-03';
         orderStatus?: string;
         orderStatusName?: string;
-        // orderType: '8330';
+        orderType?: string;
         outputUnit?: string;
         outputUnitName?: string;
         // planOutput: 10000;
-        // productDate: '2020-08-03';
-        // productLine: '474262750789451776';
+        productDate?: string;
+        productLine?: string;
         // productLineName: '杀菌一线';
         // readyTime: null;
         // realInAmount: null;

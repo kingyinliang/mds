@@ -42,7 +42,7 @@
                         type="selection"
                         width="55"
                     />
-                    <el-table-column label="序号" type="index" width="60" fixed align="center" />
+                    <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="50" fixed align="center" />
                     <el-table-column prop="workShop" min-width="160" label="车间" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>车间
@@ -306,10 +306,11 @@
                         })
 
                         if (element.targetName !== '发酵车间') {
+
                             COMMON_API.SYS_CHILDTYPE_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 deptType: ['PRODUCT_TEAM'],
-                                deptName: element.targetName
+                                deptName: element.targetName.substring(0, 2)
 
                             }).then(({ data: target }) => {
                                 target.data.forEach(items => {
@@ -456,17 +457,17 @@
                         }).then(() => {
                             this.$successToast('保存成功');
                             this.checkSaveStatus = false
-                            this.currPage = 1;
-                            this.totalCount = 1
-                            this.pageSize = 10
-                            this.getDataList()
+                            // this.currPage = 1;
+                            // this.totalCount = 1
+                            // this.pageSize = 10
+                            // this.getDataList()
                     })
                 } else {
                         this.checkSaveStatus = false
-                        this.currPage = 1;
-                        this.totalCount = 1
-                        this.pageSize = 10
-                        this.getDataList()
+                        // this.currPage = 1;
+                        // this.totalCount = 1
+                        // this.pageSize = 10
+                        // this.getDataList()
                 }
             }
         }
@@ -647,7 +648,7 @@
             currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
 
             for (const item of currentFormDataGroupNew) {
-                if (!item.workShop || !item.classes || !item.userType || item.userList === [] || !item.startTime || !item.endTime || !item.dinner || !item.jobContent) {
+                if (!item.workShop || !item.classes || !item.userType || item.userList === [] || !item.startTime || !item.endTime || !((item.dinner as number) >= 0) || !item.jobContent) {
                     this.$warningToast('请填写必填项');
                     return false
                 }
@@ -708,7 +709,7 @@ interface OptionsInList{
 
 interface OptionsTreeList{
     targetCode?: string;
-    targetName?: string;
+    targetName: string;
     productLine: OptionsInList[];
     team: OptionsInList[];
 }
@@ -724,7 +725,9 @@ interface UserTypeListObject {
 
 
 <style scoped>
-
+.header_main >>> .box-card h3 {
+    display: none;
+}
 .header_main >>> .box-card-title {
     margin-bottom: 10px;
 }
