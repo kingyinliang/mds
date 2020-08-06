@@ -60,7 +60,7 @@ export default {
             COMMON_API.ROLE_ALLOT_INSERT_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 roleId: this.roleID,
-                deptId: [].concat(this.$refs.deptListTree.getCheckedKeys())
+                deptId: [].concat(this.$refs.deptListTree.getCheckedKeys()).concat(this.$refs.deptListTree.getHalfCheckedKeys())
             }).then(() => {
                 this.$emit('refreshDataList');
                 this.isDialogShow = false;
