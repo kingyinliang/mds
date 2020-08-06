@@ -143,7 +143,8 @@
 
         SubmitForm() {
             const dataArr = this.splitTable.filter(it => it.delFlag !== 1)
-            const productDateMap: string[] = [];
+            // eslint-disable-next-line
+            const productDateMap: any[] = [];
             for (let i = 0; i < dataArr.length; i++) {
                 if (!dataArr[i].productDate || !dataArr[i].potNo || !dataArr[i].potCount || !dataArr[i].potAmount || dataArr[i].potAmount === '0') {
                     this.$warningToast('请填写必填项');
@@ -154,7 +155,9 @@
                 //     this.$warningToast('同一订单不允许跨天生产');
                 //     return false
                 // }
-                productDateMap.push(dataArr[i].productDate);
+                if (dataArr[i].productDate) {
+                    productDateMap.push(dataArr[i].productDate);
+                }
             }
             if ([...new Set(productDateMap)].length !== 1) {
                 this.$warningToast('同一订单不允许跨天生产');
