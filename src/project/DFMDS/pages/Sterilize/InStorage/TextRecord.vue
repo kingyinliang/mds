@@ -6,7 +6,8 @@
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { PKG_API, STE_API } from 'common/api/api';
+    // import { PKG_API, STE_API } from 'common/api/api';
+    import { STE_API } from 'common/api/api';
     // import _ from 'lodash';
 
     @Component({
@@ -35,22 +36,25 @@
         isChange=false
         isNewForm=false
 
-        init(formHeader, workShop?) {
+        init(orderNo, workShop?) {
+            // 车间陆续增加
             if (workShop === 'sterilize') {
                 STE_API.STE_DETAIL_TEXT_API({
-                    potOrderNo: formHeader.potOrderNo,
-                    orderNo: formHeader.orderNo,
-                    textStage: formHeader.textStage
+                    // potOrderNo: formHeader.potOrderNo,
+                    orderNo: orderNo
+                    // textStage: formHeader.textStage
                 }).then(({ data }) => {
+                    console.log('文本data')
+                    console.log(data)
                     this.getData(data);
                 })
             } else {
-                PKG_API.PKG_TEXT_QUERY_API({
-                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    orderNo: formHeader.orderNo
-                }).then(({ data }) => {
-                    this.getData(data);
-                })
+                // PKG_API.PKG_TEXT_QUERY_API({
+                //     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                //     orderNo: formHeader.orderNo
+                // }).then(({ data }) => {
+                //     this.getData(data);
+                // })
             }
         }
 
