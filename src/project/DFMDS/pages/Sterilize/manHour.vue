@@ -27,9 +27,11 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="生产物料：">
-                            <p class="input_border_bg" style="width: 180px;">
-                                {{ formHeader.materialCode }} {{ formHeader.materialName }}
-                            </p>
+                            <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + ' ' + formHeader.materialName" placement="top-start">
+                                <p class="input_border_bg" style="width: 180px;">
+                                    {{ formHeader.materialCode }} {{ formHeader.materialName }}
+                                </p>
+                            </el-tooltip>
                         </el-form-item>
                         <el-form-item label="提交人员：">
                             <p class="input_border_bg" style="width: 180px;">
