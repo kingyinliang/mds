@@ -42,7 +42,7 @@
                         type="selection"
                         width="55"
                     />
-                    <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="60" fixed align="center" />
+                    <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="50" fixed align="center" />
                     <el-table-column prop="workShop" min-width="160" label="车间" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>车间
