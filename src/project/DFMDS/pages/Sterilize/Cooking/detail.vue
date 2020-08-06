@@ -93,7 +93,7 @@
                 </div>
             </template>
             <el-table ref="table" class="newTable" :data="dissolutionResponseDtos" :row-class-name="rowDelFlag" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
-                <el-table-column type="index" label="序号" fixed="left" width="55" />
+                <el-table-column type="index" label="序号" :index="index => getIndexMethod(index, dissolutionResponseDtos)" fixed="left" width="55" />
                 <el-table-column min-width="80" prop="">
                     <template slot="header">
                         <span class="notNull">*</span>溶解罐号
@@ -138,7 +138,7 @@
         </mds-card>
         <mds-card title="辅料领用" name="ingredients">
             <el-table ref="table" class="newTable" :data="accessoriesResponseDtos" :row-class-name="rowDelFlag" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
-                <el-table-column type="index" label="序号" fixed="left" width="55" />
+                <el-table-column type="index" :index="index => getIndexMethod(index, accessoriesResponseDtos)" label="序号" fixed="left" width="55" />
                 <el-table-column label="领用物料" min-width="180">
                     <template slot-scope="scope">
                         {{ scope.row.useMaterial }} {{ scope.row.useMaterialName }}
