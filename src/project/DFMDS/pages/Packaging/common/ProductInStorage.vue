@@ -10,7 +10,7 @@
             </template>
             <el-form ref="ruleForm" :model="ruleForm">
                 <el-table header-row-class-name="tableHead" class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" border tooltip-effect="dark" size="small">
-                    <el-table-column type="index" label="序号" width="50px" fixed />
+                    <el-table-column type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" label="序号" width="50px" fixed />
                     <el-table-column label="生产日期" prop="productDate" width="210">
                         <template slot="header">
                             <span class="notNull">* </span>生产日期

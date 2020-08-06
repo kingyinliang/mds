@@ -10,7 +10,7 @@
             </template>
             <el-form ref="ruleFirstForm" :model="ruleFirstForm">
                 <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" max-height="300" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
-                    <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
+                    <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, firstFormDataGroup)" width="55" fixed="left" align="center" />
                     <el-table-column width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>班次
