@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-08-04 18:00:40
+ * @LastEditTime: 2020-08-06 16:39:18
 -->
 <template>
     <el-dialog :title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowInStorageDialog">
@@ -20,14 +20,18 @@
                 </el-radio>
             </el-form-item>
             <el-form-item label="包装产线：" prop="packageLine">
-                <el-input v-model.trim="dialogForm.packageLine" size="small" placeholder="请输入" clearable />
+                <el-select v-model="dialogForm.packageLine" placeholder="请选择" clearable @change="selectPackageLine">
+                    <el-option v-for="(item, index) in pkgWorkShopList" :key="index" :label="item.targetName" :value="item.targetCode" />
+                </el-select>
             </el-form-item>
             <el-form-item label="包装订单：" prop="packageOrderNo">
-                <el-input v-model.trim="dialogForm.packageOrderNo" size="small" placeholder="请输入" clearable />
+                <el-select v-model="dialogForm.packageOrderNo" placeholder="请选择" clearable>
+                    <el-option v-for="(item, index) in packageOrderNoList" :key="index" :label="item.targetName" :value="item.targetCode" />
+                </el-select>
             </el-form-item>
             <el-form-item label="入库物料：">
                 <!-- <el-input v-model.trim="dialogForm.packageOrderNo" size="small" placeholder="请输入" clearable /> -->
-                <span class="default">{{ dialogForm.materialCode }} {{ dialogForm.materialName }}</span>
+                <span class="default">{{ dialogForm.material }}</span>
             </el-form-item>
             <el-form-item label="单位：">
                 <!-- <el-input v-model.trim="dialogForm.packageOrderNo" size="small" placeholder="请输入" clearable /> -->
@@ -67,7 +71,7 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { dateFormat, getUserNameNumber } from 'utils/utils';
     // import { dateFormat, getUserNameNumber } from 'utils/utils';
-    // import { STE_API } from 'common/api/api';
+    import { COMMON_API } from 'common/api/api';
     // import { dateFormat } from 'utils/utils';
 
     @Component({
@@ -81,11 +85,21 @@
         @Prop({ default: '80%' }) width: string;
         // @Prop() dialogForm: object;
 
-        dialogForm={
+        $refs: {
+            dialogForm: HTMLFormElement;
+        }
+
+        pkgWorkShopList: OptionsInList[]=[]
+        packageOrderNoList: OptionsInList[]=[]
+        currentWorkShop=''
+        currentProductDate=''
+        dialogForm: DialogForm={
             orderNo: '',
             normalFlag: 'Y',
             packageLine: '',
+            packageLineName: '',
             packageOrderNo: '',
+            material: '',
             materialCode: '',
             materialName: '',
             materialUnit: '',
@@ -99,10 +113,10 @@
 
         dialogFormRules= {
             packageLine: [
-                { required: true, message: '请输入', trigger: 'blur' }
+                { required: true, message: '请选择', trigger: 'change' }
             ],
             packageOrderNo: [
-                { required: true, message: '请输入', trigger: 'blur' }
+                { required: true, message: '请选择', trigger: 'change' }
             ],
             inStoragePot: [
                 { required: true, message: '请输入', trigger: 'blur' }
@@ -117,19 +131,106 @@
 
         isShowInStorageDialog = false;
 
-        init() {
+        init(obj, pkgWorkShopList, val) {
             this.isShowInStorageDialog = true;
+
+                this.dialogForm = {
+                    orderNo: '',
+                    normalFlag: 'Y',
+                    packageLine: '',
+                    packageOrderNo: '',
+                    material: '',
+                    materialCode: '',
+                    materialName: '',
+                    materialUnit: '',
+                    inStoragePot: 0,
+                    inStorageAmount: 0,
+                    inStorageBatch: '',
+                    packageLineName: '',
+                    remark: '',
+                    changer: getUserNameNumber(),
+                    changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+                }
+            if (val) {
+                // 编辑
+                this.dialogForm = val
+                this.selectPackageLine(val.packageLine)
+            } else {
+                //新增
+                this.dialogForm.orderNo = obj.orderNo
+                this.dialogForm.materialCode = obj.materialCode
+                this.dialogForm.material = obj.material
+                this.dialogForm.materialName = obj.materialName
+                this.dialogForm.materialUnit = obj.outputUnit
+            }
+                this.pkgWorkShopList = pkgWorkShopList
+                this.currentWorkShop = obj.workShop
+                this.currentProductDate = obj.inKjmDate
+
         }
 
         btnClearBucketStatus() {
             this.isShowInStorageDialog = false
+            this.$refs.dialogForm.resetFields();
         }
 
         btnComfirmBucketStatus() {
-            //
+            // this.$refs.dialogForm.validate((valid) => {
+            //     if (valid) {
+                    this.$emit('conformData', this.dialogForm)
+                    this.$refs.dialogForm.resetFields();
+                    this.isShowInStorageDialog = false
+            //     } else {
+            //         console.log('error submit!!');
+            //         return false;
+            //     }
+            // });
+        }
+
+        selectPackageLine(val) {
+            if (val !== '') {
+
+                this.dialogForm.packageLineName = this.pkgWorkShopList.filter(item => item.targetCode === val)[0].targetName
+                COMMON_API.ORDER_LIST_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    productLine: val,
+                    productDate: this.currentProductDate,
+                    workShop: this.currentWorkShop
+                }).then(({ data }) => {
+                    console.log('获取所有订单讯息')
+                    console.log(data)
+                    this.packageOrderNoList = []
+                    if (data.data !== null) {
+                        data.data.forEach(item => {
+                            this.packageOrderNoList.push({ targetCode: item.orderNo, targetName: item.orderNo })
+                        })
+                    }
+                })
+            }
+
         }
     }
-
+    interface OptionsInList{
+        targetCode?: string;
+        targetName?: string;
+    }
+    interface DialogForm {
+        orderNo?: string;
+        normalFlag?: string;
+        packageLine?: string;
+        packageOrderNo?: string;
+        material?: string;
+        materialCode?: string;
+        materialName?: string;
+        materialUnit?: string;
+        inStoragePot?: number;
+        inStorageAmount?: number;
+        inStorageBatch?: string;
+        packageLineName?: string;
+        remark?: string;
+        changer?: string;
+        changed?: string;
+    }
 </script>
 
 <style lang="scss" scoped>

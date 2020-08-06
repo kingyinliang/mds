@@ -44,7 +44,7 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button v-if="isAuth('ckStgEdit')" class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
+                <el-button v-if="isAuth('ckStgEdit') && $refs.queryTable.activeName === '0'" class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
                     {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
                 <el-button v-if="isAuth('ckStgRecord')" class="ra_btn" type="text" round size="mini" @click="AuditLog(scope.row)">
@@ -119,7 +119,7 @@
                 label: '计划数量'
             },
             {
-                prop: 'orderEntryUom',
+                prop: 'orderEntryUomName',
                 label: '单位'
             },
             {
@@ -517,7 +517,7 @@
                 this.$warningToast('请填写审核意见')
                 return false;
             }
-            this.$confirm(`部分数据已经调用SAP接口已入库，请确认sap冲销，确认要反审?`, '反审确认', {
+            this.$confirm(`数据已经调用SAP接口已入库，反审后将冲销SAP数据，是否反审？`, '反审确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

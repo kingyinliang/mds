@@ -1,63 +1,44 @@
-<template>
-    <div>
-        <mds-card :title="cardTitle">
-            <template slot="titleBtn">
-                <el-button type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="btnAddOrEditDataRow">
-                    新增
-                </el-button>
-            </template>
+<template lang="pug">
+div
+    mds-card(:title="cardTitle")
+        template(slot="titleBtn")
+            el-button(type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="btnAddOrEditDataRow()") 新增
+        el-table.newTable.semi__pot_table(header-row-class-name="tableHead" max-height="400px" :data="currentFormDataGroup" size="small" :row-class-name="rowDelFlag" border="" tooltip-effect="dark" style="min-height: 90px;" @cell-dblclick="btnAddOrEditDataRow")
+            template(v-for="(item,index) in tableData")
+                el-table-column(
+                    v-if="item.type==='index'"
+                    type="index"
+                    :label="item.label"
+                    :width="item.width"
+                    align="center"
+                    fixed)
+                el-table-column(
+                    v-if="item.type==='string'"
+                    :key="index"
+                    :prop="item.prop"
+                    :label="item.label"
+                    :min-width="item.minWidth"
+                    :show-overflow-tooltip="true"
+                    )
+                    template(slot-scope="scope")
+                        template(v-for="(val) in item.content") {{ scope.row[val] }}
 
-            <el-table header-row-class-name="tableHead" class="newTable semi__pot_table" max-height="400px" :data="currentFormDataGroup" size="small" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="min-height: 90px;" @cell-dblclick="btnAddOrEditDataRow">
-                <el-table-column type="index" label="序号" width="50px" fixed />
-                <template v-for="(item,index) in tableData">
-                    <el-table-column :key="index" :prop="item.prop" :label="item.label" :width="item.width" :min-width="item.minWidth" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            {{ scope.row.content }}
-                        </template>
-                    </el-table-column>
-                </template>
-
-                <el-table-column prop="packageLine" label="包装产线" min-width="100" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.packageLine }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="packageOrderNo" label="包装订单" width="100" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.packageOrderNo }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="material" label="入库物料" min-width="120" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="materialUnit" label="单位" width="70" :show-overflow-tooltip="true" />
-                <el-table-column prop="inStorageAmount" label="入库数量" width="100" :show-overflow-tooltip="true" />
-                <el-table-column prop="inStorageBatch" label="入库批次" width="100" :show-overflow-tooltip="true" />
-                <el-table-column prop="remark" label="备注" width="100" :show-overflow-tooltip="true" />
-                <el-table-column prop="changer" label="操作人" width="140" />
-                <el-table-column prop="changed" label="操作时间" width="180" />
-                <el-table-column width="70" label="操作" fixed="right">
-                    <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </mds-card>
-        <audit-log :table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true" />
-        <in-storage-dialog ref="inStorageDialogForAdd" width="40%" title="新增入库" />
-        <in-storage-dialog ref="inStorageDialogForEdit" width="40%" title="编辑入库" />
-        <!-- v-if="isShowInStorageDialog" -->
-    </div>
+                el-table-column(
+                    v-if="item.type==='control'"
+                    :width="item.width"
+                    :label="item.label"
+                    fixed="right")
+                    template(slot-scope="scope")
+                        el-button(v-for="(val) in item.content" type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)") {{val.buttonName}}
+    audit-log(:table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
+    in-storage-dialog(ref="inStorageDialogForAdd" width="40%" title="新增入库" @conformData="conformDataFromAdd")
+    in-storage-dialog(ref="inStorageDialogForEdit" width="40%" title="编辑入库")
 </template>
 
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import { STE_API } from 'common/api/api';
-    import { dataEntryData } from 'utils/utils';
+    // import { STE_API } from 'common/api/api';
+    // import { dataEntryData } from 'utils/utils';
     import InStorageDialog from './InStorageDialog.vue';
 
     @Component({
@@ -66,9 +47,11 @@
         }
     })
     export default class SemiReceive extends Vue {
-        @Prop({ default: false }) isRedact: boolean;
+        @Prop({ type: Boolean, default: false }) isRedact
         @Prop({ default: '' }) cardTitle: string;
         @Prop({ default: [] }) tableData: object[];
+        @Prop({ default: [] }) pkgWorkShopList: object[];
+
 
         $refs: {
             inStorageDialogForAdd: HTMLFormElement;
@@ -77,26 +60,25 @@
 
         semiAudit = [];
         currentFormDataGroup: CurrentDataTable[] = [];
-        orgSemiTable: SemiObj[] = [];
-        visible=false
-        isShowInStorageDialog=false
+        orderData: OptionsInList={}
 
-        init(formHeader) {
-            STE_API.STE_SEMI_LIST_API({
-                orderNo: formHeader.orderNo,
-                potOrderNo: formHeader.potOrderNo
-            }).then(({ data }) => {
-                this.currentFormDataGroup = data.data;
-                this.orgSemiTable = data.data;
-            })
+        init(data, obj) {
+            this.orderData = JSON.parse(JSON.stringify(obj))
+            this.currentFormDataGroup = JSON.parse(JSON.stringify(data))
         }
 
-        savedData(formHeader) {
+        conformDataFromAdd(item) {
+            console.log('item')
+            console.log(item)
+            this.currentFormDataGroup.push(JSON.parse(JSON.stringify(item)))
+        }
+
+
+        savedData() {
             const delIds = [];
             const insertData = [];
             const updateData = [];
 
-            dataEntryData(formHeader, this.currentFormDataGroup, this.orgSemiTable, delIds, insertData, updateData);
 
             return {
                 orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
@@ -109,25 +91,24 @@
 
         btnAddOrEditDataRow(val) {
 
+            console.log(val)
             if (val) {
-                this.$refs.inStorageDialogForEdit.init();
+                this.$refs.inStorageDialogForEdit.init(this.orderData, this.pkgWorkShopList, val);
                 return false
             }
 
-            this.$refs.inStorageDialogForAdd.init();
+            this.$refs.inStorageDialogForAdd.init(this.orderData, this.pkgWorkShopList);
 
         }
 
         receive() {
-            this.visible = true;
             this.$nextTick(() => {
                 // this.$refs.SemiReceiveDialog.init()
             });
         }
 
-        dataPush(data: SemiObj) {
-            this.visible = false;
-            this.currentFormDataGroup.push(data); //测试
+        dataPush() {
+        //
         }
 
         removeDataRow(row) {
@@ -147,16 +128,7 @@
             return '';
         }
     }
-    interface SemiObj {
-        delFlag?: number;
-        id?: string;
-        orderId?: string;
-        factory?: string;
-        orderNo?: string;
-        factoryName?: string;
-        potNo?: string;
-        potOrder?: string;
-    }
+
 
     interface CurrentDataTable{
         changed?: string;
@@ -174,9 +146,47 @@
         orderId?: string;
         orderNo?: string;
         packageLine?: string;
+        packageLineName?: string;
         packageOrderNo?: string;
         productDate?: string;
         workShop?: string;
+    }
+
+    interface OptionsInList{
+        changed?: string;
+        changer?: string;
+        // countMan: null;
+        // countOutput: null;
+        // countOutputUnit: '';
+        // deviceTime: null;
+        // dispatchMan: 'S01';
+        // exceptionDateCount: null;
+        // factory: '4F8122C62C6D6C6999';
+        // factoryName: '(8300)济南欣昌';
+        // germs: null;
+        // id: '494837770712338449';
+        materialCode?: string;
+        materialName?: string;
+        // operator: '';
+        // operatorDate: null;
+        // orderEndDate: '2020-08-03';
+        orderNo?: string;
+        // orderStartDate: '2020-08-03';
+        orderStatus?: string;
+        orderStatusName?: string;
+        // orderType: '8330';
+        // outputUnit: 'KG';
+        // outputUnitName: '千克';
+        // planOutput: 10000;
+        // productDate: '2020-08-03';
+        // productLine: '474262750789451776';
+        // productLineName: '杀菌一线';
+        // readyTime: null;
+        // realInAmount: null;
+        // realOutput: null;
+        // userTime: null;
+        workShop?: string;
+        workShopName?: string;
     }
 </script>
 

@@ -156,7 +156,11 @@ const STE_API = {
     /**
      * @property {string} STE_TIMESHEET_SUBMIT_API 杀菌车间-杀菌工时-提交
      */
-    STE_TIMESHEET_SUBMIT_API: params => httpProxy('/ste/steTimeSheet/submit', 'POST', params)
+    STE_TIMESHEET_SUBMIT_API: params => httpProxy('/ste/steTimeSheet/submit', 'POST', params),
+    /**
+     * @property {string} STE_PKGLINE_QUERY_API 杀菌车间-杀菌包装对应关系-查询对应包装产线列表
+     */
+    STE_PKGLINE_QUERY_API: params => httpProxy('/ste/stePkgRelation/pkgLine/query', 'GET', params)
 };
 
 export default STE_API;

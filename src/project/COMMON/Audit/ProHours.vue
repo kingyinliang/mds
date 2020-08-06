@@ -42,7 +42,7 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button v-if="isAuth('ckTimeEdit')" class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
+                <el-button v-if="isAuth('ckTimeEdit') && $refs.queryTable.activeName === '0'" class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
                     {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
                 <el-button v-if="isAuth('ckTimeRecord')" class="ra_btn" type="text" round size="mini" @click="AuditLog(scope.row)">
@@ -522,7 +522,7 @@
                 this.$warningToast('请填写原因')
                 return false
             }
-            this.$confirm(`确定反审，是否继续？`, '反审确认', {
+            this.$confirm(`数据已经调用SAP接口已报工，反审后将冲销SAP数据，是否反审`, '反审确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

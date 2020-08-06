@@ -66,10 +66,21 @@
                     <div v-if="type === 'entry'" class="redact_tips">
                         <i class="el-icon-info" />
                         <span v-if="orderStatus === 'toBeAudited'">请仔细核对数据后再进行提交</span>
-                        <span v-else-if="orderStatus === 'checked' || orderStatus === '已审核'">订单已审核通过</span>
-                        <span v-else-if="orderStatus === 'submit' || orderStatus === '待审核'">订单已提交，请等待审核</span>
-                        <span v-else-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账'">
-                            <span v-if="isRedact">点击提交按钮，当前页面编辑信息将提交系统</span>
+                        <span v-else-if="orderStatus === '已过账'">订单已过账</span>
+                        <span v-else-if="orderStatus === '待审核'">已提交至主管审核，请等待</span>
+                        <span v-else-if="orderStatus === '已审核'">已提交至生管审核，请等待</span>
+                        <span v-else-if="orderStatus === '已保存'">
+                            <span v-if="isRedact">{{ formHeader.changer }}于{{ dateChange }}分钟前已保存</span>
+                            <span v-else>点击编辑按钮，对当前页面进行编辑</span>
+                        </span>
+                        <span v-else-if="orderStatus === '已退回'">
+                            <span v-if="isRedact">请及时保存数据</span>
+                            <span v-else>订单审核不通过，请核对</span>
+                        </span>
+                        <span v-else-if="orderStatus === 'checked'">订单已审核通过</span>
+                        <span v-else-if="orderStatus === 'submit'">订单已提交，请等待审核</span>
+                        <span v-else-if="orderStatus !== 'submit' && orderStatus !== 'checked' && orderStatus !== '已退回' && orderStatus !== '已审核' && orderStatus !== '待审核' && orderStatus !== '已过账'">
+                            <span v-if="isRedact">请及时保存数据</span>
                             <span v-else>点击编辑按钮，对当前页面进行编辑</span>
                         </span>
                     </div>
@@ -111,6 +122,7 @@
 </template>
 
 <script>
+    import { getDateDiff, dateFormat } from 'utils/utils';
     export default {
         name: 'DataEntry',
         filters: {
@@ -226,6 +238,7 @@
         },
         data() {
             return {
+                dateChange: 0,
                 headShow: true,
                 isRedact: false,
                 activeName: '1'
@@ -288,6 +301,11 @@
                     return this.$store.state.common.sidebarFold;
                 }
             }
+        },
+        mounted() {
+            setInterval(() => {
+                this.dateChange = Math.trunc(Number(getDateDiff(this.formHeader.changed, dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'), 'minute')))
+            }, 3000)
         },
         methods: {
             setRedact() {
