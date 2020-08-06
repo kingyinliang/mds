@@ -8,9 +8,9 @@
                     </el-button>
                 </div>
             </template>
-            <el-form ref="ruleFirstForm" :model="ruleFirstForm">
+            <el-form ref="ruleFirstForm" :model="ruleFirstForm" class="ruleFirstForm">
                 <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" max-height="300" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
-                    <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, firstFormDataGroup)" width="55" fixed="left" align="center" />
+                    <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, firstFormDataGroup)" width="50" fixed="left" align="center" />
                     <el-table-column width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>班次
@@ -97,9 +97,9 @@
                     </el-button>
                 </div>
             </template>
-            <el-form ref="ruleSecondForm" :model="ruleSecondForm">
+            <el-form ref="ruleSecondForm" :model="ruleSecondForm" class="ruleSecondForm">
                 <el-table ref="exception" class="newTable" :data="secondFormDataGroup" max-height="300" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
-                    <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
+                    <el-table-column label="序号" type="index" width="50" fixed align="center" />
                     <el-table-column min-width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>班次
@@ -871,7 +871,16 @@ interface Option{
     dictCode?: string;
 }
 </script>
+<style scoped>
 
+.ruleFirstForm >>> .el-form-item__content {
+    line-height: normal;
+}
+
+.ruleSecondForm >>> .el-form-item__content {
+    line-height: normal;
+}
+</style>
 <style lang="scss" scoped>
 .solerow {
     margin-top: 5px;
@@ -882,5 +891,8 @@ interface Option{
     .input_bottom {
         margin-right: 50px;
     }
+}
+.ruleFirstForm >>> .el-form-item__content {
+    line-height: normal;
 }
 </style>
