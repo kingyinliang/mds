@@ -52,7 +52,7 @@ const router = new VueRouter({
 } as RouterOptions);
 
 router.beforeEach((to, from, next) => {
-    if (router['options'].isAddDynamicMenuRoutes || fnCurrentRouteType(to, globalRoutes) === 'global') {
+    if (router['options']['isAddDynamicMenuRoutes'] || fnCurrentRouteType(to, globalRoutes) === 'global') {
         return next();
     }
     COMMON_API.NAV_API({
@@ -61,7 +61,7 @@ router.beforeEach((to, from, next) => {
         if (data && data.code === 200) {
             const AddRoutesClass = new AddRoutes(router, mainRoutes, []);
             AddRoutesClass.fnAddDynamicMenuRoutes(data.data.menuList, []);
-            router['options'].isAddDynamicMenuRoutes = true;
+            router['options']['isAddDynamicMenuRoutes'] = true;
             sessionStorage.setItem('menuList', JSON.stringify(data.data.menuList || '[]'));
             sessionStorage.setItem('permissions', JSON.stringify(data.data.permissions || '[]'));
             return next(Object.assign({}, to, { replace: true }));

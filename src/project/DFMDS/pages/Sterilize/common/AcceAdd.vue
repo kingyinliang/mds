@@ -87,7 +87,7 @@
         </mds-card>
         <mds-card title="辅料领用" name="table1" icon-bg="#ffbf00">
             <el-table header-row-class-name="tableHead" class="newTable" :data="steAccessoriesConsume" :span-method="spanMethod" :row-class-name="rowDelFlag" border tooltip-effect="dark">
-                <el-table-column prop="rowIndex" label="序号" width="50px" fixed />
+                <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" min-width="160" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.useMaterialCode + ' ' + scope.row.useMaterialName }}
@@ -163,7 +163,7 @@
                 </el-button>
             </template>
             <el-table header-row-class-name="tableHead" class="newTable" :data="newSteAccessoriesConsume" :span-method="spanTwoMethod" :row-class-name="rowDelFlag" border tooltip-effect="dark">
-                <el-table-column prop="rowIndex" label="序号" width="50px" fixed />
+                <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="领用物料" width="140">
                     <template slot="header">
                         <span class="notNull">* </span>领用物料
@@ -462,20 +462,20 @@
         merge(tableData, Data) {
             const spanOneArr: number[] = [];
             let concatOne = 0;
-            let rowIndex = 1;
+            // let rowIndex = 1;
             tableData.forEach((item, index) => {
                 if (index === 0) {
-                    item.rowIndex = rowIndex
+                    // item.rowIndex = rowIndex
                     spanOneArr.push(1);
                 } else if (item.useMaterialCode === tableData[index - 1].useMaterialCode && item.useMaterialCode) {
-                    item.rowIndex = rowIndex
+                    // item.rowIndex = rowIndex
                     if (item.delFlag !== 1) {
                         spanOneArr[concatOne] += 1;
                     }
                     spanOneArr.push(0);
                 } else {
-                    rowIndex++;
-                    item.rowIndex = rowIndex
+                    // rowIndex++;
+                    // item.rowIndex = rowIndex
                     spanOneArr.push(1);
                     concatOne = index;
                 }
