@@ -34,7 +34,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
-                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 190px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -52,7 +52,7 @@
                                     format="yyyy-MM-dd HH:mm"
                                     :default-value="scope.row.startDate"
                                     placeholder="选择时间"
-                                    style="width: 180px;"
+                                    style="width: 190px;"
                                     :picker-options="pickerOptionsEnd[0][scope.$index]"
                                     :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
                                 />
@@ -85,7 +85,7 @@
                     总运行时间：
                 </div>
                 <div class="input_bottom">
-                    {{ computedFirstDataTotal }} H
+                    {{ computedFirstDataTotal.toFixed(2) }} H
                 </div>
             </el-row>
         </mds-card>
@@ -154,7 +154,7 @@
                                     value-format="yyyy-MM-dd HH:mm"
                                     format="yyyy-MM-dd HH:mm"
                                     placeholder="选择时间"
-                                    style="width: 170px;"
+                                    style="width: 190px;"
                                     clearable
                                     :picker-options="pickerOptionsStart[1][scope.$index]"
                                     :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
@@ -175,7 +175,7 @@
                                     value-format="yyyy-MM-dd HH:mm"
                                     format="yyyy-MM-dd HH:mm"
                                     placeholder="选择时间"
-                                    style="width: 170px;"
+                                    style="width: 190px;"
                                     clearable
                                     :picker-options="pickerOptionsEnd[1][scope.$index]"
                                     :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
@@ -249,7 +249,7 @@
                     总停线时间：
                 </div>
                 <div class="input_bottom">
-                    {{ computedSecondDataTotal }} MIN
+                    {{ computedSecondDataTotal.toFixed(2) }} MIN
                 </div>
             </el-row>
         </mds-card>
