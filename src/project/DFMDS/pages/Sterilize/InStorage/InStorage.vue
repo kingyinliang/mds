@@ -21,7 +21,7 @@ div
                     :show-overflow-tooltip="true"
                     )
                     template(slot-scope="scope")
-                        template(v-for="(val) in item.content") {{ scope.row[val] }}
+                        template(v-for="(val,indexs) in item.content" ) {{ scope.row[val] }}
 
                 el-table-column(
                     v-if="item.type==='control'"
@@ -29,7 +29,7 @@ div
                     :label="item.label"
                     fixed="right")
                     template(slot-scope="scope")
-                        el-button(v-for="(val) in item.content" type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)") {{val.buttonName}}
+                        el-button(v-for="(val,index) in item.content" :key="index" type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)") {{val.buttonName}}
     audit-log(:table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
     in-storage-dialog(ref="inStorageDialogForAdd" width="40%" title="新增入库" @conformData="conformDataFromAdd")
     in-storage-dialog(ref="inStorageDialogForEdit" width="40%" title="编辑入库")
@@ -40,6 +40,7 @@ div
     // import { STE_API } from 'common/api/api';
     // import { dataEntryData } from 'utils/utils';
     import InStorageDialog from './InStorageDialog.vue';
+    import _ from 'lodash';
 
     @Component({
         components: {
@@ -60,11 +61,13 @@ div
 
         semiAudit = [];
         currentFormDataGroup: CurrentDataTable[] = [];
+        orgFormDataGroup: CurrentDataTable[] = [] // 主 data 复制
         orderData: OptionsInList={}
 
         init(data, obj) {
             this.orderData = JSON.parse(JSON.stringify(obj))
             this.currentFormDataGroup = JSON.parse(JSON.stringify(data))
+            this.orgFormDataGroup = JSON.parse(JSON.stringify(data))
         }
 
         conformDataFromAdd(item) {
@@ -74,20 +77,28 @@ div
         }
 
 
-        savedData() {
-            const delIds = [];
-            const insertData = [];
-            const updateData = [];
+        // ruleSubmit() {
+        //     if (!this.craftInfo.feedStartDate || !this.craftInfo.feeEndDate || !this.craftInfo.riseStartDate || !this.craftInfo.riseEndDate) {
+        //         this.$warningToast('请填写工艺控制页签时间必填项');
+        //         return false;
+        //     }
+        //     if (this.craftTable.filter(it => it.delFlag !== 1).length === 0) {
+        //         this.$warningToast('请录入工艺控制页签杀菌时间及温度数据');
+        //         return false;
+        //     }
 
-
-            return {
-                orderNo: this.$store.state.sterilize.SemiReceive.orderNoMap.orderNo,
-                potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
-                delIds,
-                insertData,
-                updateData
-            }
-        }
+        //     for (const item of this.craftTable.filter(it => it.delFlag !== 1)) {
+        //         if (!item.controlType || !item.controlStage) {
+        //             this.$warningToast('请填写工艺控制页签杀菌时间及温度类型、阶段');
+        //             return false;
+        //         }
+        //         if ((item.controlStage === 'START' || item.controlStage === 'END' || item.controlStage === 'DISCHARGE_START' || item.controlStage === 'DISCHARGE_END') && !item.recordDate) {
+        //             this.$warningToast('请填写工艺控制页签杀菌时间及温度下记录时间');
+        //             return false;
+        //         }
+        //     }
+        //     return true;
+        // }
 
         btnAddOrEditDataRow(val) {
 
@@ -101,15 +112,32 @@ div
 
         }
 
-        receive() {
-            this.$nextTick(() => {
-                // this.$refs.SemiReceiveDialog.init()
-            });
-        }
+        getSavedOrSubmitData() {
 
-        dataPush() {
-        //
+        const ids: string[] = [];
+        const steControlInsertDto: CurrentDataTable[] = [];
+        const steControlUpdateDto: CurrentDataTable[] = [];
+        const tempCurrentFormDataGroup = JSON.parse(JSON.stringify(this.currentFormDataGroup))
+
+        tempCurrentFormDataGroup.forEach((item, index) => {
+            if (item.delFlag === 1) {
+                if (item.id) {
+                    ids.push(item.id)
+                }
+            } else if (item.id) {
+                if (!_.isEqual(this.orgFormDataGroup[index], item)) {
+                    steControlUpdateDto.push(item)
+                }
+            } else {
+                steControlInsertDto.push(item)
+            }
+        })
+        return {
+            steControlInsertDto,
+            steControlUpdateDto,
+            ids
         }
+    }
 
         removeDataRow(row) {
             this.$confirm('是否删除?', '提示', {

@@ -17,7 +17,7 @@
             <template slot="tab-head0">
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
-                    <span>报工列表</span>
+                    <span>发料列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="pstngDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input v-model="headerText" placeholder="抬头文本" size="small" style="width: 190px; margin-right: 10px;" />
@@ -33,7 +33,7 @@
             <template slot="tab-head1">
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
-                    <span>报工列表</span>
+                    <span>发料列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="pstngDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input v-model="headerText" placeholder="抬头文本" size="small" style="width: 190px; margin-right: 10px;" />
@@ -44,7 +44,7 @@
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button v-if="isAuth('ckMatEdit')" class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
+                <el-button v-if="isAuth('ckMatEdit')" :disabled="scope.row.status === 'R'" class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
                     {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
                 <el-button v-if="isAuth('ckMatRecord')" class="ra_btn" type="text" round size="mini" @click="getAuditLog(scope.row)">
@@ -359,7 +359,7 @@
         getColumn(type) {
             const column = [
                     {
-                        prop: 'status',
+                        prop: 'statusName',
                         label: '过账状态'
                     },
                     {
@@ -385,7 +385,7 @@
                         label: '计划数量'
                     },
                     {
-                        prop: 'outputUnitName',
+                        prop: 'outputUnit',
                         label: '单位'
                     },
                     {
@@ -393,7 +393,7 @@
                         label: '入库数量'
                     },
                     {
-                        prop: 'countOutputUnitName',
+                        prop: 'countOutputUnit',
                         label: '单位'
                     },
                     {
@@ -409,7 +409,7 @@
                         label: '发料数量'
                     },
                     {
-                        prop: 'entryUomName',
+                        prop: 'entryUom',
                         label: '单位'
                     },
                     {
@@ -457,7 +457,8 @@
                         type: 'select',
                         width: '140',
                         redact: true,
-                        header: false
+                        header: true,
+                        hide: true
                     },
                     {
                         prop: 'remark',
@@ -472,8 +473,11 @@
                     }
                 ];
                 if (type === 2) {
-                    column[14]['header'] = false;
-                    column[15]['header'] = true;
+                    column[14]['hide'] = true;
+                    column[15]['hide'] = false;
+                    column[11]['type'] = '';
+                    column[12]['type'] = '';
+                    column[13]['type'] = '';
                 }
             return column;
         }
@@ -579,7 +583,7 @@
                         this.$refs.queryTable.getDataList(true)
                     }).catch((err) => {
                         if (err.data.code === 201) {
-                            this.$errorToast(err.data.msg);
+                            // this.$errorToast(err.data.msg);
                             this.$refs.queryTable.getDataList(true)
                         }
                     });
@@ -650,7 +654,7 @@
                     }).catch((err) => {
                         if (err.data.code === 201) {
                             this.isRefuseOrWriteOffsDialogShow = false;
-                            this.$errorToast(err.data.msg);
+                            // this.$errorToast(err.data.msg);
                             this.$refs.queryTable.getDataList(true);
                         }
                     });
@@ -660,7 +664,7 @@
                     this.$warningToast('请填写反审原因')
                     return false;
                 }
-                this.$confirm('部分数据已经调用SAP接口已发料，请确认sap冲销，确认要反审？', '反审确认', {
+                this.$confirm('数据已经调用SAP接口已发料，反审后将冲销SAP数据，是否反审?', '反审确认', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -690,7 +694,7 @@
                     }).catch((err) => {
                         if (err.data.code === 201) {
                             this.isRefuseOrWriteOffsDialogShow = false;
-                            this.$errorToast(err.data.msg);
+                            // this.$errorToast(err.data.msg);
                             this.$refs.queryTable.getDataList(true);
                         }
                     });

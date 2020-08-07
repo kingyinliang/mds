@@ -38,13 +38,11 @@ export default {
         /* eslint-disable @typescript-eslint/camelcase*/
         init(id, userId) {
             this.visible = true;
-            COMMON_API.USER_ROLE_QUERY_API({
+            COMMON_API.USER_ROLE_ALL_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptId: id,
-                current: 1,
-                size: 9999
+                deptId: id
             }).then(({ data }) => {
-                this.userlist = setUserList(data.data.records);
+                this.userlist = setUserList(data.data);
                 this.selctId = userId;
                 this.visible = true;
             });
