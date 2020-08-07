@@ -10,7 +10,7 @@
                 <el-row>
                     <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
                         <el-form-item label="订单号：">
-                            <el-input v-model="plantList.orderNo" style="width: 200px;" placeholder="请输入" />
+                            <el-input v-model="plantList.orderNo" style="width: 180px;" placeholder="请输入" />
                         </el-form-item>
                         <el-form-item label="品项：">
                             <el-select v-model="plantList.material" filterable placeholder="请选择">
