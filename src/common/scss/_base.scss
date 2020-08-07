@@ -1023,11 +1023,14 @@
             }
             .el-tabs__content {
                 // min-height: 300px;
-                @media screen and (min-height: 630px) {
-                    min-height: 375px;
+                @media screen and (min-height: 625px) {
+                    min-height: 360px;
                 }
+                // @media screen and (min-height: 630px) {
+                //     min-height: 375px;
+                // }
                 @media screen and (min-height: 1049px) {
-                    min-height: 790px;
+                    min-height: 780px;
                 }
                 padding: 16px 10px;
                 background: white;
