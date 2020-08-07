@@ -451,7 +451,7 @@
                         this.$refs.queryTable.getDataList(true)
                     }).catch((err) => {
                         if (err.data.code === 201) {
-                            this.$errorToast(err.data.msg)
+                            // this.$errorToast(err.data.msg)
                             this.$refs.queryTable.getDataList(true)
                         }
                     })
@@ -537,7 +537,7 @@
                 }).catch((err) => {
                     if (err.data.code === 201) {
                         this.visibleBack = false;
-                        this.$errorToast(err.data.msg);
+                        // this.$errorToast(err.data.msg);
                         this.$refs.queryTable.getDataList(true)
                     }
                 })

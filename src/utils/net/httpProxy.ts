@@ -66,6 +66,7 @@ http.interceptors.response.use(
             return Promise.resolve(response);
         } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.SAP_ERROR) {
             // 成功
+            Vue.prototype.$warningToast(response.data.msg);
             tryHideFullScreenLoading(); // 关闭遮罩
             return Promise.reject(response);
         } else if (response.data && response.data.code === HTTP_RESPONSE_STATE.EXPIRED_TOKEN) {
