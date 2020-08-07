@@ -86,16 +86,14 @@ export default {
         // 根据组织架构查人
         setdetail(dataObj) {
             console.log(dataObj.deptName)
-            COMMON_API.USER_ROLE_QUERY_API({
+            COMMON_API.USER_ROLE_ALL_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptId: dataObj.id,
-                current: 1,
-                size: 9999
+                deptId: dataObj.id
             }).then(({ data }) => {
                 console.log('11111')
                 console.log(data)
                 this.userlist = []
-                data.data.records.forEach(item => {
+                data.data.forEach(item => {
                     this.userlist.push({
                         key: item.realName + '(' + item.workNum + ')',
                         label: item.realName + '(' + item.workNum + ')'
