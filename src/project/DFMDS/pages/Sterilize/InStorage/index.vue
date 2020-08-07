@@ -4,8 +4,8 @@
             <el-card class="searchCard">
                 <el-form :inline="true" :model="formHeader" size="small" label-width="85px" class="topform multi_row searchCard__form">
                     <el-form-item label="生产车间：" class="must-fill">
-                        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;" clearable>
-                            <el-option v-for="(item, index) in workshopList" :key="index" :label="item.deptName" :value="item.id" />
+                        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;" clearable @change="selectWorkshop">
+                            <el-option v-for="(item, index) in workshopList" :key="index" :label="item.targetName" :value="item.targetCode" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="生产日期：" class="must-fill">
@@ -54,17 +54,16 @@
                 </div>
             </el-card>
 
-
             <div v-show="searchCard">
                 <tie-tabs :tab-titles="tabTitles">
-                    <template slot="1" slot-scope="data">
-                        <in-storage ref="inStorage" :is-redact="data.isRedact" :data="currentFormDataGroup" card-title="入库列表" :table-data="tableData" />
+                    <template slot="1">
+                        <in-storage ref="inStorage" :is-redact="isRedact" card-title="入库列表" :table-data="tableData" :order-info="orderData" :pkg-work-shop-list="pkgWorkShopList" />
                     </template>
-                    <template slot="2" slot-scope="data">
-                        <exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
+                    <template slot="2">
+                        <exc-record ref="excRecord" :is-redact="isRedact" :form-header="formHeader" />
                     </template>
-                    <template slot="3" slot-scope="data">
-                        <text-record ref="textRecord" :is-redact="data.isRedact" />
+                    <template slot="3">
+                        <text-record ref="textRecord" :is-redact="isRedact" />
                     </template>
                 </tie-tabs>
 
@@ -85,30 +84,6 @@
                 </redact-box>
             </div>
         </div>
-        <!-- <data-entry
-            ref="dataEntry"
-            :order-status-show="false"
-            :redact-auth="'pkg:order:update'"
-            :save-auth="'pkg:order:update'"
-            :submit-auth="'pkg:order:update'"
-            :order-status="formHeader.orderStatusName"
-            :header-base="headerBase"
-            :form-header="formHeader"
-            :tabs="tabs"
-            :saved-datas="savedDatas"
-            :submit-datas="submitDatas"
-            @success="getOrderList"
-        >
-            <template slot="1" slot-scope="data">
-                <semi-receive ref="semiReceive" :is-redact="data.isRedact" />
-            </template>
-            <template slot="2" slot-scope="data">
-                <exc-record ref="excRecord" :is-redact="data.isRedact" :form-header="formHeader" />
-            </template>
-            <template slot="3" slot-scope="data">
-                <text-record ref="textRecord" :is-redact="data.isRedact" />
-            </template>
-        </data-entry> -->
     </div>
 </template>
 
@@ -122,12 +97,17 @@
     import { dateFormat } from 'utils/utils';
     import TieTabs from './DataTabs.vue';
     import InStorage from './InStorage.vue'
+    import ExcRecord from './ExcRecord.vue' // tab3 文本记录
+    import TextRecord from './TextRecord.vue' // tab3 文本记录
+
 
     @Component({
         name: 'Instorage',
         components: {
             TieTabs,
-            InStorage
+            InStorage,
+            ExcRecord,
+            TextRecord
         }
     })
     export default class Instorage extends Vue {
@@ -141,18 +121,28 @@
             workShop: '',
             inKjmDate: dateFormat(new Date(), 'yyyy-MM-dd'),
             orderNo: '',
-            material: '',
+            materialCode: '',
+            materialName: '',
             changer: '',
             changed: '',
-            status: ''
+            status: '',
+            outputUnit: '',
+            outputUnitName: '',
+            workShopName: '',
+            factory: '',
+            orderId: '',
+            orderStatus: '',
+            orderType: '',
+            productDate: '',
+            productLine: ''
         }
 
-        orderData={}
+        orderData: OptionsInList={}
         isRedact = false;
-        workshopList = [];
+        workshopList: OptionsInList[] = [];
+        pkgWorkShopList: OptionsInList[]=[]
         orderNoList: OptionsInList[] = [];
         searchCard = true;
-        currentFormDataGroup: CurrentDataTable[] = [] // 主 data
 
         tabTitles = [
             {
@@ -169,6 +159,13 @@
 
         tableData=[
             {
+                type: 'index',
+                prop: '',
+                label: '序号',
+                width: 50,
+                content: ['']
+            },
+            {
                 type: 'string',
                 prop: 'normalFlag',
                 label: '正常入库',
@@ -179,8 +176,8 @@
                 type: 'string',
                 prop: 'packageLine',
                 label: '包装产线',
-                minWidth: 100,
-                content: ['packageLine']
+                minWidth: 200,
+                content: ['packageLineName']
             },
             {
                 type: 'string',
@@ -192,9 +189,58 @@
             {
                 type: 'string',
                 prop: 'material',
-                label: '入库物料"',
-                minWidth: 120,
+                label: '入库物料',
+                minWidth: 200,
                 content: ['materialCode', 'materialName']
+            },
+            {
+                type: 'string',
+                prop: 'materialUnit',
+                label: '单位',
+                minWidth: 70,
+                content: ['materialUnit']
+            },
+            {
+                type: 'string',
+                prop: 'inStorageAmount',
+                label: '入库数量',
+                minWidth: 100,
+                content: ['inStorageAmount']
+            },
+            {
+                type: 'string',
+                prop: 'inStorageBatch',
+                label: '入库批次',
+                minWidth: 100,
+                content: ['inStorageBatch']
+            },
+            {
+                type: 'string',
+                prop: 'remark',
+                label: '备注',
+                minWidth: 100,
+                content: ['remark']
+            },
+            {
+                type: 'string',
+                prop: 'changer',
+                label: '操作人',
+                minWidth: 140,
+                content: ['changer']
+            },
+            {
+                type: 'string',
+                prop: 'changed',
+                label: '操作时间',
+                minWidth: 140,
+                content: ['changed']
+            },
+            {
+                type: 'control',
+                prop: '',
+                label: '操作',
+                width: 100,
+                content: [{ buttonName: '删除' }]
             }
 
             // {
@@ -208,134 +254,214 @@
         ]
 
         mounted() {
-            if (!this.isAuth('steStgQuery')) {
-                this.$warningToast('无权限');
-                return false
-            }
+            // if (!this.isAuth('steStgQuery')) {
+            //     this.$warningToast('无权限');
+            //     return false
+            // }
+
+            // 获取车间
             this.getWorkshopList();
+
+
         }
 
-        selectOrder(val) {
-            if (val === '') {
-                this.formHeader.material = ''
-                this.formHeader.status = ''
-                this.formHeader.changer = ''
-                this.formHeader.changed = ''
-                return false
-            }
-            const tempOrderNoList = this.orderNoList.filter(item => item.orderNo === val)
-            this.orderData = tempOrderNoList[0]
-            this.formHeader.material = tempOrderNoList[0].materialCode + ' ' + tempOrderNoList[0].materialName
-            this.formHeader.status = tempOrderNoList[0].orderStatusName
-            this.formHeader.changer = tempOrderNoList[0].changer
-            this.formHeader.changed = tempOrderNoList[0].changed
-        }
-
-        // 车间
+        // 车间下拉抓取
         getWorkshopList() {
             COMMON_API.ORG_QUERY_WORKSHOP_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 deptType: ['WORK_SHOP'],
                 deptName: '杀菌'
             }).then(({ data }) => {
-                    this.workshopList = data.data;
+                    this.workshopList = []
                     if (data.data.length !== 0) {
+                        data.data.forEach(item => {
+                            this.workshopList.push({ targetCode: item.id, targetName: item.deptName })
+                        })
+                        // 根据回传预先取第一笔
                         this.formHeader.workShop = data.data[0]['id'];
-                        // 获取生产订单
+                        this.formHeader.workShopName = data.data[0]['deptName'];
                         this.getOrderList()
                     }
             })
         }
 
-        // 查询订单资料
+        // 车间选择触发
+        selectWorkshop(val) {
+            if (val !== '') {
+                this.formHeader.workShop = val;
+                this.formHeader.workShopName = this.workshopList.filter(item => item.targetCode === val)[0].targetName
+                this.getOrderList()
+            }
+
+        }
+
+        // 订单下拉抓取
         getOrderList() {
             COMMON_API.ORDER_LIST_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
             }).then(({ data }) => {
+                console.log('获取所有订单讯息')
+                console.log(data)
                 this.orderNoList = data.data
             })
         }
 
-        btnGetResult() {
+        // 订单选择触发
+        selectOrder(val) {
+            if (this.formHeader.inKjmDate === '') {
+                this.$infoToast('请选择生产日期');
+                return false
+            }
+            if (this.formHeader.workShop === '') {
+                this.$infoToast('请选择车间');
+                return false
+            }
 
+            // 清除下拉选单时连带清除有值时所带出来的栏位内容
+            if (val === '') {
+                this.formHeader.material = ''
+                this.formHeader.status = ''
+                this.formHeader.changer = ''
+                this.formHeader.changed = ''
+                this.formHeader.material = ''
+                this.formHeader.materialCode = ''
+                this.formHeader.materialName = ''
+                this.formHeader.outputUnit = ''
+                this.formHeader.outputUnitName = ''
+                this.formHeader.factory = ''
+                this.formHeader.orderId = ''
+                this.formHeader.orderStatus = ''
+                this.formHeader.orderType = ''
+                this.formHeader.productDate = ''
+                this.formHeader.productLine = ''
+                return false
+            }
+            this.orderData = this.orderNoList.filter(item => item.orderNo === val)[0]
+            this.formHeader.material = this.orderData.materialCode + ' ' + this.orderData.materialName
+            this.formHeader.status = this.orderData.orderStatusName
+            this.formHeader.changer = this.orderData.changer
+            this.formHeader.changed = this.orderData.changed
+            this.formHeader.materialCode = this.orderData.materialCode
+            this.formHeader.materialName = this.orderData.materialName
+            this.formHeader.outputUnit = this.orderData.outputUnit
+            this.formHeader.outputUnitName = this.orderData.outputUnitName
+            this.formHeader.workShopName = this.orderData.workShopName
+            this.formHeader.factory = this.orderData.factory
+            this.formHeader.orderId = this.orderData.id
+            this.formHeader.orderStatus = this.orderData.orderStatus
+            this.formHeader.orderType = this.orderData.orderType
+            this.formHeader.productDate = this.orderData.productDate
+            this.formHeader.productLine = this.orderData.productLine
+
+
+        }
+
+        // 查询包装产线
+        getPkgWorkShopList() {
+            STE_API.STE_PKGLINE_QUERY_API({
+                // orderNo: this.formHeader.orderNo
+                orderNo: '833000001283'
+            }).then(({ data }) => {
+                console.log('查询包装查询结果')
+                console.log(data)
+                this.pkgWorkShopList = []
+                if (data.data) {
+                    data.data.forEach(item => {
+                        this.pkgWorkShopList.push({ targetCode: item.pkgLine, targetName: item.pkgLineName })
+                    })
+                }
+            })
+        }
+
+        // 查询结果
+        btnGetResult() {
             if (this.formHeader.workShop === '' || this.formHeader.inKjmDate === '' || this.formHeader.orderNo === '') {
                 this.$infoToast('尚有必填栏位');
                 return false
             }
-
 
             STE_API.STE_INSTORAGE_QUERY_API({
                 orderNo: this.formHeader.orderNo,
                 productDate: this.formHeader.inKjmDate,
                 workShop: this.formHeader.workShop
             }).then(({ data }) => {
-                console.log('data')
+                console.log('查询结果')
                 console.log(data)
-                if (!data.data || data.data.length === 0) {
+
+                if (!data.data) {
                     this.$infoToast('暂无任何内容');
-                    this.currentFormDataGroup = [];
-                    return false
+                    this.$refs.inStorage.init([], this.formHeader)
+                } else {
+                    this.$refs.inStorage.init(data.data, this.formHeader)
                 }
-                this.currentFormDataGroup = data.data
+                this.getPkgWorkShopList()
+                this.$refs.excRecord.init(this.formHeader, 'instorage');
+                this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize');
             })
         }
 
         savedDatas() {
-            let exceptionDeleteTemp
-            let exceptionInsertTemp
-            let exceptionUpdateTemp
-            let instorageDeleteTemp
-            let instorageInsertTemp
-            let instorageUpdateTemp
+            const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'instorage');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader.orderNo, 'sterilize');
 
             STE_API.STE_INSTORAGE_SAVE_API({
-                exceptionDelete: exceptionDeleteTemp,
-                exceptionInsert: exceptionInsertTemp,
-                exceptionUpdate: exceptionUpdateTemp,
-                instorageDelete: instorageDeleteTemp,
-                instorageInsert: instorageInsertTemp,
-                instorageUpdate: instorageUpdateTemp,
-                steOrderUpdateDto: '',
-                textInsert: '',
-                textUpdate: ''
+                exceptionDelete: inStorageRequest.ids,
+                exceptionInsert: inStorageRequest.steControlInsertDto,
+                exceptionUpdate: inStorageRequest.steControlUpdateDto,
+                instorageDelete: excRequest.ids,
+                instorageInsert: excRequest.UpdateDto,
+                instorageUpdate: excRequest.UpdateDto,
+                steOrderUpdateDto: this.formHeader,
+                textInsert: textRequest.pkgTextInsert,
+                textUpdate: textRequest.pkgTextUpdate
             }).then(() => {
                 this.$successToast('保存成功');
             })
         }
 
         submitDatas() {
-            // const steSemi = this.$refs.semiReceive.savedData(this.formHeader);
-            // const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'semiReceive');
-            // const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
+            const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'instorage');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader.orderNo, 'sterilize');
 
-            // return STE_API.STE_SEMI_SUBMIT_API({
-            //     ...steSemi,
-            //     steExceptionInsertDtos: excRequest.InsertDto,
-            //     steExceptionUpdateDtos: excRequest.UpdateDto,
-            //     steExceptionRemoveDto: excRequest.ids,
-            //     steTextInsertDto: textRequest.pkgTextInsert,
-            //     steTextUpdateDto: textRequest.pkgTextUpdate
-            // })
+            STE_API.STE_INSTORAGE_SUBMIT_API({
+                exceptionDelete: inStorageRequest.ids,
+                exceptionInsert: inStorageRequest.steControlInsertDto,
+                exceptionUpdate: inStorageRequest.steControlUpdateDto,
+                instorageDelete: excRequest.ids,
+                instorageInsert: excRequest.UpdateDto,
+                instorageUpdate: excRequest.UpdateDto,
+                steOrderUpdateDto: this.formHeader,
+                textInsert: textRequest.pkgTextInsert,
+                textUpdate: textRequest.pkgTextUpdate
+            }).then(() => {
+                this.$successToast('提交成功');
+            })
         }
     }
 
     interface FormHeader{
             workShop?: string;
+            workShopName?: string;
             inKjmDate?: string;
             orderNo?: string;
-            material?: string;
             changer?: string;
             changed?: string;
             status?: string;
-    }
-
-    interface OrderData {
-        textStage?: string;
-        factoryName?: string;
-        potNo?: string;
-        potOrder?: string;
+            material?: string;
+            materialCode?: string;
+            materialName?: string;
+            outputUnit?: string;
+            outputUnitName?: string;
+            factory?: string;
+            orderId?: string;
+            orderStatus?: string;
+            orderType?: string;
+            productDate?: string;
+            productLine?: string;
     }
 
     interface OptionsInList{
@@ -347,10 +473,10 @@
         // deviceTime: null;
         // dispatchMan: 'S01';
         // exceptionDateCount: null;
-        // factory: '4F8122C62C6D6C6999';
+        factory?: string;
         // factoryName: '(8300)济南欣昌';
         // germs: null;
-        // id: '494837770712338449';
+        id?: string;
         materialCode?: string;
         materialName?: string;
         // operator: '';
@@ -360,12 +486,12 @@
         // orderStartDate: '2020-08-03';
         orderStatus?: string;
         orderStatusName?: string;
-        // orderType: '8330';
-        // outputUnit: 'KG';
-        // outputUnitName: '千克';
+        orderType?: string;
+        outputUnit?: string;
+        outputUnitName?: string;
         // planOutput: 10000;
-        // productDate: '2020-08-03';
-        // productLine: '474262750789451776';
+        productDate?: string;
+        productLine?: string;
         // productLineName: '杀菌一线';
         // readyTime: null;
         // realInAmount: null;
@@ -375,25 +501,9 @@
         workShopName?: string;
     }
 
-    interface CurrentDataTable{
-        changed?: string;
-        changer?: string;
-        checkStatus?: string;
-        id?: string;
-        inStorageAmount?: number;
-        inStorageBatch?: string;
-        inStoragePot?: number;
-        materialCode?: string;
-        materialName?: string;
-        materialUnit?: string;
-        materialUnitName?: string;
-        normalFlag?: string;
-        orderId?: string;
-        orderNo?: string;
-        packageLine?: string;
-        packageOrderNo?: string;
-        productDate?: string;
-        workShop?: string;
+    interface OptionsInList{
+        targetCode?: string;
+        targetName?: string;
     }
 </script>
 
