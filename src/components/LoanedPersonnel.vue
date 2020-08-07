@@ -125,13 +125,11 @@ export default {
                     this.$refs.orgtree.setCurrentKey(dataObj['id']);
                 })
             }
-            COMMON_API.USER_ROLE_QUERY_API({
+            COMMON_API.USER_ROLE_ALL_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptId: dataObj.id,
-                current: 1,
-                size: 9999
+                deptId: dataObj.id
             }).then(({ data }) => {
-                this.userlist = data.data.records;
+                this.userlist = data.data;
                 this.tree1Status = false;
             });
             // this.$http(`${SYSTEMSETUP_API.USERLIST_API}`, 'POST', {
