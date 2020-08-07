@@ -11,7 +11,8 @@
             :show-index-column="true"
             :show-select-column="true"
             :show-operation-column="true"
-            :operation-column-width="$refs.queryTable.activeName === '0'? 140 : 80"
+            :operation-column-width="operationColumnWidth"
+            @tab-click="() => { operationColumnWidth = $refs.queryTable.activeName === '0'? 140 : 86 }"
             @get-data-success="setData"
         >
             <template slot="tab-head0">
@@ -207,6 +208,7 @@
             queryTable: HTMLFormElement;
         };
 
+        operationColumnWidth = 140;
         auditLogData = [] // 审核日志
         ReText = '' // 退回原因
         BackText = '' // 反审原因
