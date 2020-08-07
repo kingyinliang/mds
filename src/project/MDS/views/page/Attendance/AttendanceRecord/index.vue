@@ -1,7 +1,7 @@
 <template>
-    <el-col>
+    <div>
         <div class="header_main">
-            <el-card class="searchCard">
+            <el-card class="searchCard queryHead" style="margin-bottom: 10px;">
                 <el-row type="flex">
                     <el-col :span="24">
                         <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row" @keyup.enter.native="GetList(true)" @submit.native.prevent>
@@ -12,25 +12,21 @@
                             </el-form-item>
                             <el-form-item label="生产车间：">
                                 <el-select v-model="plantList.workShop" placeholder="请选择">
-                                    <el-option label="请选择" value="" />
                                     <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="产线：">
                                 <el-select v-model="plantList.productLine" placeholder="请选择">
-                                    <el-option label="请选择" value="" />
                                     <el-option v-for="(item, index) in productline" :key="index" :label="item.deptName" :value="item.deptId" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="考勤大类：">
                                 <el-select v-model="plantList.kqdl" placeholder="请选择">
-                                    <el-option label="请选择" value="" />
                                     <el-option v-for="(iteam, index) in ARtype" :key="index" :label="iteam.value" :value="iteam.code" />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="审核状态：">
                                 <el-select v-model="plantList.status" placeholder="请选择">
-                                    <el-option label="请选择" value="" />
                                     <el-option label="已保存" value="saved" />
                                     <el-option label="已提交" value="submit" />
                                     <el-option label="审核通过" value="checked" />
@@ -64,14 +60,10 @@
                     <i class="el-icon-caret-top" />
                 </div>
             </el-card>
-        </div>
-        <div class="main">
-            <el-card class="tableCard">
-                <div class="toggleSearchTop">
-                    <i class="el-icon-caret-bottom" />
-                </div>
+
+            <mds-card title="考勤记录">
                 <el-row v-if="clearStatus">
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="datalist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                    <el-table ref="table1" header-row-class-name="tableHead" :data="datalist" class="newTable" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" :selectable="checkboxT" width="50" />
                         <el-table-column label="状态" :show-overflow-tooltip="true" width="100">
                             <template slot-scope="scope">
@@ -156,7 +148,7 @@
                                 <span v-else>{{ scope.row.classTypeName }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="工作内容" :show-overflow-tooltip="true" width="120">
+                        <el-table-column label="工作内容" :show-overflow-tooltip="true" min-width="120">
                             <template slot-scope="scope">
                                 <el-input v-if="scope.row.redactStatus" v-model="scope.row.content" size="small" placeholder="手工录入" />
                                 <span v-else>{{ scope.row.content }}</span>
@@ -203,7 +195,7 @@
                         </el-table-column>
                     </el-table>
                 </el-row>
-                <el-table v-if="!clearStatus" ref="table1" header-row-class-name="tableHead" :data="datalist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
+                <el-table v-if="!clearStatus" ref="table1" class="newTable" header-row-class-name="tableHead" :data="datalist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column label="车间" :show-overflow-tooltip="true" width="120">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.workShop" placeholder="请选择" size="small" disabled>
@@ -270,7 +262,7 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="工作内容" :show-overflow-tooltip="true" width="120">
+                    <el-table-column label="工作内容" :show-overflow-tooltip="true" min-width="120">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.content" size="small" placeholder="手工录入" />
                         </template>
@@ -305,85 +297,86 @@
                 <el-row v-if="clearStatus">
                     <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
-            </el-card>
-        </div>
-        <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
-            <el-row>
-                <el-col style="width: 500px;">
-                    <el-transfer v-model="selctId" filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" :data="userlist" />
-                </el-col>
-            </el-row>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="visible = false">取消</el-button>
-                <el-button type="primary" @click="updatauser(row)">确定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog ref="dayLaborer" width="450px" title="新增临时工" :close-on-click-modal="false" :visible.sync="visible1">
-            <el-form :model="form" size="small" label-width="120px" class="dialogform">
+            </mds-card>
+
+            <el-dialog title="人员分配" :close-on-click-modal="false" :visible.sync="visible">
                 <el-row>
-                    <el-button v-if="!clearStatus" type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="addDayLaborer(selctId2)">
-                        新增
-                    </el-button>
+                    <el-col style="width: 500px;">
+                        <el-transfer v-model="selctId" filterable :titles="['未分配人员', '已分配人员']" :filter-method="filterMethod" filter-placeholder="请输入用户名称" :data="userlist" />
+                    </el-col>
                 </el-row>
-                <el-form-item v-for="(item, index) in selctId2" :key="index" label="临时工姓名：">
-                    <el-col :span="20">
-                        <el-input v-model="selctId2[index]" />
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="visible = false">取消</el-button>
+                    <el-button type="primary" @click="updatauser(row)">确定</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog ref="dayLaborer" width="450px" title="新增临时工" :close-on-click-modal="false" :visible.sync="visible1">
+                <el-form :model="form" size="small" label-width="120px" class="dialogform">
+                    <el-row>
+                        <el-button v-if="!clearStatus" type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="addDayLaborer(selctId2)">
+                            新增
+                        </el-button>
+                    </el-row>
+                    <el-form-item v-for="(item, index) in selctId2" :key="index" label="临时工姓名：">
+                        <el-col :span="20">
+                            <el-input v-model="selctId2[index]" />
+                        </el-col>
+                        <el-col :span="4">
+                            <el-button v-if="!clearStatus" type="danger" icon="el-icon-delete" circle @click="delselctId2(item)" />
+                        </el-col>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="visible1 = false">取消</el-button>
+                    <el-button type="primary" @click="close(row)">确定</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog width="850px" title="借调人员" :close-on-click-modal="false" :visible.sync="visible2">
+                <el-row>
+                    <el-col style="width: 250px;">
+                        <el-card style="height: 303px; overflow-y: scroll;">
+                            <h3 style=" margin-bottom: 10px; color: black; font-size: 16px;">
+                                组织架构
+                            </h3>
+                            <el-tree ref="tree2" :data="OrgTree" node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
+                        </el-card>
                     </el-col>
-                    <el-col :span="4">
-                        <el-button v-if="!clearStatus" type="danger" icon="el-icon-delete" circle @click="delselctId2(item)" />
+                    <el-col style="width: 250px;">
+                        <el-card style="height: 303px; overflow-y: scroll;">
+                            <el-input v-model="filterText" size="small" placeholder="搜索人员" />
+                            <el-tree ref="userlistTree" :filter-node-method="filterNode" node-key="userId" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
+                        </el-card>
                     </el-col>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="visible1 = false">取消</el-button>
-                <el-button type="primary" @click="close(row)">确定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog width="850px" title="借调人员" :close-on-click-modal="false" :visible.sync="visible2">
-            <el-row>
-                <el-col style="width: 250px;">
-                    <el-card style="height: 303px; overflow-y: scroll;">
-                        <h3 style=" margin-bottom: 10px; color: black; font-size: 16px;">
-                            组织架构
-                        </h3>
-                        <el-tree ref="tree2" :data="OrgTree" node-key="deptId" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
-                    </el-card>
-                </el-col>
-                <el-col style="width: 250px;">
-                    <el-card style="height: 303px; overflow-y: scroll;">
-                        <el-input v-model="filterText" size="small" placeholder="搜索人员" />
-                        <el-tree ref="userlistTree" :filter-node-method="filterNode" node-key="userId" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
-                    </el-card>
-                </el-col>
-                <el-col style="width: 50px; padding: 70px 5px;">
-                    <el-button v-if="tree2Status" type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px;" @click="delSelcted()" />
-                    <el-button v-else type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px;" disabled @click="delSelcted()" />
-                    <el-button v-if="tree1Status" type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0;" @click="addSelcted()" />
-                    <el-button v-else type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0;" disabled @click="addSelcted()" />
-                </el-col>
-                <el-col style="width: 250px;">
-                    <el-card style="height: 303px; overflow-y: scroll;">
-                        <el-input v-model="filterText1" size="small" placeholder="搜索人员" />
-                        <el-tree ref="userlistTree1" :filter-node-method="filterNode1" :data="selctId" show-checkbox :props="selctListTreeProps" :expand-on-click-node="false" @check-change="userTree1" />
-                    </el-card>
-                </el-col>
-            </el-row>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="visible2 = false">取消</el-button>
-                <el-button type="primary" @click="saveduser(row)">确定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="审核日志" :close-on-click-modal="false" :visible.sync="visible3">
-            <el-table :data="auditLogList" header-row-class-name="tableHead" border tooltip-effect="dark">
-                <el-table-column prop="changer" label="审核人" />
-                <el-table-column prop="memo" label="审核意见" />
-                <el-table-column prop="changed" label="审核时间" />
-            </el-table>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="visible3 = false">关闭</el-button>
-            </span>
-        </el-dialog>
-    </el-col>
+                    <el-col style="width: 50px; padding: 70px 5px;">
+                        <el-button v-if="tree2Status" type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px;" @click="delSelcted()" />
+                        <el-button v-else type="primary" icon="el-icon-arrow-left" circle style="margin-bottom: 50px;" disabled @click="delSelcted()" />
+                        <el-button v-if="tree1Status" type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0;" @click="addSelcted()" />
+                        <el-button v-else type="primary" icon="el-icon-arrow-right" circle style="margin-left: 0;" disabled @click="addSelcted()" />
+                    </el-col>
+                    <el-col style="width: 250px;">
+                        <el-card style="height: 303px; overflow-y: scroll;">
+                            <el-input v-model="filterText1" size="small" placeholder="搜索人员" />
+                            <el-tree ref="userlistTree1" :filter-node-method="filterNode1" :data="selctId" show-checkbox :props="selctListTreeProps" :expand-on-click-node="false" @check-change="userTree1" />
+                        </el-card>
+                    </el-col>
+                </el-row>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="visible2 = false">取消</el-button>
+                    <el-button type="primary" @click="saveduser(row)">确定</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog title="审核日志" :close-on-click-modal="false" :visible.sync="visible3">
+                <el-table :data="auditLogList" header-row-class-name="tableHead" border tooltip-effect="dark">
+                    <el-table-column prop="changer" label="审核人" />
+                    <el-table-column prop="memo" label="审核意见" />
+                    <el-table-column prop="changed" label="审核时间" />
+                </el-table>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="visible3 = false">关闭</el-button>
+                </span>
+            </el-dialog>
+        </div>
+    </div>
 </template>
 
 <script>

@@ -96,8 +96,8 @@
             </p>
         </mds-card>
         <mds-card v-if="att" :title="'产量考勤分配'" :name="'user'">
-            <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="attendance" border tooltip-effect="dark">
-                <el-table-column label="班组" width="60">
+            <el-table header-row-class-name="tableHead" class="newTable" :row-class-name="RowDelFlag" :data="attendance" border tooltip-effect="dark">
+                <el-table-column label="班组" width="80">
                     <template slot-scope="scope">
                         {{ scope.row.itemName }}
                     </template>

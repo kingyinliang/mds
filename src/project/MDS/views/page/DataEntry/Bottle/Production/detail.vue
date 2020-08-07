@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <el-card class="searchCard newCard" style="margin-bottom: 5px;">
+        <el-card class="searchCard queryHead" style="margin-bottom: 5px;">
             <el-row type="flex">
                 <el-col>
                     <form-head :form-header="formHeader" :is-redact="isRedact" />
@@ -39,7 +39,7 @@
                 </el-col>
             </el-row>
         </el-card>
-        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs" type="border-card" @tab-click="tabClick">
+        <el-tabs ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" @tab-click="tabClick">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
                     <el-tooltip class="item" effect="dark" :content="readyState === 'noPass' ? '不通过' : readyState === 'saved' ? '已保存' : readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过' : '未录入'" placement="top-start">
