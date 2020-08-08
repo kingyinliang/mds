@@ -274,7 +274,7 @@ export default class ProductPeople extends Vue {
 
     // 获取组织结构树
     getTree() {
-        COMMON_API.ORGSTRUCTURE_API({
+        COMMON_API.ORGSTRUCTURE_ALL_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
         }).then(({ data }) => {
             this.orgTree = data.data;

@@ -154,6 +154,10 @@ const COMMON_API = {
      */
     ORGSTRUCTURE_API: params => httpProxy('/sysDept/dropDown', 'GET', params),
     /**
+     * @property {string} ORGSTRUCTURE_API 组织架构树形 - 下拉
+     */
+    ORGSTRUCTURE_ALL_API: params => httpProxy('/sysDept/all/dropDown', 'GET', params),
+    /**
      * @property {string} ADDORG_API 组织架构新增
      */
     ADDORG_API: params => httpProxy('/sysDept/insert', 'POST', params),
