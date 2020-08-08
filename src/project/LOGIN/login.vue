@@ -225,7 +225,7 @@ export default {
                         loginSystem: 'MDS'
                     }).then(({ data }) => {
                         if (data.code === 200) {
-                            // this.loginSuccess(data.data);
+                            this.loginSuccess(data.data);
                         }
                     });
                 } else {
