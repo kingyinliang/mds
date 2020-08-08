@@ -196,7 +196,7 @@ export default {
         dataFormSubmit() {
             this.$refs['dataForm'].validate(valid => {
                 if (valid) {
-                    COMMON_API.UPPASS_API(this.dataForm).then(({ data }) => {
+                    COMMON_API.UPPASS_API(this.dataForm).then(() => {
                         this.$successToast('密码修改成功');
                         this.visible = false;
                         if (sessionStorage.getItem('defaultFactory')) {
