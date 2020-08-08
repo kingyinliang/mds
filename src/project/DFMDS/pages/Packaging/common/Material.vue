@@ -8,7 +8,7 @@
                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="单位" prop="materialUnit" width="50" :show-overflow-tooltip="true" />
+                <el-table-column label="单位" prop="materialUnitName" width="50" :show-overflow-tooltip="true" />
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="结算库存" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
@@ -425,6 +425,7 @@
                         materialCode: item.materialCode,
                         materialName: item.materialName,
                         materialUnit: item.materialUnit,
+                        materialUnitName: item.materialUnitName,
                         needNum: item.needNum,
                         materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : null,
                         materialType: dataGroup === 'currentDataTable' ? item.materialType : null,
@@ -618,6 +619,7 @@ interface MaterialMap{
     materialName?: string;
     materialStatus?: string;
     materialUnit?: string;
+    materialUnitName?: string;
     needNum?: number;
     startStocks?: number;
     endStocks?: number;
