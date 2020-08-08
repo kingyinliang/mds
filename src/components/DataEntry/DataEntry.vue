@@ -108,10 +108,10 @@
                         <span v-else>点击编辑按钮，对当前页面进行编辑</span>
                     </div>
                     <div class="redact_btn">
-                        <el-button v-if="isRedact" type="primary" size="small" @click="cancel">
+                        <el-button v-if="isRedact && isAuth(redactAuth)" type="primary" size="small" @click="cancel">
                             取消
                         </el-button>
-                        <el-button type="primary" size="small" @click="save">
+                        <el-button v-if="isAuth(saveAuth)" type="primary" size="small" @click="save">
                             {{ isRedact ? '保存' : '编辑' }}
                         </el-button>
                     </div>
