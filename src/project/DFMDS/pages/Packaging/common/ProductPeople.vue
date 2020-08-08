@@ -210,7 +210,7 @@ export default class ProductPeople extends Vue {
         // 获取组织结构树
         this.getTree()
 
-        this.getStandardManPower(this.$store.state.packaging.packDetail)
+        this.getStandardManPower(formHeader)
 
         this.productPeopleAudit = await this.getAudit(formHeader, 'TIMESHEET');
     }
