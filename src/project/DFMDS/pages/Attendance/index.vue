@@ -14,8 +14,11 @@
                                 <el-option v-for="(item,index) in productLineList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="考勤日期：">
-                            <el-date-picker v-model="searchForm.evaluationDate" type="date" value-format="yyyy-MM-dd" style="width: 160px;" />
+                        <el-form-item label="考勤开始日期：" label-width="100px">
+                            <el-date-picker v-model="searchForm.evaluationStartDate" type="date" value-format="yyyy-MM-dd" style="width: 160px;" />
+                        </el-form-item>
+                        <el-form-item label="考勤结束日期：" label-width="100px">
+                            <el-date-picker v-model="searchForm.evaluationEndtDate" type="date" value-format="yyyy-MM-dd" style="width: 160px;" />
                         </el-form-item>
                     </el-form>
                     <div class="button-group">
@@ -105,14 +108,14 @@
                         <template slot-scope="scope">
                             <div class="required" style="min-height: 32px; line-height: 32px;">
                                 <span v-if="!scope.row.isRedact" style="cursor: pointer;">
-                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
+                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}</i>
                                 </span>
                                 <span v-if="scope.row.isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
-                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
+                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}</i>
                                     <i>点击选择人员</i>
                                 </span>
                                 <span v-if="scope.row.isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" @click="dayLaborer(scope.row)">
-                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
+                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}</i>
                                     <i>点击输入人员</i>
                                 </span>
                             </div>
@@ -144,7 +147,7 @@
                     </el-table-column>
                     <el-table-column prop="duration" min-width="80" label="时长(H)" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <p> {{ workTimeCount(scope.row,scope.$index) }} H </p>
+                            <p> {{ Object.is(NaN,workTimeCount(scope.row,scope.$index))?0:workTimeCount(scope.row,scope.$index) }} H </p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="jobContent" min-width="200" label="工作内容" :show-overflow-tooltip="true">
@@ -220,7 +223,8 @@
         searchForm={
             workshop: '',
             productLine: '',
-            evaluationDate: ''
+            evaluationStartDate: '',
+            evaluationEndDate: ''
         }
 
         currentRow: CurrentDataTable = {
@@ -229,8 +233,8 @@
 
         currentWorkshop=''
         currentProductLine=''
-        currentEvaluationDate=''
-
+        currentEvaluationStartDate=''
+        currentEvaluationEndDate=''
         selectTree: OptionsTreeList[]=[] // 选单结构树
         workshopList: OptionsInList[]=[] // 车间清单
         productLineList: OptionsInList[]=[] // 产线清单
@@ -360,7 +364,8 @@
                 workShop: this.currentWorkshop,
                 size: this.pageSize,
                 current: this.totalCount,
-                checkWorkDate: this.currentEvaluationDate
+                checkWorkDate: this.currentEvaluationStartDate,
+                checkWorkEndDate: this.currentEvaluationEndDate
                 }).then(({ data }) => {
                     console.log('查寻结果')
                     console.log(data)
@@ -390,7 +395,8 @@
                 workShop: obj.workshop,
                 size: this.pageSize,
                 current: this.currPage,
-                checkWorkDate: obj.evaluationDate
+                checkWorkDate: obj.evaluationStartDate,
+                checkWorkEndDate: obj.evaluationEndDate
                 }).then(({ data }) => {
                     this.checkSaveStatus = false
                     console.log('查寻结果')
@@ -412,14 +418,16 @@
                     // 存全局变量
                     this.currentWorkshop = obj.workshop
                     this.currentProductLine = obj.productLine
-                    this.currentEvaluationDate = obj.evaluationDate
+                    this.currentEvaluationStartDate = obj.evaluationStartDate
+                    this.currentEvaluationEndDate = obj.evaluationEndDate
 
                 } else {
                     this.$infoToast('暂无任何内容');
                     this.currentFormDataGroup = []
                     this.currentWorkshop = ''
                     this.currentProductLine = ''
-                    this.currentEvaluationDate = ''
+                    this.currentEvaluationStartDate = ''
+                    this.currentEvaluationEndDate = ''
                 }
             })
         }
@@ -461,7 +469,7 @@
                         insertData: insertDataTemp,
                         updateData: updateDataTemp
                         }).then(() => {
-                            this.$successToast('保存成功');
+                            this.$successToast('操作成功');
                             this.checkSaveStatus = false
                             // this.currPage = 1;
                             // this.totalCount = 1
@@ -508,7 +516,7 @@
 
         // 计算时长
         workTimeCount(row, index) {
-            let num = this.currentFormDataGroup[index].duration;
+            let num: number = this.currentFormDataGroup[index].duration as number;
             if (row.delFlag !== 1 && row.isRedact === true) { // 避免锅次呼叫，增加判断，若不是新增的 row 且编辑状态
                 num = Number(getDateDiff(row.startTime, row.endTime, 'hour'))
                 this.currentFormDataGroup[index].duration = num
@@ -589,7 +597,7 @@
                     this.multipleSelection.forEach(item => {
                         item.delFlag = 1
                     })
-                    this.$successToast('删除成功');
+                    // this.$successToast('删除成功');
                     this.multipleSelection = []
                     this.btnSaveData()
                 });
@@ -739,5 +747,13 @@ interface UserTypeListObject {
 }
 .header_main >>> .box-card-title {
     margin-bottom: 10px;
+}
+.required span i::after {
+    margin-left: -2px;
+    content: ",";
+}
+.required span i:last-child::after {
+    margin-left: -2px;
+    content: "";
 }
 </style>
