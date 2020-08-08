@@ -239,7 +239,12 @@
                 const filterArr1: (any) = pkgPackingMaterial.packingMaterialUpdate.filter(it => it.id === item.mainId);// eslint-disable-line
                 const filterArr2: (any) = pkgPackingMaterial.packingMaterialInsert.filter(it => it.merge === item.merge);// eslint-disable-line
                 if (item.materialStatus === '3') {
-                    pkgPackingMaterial.packingMaterialDelete.push(item.mainId);
+                    if (pkgPackingMaterial.packingMaterialDelete.indexOf(item.mainId) === -1) {
+                        pkgPackingMaterial.packingMaterialDelete.push(item.mainId);
+                    }
+                    if (item.id) {
+                        pkgPackingMaterial.packingMaterialItemDelete.push(item.id)
+                    }
                 } else if (item.delFlag === 1) {
                     if (item.id) {
                         pkgPackingMaterial.packingMaterialItemDelete.push(item.id)
@@ -380,6 +385,7 @@
             }).then(({ data }) => {
                 this.processData(data.data, 'currentDataTable');
                 this.merge(this.currentDataTable, 'currentDataTable');
+                console.log(this.currentDataTable);
                 this.orgDataTable = JSON.parse(JSON.stringify(this.currentDataTable));
             });
             PKG_API.PKG_MATERIAL_S_QUERY_API({

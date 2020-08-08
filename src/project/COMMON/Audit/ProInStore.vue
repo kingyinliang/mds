@@ -11,7 +11,8 @@
             :show-index-column="true"
             :show-select-column="true"
             :show-operation-column="true"
-            :operation-column-width="140"
+            :operation-column-width="operationColumnWidth"
+            @tab-click="() => { operationColumnWidth = $refs.queryTable.activeName === '0'? 140 : 86 }"
             @get-data-success="setData"
         >
             <template slot="tab-head0">
@@ -119,7 +120,7 @@
                 label: '计划数量'
             },
             {
-                prop: 'orderEntryUomName',
+                prop: 'orderEntryUom',
                 label: '单位'
             },
             {
@@ -193,7 +194,7 @@
                 label: '备注'
             },
             {
-                prop: 'interfaceMsg',
+                prop: 'interfaceReturn',
                 label: '接口回写'
             }
         ];
@@ -202,6 +203,7 @@
             queryTable: HTMLFormElement;
         };
 
+        operationColumnWidth = 140;
         auditLogData = []; // 审核日志
         ReText = ''; // 退回原因
         BackText = ''; // 反审原因
