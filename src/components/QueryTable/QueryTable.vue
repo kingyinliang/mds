@@ -476,19 +476,19 @@
                             this.tableData = path.list;
                         }
                         if (this.resData.currPage) {
-                            this.queryForm.currPage = path[this.resData.currPage];
+                            this.queryForm.currPage = Number(path[this.resData.currPage]);
                         } else {
-                            this.queryForm.currPage = path.currPage;
+                            this.queryForm.currPage = Number(path.currPage);
                         }
                         if (this.resData.pageSize) {
-                            this.queryForm[this.pagesizeConfig] = path[this.resData.pageSize];
+                            this.queryForm[this.pagesizeConfig] = Number(path[this.resData.pageSize]);
                         } else {
-                            this.queryForm[this.pagesizeConfig] = path.pageSize;
+                            this.queryForm[this.pagesizeConfig] = Number(path.pageSize);
                         }
                         if (this.resData.totalCount) {
-                            this.queryForm.totalCount = path[this.resData.totalCount];
+                            this.queryForm.totalCount = Number(path[this.resData.totalCount]);
                         } else {
-                            this.queryForm.totalCount = path.totalCount;
+                            this.queryForm.totalCount = Number(path.totalCount);
                         }
                     } else if (this.factoryType === 1) {
                         this.tableData = data.data.records;
