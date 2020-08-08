@@ -2,8 +2,8 @@
     <div class="header_main">
         <mds-card title="考勤记录" :pack-up="false" name="evaluation">
             <template slot="titleBtn">
-                <div style="display: flex; align-items: center;" class="floatr">
-                    <el-form :model="searchForm" size="small" :inline="true" label-position="right" label-width="100px" class="sole_row" style="margin-right: 30px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row" style="margin-right: 30px;">
                         <el-form-item label="生产车间：">
                             <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 140px;" clearable @change="eventChangeWorkshopOptions">
                                 <el-option v-for="(item,index) in selectTree" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
@@ -14,26 +14,27 @@
                                 <el-option v-for="(item,index) in productLineList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="考核日期：">
+                        <el-form-item label="考勤日期：">
                             <el-date-picker v-model="searchForm.evaluationDate" type="date" value-format="yyyy-MM-dd" style="width: 160px;" />
                         </el-form-item>
                     </el-form>
-
-                    <el-button v-if="isAuth('kqQuery')" type="primary" size="small" :disabled="searchForm.workshop===''|| searchForm.productLine===''" @click="btnGetResult(searchForm)">
-                        查询
-                    </el-button>
-                    <el-button v-if="isAuth('kqInsert')" type="primary" size="small" @click="btnAddDataRow">
-                        新增
-                    </el-button>
-                    <el-button v-if="isAuth('kqSave')" type="primary" size="small" :disabled="currentFormDataGroup.length===0||!checkSaveStatus" @click="btnSaveData">
-                        保存
-                    </el-button>
-                    <!-- <el-button type="danger" size="small" @click="btnReject">
-                        撤回
-                    </el-button>-->
-                    <el-button v-if="isAuth('kqDel')" type="danger" size="small" :disabled="multipleSelection.length===0" @click="btnRemoveDataRow">
-                        删除
-                    </el-button>
+                    <div class="button-group">
+                        <el-button v-if="isAuth('kqQuery')" type="primary" size="small" :disabled="searchForm.workshop===''" @click="btnGetResult(searchForm)">
+                            查询
+                        </el-button>
+                        <el-button v-if="isAuth('kqInsert')" type="primary" size="small" @click="btnAddDataRow">
+                            新增
+                        </el-button>
+                        <el-button v-if="isAuth('kqSave')" type="primary" size="small" :disabled="currentFormDataGroup.length===0||!checkSaveStatus" @click="btnSaveData">
+                            保存
+                        </el-button>
+                        <!-- <el-button type="danger" size="small" @click="btnReject">
+                            撤回
+                        </el-button>-->
+                        <el-button v-if="isAuth('kqDel')" type="danger" size="small" :disabled="multipleSelection.length===0" @click="btnRemoveDataRow">
+                            删除
+                        </el-button>
+                    </div>
                 </div>
             </template>
             <el-form ref="dataFormRules" :model="dataFormRules">
@@ -300,12 +301,13 @@
                             deptType: 'PRODUCT_LINE'
 
                         }).then(({ data: target }) => {
+                            element.productLine = []
                             target.data.forEach(items => {
                                 element.productLine.push({ targetCode: items.deptCode, targetName: items.deptName })
                             })
                         })
 
-                        if (element.targetName !== '发酵车间') {
+                        // if (element.targetName !== '发酵车间') {
 
                             COMMON_API.SYS_CHILDTYPE_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -313,11 +315,15 @@
                                 deptName: element.targetName.substring(0, 2)
 
                             }).then(({ data: target }) => {
-                                target.data.forEach(items => {
-                                    element.team.push({ targetCode: items.deptCode, targetName: items.deptName })
-                                });
+                                element.team = []
+                                if (target.data !== null) {
+                                    target.data.forEach(items => {
+                                        element.team.push({ targetCode: items.deptCode, targetName: items.deptName })
+                                    });
+                                }
+
                             });
-                        }
+                        // }
                 })
             })
 
@@ -383,7 +389,7 @@
                 productLine: obj.productLine,
                 workShop: obj.workshop,
                 size: this.pageSize,
-                current: this.totalCount,
+                current: this.currPage,
                 checkWorkDate: obj.evaluationDate
                 }).then(({ data }) => {
                     this.checkSaveStatus = false
@@ -461,6 +467,10 @@
                             // this.totalCount = 1
                             // this.pageSize = 10
                             // this.getDataList()
+                            this.currentFormDataGroup.forEach(item => {
+                                item.isRedact = false
+                            })
+
                     })
                 } else {
                         this.checkSaveStatus = false
@@ -607,12 +617,11 @@
         // 选择人员 正式借调
         selectUser(row: CurrentDataTable) {
             this.currentRow = row
-            console.log(row)
             if (row.userType === 'FORMAL') { // 正式
-                if (row.productLine) {
+                if (row.team) {
                     this.officialWorkerStatus = true;
                     this.$nextTick(() => {
-                        this.$refs.officialWorker.init(row.productLine, row.userList);
+                        this.$refs.officialWorker.init(row.team, row.userList);
                     });
                 } else {
                     this.$warningToast('请选择产线');
@@ -648,7 +657,7 @@
             currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
 
             for (const item of currentFormDataGroupNew) {
-                if (!item.workShop || !item.classes || !item.userType || item.userList === [] || !item.startTime || !item.endTime || !((item.dinner as number) >= 0) || !item.jobContent) {
+                if (!item.workShop || !item.classes || !item.userType || item.userList.length === 0 || !item.startTime || !item.endTime || !((item.dinner as number) >= 0) || !item.jobContent) {
                     this.$warningToast('请填写必填项');
                     return false
                 }
@@ -693,7 +702,7 @@ interface CurrentDataTable {
         startTime?: string;
         // status?: string;
         team?: string;
-        userList?: string[];
+        userList: string[];
         userType?: string;
         workShop?: string;
         delFlag?: number;
