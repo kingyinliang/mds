@@ -107,7 +107,7 @@ export default {
             }
         },
         getTree() {
-            COMMON_API.ORGSTRUCTURE_API({
+            COMMON_API.ORGSTRUCTURE_ALL_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             }).then(({ data }) => {
                 this.orgTree = data.data;

@@ -89,7 +89,7 @@
             } else {
                 id = JSON.parse(sessionStorage.getItem('factory') || '{}').id
             }
-            COMMON_API.ORGSTRUCTURE_API({
+            COMMON_API.ORGSTRUCTURE_ALL_API({
                 factory: id
             }).then(({ data }) => {
                 if (data.code === 200) {
