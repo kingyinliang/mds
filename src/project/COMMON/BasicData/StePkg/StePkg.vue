@@ -6,7 +6,7 @@
                     <el-select v-model="queryForm.stePotId" size="small" placeholder="杀菌锅" style="width: 160px; margin-right: 10px;" clearable>
                         <el-option v-for="(item, index) in holderList" :key="index" :label="item.holderName" :value="item.id" />
                     </el-select>
-                    <el-button v-if="isAuth('stePkgQuery')" type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; GetData() }">
+                    <el-button v-if="isAuth('stePkgQuery')" type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; queryType = 1; GetData() }">
                         查询
                     </el-button>
                     <el-button v-if="isAuth('stePkgQuery')" type="primary" size="small" @click="visibleHightLevelQuery = true">
@@ -62,7 +62,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="visibleHightLevelQuery = false">取消</el-button>
-                <el-button type="primary" @click="() => { queryForm.current = 1; GetData() }">确定</el-button>
+                <el-button type="primary" @click="() => { queryForm.current = 1; queryType = 2; GetData() }">确定</el-button>
             </span>
         </el-dialog>
         <ste-pkg-add-or-update v-if="addOrUpdate" ref="addOrUpdate" :ste-work-shop="steWorkShop" :pkg-work-shop="pkgWorkShop" :holder-list="holderList" @refreshDataList="GetData" />
@@ -89,6 +89,7 @@
             addOrUpdate: HTMLFormElement;
         };
 
+        queryType = 1;
         queryForm = {
             current: 1,
             size: 10,
@@ -164,7 +165,25 @@
         }
 
         GetData() {
-            BASIC_API.STEPKG_LIST_API(this.queryForm).then(({ data }) => {
+            let params;
+            if (this.queryType === 1) {
+                params = {
+                    stePotId: this.queryForm.stePotId,
+                    current: this.queryForm.current,
+                    size: this.queryForm.current,
+                    total: this.queryForm.current
+                }
+            } else if (this.queryType === 2) {
+                params = {
+                    steWorkShop: this.queryForm.steWorkShop,
+                    pkgWorkShop: this.queryForm.pkgWorkShop,
+                    pkgLine: this.queryForm.pkgLine,
+                    current: this.queryForm.current,
+                    size: this.queryForm.current,
+                    total: this.queryForm.current
+                }
+            }
+            BASIC_API.STEPKG_LIST_API(params).then(({ data }) => {
                 this.visibleHightLevelQuery = false;
                 this.addOrUpdate = false;
                 if (data.data.current === 1 && data.data.records.length === 0) {
