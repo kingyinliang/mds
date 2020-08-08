@@ -245,7 +245,7 @@ export default {
             sessionStorage.setItem('staff-post', data.post || '');
             sessionStorage.setItem('staff-location', data.deptName || '');
             sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
-            if (data.firstFlag === '1') {
+            if (data.firstFlag === 'Y') {
                 this.visible = true;
                 this.factory = data.userFactory
             } else if (data.defaultFactory) {
