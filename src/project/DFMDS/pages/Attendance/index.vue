@@ -2,10 +2,10 @@
     <div class="header_main">
         <mds-card title="考勤记录" :pack-up="false" name="evaluation">
             <template slot="titleBtn">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row" style="margin-right: 30px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; white-space: nowrap;">
+                    <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row">
                         <el-form-item label="生产车间：">
-                            <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 140px;" clearable @change="eventChangeWorkshopOptions">
+                            <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 130px;" clearable @change="eventChangeWorkshopOptions">
                                 <el-option v-for="(item,index) in selectTree" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
@@ -14,14 +14,11 @@
                                 <el-option v-for="(item,index) in productLineList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="考勤开始日期：" label-width="100px">
-                            <el-date-picker v-model="searchForm.evaluationStartDate" type="date" value-format="yyyy-MM-dd" style="width: 160px;" />
-                        </el-form-item>
-                        <el-form-item label="考勤结束日期：" label-width="100px">
-                            <el-date-picker v-model="searchForm.evaluationEndtDate" type="date" value-format="yyyy-MM-dd" style="width: 160px;" />
+                        <el-form-item label="考勤日期：" label-width="70px">
+                            <el-date-picker v-model="searchForm.evaluationStartDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 140px;" /> - <el-date-picker v-model="searchForm.evaluationEndtDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 140px;" />
                         </el-form-item>
                     </el-form>
-                    <div class="button-group">
+                    <div class="button-group" style="white-space: nowrap;">
                         <el-button v-if="isAuth('kqQuery')" type="primary" size="small" :disabled="searchForm.workshop===''" @click="btnGetResult(searchForm)">
                             查询
                         </el-button>

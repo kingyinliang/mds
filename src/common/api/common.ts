@@ -98,7 +98,7 @@ const COMMON_API = {
      */
     USER_ROLE_QUERY_API: params => httpProxy('/sysUser/userRole/query', 'POST', params),
     /**
-     * @property {string} USER_ROLE_QUERY_API 系统管理-用户管理-查询 不带分页
+     * @property {string} USER_ROLE_ALL_QUERY_API 系统管理-用户管理-查询 不带分页
      */
     USER_ROLE_ALL_QUERY_API: params => httpProxy('/sysUser/userRole/all/query', 'POST', params),
     /**
