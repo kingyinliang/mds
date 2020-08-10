@@ -93,7 +93,7 @@
 
 <script lang="ts">
     import { Vue, Component, Watch } from 'vue-property-decorator';
-    import { COMMON_API, MSG_API } from 'common/api/api';
+    import { MSG_API } from 'common/api/api';
 
     @Component({
         components: {
@@ -120,10 +120,8 @@
         post=sessionStorage.getItem('staff-post')
         deptName=sessionStorage.getItem('staff-location')
 
-        iconLib: Icon[]=[]
-
         async mounted() {
-            await this.getIcon()
+            // await this.getIcon()
             setTimeout(() => {
                 // 取已读、未读消息
                 this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
@@ -141,20 +139,6 @@
             if (newStatus !== false) {
                 this.getMsgDataList(this.currPageFromUnread, this.pageSizeFromUnread, 0)
             }
-        }
-
-
-        getIcon() {
-            // 获取数据列表
-            COMMON_API.MENULIST_API({
-                factory: 'common'
-            }).then(({ data }) => {
-                data.data.forEach(item => {
-                    if (item.parentId === '0') {
-                        this.iconLib.push({ menuName: item.menuName, menuIcon: item.menuIcon })
-                    }
-                })
-            });
         }
 
         getMsgDataList(current, size, read): void {
@@ -176,25 +160,10 @@
                     this.readList = data.data.records
                     this.readNum = data.data.total
                     this.totalCountFromRead = data.data.total
-                    this.readList.forEach(item => {
-                        this.iconLib.forEach((element: Icon) => {
-                            if (item.workShopName.indexOf(element.menuName.substring(0, 2)) !== -1) {
-                                item.icon = element.menuIcon
-                            }
-                        })
-                            item.readed = true
-                    })
                 } else {
                     this.unreadList = data.data.records
                     this.unreadNum = data.data.total
                     this.totalCountFromUnread = data.data.total
-                    this.unreadList.forEach((item: MessageObject) => {
-                        this.iconLib.forEach((element: Icon) => {
-                            if (item.workShopName.indexOf(element.menuName.substring(0, 2)) !== -1) {
-                                item.icon = element.menuIcon
-                            }
-                        })
-                    })
                 }
             });
         }
