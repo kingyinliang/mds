@@ -110,11 +110,13 @@ export default {
                 return;
             }
             let net;
+            console.log(JSON.parse(sessionStorage.getItem('factory')))
+
             switch (JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode) {
                 case '9999-xn':
-                    net = COMMON_API.USER_QUERY_API;
+                    net = COMMON_API.USER_QUERY_API; // /sysUser/query
                     break;
-                default: net = COMMON_API.USER_ROLE_QUERY_API;
+                default: net = COMMON_API.USER_ROLE_QUERY_API; // /sysUser/userRole/query
             }
             net({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -163,45 +165,46 @@ export default {
             if (this.multipleSelection.length === 0) {
                 this.$warningToast('请选择要删除的用户');
             } else {
-                const roleName = [];
+                // const roleName = [];
                 const userID = [];
                 this.multipleSelectionTemp.forEach(item => {
-                    if (item.roles.length !== 0) {
-                        item.roles.forEach(subItem => {
-                            roleName.push(subItem.roleName);
-                        })
-                    }
+                    // if (item.roles.length !== 0) {
+                    //     item.roles.forEach(subItem => {
+                    //         roleName.push(subItem.roleName);
+                    //     })
+                    // }
                     userID.push(item.id);
                 });
-                if (roleName.length) {
-                    this.$confirm(`有 ${roleName.join(',')}权限，不能删除，请联系IT`, '删除用户', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                    //    then
-                    }).catch(() => {
-                        // this.$infoToast('已取消删除');
-                    });
-                } else {
-                    this.$confirm('此用户无权限，是否删除?', '删除用户', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    })
-                        .then(() => {
+                // if (roleName.length) {
+                //     this.$confirm(`有 ${roleName.join(',')}权限，不能删除，请联系IT`, '删除用户', {
+                //         confirmButtonText: '确定',
+                //         cancelButtonText: '取消',
+                //         type: 'warning'
+                //     }).then(() => {
+                //     //    then
+                //     }).catch(() => {
+                //         // this.$infoToast('已取消删除');
+                //     });
+                // } else {
+                    // this.$confirm('此用户无权限，是否删除?', '删除用户', {
+                    //     confirmButtonText: '确定',
+                    //     cancelButtonText: '取消',
+                    //     type: 'warning'
+                    // })
+                    //     .then(() => {
                             COMMON_API.USER_DELETE_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 ids: userID
                             }).then(() => {
+                                this.$successToast('操作成功');
                                 this.multipleSelection = [];
                                 this.getItemsList();
                             });
-                        })
-                        .catch(() => {
-                        //    catch
-                        });
-                }
+                        // })
+                        // .catch(() => {
+                        // //    catch
+                        // });
+                // }
             }
         },
         // 改变每页条数
