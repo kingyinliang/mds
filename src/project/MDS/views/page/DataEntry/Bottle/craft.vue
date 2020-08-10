@@ -79,7 +79,7 @@
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="productList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
+                <el-table :data="productList" class="newTable" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
                     <el-table-column type="index" label="序号" width="50" fixed="left" />
                     <el-table-column label="产品参数" fixed="left" show-overflow-tooltip width="85" prop="parameter" />
                     <el-table-column label="时间" width="200">

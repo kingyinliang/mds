@@ -1,41 +1,33 @@
 <template>
     <div class="header_main">
-        <el-card class="newCard">
+        <el-card class="searchCard queryHead">
             <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="sole_row">
                 <el-form-item label="生产工厂：">
-                    <el-select v-model="formHeader.factory" class="width150px">
-                        <el-option value="">
-                            请选择
-                        </el-option>
+                    <el-select v-model="formHeader.factory" class="selectwpx" style="width: 180px;" placeholder="请选择" clearable>
                         <el-option v-for="(item, index) in factoryList" :key="index" :value="item.deptId" :label="item.deptName" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产车间：">
-                    <el-select v-model="formHeader.workShop" class="width150px">
-                        <el-option value="">
-                            请选择
-                        </el-option>
+                    <el-select v-model="formHeader.workShop" :disabled="workshopList.length===0" class="selectwpx" style="width: 140px;" placeholder="请选择" clearable>
                         <el-option v-for="(item, index) in workshopList" :key="index" :value="item.deptId" :label="item.deptName" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <el-date-picker v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 150px;" />
+                    <el-date-picker v-model="formHeader.productDate" type="date" value-format="yyyy-MM-dd" placeholder="请选择日期" style="width: 150px;" clearable />
                 </el-form-item>
                 <el-form-item label="生产订单：">
-                    <el-input v-model.trim="formHeader.orderNo" style="width: 150px;" />
+                    <el-input v-model.trim="formHeader.orderNo" style="width: 150px;" placeholder="请输入" clearable />
                 </el-form-item>
-                <el-form-item class="floatr">
-                    <el-button v-if="isAuth('bottle:workshop:indexList')" type="primary" size="small" class="floatr" @click="getList">
-                        查询
-                    </el-button>
-                </el-form-item>
+                <el-button v-if="isAuth('bottle:workshop:indexList')" type="primary" size="small" class="floatr" @click="getList">
+                    查询
+                </el-button>
             </el-form>
         </el-card>
-        <el-row :gutter="20" style="margin-top: 5px;">
-            <el-col v-for="(item, index) in dataList" :key="index" :span="8" style="margin-bottom: 15px;">
-                <div class="sole">
-                    <div class="top">
-                        <div>产线：{{ item.name }}</div>
+        <el-row class="potList" :gutter="10" style="min-height: 150px; margin-top: 5px;">
+            <el-col v-for="(item, index) in dataList" :key="index" :span="8">
+                <div class="box-item">
+                    <div class="box-item__top">
+                        <div><i class="title-icon" />产线：{{ item.name }}</div>
                         <div class="status">
                             <span
                                 class="points"
@@ -52,36 +44,38 @@
                             >{{ item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus }}</i>
                         </div>
                     </div>
-                    <el-row class="content" :gutter="20">
-                        <el-col class="img" :span="10">
-                            <img src="@/assets/img/bottle.png" style="width: 95%;">
-                        </el-col>
-                        <el-col class="right" :span="14">
-                            <div class="lines">
-                                订单号：
-                                <el-select v-model="item.orderNo" filterable size="mini" style="width: 140px;" @change="changeOrder($event, item)">
-                                    <el-option v-for="(subItems, subIndex) in item.orderList" :key="subIndex" :value="subItems.orderNo" :label="subItems.orderNo" />
-                                </el-select>
-                            </div>
-                            <div class="lines">
-                                <div style="float: left;">
-                                    品项：
-                                </div>
-                                <el-tooltip class="item" effect="dark" :content="item.materialCode + item.materialName" placement="bottom-start">
-                                    <div style="float: left; width: 140px; overflow: hidden; color: rgba(0, 0, 0, 0.65); white-space: nowrap; text-overflow: ellipsis;">
-                                        {{ item.materialCode }}{{ item.materialName }}
-                                    </div>
-                                </el-tooltip>
-                            </div>
-                            <div class="lines">
-                                计划产量：<span>{{ item.planOutput }} {{ item.outputUnit }}</span>
-                            </div>
-                            <div class="lines">
-                                实时产量：<span>{{ item.realOutput }} {{ item.realOutput ? item.outputUnit : '' }}</span>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <div class="bottom">
+                    <div class="box-item__content" :gutter="20">
+                        <div class="img">
+                            <img src="@/assets/img/bottle.png" style="width: 130px;">
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li class="lines">
+                                    <span>订单号：</span>
+                                    <el-select v-model="item.orderNo" filterable size="mini" style="flex: 1;" @change="changeOrder($event, item)">
+                                        <el-option v-for="(subItems, subIndex) in item.orderList" :key="subIndex" :value="subItems.orderNo" :label="subItems.orderNo" />
+                                    </el-select>
+                                </li>
+                                <li class="lines">
+                                    <span>
+                                        生产品项：
+                                    </span>
+                                    <el-tooltip class="item" effect="dark" :content="item.materialCode + item.materialName" placement="bottom-start">
+                                        <span>
+                                            {{ item.materialCode }}{{ item.materialName }}
+                                        </span>
+                                    </el-tooltip>
+                                </li>
+                                <li class="lines">
+                                    <span>计划产量：</span><span>{{ item.planOutput }} {{ item.outputUnit }}</span>
+                                </li>
+                                <li class="lines">
+                                    <span>实时产量：</span><span>{{ item.realOutput }} {{ item.realOutput ? item.outputUnit : '' }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="box-item__footer">
                         <el-tooltip
                             class="item"
                             effect="dark"
@@ -92,13 +86,12 @@
                                 生产数据
                             </el-button>
                         </el-tooltip>
-                        <div class="bottom-split" />
+
                         <el-tooltip class="item" effect="dark" :content="item.craftDataStatus" placement="top-start">
                             <el-button :disabled="!isAuth('bottle:workshop:techProductParameterList')" class="bottom-item" @click="GoDetail(2, item)">
                                 工艺数据
                             </el-button>
                         </el-tooltip>
-                        <div class="bottom-split" />
                         <el-tooltip class="item" effect="dark" :content="item.qualityStatus" placement="top-start">
                             <el-button :disabled="!isAuth('bottle:workshop:qualityInspectionList')" class="bottom-item" @click="GoDetail(3, item)">
                                 质量检测
@@ -278,60 +271,77 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.sole {
+<style lang="scss" scoped>
+.box-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(232, 232, 232, 1);
-    border-radius: 2px;
-    .top {
+    border-radius: 6px;
+    .box-item__top {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
         height: 40px;
         padding: 0 10px;
+        font-size: 14px;
         .status {
-            font-size: 14px;
+            font-size: 12px;
             line-height: 20px;
         }
     }
-    .content {
-        padding: 10px;
+    .box-item__content {
+        display: flex;
+        flex-direction: row;
         .img {
             margin-top: 10px;
-            text-align: center;
         }
         .right {
-            height: 120px;
             .lines {
-                overflow: hidden;
-                color: rgba(0, 0, 0, 0.45);
+                display: flex;
+                flex-direction: row;
+                height: 32px;
+                margin-bottom: 10px;
+                padding-left: 10px;
+                color: #333;
                 font-size: 12px;
-                line-height: 26px;
-                span {
+                line-height: 32px;
+                list-style: none;
+                border-radius: 4px;
+                span:last-child {
+                    flex: 1;
+                    padding: 0 10px;
+                    overflow: hidden;
+                    font-size: 12px;
+                    line-height: 32px;
+                    text-overflow: ellipsis;
+                    background: #f5f5f5;
+                    border-radius: 4px;
+                }
+                span:first-child {
+                    width: 60px;
                     color: rgba(0, 0, 0, 0.65);
                     font-size: 12px;
                 }
             }
         }
     }
-    .bottom {
+    .box-item__footer {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        height: 40px;
-        background: rgba(247, 249, 250, 1);
         .bottom-item {
             flex: 1;
-            height: 40px;
-            padding: 0;
-            font-size: 14px;
-            line-height: 40px;
+            padding: 9px 15px;
+            color: #000;
+            font-size: 12px;
             text-align: center;
-            background: #f7f9fa;
-            border: none;
+            background-color: #fff;
+            border-color: #d9d9d9;
             border-radius: 0;
             &:hover {
                 color: #fff;
@@ -344,11 +354,15 @@ export default {
                 color: #fff;
             }
         }
-        .bottom-split {
-            width: 1px;
-            height: 16px;
-            background: rgba(232, 232, 232, 1);
-        }
     }
+}
+.title-icon {
+    display: inline-block;
+    width: 4px;
+    height: 12px;
+    margin-top: 5px;
+    margin-right: 5px;
+    background: #487bff;
+    border-radius: 2px;
 }
 </style>

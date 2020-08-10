@@ -1,11 +1,8 @@
 <template>
     <div>
-        <el-card style=" position: relative; margin-bottom: 10px;" class="newCard">
+        <mds-card title="准备时间（分钟：min）">
             <el-form ref="timesForm" :inline="true" :model="readyTimeDate" size="small" label-width="125px">
                 <el-row class="clearfix">
-                    <h3 style=" float: left; font-weight: 600; font-size: 14px; line-height: 32px;">
-                        准备时间（分钟：min）
-                    </h3>
                     <el-form-item label="班次：" style="float: right; margin-right: 0; margin-bottom: 10px;">
                         <el-select v-model="readyTimeDate.classes" size="mini" style="width: 130px;" placeholder="请选择" :disabled="!(isRedact && (readyTimeDate.status === 'noPass' || readyTimeDate.status === 'saved' || readyTimeDate.status === ''))">
                             <el-option label="白班" value="白班" />
@@ -65,11 +62,8 @@
                     </el-row>
                 </div>
             </el-form>
-        </el-card>
-        <el-card style=" position: relative; margin-bottom: 10px;" class="newCard">
-            <h3 style=" float: none; font-weight: 600; font-size: 14px; line-height: 32px;">
-                设备时间（分钟：min）
-            </h3>
+        </mds-card>
+        <mds-card title="设备时间（分钟：min）">
             <el-row type="flex">
                 <el-col style="width: 160px;">
                     <div class="equ">
@@ -95,11 +89,11 @@
                         </el-row>
                     </div>
                 </el-col>
-                <el-col style="max-width: 942px;">
-                    <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="dataList" border tooltip-effect="dark" @row-dblclick="updateRow">
+                <el-col>
+                    <el-table header-row-class-name="tableHead" height="100%" :row-class-name="RowDelFlag" :data="dataList" border tooltip-effect="dark" class="newTable" style="width: 100%;" @row-dblclick="updateRow">
                         <el-table-column type="index" label="序号" width="55" fixed />
                         <el-table-column label="班次" :show-overflow-tooltip="true" prop="classesName" width="70" />
-                        <el-table-column label="工作内容" :show-overflow-tooltip="true" prop="content" width="110" />
+                        <el-table-column label="工作内容" :show-overflow-tooltip="true" prop="content" min-width="110" />
                         <el-table-column label="开始时间" :show-overflow-tooltip="true" prop="startDate" width="130" />
                         <el-table-column label="结束时间" :show-overflow-tooltip="true" prop="endDate" width="130" />
                         <el-table-column label="时长" :show-overflow-tooltip="true" prop="dateLength" width="80" />
@@ -116,7 +110,7 @@
                     </el-table>
                 </el-col>
             </el-row>
-        </el-card>
+        </mds-card>
         <audit-log :table-data="TimeAudit" />
         <el-dialog width="400px" :title="dataForm.content" class="ShinHoDialog" :close-on-click-modal="false" :visible.sync="visible">
             <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="110px" size="small" style="width: 300px; margin: auto;" @keyup.enter.native="Confirmed()" @submit.native.prevent>
@@ -467,7 +461,7 @@ export default {
     }
     &_btn {
         color: black;
-        font-size: 14px;
+        font-size: 12px;
         line-height: 40px;
         text-align: center;
         border-top: 1px solid #eee;
