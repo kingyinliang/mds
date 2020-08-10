@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:form:listJBS'" :column="column" :export-excel="true" :export-option="exportOption" />
+        <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:formh:collectList'" :column="column" :export-excel="true" :export-option="exportOption" />
     </div>
 </template>
 
