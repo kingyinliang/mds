@@ -25,7 +25,7 @@
                                     </p>
                                 </div>
                                 <div class="home_card__main__item__main">
-                                    <div class="home_card__main__item__main__left">
+                                    <div class="home_card__main__item__main__left" style="background: #f5f5f5;">
                                         <img :src="item.img" alt="">
                                     </div>
                                     <div class="home_card__main__item__main__right">
