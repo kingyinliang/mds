@@ -425,7 +425,7 @@
                         materialCode: item.materialCode,
                         materialName: item.materialName,
                         materialUnit: item.materialUnit,
-                        materialUnitName: item.materialUnitName,
+                        materialUnitName: dataGroup === 'currentDataTable' ? item.materialUnitName : null,
                         needNum: item.needNum,
                         materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : null,
                         materialType: dataGroup === 'currentDataTable' ? item.materialType : null,
