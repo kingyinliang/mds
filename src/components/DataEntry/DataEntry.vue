@@ -276,6 +276,9 @@
                         case 'N':
                             res = '未录入';
                             break;
+                        case 'M':
+                            res = '已提交';
+                            break;
                         case 'D':
                             res = '待审核';
                             break;

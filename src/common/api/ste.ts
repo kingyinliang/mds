@@ -118,6 +118,10 @@ const STE_API = {
      */
     STE_DETAIL_CRAFTHEADER_INFO_API: params => httpProxy('/steOrderSplit/potOrder/queryByPortOrderNo', 'GET', params),
     /**
+     * @property {string} STE_DETAIL_CRAFTHEADER_STATUS_API 杀菌车间-杀菌工艺-页签状态查询
+     */
+    STE_DETAIL_CRAFTHEADER_STATUS_API: params => httpProxy('/steTagPot/queryByPotOrderNo', 'GET', params),
+    /**
      * @property {string} STE_DETAIL_CRAFT_SAVED_API 杀菌车间-杀菌工艺-保存
      */
     STE_DETAIL_CRAFT_SAVED_API: params => httpProxy('/ste/steProcessorControl/save', 'POST', params),

@@ -95,14 +95,22 @@
             <el-form :inline="true" :model="craftInfo" style="margin-top: 5px;">
                 <el-form-item label="保温阶段-ZK：" style="margin-bottom: 5px;">
                     <el-radio-group v-model="craftInfo.keepZkFlag" :disabled="!isRedact">
-                        <el-radio label="是" value="Y" />
-                        <el-radio label="否" value="N" />
+                        <el-radio label="Y">
+                            是
+                        </el-radio>
+                        <el-radio label="N">
+                            否
+                        </el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="降温阶段-ZK：" label-width="150px" style="margin-bottom: 5px;">
                     <el-radio-group v-model="craftInfo.coolZkFlag" :disabled="!isRedact">
-                        <el-radio label="是" value="Y" />
-                        <el-radio label="否" value="N" />
+                        <el-radio label="Y">
+                            是
+                        </el-radio>
+                        <el-radio label="N">
+                            否
+                        </el-radio>
                     </el-radio-group>
                 </el-form-item>
             </el-form>
