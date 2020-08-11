@@ -2,7 +2,7 @@
 div
     mds-card(:title="cardTitle")
         template(slot="titleBtn")
-            el-button(type="primary" size="small" style="float: right; margin-bottom: 10px;" @click="btnAddOrEditDataRow()") 新增
+            el-button(type="primary" size="small" style="float: right; margin-bottom: 5px;" :disabled="!isRedact" @click="btnAddOrEditDataRow()") 新增
         el-table.newTable.semi__pot_table(header-row-class-name="tableHead" max-height="400px" :data="currentFormDataGroup" size="small" :row-class-name="rowDelFlag" border="" tooltip-effect="dark" style="min-height: 90px;" @cell-dblclick="btnAddOrEditDataRow")
             template(v-for="(item,index) in tableData")
                 el-table-column(
@@ -29,7 +29,7 @@ div
                     :label="item.label"
                     fixed="right")
                     template(slot-scope="scope")
-                        el-button(v-for="(val,index) in item.content" :key="index" type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)") {{val.buttonName}}
+                        el-button(:class="val.btn" :icon="val.icon" v-for="(val,index) in item.content" :key="index" type="text" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)") {{val.buttonName}}
     audit-log(:table-data="semiAudit" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :status="true")
     in-storage-dialog(ref="inStorageDialogForAdd" width="40%" title="新增入库" @conformData="conformDataFromAdd")
     in-storage-dialog(ref="inStorageDialogForEdit" width="40%" title="编辑入库")

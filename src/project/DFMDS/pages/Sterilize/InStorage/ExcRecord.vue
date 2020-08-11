@@ -1,105 +1,69 @@
-<template>
-    <mds-card :title="'录入数据单位：MIN'" :name="'exc'" :icon-bg="'#f05c4a'">
-        <template slot="titleBtn">
-            <div style="float: right;">
-                <el-button type="primary" size="small" :disabled="!isRedact" @click="AddExcDate()">
-                    新增
-                </el-button>
-            </div>
-        </template>
-        <el-table header-row-class-name="tableHead" class="newTable" :data="excList" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="min-height: 90px;">
-            <el-table-column type="index" label="序号" :index="index => getIndexMethod(index, currentFormDataGroup)" width="50" fixed align="center" />
-            <el-table-column min-width="100">
-                <template slot="header">
-                    <span class="notNull">* </span>班次
-                </template>
-                <template slot-scope="scope">
-                    <el-select v-model="scope.row.classes" size="small" :disabled="!isRedact" clearable>
-                        <el-option
+<template lang="pug">
+    mds-card(:title="'录入数据单位：MIN'" :name="'exc'" :icon-bg="'#f05c4a'")
+        template(slot="titleBtn")
+            div(style="float: right; margin-bottom: 5px;")
+                el-button(type="primary" size="small" :disabled="!isRedact" @click="AddExcDate()") 新增
+        el-table(header-row-class-name="tableHead" class="newTable" :data="excList" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="min-height: 90px;")
+            el-table-column(type="index" label="序号" :index="index => getIndexMethod(index, excList)" width="50" fixed align="center")
+            el-table-column(min-width="100")
+                template(slot="header")
+                    span.notNull *
+                    em 班次
+                template(slot-scope="scope")
+                    el-select(v-model="scope.row.classes" size="small" placeholder="请选择" :disabled="!isRedact" clearable)
+                        el-option(
                             v-for="item in classesOptions"
                             :key="item.dictCode"
                             :label="item.dictValue"
                             :value="item.dictCode"
-                        />
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column min-width="120">
-                <template slot="header">
-                    <span class="notNull">* </span>异常情况
-                </template>
-                <template slot-scope="scope">
-                    <el-select v-model="scope.row.exceptionSituation" size="small" :disabled="!isRedact" @change="changeExc($event, scope.row)">
-                        <el-option
+                        )
+            el-table-column(min-width="120")
+                template(slot="header")
+                    span.notNull *
+                    em 异常情况
+                template(slot-scope="scope")
+                    el-select(v-model="scope.row.exceptionSituation" size="small" placeholder="请选择" :disabled="!isRedact" @change="changeExc($event, scope.row)")
+                        el-option(
                             v-for="item in abnormalList"
                             :key="item.dictCode"
                             :label="item.dictValue"
                             :value="item.dictCode"
-                        />
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column min-width="200">
-                <template slot="header">
-                    <span class="notNull">* </span>开始时间
-                </template>
-                <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 170px;" />
-                </template>
-            </el-table-column>
-            <el-table-column min-width="200">
-                <template slot="header">
-                    <span class="notNull">* </span>结束时间
-                </template>
-                <template slot-scope="scope">
-                    <el-date-picker v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 170px;" />
-                </template>
-            </el-table-column>
-            <el-table-column label="时长" min-width="100">
-                <template slot-scope="scope">
-                    {{ scope.row.duration = Number(workTime(scope.row.endDate, scope.row.startDate, scope.row)) }}
-                </template>
-            </el-table-column>
-            <el-table-column min-width="80" label="单位" prop="durationUnit" />
-            <el-table-column min-width="140">
-                <template slot="header">
-                    <span class="notNull">* </span>异常原因
-                </template>
-                <template slot-scope="scope">
-                    <el-select v-model="scope.row.exceptionReason" filterable size="small" :disabled="!isRedact || scope.row.exceptionSituation === 'AB_OTHERS'">
-                        <el-option v-for="(item, index) in scope.row.excReasonList" :key="index" :label="item.dictValue" :value="item.dictCode" />
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column label="异常描述" min-width="140">
-                <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" :disabled="!isRedact" />
-                </template>
-            </el-table-column>
-            <el-table-column label="备注" min-width="100">
-                <template slot-scope="scope">
-                    <el-input v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact" />
-                </template>
-            </el-table-column>
-            <el-table-column label="操作人" width="140">
-                <template slot-scope="scope">
-                    {{ scope.row.changer }}
-                </template>
-            </el-table-column>
-            <el-table-column label="操作时间" width="180">
-                <template slot-scope="scope">
-                    {{ scope.row.changed }}
-                </template>
-            </el-table-column>
-            <el-table-column width="70" fixed="right">
-                <template slot-scope="scope">
-                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)">
-                        删除
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-    </mds-card>
+                        )
+            el-table-column(min-width="210")
+                template(slot="header")
+                    span.notNull *
+                    em 开始时间
+                template(slot-scope="scope")
+                    el-date-picker(v-model="scope.row.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 180px;")
+            el-table-column(min-width="210")
+                template(slot="header")
+                    span.notNull *
+                    em 结束时间
+                template(slot-scope="scope")
+                    el-date-picker(v-model="scope.row.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择" :disabled="!isRedact" size="small" style="width: 180px;")
+            el-table-column(label="时长" min-width="100")
+                template(slot-scope="scope") {{ scope.row.duration = Number(workTime(scope.row.endDate, scope.row.startDate, scope.row)) }}
+            el-table-column(min-width="80" label="单位" prop="durationUnit")
+            el-table-column(min-width="140")
+                template(slot="header")
+                    span.notNull *
+                    em 异常原因
+                template(slot-scope="scope")
+                    el-select(v-model="scope.row.exceptionReason" filterable size="small"  placeholder="请选择" :disabled="!isRedact || scope.row.exceptionSituation === 'AB_OTHERS'")
+                        el-option(v-for="(item, index) in scope.row.excReasonList" :key="index" :label="item.dictValue" :value="item.dictCode")
+            el-table-column(label="异常描述" min-width="200")
+                template(slot-scope="scope")
+                    el-input(v-model.trim="scope.row.exceptionInfo" size="small" placeholder="请输入" :disabled="!isRedact")
+            el-table-column(label="备注" min-width="200")
+                template(slot-scope="scope")
+                    el-input(v-model.trim="scope.row.remark" size="small" placeholder="请输入" :disabled="!isRedact")
+            el-table-column(label="操作人" width="140")
+                template(slot-scope="scope") {{ scope.row.changer }}
+            el-table-column(label="操作时间" width="180")
+                template(slot-scope="scope") {{ scope.row.changed }}
+            el-table-column(label="操作" width="70" fixed="right")
+                template(slot-scope="scope")
+                    el-button(class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeRow(scope.row)") 删除
 </template>
 
 <script lang="ts">

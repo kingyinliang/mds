@@ -1,11 +1,11 @@
 <template>
     <div class="header_main">
-        <mds-card title="考勤记录" :pack-up="false" name="evaluation">
+        <mds-card title="考勤记录" :pack-up="false" name="evaluation" class="searchCard">
             <template slot="titleBtn">
                 <div style="display: flex; align-items: center; justify-content: space-between; white-space: nowrap;">
                     <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row">
-                        <el-form-item label="生产车间：">
-                            <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 130px;" clearable @change="eventChangeWorkshopOptions">
+                        <el-form-item label="生产车间：" class="must-fill" label-width="80px">
+                            <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 140px;" clearable @change="eventChangeWorkshopOptions">
                                 <el-option v-for="(item,index) in selectTree" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
@@ -172,7 +172,7 @@
                     </el-table-column>
                     <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button v-if="isAuth('kqSave')" type="text" size="small" :disabled="scope.row.isRedact" @click="btnEditDataRow(scope.row)">
+                            <el-button v-if="isAuth('kqSave')" class="editBtn" icon="el-icon-edit" type="text" size="small" :disabled="scope.row.isRedact" @click="btnEditDataRow(scope.row)">
                                 编辑
                             </el-button>
                         </template>
@@ -752,5 +752,10 @@ interface UserTypeListObject {
 .required span i:last-child::after {
     margin-left: -2px;
     content: "";
+}
+.searchCard >>> .must-fill > label::before {
+    margin-right: 4px;
+    color: #f56c6c;
+    content: "*";
 }
 </style>
