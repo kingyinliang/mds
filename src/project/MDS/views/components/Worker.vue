@@ -2,7 +2,7 @@
     <div>
         <mds-card :title="'人员 (小时:H)'" :name="'user'">
             <template slot="titleBtn">
-                <div style="float: right;">
+                <div style="float: right; margin-bottom: 5px;">
                     <el-button type="primary" size="small" :disabled="!isRedact" @click="AddWorkerDate(WorkerDate)">
                         新增
                     </el-button>
@@ -189,8 +189,8 @@ export default {
             type: Boolean
         },
         attendance: {
-            type: Object,
-            default: function() { return {} }
+            type: Array,
+            default: function() { return [] }
         }
     },
     data() {

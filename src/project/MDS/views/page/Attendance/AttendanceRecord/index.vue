@@ -72,13 +72,13 @@
                         </el-table-column>
                         <el-table-column prop="reqno" label="订单号" :show-overflow-tooltip="true" width="120" />
                         <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="120" />
-                        <el-table-column prop="kqrq" label="考勤日期" :show-overflow-tooltip="true" width="120">
+                        <el-table-column prop="kqrq" label="考勤日期" :show-overflow-tooltip="true" width="140">
                             <template slot-scope="scope">
                                 <el-date-picker v-if="scope.row.redactStatus" v-model="scope.row.kqrq" size="small" type="datetime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" />
                                 <span v-else>{{ scope.row.kqrq }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="考勤大类" :show-overflow-tooltip="true" width="100">
+                        <el-table-column label="考勤大类" :show-overflow-tooltip="true" width="120">
                             <template slot-scope="scope">
                                 <el-select v-if="scope.row.redactStatus" v-model="scope.row.kqdl" placeholder="请选择" size="small" @change="GetARpro(scope.row)">
                                     <el-option v-for="(iteam, index) in ARtype" :key="index" :label="iteam.value" :value="iteam.code" />
@@ -86,7 +86,7 @@
                                 <span v-else>{{ scope.row.kqdlName }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="考勤类型" :show-overflow-tooltip="true" width="100">
+                        <el-table-column label="考勤类型" :show-overflow-tooltip="true" width="120">
                             <template slot-scope="scope">
                                 <el-select v-if="scope.row.redactStatus" v-model="scope.row.kqlx" placeholder="请选择" size="small" @change="Setcode(scope.row)">
                                     <el-option v-for="(iteam, index) in scope.row.ARpro" :key="index" :label="iteam.value" :value="iteam.code" />
@@ -203,21 +203,21 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="考勤大类" :show-overflow-tooltip="true" width="100">
+                    <el-table-column label="考勤大类" :show-overflow-tooltip="true" width="120">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.kqdl" placeholder="请选择" size="small" @change="GetARpro(scope.row)">
                                 <el-option v-for="(iteam, index) in ARtype" :key="index" :label="iteam.value" :value="iteam.code" />
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="考勤类型" :show-overflow-tooltip="true" width="100">
+                    <el-table-column label="考勤类型" :show-overflow-tooltip="true" width="120">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.kqlx" placeholder="请选择" size="small" @change="Setcode(scope.row)">
                                 <el-option v-for="(iteam, index) in scope.row.ARpro" :key="index" :label="iteam.value" :value="iteam.code" />
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="产线/工序" :show-overflow-tooltip="true" width="100">
+                    <el-table-column label="产线/工序" :show-overflow-tooltip="true" width="120">
                         <template slot-scope="scope">
                             <el-select v-if="scope.row.productLineSt" v-model="scope.row.productLine" placeholder="请选择" size="small">
                                 <el-option v-for="(item, index) in scope.row.productlineList" :key="index" :label="item.deptName" :value="item.deptId" />
@@ -234,7 +234,7 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="人员属性" :show-overflow-tooltip="true" width="100">
+                    <el-table-column label="人员属性" :show-overflow-tooltip="true" width="140">
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.userType" placeholder="请选择" size="small">
                                 <el-option label="正式" value="正式" />
@@ -262,7 +262,7 @@
                             </el-select>
                         </template>
                     </el-table-column>
-                    <el-table-column label="工作内容" :show-overflow-tooltip="true" min-width="120">
+                    <el-table-column label="工作内容" :show-overflow-tooltip="true" min-width="180">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.content" size="small" placeholder="手工录入" />
                         </template>

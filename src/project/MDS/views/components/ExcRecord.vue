@@ -1,7 +1,7 @@
 <template>
     <mds-card :title="'录入数据单位：MIN'" :name="'exc'" :icon-bg="'#f05c4a'">
         <template slot="titleBtn">
-            <div style="float: right;">
+            <div style="float: right; margin-bottom: 5px;">
                 <el-button type="primary" size="small" :disabled="!isRedact" @click="AddExcDate(ExcDate)">
                     新增
                 </el-button>
