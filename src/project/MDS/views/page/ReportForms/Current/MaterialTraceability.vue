@@ -1,5 +1,6 @@
 <template>
-    <div class="main">
+    <div class="header_main">
+        <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" query-auth="report:production:materielTrace" :column="column" />
         <el-card class="searchCard  newCard ferCard">
             <el-form :inline="true" :model="formHeader" size="small" label-width="75px" class="marbottom">
                 <el-form-item label="生产工厂：">
@@ -90,11 +91,161 @@
 
 <script>
 import { BASICDATA_API, REP_API, AUDIT_API } from '@/api/api';
-// import { exportFile } from '@/net/validate'
 export default {
     name: 'TwoOneRetrospect',
     data() {
         return {
+            queryFormData: [
+                {
+                    type: 'select',
+                    label: '生产工厂',
+                    prop: 'factory',
+                    defaultOptionsFn: () => {
+                        return this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false);
+                    },
+                    resVal: {
+                        resData: 'typeList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    linkageProp: ['workShop', 'materialCodeLittle']
+                },
+                {
+                    type: 'select',
+                    label: '生产车间',
+                    prop: 'workShop',
+                    optionsFn: val => {
+                        return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {
+                            deptId: val
+                        });
+                    },
+                    resVal: {
+                        resData: 'typeList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    linkageProp: ['productLine']
+                },
+                {
+                    type: 'select',
+                    label: '生产产线',
+                    prop: 'productLine',
+                    resVal: {
+                        resData: 'childList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    optionsFn: val => {
+                        return this.$http(`${BASICDATA_API.FINDORGBYPARENTID_API}`, 'POST', { parentId: val });
+                    }
+                },
+                {
+                    type: 'input',
+                    label: '生产订单',
+                    prop: 'orderNo'
+                },
+                {
+                    type: 'input',
+                    label: '生产批次',
+                    prop: 'batch'
+                },
+                {
+                    type: 'input',
+                    label: '组件批次',
+                    prop: 'batchLittle'
+                },
+                {
+                    type: 'select',
+                    label: '生产物料',
+                    prop: 'materialCode',
+                    resVal: {
+                        resData: 'materielTraceSelectInfo',
+                        label: ['MATERIAL_CODE', 'MATERIAL_NAME'],
+                        value: 'MATERIAL_CODE'
+                    },
+                    defaultValue: '',
+                    defaultOptionsFn: val => {
+                        return this.$http(`${REP_API.CURRENT_MATERIALTRACEABILITY_LIAT}`, 'POST', {});
+                    }
+                },
+                {
+                    type: 'select',
+                    label: '组件物料',
+                    prop: 'materialCodeLittle',
+                    optionsFn: val => {
+                        return this.$http(`${AUDIT_API.AUDIT_ISSUE_MATERIAL_API}`, 'POST', {
+                            factory: val
+                        });
+                    },
+                    defaultValue: '',
+                    resVal: {
+                        resData: 'list',
+                        label: ['materialCode', 'materialName'],
+                        value: 'materialCode'
+                    }
+                },
+                {
+                    type: 'date-interval',
+                    label: '生产日期',
+                    prop: 'orderStartDate',
+                    propTwo: 'orderEndDate'
+                }
+            ],
+            listInterface: params => {
+                return this.$http(`${REP_API.CURRENT_MATERIALTRACEABILITY_LIST}`, 'POST', params);
+            },
+            column: [
+                {
+                    prop: 'factoryName',
+                    label: '工厂',
+                    minwidth: '90'
+                },
+                {
+                    prop: 'workShopName',
+                    label: '车间',
+                    minwidth: '95'
+                },
+                {
+                    prop: 'houseNoName',
+                    label: '曲房',
+                    minwidth: '100'
+                },
+                {
+                    prop: 'inPotNoName',
+                    label: '发酵罐',
+                    minwidth: '100'
+                },
+                {
+                    prop: 'inKjmDate',
+                    label: '制曲日期',
+                    minwidth: '100'
+                },
+                {
+                    prop: 'cookingException',
+                    label: '煮豆异常',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'continuousCookingException',
+                    label: '连续蒸煮异常',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'blendException',
+                    label: '混合入曲异常',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'guardException',
+                    label: '看曲异常',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'outException',
+                    label: '出曲异常',
+                    minwidth: '120'
+                }
+            ],
             formHeader: {
                 factory: '',
                 workShop: '',
