@@ -120,7 +120,7 @@
                 this.dataForm = {
                     id: '',
                     stePotNo: this.$store.state.sterilize.SemiReceive.potNo,
-                    potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrder,
+                    potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.id,
                     potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
                     consumeType: '1',
                     fermentPotNo: '',

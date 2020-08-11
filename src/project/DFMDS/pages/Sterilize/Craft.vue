@@ -5,7 +5,7 @@
             redact-auth="steCtrEdit"
             save-auth="steCtrEdit"
             submit-auth="steCtrSubmit"
-            :order-status="formHeader.orderStatusName"
+            :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
@@ -40,6 +40,7 @@
     })
     export default class CraftIndex extends Vue {
         $refs: {
+            dataEntry: HTMLFormElement;
             craft: HTMLFormElement;
             excRecord: HTMLFormElement;
             textRecord: HTMLFormElement;
@@ -119,6 +120,12 @@
                 this.$warningToast('无权限');
                 return false
             }
+            STE_API.STE_DETAIL_CRAFTHEADER_STATUS_API({
+                potOrderNo: this.$store.state.sterilize.Craft.potOrderMap.potOrderNo
+            }).then(({ data }) => {
+                this.tabs[0].status = data.data.controlStatus;
+                this.$refs.dataEntry.updateTabs();
+            });
             STE_API.STE_DETAIL_CRAFTHEADER_INFO_API({
                 potOrderNo: this.$store.state.sterilize.Craft.potOrderMap.potOrderNo
             }).then(({ data }) => {
@@ -138,6 +145,7 @@
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
             return STE_API.STE_DETAIL_CRAFT_SAVED_API({
+                potOrderNo: this.formHeader.potOrderNo,
                 steControlInsertDto: craftRequest.steControlInsertDto,
                 steControlUpdateDto: craftRequest.steControlUpdateDto,
                 steItemRemoveDto: craftRequest.ids,
@@ -161,6 +169,7 @@
             const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
             return STE_API.STE_DETAIL_CRAFT_SUBMIT_API({
+                potOrderNo: this.formHeader.potOrderNo,
                 steControlInsertDto: craftRequest.steControlInsertDto,
                 steControlUpdateDto: craftRequest.steControlUpdateDto,
                 steExceptionInsertDtos: excRequest.InsertDto,
