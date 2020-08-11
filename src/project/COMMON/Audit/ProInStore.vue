@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            query-auth="ckStgQuery"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             :custom-data="true"
@@ -10,7 +11,8 @@
             :show-index-column="true"
             :show-select-column="true"
             :show-operation-column="true"
-            :operation-column-width="140"
+            :operation-column-width="operationColumnWidth"
+            @tab-click="() => { operationColumnWidth = $refs.queryTable.activeName === '0'? 140 : 86 }"
             @get-data-success="setData"
         >
             <template slot="tab-head0">
@@ -20,10 +22,10 @@
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input v-model="headText" size="small" style="width: 190px; margin-right: 10px;" />
-                        <el-button type="primary" size="small" @click="pass">
+                        <el-button v-if="isAuth('ckStgPost')" type="primary" size="small" @click="pass">
                             过账
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-red" @click="refuseDialog">
+                        <el-button v-if="isAuth('ckStgReturn')" type="primary" size="small" class="sub-red" @click="refuseDialog">
                             退回
                         </el-button>
                     </div>
@@ -36,17 +38,17 @@
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input v-model="headText" size="small" style="width: 190px; margin-right: 10px;" />
-                        <el-button type="primary" size="small" class="sub-yellow" @click="writeOffsDialog">
+                        <el-button v-if="isAuth('ckStgRevert')" type="ckStgRevert" size="small" class="sub-yellow" @click="writeOffsDialog">
                             反审
                         </el-button>
                     </div>
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
+                <el-button v-if="isAuth('ckStgEdit') && $refs.queryTable.activeName === '0'" class="ra_btn" type="text" round size="mini" @click="addOrupdate(scope.row)">
                     {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
-                <el-button class="ra_btn" type="text" round size="mini" @click="AuditLog(scope.row)">
+                <el-button v-if="isAuth('ckStgRecord')" class="ra_btn" type="text" round size="mini" @click="AuditLog(scope.row)">
                     审核日志
                 </el-button>
             </template>
@@ -73,7 +75,7 @@
                 </el-button>
             </div>
         </el-dialog>
-        <el-dialog title="审核日志" width="600px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
+        <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="visibleAuditLog">
             <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
             <div slot="footer" class="dialog-footer" />
         </el-dialog>
@@ -126,7 +128,7 @@
                 label: '入库数量'
             },
             {
-                prop: 'entryUomName',
+                prop: 'entryUom',
                 label: '单位'
             },
             {
@@ -192,7 +194,7 @@
                 label: '备注'
             },
             {
-                prop: 'interfaceMsg',
+                prop: 'interfaceReturn',
                 label: '接口回写'
             }
         ];
@@ -201,6 +203,7 @@
             queryTable: HTMLFormElement;
         };
 
+        operationColumnWidth = 140;
         auditLogData = []; // 审核日志
         ReText = ''; // 退回原因
         BackText = ''; // 反审原因
@@ -450,7 +453,7 @@
                         this.$refs.queryTable.getDataList(true)
                     }).catch((err) => {
                         if (err.data.code === 201) {
-                            this.$errorToast(err.data.msg)
+                            // this.$errorToast(err.data.msg)
                             this.$refs.queryTable.getDataList(true)
                         }
                     })
@@ -516,7 +519,7 @@
                 this.$warningToast('请填写审核意见')
                 return false;
             }
-            this.$confirm(`部分数据已经调用SAP接口已入库，请确认sap冲销，确认要反审?`, '反审确认', {
+            this.$confirm(`数据已经调用SAP接口已入库，反审后将冲销SAP数据，是否反审？`, '反审确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -536,7 +539,7 @@
                 }).catch((err) => {
                     if (err.data.code === 201) {
                         this.visibleBack = false;
-                        this.$errorToast(err.data.msg);
+                        // this.$errorToast(err.data.msg);
                         this.$refs.queryTable.getDataList(true)
                     }
                 })

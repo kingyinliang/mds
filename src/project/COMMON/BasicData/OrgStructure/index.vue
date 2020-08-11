@@ -71,13 +71,13 @@
                         </el-form>
                     </div>
                     <div class="org-detail-btn" :class="{'org-detail-btn__fix':mainClientHeight > 500}">
-                        <el-button type="primary" size="small" @click="setRedact">
+                        <el-button v-if="isAuth('deptEdit')" type="primary" size="small" @click="setRedact">
                             {{ isRedact? '编辑' : '取消' }}
                         </el-button>
-                        <el-button v-if="!isRedact" type="primary" size="small" @click="savedatail">
+                        <el-button v-if="!isRedact && isAuth('deptEdit')" type="primary" size="small" @click="savedatail">
                             保存
                         </el-button>
-                        <el-button v-if="!isRedact" type="danger" size="small" @click="deleteorg">
+                        <el-button v-if="!isRedact && isAuth('deptDel')" type="danger" size="small" @click="deleteorg">
                             删除
                         </el-button>
                     </div>
@@ -156,10 +156,10 @@
             </div>
         </el-dialog>
         <ul v-show="menuVisible" id="menu">
-            <li class="menuli" @click="menuClick(true, clickTreeNode.parentName, clickTreeNode.parentId)">
+            <li v-if="isAuth('deptInsert')" class="menuli" @click="menuClick(true, clickTreeNode.parentName, clickTreeNode.parentId)">
                 新增同级
             </li>
-            <li class="menuli" @click="menuClick(false, clickTreeNode.deptName, clickTreeNode.id)">
+            <li v-if="isAuth('deptInsert')" class="menuli" @click="menuClick(false, clickTreeNode.deptName, clickTreeNode.id)">
                 新增下级
             </li>
         </ul>
@@ -235,7 +235,10 @@ export default class OrgStructure extends Vue {
 
     // 展示详情
     setdetail(row: DeptObject) {
-        console.log(row)
+        if (!this.isAuth('deptQuery')) {
+            this.$warningToast('无权限');
+            return false
+        }
         this.menuVisible = false;
         COMMON_API.ORGDETAIL_API({
             id: row.id || 1

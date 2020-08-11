@@ -98,6 +98,10 @@ const COMMON_API = {
      */
     USER_ROLE_QUERY_API: params => httpProxy('/sysUser/userRole/query', 'POST', params),
     /**
+     * @property {string} USER_ROLE_ALL_QUERY_API 系统管理-用户管理-查询 不带分页
+     */
+    USER_ROLE_ALL_QUERY_API: params => httpProxy('/sysUser/userRole/all/query', 'POST', params),
+    /**
      * @property {string} USER_ROLE_DROPDOWN_API 系统管理-用户管理-角色下拉
      */
     USER_ROLE_DROPDOWN_API: params => httpProxy('/sysRole/dropDown', 'POST', params),
@@ -149,6 +153,10 @@ const COMMON_API = {
      * @property {string} ORGSTRUCTURE_API 组织架构树形列表
      */
     ORGSTRUCTURE_API: params => httpProxy('/sysDept/dropDown', 'GET', params),
+    /**
+     * @property {string} ORGSTRUCTURE_API 组织架构树形 - 下拉
+     */
+    ORGSTRUCTURE_ALL_API: params => httpProxy('/sysDept/all/dropDown', 'GET', params),
     /**
      * @property {string} ADDORG_API 组织架构新增
      */
@@ -368,6 +376,10 @@ const COMMON_API = {
      */
     ORDER_QUERY_API: params => httpProxy('/order/query', 'POST', params),
     /**
+     * @property {string} ORDER_LIST_QUERY_API
+     */
+    ORDER_LIST_QUERY_API: params => httpProxy('/order/list/query', 'POST', params),
+    /**
      * @property {string} OREDER_SYNC_API 计划管理--计划订单-订单同步（增量）
      */
     OREDER_SYNC_API: params => httpProxy('/order/sync', 'POST', params),
@@ -419,6 +431,10 @@ const COMMON_API = {
      * @property {string} DROPDOWN_UNIT_API 根据物料获取单位
      */
     DROPDOWN_UNIT_API: params => httpProxy('/sysMaterial/unit/dropDown', 'GET', params),
+    /**
+     * @property {string} DROPDOWN_UNIT_API 基础数据-订单管理-列表查询（非分页）
+     */
+    ORDER_LIST_API: params => httpProxy('/order/list/query', 'POST', params),
     /**
      * @property {string} CHECKWORK_QUERY_API 考勤管理-查询
      */

@@ -2,10 +2,10 @@
     <div class="header_main">
         <mds-card title="考勤记录" :pack-up="false" name="evaluation">
             <template slot="titleBtn">
-                <div style="display: flex; align-items: center;" class="floatr">
-                    <el-form :model="searchForm" size="small" :inline="true" label-position="right" label-width="100px" class="sole_row" style="margin-right: 30px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; white-space: nowrap;">
+                    <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row">
                         <el-form-item label="生产车间：">
-                            <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 140px;" clearable @change="eventChangeWorkshopOptions">
+                            <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 130px;" clearable @change="eventChangeWorkshopOptions">
                                 <el-option v-for="(item,index) in selectTree" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
@@ -14,26 +14,27 @@
                                 <el-option v-for="(item,index) in productLineList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="考核日期：">
-                            <el-date-picker v-model="searchForm.evaluationDate" type="date" value-format="yyyy-MM-dd" style="width: 160px;" />
+                        <el-form-item label="考勤日期：" label-width="70px">
+                            <el-date-picker v-model="searchForm.evaluationStartDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 140px;" /> - <el-date-picker v-model="searchForm.evaluationEndtDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 140px;" />
                         </el-form-item>
                     </el-form>
-
-                    <el-button type="primary" size="small" :disabled="searchForm.workshop===''|| searchForm.productLine===''" @click="btnGetResult(searchForm)">
-                        查询
-                    </el-button>
-                    <el-button type="primary" size="small" @click="btnAddDataRow">
-                        新增
-                    </el-button>
-                    <el-button type="primary" size="small" :disabled="currentFormDataGroup.length===0||!checkSaveStatus" @click="btnSaveData">
-                        保存
-                    </el-button>
-                    <!-- <el-button type="danger" size="small" @click="btnReject">
-                        撤回
-                    </el-button>-->
-                    <el-button type="danger" size="small" :disabled="multipleSelection.length===0" @click="btnRemoveDataRow">
-                        删除
-                    </el-button>
+                    <div class="button-group" style="white-space: nowrap;">
+                        <el-button v-if="isAuth('kqQuery')" type="primary" size="small" :disabled="searchForm.workshop===''" @click="btnGetResult(searchForm)">
+                            查询
+                        </el-button>
+                        <el-button v-if="isAuth('kqInsert')" type="primary" size="small" @click="btnAddDataRow">
+                            新增
+                        </el-button>
+                        <el-button v-if="isAuth('kqSave')" type="primary" size="small" :disabled="currentFormDataGroup.length===0||!checkSaveStatus" @click="btnSaveData">
+                            保存
+                        </el-button>
+                        <!-- <el-button type="danger" size="small" @click="btnReject">
+                            撤回
+                        </el-button>-->
+                        <el-button v-if="isAuth('kqDel')" type="danger" size="small" :disabled="multipleSelection.length===0" @click="btnRemoveDataRow">
+                            删除
+                        </el-button>
+                    </div>
                 </div>
             </template>
             <el-form ref="dataFormRules" :model="dataFormRules">
@@ -42,7 +43,7 @@
                         type="selection"
                         width="55"
                     />
-                    <el-table-column label="序号" type="index" width="60" fixed align="center" />
+                    <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="50" fixed align="center" />
                     <el-table-column prop="workShop" min-width="160" label="车间" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>车间
@@ -104,14 +105,14 @@
                         <template slot-scope="scope">
                             <div class="required" style="min-height: 32px; line-height: 32px;">
                                 <span v-if="!scope.row.isRedact" style="cursor: pointer;">
-                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
+                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}</i>
                                 </span>
                                 <span v-if="scope.row.isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
-                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
+                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}</i>
                                     <i>点击选择人员</i>
                                 </span>
                                 <span v-if="scope.row.isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" @click="dayLaborer(scope.row)">
-                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
+                                    <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}</i>
                                     <i>点击输入人员</i>
                                 </span>
                             </div>
@@ -143,7 +144,7 @@
                     </el-table-column>
                     <el-table-column prop="duration" min-width="80" label="时长(H)" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <p> {{ workTimeCount(scope.row,scope.$index) }} H </p>
+                            <p> {{ Object.is(NaN,workTimeCount(scope.row,scope.$index))?0:workTimeCount(scope.row,scope.$index) }} H </p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="jobContent" min-width="200" label="工作内容" :show-overflow-tooltip="true">
@@ -171,14 +172,14 @@
                     </el-table-column>
                     <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" :disabled="scope.row.isRedact" @click="btnEditDataRow(scope.row)">
+                            <el-button v-if="isAuth('kqSave')" type="text" size="small" :disabled="scope.row.isRedact" @click="btnEditDataRow(scope.row)">
                                 编辑
                             </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-form>
-            <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            <el-pagination v-if="currentFormDataGroup.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </mds-card>
 
         <official-worker v-if="officialWorkerStatus" ref="officialWorker" @changeUser="changeUser" />
@@ -219,7 +220,8 @@
         searchForm={
             workshop: '',
             productLine: '',
-            evaluationDate: ''
+            evaluationStartDate: '',
+            evaluationEndDate: ''
         }
 
         currentRow: CurrentDataTable = {
@@ -228,8 +230,8 @@
 
         currentWorkshop=''
         currentProductLine=''
-        currentEvaluationDate=''
-
+        currentEvaluationStartDate=''
+        currentEvaluationEndDate=''
         selectTree: OptionsTreeList[]=[] // 选单结构树
         workshopList: OptionsInList[]=[] // 车间清单
         productLineList: OptionsInList[]=[] // 产线清单
@@ -300,23 +302,29 @@
                             deptType: 'PRODUCT_LINE'
 
                         }).then(({ data: target }) => {
+                            element.productLine = []
                             target.data.forEach(items => {
                                 element.productLine.push({ targetCode: items.deptCode, targetName: items.deptName })
                             })
                         })
 
-                        if (element.targetName !== '发酵车间') {
+                        // if (element.targetName !== '发酵车间') {
+
                             COMMON_API.SYS_CHILDTYPE_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 deptType: ['PRODUCT_TEAM'],
-                                deptName: element.targetName
+                                deptName: element.targetName.substring(0, 2)
 
                             }).then(({ data: target }) => {
-                                target.data.forEach(items => {
-                                    element.team.push({ targetCode: items.deptCode, targetName: items.deptName })
-                                });
+                                element.team = []
+                                if (target.data !== null) {
+                                    target.data.forEach(items => {
+                                        element.team.push({ targetCode: items.deptCode, targetName: items.deptName })
+                                    });
+                                }
+
                             });
-                        }
+                        // }
                 })
             })
 
@@ -353,7 +361,8 @@
                 workShop: this.currentWorkshop,
                 size: this.pageSize,
                 current: this.totalCount,
-                checkWorkDate: this.currentEvaluationDate
+                checkWorkDate: this.currentEvaluationStartDate,
+                checkWorkEndDate: this.currentEvaluationEndDate
                 }).then(({ data }) => {
                     console.log('查寻结果')
                     console.log(data)
@@ -382,8 +391,9 @@
                 productLine: obj.productLine,
                 workShop: obj.workshop,
                 size: this.pageSize,
-                current: this.totalCount,
-                checkWorkDate: obj.evaluationDate
+                current: this.currPage,
+                checkWorkDate: obj.evaluationStartDate,
+                checkWorkEndDate: obj.evaluationEndDate
                 }).then(({ data }) => {
                     this.checkSaveStatus = false
                     console.log('查寻结果')
@@ -405,14 +415,16 @@
                     // 存全局变量
                     this.currentWorkshop = obj.workshop
                     this.currentProductLine = obj.productLine
-                    this.currentEvaluationDate = obj.evaluationDate
+                    this.currentEvaluationStartDate = obj.evaluationStartDate
+                    this.currentEvaluationEndDate = obj.evaluationEndDate
 
                 } else {
                     this.$infoToast('暂无任何内容');
                     this.currentFormDataGroup = []
                     this.currentWorkshop = ''
                     this.currentProductLine = ''
-                    this.currentEvaluationDate = ''
+                    this.currentEvaluationStartDate = ''
+                    this.currentEvaluationEndDate = ''
                 }
             })
         }
@@ -454,19 +466,23 @@
                         insertData: insertDataTemp,
                         updateData: updateDataTemp
                         }).then(() => {
-                            this.$successToast('保存成功');
+                            this.$successToast('操作成功');
                             this.checkSaveStatus = false
-                            this.currPage = 1;
-                            this.totalCount = 1
-                            this.pageSize = 10
-                            this.getDataList()
+                            // this.currPage = 1;
+                            // this.totalCount = 1
+                            // this.pageSize = 10
+                            // this.getDataList()
+                            this.currentFormDataGroup.forEach(item => {
+                                item.isRedact = false
+                            })
+
                     })
                 } else {
                         this.checkSaveStatus = false
-                        this.currPage = 1;
-                        this.totalCount = 1
-                        this.pageSize = 10
-                        this.getDataList()
+                        // this.currPage = 1;
+                        // this.totalCount = 1
+                        // this.pageSize = 10
+                        // this.getDataList()
                 }
             }
         }
@@ -497,7 +513,7 @@
 
         // 计算时长
         workTimeCount(row, index) {
-            let num = this.currentFormDataGroup[index].duration;
+            let num: number = this.currentFormDataGroup[index].duration as number;
             if (row.delFlag !== 1 && row.isRedact === true) { // 避免锅次呼叫，增加判断，若不是新增的 row 且编辑状态
                 num = Number(getDateDiff(row.startTime, row.endTime, 'hour'))
                 this.currentFormDataGroup[index].duration = num
@@ -578,7 +594,7 @@
                     this.multipleSelection.forEach(item => {
                         item.delFlag = 1
                     })
-                    this.$successToast('删除成功');
+                    // this.$successToast('删除成功');
                     this.multipleSelection = []
                     this.btnSaveData()
                 });
@@ -606,12 +622,11 @@
         // 选择人员 正式借调
         selectUser(row: CurrentDataTable) {
             this.currentRow = row
-            console.log(row)
             if (row.userType === 'FORMAL') { // 正式
-                if (row.productLine) {
+                if (row.team) {
                     this.officialWorkerStatus = true;
                     this.$nextTick(() => {
-                        this.$refs.officialWorker.init(row.productLine, row.userList);
+                        this.$refs.officialWorker.init(row.team, row.userList);
                     });
                 } else {
                     this.$warningToast('请选择产线');
@@ -647,7 +662,7 @@
             currentFormDataGroupNew = this.currentFormDataGroup.filter(item => item.delFlag === 0);
 
             for (const item of currentFormDataGroupNew) {
-                if (!item.workShop || !item.classes || !item.userType || item.userList === [] || !item.startTime || !item.endTime || !item.dinner || !item.jobContent) {
+                if (!item.workShop || !item.classes || !item.userType || item.userList.length === 0 || !item.startTime || !item.endTime || !((item.dinner as number) >= 0) || !item.jobContent) {
                     this.$warningToast('请填写必填项');
                     return false
                 }
@@ -692,7 +707,7 @@ interface CurrentDataTable {
         startTime?: string;
         // status?: string;
         team?: string;
-        userList?: string[];
+        userList: string[];
         userType?: string;
         workShop?: string;
         delFlag?: number;
@@ -708,7 +723,7 @@ interface OptionsInList{
 
 interface OptionsTreeList{
     targetCode?: string;
-    targetName?: string;
+    targetName: string;
     productLine: OptionsInList[];
     team: OptionsInList[];
 }
@@ -724,8 +739,18 @@ interface UserTypeListObject {
 
 
 <style scoped>
-
+.header_main >>> .box-card h3 {
+    display: none;
+}
 .header_main >>> .box-card-title {
     margin-bottom: 10px;
+}
+.required span i::after {
+    margin-left: -2px;
+    content: ",";
+}
+.required span i:last-child::after {
+    margin-left: -2px;
+    content: "";
 }
 </style>

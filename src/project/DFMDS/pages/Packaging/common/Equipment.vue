@@ -3,14 +3,14 @@
         <mds-card title="运行情况" :name="'equipment'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewFirstDataRowThrottle">
+                    <el-button v-if="isAuth('pkgPdInsert')" type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewFirstDataRowThrottle">
                         新增
                     </el-button>
                 </div>
             </template>
-            <el-form ref="ruleFirstForm" :model="ruleFirstForm">
+            <el-form ref="ruleFirstForm" :model="ruleFirstForm" class="ruleFirstForm">
                 <el-table class="newTable" :data="firstFormDataGroup" :row-class-name="rowDelFlag" max-height="300" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
-                    <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
+                    <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, firstFormDataGroup)" width="50" fixed="left" align="center" />
                     <el-table-column width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>班次
@@ -34,7 +34,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-form-item :prop="'r'+scope.$index+'.startDate'" :rules="dataRules.startDate">
-                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 180px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
+                                <el-date-picker v-model="scope.row.startDate" type="datetime" size="small" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择时间" style="width: 190px;" :picker-options="pickerOptionsStart[0][scope.$index]" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" />
                             </el-form-item>
                         </template>
                     </el-table-column>
@@ -52,7 +52,7 @@
                                     format="yyyy-MM-dd HH:mm"
                                     :default-value="scope.row.startDate"
                                     placeholder="选择时间"
-                                    style="width: 180px;"
+                                    style="width: 190px;"
                                     :picker-options="pickerOptionsEnd[0][scope.$index]"
                                     :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
                                 />
@@ -73,7 +73,7 @@
                     <el-table-column prop="changed" min-width="180" label="操作时间" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeFirstDataRow(scope.row)">
+                            <el-button v-if="isAuth('pkgPdDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeFirstDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -85,21 +85,21 @@
                     总运行时间：
                 </div>
                 <div class="input_bottom">
-                    {{ computedFirstDataTotal }} H
+                    {{ computedFirstDataTotal.toFixed(2) }} H
                 </div>
             </el-row>
         </mds-card>
         <mds-card title="停机情况" :name="'equipmentStop'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addSecondDataRowThrottle">
+                    <el-button v-if="isAuth('pkgPdInsert')" type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addSecondDataRowThrottle">
                         新增
                     </el-button>
                 </div>
             </template>
-            <el-form ref="ruleSecondForm" :model="ruleSecondForm">
+            <el-form ref="ruleSecondForm" :model="ruleSecondForm" class="ruleSecondForm">
                 <el-table ref="exception" class="newTable" :data="secondFormDataGroup" max-height="300" :row-class-name="rowStopDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
-                    <el-table-column label="序号" type="index" width="55" fixed="left" align="center" />
+                    <el-table-column label="序号" type="index" width="50" fixed align="center" />
                     <el-table-column min-width="130" :show-overflow-tooltip="true">
                         <template slot="header">
                             <span class="notNull">*</span>班次
@@ -154,7 +154,7 @@
                                     value-format="yyyy-MM-dd HH:mm"
                                     format="yyyy-MM-dd HH:mm"
                                     placeholder="选择时间"
-                                    style="width: 170px;"
+                                    style="width: 190px;"
                                     clearable
                                     :picker-options="pickerOptionsStart[1][scope.$index]"
                                     :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
@@ -175,7 +175,7 @@
                                     value-format="yyyy-MM-dd HH:mm"
                                     format="yyyy-MM-dd HH:mm"
                                     placeholder="选择时间"
-                                    style="width: 170px;"
+                                    style="width: 190px;"
                                     clearable
                                     :picker-options="pickerOptionsEnd[1][scope.$index]"
                                     :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')"
@@ -237,7 +237,7 @@
                     <el-table-column prop="changed" label="操作时间" min-width="180" :show-overflow-tooltip="true" />
                     <el-table-column fixed="right" label="操作" width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeSecondDataRow(scope.row)">
+                            <el-button v-if="isAuth('pkgPdDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')" @click="removeSecondDataRow(scope.row)">
                                 删除
                             </el-button>
                         </template>
@@ -249,7 +249,7 @@
                     总停线时间：
                 </div>
                 <div class="input_bottom">
-                    {{ computedSecondDataTotal }} MIN
+                    {{ computedSecondDataTotal.toFixed(2) }} MIN
                 </div>
             </el-row>
         </mds-card>
@@ -871,7 +871,16 @@ interface Option{
     dictCode?: string;
 }
 </script>
+<style scoped>
 
+.ruleFirstForm >>> .el-form-item__content {
+    line-height: normal;
+}
+
+.ruleSecondForm >>> .el-form-item__content {
+    line-height: normal;
+}
+</style>
 <style lang="scss" scoped>
 .solerow {
     margin-top: 5px;
@@ -882,5 +891,8 @@ interface Option{
     .input_bottom {
         margin-right: 50px;
     }
+}
+.ruleFirstForm >>> .el-form-item__content {
+    line-height: normal;
 }
 </style>

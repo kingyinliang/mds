@@ -2,13 +2,13 @@
     <mds-card title="待处理数量(单位：KG)" :name="'productPeople'">
         <template slot="titleBtn">
             <div style="float: right;">
-                <el-button type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
+                <el-button v-if="isAuth('pkgPdInsert')" type="primary" size="small" :disabled="!isRedact" @click="addNewDataRow()">
                     新增
                 </el-button>
             </div>
         </template>
-        <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
-            <el-table-column label="序号" type="index" width="60" fixed />
+        <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
+            <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="50" fixed="left" align="center" />
             <el-table-column width="100" :show-overflow-tooltip="true">
                 <template slot="header">
                     <span class="notNull">*</span>班次
@@ -58,7 +58,7 @@
             <el-table-column prop="changed" label="操作时间" :show-overflow-tooltip="true" min-width="160" />
             <el-table-column fixed="right" label="操作" :show-overflow-tooltip="true" width="100">
                 <template slot-scope="scope">
-                    <el-button class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
+                    <el-button v-if="isAuth('pkgPdDel')" class="delBtn" type="text" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="removeDataRow(scope.row)">
                         删除
                     </el-button>
                 </template>

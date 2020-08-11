@@ -4,10 +4,10 @@
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
                     <el-input v-model="controllableForm.username" placeholder="角色名称" size="small" clearable style="width: 180px; margin-right: 16px;" @clear="getItemsList()" />
-                    <el-button type="primary" size="small" :disabled="controllableForm.username.trim()===''" @click="getItemsList(true,controllableForm.username)">
+                    <el-button v-if="isAuth('roleQuery')" type="primary" size="small" :disabled="controllableForm.username.trim()===''" @click="getItemsList(true,controllableForm.username)">
                         查询
                     </el-button>
-                    <el-button type="primary" size="small" @click="addOrUpdateItem()">
+                    <el-button v-if="isAuth('roleInsert')" type="primary" size="small" @click="addOrUpdateItem()">
                         新增
                     </el-button>
                 </div>
@@ -21,19 +21,19 @@
                 <el-table-column prop="changed" label="修改时间" width="180" />
                 <el-table-column label="操作" min-width="360" fixed="right">
                     <template slot-scope="scope">
-                        <el-button type="text" class="role__btn" @click="manageUser(scope.row.id)">
+                        <el-button v-if="isAuth('roleUserCfg')" type="text" class="role__btn" @click="manageUser(scope.row.id)">
                             人员管理
                         </el-button>
-                        <el-button type="text" class="role__btn" @click="manageDepartment(scope.row.id)">
+                        <el-button v-if="isAuth('roleDeptCfg')" type="text" class="role__btn" @click="manageDepartment(scope.row.id)">
                             部门分配
                         </el-button>
-                        <el-button type="text" class="role__btn" @click="manageFunction(scope.row.id)">
+                        <el-button v-if="isAuth('roleMenuCfg')" type="text" class="role__btn" @click="manageFunction(scope.row.id)">
                             功能分配
                         </el-button>
-                        <el-button type="text" class="role__btn" @click="addOrUpdateItem(scope.row)">
+                        <el-button v-if="isAuth('roleEdit')" type="text" class="role__btn" @click="addOrUpdateItem(scope.row)">
                             修改角色
                         </el-button>
-                        <el-button type="text" class="role__btn" @click="removeItems(scope.row.id)">
+                        <el-button v-if="isAuth('roleDel')" type="text" class="role__btn" @click="removeItems(scope.row.id)">
                             删除角色
                         </el-button>
                     </template>
@@ -159,10 +159,6 @@
                     .then(() => {
                         COMMON_API.ROLE_REMOVE_API({ id: id }).then(() => {
                             this.getItemsList();
-                        }).catch((err) => {
-                            if (err.data.code === 201) {
-                                this.$errorToast(err.data.msg);
-                            }
                         })
                     })
                     .catch(() => {

@@ -3,13 +3,13 @@
         <mds-card title="人员统计" :name="'productPeople'">
             <template slot="titleBtn">
                 <div style="float: right;">
-                    <el-button type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewDataRow()">
+                    <el-button v-if="isAuth('pkgPdInsert')" type="primary" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="addNewDataRow()">
                         新增
                     </el-button>
                 </div>
             </template>
             <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
-                <el-table-column label="序号" type="index" width="60" fixed />
+                <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="50" fixed="left" align="center" />
                 <el-table-column prop="status" min-width="100" :show-overflow-tooltip="true">
                     <template slot="header">
                         <span class="notNull">*</span>班次
@@ -111,7 +111,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <el-button class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="removeDataRow(scope.row)">
+                        <el-button v-if="isAuth('pkgPdDel')" class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" @click="removeDataRow(scope.row)">
                             删除
                         </el-button>
                     </template>
@@ -210,7 +210,7 @@ export default class ProductPeople extends Vue {
         // 获取组织结构树
         this.getTree()
 
-        this.getStandardManPower(this.$store.state.packaging.packDetail)
+        this.getStandardManPower(formHeader)
 
         this.productPeopleAudit = await this.getAudit(formHeader, 'TIMESHEET');
     }
@@ -274,7 +274,7 @@ export default class ProductPeople extends Vue {
 
     // 获取组织结构树
     getTree() {
-        COMMON_API.ORGSTRUCTURE_API({
+        COMMON_API.ORGSTRUCTURE_ALL_API({
             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
         }).then(({ data }) => {
             this.orgTree = data.data;

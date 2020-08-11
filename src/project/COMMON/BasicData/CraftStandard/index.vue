@@ -4,16 +4,16 @@
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
                     <el-input v-model.trim="queryForm.productMaterial" size="small" placeholder="领用物料" suffix-icon="el-icon-search" clearable style="width: 160px; margin-right: 10px;" @clear="clearForm" />
-                    <el-button type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; GetData() }">
+                    <el-button v-if="isAuth('craftQuery')" type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; queryType = 1; GetData() }">
                         查询
                     </el-button>
-                    <el-button type="primary" size="small" @click="visibleHightLevelQuery = true">
+                    <el-button v-if="isAuth('craftQuery')" type="primary" size="small" @click="visibleHightLevelQuery = true">
                         高级查询
                     </el-button>
-                    <el-button type="primary" size="small" style="margin-left: 10px;" @click="AddDate()">
+                    <el-button v-if="isAuth('craftInsert')" type="primary" size="small" style="margin-left: 10px;" @click="AddDate()">
                         新增
                     </el-button>
-                    <el-button type="danger" size="small" @click="remove">
+                    <el-button v-if="isAuth('craftDel')" type="danger" size="small" @click="remove">
                         批量删除
                     </el-button>
                 </div>
@@ -37,7 +37,7 @@
                 <el-table-column label="操作时间" prop="changed" :show-overflow-tooltip="true" />
                 <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
-                        <el-button class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
+                        <el-button v-if="isAuth('craftEdit')" class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
                             编辑
                         </el-button>
                     </template>
@@ -85,7 +85,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="visibleHightLevelQuery = false">取消</el-button>
-                <el-button type="primary" @click="() => { queryForm.current = 1; GetData() }">确定</el-button>
+                <el-button type="primary" @click="() => { queryForm.current = 1; queryType = 2; GetData() }">确定</el-button>
             </span>
         </el-dialog>
         <craft-add-or-update v-if="addOrUpdate" ref="addOrUpdate" @refreshDataList="GetData" />
@@ -112,6 +112,7 @@
             addOrUpdate: HTMLFormElement;
         };
 
+        queryType = 1;
         queryForm = {
             current: 1,
             size: 10,
@@ -147,6 +148,7 @@
                 startDate: '',
                 endDate: ''
             };
+            this.queryType = 1;
             this.GetData()
         }
 
@@ -171,7 +173,29 @@
         }
 
         GetData() {
-            BASIC_API.CRAFT_LIST_API(this.queryForm).then(({ data }) => {
+            let params;
+            if (this.queryType === 1) {
+                params = {
+                    productMaterial: this.queryForm.productMaterial,
+                    current: this.queryForm.current,
+                    size: this.queryForm.current,
+                    total: this.queryForm.current
+                }
+            } else if (this.queryType === 2) {
+                params = {
+                    current: this.queryForm.current,
+                    size: this.queryForm.current,
+                    total: this.queryForm.current,
+                    productMaterial: '',
+                    warmTimeFloor: this.queryForm.warmTimeFloor,
+                    warmTimeLower: this.queryForm.warmTimeLower,
+                    warmTempFloor: this.queryForm.warmTempFloor,
+                    warmTempLower: this.queryForm.warmTempLower,
+                    startDate: this.queryForm.startDate,
+                    endDate: this.queryForm.endDate
+                }
+            }
+            BASIC_API.CRAFT_LIST_API(params).then(({ data }) => {
                 this.visibleHightLevelQuery = false;
                 this.addOrUpdate = false;
                 if (data.data.current === 1 && data.data.records.length === 0) {

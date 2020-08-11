@@ -2,6 +2,7 @@
     <div class="packaging header_main">
         <query-table
             ref="queryTable"
+            query-auth="pkgQuery"
             :type="'home'"
             :rules="rules"
             :query-form-data="queryFormData"
@@ -51,11 +52,11 @@
                                             </div>
                                         </el-form-item>
                                         <div class="home_card__main__item__main__right__btn">
-                                            <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goDataEntry(item)">
+                                            <el-button v-if="isAuth('pkgPd')" :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goDataEntry(item)">
                                                 生产数据
                                             </el-button>
-                                            <el-button :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goCheckData(item)">
-                                                检查数据
+                                            <el-button v-if="isAuth('pkgCkd')" :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goCheckData(item)">
+                                                检测数据
                                             </el-button>
                                         </div>
                                     </div>

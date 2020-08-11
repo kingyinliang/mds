@@ -3,7 +3,7 @@ import App from './App.vue';
 import $ from 'jquery';
 import router from './router/index';
 import store from './store/index';
-import { isAuth } from 'utils/utils';
+import { isAuth, getIndexMethod } from 'utils/utils';
 import useComponents from 'src/components/index';
 import elementUi from './elementUi';
 import httpProxy from 'utils/net/httpProxy';
@@ -26,6 +26,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$http = httpProxy; // ajax请求方法
 Vue.prototype.$ = $;
 Vue.prototype.isAuth = isAuth; // 权限方法
+Vue.prototype.getIndexMethod = getIndexMethod; // 权限方法
 // 警告通知
 Vue.prototype.$warningToast = str => {
     Notification({ title: '警告', message: str, type: 'warning' });

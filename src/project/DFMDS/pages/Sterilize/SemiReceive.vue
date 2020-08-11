@@ -2,13 +2,14 @@
     <div>
         <data-entry
             ref="dataEntry"
-            :redact-auth="'pkg:order:update'"
-            :save-auth="'pkg:order:update'"
-            :submit-auth="'pkg:order:update'"
-            :order-status="formHeader.orderStatusName"
+            redact-auth="steSemiEdit"
+            save-auth="steSemiEdit"
+            submit-auth="steSemiSubmit"
+            :order-status="formHeader.statusName"
             :header-base="headerBase"
             :form-header="formHeader"
             :tabs="tabs"
+            :submit-rules="submitRules"
             :saved-datas="savedDatas"
             :submit-datas="submitDatas"
             @success="getOrderList"
@@ -109,12 +110,20 @@
             }
         ];
 
+        submitRules(): Function[] {
+            return [this.$refs.semiReceive.ruleSubmit, this.$refs.excRecord.ruleSubmit]
+        }
+
         mounted() {
             this.getOrderList()
         }
 
         // 查询表头
         getOrderList() {
+            if (!this.isAuth('steSemiQuery')) {
+                this.$warningToast('无权限');
+                return false
+            }
             STE_API.STE_DETAIL_CRAFTHEADER_INFO_API({
                 potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
             }).then(({ data }) => {

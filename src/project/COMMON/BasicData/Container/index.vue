@@ -21,16 +21,17 @@
                     </el-form-item>
                     <el-form-item class="floatr" style="height: 32px;">
                         <el-button
+                            v-if="isAuth('holderQuery')"
                             type="primary"
                             size="small"
                             @click="getItemsList(true)"
                         >
                             查询
                         </el-button>
-                        <el-button type="primary" size="small" @click="addOrUpdateItem()">
+                        <el-button v-if="isAuth('holderInsert')" type="primary" size="small" @click="addOrUpdateItem()">
                             新增
                         </el-button>
-                        <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
+                        <el-button v-if="isAuth('holderDel')" type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                             批量删除
                         </el-button>
                     </el-form-item>
@@ -70,7 +71,7 @@
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" header-align="left" align="left" width="65">
                     <template slot-scope="scope">
-                        <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row)">
+                        <el-button v-if="isAuth('holderEdit')" style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row)">
                             编辑
                         </el-button>
                     </template>
@@ -111,7 +112,7 @@
                 containerTypeList: [],
                 containerTypeObject: {},
                 targetInfoList: [],
-                holderStatusObject: { E: '空', R: '投料', F: '发酵', U: '领用', C: '清洗' }
+                holderStatusObject: { E: '空罐', R: '投料', F: '发酵', U: '领用', C: '清洗' }
             };
         },
         computed: {

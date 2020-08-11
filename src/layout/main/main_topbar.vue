@@ -124,10 +124,12 @@
         },
         watch: {
             updateMsgNum(newStatus) {
-                if (newStatus !== false) {
-                    this.$store.commit('common/updateMsg', false);
+                if (this.factoryName !== '系统设置') {
+                    if (newStatus !== false) {
+                        this.$store.commit('common/updateMsg', false);
+                    }
+                    this.getMsgNum()
                 }
-                this.getMsgNum()
             }
         },
         created() {
@@ -135,9 +137,13 @@
         },
         mounted() {
             this.gender = sessionStorage.getItem('gender')
-            this.websocketToLogin()
-            // 获取消息数字
-            this.getMsgNum()
+
+            if (this.factoryName !== '系统设置') {
+                this.websocketToLogin()
+                 // 获取消息数字
+                this.getMsgNum()
+            }
+
 
         },
         methods: {

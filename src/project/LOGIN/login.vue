@@ -196,21 +196,19 @@ export default {
         dataFormSubmit() {
             this.$refs['dataForm'].validate(valid => {
                 if (valid) {
-                    COMMON_API.UPPASS_API(this.dataForm).then(({ data }) => {
-                        if (data.code === 0) {
-                            this.$successToast('操作成功');
-                            this.visible = false;
-                            if (sessionStorage.getItem('defaultFactory')) {
-                                const dfFa = this.factory.filter(item => item.deptCode === sessionStorage.getItem('defaultFactory'))[0]
-                                this.$refs.selectfactory.goFa(dfFa)
-                            } else if (this.factory.length > 1) {
-                                this.factoryVisible = true;
-                                this.$nextTick(() => {
-                                    this.$refs['selectfactory'].init();
-                                });
-                            } else if (this.factory.length === 1) {
-                                this.$refs.selectfactory.goFa(this.factory[0])
-                            }
+                    COMMON_API.UPPASS_API(this.dataForm).then(() => {
+                        this.$successToast('密码修改成功');
+                        this.visible = false;
+                        if (sessionStorage.getItem('defaultFactory')) {
+                            const dfFa = this.factory.filter(item => item.deptCode === sessionStorage.getItem('defaultFactory'))[0]
+                            this.$refs.selectfactory.goFa(dfFa)
+                        } else if (this.factory.length > 1) {
+                            this.factoryVisible = true;
+                            this.$nextTick(() => {
+                                this.$refs['selectfactory'].init();
+                            });
+                        } else if (this.factory.length === 1) {
+                            this.$refs.selectfactory.goFa(this.factory[0])
                         }
                     });
                 }
@@ -245,7 +243,7 @@ export default {
             sessionStorage.setItem('staff-post', data.post || '');
             sessionStorage.setItem('staff-location', data.deptName || '');
             sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
-            if (data.firstFlag === '1') {
+            if (data.firstFlag === 'Y') {
                 this.visible = true;
                 this.factory = data.userFactory
             } else if (data.defaultFactory) {

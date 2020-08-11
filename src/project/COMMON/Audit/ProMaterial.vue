@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            query-auth="ckMatQuery"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             :custom-data="true"
@@ -16,14 +17,14 @@
             <template slot="tab-head0">
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
-                    <span>报工列表</span>
+                    <span>发料列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="pstngDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input v-model="headerText" placeholder="抬头文本" size="small" style="width: 190px; margin-right: 10px;" />
-                        <el-button type="primary" size="small" @click="getPass">
+                        <el-button v-if="isAuth('ckMatPost')" type="primary" size="small" @click="getPass">
                             过账
                         </el-button>
-                        <el-button type="primary" size="small" class="sub-red" @click="refuseDialogShow(true)">
+                        <el-button v-if="isAuth('ckMatReturn')" type="primary" size="small" class="sub-red" @click="refuseDialogShow(true)">
                             退回
                         </el-button>
                     </div>
@@ -32,21 +33,21 @@
             <template slot="tab-head1">
                 <div class="tab__heads clearfix">
                     <i class="title-icon" />
-                    <span>报工列表</span>
+                    <span>发料列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="pstngDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
                         <span>抬头文本：</span><el-input v-model="headerText" placeholder="抬头文本" size="small" style="width: 190px; margin-right: 10px;" />
-                        <el-button type="primary" size="small" class="sub-yellow" @click="refuseDialogShow(false)">
+                        <el-button v-if="isAuth('ckMatRevert')" type="primary" size="small" class="sub-yellow" @click="refuseDialogShow(false)">
                             反审
                         </el-button>
                     </div>
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">
-                <el-button class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
+                <el-button v-if="isAuth('ckMatEdit')" :disabled="scope.row.status === 'R'" class="ra_btn" type="text" round size="mini" @click="redact(scope.row)">
                     {{ scope.row.redact ? '保存' : '编辑' }}
                 </el-button>
-                <el-button class="ra_btn" type="text" round size="mini" @click="getAuditLog(scope.row)">
+                <el-button v-if="isAuth('ckMatRecord')" class="ra_btn" type="text" round size="mini" @click="getAuditLog(scope.row)">
                     审核日志
                 </el-button>
             </template>
@@ -63,7 +64,7 @@
                 </el-button>
             </span>
         </el-dialog>
-        <el-dialog title="审核日志" width="600px" :close-on-click-modal="false" :visible.sync="isAuditLogDialogShow">
+        <el-dialog title="审核日志" width="900px" :close-on-click-modal="false" :visible.sync="isAuditLogDialogShow">
             <audit-log :table-data="auditLogData" :verify-man="'verifyMan'" :verify-date="'verifyDate'" :pack-up="false" :status="true" />
             <div slot="footer" class="dialog-footer" />
         </el-dialog>
@@ -358,7 +359,7 @@
         getColumn(type) {
             const column = [
                     {
-                        prop: 'status',
+                        prop: 'statusName',
                         label: '过账状态'
                     },
                     {
@@ -384,7 +385,7 @@
                         label: '计划数量'
                     },
                     {
-                        prop: 'outputUnitName',
+                        prop: 'outputUnit',
                         label: '单位'
                     },
                     {
@@ -392,7 +393,7 @@
                         label: '入库数量'
                     },
                     {
-                        prop: 'countOutputUnitName',
+                        prop: 'countOutputUnit',
                         label: '单位'
                     },
                     {
@@ -408,7 +409,7 @@
                         label: '发料数量'
                     },
                     {
-                        prop: 'entryUomName',
+                        prop: 'entryUom',
                         label: '单位'
                     },
                     {
@@ -456,7 +457,8 @@
                         type: 'select',
                         width: '140',
                         redact: true,
-                        header: false
+                        header: true,
+                        hide: true
                     },
                     {
                         prop: 'remark',
@@ -471,8 +473,11 @@
                     }
                 ];
                 if (type === 2) {
-                    column[14]['header'] = false;
-                    column[15]['header'] = true;
+                    column[14]['hide'] = true;
+                    column[15]['hide'] = false;
+                    column[11]['type'] = '';
+                    column[12]['type'] = '';
+                    column[13]['type'] = '';
                 }
             return column;
         }
@@ -578,7 +583,7 @@
                         this.$refs.queryTable.getDataList(true)
                     }).catch((err) => {
                         if (err.data.code === 201) {
-                            this.$errorToast(err.data.msg);
+                            // this.$errorToast(err.data.msg);
                             this.$refs.queryTable.getDataList(true)
                         }
                     });
@@ -649,7 +654,7 @@
                     }).catch((err) => {
                         if (err.data.code === 201) {
                             this.isRefuseOrWriteOffsDialogShow = false;
-                            this.$errorToast(err.data.msg);
+                            // this.$errorToast(err.data.msg);
                             this.$refs.queryTable.getDataList(true);
                         }
                     });
@@ -659,7 +664,7 @@
                     this.$warningToast('请填写反审原因')
                     return false;
                 }
-                this.$confirm('部分数据已经调用SAP接口已发料，请确认sap冲销，确认要反审？', '反审确认', {
+                this.$confirm('数据已经调用SAP接口已发料，反审后将冲销SAP数据，是否反审?', '反审确认', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -685,11 +690,11 @@
                     AUDIT_API.PROISSUEWRITEOFFS_API(list).then(({ data }) => {
                         this.isRefuseOrWriteOffsDialogShow = false
                         this.$successToast(data.msg);
-                        this.$refs.queryTable.getDataList()
+                        this.$refs.queryTable.getDataList(true)
                     }).catch((err) => {
                         if (err.data.code === 201) {
                             this.isRefuseOrWriteOffsDialogShow = false;
-                            this.$errorToast(err.data.msg);
+                            // this.$errorToast(err.data.msg);
                             this.$refs.queryTable.getDataList(true);
                         }
                     });

@@ -2,7 +2,7 @@
     <div class="header_main">
         <mds-card title="菜单列表" :name="'menu'" :pack-up="false" style="margin-bottom: 0; background: white;">
             <template slot="titleBtn">
-                <el-button type="primary" style="float: right; margin-bottom: 12px;" size="small" @click="addOrUpdateHandle()">
+                <el-button v-if="isAuth('menuInsert')" type="primary" style="float: right; margin-bottom: 12px;" size="small" @click="addOrUpdateHandle()">
                     新增
                 </el-button>
             </template>
@@ -39,11 +39,11 @@
                 <el-table-column fixed="right" header-align="left" align="left" width="88" label="操作">
                     <template slot-scope="scope">
                         <!--<el-button v-if="isAuth('sys:menu:update')" style="padding: 0;" type="text" size="small" @click="addOrUpdateHandle(scope.row.menuId)">-->
-                        <el-button style="padding: 0;" type="text" size="small" @click="addOrUpdateHandle(scope.row)">
+                        <el-button v-if="isAuth('menuEdit')" style="padding: 0;" type="text" size="small" @click="addOrUpdateHandle(scope.row)">
                             修改
                         </el-button>
                         <!--<el-button v-if="isAuth('sys:menu:delete')" style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.menuId)">-->
-                        <el-button style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.id)">
+                        <el-button v-if="isAuth('menuDel')" style="padding: 0;" type="text" size="small" @click="deleteHandle(scope.row.id)">
                             删除
                         </el-button>
                     </template>
@@ -81,6 +81,10 @@ export default class Menu extends Vue {
 
     // 获取数据列表
     getDataList() {
+        if (!this.isAuth('menuQuery')) {
+            this.$warningToast('无权限');
+            return false
+        }
         COMMON_API.MENULIST_API({
             factory: 'common'
         }).then(({ data }) => {

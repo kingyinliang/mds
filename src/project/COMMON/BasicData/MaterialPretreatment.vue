@@ -3,17 +3,17 @@
         <mds-card title="辅料前处理页面" :name="'materialPretreatment'" :pack-up="false">
             <template slot="titleBtn">
                 <el-row style="margin-bottom: 5px; text-align: right;">
-                    <el-input v-model="form.useMaterial" size="small" placeholder="领用物料" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" clearable @clear="getDataList()" @keyup.enter.native="getDataList()" />
-                    <el-button type="primary" size="small" @click="getDataList(true)">
+                    <el-input v-model="form.useMaterial" size="small" placeholder="领用物料" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" clearable @keyup.enter.native="getDataLowList(true)" />
+                    <el-button v-if="isAuth('accPreQuery')" type="primary" size="small" @click="getDataLowList(true)">
                         查询
                     </el-button>
-                    <el-button type="primary" size="small" @click="isSearchDialogShow = true">
+                    <el-button v-if="isAuth('accPreQuery')" type="primary" size="small" @click="isSearchDialogShow = true">
                         高级查询
                     </el-button>
-                    <el-button type="primary" size="small" @click="addorUpdateItem()">
+                    <el-button v-if="isAuth('accPreInsert')" type="primary" size="small" @click="addorUpdateItem()">
                         新增
                     </el-button>
-                    <el-button type="danger" size="small" :disabled="dataList.length === 0 || multipleSelection.length === 0" @click="removeItems()">
+                    <el-button v-if="isAuth('accPreDel')" type="danger" size="small" @click="removeItems()">
                         批量删除
                     </el-button>
                 </el-row>
@@ -38,7 +38,7 @@
                 <el-table-column min-width="135" label="操作时间" prop="changed" />
                 <el-table-column width="60" label="操作">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="addorUpdateItem(scope.row)">
+                        <el-button v-if="isAuth('accPreEdit')" type="text" size="small" @click="addorUpdateItem(scope.row)">
                             编辑
                         </el-button>
                     </template>
@@ -148,6 +148,10 @@ export default class MaterialPretreatment extends Vue {
     formatData: FormData = {};
 
     form = {
+        productMaterial: '',
+        useMaterial: '',
+        preStage: '',
+        potDisplay: '',
         size: 10,
         current: 1
     };
@@ -178,6 +182,13 @@ export default class MaterialPretreatment extends Vue {
 
     get mainClientHeight() {
         return this.$store.state.common.mainClientHeight;
+    }
+
+    getDataLowList(st) {
+        this.form.productMaterial = '';
+        this.form.preStage = '';
+        this.form.potDisplay = '';
+        this.getDataList(st);
     }
 
     // 生产物料
@@ -270,6 +281,10 @@ export default class MaterialPretreatment extends Vue {
 
     //删除
     removeItems() {
+        if (this.multipleSelection.length === 0) {
+            this.$warningToast('请选择删除数据');
+            return false;
+        }
         const delList = recombineField(this.multipleSelection, 'id');
         this.$confirm('确认删除，是否继续?', '提示', {
             confirmButtonText: '确定',

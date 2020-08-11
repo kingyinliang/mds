@@ -11,13 +11,13 @@
             <template slot="view" style="padding-top: 16px;">
                 <div class="view-btn">
                     <el-input v-model="controllableForm.param" placeholder="工号/姓名" size="small" suffix-icon="el-icon-search" clearable style="width: 180px; margin-right: 16px;" @clear="getItemsList()" />
-                    <el-button type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
+                    <el-button v-if="isAuth('userQuery')" type="primary" size="small" :disabled="controllableForm.param.trim()===''" @click="getItemsList(true)">
                         查询
                     </el-button>
-                    <el-button type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
+                    <el-button v-if="isAuth('userDel')" type="danger" size="small" :disabled="targetInfoList.length===0" @click="removeItems()">
                         批量删除
                     </el-button>
-                    <el-button type="primary" size="small" @click="addOrUpdateItem()">
+                    <el-button v-if="isAuth('userInsert')" type="primary" size="small" @click="addOrUpdateItem()">
                         增加
                     </el-button>
                 </div>
@@ -34,7 +34,7 @@
                     <el-table-column prop="created" label="创建日期" width="180" />
                     <el-table-column v-if="targetInfoList.length!==0" label="操作" fixed="right" width="65">
                         <template slot-scope="scope">
-                            <el-button style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
+                            <el-button v-if="isAuth('userEdit')" style="padding: 0;" type="text" @click="addOrUpdateItem(scope.row.id)">
                                 编辑
                             </el-button>
                         </template>
@@ -92,6 +92,10 @@ export default {
         },
         // 根据deptId查询用户
         showOrgDetail(data) {
+            if (!this.isAuth('userQuery')) {
+                this.$warningToast('无权限');
+                return false
+            }
             this.deptID = data.id;
             this.deptName = data.deptName;
             this.getItemsList();
@@ -106,11 +110,13 @@ export default {
                 return;
             }
             let net;
+            console.log(JSON.parse(sessionStorage.getItem('factory')))
+
             switch (JSON.parse(sessionStorage.getItem('factory') || '{}').deptCode) {
                 case '9999-xn':
-                    net = COMMON_API.USER_QUERY_API;
+                    net = COMMON_API.USER_QUERY_API; // /sysUser/query
                     break;
-                default: net = COMMON_API.USER_ROLE_QUERY_API;
+                default: net = COMMON_API.USER_ROLE_QUERY_API; // /sysUser/userRole/query
             }
             net({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -159,45 +165,46 @@ export default {
             if (this.multipleSelection.length === 0) {
                 this.$warningToast('请选择要删除的用户');
             } else {
-                const roleName = [];
+                // const roleName = [];
                 const userID = [];
                 this.multipleSelectionTemp.forEach(item => {
-                    if (item.roles.length !== 0) {
-                        item.roles.forEach(subItem => {
-                            roleName.push(subItem.roleName);
-                        })
-                    }
+                    // if (item.roles.length !== 0) {
+                    //     item.roles.forEach(subItem => {
+                    //         roleName.push(subItem.roleName);
+                    //     })
+                    // }
                     userID.push(item.id);
                 });
-                if (roleName.length) {
-                    this.$confirm(`有 ${roleName.join(',')}权限，不能删除，请联系IT`, '删除用户', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                    //    then
-                    }).catch(() => {
-                        // this.$infoToast('已取消删除');
-                    });
-                } else {
-                    this.$confirm('此用户无权限，是否删除?', '删除用户', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    })
-                        .then(() => {
+                // if (roleName.length) {
+                //     this.$confirm(`有 ${roleName.join(',')}权限，不能删除，请联系IT`, '删除用户', {
+                //         confirmButtonText: '确定',
+                //         cancelButtonText: '取消',
+                //         type: 'warning'
+                //     }).then(() => {
+                //     //    then
+                //     }).catch(() => {
+                //         // this.$infoToast('已取消删除');
+                //     });
+                // } else {
+                    // this.$confirm('此用户无权限，是否删除?', '删除用户', {
+                    //     confirmButtonText: '确定',
+                    //     cancelButtonText: '取消',
+                    //     type: 'warning'
+                    // })
+                    //     .then(() => {
                             COMMON_API.USER_DELETE_API({
                                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                                 ids: userID
                             }).then(() => {
+                                this.$successToast('操作成功');
                                 this.multipleSelection = [];
                                 this.getItemsList();
                             });
-                        })
-                        .catch(() => {
-                        //    catch
-                        });
-                }
+                        // })
+                        // .catch(() => {
+                        // //    catch
+                        // });
+                // }
             }
         },
         // 改变每页条数

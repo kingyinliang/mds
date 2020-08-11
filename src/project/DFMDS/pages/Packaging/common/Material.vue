@@ -2,13 +2,13 @@
     <div>
         <mds-card :title="'包材领用'" :name="'materialP'">
             <el-table header-row-class-name="tableHead" class="newTable" :data="currentDataTable" :row-class-name="rowDelFlag" :span-method="spanMethod" border tooltip-effect="dark">
-                <el-table-column type="index" label="序号" width="50px" />
+                <el-table-column type="index" label="序号" width="50" fixed align="center" />
                 <el-table-column label="领用物料" prop="material" width="150" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                     </template>
                 </el-table-column>
-                <el-table-column label="单位" prop="materialUnit" width="50" :show-overflow-tooltip="true" />
+                <el-table-column label="单位" prop="materialUnitName" width="50" :show-overflow-tooltip="true" />
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column label="结算库存" width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
@@ -23,7 +23,7 @@
                 </el-table-column>
                 <el-table-column width="70">
                     <template slot-scope="scope">
-                        <el-button type="text" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3') || scope.row.materialStatus === '3'" @click="SplitDate('currentDataTable', scope.row, scope.$index)">
+                        <el-button v-if="isAuth('pkgPdInsert')" type="text" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3') || scope.row.materialStatus === '3'" @click="SplitDate('currentDataTable', scope.row, scope.$index)">
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
@@ -78,7 +78,7 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="70">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.splitFlag === 'Y'" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row, 'currentDataTable')">
+                        <el-button v-if="scope.row.splitFlag === 'Y' && isAuth('pkgPdDel')" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3')" class="delBtn" type="text" icon="el-icon-delete" size="mini" @click="delMaterial(scope.row, 'currentDataTable')">
                             删除
                         </el-button>
                     </template>
@@ -97,7 +97,7 @@
                 <el-table-column label="需求用量" prop="needNum" width="80" :show-overflow-tooltip="true" />
                 <el-table-column width="70">
                     <template slot-scope="scope">
-                        <el-button type="text" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS('materialS', scope.row, scope.$index)">
+                        <el-button v-if="isAuth('pkgPdInsert')" type="text" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS('materialS', scope.row, scope.$index)">
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
@@ -239,7 +239,12 @@
                 const filterArr1: (any) = pkgPackingMaterial.packingMaterialUpdate.filter(it => it.id === item.mainId);// eslint-disable-line
                 const filterArr2: (any) = pkgPackingMaterial.packingMaterialInsert.filter(it => it.merge === item.merge);// eslint-disable-line
                 if (item.materialStatus === '3') {
-                    pkgPackingMaterial.packingMaterialDelete.push(item.mainId);
+                    if (pkgPackingMaterial.packingMaterialDelete.indexOf(item.mainId) === -1) {
+                        pkgPackingMaterial.packingMaterialDelete.push(item.mainId);
+                    }
+                    if (item.id) {
+                        pkgPackingMaterial.packingMaterialItemDelete.push(item.id)
+                    }
                 } else if (item.delFlag === 1) {
                     if (item.id) {
                         pkgPackingMaterial.packingMaterialItemDelete.push(item.id)
@@ -380,6 +385,7 @@
             }).then(({ data }) => {
                 this.processData(data.data, 'currentDataTable');
                 this.merge(this.currentDataTable, 'currentDataTable');
+                console.log(this.currentDataTable);
                 this.orgDataTable = JSON.parse(JSON.stringify(this.currentDataTable));
             });
             PKG_API.PKG_MATERIAL_S_QUERY_API({
@@ -419,6 +425,7 @@
                         materialCode: item.materialCode,
                         materialName: item.materialName,
                         materialUnit: item.materialUnit,
+                        materialUnitName: item.materialUnitName,
                         needNum: item.needNum,
                         materialStatus: dataGroup === 'currentDataTable' ? item.materialStatus : null,
                         materialType: dataGroup === 'currentDataTable' ? item.materialType : null,
@@ -612,6 +619,7 @@ interface MaterialMap{
     materialName?: string;
     materialStatus?: string;
     materialUnit?: string;
+    materialUnitName?: string;
     needNum?: number;
     startStocks?: number;
     endStocks?: number;

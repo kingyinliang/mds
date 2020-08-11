@@ -2,6 +2,7 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            query-auth="steSplitQuery"
             :type="'home'"
             :rules="rules"
             :query-form-data="queryFormData"
@@ -32,7 +33,7 @@
                                 <el-table-column label="备注" width="70" prop="remark" />
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
-                                        <el-button type="text" @click="orderSplit(scope.row)">
+                                        <el-button v-if="isAuth('steSplit')" type="text" @click="orderSplit(scope.row)">
                                             <i class="iconfont factory-chaifen" />拆分
                                         </el-button>
                                     </template>
@@ -54,7 +55,7 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item style="margin-bottom: 10px;">
-                                        <el-button type="primary" size="small" @click="getSplitTable">
+                                        <el-button v-if="isAuth('steSplitQuery')" type="primary" size="small" @click="getSplitTable">
                                             查询
                                         </el-button>
                                     </el-form-item>
@@ -79,10 +80,10 @@
                                 <el-table-column label="操作时间" width="100" prop="changed" :show-overflow-tooltip="true" />
                                 <el-table-column label="操作" fixed="right" align="center" width="140">
                                     <template slot-scope="scope">
-                                        <el-button type="text" icon="el-icon-delete" @click="delSplitRow(scope.row)">
+                                        <el-button v-if="isAuth('steSplitDel')" type="text" icon="el-icon-delete" @click="delSplitRow(scope.row)">
                                             删除
                                         </el-button>
-                                        <el-button type="text" @click="orderSplitDetail(scope.row)">
+                                        <el-button v-if="isAuth('steSplitMx')" type="text" @click="orderSplitDetail(scope.row)">
                                             <i class="iconfont factory-liebiao" />
                                             <span style="margin-left: 5px;">详情</span>
                                         </el-button>

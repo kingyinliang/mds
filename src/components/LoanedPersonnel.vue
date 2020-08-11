@@ -12,7 +12,7 @@
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
                     <el-input v-model="filterText" size="small" placeholder="搜索人员" />
-                    <el-tree ref="userlistTree" :filter-node-method="filterNode" node-key="id" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
+                    <el-tree ref="userlistTree" :filter-node-method="filterNode1" node-key="id" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
                 </el-card>
             </el-col>
             <el-col style="width: 50px; padding: 70px 5px;">
@@ -64,7 +64,8 @@ export default {
             tree2Status: false,
             userListTreeProps: {
                 label: function(data) {
-                    return data.realName + '（' + (data.workNum !== null && data.workNum !== '' ? data.workNum : data.workNumTemp) + '）';
+                    // return data.realName + '（' + (data.workNum !== null && data.workNum !== '' ? data.workNum : data.workNumTemp) + '）';
+                    return data.label;
                 },
                 children: ''
             },
@@ -107,7 +108,7 @@ export default {
             }
         },
         getTree() {
-            COMMON_API.ORGSTRUCTURE_API({
+            COMMON_API.ORGSTRUCTURE_ALL_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
             }).then(({ data }) => {
                 this.orgTree = data.data;
@@ -125,13 +126,14 @@ export default {
                     this.$refs.orgtree.setCurrentKey(dataObj['id']);
                 })
             }
-            COMMON_API.USER_ROLE_QUERY_API({
+            COMMON_API.USER_ROLE_ALL_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                deptId: dataObj.id,
-                current: 1,
-                size: 9999
+                deptId: dataObj.id
             }).then(({ data }) => {
-                this.userlist = data.data.records;
+                this.userlist = data.data;
+                this.userlist.map(item => {
+                    item.label = item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）';
+                })
                 this.tree1Status = false;
             });
             // this.$http(`${SYSTEMSETUP_API.USERLIST_API}`, 'POST', {
@@ -168,6 +170,11 @@ export default {
         delSelcted() {
             this.$refs.userlistTree1.getCheckedNodes().forEach((item) => {
                 this.selctId.splice(this.selctId.indexOf(item), 1);
+                if (this.userlist.findIndex(items => items.label === item.label) === -1) {
+                    this.userlist.push({
+                        label: item.label
+                    })
+                }
             });
             this.tree2Status = false;
         },
@@ -175,19 +182,21 @@ export default {
         addSelcted() {
             this.$refs.userlistTree.getCheckedNodes().forEach((item) => {
                 const obj = {};
-                obj.label = item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）';
+                obj.label = item.label;
+                // obj.label = item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）';
                 if (JSON.stringify(this.selctId).indexOf(JSON.stringify(obj)) === -1) {
                     this.selctId.push(obj);
                 }
+                this.userlist.splice(this.userlist.findIndex(items => items.label === item.label), 1);
             });
         },
         // 部门搜索人员
-        filterNode(value, data) {
-            if (!value) return true;
-            // 如果没有workNum, 使用workNumTemp
-            const workNum = data.workNum ? data.workNum : data.workNumTemp;
-            return data.realName.indexOf(value) !== -1 || workNum.indexOf(value) !== -1;
-        },
+        // filterNode(value, data) {
+        //     if (!value) return true;
+        //     // 如果没有workNum, 使用workNumTemp
+        //     const workNum = data.workNum ? data.workNum : data.workNumTemp;
+        //     return data.realName.indexOf(value) !== -1 || workNum.indexOf(value) !== -1;
+        // },
         // 选中搜索人员
         filterNode1(value, data) {
             if (!value) return true;

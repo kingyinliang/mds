@@ -6,6 +6,7 @@ declare module 'vue/types/vue' {
         $route: Route;
         $http: Function;
         isAuth: Function;
+        getIndexMethod: Function;
         $: any; // eslint-disable-line
         $warningToast: Function;
         $errorToast: Function;
