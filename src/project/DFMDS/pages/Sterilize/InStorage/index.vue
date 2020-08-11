@@ -1,90 +1,38 @@
-<template>
-    <div>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-form :inline="true" :model="formHeader" size="small" label-width="85px" class="topform multi_row searchCard__form">
-                    <el-form-item label="生产车间：" class="must-fill">
-                        <el-select v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;" clearable @change="selectWorkshop">
-                            <el-option v-for="(item, index) in workshopList" :key="index" :label="item.targetName" :value="item.targetCode" />
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="生产日期：" class="must-fill">
-                        <el-date-picker v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择" style="width: 180px;" />
-                    </el-form-item>
-                    <el-form-item label="生产订单：" class="must-fill">
-                        <el-select v-model="formHeader.orderNo" placeholder="请选择" style="width: 180px;" clearable @change="selectOrder">
-                            <el-option v-for="(item) in orderNoList" :key="item.id" :label="item.orderNo" :value="item.orderNo" />
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="生产物料：">
-                        <p class="input_border_bg" style="width: 180px;">
-                            {{ formHeader.material }}
-                        </p>
-                    </el-form-item>
-                    <el-form-item label="提交人员：">
-                        <p class="input_border_bg" style="width: 180px;">
-                            {{ formHeader.changer }}
-                        </p>
-                    </el-form-item>
-                    <el-form-item label="提交时间：">
-                        <p class="input_border_bg" style="width: 180px;">
-                            {{ formHeader.changed }}
-                        </p>
-                    </el-form-item>
-                </el-form>
-                <div class="searchCard__control">
-                    <div>
-                        <el-button type="primary" size="small" :disabled="!formHeader.workShop||!formHeader.inKjmDate||!formHeader.orderNo" @click="btnGetResult">
-                            查询
-                        </el-button>
-                    </div>
-                    <div v-show="formHeader.status!==''">
-                        <span
-                            class="dot"
-                            :style="{
-                                background: formHeader.status === 'noPass' ? 'red' : formHeader.status === 'saved' ? '#1890f' : formHeader.status === 'submit' ? '#1890ff' : formHeader.status === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',
-                            }"
-                        />订单状态：
-                        <span
-                            :style="{
-                                color: formHeader.status === 'noPass' ? 'red' : '',
-                            }"
-                        >{{ formHeader.status === 'noPass' ? '审核不通过' : formHeader.status === 'saved' ? '已保存' : formHeader.status === 'submit' ? '已提交' : formHeader.status === 'checked' ? '通过' : formHeader.status === '已同步' ? '未录入' : formHeader.status }}</span>
-                    </div>
-                </div>
-            </el-card>
-
-            <div v-show="searchCard">
-                <tie-tabs :tab-titles="tabTitles">
-                    <template slot="1">
-                        <in-storage ref="inStorage" :is-redact="isRedact" card-title="入库列表" :table-data="tableData" :order-info="orderData" :pkg-work-shop-list="pkgWorkShopList" />
-                    </template>
-                    <template slot="2">
-                        <exc-record ref="excRecord" :is-redact="isRedact" :form-header="formHeader" />
-                    </template>
-                    <template slot="3">
-                        <text-record ref="textRecord" :is-redact="isRedact" />
-                    </template>
-                </tie-tabs>
-
-                <redact-box>
-                    <template slot="button">
-                        <el-button v-if="isAuth('steStgEdit') && searchCard" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                            {{ isRedact ? '取消' : '编辑' }}
-                        </el-button>
-                        <template v-if="isRedact && searchCard" style="float: right; margin-left: 10px;">
-                            <el-button v-if="isAuth('steStgEdit')" type="primary" size="small" @click="savedDatas()">
-                                保存
-                            </el-button>
-                            <el-button v-if="isAuth('steStgSubmit')" type="primary" size="small" @click="submitDatas()">
-                                提交
-                            </el-button>
-                        </template>
-                    </template>
-                </redact-box>
-            </div>
-        </div>
-    </div>
+<template lang="pug">
+    div
+        .header_main
+            el-card.searchCard
+                el-form.topform.multi_row.searchCard__form(:inline="true" :model="formHeader" size="small" label-width="85px")
+                    el-form-item.must-fill(label="生产车间：")
+                        el-select(v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;" clearable="" @change="selectWorkshop"): el-option(v-for="(item, index) in workshopList" :key="index" :label="item.targetName" :value="item.targetCode")
+                    el-form-item.must-fill(label="生产日期：")
+                        el-date-picker(v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 180px;")
+                    el-form-item.must-fill(label="生产订单：")
+                        el-select(v-model="formHeader.orderNo" placeholder="请选择" style="width: 180px;" clearable="" @change="selectOrder"): el-option(v-for="(item) in orderNoList" :key="item.id" :label="item.orderNo" :value="item.orderNo")
+                    el-form-item(label="生产物料：")
+                        p.input_border_bg(style="width: 180px;") {{ formHeader.material }}
+                    el-form-item(label="提交人员：")
+                        p.input_border_bg(style="width: 180px;") {{ formHeader.changer }}
+                    el-form-item(label="提交时间：")
+                        p.input_border_bg(style="width: 180px;") {{ formHeader.changed }}
+                .searchCard__control
+                    div
+                        el-button(type="primary" size="small" @click="btnGetResult") 查询
+                    div(v-show="formHeader.status!==''")
+                        span.dot(:style="{background: formHeader.status === 'noPass' ? 'red' : formHeader.status === 'saved' ? '#1890f' : formHeader.status === 'submit' ? '#1890ff' : formHeader.status === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',}")
+                        span {{'订单状态：'}}
+                        span(:style="{color: formHeader.status === 'noPass' ? 'red' : '',}") {{ formHeader.status === 'noPass' ? '审核不通过' : formHeader.status === 'saved' ? '已保存' : formHeader.status === 'submit' ? '已提交' : formHeader.status === 'checked' ? '通过' : formHeader.status === '已同步' ? '未录入' : formHeader.status }}
+            div(v-show="searchCard")
+                tie-tabs(:tab-titles="tabTitles")
+                    template(slot="1"): in-storage(ref="inStorage" :is-redact="isRedact" card-title="入库列表" :table-data="tableData" :order-info="orderData" :pkg-work-shop-list="pkgWorkShopList")
+                    template(slot="2"): exc-record(ref="excRecord" :is-redact="isRedact" :form-header="formHeader")
+                    template(slot="3"): text-record(ref="textRecord" :is-redact="isRedact")
+                redact-box
+                    template(slot="button")
+                        el-button.button(v-if="isAuth('steStgEdit') && searchCard" type="primary" size="small" @click="isRedact = !isRedact" :disabled="!alreadySearch") {{ isRedact ? '取消' : '编辑' }}
+                        template(v-if="isRedact && searchCard" style="float: right; margin-left: 10px;")
+                            el-button(v-if="isAuth('steStgEdit')" type="primary" size="small" @click="savedDatas()") 保存
+                            el-button(v-if="isAuth('steStgSubmit')" type="primary" size="small" @click="submitDatas()") 提交
 </template>
 
 <script lang="ts">
@@ -143,6 +91,8 @@
         pkgWorkShopList: OptionsInList[]=[]
         orderNoList: OptionsInList[] = [];
         searchCard = true;
+
+        alreadySearch=false;
 
         tabTitles = [
             {
@@ -240,7 +190,12 @@
                 prop: '',
                 label: '操作',
                 width: 100,
-                content: [{ buttonName: '删除' }]
+                content: [{
+                            buttonName: '删除',
+                            btn: 'delBtn',
+                            icon: 'el-icon-delete'
+                        }
+                        ]
             }
 
             // {
@@ -261,8 +216,6 @@
 
             // 获取车间
             this.getWorkshopList();
-
-
         }
 
         // 车间下拉抓取
@@ -361,8 +314,8 @@
         // 查询包装产线
         getPkgWorkShopList() {
             STE_API.STE_PKGLINE_QUERY_API({
-                // orderNo: this.formHeader.orderNo
-                orderNo: '833000001283'
+                orderNo: this.formHeader.orderNo
+                // orderNo: '833000001283'
             }).then(({ data }) => {
                 console.log('查询包装查询结果')
                 console.log(data)
@@ -396,6 +349,8 @@
                 } else {
                     this.$refs.inStorage.init(data.data, this.formHeader)
                 }
+
+                this.alreadySearch = true
                 this.getPkgWorkShopList()
                 this.$refs.excRecord.init(this.formHeader, 'instorage');
                 this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize');
