@@ -127,11 +127,11 @@ export default {
                     prop: 'userId',
                     label: '统计',
                     child: [
-                        { prop: 'dayAllDay', label: '白班天数' },
-                        { prop: 'nightAllDay', label: '夜班天数' },
-                        { prop: 'allTime', label: '总计出勤数（H）' },
-                        { prop: 'workAllDay', label: '上班天数' },
-                        { prop: 'offDutyAllDay', label: '休班天数' }
+                        { prop: 'dayAllDay', label: '白班天数', width: '90' },
+                        { prop: 'nightAllDay', label: '夜班天数', width: '90' },
+                        { prop: 'allTime', label: '总计出勤数（H）', width: '140' },
+                        { prop: 'workAllDay', label: '上班天数', width: '90' },
+                        { prop: 'offDutyAllDay', label: '休班天数', width: '90' }
                     ]
                 }
             ],
