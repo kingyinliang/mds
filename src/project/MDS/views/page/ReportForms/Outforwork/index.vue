@@ -1,132 +1,175 @@
 <template>
-    <el-row>
+    <el-row v-loading.fullscreen.lock="lodingS" element-loading-text="加载中">
         <div class="header_main">
-            <el-card class="searchCard">
-                <el-row type="flex">
-                    <el-col>
-                        <linkage :plant-list="plantList" />
-                    </el-col>
-                    <el-col style="width: 200px; margin-top: 42px; text-align: right;">
-                        <el-button v-if="isAuth('report:form:listShopAttM')" type="primary" size="small" @click="GetList(true)">
-                            查询
-                        </el-button>
-                        <el-button v-if="isAuth('report:form:exportShopAttM')" type="primary" size="small" @click="ExportExcel(true)">
-                            导出
-                        </el-button>
-                    </el-col>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <el-card class="tableCard">
-                <div class="toggleSearchTop">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-                <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" width="90" />
-                    <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="95" />
-                    <el-table-column prop="productLineName" label="产线" :show-overflow-tooltip="true" width="70" />
-                    <el-table-column prop="teamName" label="班组" :show-overflow-tooltip="true" />
-                    <el-table-column prop="userId" label="人员" :show-overflow-tooltip="true" width="80" />
-                    <template v-if="dataList.length > 0">
-                        <el-table-column v-for="(item, index) in dataList[0].listMonth.length" :key="item" :label="month + '月' + (index + 1).toString() + '日'">
-                            <el-table-column label="白班时数" :show-overflow-tooltip="true" width="80">
-                                <template slot-scope="scope">
-                                    {{ scope.row.listMonth[index].dayTime }}
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="夜班时数" :show-overflow-tooltip="true" width="80">
-                                <template slot-scope="scope">
-                                    {{ scope.row.listMonth[index].nightTime }}
-                                </template>
-                            </el-table-column>
-                        </el-table-column>
-                    </template>
-                    <el-table-column label="统计">
-                        <el-table-column prop="dayAllDay" label="白班天数" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="nightAllDay" label="夜班天数" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="allTime" label="总计出勤数（H）" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="workAllDay" label="上班天数" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="offDutyAllDay" label="休班天数" :show-overflow-tooltip="true" width="80" />
-                    </el-table-column>
-                </el-table>
-                <el-row>
-                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
+            <query-table ref="queryTable" :query-form-data="queryFormData" :rules="rules" :list-interface="listInterface" query-auth="report:form:listShopAttM" table-class="newTable borderTable" :column="column" @get-data-success="setTable">
+                <template slot="mds-button">
+                    <el-button v-if="isAuth('report:form:exportShopAttM')" type="primary" size="small" @click="ExportExcel(true)">
+                        导出
+                    </el-button>
+                </template>
+            </query-table>
         </div>
     </el-row>
 </template>
 
 <script>
-import { REP_API } from '@/api/api';
-import { getNewDate, headanimation } from '@/net/validate';
+import { REP_API, BASICDATA_API } from '@/api/api';
+import { getNewDate } from '@/net/validate';
 export default {
     name: 'Index',
-    components: {
-        Linkage: resolve => {
-            require(['@/views/page/ReportForms/common/Linkage'], resolve);
-        }
-    },
     data() {
         return {
+            queryFormData: [
+                {
+                    type: 'select',
+                    label: '生产工厂',
+                    prop: 'factory',
+                    defaultOptionsFn: () => {
+                        return this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false);
+                    },
+                    resVal: {
+                        resData: 'typeList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    linkageProp: ['workshop', 'deptId']
+                },
+                {
+                    type: 'select',
+                    label: '生产车间',
+                    prop: 'workshop',
+                    optionsFn: val => {
+                        return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {
+                            deptId: val
+                        });
+                    },
+                    resVal: {
+                        resData: 'typeList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    linkageProp: ['productline']
+                },
+                {
+                    type: 'select',
+                    label: '生产产线',
+                    prop: 'productline',
+                    resVal: {
+                        resData: 'childList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    defaultValue: '',
+                    optionsFn: val => {
+                        return this.$http(`${BASICDATA_API.FINDORGBYPARENTID_API}`, 'POST', { parentId: val });
+                    }
+                },
+                {
+                    type: 'select',
+                    label: '生产班组',
+                    prop: 'deptId',
+                    optionsFn: val => {
+                        return this.$http(`${BASICDATA_API.FINDTEAM_API}`, 'POST', {
+                            factory: val
+                        });
+                    },
+                    defaultValue: '',
+                    resVal: {
+                        resData: 'teamList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    }
+                },
+                {
+                    type: 'date-picker',
+                    label: '生产日期',
+                    dataType: 'month',
+                    valueFormat: 'yyyy-MM',
+                    prop: 'productDate'
+                }
+            ],
+            rules: [
+                {
+                    prop: 'productDate',
+                    text: '请选择月份'
+                }
+            ],
+            listInterface: params => {
+                return this.$http(`${REP_API.REPATTM_API}`, 'POST', params);
+            },
+            column: [
+                {
+                    prop: 'factoryName',
+                    label: '工厂',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'workShopName',
+                    label: '车间',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'productLineName',
+                    label: '产线',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'teamName',
+                    label: '班组',
+                    minwidth: '100'
+                },
+                {
+                    prop: 'userId',
+                    label: '人员',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'userId',
+                    label: '统计',
+                    child: [
+                        { prop: 'dayAllDay', label: '白班天数' },
+                        { prop: 'nightAllDay', label: '夜班天数' },
+                        { prop: 'allTime', label: '总计出勤数（H）' },
+                        { prop: 'workAllDay', label: '上班天数' },
+                        { prop: 'offDutyAllDay', label: '休班天数' }
+                    ]
+                }
+            ],
             ExportTime: {},
-            month: '',
-            lodingS: false,
-            Team: [],
-            dataList: [],
-            plantList: {
-                deptId: '',
-                productDate: '',
-                factory: '',
-                workshop: '',
-                productline: '',
-                currPage: 1,
-                pageSize: 10,
-                totalCount: 0
-            }
+            lodingS: false
         };
     },
-    computed: {},
-    mounted() {
-        headanimation(this.$);
-    },
     methods: {
-        GetList(st) {
-            if (!this.plantList.productDate) {
-                this.$notify.error({ title: '错误', message: '请选择月份' });
-                return false;
+        setTable(data) {
+            this.column = this.column.slice(0, 6);
+            const dataList = data.page.list
+            if (dataList.length) {
+                const temp = this.$refs.queryTable.queryForm.productDate;
+                const month = temp.substring(temp.indexOf('-') + 1).split('')[0] === '0' ? temp.substring(temp.indexOf('-') + 1).slice(1) : temp.substring(temp.indexOf('-') + 1);
+                dataList[0].listMonth.forEach((item, index) => {
+                    this.column.push({
+                        label: `${month}月${index + 1}日`,
+                        child: [
+                            {
+                                prop: `listMonth[${index}].dayTime`,
+                                label: '白班时数'
+                            },
+                            {
+                                prop: `listMonth[${index}].nightTime`,
+                                label: '夜班时数'
+                            }
+                        ]
+                    })
+                })
             }
-            this.lodingS = true;
-            if (st) {
-                this.plantList.currPage = 1;
-            }
-            this.$http(`${REP_API.REPATTM_API}`, 'POST', this.plantList).then(({ data }) => {
-                if (data.code === 0) {
-                    this.dataList = data.page.list;
-                    this.plantList.currPage = data.page.currPage;
-                    this.plantList.pageSize = data.page.pageSize;
-                    this.plantList.totalCount = data.page.totalCount;
-                    this.month =
-                        this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1).split('')[0] === '0'
-                            ? this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1).slice(1)
-                            : this.plantList.productDate.substring(this.plantList.productDate.indexOf('-') + 1);
-                } else {
-                    this.$errorToast(data.msg);
-                }
-                this.lodingS = false;
-            });
         },
         ExportExcel() {
-            if (!this.plantList.productDate) {
+            if (!this.$refs.queryTable.queryForm.productDate) {
                 this.$notify.error({ title: '错误', message: '请选择月份' });
                 return false;
             }
             this.lodingS = true;
-            this.$http(`${REP_API.REPOUTFORWORKOUTPUT_API}`, 'POST', this.plantList).then(({ data }) => {
+            this.$http(`${REP_API.REPOUTFORWORKOUTPUT_API}`, 'POST', this.$refs.queryTable.queryForm).then(({ data }) => {
                 if (data.code === 0) {
                     this.ExportTime = setInterval(() => {
                         this.GetExportExcel();
@@ -136,8 +179,6 @@ export default {
                     this.$errorToast(data.msg);
                 }
             });
-            // let that = this
-            // exportFile(`${REP_API.REPOUTFORWORKOUTPUT_API}`, '车间出勤汇总报表', that)
         },
         GetExportExcel() {
             this.$http(`${REP_API.GETREPOUTFORWORKOUTPUT_API}`, 'GET', {
@@ -180,16 +221,6 @@ export default {
                     this.lodingS = false;
                     clearInterval(this.ExportTime);
                 });
-        },
-        // 改变每页条数
-        handleSizeChange(val) {
-            this.plantList.pageSize = val;
-            this.GetList();
-        },
-        // 跳转页数
-        handleCurrentChange(val) {
-            this.plantList.currPage = val;
-            this.GetList();
         }
     }
 };
