@@ -23,7 +23,7 @@
                 <iframe v-if="item.type === 'iframe'" :src="item.iframeUrl" width="100%" height="100%" title="" />
                 <transition v-else name="custom-classes-transition" enter-active-class="animated rollin" leave-active-class="animated rollOut">
                     <keep-alive>
-                        <router-view v-if="item.name === mainTabsActiveName" :style="siteContentViewHeight" />
+                        <router-view v-if="item.name === mainTabsActiveName" ref="routerViews" :style="siteContentViewHeight" />
                     </keep-alive>
                 </transition>
             </el-tab-pane>
@@ -123,7 +123,7 @@ export default {
         },
         // tabs, 删除tab
         removeTabHandle(tabName, add) {
-            if (/录入/g.test(this.mainTabs.filter(item => item.name === tabName)[0].title)) {
+            if (/录入/g.test(this.mainTabs.filter(item => item.name === tabName)[0].title) && this.$refs.routerViews[0].$refs.dataEntry.isRedact) {
                 this.$confirm('为防止数据丢失请保存后关闭, 是否继续?', '关闭', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

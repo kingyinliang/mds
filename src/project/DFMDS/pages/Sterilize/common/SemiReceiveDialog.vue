@@ -115,7 +115,7 @@
             })
             this.visible = true;
             if (Data) {
-                this.dataForm = Data
+                this.dataForm = JSON.parse(JSON.stringify(Data))
             } else {
                 this.dataForm = {
                     id: '',
@@ -125,6 +125,7 @@
                     consumeType: '1',
                     fermentPotNo: '',
                     materialCode: '',
+                    materialType: '',
                     materialName: '',
                     consumeUnit: '',
                     consumeAmount: '',
@@ -142,7 +143,8 @@
         setUtil() {
             const filterArr1: (any) = this.materialArr.filter(it => it.matnr === this.dataForm.materialCode);// eslint-disable-line
             this.dataForm.consumeUnit = filterArr1[0].erfme;
-            this.dataForm.materialName = filterArr1[0].materialName
+            this.dataForm.materialName = filterArr1[0].materialName;
+            this.dataForm.materialType = filterArr1[0].materialType
         }
 
         dataFormSubmit() {
@@ -174,6 +176,7 @@
         potOrderNo?: string;
         fermentPotNo?: string;
         materialCode?: string;
+        materialType?: string;
         materialName?: string;
         consumeUnit?: string;
         consumeAmount?: string;
