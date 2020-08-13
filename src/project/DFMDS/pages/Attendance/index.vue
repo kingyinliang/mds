@@ -14,8 +14,8 @@
                                 <el-option v-for="(item,index) in productLineList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="考勤日期：" label-width="70px">
-                            <el-date-picker v-model="searchForm.evaluationStartDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 140px;" /> - <el-date-picker v-model="searchForm.evaluationEndtDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 140px;" />
+                        <el-form-item label="考勤开始日期：" label-width="100px">
+                            <el-date-picker v-model="searchForm.evaluationStartDate" type="date" value-format="yyyy-MM-dd" placeholder="请输入" style="width: 140px;" /> - <el-date-picker v-model="searchForm.evaluationEndDate" type="date" value-format="yyyy-MM-dd" placeholder="请输入" style="width: 140px;" />
                         </el-form-item>
                     </el-form>
                     <div class="button-group" style="white-space: nowrap;">
@@ -40,6 +40,7 @@
             <el-form ref="dataFormRules" :model="dataFormRules">
                 <el-table class="newTable" :data="currentFormDataGroup" :height="mainClientHeight - 52 - 39 - 47" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="handleSelectionChange">
                     <el-table-column
+                        v-if="currentFormDataGroup.length!==0"
                         type="selection"
                         width="55"
                     />
@@ -123,7 +124,7 @@
                             <span class="notNull">*</span>开始时间
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!scope.row.isRedact" style="width: 180px;" />
+                            <el-date-picker v-model="scope.row.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!scope.row.isRedact" style="width: 180px;" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="dinner" width="135" label="用餐时间(MIN)" :show-overflow-tooltip="true">
@@ -139,7 +140,7 @@
                             <span class="notNull">*</span>结束时间
                         </template>
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!scope.row.isRedact" style="width: 180px;" />
+                            <el-date-picker v-model="scope.row.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm" placeholder="选择" size="small" :disabled="!scope.row.isRedact" style="width: 180px;" />
                         </template>
                     </el-table-column>
                     <el-table-column prop="duration" min-width="80" label="时长(H)" :show-overflow-tooltip="true">
