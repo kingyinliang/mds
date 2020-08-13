@@ -8,7 +8,7 @@
                     </el-button>
                 </div>
             </template>
-            <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%;">
+            <el-table class="newTable" :data="currentFormDataGroup" :row-class-name="RowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;">
                 <el-table-column label="序号" type="index" :index="index => getIndexMethod(index, currentFormDataGroup)" width="50" fixed="left" align="center" />
                 <el-table-column prop="status" min-width="100" :show-overflow-tooltip="true">
                     <template slot="header">
