@@ -14,8 +14,8 @@
                                 <el-option v-for="(item,index) in productLineList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="考勤日期：" label-width="70px">
-                            <el-date-picker v-model="searchForm.evaluationStartDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 140px;" /> - <el-date-picker v-model="searchForm.evaluationEndtDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 140px;" />
+                        <el-form-item label="考勤开始日期：" label-width="100px">
+                            <el-date-picker v-model="searchForm.evaluationStartDate" type="date" value-format="yyyy-MM-dd" placeholder="请输入" style="width: 140px;" /> - <el-date-picker v-model="searchForm.evaluationEndDate" type="date" value-format="yyyy-MM-dd" placeholder="请输入" style="width: 140px;" />
                         </el-form-item>
                     </el-form>
                     <div class="button-group" style="white-space: nowrap;">
@@ -40,6 +40,7 @@
             <el-form ref="dataFormRules" :model="dataFormRules">
                 <el-table class="newTable" :data="currentFormDataGroup" :height="mainClientHeight - 52 - 39 - 47" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="handleSelectionChange">
                     <el-table-column
+                        v-if="currentFormDataGroup.length!==0"
                         type="selection"
                         width="55"
                     />
@@ -452,10 +453,23 @@
                             delIdsTemp.push(item.id)
                         }
                     } else if (item.id) {
+                        // if (!item.startTime.split(':')[2]) {
+                        //     item.startTime = item.startTime + ':00'
+                        // }
+                        // if (!item.endTime.split(':')[2]) {
+                        //     item.endTime = item.endTime + ':00'
+                        // }
+
                         if (!_.isEqual(this.orgFormDataGroup[index], item)) {
                             updateDataTemp.push(item)
                         }
                     } else {
+                        // if (!item.startTime.split(':')[2]) {
+                        //     item.startTime = item.startTime + ':00'
+                        // }
+                        // if (!item.endTime.split(':')[2]) {
+                        //     item.endTime = item.endTime + ':00'
+                        // }
                         insertDataTemp.push(item)
                     }
                 })
