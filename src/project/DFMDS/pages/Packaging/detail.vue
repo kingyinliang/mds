@@ -112,7 +112,7 @@
                 value: 'workShopName'
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 icon: 'factory-shengchanxian',
                 label: '生产产线',
                 value: 'productLineName'

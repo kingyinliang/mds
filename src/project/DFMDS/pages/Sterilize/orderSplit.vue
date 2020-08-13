@@ -249,14 +249,13 @@
                 return false
             }
             STE_API.STE_SPLIT_LIST_API(this.splitForm).then(({ data }) => {
-                if (data.data.records.length) {
-                    this.splitTable = data.data.records
-                    this.splitForm.current = data.data.current;
-                    this.splitForm.size = data.data.size;
-                    this.splitForm.total = data.data.total;
-                } else {
+                if (!data.data.records.length) {
                     this.$infoToast('暂无任何内容');
                 }
+                this.splitTable = data.data.records
+                this.splitForm.current = data.data.current;
+                this.splitForm.size = data.data.size;
+                this.splitForm.total = data.data.total;
             })
         }
 
