@@ -184,6 +184,7 @@
             STE_API.STE_SPLIT_SAVE_API(submitObj).then(({ data }) => {
                 this.$successToast(data.msg);
                 this.dialogFormVisible = false;
+                this.$emit('getList');
             })
         }
 

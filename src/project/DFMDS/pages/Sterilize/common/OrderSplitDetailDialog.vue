@@ -37,7 +37,7 @@
             </el-table-column>
         </el-table>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="visible = false">取消</el-button>
+            <el-button @click="dialogFormVisible = false">取消</el-button>
             <el-button type="primary" @click="SubmitForm()">确定</el-button>
         </span>
     </el-dialog>
