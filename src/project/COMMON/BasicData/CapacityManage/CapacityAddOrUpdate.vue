@@ -33,11 +33,11 @@
                 <el-form-item label="性能稼动率：" prop="performanceRate">
                     <el-input v-model="dataForm.performanceRate" type="number" placeholder="手动输入" />
                 </el-form-item>
-                <el-form-item label="生产效率：" prop="oeeOrOpe">
-                    <el-input v-model="dataForm.oeeOrOpe" type="number" placeholder="手动输入" />
-                </el-form-item>
                 <el-form-item label="良品率：" prop="yieldRate">
                     <el-input v-model="dataForm.yieldRate" type="number" placeholder="手动输入" />
+                </el-form-item>
+                <el-form-item label="生产效率：" prop="oeeOrOpe">
+                    <el-input v-model="dataForm.oeeOrOpe" type="number" placeholder="手动输入" />
                 </el-form-item>
                 <el-form-item label="有效开始日期：" prop="startDate">
                     <el-date-picker v-model="dataForm.startDate" type="date" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
