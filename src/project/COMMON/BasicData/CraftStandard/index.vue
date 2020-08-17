@@ -178,13 +178,13 @@
                 params = {
                     productMaterial: this.queryForm.productMaterial,
                     current: this.queryForm.current,
-                    size: this.queryForm.current,
+                    size: this.queryForm.size,
                     total: this.queryForm.current
                 }
             } else if (this.queryType === 2) {
                 params = {
                     current: this.queryForm.current,
-                    size: this.queryForm.current,
+                    size: this.queryForm.size,
                     total: this.queryForm.current,
                     productMaterial: '',
                     warmTimeFloor: this.queryForm.warmTimeFloor,
