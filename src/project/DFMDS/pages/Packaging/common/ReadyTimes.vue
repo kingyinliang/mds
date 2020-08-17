@@ -211,8 +211,12 @@ export default class ReadyTimes extends Vue {
         }).then(({ data }) => {
             if (data.data === null) {
                 this.isNewForm = true
-                this.currentFormDataGroup = {}
-                this.orgFormDataGroup = {}
+                this.currentFormDataGroup = {
+                    classes: 'M'
+                }
+                this.orgFormDataGroup = {
+                    classes: 'M'
+                }
             } else {
                 this.isNewForm = false
                 this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
