@@ -37,7 +37,7 @@
                 <el-table-column width="50" label="单位" prop="unit" />
                 <el-table-column width="" label="操作人" prop="changer" show-overflow-tooltip />
                 <el-table-column width="" label="操作时间" prop="changed" show-overflow-tooltip />
-                <el-table-column width="70" label="操作" fixed="right">
+                <!-- <el-table-column width="70" label="操作" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.isSplit === '1'" class="delBtn" type="text" icon="el-icon-delete" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delInStock(scope.row)">
                             删除
@@ -46,7 +46,7 @@
                             <i class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
         </mds-card>
         <audit-log :table-data="InStockAuditlog" />
