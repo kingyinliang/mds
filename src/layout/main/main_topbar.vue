@@ -140,7 +140,9 @@
 
             if (this.factoryName !== '系统设置') {
                 this.websocketToLogin()
-                 // 获取消息数字
+                // 通知消息管理更新讯息
+                this.$store.commit('common/updateMsg', true)
+                // 获取消息数字
                 this.getMsgNum()
             }
 
