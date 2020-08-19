@@ -121,6 +121,8 @@
         deptName=sessionStorage.getItem('staff-location')
 
         async mounted() {
+            console.log('this.loginUserId')
+            console.log(this.loginUserId)
             // await this.getIcon()
             setTimeout(() => {
                 // 取已读、未读消息
@@ -131,6 +133,7 @@
 
         // 侦听消息是否有异动
         get updateMsgNum(): boolean {
+            console.log('侦听到消息进来讯息')
             return this.$store.state.common.updateMsg;
         }
 
@@ -174,8 +177,10 @@
          * @return: no
          */
         seeMessage(item) {
+            console.log('item')
+            console.log(item)
             if (!item.readed) {
-                this.markThisReaded(item.id)
+                this.markThisReaded(item.msgId)
             }
             if (item.msgUrl !== '') {
                 const targetURL = item.msgUrl.replace(/\//g, '-')
@@ -200,13 +205,14 @@
                 user: this.loginUserId // 登录用户id
             }).then(({ data }) => {
                 data.data.records.forEach(item => {
-                    unreadTemp.push(item.id)
+                    unreadTemp.push(item.msgId)
                 });
             });
 
             if (unreadTemp.length !== 0) {
                 MSG_API.MSG_READ_API({
-                    ids: unreadTemp // 用户消息id列表
+                    ids: unreadTemp, // 用户消息id列表
+                    userId: this.loginUserId
                 }).then(({ data }) => {
                     console.log('v2')
                     console.log(data)
@@ -223,9 +229,12 @@
 
         }
 
-        markThisReaded(id) {
+        markThisReaded(msgId) {
+            console.log('msgId')
+            console.log(msgId)
             MSG_API.MSG_READ_API({
-                ids: [id] // 用户消息id列表
+                ids: [msgId], // 用户消息id列表
+                userId: this.loginUserId
             }).then(() => {
                 this.readNumStyle = 3
                 this.currPageFromRead = 1
