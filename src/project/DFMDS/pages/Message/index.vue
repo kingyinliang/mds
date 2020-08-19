@@ -288,7 +288,7 @@
         }
 
         get gender() {
-            return this.$store.state.user.gender
+            return sessionStorage.getItem('gender')
         }
 
         get totalNum() {
