@@ -10,7 +10,7 @@
                                 {{ realName }}, 祝你开心每一天
                             </div>
                             <div style=" height: 22px; padding-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px; line-height: 22px;">
-                                {{ post }} | {{ deptName }}
+                                {{ post }} <span v-if="post!==''"> |</span> {{ deptName }}
                             </div>
                         </div>
                         <div class="info-number">
@@ -116,7 +116,7 @@
         readList: MessageObject[]=[]
         unreadList: MessageObject[]=[]
         loginUserId= sessionStorage.getItem('loginUserId');
-        realName= sessionStorage.getItem('userName')
+        realName= sessionStorage.getItem('realName')
         post=sessionStorage.getItem('staff-post')
         deptName=sessionStorage.getItem('staff-location')
 
@@ -184,6 +184,11 @@
             }
             if (item.msgUrl !== '') {
                 const targetURL = item.msgUrl.replace(/\//g, '-')
+
+                if (this.$store.state.common.mainTabs.filter(element => element.name === targetURL).length !== 0) {
+                    this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(element => element.name !== targetURL));
+                }
+
                 setTimeout(() => {
                     this.$store.commit('common/updateMsg', true);
                     this.$router.push({

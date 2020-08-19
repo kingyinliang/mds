@@ -332,10 +332,8 @@
         ];
 
         mounted() {
-            console.log('99999999')
             // 消息管理跳转 url 传参判断
             if (window.location.href.indexOf('?') !== -1) {
-                console.log('url~~~~~~')
                 const url = window.location.href.split('?')[1].split('&');
                 const urlData = {};
                 for (let i = 0; i < url.length; i++) {
@@ -360,14 +358,17 @@
                 AUDIT_API.HOURS_LIST_API(paramsTemp).then(({ data }) => {
                     console.log('data')
                     console.log(data)
-                    // 修正表单上呈现
-                    this.queryFormData.forEach(item => {
-                        this.$refs.queryTable.queryForm[item.prop] = ''
-                    })
-                    this.$refs.queryTable.queryForm.workshop = urlData['workShop']
-                    this.$refs.queryTable.queryForm.orderNo = urlData['orderNo']
                     // 显示内容
                     this.setData(data, true)
+                    setTimeout(() => {
+                        // 修正表单上呈现
+                        this.queryFormData.forEach(item => {
+                            this.$refs.queryTable.queryForm[item.prop] = ''
+                        })
+                        this.$refs.queryTable.queryForm.workshop = urlData['workShop']
+                        this.$refs.queryTable.queryForm.orderNo = urlData['orderNo']
+                    }, 1000);
+
                 });
             }
             this.$refs.queryTable.optionLists.finConf = [{
