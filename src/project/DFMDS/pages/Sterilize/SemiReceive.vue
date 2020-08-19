@@ -97,7 +97,7 @@
             }
         ];
 
-        tabs = [
+        tabs: TabsObj[] = [
             {
                 label: '半成品领用',
                 status: '未录入'
@@ -129,7 +129,7 @@
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 this.formHeader.textStage = 'semiReceive';
-                this.tabs[0]['status'] = this.formHeader.steTagPot.semiMaterialStatus
+                this.tabs[0].status = this.formHeader.steTagPot.semiMaterialStatus
                 this.$refs.semiReceive.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'semiReceive');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
@@ -165,6 +165,10 @@
                 steTextUpdateDto: textRequest.pkgTextUpdate
             })
         }
+    }
+    interface TabsObj {
+        label?: string;
+        status?: string;
     }
     interface StatusObj {
         semiMaterialStatus?: string;
