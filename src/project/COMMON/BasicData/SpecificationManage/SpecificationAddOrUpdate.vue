@@ -123,7 +123,8 @@
             },
             // 设置品牌
             setBrand(val) {
-                this.dataForm.brand = val.split(' ')[2];
+                // this.dataForm.brand = val.split(' ')[2];
+                this.dataForm.brand = this.serchSapList.find(item => item.materialCode === val.split(' ')[0]).kondm;
             },
             init(data) {
                 if (data) {

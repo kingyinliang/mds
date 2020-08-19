@@ -258,6 +258,7 @@ export default class MaterialPretreatment extends Vue {
             this.formatData = {
                 id: row.id,
                 productMaterialString: row.productMaterial + ' ' + row.productMaterialName,
+                useMaterialType: row.useMaterialType,
                 useMaterialString: row.useMaterial + ' ' + row.useMaterialName,
                 preStage: row.preStage,
                 potDisplay: row.potDisplay,
@@ -268,6 +269,7 @@ export default class MaterialPretreatment extends Vue {
         } else {
             this.formatData = {
                 productMaterialString: '',
+                useMaterialType: '',
                 useMaterialString: '',
                 preStage: '',
                 potDisplay: '',
@@ -314,6 +316,10 @@ export default class MaterialPretreatment extends Vue {
                     this.formatData.useMaterial = useMaterialString[0];
                     this.formatData.useMaterialName = useMaterialString[1];
                 }
+                const materialType = this.useMaterialList.find(item => item.materialCode === this.formatData.useMaterial);
+                if (materialType) {
+                    this.formatData.useMaterialType = materialType.materialTypeCode;
+                }
                 if (this.formatData.id) {
                     COMMON_API.PRE_MATERIAL_UPDATE_API(this.formatData).then(({ data }) => {
                         if (data.code === 200) {
@@ -359,6 +365,7 @@ export default class MaterialPretreatment extends Vue {
 interface FormData {
     id?: number;
     productMaterialString?: string;
+    useMaterialType?: string;
     useMaterialString?: string;
     productMaterial?: string;
     productMaterialName?: string;
