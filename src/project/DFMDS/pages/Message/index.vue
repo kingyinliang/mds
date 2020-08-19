@@ -4,13 +4,16 @@
             <el-col :span="24">
                 <el-card class="box-card" style="margin: 10px 0;">
                     <div class="hello-box">
-                        <div><img src="~common/img/man.png" alt="" style="width: 66px;"></div>
+                        <div>
+                            <img v-if="gender==='M'" src="~common/img/man.png" alt="" style="width: 66px;">
+                            <img v-else src="~common/img/feman.png" alt="" style="width: 66px;">
+                        </div>
                         <div>
                             <div style=" height: 28px; margin-top: 2px; color: rgba(0, 0, 0, 0.85); font-weight: 600; font-size: 16px; line-height: 28px;">
                                 {{ realName }}, 祝你开心每一天
                             </div>
                             <div style=" height: 22px; padding-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px; line-height: 22px;">
-                                {{ post }} | {{ deptName }}
+                                {{ post }} <span v-if="post!==''"> |</span> {{ deptName }}
                             </div>
                         </div>
                         <div class="info-number">
@@ -116,7 +119,7 @@
         readList: MessageObject[]=[]
         unreadList: MessageObject[]=[]
         loginUserId= sessionStorage.getItem('loginUserId');
-        realName= sessionStorage.getItem('userName')
+        realName= sessionStorage.getItem('realName')
         post=sessionStorage.getItem('staff-post')
         deptName=sessionStorage.getItem('staff-location')
 
@@ -185,10 +188,20 @@
             if (item.msgUrl !== '') {
                 const targetURL = item.msgUrl.replace(/\//g, '-')
 
+                if (this.$store.state.common.mainTabs.filter(element => element.name === targetURL).length !== 0) {
+                    this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(element => element.name !== targetURL));
+                }
+
                 setTimeout(() => {
                     this.$store.commit('common/updateMsg', true);
                     this.$router.push({
-                        path: targetURL
+                        // targetURL + '?orderNo=' + item.orderNo
+                        path: targetURL,
+                        query: {
+                            workShop: item.workShop,
+                            orderNo: item.orderNo,
+                            orderStatus: item.orderStatus
+                        }
                     });
                 }, 100);
             }

@@ -29,7 +29,7 @@
                                 </template>
                                 <template slot-scope="scope">
                                     <el-form-item prop="prodcutMaterial">
-                                        <el-select v-model="scope.row.prodcutMaterial" size="small" clearable>
+                                        <el-select v-model="scope.row.prodcutMaterial" size="small" clearable @change="scope.row.productMaterialName=productMaterialList.filter(item=>item.dictCode===scope.row.prodcutMaterial)[0].dictValue">
                                             <el-option
                                                 v-for="item in productMaterialList"
                                                 :key="'b'+item.dictCode"
@@ -56,7 +56,7 @@
                                 </template>
                                 <template slot-scope="scope">
                                     <el-form-item prop="feedMaterial">
-                                        <el-select v-model="scope.row.feedMaterial" size="small" clearable>
+                                        <el-select v-model="scope.row.feedMaterial" size="small" clearable @change="scope.row.feedMaterialName=feedMateriallList.filter(item=>item.dictCode===scope.row.feedMaterial)[0].dictValue">
                                             <el-option
                                                 v-for="item in feedMateriallList"
                                                 :key="item.id"

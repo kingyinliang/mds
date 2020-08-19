@@ -154,7 +154,7 @@
 
         createdEnd() {
             this.$nextTick(() => {
-                if (this.$refs.queryTable.queryForm.workShop !== '' && this.$refs.queryTable.queryForm.workShop.productDate !== '') {
+                if (this.$refs.queryTable.queryForm.workShop !== '' && this.$refs.queryTable.queryForm.productDate !== '') {
                     this.$refs.queryTable.getDataList(true)
                 }
             })

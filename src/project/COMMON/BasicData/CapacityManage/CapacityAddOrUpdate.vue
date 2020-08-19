@@ -120,7 +120,7 @@ export default class CapacityAddOrUpdate extends Vue {
                 material: query
             }).then(({ data }) => {
                 this.loading = false;
-                this.serchSapList = data.data
+                data.data ? this.serchSapList = data.data : this.serchSapList = []
             }).catch(() => {
                 this.loading = false;
             })
@@ -145,6 +145,7 @@ export default class CapacityAddOrUpdate extends Vue {
         if (data) {
             this.CapacityId = data.id;
             this.dataForm = JSON.parse(JSON.stringify(data));
+            this.remoteMethod(this.dataForm.materialCode)
         } else {
             this.CapacityId = '';
             this.dataForm = {
@@ -160,7 +161,12 @@ export default class CapacityAddOrUpdate extends Vue {
         this.$refs.dataForm.validate(valid => {
             if (valid) {
                 this.dataForm.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                this.dataForm.materialName = this.serchSapList.filter(item => item.materialCode === this.dataForm.materialCode)[0].materialName;
+                if (this.serchSapList.filter(item => item.materialCode === this.dataForm.materialCode).length) {
+                    this.dataForm.materialName = this.serchSapList.filter(item => item.materialCode === this.dataForm.materialCode)[0].materialName;
+                } else {
+                    this.$warningToast('没有找到此物料主数据');
+                    return false
+                }
                 let http;
                 this.CapacityId ? http = COMMON_API.CAPACITYUPDATA_API : http = COMMON_API.CAPACITYADD_API;
                 http(this.dataForm).then(({ data }) => {
