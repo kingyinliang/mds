@@ -4,7 +4,10 @@
             <el-col :span="24">
                 <el-card class="box-card" style="margin: 10px 0;">
                     <div class="hello-box">
-                        <div><img src="~common/img/man.png" alt="" style="width: 66px;"></div>
+                        <div>
+                            <img v-if="gender==='M'" src="~common/img/man.png" alt="" style="width: 66px;">
+                            <img v-else src="~common/img/feman.png" alt="" style="width: 66px;">
+                        </div>
                         <div>
                             <div style=" height: 28px; margin-top: 2px; color: rgba(0, 0, 0, 0.85); font-weight: 600; font-size: 16px; line-height: 28px;">
                                 {{ realName }}, 祝你开心每一天
