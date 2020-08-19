@@ -272,6 +272,14 @@ export default class AuditIndex extends Vue {
             COMMON_API.ORDER_QUERY_API(paramsTemp).then(({ data }) => {
                 console.log('data')
                 console.log(data)
+                // 修正表单上呈现
+                this.queryFormData.forEach(item => {
+                    this.$refs.queryTable.queryForm[item.prop] = ''
+                })
+                this.$refs.queryTable.queryForm.workShop = urlData['workShop']
+                this.$refs.queryTable.queryForm.orderNo = urlData['orderNo']
+                // 显示内容
+
                 this.setData(data, true)
             });
         }
