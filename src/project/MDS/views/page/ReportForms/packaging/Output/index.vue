@@ -144,6 +144,11 @@ export default {
                     width: '55'
                 },
                 {
+                    prop: 'batch',
+                    label: '批次',
+                    width: '120'
+                },
+                {
                     prop: 'allBad',
                     label: '不良品数',
                     minwidth: '80'
