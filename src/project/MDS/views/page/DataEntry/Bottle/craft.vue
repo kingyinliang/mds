@@ -50,21 +50,9 @@
                         <el-button
                             type="primary"
                             size="small"
-                            @click="
-                                $router.push({
-                                    path: '/DataEntry-Bottle-index',
-                                })
-                            "
+                            @click="$router.push({path: '/DataEntry-Bottle-index'})"
                         >
                             返回
-                        </el-button>
-                        <el-button v-if="isAuth('bottle:workshop:techProductParameterSave')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                            {{ isRedact ? '取消' : '编辑' }}
-                        </el-button>
-                    </template>
-                    <template v-if="isRedact" style="float: right;">
-                        <el-button v-if="isAuth('bottle:workshop:techProductParameterSave')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                            保存
                         </el-button>
                     </template>
                 </el-form-item>
@@ -316,6 +304,21 @@
                 </el-table>
             </el-tab-pane>
         </el-tabs>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('bottle:workshop:techProductParameterSave')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button v-if="isAuth('bottle:workshop:techProductParameterSave')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <!-- <el-button v-if="isAuth('bottle:workshop:techProductParameterSave')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button> -->
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 

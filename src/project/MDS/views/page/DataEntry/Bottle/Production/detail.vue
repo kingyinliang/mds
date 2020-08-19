@@ -21,21 +21,6 @@
                             >{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
                         </div>
                     </el-row>
-                    <el-row style=" position: absolute; right: 0; bottom: 10px; text-align: right;">
-                        <template style="float: right; margin-left: 10px;">
-                            <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('bottle:inStorage:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                                {{ isRedact ? '取消' : '编辑' }}
-                            </el-button>
-                        </template>
-                        <template v-if="isRedact" style="float: right; margin-left: 10px;">
-                            <el-button v-if="isAuth('bottle:inStorage:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                                保存
-                            </el-button>
-                            <el-button v-if="isAuth('bottle:inStorage:submit')" type="primary" size="small" @click="SubmitForm">
-                                提交
-                            </el-button>
-                        </template>
-                    </el-row>
                 </el-col>
             </el-row>
         </el-card>
@@ -43,11 +28,11 @@
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
                     <el-tooltip class="item" effect="dark" :content="readyState === 'noPass' ? '不通过' : readyState === 'saved' ? '已保存' : readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过' : '未录入'" placement="top-start">
-                        <el-button
+                        <em
                             :style="{
                                 color: readyState === 'noPass' ? 'red' : '',
                             }"
-                        >准备时间</el-button>
+                        >准备时间</em>
                     </el-tooltip>
                 </span>
                 <ready-times ref="readytimes" :is-redact="isRedact" :form-header="formHeader" :product-shift="productShift" @SetReadyStatus="SetReadyStatus" />
@@ -55,11 +40,11 @@
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
                     <el-tooltip class="item" effect="dark" :content="readyState === 'noPass' ? '不通过' : readyState === 'saved' ? '已保存' : readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过' : '未录入'" placement="top-start">
-                        <el-button
+                        <em
                             :style="{
                                 color: readyState === 'noPass' ? 'red' : '',
                             }"
-                        >人员</el-button>
+                        >人员</em>
                     </el-tooltip>
                 </span>
                 <worker ref="workerref" :is-redact="isRedact" :order="formHeader" :attendance="Attendance" :att="true" />
@@ -75,11 +60,11 @@
             <el-tab-pane name="5">
                 <span slot="label" class="spanview">
                     <el-tooltip class="item" effect="dark" :content="inStorageState === 'noPass' ? '不通过' : inStorageState === 'saved' ? '已保存' : inStorageState === 'submit' ? '已提交' : inStorageState === 'checked' ? '通过' : '未录入'" placement="top-start">
-                        <el-button
+                        <em
                             :style="{
                                 color: inStorageState === 'noPass' ? 'red' : '',
                             }"
-                        >生产入库</el-button>
+                        >生产入库</em>
                     </el-tooltip>
                 </span>
                 <in-storage ref="instorage" :is-redact="isRedact" :product-shift="productShift" @setInStorageState="setInStorageState" @SetMeaterielNum="SetMeaterielNum" />
@@ -87,11 +72,11 @@
             <el-tab-pane name="6">
                 <span slot="label" class="spanview">
                     <el-tooltip class="item" effect="dark" :content="applyMaterielState === 'noPass' ? '不通过' : applyMaterielState === 'saved' ? '已保存' : applyMaterielState === 'submit' ? '已提交' : applyMaterielState === 'checked' ? '通过' : '未录入'" placement="top-start">
-                        <el-button
+                        <em
                             :style="{
                                 color: applyMaterielState === 'noPass' ? 'red' : '',
                             }"
-                        >物料领用</el-button>
+                        >物料领用</em>
                     </el-tooltip>
                 </span>
                 <material ref="material" :is-redact="isRedact" :supplier="Supplier" @SetMeaterielNum="SetMeaterielNum" @setApplyMaterielState="setApplyMaterielState" />
@@ -101,6 +86,21 @@
                 <text-record ref="textrecord" :is-redact="isRedact" />
             </el-tab-pane>
         </el-tabs>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('bottle:inStorage:mySaveOrUpdate')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button v-if="isAuth('bottle:inStorage:mySaveOrUpdate')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('bottle:inStorage:submit')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 

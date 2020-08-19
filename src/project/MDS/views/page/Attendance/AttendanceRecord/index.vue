@@ -40,18 +40,6 @@
                                 <el-button v-if="isAuth('sys:att:listAtt')" type="primary" size="small" @click="GetList(true)">
                                     查询
                                 </el-button>
-                                <el-button v-if="isAuth('sys:att:saveAtt')" type="primary" size="small" @click="addAR()">
-                                    新增
-                                </el-button>
-                                <el-button v-if="isAuth('sys:att:updateAtt')" type="primary" size="small" @click="saveAtt('saved')">
-                                    保存
-                                </el-button>
-                                <el-button v-if="isAuth('sys:att:updateAtt')" type="primary" size="small" @click="saveAtt('submit')">
-                                    提交
-                                </el-button>
-                                <el-button v-if="isAuth('sys:att:deleteAtt')" type="danger" size="small" @click="delDate()">
-                                    删除
-                                </el-button>
                             </el-form-item>
                         </el-form>
                     </el-col>
@@ -62,6 +50,16 @@
             </el-card>
 
             <mds-card title="考勤记录">
+                <template slot="titleBtn">
+                    <div style="float: right; margin-bottom: 5px;">
+                        <el-button v-if="isAuth('sys:att:saveAtt')" type="primary" size="small" :disabled="!isRedact" @click="addAR()">
+                            新增
+                        </el-button>
+                        <el-button v-if="isAuth('sys:att:deleteAtt')&&clearStatus" type="danger" size="small" :disabled="!isRedact" @click="delDate()">
+                            删除
+                        </el-button>
+                    </div>
+                </template>
                 <el-row v-if="clearStatus">
                     <el-table ref="table1" header-row-class-name="tableHead" :data="datalist" class="newTable" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" :selectable="checkboxT" width="50" />
@@ -376,6 +374,21 @@
                 </span>
             </el-dialog>
         </div>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('bottle:workshop:techProductParameterSave')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button v-if="isAuth('sys:att:updateAtt')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button v-if="isAuth('sys:att:updateAtt')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 
@@ -388,6 +401,7 @@ export default {
     components: {},
     data() {
         return {
+            isRedact: false,
             multipleSelection: [],
             form: {},
             visible: false,
@@ -1000,23 +1014,18 @@ export default {
             return st;
         },
         // 保存
-        saveAtt(st) {
+        savedOrSubmitForm(st) {
             if (this.clearStatus && this.multipleSelection.length <= 0) {
                 this.$warningToast('请选择考勤');
                 return false;
             }
-            this.$confirm(`确认${st === 'saved' ? '保存' : '提交'}, 是否继续?`, `${st === 'saved' ? '保存' : '提交'}`, {
+            this.$confirm(`确认保存, 是否继续?`, '保存', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 if (!this.clearStatus) {
                     this.disData(st);
-                    if (st === 'submit') {
-                        if (!this.datarul(this.datalist)) {
-                            return false;
-                        }
-                    }
                     this.lodingS = true;
                     this.$http(`${AR_API.ARADD_API}`, 'POST', this.saveData).then(({ data }) => {
                         if (data.code === 0) {
@@ -1033,6 +1042,43 @@ export default {
                     });
                 } else {
                     this.subAutio(st);
+                }
+            }).catch(() => {
+                // this.$infoToast('已取消删除');
+            });
+        },
+        // 提交
+        SubmitForm() {
+            if (this.clearStatus && this.multipleSelection.length <= 0) {
+                this.$warningToast('请选择考勤');
+                return false;
+            }
+            this.$confirm(`确认提交, 是否继续?`, '提交', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                if (!this.clearStatus) {
+                    this.disData('submit');
+                    if (!this.datarul(this.datalist)) {
+                        return false;
+                    }
+                    this.lodingS = true;
+                    this.$http(`${AR_API.ARADD_API}`, 'POST', this.saveData).then(({ data }) => {
+                        if (data.code === 0) {
+                            this.$notify({
+                                title: '成功',
+                                message: '操作成功',
+                                type: 'success'
+                            });
+                            this.GetList(true);
+                        } else {
+                            this.$errorToast(data.msg);
+                        }
+                        this.lodingS = false;
+                    });
+                } else {
+                    this.subAutio('submit');
                 }
             }).catch(() => {
                 // this.$infoToast('已取消删除');

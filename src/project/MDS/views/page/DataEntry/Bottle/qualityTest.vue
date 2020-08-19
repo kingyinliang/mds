@@ -57,14 +57,6 @@
                         >
                             返回
                         </el-button>
-                        <el-button v-if="isAuth('bottle:workshop:techProductParameterList')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                            {{ isRedact ? '取消' : '编辑' }}
-                        </el-button>
-                    </template>
-                    <template v-if="isRedact" style="float: right; margin-left: 10px;">
-                        <el-button v-if="isAuth('bottle:workshop:techProductParameterList')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                            保存
-                        </el-button>
                     </template>
                 </el-form-item>
             </el-form>
@@ -270,6 +262,22 @@
         <mds-card title="异常事项">
             <el-input v-model="Textareas" type="textarea" :disabled="!isRedact" style="width: 100%; margin: 10px 0;" />
         </mds-card>
+
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('bottle:workshop:techProductParameterList')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button v-if="isAuth('bottle:workshop:techProductParameterList')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <!-- <el-button v-if="isAuth('bottle:workshop:techProductParameterList')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button> -->
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 
@@ -414,6 +422,55 @@ export default {
         handleCurrentChange(val) {
             this.pages.currPage = val;
             this.getList();
+        },
+        // 校验
+        dataRul() {
+            let ty = true;
+            if (this.crafData.hotMedium.length > 0) {
+                this.crafData.hotMedium.forEach(item => {
+                    if (item === '酱油') {
+                        if (!this.crafData.sauceTemp) {
+                            ty = false;
+                            this.$warningToast('酱油温度必填');
+                        }
+                    } else if (item === '热水') {
+                        if (!this.crafData.hotTemp) {
+                            ty = false;
+                            this.$warningToast('热水温度必填');
+                        }
+                    }
+                });
+            }
+            this.crafData.result.forEach(item => {
+                if (!item.temp) {
+                    ty = false;
+                    this.$warningToast('屏显温度必填');
+                }
+                if (!item.logTime) {
+                    ty = false;
+                    this.$warningToast('记录时间必填');
+                }
+            });
+            return ty;
+        },
+        // 保存提交
+        SubmitForm() {
+            if (!this.dataRul()) {
+                return;
+            }
+            this.$refs.dataForm.validate(valid => {
+                if (valid) {
+                    this.$confirm('确认提交该订单, 是否继续?', '提交订单', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.savedOrSubmitForm('submit');
+                    }).catch(() => {
+                        // this.$infoToast('已取消删除');
+                    });
+                }
+            });
         },
         savedOrSubmitForm(str) {
             this.dataList.map(item => {
