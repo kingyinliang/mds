@@ -34,6 +34,10 @@ const STE_API = {
      */
     STE_ACCE_SAVE_API: params => httpProxy('/ste/accessiruesConsume/save', 'POST', params),
     /**
+     * @property {string} STE_SEMI_LIST_API 杀菌车间-辅料添加-保存
+     */
+    STE_ACCE_SUBMIT_API: params => httpProxy('/ste/accessiruesConsume/submit', 'POST', params),
+    /**
      * @property {string} STE_SPLIT_LIST_API 杀菌车间-订单拆分
      */
     STE_SPLIT_LIST_API: params => httpProxy('/steOrderSplit/query', 'POST', params),
@@ -117,6 +121,10 @@ const STE_API = {
      * @property {string} STE_DETAIL_CRAFTHEADER_INFO_API 杀菌车间-杀菌工艺-头部查询
      */
     STE_DETAIL_CRAFTHEADER_INFO_API: params => httpProxy('/steOrderSplit/potOrder/queryByPortOrderNo', 'GET', params),
+    /**
+     * @property {string} STE_DETAIL_CRAFTHEADER_STATUS_API 杀菌车间-杀菌工艺-页签状态查询
+     */
+    STE_DETAIL_CRAFTHEADER_STATUS_API: params => httpProxy('/steTagPot/queryByPotOrderNo', 'GET', params),
     /**
      * @property {string} STE_DETAIL_CRAFT_SAVED_API 杀菌车间-杀菌工艺-保存
      */

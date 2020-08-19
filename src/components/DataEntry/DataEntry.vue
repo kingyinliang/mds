@@ -276,6 +276,9 @@
                         case 'N':
                             res = '未录入';
                             break;
+                        case 'M':
+                            res = '已提交';
+                            break;
                         case 'D':
                             res = '待审核';
                             break;
@@ -304,7 +307,9 @@
         },
         mounted() {
             setInterval(() => {
-                this.dateChange = Math.trunc(Number(getDateDiff(this.formHeader.changed, dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'), 'minute')))
+                if (this.formHeader.changed) {
+                    this.dateChange = Math.trunc(Number(getDateDiff(this.formHeader.changed, dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'), 'minute')))
+                }
             }, 3000)
         },
         methods: {

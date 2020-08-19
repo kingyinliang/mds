@@ -124,6 +124,7 @@
                 potUnit: this.orderObj.countOutputUnit,
                 workShop: this.orderObj.workShop,
                 productLine: this.orderObj.productLine,
+                orderType: this.orderObj.orderType,
                 orderId: this.orderObj.id,
                 orderNo: this.orderObj.orderNo,
                 orderDate: this.orderObj.productDate,
@@ -184,6 +185,7 @@
             STE_API.STE_SPLIT_SAVE_API(submitObj).then(({ data }) => {
                 this.$successToast(data.msg);
                 this.dialogFormVisible = false;
+                this.$emit('getList');
             })
         }
 
@@ -213,6 +215,7 @@
         countOutputUnit?: string;
         potUnit?: string;
         workShop?: string;
+        orderType?: string;
         productLine?: string;
         orderId?: string;
         orderNo?: string;

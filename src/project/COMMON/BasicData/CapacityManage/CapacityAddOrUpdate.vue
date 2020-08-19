@@ -33,11 +33,11 @@
                 <el-form-item label="性能稼动率：" prop="performanceRate">
                     <el-input v-model="dataForm.performanceRate" type="number" placeholder="手动输入" />
                 </el-form-item>
-                <el-form-item label="生产效率：" prop="oeeOrOpe">
-                    <el-input v-model="dataForm.oeeOrOpe" type="number" placeholder="手动输入" />
-                </el-form-item>
                 <el-form-item label="良品率：" prop="yieldRate">
                     <el-input v-model="dataForm.yieldRate" type="number" placeholder="手动输入" />
+                </el-form-item>
+                <el-form-item label="生产效率：" prop="oeeOrOpe">
+                    <el-input v-model="dataForm.oeeOrOpe" type="number" placeholder="手动输入" />
                 </el-form-item>
                 <el-form-item label="有效开始日期：" prop="startDate">
                     <el-date-picker v-model="dataForm.startDate" type="date" value-format="yyyy-MM-dd" placeholder="选择" style="width: 100%;" />
@@ -120,7 +120,7 @@ export default class CapacityAddOrUpdate extends Vue {
                 material: query
             }).then(({ data }) => {
                 this.loading = false;
-                this.serchSapList = data.data
+                data.data ? this.serchSapList = data.data : this.serchSapList = []
             }).catch(() => {
                 this.loading = false;
             })
@@ -145,6 +145,7 @@ export default class CapacityAddOrUpdate extends Vue {
         if (data) {
             this.CapacityId = data.id;
             this.dataForm = JSON.parse(JSON.stringify(data));
+            this.remoteMethod(this.dataForm.materialCode)
         } else {
             this.CapacityId = '';
             this.dataForm = {
@@ -160,7 +161,12 @@ export default class CapacityAddOrUpdate extends Vue {
         this.$refs.dataForm.validate(valid => {
             if (valid) {
                 this.dataForm.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                this.dataForm.materialName = this.serchSapList.filter(item => item.materialCode === this.dataForm.materialCode)[0].materialName;
+                if (this.serchSapList.filter(item => item.materialCode === this.dataForm.materialCode).length) {
+                    this.dataForm.materialName = this.serchSapList.filter(item => item.materialCode === this.dataForm.materialCode)[0].materialName;
+                } else {
+                    this.$warningToast('没有找到此物料主数据');
+                    return false
+                }
                 let http;
                 this.CapacityId ? http = COMMON_API.CAPACITYUPDATA_API : http = COMMON_API.CAPACITYADD_API;
                 http(this.dataForm).then(({ data }) => {

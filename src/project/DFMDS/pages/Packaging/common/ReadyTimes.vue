@@ -211,8 +211,12 @@ export default class ReadyTimes extends Vue {
         }).then(({ data }) => {
             if (data.data === null) {
                 this.isNewForm = true
-                this.currentFormDataGroup = {}
-                this.orgFormDataGroup = {}
+                this.currentFormDataGroup = {
+                    classes: 'M'
+                }
+                this.orgFormDataGroup = {
+                    classes: 'M'
+                }
             } else {
                 this.isNewForm = false
                 this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
@@ -304,19 +308,19 @@ export default class ReadyTimes extends Vue {
 
     ruleSubmit() {
         if (this.currentFormDataGroup.classes === 'M' || this.currentFormDataGroup.classes === 'D') { // 早
-            if (!this.currentFormDataGroup.dayUser || !this.currentFormDataGroup.dayShift || !this.currentFormDataGroup.dayMeeting || !this.currentFormDataGroup.dayPrepaired || !this.currentFormDataGroup.dayClear) {
+            if ((!this.currentFormDataGroup.dayUser && this.currentFormDataGroup.dayUser !== 0) || (!this.currentFormDataGroup.dayShift && this.currentFormDataGroup.dayShift !== 0) || (!this.currentFormDataGroup.dayMeeting && this.currentFormDataGroup.dayMeeting !== 0) || (!this.currentFormDataGroup.dayPrepaired && this.currentFormDataGroup.dayPrepaired !== 0) || (!this.currentFormDataGroup.dayClear && this.currentFormDataGroup.dayClear !== 0)) {
                 this.$warningToast('请填写生产准备页签准备工时必填项');
                 return false
             }
         }
         if (this.currentFormDataGroup.classes === 'A') { // 中
-            if (!this.currentFormDataGroup.midUser || !this.currentFormDataGroup.midShift || !this.currentFormDataGroup.midMeeting || !this.currentFormDataGroup.midPrepaired || !this.currentFormDataGroup.midClear) {
+            if ((!this.currentFormDataGroup.midUser && this.currentFormDataGroup.midUser !== 0) || (!this.currentFormDataGroup.midShift && this.currentFormDataGroup.midShift !== 0) || (!this.currentFormDataGroup.midMeeting && this.currentFormDataGroup.midMeeting !== 0) || (!this.currentFormDataGroup.midPrepaired && this.currentFormDataGroup.midPrepaired !== 0) || (!this.currentFormDataGroup.midClear && this.currentFormDataGroup.midClear !== 0)) {
                 this.$warningToast('请填写生产准备页签准备工时必填项');
                 return false
             }
         }
         if (this.currentFormDataGroup.classes === 'N' || this.currentFormDataGroup.classes === 'D') { // 晚
-            if (!this.currentFormDataGroup.nightUser || !this.currentFormDataGroup.nightShift || !this.currentFormDataGroup.nightMeeting || !this.currentFormDataGroup.nightPrepaired || !this.currentFormDataGroup.nightClear) {
+            if ((!this.currentFormDataGroup.nightUser && this.currentFormDataGroup.nightUser !== 0) || (!this.currentFormDataGroup.nightShift && this.currentFormDataGroup.nightShift !== 0) || (!this.currentFormDataGroup.nightMeeting && this.currentFormDataGroup.nightMeeting !== 0) || (!this.currentFormDataGroup.nightPrepaired && this.currentFormDataGroup.nightPrepaired !== 0) || (!this.currentFormDataGroup.nightClear && this.currentFormDataGroup.nightClear !== 0)) {
                 this.$warningToast('请填写生产准备页签准备工时必填项');
                 return false
             }

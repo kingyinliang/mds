@@ -263,10 +263,10 @@ export default class ExcRecord extends Vue {
     }
 
     ruleSubmit() {
-        if (this.excList.filter(it => it.delFlag !== 1).length === 0) {
-            this.$warningToast('请录入异常记录页签数据');
-            return false;
-        }
+        // if (this.excList.filter(it => it.delFlag !== 1).length === 0) {
+        //     this.$warningToast('请录入异常记录页签数据');
+        //     return false;
+        // }
         for (const item of this.excList.filter(it => it.delFlag !== 1)) {
             if (!item.classes || !item.exceptionSituation || !item.startDate || !item.endDate) {
                 this.$warningToast('请填写异常记录页签必填项');

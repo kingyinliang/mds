@@ -2,7 +2,7 @@
     <el-dialog title="拆分详情" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="1200px" custom-class="dialog__class">
         <el-table :data="splitTable" :row-class-name="rowDelFlag" header-row-class-name="tableHead" class="newTable" border tooltip-effect="dark">
             <el-table-column type="index" width="55" label="序号" fixed />
-            <el-table-column label="状态" width="100" prop="status" :show-overflow-tooltip="true" />
+            <el-table-column label="状态" width="100" prop="statusName" :show-overflow-tooltip="true" />
             <el-table-column label="锅单号" width="100" prop="potOrderNo" :show-overflow-tooltip="true" />
             <el-table-column label="生产锅序" width="100" prop="potOrder" :show-overflow-tooltip="true" />
             <el-table-column label="生产日期" width="100" prop="productDate" :show-overflow-tooltip="true" />
@@ -37,7 +37,7 @@
             </el-table-column>
         </el-table>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="visible = false">取消</el-button>
+            <el-button @click="dialogFormVisible = false">取消</el-button>
             <el-button type="primary" @click="SubmitForm()">确定</el-button>
         </span>
     </el-dialog>
@@ -101,7 +101,20 @@
 
         // 删除行
         removeDataRow(row) {
-            row.delFlag = 1;
+            const list = this.splitTable.filter(it => it.delFlag !== 1)
+            for (const i of list) {
+                if (row.potOrder < Number(i.potOrder)) {
+                    this.$warningToast('请先删除锅序最大的订单')
+                    return false;
+                }
+            }
+            this.$confirm('是否确认删除？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                row.delFlag = 1;
+            })
         }
 
         rowDelFlag({ row }) {
@@ -129,6 +142,7 @@
         potNo?: string;
         potCount?: string;
         potAmount?: string;
+        potOrder?: string;
         remark?: string;
         changed?: string;
         changer?: string;

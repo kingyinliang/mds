@@ -1,28 +1,11 @@
-<!--
- * @Description:
- * @Anthor: Telliex
- * @Date: 2020-08-03 17:11:48
- * @LastEditors: Telliex
- * @LastEditTime: 2020-08-04 18:28:17
--->
-<template>
-    <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick">
-        <el-tab-pane v-for="(item, index) in tabTitles" :key="index" :name="setKey(index)">
-            <span v-if="item.status !== undefined" slot="label" class="spanview">
-                <el-tooltip effect="dark" :content="getTagStatus(item.status)" placement="top-start">
-                    <span
-                        :style="{
-                            color: item.status === 'noPass' ? 'red' : item.status === 'R' ? 'red' : ''
-                        }"
-                    >{{ item.label }}</span>
-                </el-tooltip>
-            </span>
-            <span v-if="item.status === undefined" slot="label" class="spanview">
-                {{ item.label }}
-            </span>
-            <slot :name="setKey(index)" :isRedact="isRedact" />
-        </el-tab-pane>
-    </el-tabs>
+<template lang="pug">
+    el-tabs#DaatTtabs(ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" :before-leave="beforeLeave" @tab-click="tabClick")
+        el-tab-pane(v-for="(item, index) in tabTitles" :key="index" :name="setKey(index)")
+            span(v-if="item.status !== undefined" slot="label" class="spanview")
+                el-tooltip(effect="dark" :content="getTagStatus(item.status)" placement="top-start")
+                    span(:style="{color: item.status === 'noPass' ? 'red' : item.status === 'R' ? 'red' : ''}") {{ item.label }}
+            span(v-if="item.status === undefined" slot="label" class="spanview") {{ item.label }}
+            slot(:name="setKey(index)" :isRedact="isRedact")
 </template>
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';

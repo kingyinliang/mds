@@ -29,7 +29,7 @@
                 <el-input v-model="dataForm.consumeAmount" placeholder="手动输入" />
             </el-form-item>
             <el-form-item label="领用批次：" prop="consumeBatch">
-                <el-input v-model="dataForm.consumeBatch" placeholder="手动输入" />
+                <el-input v-model="dataForm.consumeBatch" maxlength="10" placeholder="手动输入" />
             </el-form-item>
             <el-form-item v-if="dataForm.consumeType === '1'" label="发酵罐库存：">
                 <el-input v-model="dataForm.fermentStorage" placeholder="手动输入" />
@@ -115,16 +115,17 @@
             })
             this.visible = true;
             if (Data) {
-                this.dataForm = Data
+                this.dataForm = JSON.parse(JSON.stringify(Data))
             } else {
                 this.dataForm = {
                     id: '',
                     stePotNo: this.$store.state.sterilize.SemiReceive.potNo,
-                    potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrder,
+                    potOrderId: this.$store.state.sterilize.SemiReceive.potOrderMap.id,
                     potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo,
                     consumeType: '1',
                     fermentPotNo: '',
                     materialCode: '',
+                    materialType: '',
                     materialName: '',
                     consumeUnit: '',
                     consumeAmount: '',
@@ -142,7 +143,8 @@
         setUtil() {
             const filterArr1: (any) = this.materialArr.filter(it => it.matnr === this.dataForm.materialCode);// eslint-disable-line
             this.dataForm.consumeUnit = filterArr1[0].erfme;
-            this.dataForm.materialName = filterArr1[0].materialName
+            this.dataForm.materialName = filterArr1[0].materialName;
+            this.dataForm.materialType = filterArr1[0].materialType
         }
 
         dataFormSubmit() {
@@ -174,6 +176,7 @@
         potOrderNo?: string;
         fermentPotNo?: string;
         materialCode?: string;
+        materialType?: string;
         materialName?: string;
         consumeUnit?: string;
         consumeAmount?: string;

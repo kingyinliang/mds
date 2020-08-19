@@ -4,13 +4,16 @@
             <el-col :span="24">
                 <el-card class="box-card" style="margin: 10px 0;">
                     <div class="hello-box">
-                        <div><img src="~common/img/man.png" alt="" style="width: 66px;"></div>
+                        <div>
+                            <img v-if="gender==='M'" src="~common/img/man.png" alt="" style="width: 66px;">
+                            <img v-else src="~common/img/feman.png" alt="" style="width: 66px;">
+                        </div>
                         <div>
                             <div style=" height: 28px; margin-top: 2px; color: rgba(0, 0, 0, 0.85); font-weight: 600; font-size: 16px; line-height: 28px;">
                                 {{ realName }}, 祝你开心每一天
                             </div>
                             <div style=" height: 22px; padding-top: 12px; color: rgba(0, 0, 0, 0.45); font-size: 12px; line-height: 22px;">
-                                {{ post }} | {{ deptName }}
+                                {{ post }} <span v-if="post!==''"> |</span> {{ deptName }}
                             </div>
                         </div>
                         <div class="info-number">
@@ -116,11 +119,13 @@
         readList: MessageObject[]=[]
         unreadList: MessageObject[]=[]
         loginUserId= sessionStorage.getItem('loginUserId');
-        realName= sessionStorage.getItem('userName')
+        realName= sessionStorage.getItem('realName')
         post=sessionStorage.getItem('staff-post')
         deptName=sessionStorage.getItem('staff-location')
 
         async mounted() {
+            console.log('this.loginUserId')
+            console.log(this.loginUserId)
             // await this.getIcon()
             setTimeout(() => {
                 // 取已读、未读消息
@@ -131,6 +136,7 @@
 
         // 侦听消息是否有异动
         get updateMsgNum(): boolean {
+            console.log('侦听到消息进来讯息')
             return this.$store.state.common.updateMsg;
         }
 
@@ -174,16 +180,28 @@
          * @return: no
          */
         seeMessage(item) {
+            console.log('item')
+            console.log(item)
             if (!item.readed) {
-                this.markThisReaded(item.id)
+                this.markThisReaded(item.msgId)
             }
             if (item.msgUrl !== '') {
                 const targetURL = item.msgUrl.replace(/\//g, '-')
 
+                if (this.$store.state.common.mainTabs.filter(element => element.name === targetURL).length !== 0) {
+                    this.$store.commit('common/updateMainTabs', this.$store.state.common.mainTabs.filter(element => element.name !== targetURL));
+                }
+
                 setTimeout(() => {
                     this.$store.commit('common/updateMsg', true);
                     this.$router.push({
-                        path: targetURL
+                        // targetURL + '?orderNo=' + item.orderNo
+                        path: targetURL,
+                        query: {
+                            workShop: item.workShop,
+                            orderNo: item.orderNo,
+                            orderStatus: item.orderStatus
+                        }
                     });
                 }, 100);
             }
@@ -200,13 +218,14 @@
                 user: this.loginUserId // 登录用户id
             }).then(({ data }) => {
                 data.data.records.forEach(item => {
-                    unreadTemp.push(item.id)
+                    unreadTemp.push(item.msgId)
                 });
             });
 
             if (unreadTemp.length !== 0) {
                 MSG_API.MSG_READ_API({
-                    ids: unreadTemp // 用户消息id列表
+                    ids: unreadTemp, // 用户消息id列表
+                    userId: this.loginUserId
                 }).then(({ data }) => {
                     console.log('v2')
                     console.log(data)
@@ -223,9 +242,12 @@
 
         }
 
-        markThisReaded(id) {
+        markThisReaded(msgId) {
+            console.log('msgId')
+            console.log(msgId)
             MSG_API.MSG_READ_API({
-                ids: [id] // 用户消息id列表
+                ids: [msgId], // 用户消息id列表
+                userId: this.loginUserId
             }).then(() => {
                 this.readNumStyle = 3
                 this.currPageFromRead = 1

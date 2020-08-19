@@ -9,6 +9,7 @@
             :list-interface="listInterface"
             :custom-data="true"
             @get-data-success="setData"
+            @created-end="createdEnd"
         >
             <template slot="home">
                 <el-row class="home_card__main" :gutter="10">
@@ -142,6 +143,7 @@
             potNo: ''
         };
 
+        orderSplitRow = {};
         holder = [];
         queryResultList: SteObj[] = [];
         splitTable: SteObj[] = [];
@@ -209,8 +211,17 @@
             return COMMON_API.ORDER_QUERY_API(params);
         }
 
+        createdEnd() {
+            this.$nextTick(() => {
+                if (this.$refs.queryTable.queryForm.workShop !== '' && this.$refs.queryTable.queryForm.productDate !== '') {
+                    this.$refs.queryTable.getDataList(true)
+                }
+            })
+        }
+
         getData() {
             this.$refs.queryTable.getDataList();
+            this.showSplitTable(this.orderSplitRow);
         }
 
         setData(data) {
@@ -249,19 +260,19 @@
                 return false
             }
             STE_API.STE_SPLIT_LIST_API(this.splitForm).then(({ data }) => {
-                if (data.data.records.length) {
-                    this.splitTable = data.data.records
-                    this.splitForm.current = data.data.current;
-                    this.splitForm.size = data.data.size;
-                    this.splitForm.total = data.data.total;
-                } else {
+                if (!data.data.records.length) {
                     this.$infoToast('暂无任何内容');
                 }
+                this.splitTable = data.data.records
+                this.splitForm.current = data.data.current;
+                this.splitForm.size = data.data.size;
+                this.splitForm.total = data.data.total;
             })
         }
 
         // 拆分
         orderSplit(row) {
+            this.orderSplitRow = row;
             this.dialogFormVisible1 = true;
             this.$nextTick(() => {
                 this.$refs.orderSplitDialog.init(row);
@@ -278,7 +289,7 @@
 
         // 删除订单
         delSplitRow(row) {
-            this.$confirm('是否删除?', '提示', {
+            this.$confirm('删除后数据将丢失，是否删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

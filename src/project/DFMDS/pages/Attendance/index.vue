@@ -1,11 +1,11 @@
 <template>
     <div class="header_main">
-        <mds-card title="考勤记录" :pack-up="false" name="evaluation">
+        <mds-card title="考勤记录" :pack-up="false" name="evaluation" class="searchCard">
             <template slot="titleBtn">
                 <div style="display: flex; align-items: center; justify-content: space-between; white-space: nowrap;">
                     <el-form :model="searchForm" size="small" :inline="true" label-position="left" label-width="70px" class="sole_row">
-                        <el-form-item label="生产车间：">
-                            <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 130px;" clearable @change="eventChangeWorkshopOptions">
+                        <el-form-item label="生产车间：" class="must-fill" label-width="80px">
+                            <el-select v-model="searchForm.workshop" class="selectwpx" style="width: 140px;" clearable @change="eventChangeWorkshopOptions">
                                 <el-option v-for="(item,index) in selectTree" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
@@ -14,8 +14,8 @@
                                 <el-option v-for="(item,index) in productLineList" :key="item.targetCode+index" :label="item.targetName" :value="item.targetCode" />
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="考勤日期：" label-width="70px">
-                            <el-date-picker v-model="searchForm.evaluationStartDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 140px;" /> - <el-date-picker v-model="searchForm.evaluationEndtDate" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 140px;" />
+                        <el-form-item label="考勤开始日期：" label-width="100px">
+                            <el-date-picker v-model="searchForm.evaluationStartDate" type="date" value-format="yyyy-MM-dd" placeholder="请输入" style="width: 140px;" /> - <el-date-picker v-model="searchForm.evaluationEndDate" type="date" value-format="yyyy-MM-dd" placeholder="请输入" style="width: 140px;" />
                         </el-form-item>
                     </el-form>
                     <div class="button-group" style="white-space: nowrap;">
@@ -40,6 +40,7 @@
             <el-form ref="dataFormRules" :model="dataFormRules">
                 <el-table class="newTable" :data="currentFormDataGroup" :height="mainClientHeight - 52 - 39 - 47" :row-class-name="rowDelFlag" header-row-class-name="tableHead" border style="width: 100%; min-height: 90px;" @selection-change="handleSelectionChange">
                     <el-table-column
+                        v-if="currentFormDataGroup.length!==0"
                         type="selection"
                         width="55"
                     />
@@ -172,7 +173,7 @@
                     </el-table-column>
                     <el-table-column fixed="right" width="90" prop="verify_date" label="操作" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <el-button v-if="isAuth('kqSave')" type="text" size="small" :disabled="scope.row.isRedact" @click="btnEditDataRow(scope.row)">
+                            <el-button v-if="isAuth('kqSave')" class="editBtn" icon="el-icon-edit" type="text" size="small" :disabled="scope.row.isRedact" @click="btnEditDataRow(scope.row)">
                                 编辑
                             </el-button>
                         </template>
@@ -452,10 +453,23 @@
                             delIdsTemp.push(item.id)
                         }
                     } else if (item.id) {
+                        // if (!item.startTime.split(':')[2]) {
+                        //     item.startTime = item.startTime + ':00'
+                        // }
+                        // if (!item.endTime.split(':')[2]) {
+                        //     item.endTime = item.endTime + ':00'
+                        // }
+
                         if (!_.isEqual(this.orgFormDataGroup[index], item)) {
                             updateDataTemp.push(item)
                         }
                     } else {
+                        // if (!item.startTime.split(':')[2]) {
+                        //     item.startTime = item.startTime + ':00'
+                        // }
+                        // if (!item.endTime.split(':')[2]) {
+                        //     item.endTime = item.endTime + ':00'
+                        // }
                         insertDataTemp.push(item)
                     }
                 })
@@ -752,5 +766,10 @@ interface UserTypeListObject {
 .required span i:last-child::after {
     margin-left: -2px;
     content: "";
+}
+.searchCard >>> .must-fill > label::before {
+    margin-right: 4px;
+    color: #f56c6c;
+    content: "*";
 }
 </style>

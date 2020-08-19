@@ -80,8 +80,8 @@
                 orderNo: formHeader.orderNo,
                 potOrderNo: formHeader.potOrderNo
             }).then(({ data }) => {
-                this.semiTable = data.data;
-                this.orgSemiTable = data.data;
+                this.semiTable = JSON.parse(JSON.stringify(data.data));
+                this.orgSemiTable = JSON.parse(JSON.stringify(data.data));
             })
         }
 
@@ -128,10 +128,13 @@
         }
 
         EditRow(row) {
-            row.modifiedId = 1;
             if (!this.isRedact) {
                 return false
             }
+            for (const it of this.semiTable) {
+                delete it.modifiedId
+            }
+            row.modifiedId = 1;
             this.visible = true;
             this.$nextTick(() => {
                 this.$refs.SemiReceiveDialog.init(row)
@@ -140,8 +143,14 @@
 
         dataPush(data: SemiObj) {
             if (data.modifiedId === 1) {
-                this.semiTable.filter(it => it.modifiedId === 1)[0] = data;
-                this.semiTable.filter(it => it.modifiedId === 1)[0].modifiedId = 0
+                for (const it of this.semiTable) {
+                    if (it.modifiedId === 1) {
+                        Reflect.ownKeys(data).forEach(key => {
+                            it[key] = data[key];
+                        });
+                        delete it.modifiedId
+                    }
+                }
             } else {
                 this.semiTable.push(data);
             }
