@@ -376,7 +376,7 @@
         </div>
         <redact-box>
             <template slot="button">
-                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('bottle:workshop:techProductParameterSave')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                <el-button v-if="isAuth('sys:att:updateAtt')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <template v-if="isRedact">
@@ -792,10 +792,10 @@ export default {
             this.tree2Status = false;
             if (!this.clearStatus) {
                 this.row.userId.forEach((item) => {
-                    this.selctId.push({ label: item });
+                    this.selctId.push({ key: item, label: item });
                 });
             } else {
-                this.selctId.push({ label: this.row.userId });
+                this.selctId.push({ key: this.row.userId, label: this.row.userId });
             }
             this.visible2 = true;
         },
