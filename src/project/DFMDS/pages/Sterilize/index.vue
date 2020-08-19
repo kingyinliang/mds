@@ -175,6 +175,7 @@
             if (data.data) {
                 this.queryResultList = data.data
             } else {
+                this.queryResultList = []
                 this.$infoToast('暂无任何内容');
             }
         }
