@@ -332,6 +332,7 @@
         ];
 
         mounted() {
+            console.log('99999999')
             // 消息管理跳转 url 传参判断
             if (window.location.href.indexOf('?') !== -1) {
                 console.log('url~~~~~~')
@@ -342,12 +343,10 @@
                 }
 
                 // 切换页签
-                if (urlData['orderStatus'] === 'D') {
-                    this.$refs.queryTable.activeName = '0'
-                } else if (urlData['orderStatus'] === 'C' || urlData['orderStatus'] === 'P') {
+                if (urlData['orderStatus'] === 'P') {
                     this.$refs.queryTable.activeName = '1'
                 } else {
-                    this.$refs.queryTable.activeName = '2'
+                    this.$refs.queryTable.activeName = '0'
                 }
 
                 const paramsTemp = {
@@ -361,6 +360,13 @@
                 AUDIT_API.HOURS_LIST_API(paramsTemp).then(({ data }) => {
                     console.log('data')
                     console.log(data)
+                    // 修正表单上呈现
+                    this.queryFormData.forEach(item => {
+                        this.$refs.queryTable.queryForm[item.prop] = ''
+                    })
+                    this.$refs.queryTable.queryForm.workshop = urlData['workShop']
+                    this.$refs.queryTable.queryForm.orderNo = urlData['orderNo']
+                    // 显示内容
                     this.setData(data, true)
                 });
             }

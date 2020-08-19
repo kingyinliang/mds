@@ -83,42 +83,7 @@
     })
 
     export default class ProInStore extends Vue {
-        mounted() {
-       // 消息管理跳转 url 传参判断
-        if (window.location.href.indexOf('?') !== -1) {
-            console.log('url~~~~~~')
-            const url = window.location.href.split('?')[1].split('&');
-            const urlData = {};
-            for (let i = 0; i < url.length; i++) {
-                urlData[url[i].split('=')[0]] = unescape(url[i].split('=')[1]);
-            }
 
-            // 切换页签
-            if (urlData['orderStatus'] === 'P') {
-                this.$refs.queryTable.activeName = '1'
-            } else {
-                this.$refs.queryTable.activeName = '0'
-            }
-
-            const paramsTemp = {
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                orderNo: urlData['orderNo'],
-                // orderStatus: [urlData['orderStatus']],
-                passStatus: Number(this.$refs.queryTable.activeName),
-                current: 1,
-                size: 10,
-                total: 0
-            }
-            AUDIT_API.PROISSUEQUERY_API(paramsTemp).then(({ data }) => {
-                console.log('data')
-                console.log(data)
-                this.setData(data, true)
-            });
-        }
-
-            this.getHaveBeenMoveReas();
-            this.getMoveReas();
-        }
 
         //表格数据
         get name() {
@@ -387,6 +352,50 @@
                 column: this.getColumn(2) // eslint-disable-line
             }
         ];
+
+                mounted() {
+        // 消息管理跳转 url 传参判断
+        if (window.location.href.indexOf('?') !== -1) {
+            console.log('url~~~~~~')
+            const url = window.location.href.split('?')[1].split('&');
+            const urlData = {};
+            for (let i = 0; i < url.length; i++) {
+                urlData[url[i].split('=')[0]] = unescape(url[i].split('=')[1]);
+            }
+
+            // 切换页签
+            if (urlData['orderStatus'] === 'P') {
+                this.$refs.queryTable.activeName = '1'
+            } else {
+                this.$refs.queryTable.activeName = '0'
+            }
+
+            const paramsTemp = {
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: urlData['orderNo'],
+                // orderStatus: [urlData['orderStatus']],
+                passStatus: Number(this.$refs.queryTable.activeName),
+                current: 1,
+                size: 10,
+                total: 0
+            }
+            AUDIT_API.PROISSUEQUERY_API(paramsTemp).then(({ data }) => {
+                console.log('data')
+                console.log(data)
+                // 修正表单上呈现
+                this.queryFormData.forEach(item => {
+                    this.$refs.queryTable.queryForm[item.prop] = ''
+                })
+                this.$refs.queryTable.queryForm.workShop = urlData['workShop']
+                this.$refs.queryTable.queryForm.orderNo = urlData['orderNo']
+                // 显示内容
+                this.setData(data, true)
+            });
+        }
+
+            this.getHaveBeenMoveReas();
+            this.getMoveReas();
+        }
 
         getColumn(type) {
             const column = [
