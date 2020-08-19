@@ -188,7 +188,7 @@
                 setTimeout(() => {
                     this.$store.commit('common/updateMsg', true);
                     this.$router.push({
-                        path: targetURL
+                        path: targetURL + '?orderNo=' + item.orderNo
                     });
                 }, 100);
             }
