@@ -375,6 +375,15 @@
                 this.$warningToast('无权限');
                 return false
             }
+            // 消息管理跳转 url 传参判断
+            if (window.location.href.indexOf('?') !== -1) {
+                const url = window.location.href.split('?')[1].split('&');
+                const urlData = {};
+                for (let i = 0; i < url.length; i++) {
+                    urlData[url[i].split('=')[0]] = unescape(url[i].split('=')[1]);
+                }
+                this.$store.state.packaging.packDetail.orderNo = urlData['orderNo']
+            }
             this.getOrderList()
             COMMON_API.DICTQUERY_API({ dictType: 'COMMON_CLASSES' }).then(({ data }) => {
                 this.classesOptions = []
