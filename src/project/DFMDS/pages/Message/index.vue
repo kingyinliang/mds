@@ -184,11 +184,16 @@
             }
             if (item.msgUrl !== '') {
                 const targetURL = item.msgUrl.replace(/\//g, '-')
-
                 setTimeout(() => {
                     this.$store.commit('common/updateMsg', true);
                     this.$router.push({
-                        path: targetURL + '?orderNo=' + item.orderNo
+                        // targetURL + '?orderNo=' + item.orderNo
+                        path: targetURL,
+                        query: {
+                            workShop: item.workShop,
+                            orderNo: item.orderNo,
+                            orderStatus: item.orderStatus
+                        }
                     });
                 }, 100);
             }
