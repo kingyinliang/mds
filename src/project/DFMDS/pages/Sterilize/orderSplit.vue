@@ -9,6 +9,7 @@
             :list-interface="listInterface"
             :custom-data="true"
             @get-data-success="setData"
+            @created-end="createdEnd"
         >
             <template slot="home">
                 <el-row class="home_card__main" :gutter="10">
@@ -142,6 +143,7 @@
             potNo: ''
         };
 
+        orderSplitRow = {};
         holder = [];
         queryResultList: SteObj[] = [];
         splitTable: SteObj[] = [];
@@ -209,8 +211,17 @@
             return COMMON_API.ORDER_QUERY_API(params);
         }
 
+        createdEnd() {
+            this.$nextTick(() => {
+                if (this.$refs.queryTable.queryForm.workShop !== '' && this.$refs.queryTable.queryForm.productDate !== '') {
+                    this.$refs.queryTable.getDataList(true)
+                }
+            })
+        }
+
         getData() {
             this.$refs.queryTable.getDataList();
+            this.showSplitTable(this.orderSplitRow);
         }
 
         setData(data) {
@@ -261,6 +272,7 @@
 
         // 拆分
         orderSplit(row) {
+            this.orderSplitRow = row;
             this.dialogFormVisible1 = true;
             this.$nextTick(() => {
                 this.$refs.orderSplitDialog.init(row);
