@@ -101,7 +101,20 @@
 
         // 删除行
         removeDataRow(row) {
-            row.delFlag = 1;
+            const list = this.splitTable.filter(it => it.delFlag !== 1)
+            for (const i of list) {
+                if (row.potOrder < Number(i.potOrder)) {
+                    this.$warningToast('请先删除锅序最大的订单')
+                    return false;
+                }
+            }
+            this.$confirm('是否确认删除？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                row.delFlag = 1;
+            })
         }
 
         rowDelFlag({ row }) {
@@ -129,6 +142,7 @@
         potNo?: string;
         potCount?: string;
         potAmount?: string;
+        potOrder?: string;
         remark?: string;
         changed?: string;
         changer?: string;
