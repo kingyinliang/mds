@@ -242,6 +242,40 @@ export default class AuditIndex extends Vue {
 
     logList = [];
     visibleDetailLog = false;
+    mounted() {
+        // 消息管理跳转 url 传参判断
+        if (window.location.href.indexOf('?') !== -1) {
+            console.log('url~~~~~~')
+            const url = window.location.href.split('?')[1].split('&');
+            const urlData = {};
+            for (let i = 0; i < url.length; i++) {
+                urlData[url[i].split('=')[0]] = unescape(url[i].split('=')[1]);
+            }
+
+            // 切换页签
+            if (urlData['orderStatus'] === 'D') {
+                this.$refs.queryTable.activeName = '0'
+            } else if (urlData['orderStatus'] === 'C' || urlData['orderStatus'] === 'P') {
+                this.$refs.queryTable.activeName = '1'
+            } else {
+                this.$refs.queryTable.activeName = '2'
+            }
+
+            const paramsTemp = {
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                orderNo: urlData['orderNo'],
+                // orderStatus: [urlData['orderStatus']],
+                current: 1,
+                size: 10,
+                total: 0
+            }
+            COMMON_API.ORDER_QUERY_API(paramsTemp).then(({ data }) => {
+                console.log('data')
+                console.log(data)
+                this.setData(data, true)
+            });
+        }
+    }
 
     // 查询请求
     listInterface(params) {
