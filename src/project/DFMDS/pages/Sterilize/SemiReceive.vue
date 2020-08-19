@@ -129,6 +129,7 @@
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 this.formHeader.textStage = 'semiReceive';
+                this.tabs[0]['status'] = this.formHeader.steTagPot.semiMaterialStatus
                 this.$refs.semiReceive.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'semiReceive');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
@@ -165,11 +166,15 @@
             })
         }
     }
+    interface StatusObj {
+        semiMaterialStatus?: string;
+    }
     interface OrderData {
         textStage?: string;
         factoryName?: string;
         potNo?: string;
         potOrder?: string;
+        steTagPot?: StatusObj;
     }
 </script>
 

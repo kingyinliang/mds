@@ -125,6 +125,7 @@
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 this.formHeader.textStage = 'acceadd';
+                this.tabs[0]['status'] = this.formHeader.steTagPot.accessoriesStatus
                 this.$refs.acceadd.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'acceadd');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
@@ -166,11 +167,15 @@
             })
         }
     }
+    interface StatusObj {
+        accessoriesStatus?: string;
+    }
     interface OrderData {
         textStage?: string;
         factoryName?: string;
         potNo?: string;
         potOrder?: string;
+        steTagPot?: StatusObj;
     }
 </script>
 

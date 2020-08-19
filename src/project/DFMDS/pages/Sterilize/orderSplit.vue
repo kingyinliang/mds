@@ -289,7 +289,7 @@
 
         // 删除订单
         delSplitRow(row) {
-            this.$confirm('是否删除?', '提示', {
+            this.$confirm('删除后数据将丢失，是否删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

@@ -35,27 +35,27 @@
                     <el-table-column prop="standardManpower" label="标配人力" min-width="80" :show-overflow-tooltip="true" />
                     <el-table-column prop="availableRate" label="可用率" min-width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.availableRate*100 }}%
+                            {{ scope.row.availableRate }}%
                         </template>
                     </el-table-column>
                     <el-table-column prop="timeRate" label="时间稼动率" min-width="100" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.timeRate*100 }}%
+                            {{ scope.row.timeRate }}%
                         </template>
                     </el-table-column>
                     <el-table-column prop="performanceRate" label="性能稼动率" min-width="100" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.performanceRate*100 }}%
+                            {{ scope.row.performanceRate }}%
                         </template>
                     </el-table-column>
                     <el-table-column prop="yieldRate" label="良品率" min-width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.yieldRate*100 }}%
+                            {{ scope.row.yieldRate }}%
                         </template>
                     </el-table-column>
                     <el-table-column prop="oeeOrOpe" label="生产效率" min-width="80" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.oeeOrOpe*100 }}%
+                            {{ scope.row.oeeOrOpe }}%
                         </template>
                     </el-table-column>
                     <el-table-column prop="startDate" label="有效开始日期" width="110" :show-overflow-tooltip="true">
