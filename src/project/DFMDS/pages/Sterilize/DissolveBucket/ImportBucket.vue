@@ -262,7 +262,7 @@
                 id: item.id,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 potId: this.currentPotId,
-                potStatus: this.currentPotStatus,
+                potStatus: [this.currentPotStatus],
                 potNo: this.currentPotNo,
                 workShop: this.currentWorkShop
             }).then(({ data }) => {
@@ -296,15 +296,15 @@
 
             // API 辅料前处理-查询不带分页 (查询生产物料)
             STE_API.STE_PREACCESSORIES_LIST_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-                // preStage: 'DISSOLUTION'
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                preStage: 'DISSOLUTION'
             }).then(({ data }) => {
                 console.log('辅料前处理')
                 console.log(data)
                 this.feedMateriallList = []
                 if (data.data) {
                     data.data.forEach(element => {
-                        this.feedMateriallList.push({ dictCode: element.productMaterial, dictValue: element.productMaterialName })
+                        this.feedMateriallList.push({ dictCode: element.useMaterial, dictValue: element.useMaterial + ' ' + element.useMaterialName })
                     })
                 }
             });

@@ -308,7 +308,7 @@
             const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === item.potStatus)
             this.dialogForm.filled.form = {
                     cycle: item.cycle,
-                    number: this.currentPotNo,
+                    number: this.currentPotId,
                     status: item.potStatus,
                     statusC: tempHolderStatus[0].dictValue,
                     doit: false,
@@ -329,7 +329,7 @@
             const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === 'R')
             this.dialogForm.filled.form = {
                     cycle: item.cycle,
-                    number: this.currentPotNo,
+                    number: this.currentPotId,
                     status: 'R',
                     statusC: tempHolderStatus[0].dictValue,
                     doit: false,
