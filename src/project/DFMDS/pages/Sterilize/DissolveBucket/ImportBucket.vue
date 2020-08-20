@@ -435,17 +435,20 @@
                 const updateDtosArray: CurrentDataTable[] = []
 
                 this.importBucketInfo.forEach((item: CurrentDataTable, index) => {
-                    item.potStatus = this.currentPotStatus
-                    item.workShop = this.currentWorkShop
+
                     if (item.delFlag === 1) {
                         if (item.id) {
                             delIdsArray.push(item.id)
                         }
                     } else if (item.id) {
                         if (!_.isEqual(this.orgFormDataGroup[index], item)) {
+                            item.potStatus = this.currentPotStatus
+                            item.workShop = this.currentWorkShop
                             updateDtosArray.push(item)
                         }
                     } else {
+                        item.potStatus = this.currentPotStatus
+                        item.workShop = this.currentWorkShop
                         insertDtosArray.push(item)
                     }
                 })
@@ -455,15 +458,19 @@
                 console.log(insertDtosArray)
                 console.log('updateDtosArray')
                 console.log(updateDtosArray)
-                STE_API.STE_DISSOLUTIONBUCKET_SAVE_API({
-                    delIds: delIdsArray,
-                    insertDtos: insertDtosArray,
-                    updateDtos: updateDtosArray
-                }).then(({ data }) => {
-                    console.log(data)
-                    this.$emit('importBucketFinish', obj);
+                if (!(delIdsArray.length === 0 && insertDtosArray.length === 0 && updateDtosArray.length === 0)) {
+                    STE_API.STE_DISSOLUTIONBUCKET_SAVE_API({
+                        delIds: delIdsArray,
+                        insertDtos: insertDtosArray,
+                        updateDtos: updateDtosArray
+                    }).then(({ data }) => {
+                        console.log(data)
+                        this.$emit('importBucketFinish', obj);
+                        this.isTableDialogVisible = false
+                    });
+                } else {
                     this.isTableDialogVisible = false
-                });
+                }
             }
         }
 

@@ -3,7 +3,7 @@
         <div class="orgStaff">
             <el-card style="width: 30%; max-height: 305px; margin-right: 30px; overflow-y: scroll;">
                 <el-row class="orgHead">
-                    <el-checkbox v-model="openOrgTree" @change="handleCheckAllChange" /> <span>组织架构</span>
+                    <span>组织架构</span>
                 </el-row>
                 <el-tree ref="orgtree" :data="orgTree" node-key="deptId" :default-expand-all="openOrgTree" :default-expanded-keys="arrList" :expand-on-click-node="false" @node-click="setdetail" />
             </el-card>
@@ -122,10 +122,9 @@ export default {
     justify-content: space-between;
 }
 .orgHead {
-    display: flex;
-    justify-content: space-between;
     height: 40px;
     margin: 0;
+    padding-left: 20px;
     color: #000;
     font-size: 14px;
     line-height: 40px;
