@@ -1,88 +1,86 @@
 <template>
-    <el-col>
-        <div class="header_main">
-            <el-card class="newCard">
-                <el-form ref="" :model="plantList" size="small" class="sole_row" :inline="true" label-width="70px" @keyup.enter.native="GetOrderList()" @submit.native.prevent>
-                    <el-form-item label="生产工厂：">
-                        <el-select v-model="plantList.factoryid" placeholder="请选择">
-                            <el-option value="">
-                                请选择
-                            </el-option>
-                            <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="生产车间：">
-                        <el-select v-model="plantList.workShop" placeholder="请选择" class="width140px" @change="setworkShopname">
-                            <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="日期：" label-width="45px">
-                        <el-date-picker v-model="plantList.productDate" type="date" placeholder="选择" value-format="yyyyMMdd" style="width: 140px;" />
-                    </el-form-item>
-                    <el-form-item label="订单：" label-width="45px">
-                        <el-input v-model="plantList.orderNo" type="text" clearable style="width: 140px;" />
-                    </el-form-item>
-                    <el-form-item class="floatr">
-                        <el-button type="primary" @click="GetOrderList()">
-                            查询
-                        </el-button>
-                    </el-form-item>
-                </el-form>
-            </el-card>
-            <el-card v-if="list.length" style="margin-top: 5px;">
-                <el-row :gutter="10">
-                    <el-col v-for="(item, index) in list" :key="index" :span="12" style="margin-bottom: 10px;">
-                        <el-card class="box-card">
-                            <el-form :model="item" size="small" label-position="right" label-width="85px">
-                                <div class="clearfix pro-line">
-                                    <el-form-item label="产线：">
-                                        <p>
-                                            {{ item.productLineName }}
-                                            <el-button v-if="isAuth('pkg:order:list')" type="primary" size="small" style="float: right;" @click="goPro(item)">
-                                                数据录入
-                                            </el-button>
-                                            <span
-                                                style="float: right; min-width: 150px; color: #8a979e; font-size: 14px;"
-                                            >订单状态：<i
-                                                :style="{
-                                                    color: item.orderStatus === 'noPass' ? 'red' : item.orderStatus === 'checked' ? '#67C23A' : '',
-                                                }"
-                                            >{{ item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus }}</i></span>
-                                        </p>
-                                    </el-form-item>
-                                </div>
-                                <div class="clearfix item">
+    <div class="header_main">
+        <el-card class="searchCard ferCard">
+            <el-form ref="" :model="plantList" size="small" class="sole_row clearfix" :inline="true" label-width="70px" @keyup.enter.native="GetOrderList()" @submit.native.prevent>
+                <el-form-item label="生产工厂：">
+                    <el-select v-model="plantList.factoryid" placeholder="请选择">
+                        <el-option value="">
+                            请选择
+                        </el-option>
+                        <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="生产车间：">
+                    <el-select v-model="plantList.workShop" placeholder="请选择" class="width140px" @change="setworkShopname">
+                        <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="日期：" label-width="45px">
+                    <el-date-picker v-model="plantList.productDate" type="date" placeholder="选择" value-format="yyyyMMdd" style="width: 140px;" />
+                </el-form-item>
+                <el-form-item label="订单：" label-width="45px">
+                    <el-input v-model="plantList.orderNo" type="text" clearable style="width: 140px;" />
+                </el-form-item>
+                <el-form-item class="floatr">
+                    <el-button type="primary" @click="GetOrderList()">
+                        查询
+                    </el-button>
+                </el-form-item>
+            </el-form>
+        </el-card>
+        <el-card v-if="list.length" style="margin-top: 5px;">
+            <el-row class="home_card__main" :gutter="10">
+                <el-col v-for="(item, index) in list" :key="index" :span="8" style="margin-bottom: 10px;">
+                    <el-form :model="item" size="small" label-position="right" label-width="85px">
+                        <div class="home_card__main__item">
+                            <div class="home_card__main__item__title clearfix">
+                                <p class="home_card__main__item__title__left">
+                                    产线：<span class="home_card__main__item__title__left__proLine">{{ item.productLineName }}</span>
+                                </p>
+                                <p v-if="item.orderNo!==''" class="home_card__main__item__title__right" :class="{'home_card__main__item__title__right--R': item.orderStatus === 'noPass'}">
+                                    <span>状态：{{ item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus }}</span>
+                                </p>
+                            </div>
+                            <div class="home_card__main__item__main">
+                                <div class="home_card__main__item__main__left">
                                     <img :src="'data:image/gif;base64,' + item.img" alt="">
-                                    <div class="itemForm">
-                                        <el-form-item label="订单号：" style="margin-bottom: 10px;">
-                                            <el-select v-model="item.orderNo" placeholder="请选择" @change="orderchange(item)">
-                                                <el-option v-for="(subItem, subIndex) in item.order_arr" :key="subIndex" :label="subItem" :value="subItem" />
-                                            </el-select>
-                                        </el-form-item>
-                                        <el-form-item label="品项：" style="margin-bottom: 10px;">
-                                            <p class="hiddenP">
-                                                {{ item.materialCode + ' ' + item.materialName }}
-                                            </p>
-                                        </el-form-item>
-                                        <el-form-item label="计划产量：" style="margin-bottom: 10px;">
-                                            <p>
-                                                {{ item.planOutput + ' ' + item.outputUnit }}
-                                            </p>
-                                        </el-form-item>
-                                        <el-form-item label="实时产量：" style="margin-bottom: 10px;">
-                                            <p>
-                                                {{ item.realOutput ? item.realOutput + item.outputUnit : '0' + ' ' + item.outputUnit }}
-                                            </p>
-                                        </el-form-item>
+                                </div>
+                                <div class="home_card__main__item__main__right">
+                                    <el-form-item label="生产订单：">
+                                        <el-select v-model="item.orderNo" placeholder="请选择" style="width: 100%;" @change="orderchange(item)">
+                                            <el-option v-for="(subItem, subIndex) in item.order_arr" :key="subIndex" :label="subItem" :value="subItem" />
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="生产物料：">
+                                        <div class="disabled-input el-input el-input--small is-disabled">
+                                            <el-tooltip class="item" effect="dark" :content="item.orderNo? `${item.materialCode} ${item.materialName}` : ''" placement="top">
+                                                <span class="el-input__inner">{{ item.materialCode + ' ' + item.materialName }}</span>
+                                            </el-tooltip>
+                                        </div>
+                                    </el-form-item>
+                                    <el-form-item label="订单产量：">
+                                        <div class="disabled-input el-input el-input--small is-disabled">
+                                            <span class="el-input__inner">{{ item.planOutput + ' ' + item.outputUnit }}</span>
+                                        </div>
+                                    </el-form-item>
+                                    <el-form-item label="实际产量：">
+                                        <div class="disabled-input el-input el-input--small is-disabled">
+                                            <span class="el-input__inner">{{ item.realOutput ? item.realOutput + item.outputUnit : '0' + ' ' + item.outputUnit }}</span>
+                                        </div>
+                                    </el-form-item>
+                                    <div class="home_card__main__item__main__right__btn">
+                                        <el-button v-if="isAuth('pkg:order:list')" :disabled="item.activeOrderNo===''" size="small" type="primary" @click="goPro(item)">
+                                            生产数据
+                                        </el-button>
                                     </div>
                                 </div>
-                            </el-form>
-                        </el-card>
-                    </el-col>
-                </el-row>
-            </el-card>
-        </div>
-    </el-col>
+                            </div>
+                        </div>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </el-card>
+    </div>
 </template>
 
 <script>

@@ -1,134 +1,116 @@
 <template>
-    <el-col>
-        <div class="header_main">
-            <el-card class="searchCard newCard" style="margin: 0;">
-                <el-row type="flex">
-                    <el-col>
-                        <form-header ref="formheader" :form-header="formHeader" :is-redact="isRedact" :pro="true" />
-                    </el-col>
-                    <el-col :span="8" style="font-size: 14px; line-height: 32px;">
-                        <div style=" float: right; overflow: hidden; text-align: left;">
-                            <span
-                                class="point"
-                                :style="{
-                                    background: orderStatus === 'noPass' ? 'red' : orderStatus === 'saved' ? '#1890f' : orderStatus === 'submit' ? '#1890ff' : orderStatus === '已同步' ? '#f5f7fa' : 'rgb(103, 194, 58)',
-                                }"
-                            />订单状态：
-                            <span
-                                :style="{
-                                    color: orderStatus === 'noPass' ? 'red' : '',
-                                }"
-                            >{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus }}</span>
-                        </div>
-                        <div style="clear: both;" />
-                        <div style="width: 100%; margin-top: 50px; text-align: right;">
-                            <template style="float: right; margin-bottom: 13px;">
-                                <el-button
-                                    type="primary"
-                                    size="small"
-                                    @click="
-                                        $router.push({
-                                            path: '/DataEntry-Packaging-index',
-                                        })
-                                    "
-                                >
-                                    返回
-                                </el-button>
-                                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('pkg:order:update')" type="primary" size="small" @click="isRedact = !isRedact">
-                                    {{ isRedact ? '取消' : '编辑' }}
-                                </el-button>
-                            </template>
-                            <template v-if="isRedact" style="float: right;">
-                                <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                                    保存
-                                </el-button>
-                                <el-button type="primary" size="small" @click="Submitdialog">
-                                    提交
-                                </el-button>
-                            </template>
-                        </div>
-                    </el-col>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
+    <div class="header_main">
+        <div class="dataEntry-head">
+            <div class="dataEntry-head-title">
+                <i class="dataEntry-head-title__icon iconfont factory-gongchang" />
+                <span class="dataEntry-head-title__text">基础信息</span>
+                <i
+                    class="dataEntry-head-title__status"
+                    :class="{
+                        noPass: orderStatus === 'noPass' || orderStatus === '已退回'
+                    }"
+                >
+                    订单状态：{{ orderStatus === 'noPass' ? '审核不通过' : orderStatus === 'saved' ? '已保存' : orderStatus === 'submit' ? '已提交' : orderStatus === 'checked' ? '通过' : orderStatus === '已同步' ? '未录入' : orderStatus }}
+                </i>
+            </div>
+            <div class="dataEntry-head-base">
+                <form-header ref="formheader" :form-header="formHeader" :is-redact="isRedact" :pro="true" />
+            </div>
+            <!-- <el-card>
+                <template style="float: right; margin-bottom: 13px;">
+                    <el-button
+                        type="primary"
+                        size="small"
+                        @click="
+                            $router.push({
+                                path: '/DataEntry-Packaging-index',
+                            })
+                        "
+                    >
+                        返回
+                    </el-button>
+                    <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('pkg:order:update')" type="primary" size="small" @click="isRedact = !isRedact">
+                        {{ isRedact ? '取消' : '编辑' }}
+                    </el-button>
+                </template>
+                <template v-if="isRedact" style="float: right;">
+                    <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button type="primary" size="small" @click="Submitdialog">
+                        提交
+                    </el-button>
+                </template>
+            </el-card> -->
         </div>
-        <div class="main">
-            <el-card class="tableCard">
-                <div class="toggleSearchTop">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-                <el-tabs id="pkg" v-model="activeName">
-                    <el-tab-pane name="1">
-                        <span slot="label" class="spanview">
-                            <el-tooltip class="item" effect="dark" :content="readyState === 'noPass' ? '不通过' : readyState === 'saved' ? '已保存' : readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过' : '未录入'" placement="top-start">
-                                <el-button
-                                    :style="{
-                                        color: readyState === 'noPass' ? 'red' : '',
-                                    }"
-                                >准备时间</el-button>
-                            </el-tooltip>
-                        </span>
-                        <ready-times ref="readytimes" :is-redact="isRedact" :order="formHeader" @GetReadyStatus="GetReadyStatus" />
-                    </el-tab-pane>
-                    <el-tab-pane name="2">
-                        <span slot="label" class="spanview">
-                            <el-tooltip class="item" effect="dark" :content="readyState === 'noPass' ? '不通过' : readyState === 'saved' ? '已保存' : readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过' : '未录入'" placement="top-start">
-                                <el-button
-                                    :style="{
-                                        color: readyState === 'noPass' ? 'red' : '',
-                                    }"
-                                >人员</el-button>
-                            </el-tooltip>
-                        </span>
-                        <worker ref="workerref" :is-redact="isRedact" :order="formHeader" />
-                    </el-tab-pane>
-                    <el-tab-pane name="3">
-                        <span slot="label" class="spanview">
-                            <el-button>异常记录</el-button>
-                        </span>
-                        <exc-record ref="excrecord" :is-redact="isRedact" :order="formHeader" />
-                    </el-tab-pane>
-                    <el-tab-pane name="4">
-                        <span slot="label" class="spanview">
-                            <el-tooltip class="item" effect="dark" :content="instorageState === 'noPass' ? '不通过' : instorageState === 'saved' ? '已保存' : instorageState === 'submit' ? '已提交' : instorageState === 'checked' ? '通过' : '未录入'" placement="top-start">
-                                <el-button
-                                    :style="{
-                                        color: instorageState === 'noPass' ? 'red' : '',
-                                    }"
-                                >生产入库</el-button>
-                            </el-tooltip>
-                        </span>
-                        <in-storage ref="instorage" :is-redact="isRedact" :order="formHeader" :ratio="ratio" @GetinstorageState="GetinstorageState" />
-                    </el-tab-pane>
-                    <el-tab-pane name="5">
-                        <span slot="label" class="spanview">
-                            <el-tooltip class="item" effect="dark" :content="listbomStatus === 'noPass' ? '不通过' : listbomStatus === 'saved' ? '已保存' : listbomStatus === 'submit' ? '已提交' : listbomStatus === 'checked' ? '通过' : '未录入'" placement="top-start">
-                                <el-button
-                                    :style="{
-                                        color: listbomStatus === 'noPass' ? 'red' : '',
-                                    }"
-                                >物料领用</el-button>
-                            </el-tooltip>
-                        </span>
-                        <list-bom ref="listbom" :is-redact="isRedact" :order="formHeader" @GetlistbomStatus="GetlistbomStatus" />
-                    </el-tab-pane>
-                    <el-tab-pane v-if="formHeader.properties !== '二合一&礼盒产线'" name="6">
-                        <span slot="label" class="spanview">
-                            <el-button>待杀菌数量</el-button>
-                        </span>
-                        <germs ref="germs" :is-redact="isRedact" />
-                    </el-tab-pane>
-                    <el-tab-pane name="7">
-                        <span slot="label" class="spanview">
-                            <el-button>文本记录</el-button>
-                        </span>
-                        <text-record ref="textrecord" :is-redact="isRedact" />
-                    </el-tab-pane>
-                </el-tabs>
-            </el-card>
-        </div>
+        <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card">
+            <el-tab-pane name="1">
+                <span slot="label" class="spanview">
+                    <el-tooltip class="item" effect="dark" :content="readyState === 'noPass' ? '不通过' : readyState === 'saved' ? '已保存' : readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过' : '未录入'" placement="top-start">
+                        <span
+                            :style="{
+                                color: readyState === 'noPass' ? 'red' : '',
+                            }"
+                        >准备时间</span>
+                    </el-tooltip>
+                </span>
+                <ready-times ref="readytimes" :is-redact="isRedact" :order="formHeader" @GetReadyStatus="GetReadyStatus" />
+            </el-tab-pane>
+            <el-tab-pane name="2">
+                <span slot="label" class="spanview">
+                    <el-tooltip class="item" effect="dark" :content="readyState === 'noPass' ? '不通过' : readyState === 'saved' ? '已保存' : readyState === 'submit' ? '已提交' : readyState === 'checked' ? '通过' : '未录入'" placement="top-start">
+                        <span
+                            :style="{
+                                color: readyState === 'noPass' ? 'red' : '',
+                            }"
+                        >人员</span>
+                    </el-tooltip>
+                </span>
+                <worker ref="workerref" :is-redact="isRedact" :order="formHeader" />
+            </el-tab-pane>
+            <el-tab-pane name="3">
+                <span slot="label" class="spanview">
+                    <span>异常记录</span>
+                </span>
+                <exc-record ref="excrecord" :is-redact="isRedact" :order="formHeader" />
+            </el-tab-pane>
+            <el-tab-pane name="4">
+                <span slot="label" class="spanview">
+                    <el-tooltip class="item" effect="dark" :content="instorageState === 'noPass' ? '不通过' : instorageState === 'saved' ? '已保存' : instorageState === 'submit' ? '已提交' : instorageState === 'checked' ? '通过' : '未录入'" placement="top-start">
+                        <span
+                            :style="{
+                                color: instorageState === 'noPass' ? 'red' : '',
+                            }"
+                        >生产入库</span>
+                    </el-tooltip>
+                </span>
+                <in-storage ref="instorage" :is-redact="isRedact" :order="formHeader" :ratio="ratio" @GetinstorageState="GetinstorageState" />
+            </el-tab-pane>
+            <el-tab-pane name="5">
+                <span slot="label" class="spanview">
+                    <el-tooltip class="item" effect="dark" :content="listbomStatus === 'noPass' ? '不通过' : listbomStatus === 'saved' ? '已保存' : listbomStatus === 'submit' ? '已提交' : listbomStatus === 'checked' ? '通过' : '未录入'" placement="top-start">
+                        <span
+                            :style="{
+                                color: listbomStatus === 'noPass' ? 'red' : '',
+                            }"
+                        >物料领用</span>
+                    </el-tooltip>
+                </span>
+                <list-bom ref="listbom" :is-redact="isRedact" :order="formHeader" @GetlistbomStatus="GetlistbomStatus" />
+            </el-tab-pane>
+            <el-tab-pane v-if="formHeader.properties !== '二合一&礼盒产线'" name="6">
+                <span slot="label" class="spanview">
+                    <span>待杀菌数量</span>
+                </span>
+                <germs ref="germs" :is-redact="isRedact" />
+            </el-tab-pane>
+            <el-tab-pane name="7">
+                <span slot="label" class="spanview">
+                    <span>文本记录</span>
+                </span>
+                <text-record ref="textrecord" :is-redact="isRedact" />
+            </el-tab-pane>
+        </el-tabs>
         <el-dialog width="400px" title="分批提交" :close-on-click-modal="false" :visible.sync="visible">
             <p style="margin-bottom: 20px; font-size: 18px;">
                 本次提交是否提交全部数据
@@ -144,7 +126,33 @@
                 <el-button type="primary" @click="SubmitForm()">确定</el-button>
             </span>
         </el-dialog>
-    </el-col>
+        <redact-box>
+            <template slot="button">
+                <el-button
+                    type="primary"
+                    size="small"
+                    @click="
+                        $router.push({
+                            path: '/DataEntry-Packaging-index',
+                        })
+                    "
+                >
+                    返回
+                </el-button>
+                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('pkg:order:update')" type="primary" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact" style="float: right;">
+                    <el-button type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <el-button type="primary" size="small" @click="Submitdialog">
+                        提交
+                    </el-button>
+                </template>
+            </template>
+        </redact-box>
+    </div>
 </template>
 
 <script>

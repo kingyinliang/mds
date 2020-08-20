@@ -1,116 +1,104 @@
 <template>
-    <el-col>
-        <div class="header_main">
-            <el-card class="search-card" style="margin: 0;">
-                <el-row type="flex">
-                    <el-col>
-                        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row" @keyup.enter.native="GetLtkList(true)" @submit.native.prevent>
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="plantList.workshop" placeholder="请选择" style="width: 160px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="产线：">
-                                <el-select v-model="plantList.productline" placeholder="产线" style="width: 160px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in productline" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="订单状态：">
-                                <el-select v-model="plantList.status" placeholder="请选择" style="width: 160px;">
-                                    <el-option label="请选择" value="" />
-                                    <el-option label="未审核" value="submit" />
-                                    <el-option label="审核通过" value="checked" />
-                                    <el-option label="审核不通过" value="noPass" />
-                                    <el-option label="接口失败" value="0" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="订单号：">
-                                <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 160px;" />
-                            </el-form-item>
-                            <el-form-item label="日期：">
-                                <el-date-picker v-model="plantList.productdate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
-                            </el-form-item>
-                            <el-form-item class="floatr">
-                                <el-button v-if="isAuth('sys:verifyLTK:list')" type="primary" size="small" @click="GetLtkList(true)">
-                                    查询
-                                </el-button>
-                                <el-button type="primary" size="small" @click="doPrint">
-                                    导出
-                                </el-button>
-                                <el-button v-if="isAuth('sys:verifyLTK:auditing')" type="primary" size="small" @click="subAutio()">
-                                    审核通过
-                                </el-button>
-                                <el-button v-if="isAuth('sys:verifyLTK:auditing')" type="danger" size="small" @click="repulseAutios()">
-                                    审核不通过
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-                <div class="toggle-search_bottom">
-                    <i class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <el-card class="table-card">
-                <div class="toggle-search_top">
-                    <i class="el-icon-caret-bottom" />
-                </div>
-                <div>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="LtkList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="checkboxT" width="50" />
-                        <el-table-column label="审核状态" width="100">
-                            <template slot-scope="scope">
-                                {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? '审核通过' : scope.row.status === 'noPass' ? '审核不通过' : '' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="120" />
-                        <el-table-column label="生产订单号" width="120">
-                            <template slot-scope="scope">
-                                {{ scope.row.orderNo }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="name" label="品项" :show-overflow-tooltip="true" width="360">
-                            <template slot-scope="scope">
-                                <span>{{ scope.row.materialCode + ' ' + scope.row.materialName }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="batch" label="生产批次" width="110" />
-                        <el-table-column prop="input" label="订单入库量" width="91" />
-                        <el-table-column v-if="deptCode === '6010'" prop="aiShelves" label="正常品入库数" width="140" />
-                        <el-table-column v-if="deptCode === '6010'" prop="manSolid" label="供应商待买数" width="140" />
-                        <el-table-column v-if="deptCode !== '6010'" prop="manSolid" label="人工码垛数-立体库" width="140" />
-                        <el-table-column v-if="deptCode !== '6010'" prop="aiShelves" label="自动上架-立体库" width="140" />
-                        <el-table-column v-if="deptCode !== '6010'" prop="aiSolid" label="自动码垛-立体库" width="140" />
-                        <el-table-column prop="unitName" label="单位" :show-overflow-tooltip="true" width="50" />
-                        <el-table-column prop="workShopMan" label="车间确认人" :show-overflow-tooltip="true" width="92" />
-                        <el-table-column prop="ltkMan" label="立体库确认人" :show-overflow-tooltip="true" width="105" />
-                        <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="78" />
-                        <el-table-column prop="verifyDate" label="审核时间" width="220" />
-                        <el-table-column prop="name" :show-overflow-tooltip="true" label="备注" />
-                        <el-table-column fixed="right" label="操作" width="75">
-                            <template slot-scope="scope">
-                                <el-button v-if="scope.row.status === 'checked' && isAuth('sys:verifyLTK:resetLTK')" type="warning" round size="mini" @click="ResetD(scope.row)">
-                                    反审
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-                <el-row>
-                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
+    <div class="header_main">
+        <el-card class="searchCards searchCard">
+            <el-row>
+                <el-col>
+                    <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row" @keyup.enter.native="GetLtkList(true)" @submit.native.prevent>
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="plantList.workshop" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="产线：">
+                            <el-select v-model="plantList.productline" placeholder="产线" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in productline" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单状态：">
+                            <el-select v-model="plantList.status" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option label="未审核" value="submit" />
+                                <el-option label="审核通过" value="checked" />
+                                <el-option label="审核不通过" value="noPass" />
+                                <el-option label="接口失败" value="0" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单号：">
+                            <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 160px;" />
+                        </el-form-item>
+                        <el-form-item label="日期：">
+                            <el-date-picker v-model="plantList.productdate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
+                        </el-form-item>
+                        <el-form-item class="floatr">
+                            <el-button v-if="isAuth('sys:verifyLTK:list')" type="primary" size="small" @click="GetLtkList(true)">
+                                查询
+                            </el-button>
+                            <el-button type="primary" size="small" @click="doPrint">
+                                导出
+                            </el-button>
+                            <el-button v-if="isAuth('sys:verifyLTK:auditing')" type="primary" size="small" @click="subAutio()">
+                                审核通过
+                            </el-button>
+                            <el-button v-if="isAuth('sys:verifyLTK:auditing')" type="danger" size="small" @click="repulseAutios()">
+                                审核不通过
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </el-card>
+        <mds-card title="立体库" name="LtkList" :pack-up="false" style="margin-top: 10px;">
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="LtkList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" :selectable="checkboxT" width="50" />
+                <el-table-column label="审核状态" width="100">
+                    <template slot-scope="scope">
+                        {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? '审核通过' : scope.row.status === 'noPass' ? '审核不通过' : '' }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="120" />
+                <el-table-column label="生产订单号" width="120">
+                    <template slot-scope="scope">
+                        {{ scope.row.orderNo }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="name" label="品项" :show-overflow-tooltip="true" width="360">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.materialCode + ' ' + scope.row.materialName }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="batch" label="生产批次" width="110" />
+                <el-table-column prop="input" label="订单入库量" width="91" />
+                <el-table-column v-if="deptCode === '6010'" prop="aiShelves" label="正常品入库数" width="140" />
+                <el-table-column v-if="deptCode === '6010'" prop="manSolid" label="供应商待买数" width="140" />
+                <el-table-column v-if="deptCode !== '6010'" prop="manSolid" label="人工码垛数-立体库" width="140" />
+                <el-table-column v-if="deptCode !== '6010'" prop="aiShelves" label="自动上架-立体库" width="140" />
+                <el-table-column v-if="deptCode !== '6010'" prop="aiSolid" label="自动码垛-立体库" width="140" />
+                <el-table-column prop="unitName" label="单位" :show-overflow-tooltip="true" width="50" />
+                <el-table-column prop="workShopMan" label="车间确认人" :show-overflow-tooltip="true" width="92" />
+                <el-table-column prop="ltkMan" label="立体库确认人" :show-overflow-tooltip="true" width="105" />
+                <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="78" />
+                <el-table-column prop="verifyDate" label="审核时间" width="220" />
+                <el-table-column prop="name" :show-overflow-tooltip="true" label="备注" />
+                <el-table-column fixed="right" label="操作" width="75">
+                    <template slot-scope="scope">
+                        <el-button v-if="scope.row.status === 'checked' && isAuth('sys:verifyLTK:resetLTK')" type="warning" round size="mini" @click="ResetD(scope.row)">
+                            反审
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-row>
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
         <el-dialog title="审核拒绝" :close-on-click-modal="false" :visible.sync="visible">
             <p style="line-height: 42px;">
                 请填写不通过原因
@@ -127,11 +115,11 @@
             </p>
             <el-input v-model="ReText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
             <span slot="footer" class="dialog-footer">
-                <el-button @click="visibleRe = false">取消</el-button>
-                <el-button type="primary" @click="ResetSt()">确定</el-button>
+                <el-button size="small" @click="visibleRe = false">取消</el-button>
+                <el-button type="primary" size="small" @click="ResetSt()">确定</el-button>
             </span>
         </el-dialog>
-    </el-col>
+    </div>
 </template>
 
 <script>
