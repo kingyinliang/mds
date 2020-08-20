@@ -355,7 +355,9 @@
 
         // queryTable 查询请求
         queryTableListInterface = params => {
+            const paramsTemp = params
             params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            params.potStatus = [paramsTemp.potStatus]
             return STE_API.STE_DISSOLUTIONBUCKET_QUERY_API(params);
         };
 
