@@ -162,6 +162,7 @@ export default class CookingIndex extends Vue {
     mounted() {
         this.getWorkShop();
         this.getHolderNumber();
+        this.getDataList(true);
     }
 
     @Watch('formHeader.workShop')
