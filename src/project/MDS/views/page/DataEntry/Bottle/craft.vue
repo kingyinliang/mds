@@ -306,7 +306,7 @@
         </el-tabs>
         <redact-box>
             <template slot="button">
-                <el-button v-if="orderStatus !== 'submit' && orderStatus !== 'checked' && isAuth('bottle:workshop:techProductParameterSave')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                <el-button v-if="isAuth('bottle:workshop:techProductParameterSave')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
                     {{ isRedact ? '取消' : '编辑' }}
                 </el-button>
                 <template v-if="isRedact">
