@@ -122,6 +122,8 @@
         realName= sessionStorage.getItem('realName')
         post=sessionStorage.getItem('staff-post')
         deptName=sessionStorage.getItem('staff-location')
+        gender=sessionStorage.getItem('gender')
+
 
         async mounted() {
             console.log('this.loginUserId')
@@ -285,10 +287,6 @@
 
         get mainClientHeight() {
             return this.$store.state.common.mainClientHeight;
-        }
-
-        get gender() {
-            return this.$store.state.user.gender
         }
 
         get totalNum() {

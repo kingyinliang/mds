@@ -308,7 +308,7 @@
             const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === item.potStatus)
             this.dialogForm.filled.form = {
                     cycle: item.cycle,
-                    number: this.currentPotNo,
+                    number: this.currentPotId,
                     status: item.potStatus,
                     statusC: tempHolderStatus[0].dictValue,
                     doit: false,
@@ -329,7 +329,7 @@
             const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === 'R')
             this.dialogForm.filled.form = {
                     cycle: item.cycle,
-                    number: this.currentPotNo,
+                    number: this.currentPotId,
                     status: 'R',
                     statusC: tempHolderStatus[0].dictValue,
                     doit: false,
@@ -355,8 +355,16 @@
 
         // queryTable 查询请求
         queryTableListInterface = params => {
-            params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            return STE_API.STE_DISSOLUTIONBUCKET_QUERY_API(params);
+            console.log('搜寻传值')
+            console.log(params)
+            const paramsTemp = JSON.parse(JSON.stringify(params))
+            paramsTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            if (params.potStatus === '') {
+                paramsTemp.potStatus = []
+            } else {
+                paramsTemp.potStatus = [params.potStatus]
+            }
+            return STE_API.STE_DISSOLUTIONBUCKET_QUERY_API(paramsTemp);
         };
 
         // queryTable 回传 result
