@@ -355,10 +355,16 @@
 
         // queryTable 查询请求
         queryTableListInterface = params => {
-            const paramsTemp = params
-            params.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-            params.potStatus = [paramsTemp.potStatus]
-            return STE_API.STE_DISSOLUTIONBUCKET_QUERY_API(params);
+            console.log('搜寻传值')
+            console.log(params)
+            const paramsTemp = JSON.parse(JSON.stringify(params))
+            paramsTemp.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
+            if (params.potStatus === '') {
+                paramsTemp.potStatus = []
+            } else {
+                paramsTemp.potStatus = [params.potStatus]
+            }
+            return STE_API.STE_DISSOLUTIONBUCKET_QUERY_API(paramsTemp);
         };
 
         // queryTable 回传 result
