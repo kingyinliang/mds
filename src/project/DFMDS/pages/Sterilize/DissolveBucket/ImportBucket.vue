@@ -262,7 +262,7 @@
                 id: item.id,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 potId: this.currentPotId,
-                potStatus: this.currentPotStatus,
+                // potStatus: this.currentPotStatus,
                 potNo: this.currentPotNo,
                 workShop: this.currentWorkShop
             }).then(({ data }) => {
