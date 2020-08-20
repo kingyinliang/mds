@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="card-bucket__fotter">
                                     <div v-if="!(item.potStatus==='E'||item.potStatus==='C')">
-                                        <span>{{ item.prodcutMaterialName || '未有生产物料' }}</span><span>{{ item.potAmount || '0' }} KG</span>
+                                        <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.prodcutMaterialName || '未有生产物料' }}</span><span>{{ item.potAmount || '0' }} </span>KG
                                     </div>
                                     <!-- <div><span>溶解辅料</span><span>10/100</span></div> -->
                                 </div>
