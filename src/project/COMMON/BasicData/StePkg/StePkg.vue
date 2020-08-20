@@ -170,8 +170,8 @@
                 params = {
                     stePotId: this.queryForm.stePotId,
                     current: this.queryForm.current,
-                    size: this.queryForm.current,
-                    total: this.queryForm.current
+                    size: this.queryForm.size,
+                    total: this.queryForm.total
                 }
             } else if (this.queryType === 2) {
                 params = {
@@ -179,8 +179,8 @@
                     pkgWorkShop: this.queryForm.pkgWorkShop,
                     pkgLine: this.queryForm.pkgLine,
                     current: this.queryForm.current,
-                    size: this.queryForm.current,
-                    total: this.queryForm.current
+                    size: this.queryForm.size,
+                    total: this.queryForm.total
                 }
             }
             BASIC_API.STEPKG_LIST_API(params).then(({ data }) => {
