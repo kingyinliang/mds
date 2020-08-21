@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="card-bucket__fotter">
                                     <div v-if="!(item.potStatus==='E'||item.potStatus==='C')">
-                                        <span>{{ item.prodcutMaterialName || '未有生产物料' }}</span><span>{{ item.potAmount || '0' }} KG</span>
+                                        <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ item.prodcutMaterialName || '未有生产物料' }}</span><span>{{ item.potAmount || '0' }} </span>KG
                                     </div>
                                     <!-- <div><span>溶解辅料</span><span>10/100</span></div> -->
                                 </div>
@@ -156,7 +156,8 @@
                     doit: false,
                     remark: '',
                     changer: '',
-                    changed: ''
+                    changed: '',
+                    id: ''
                 }
             },
             clear: {
@@ -169,7 +170,8 @@
                     doit: false,
                     remark: '',
                     changer: '',
-                    changed: ''
+                    changed: '',
+                    id: ''
                 }
             }
         }; // 弹窗 form
@@ -308,10 +310,11 @@
             const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === item.potStatus)
             this.dialogForm.filled.form = {
                     cycle: item.cycle,
-                    number: this.currentPotId,
+                    number: this.currentPotNo,
                     status: item.potStatus,
                     statusC: tempHolderStatus[0].dictValue,
                     doit: false,
+                    id: this.currentPotId,
                     remark: '',
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
@@ -329,11 +332,12 @@
             const tempHolderStatus: HolderStatus[] = this.holderStatus.filter(element => element.dictCode === 'R')
             this.dialogForm.filled.form = {
                     cycle: item.cycle,
-                    number: this.currentPotId,
+                    number: this.currentPotNo,
                     status: 'R',
                     statusC: tempHolderStatus[0].dictValue,
                     doit: false,
                     remark: '',
+                    id: this.currentPotId,
                     changer: getUserNameNumber(),
                     changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
             }
@@ -341,7 +345,7 @@
                 STE_API.STE_DISSOLUTIONBUCKET_FULL_API({
                     cycle: item.cycle,
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    potId: this.currentPotNo,
+                    potId: this.currentPotId,
                     fullFlag: '0',
                     remark: ''
                 }).then(({ data }) => {
@@ -425,7 +429,7 @@
                 STE_API.STE_DISSOLUTIONBUCKET_FULL_API({
                     cycle: this.dialogForm.filled.form.cycle,
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    potId: this.dialogForm.filled.form.number,
+                    potId: this.dialogForm.filled.form.id,
                     fullFlag: this.dialogForm.filled.form.status === 'M' ? '1' : '0',
                     remark: this.dialogForm.filled.form.remark
                 }).then(({ data }) => {
@@ -444,7 +448,7 @@
                 STE_API.STE_DISSOLUTIONBUCKET_CLEAN_API({
                     cycle: this.dialogForm.clear.form.cycle,
                     factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    potId: this.dialogForm.clear.form.number,
+                    potId: this.dialogForm.clear.form.id,
                     fullFlag: this.dialogForm.clear.form.status === 'E' ? '0' : '1', // API 似乎有误
                     remark: this.dialogForm.clear.form.remark
                 }).then(({ data }) => {
@@ -475,6 +479,7 @@
                         statusC: tempHolderStatus[0].dictValue,
                         doit: false,
                         remark: '',
+                        id: this.currentPotId,
                         changer: getUserNameNumber(),
                         changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
                 }
