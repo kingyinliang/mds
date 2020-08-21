@@ -1,6 +1,6 @@
 <template>
     <div class="header_main">
-        <el-card class="searchCards newCard">
+        <el-card class="searchCard" style="margin-bottom: 5px;">
             <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" class="width180px">
@@ -66,12 +66,12 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-tabs v-model="activeName" type="border-card" class="NewDaatTtabs" style="margin-top: 5px;" @tab-click="TabClick">
+        <el-tabs v-model="activeName" type="border-card" class="NewDaatTtabs tabsPages" style="margin-top: 5px;" @tab-click="TabClick">
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">
-                    <el-button>待调整</el-button>
+                    <span>待调整</span>
                 </span>
-                <el-table ref="multipleTable1" :data="dataList" :row-key="getRowKeys" header-row-class-name="tableHead" border @selection-change="handleSelectionChange">
+                <el-table ref="multipleTable1" class="newTable" :data="dataList" :row-key="getRowKeys" header-row-class-name="tableHead" border @selection-change="handleSelectionChange">
                     <el-table-column type="selection" :reserve-selection="true" width="50" fixed="left" />
                     <el-table-column label="容器类型" prop="holderTypeName" show-overflow-tooltip />
                     <el-table-column label="容器号" prop="holderName" width="100" show-overflow-tooltip />
@@ -95,9 +95,9 @@
             </el-tab-pane>
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">
-                    <el-button>调整中</el-button>
+                    <span>调整中</span>
                 </span>
-                <el-table ref="multipleTable2" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark" @selection-change="handleSelectionChange">
+                <el-table ref="multipleTable2" class="newTable" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" :reserve-selection="true" width="50" fixed="left" />
                     <el-table-column label="容器类型" prop="holderTypeName" show-overflow-tooltip />
                     <el-table-column label="容器号" width="100" prop="holderName" show-overflow-tooltip />
@@ -121,9 +121,9 @@
             </el-tab-pane>
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">
-                    <el-button>已调整</el-button>
+                    <span>已调整</span>
                 </span>
-                <el-table ref="multipleTable3" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
+                <el-table ref="multipleTable3" class="newTable" :data="dataList" header-row-class-name="tableHead" border tooltip-effect="dark">
                     <el-table-column label="订单号" width="120" prop="orderNo" />
                     <el-table-column label="容器类型" prop="holderTypeName" show-overflow-tooltip />
                     <el-table-column label="容器号" width="100" prop="holderName" show-overflow-tooltip />
