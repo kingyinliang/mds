@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-08-11 18:29:10
+ * @LastEditTime: 2020-08-24 11:03:09
 -->
 <template lang="pug">
     el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowInStorageDialog")
@@ -68,6 +68,7 @@
         currentProductDate=''
         dialogForm: DialogForm={
             orderNo: '',
+            orderId: '',
             normalFlag: 'Y',
             packageLine: '',
             packageLineName: '',
@@ -105,10 +106,13 @@
         isShowInStorageDialog = false;
 
         init(obj, pkgWorkShopList, val) {
+            console.log('pkgWorkShopList')
+            console.log(pkgWorkShopList)
             this.isShowInStorageDialog = true;
 
                 this.dialogForm = {
                     orderNo: '',
+                    orderId: '',
                     normalFlag: 'Y',
                     packageLine: '',
                     packageOrderNo: '',
@@ -136,6 +140,7 @@
             } else {
                 //新增
                 this.dialogForm.orderNo = obj.orderNo
+                this.dialogForm.orderId = obj.orderId
                 this.dialogForm.materialCode = obj.materialCode
                 this.dialogForm.material = obj.material
                 this.dialogForm.materialName = obj.materialName
@@ -151,16 +156,16 @@
         }
 
         btnComfirmBucketStatus() {
-            // this.$refs.dialogForm.validate((valid) => {
-            //     if (valid) {
+            this.$refs.dialogForm.validate((valid) => {
+                if (valid) {
                     this.$emit('conformData', this.dialogForm)
                     this.$refs.dialogForm.resetFields();
                     this.isShowInStorageDialog = false
-            //     } else {
-            //         console.log('error submit!!');
-            //         return false;
-            //     }
-            // });
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         }
 
         selectPackageLine(val) {
@@ -192,6 +197,7 @@
     }
     interface DialogForm {
         orderNo?: string;
+        orderId?: string;
         normalFlag?: string;
         packageLine?: string;
         packageOrderNo?: string;
