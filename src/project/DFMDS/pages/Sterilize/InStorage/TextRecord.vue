@@ -21,13 +21,27 @@
             factory: '', // 工厂
             id: '', // 主键
             orderId: '', // 订单ID
-            orderNo: '' // 订单号
+            orderNo: '', // 订单号
+            potOrderId: '', // 锅单主键
+            potOrderNo: '', // 锅单号
+            textStage: '' // 异常阶段（半成品、工艺、辅料、入库）
         }
 
-        orgFormDataGroup: TextObj = {}
+        orgFormDataGroup: TextObj = {
+            text: '', // 文本
+            factory: '', // 工厂
+            id: '', // 主键
+            orderId: '', // 订单ID
+            orderNo: '', // 订单号
+            potOrderId: '', // 锅单主键
+            potOrderNo: '', // 锅单号
+            textStage: '' // 异常阶段（半成品、工艺、辅料、入库）
+        }
+
         isNewForm=false
 
         init(orderNo, workShop?) {
+
             // 车间陆续增加
             if (workShop === 'sterilize') {
                 STE_API.STE_DETAIL_TEXT_API({
@@ -35,6 +49,8 @@
                     orderNo: orderNo
                     // textStage: formHeader.textStage
                 }).then(({ data }) => {
+                    console.log('文字调整')
+                    console.log(data)
                     if (data.data !== null) {
                         this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
                         this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data))

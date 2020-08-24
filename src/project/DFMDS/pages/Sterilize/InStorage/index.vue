@@ -352,23 +352,23 @@
 
                 this.alreadySearch = true
                 this.getPkgWorkShopList()
-                this.$refs.excRecord.init(this.formHeader, 'instorage');
+                this.$refs.excRecord.init(this.formHeader, 'INSTORAGE');
                 this.$refs.textRecord.init(this.formHeader.orderNo, 'sterilize');
             })
         }
 
         savedDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
-            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'instorage');
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader.orderNo, 'sterilize');
 
             STE_API.STE_INSTORAGE_SAVE_API({
-                exceptionDelete: inStorageRequest.ids,
-                exceptionInsert: inStorageRequest.steControlInsertDto,
-                exceptionUpdate: inStorageRequest.steControlUpdateDto,
-                instorageDelete: excRequest.ids,
-                instorageInsert: excRequest.UpdateDto,
-                instorageUpdate: excRequest.UpdateDto,
+                exceptionDelete: excRequest.ids,
+                exceptionInsert: excRequest.insertDto,
+                exceptionUpdate: excRequest.updateDto,
+                instorageDelete: inStorageRequest.ids,
+                instorageInsert: inStorageRequest.steControlInsertDto,
+                instorageUpdate: inStorageRequest.steControlUpdateDto,
                 steOrderUpdateDto: this.formHeader,
                 textInsert: textRequest.pkgTextInsert,
                 textUpdate: textRequest.pkgTextUpdate
@@ -379,16 +379,16 @@
 
         submitDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
-            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'instorage');
+            const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
             const textRequest = this.$refs.textRecord.savedData(this.formHeader.orderNo, 'sterilize');
 
             STE_API.STE_INSTORAGE_SUBMIT_API({
-                exceptionDelete: inStorageRequest.ids,
-                exceptionInsert: inStorageRequest.steControlInsertDto,
-                exceptionUpdate: inStorageRequest.steControlUpdateDto,
-                instorageDelete: excRequest.ids,
-                instorageInsert: excRequest.UpdateDto,
-                instorageUpdate: excRequest.UpdateDto,
+                exceptionDelete: excRequest.ids,
+                exceptionInsert: excRequest.insertDto,
+                exceptionUpdate: excRequest.updateDto,
+                instorageDelete: inStorageRequest.ids,
+                instorageInsert: inStorageRequest.steControlInsertDto,
+                instorageUpdate: inStorageRequest.steControlUpdateDto,
                 steOrderUpdateDto: this.formHeader,
                 textInsert: textRequest.pkgTextInsert,
                 textUpdate: textRequest.pkgTextUpdate
