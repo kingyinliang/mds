@@ -83,7 +83,7 @@ export default class ExcRecord extends Vue {
     abnormalList: object[] = [];
     excReasonList = [];
     excList: ExcList[] = [];
-    excListOrg: ExcList[] = [];
+    orgexcList: ExcList[] = [];
     excReasonTotal: ExcReasonTotal = {
         FAULTSHUTDOWN: [],
         POORPROCESSWAIT: [],
@@ -139,7 +139,7 @@ export default class ExcRecord extends Vue {
             exceptionStage: tagName
         }).then(({ data }) => {
             this.excList = data.data;
-            this.excListOrg = JSON.parse(JSON.stringify(data.data));
+            this.orgexcList = JSON.parse(JSON.stringify(data.data));
             this.excList.map(item => {
                 if (item.exceptionSituation === 'FAULT' || item.exceptionSituation === 'SHUTDOWN') {
                     item.excReasonList = this.excReasonTotal.FAULTSHUTDOWN
@@ -197,32 +197,46 @@ export default class ExcRecord extends Vue {
 
     getSavedOrSubmitData(formHeader, tagName) {
         const ids: string[] = [];
-        const InsertDto: ExcList[] = [];
-        const UpdateDto: ExcList[] = [];
-        this.excList.map((item: ExcList) => {
-            item.exceptionStage = tagName;
-            item.orderId = formHeader.orderId;
-            item.orderNo = formHeader.orderNo;
-            item.potOrderId = formHeader.id;
-            item.potOrderNo = formHeader.potOrderNo;
-        })
+        const insertDto: ExcList[] = [];
+        const updateDto: ExcList[] = [];
+        // this.excList.map((item: ExcList) => {
+        //     item.exceptionStage = tagName;
+        //     item.orderId = formHeader.orderId;
+        //     item.orderNo = formHeader.orderNo;
+        //     item.potOrderId = formHeader.id;
+        //     item.potOrderNo = formHeader.potOrderNo;
+        // })
         this.excList.forEach((item, index) => {
             if (item.delFlag === 1) {
                 if (item.id) {
                     ids.push(item.id)
                 }
             } else if (item.id) {
-                if (!_.isEqual(this.excListOrg[index], item)) {
-                    UpdateDto.push(item)
+                if (!_.isEqual(this.orgexcList[index], item)) {
+                    this.excList.map((element: ExcList) => {
+                        element.exceptionStage = tagName;
+                        element.orderId = formHeader.orderId;
+                        element.orderNo = formHeader.orderNo;
+                        element.potOrderId = formHeader.id;
+                        element.potOrderNo = formHeader.potOrderNo;
+                    })
+                    updateDto.push(item)
                 }
             } else {
-                InsertDto.push(item)
+                this.excList.map((element: ExcList) => {
+                    element.exceptionStage = tagName;
+                    element.orderId = formHeader.orderId;
+                    element.orderNo = formHeader.orderNo;
+                    element.potOrderId = formHeader.id;
+                    element.potOrderNo = formHeader.potOrderNo;
+                })
+                insertDto.push(item)
             }
         })
         return {
             ids,
-            InsertDto,
-            UpdateDto
+            insertDto,
+            updateDto
         }
     }
 

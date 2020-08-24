@@ -3,10 +3,10 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-08-24 11:03:09
+ * @LastEditTime: 2020-08-24 11:22:27
 -->
 <template lang="pug">
-    el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowInStorageDialog")
+    el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowCurrentDialog")
         el-form(ref="dialogForm" :model="dialogForm" size="small" label-width="110px" class="orderMangedialog" :rules="dialogFormRules")
             el-form-item(label="生产订单：")
                 span(class="default") {{ dialogForm.orderNo }}
@@ -62,10 +62,16 @@
             dialogForm: HTMLFormElement;
         }
 
+        // 下拉选单选项
         pkgWorkShopList: OptionsInList[]=[]
         packageOrderNoList: OptionsInList[]=[]
+
+        // 页面全局
         currentWorkShop=''
         currentProductDate=''
+        isShowCurrentDialog = false;
+
+        // 表单 data
         dialogForm: DialogForm={
             orderNo: '',
             orderId: '',
@@ -85,6 +91,7 @@
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
         }
 
+        // 表单 data Rule
         dialogFormRules= {
             packageLine: [
                 { required: true, message: '请选择', trigger: 'change' }
@@ -103,12 +110,11 @@
             ]
         }
 
-        isShowInStorageDialog = false;
 
         init(obj, pkgWorkShopList, val) {
             console.log('pkgWorkShopList')
             console.log(pkgWorkShopList)
-            this.isShowInStorageDialog = true;
+            this.isShowCurrentDialog = true;
 
                 this.dialogForm = {
                     orderNo: '',
@@ -151,7 +157,7 @@
         }
 
         btnClearBucketStatus() {
-            this.isShowInStorageDialog = false
+            this.isShowCurrentDialog = false
             this.$refs.dialogForm.resetFields();
         }
 
@@ -160,7 +166,7 @@
                 if (valid) {
                     this.$emit('conformData', this.dialogForm)
                     this.$refs.dialogForm.resetFields();
-                    this.isShowInStorageDialog = false
+                    this.isShowCurrentDialog = false
                 } else {
                     console.log('error submit!!');
                     return false;
