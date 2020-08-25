@@ -127,7 +127,7 @@
                 prop: 'packageLine',
                 label: '包装产线',
                 minWidth: 200,
-                content: ['packageLineName']
+                content: ['packageLine']
             },
             {
                 type: 'string',
@@ -368,7 +368,7 @@
         savedDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
-            const textRequest = this.$refs.textRecord.savedData(this.formHeader.orderNo, 'sterilize');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
             STE_API.STE_INSTORAGE_SAVE_API({
                 exceptionDelete: excRequest.ids,
@@ -382,13 +382,15 @@
                 textUpdate: textRequest.pkgTextUpdate
             }).then(() => {
                 this.$successToast('保存成功');
+                // 重整数据
+                this.btnGetResult();
             })
         }
 
         submitDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
-            const textRequest = this.$refs.textRecord.savedData(this.formHeader.orderNo, 'sterilize');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
             STE_API.STE_INSTORAGE_SUBMIT_API({
                 exceptionDelete: excRequest.ids,
