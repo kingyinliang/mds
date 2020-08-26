@@ -3,7 +3,7 @@ div
     mds-card(:title="cardTitle")
         template(slot="titleBtn")
             el-button(type="primary" size="small" style="float: right; margin-bottom: 5px;" :disabled="!isRedact" @click="btnAddOrEditDataRow()") 新增
-        el-table.newTable.semi__pot_table(header-row-class-name="tableHead" max-height="400px" :data="currentFormDataGroup" size="small" :row-class-name="rowDelFlag" border="" tooltip-effect="dark" style="min-height: 90px;" @cell-dblclick="btnAddOrEditDataRow")
+        el-table.newTable.semi__pot_table(header-row-class-name="tableHead"  :data="currentFormDataGroup" size="small" :row-class-name="rowDelFlag" border="" tooltip-effect="dark" style="min-height: 90px;" @cell-dblclick="btnAddOrEditDataRow")
             template(v-for="(item,index) in tableData")
                 el-table-column(
                     v-if="item.type==='index'"
@@ -132,6 +132,9 @@ div
                 steControlInsertDto.push(item)
             }
         })
+        // 将 data 清空
+        this.currentFormDataGroup = [];
+        this.orgFormDataGroup = [];
         return {
             steControlInsertDto,
             steControlUpdateDto,
