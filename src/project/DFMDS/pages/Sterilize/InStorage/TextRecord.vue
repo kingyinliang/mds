@@ -18,7 +18,7 @@
 
         currentFormDataGroup: TextObj = {
             text: '', // 文本
-            factory: '', // 工厂
+            // factory: '', // 工厂
             id: '', // 主键
             orderId: '', // 订单ID
             orderNo: '', // 订单号
@@ -29,7 +29,7 @@
 
         orgFormDataGroup: TextObj = {
             text: '', // 文本
-            factory: '', // 工厂
+            // factory: '', // 工厂
             id: '', // 主键
             orderId: '', // 订单ID
             orderNo: '', // 订单号
@@ -71,6 +71,8 @@
 
 
         savedData(formHeader, workShop?) {
+            console.log('formHeader')
+            console.log(formHeader)
             let pkgTextInsert: TextObj = {};
             let pkgTextUpdate: TextObj = {};
             // if (!_.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)) {
@@ -86,13 +88,9 @@
             if (workShop === 'sterilize') {
                 this.currentFormDataGroup.orderId = formHeader.orderId;
                 this.currentFormDataGroup.orderNo = formHeader.orderNo;
-                this.currentFormDataGroup.potOrderId = formHeader.id;
-                this.currentFormDataGroup.potOrderNo = formHeader.potOrderNo;
-                this.currentFormDataGroup.textStage = formHeader.textStage;
-            } else {
-                // this.currentFormDataGroup.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                // this.currentFormDataGroup.orderId = formHeader.id;
-                // this.currentFormDataGroup.orderNo = formHeader.orderNo;
+                // this.currentFormDataGroup.potOrderId = formHeader.id;
+                // this.currentFormDataGroup.potOrderNo = formHeader.potOrderNo;
+                this.currentFormDataGroup.textStage = 'INSTORAGE';
             }
             if (this.isNewForm && this.currentFormDataGroup.text !== '') {
                 pkgTextInsert = this.currentFormDataGroup;

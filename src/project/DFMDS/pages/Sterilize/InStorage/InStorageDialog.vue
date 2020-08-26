@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-08-03 18:13:58
  * @LastEditors: Telliex
- * @LastEditTime: 2020-08-24 11:22:27
+ * @LastEditTime: 2020-08-24 18:25:06
 -->
 <template lang="pug">
     el-dialog(:title="title" :width="width" :close-on-click-modal="false" :visible.sync="isShowCurrentDialog")
@@ -156,6 +156,7 @@
 
         }
 
+        // TODO
         btnClearBucketStatus() {
             this.isShowCurrentDialog = false
             this.$refs.dialogForm.resetFields();

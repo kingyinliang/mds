@@ -233,6 +233,9 @@ export default class ExcRecord extends Vue {
                 insertDto.push(item)
             }
         })
+        // 将 data 归零
+        this.excList = []
+        this.orgexcList = []
         return {
             ids,
             insertDto,

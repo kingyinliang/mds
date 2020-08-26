@@ -6,7 +6,7 @@
                     el-form-item.must-fill(label="生产车间：")
                         el-select(v-model="formHeader.workShop" placeholder="请选择" style="width: 180px;" clearable="" @change="selectWorkshop"): el-option(v-for="(item, index) in workshopList" :key="index" :label="item.targetName" :value="item.targetCode")
                     el-form-item.must-fill(label="生产日期：")
-                        el-date-picker(v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 180px;")
+                        el-date-picker(v-model="formHeader.inKjmDate" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="请选择" style="width: 180px;" @change="selectTime")
                     el-form-item.must-fill(label="生产订单：")
                         el-select(v-model="formHeader.orderNo" placeholder="请选择" style="width: 180px;" clearable="" @change="selectOrder"): el-option(v-for="(item) in orderNoList" :key="item.id" :label="item.orderNo" :value="item.orderNo")
                     el-form-item(label="生产物料：")
@@ -127,7 +127,7 @@
                 prop: 'packageLine',
                 label: '包装产线',
                 minWidth: 200,
-                content: ['packageLineName']
+                content: ['packageLine']
             },
             {
                 type: 'string',
@@ -218,6 +218,7 @@
             this.getWorkshopList();
         }
 
+
         // 车间下拉抓取
         getWorkshopList() {
             COMMON_API.ORG_QUERY_WORKSHOP_API({
@@ -245,7 +246,14 @@
                 this.formHeader.workShopName = this.workshopList.filter(item => item.targetCode === val)[0].targetName
                 this.getOrderList()
             }
+        }
 
+        // 时间选择触发
+        selectTime(val) {
+            if (val !== '') {
+                this.formHeader.inKjmDate = val;
+                this.getOrderList()
+            }
         }
 
         // 订单下拉抓取
@@ -360,7 +368,7 @@
         savedDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
-            const textRequest = this.$refs.textRecord.savedData(this.formHeader.orderNo, 'sterilize');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
             STE_API.STE_INSTORAGE_SAVE_API({
                 exceptionDelete: excRequest.ids,
@@ -374,13 +382,15 @@
                 textUpdate: textRequest.pkgTextUpdate
             }).then(() => {
                 this.$successToast('保存成功');
+                // 重整数据
+                this.btnGetResult();
             })
         }
 
         submitDatas() {
             const inStorageRequest = this.$refs.inStorage.getSavedOrSubmitData();
             const excRequest = this.$refs.excRecord.getSavedOrSubmitData(this.formHeader, 'INSTORAGE');
-            const textRequest = this.$refs.textRecord.savedData(this.formHeader.orderNo, 'sterilize');
+            const textRequest = this.$refs.textRecord.savedData(this.formHeader, 'sterilize');
 
             STE_API.STE_INSTORAGE_SUBMIT_API({
                 exceptionDelete: excRequest.ids,
