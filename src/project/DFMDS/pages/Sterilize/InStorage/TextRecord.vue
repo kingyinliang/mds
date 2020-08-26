@@ -24,7 +24,7 @@
             orderNo: '', // 订单号
             potOrderId: '', // 锅单主键
             potOrderNo: '', // 锅单号
-            textStage: '' // 异常阶段（半成品、工艺、辅料、入库）
+            textStage: 'INSTORAGE' // 异常阶段（半成品、工艺、辅料、入库）
         }
 
         orgFormDataGroup: TextObj = {
@@ -35,10 +35,33 @@
             orderNo: '', // 订单号
             potOrderId: '', // 锅单主键
             potOrderNo: '', // 锅单号
-            textStage: '' // 异常阶段（半成品、工艺、辅料、入库）
+            textStage: 'INSTORAGE' // 异常阶段（半成品、工艺、辅料、入库）
         }
 
         isNewForm=false
+
+        initData() {
+            this.currentFormDataGroup = {
+                text: '', // 文本
+                // factory: '', // 工厂
+                id: '', // 主键
+                orderId: '', // 订单ID
+                orderNo: '', // 订单号
+                potOrderId: '', // 锅单主键
+                potOrderNo: '', // 锅单号
+                textStage: 'INSTORAGE' // 异常阶段（半成品、工艺、辅料、入库）
+            }
+            this.orgFormDataGroup = {
+                text: '', // 文本
+                // factory: '', // 工厂
+                id: '', // 主键
+                orderId: '', // 订单ID
+                orderNo: '', // 订单号
+                potOrderId: '', // 锅单主键
+                potOrderNo: '', // 锅单号
+                textStage: 'INSTORAGE' // 异常阶段（半成品、工艺、辅料、入库）
+            }
+        }
 
         init(orderNo, workShop?) {
 
@@ -46,8 +69,8 @@
             if (workShop === 'sterilize') {
                 STE_API.STE_DETAIL_TEXT_API({
                     // potOrderNo: formHeader.potOrderNo,
-                    orderNo: orderNo
-                    // textStage: formHeader.textStage
+                    orderNo: orderNo,
+                    textStage: 'INSTORAGE'
                 }).then(({ data }) => {
                     console.log('文字调整')
                     console.log(data)
@@ -97,6 +120,7 @@
             } else if (this.currentFormDataGroup.text !== this.orgFormDataGroup.text) {
                 pkgTextUpdate = this.currentFormDataGroup;
             }
+            this.initData()
             return {
                 pkgTextInsert,
                 pkgTextUpdate

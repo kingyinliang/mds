@@ -103,12 +103,15 @@ div
         btnAddOrEditDataRow(val) {
 
             console.log(val)
-            if (val) {
-                this.$refs.inStorageDialogForEdit.init(this.orderData, this.pkgWorkShopList, val);
-                return false
+            if (this.isRedact === true) {
+                if (val) {
+                    this.$refs.inStorageDialogForEdit.init(this.orderData, this.pkgWorkShopList, val);
+                    return false
+                }
+
+                this.$refs.inStorageDialogForAdd.init(this.orderData, this.pkgWorkShopList);
             }
 
-            this.$refs.inStorageDialogForAdd.init(this.orderData, this.pkgWorkShopList);
 
         }
 

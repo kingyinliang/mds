@@ -83,7 +83,7 @@ export default class ExcRecord extends Vue {
     abnormalList: object[] = [];
     excReasonList = [];
     excList: ExcList[] = [];
-    orgexcList: ExcList[] = [];
+    orgExcList: ExcList[] = [];
     excReasonTotal: ExcReasonTotal = {
         FAULTSHUTDOWN: [],
         POORPROCESSWAIT: [],
@@ -134,12 +134,11 @@ export default class ExcRecord extends Vue {
 
     getExcList(formHeader, tagName) {
         STE_API.STE_DETAIL_CRAFTEXC_LIST_API({
-            potOrderNo: formHeader.potOrderNo,
+            orderId: formHeader.orderId,
             orderNo: formHeader.orderNo,
             exceptionStage: tagName
         }).then(({ data }) => {
-            this.excList = data.data;
-            this.orgexcList = JSON.parse(JSON.stringify(data.data));
+            this.excList = JSON.parse(JSON.stringify(data.data));
             this.excList.map(item => {
                 if (item.exceptionSituation === 'FAULT' || item.exceptionSituation === 'SHUTDOWN') {
                     item.excReasonList = this.excReasonTotal.FAULTSHUTDOWN
@@ -149,6 +148,7 @@ export default class ExcRecord extends Vue {
                     item.excReasonList = this.excReasonTotal.ENERGY
                 }
             })
+            this.orgExcList = JSON.parse(JSON.stringify(this.excList));
         });
     }
 
@@ -177,6 +177,7 @@ export default class ExcRecord extends Vue {
             exceptionReason: '',
             exceptionInfo: '',
             remark: '',
+            excReasonList: [],
             changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
             changer: getUserNameNumber(),
             delFlag: 0
@@ -209,33 +210,48 @@ export default class ExcRecord extends Vue {
         this.excList.forEach((item, index) => {
             if (item.delFlag === 1) {
                 if (item.id) {
+                        item.exceptionStage = tagName;
+                        item.orderId = formHeader.orderId;
+                        item.orderNo = formHeader.orderNo;
+                        item.potOrderId = formHeader.id;
+                        item.potOrderNo = formHeader.potOrderNo;
+                        delete item.excReasonList
+                        delete item.delFlag
                     ids.push(item.id)
                 }
             } else if (item.id) {
-                if (!_.isEqual(this.orgexcList[index], item)) {
-                    this.excList.map((element: ExcList) => {
-                        element.exceptionStage = tagName;
-                        element.orderId = formHeader.orderId;
-                        element.orderNo = formHeader.orderNo;
-                        element.potOrderId = formHeader.id;
-                        element.potOrderNo = formHeader.potOrderNo;
-                    })
+                if (!_.isEqual(this.orgExcList[index], item)) {
+                    console.log('this.orgExcList item')
+                    console.log(this.orgExcList[index])
+                    console.log('this.excList item')
+                    console.log(item)
+
+                        item.exceptionStage = tagName;
+                        item.orderId = formHeader.orderId;
+                        item.orderNo = formHeader.orderNo;
+                        item.potOrderId = formHeader.id;
+                        item.potOrderNo = formHeader.potOrderNo;
+                        delete item.excReasonList
+                        delete item.delFlag
+
                     updateDto.push(item)
                 }
             } else {
-                this.excList.map((element: ExcList) => {
-                    element.exceptionStage = tagName;
-                    element.orderId = formHeader.orderId;
-                    element.orderNo = formHeader.orderNo;
-                    element.potOrderId = formHeader.id;
-                    element.potOrderNo = formHeader.potOrderNo;
-                })
+
+                    item.exceptionStage = tagName;
+                    item.orderId = formHeader.orderId;
+                    item.orderNo = formHeader.orderNo;
+                    item.potOrderId = formHeader.id;
+                    item.potOrderNo = formHeader.potOrderNo;
+                    delete item.excReasonList
+                    delete item.delFlag
+
                 insertDto.push(item)
             }
         })
         // 将 data 归零
         this.excList = []
-        this.orgexcList = []
+        this.orgExcList = []
         return {
             ids,
             insertDto,
