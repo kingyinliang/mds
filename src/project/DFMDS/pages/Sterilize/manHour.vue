@@ -149,6 +149,11 @@ export default class ManHour extends Vue {
         this.getOrderList();
     }
 
+    @Watch('formHeader.productDate')
+    watchProductDate() {
+        this.getOrderList();
+    }
+
     @Watch('formHeader.orderNo')
     watchOrderNo() {
         const orderNoSole = this.orderNoList.find((item: OrderList) => item.orderNo === this.formHeader.orderNo)
@@ -187,7 +192,10 @@ export default class ManHour extends Vue {
 
     // 订单拉取
     getOrderList() {
-        COMMON_API.ORDER_LIST_QUERY_API(this.formHeader).then(({ data }) => {
+        COMMON_API.ORDER_LIST_QUERY_API({
+            workShop: this.formHeader.workShop,
+            productDate: this.formHeader.productDate
+        }).then(({ data }) => {
             if (data.code === 200) {
                 this.orderNoList = data.data;
                 if (this.orderNoList.length !== 0) {
