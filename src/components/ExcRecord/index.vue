@@ -7,7 +7,7 @@
                 </el-button>
             </div>
         </template>
-        <el-table header-row-class-name="tableHead" class="newTable" :data="excList" :row-class-name="RowDelFlag" border tooltip-effect="dark">
+        <el-table header-row-class-name="tableHead" class="newTable" :data="excList" :row-class-name="RowDelFlag" border tooltip-effect="dark" style="min-height: 90px;">
             <el-table-column type="index" label="序号" width="50px" fixed />
             <el-table-column min-width="100">
                 <template slot="header">

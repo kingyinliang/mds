@@ -18,23 +18,62 @@
 
         currentFormDataGroup: TextObj = {
             text: '', // 文本
-            factory: '', // 工厂
+            // factory: '', // 工厂
             id: '', // 主键
             orderId: '', // 订单ID
-            orderNo: '' // 订单号
+            orderNo: '', // 订单号
+            potOrderId: '', // 锅单主键
+            potOrderNo: '', // 锅单号
+            textStage: 'INSTORAGE' // 异常阶段（半成品、工艺、辅料、入库）
         }
 
-        orgFormDataGroup: TextObj = {}
+        orgFormDataGroup: TextObj = {
+            text: '', // 文本
+            // factory: '', // 工厂
+            id: '', // 主键
+            orderId: '', // 订单ID
+            orderNo: '', // 订单号
+            potOrderId: '', // 锅单主键
+            potOrderNo: '', // 锅单号
+            textStage: 'INSTORAGE' // 异常阶段（半成品、工艺、辅料、入库）
+        }
+
         isNewForm=false
 
+        initData() {
+            this.currentFormDataGroup = {
+                text: '', // 文本
+                // factory: '', // 工厂
+                id: '', // 主键
+                orderId: '', // 订单ID
+                orderNo: '', // 订单号
+                potOrderId: '', // 锅单主键
+                potOrderNo: '', // 锅单号
+                textStage: 'INSTORAGE' // 异常阶段（半成品、工艺、辅料、入库）
+            }
+            this.orgFormDataGroup = {
+                text: '', // 文本
+                // factory: '', // 工厂
+                id: '', // 主键
+                orderId: '', // 订单ID
+                orderNo: '', // 订单号
+                potOrderId: '', // 锅单主键
+                potOrderNo: '', // 锅单号
+                textStage: 'INSTORAGE' // 异常阶段（半成品、工艺、辅料、入库）
+            }
+        }
+
         init(orderNo, workShop?) {
+
             // 车间陆续增加
             if (workShop === 'sterilize') {
                 STE_API.STE_DETAIL_TEXT_API({
                     // potOrderNo: formHeader.potOrderNo,
-                    orderNo: orderNo
-                    // textStage: formHeader.textStage
+                    orderNo: orderNo,
+                    textStage: 'INSTORAGE'
                 }).then(({ data }) => {
+                    console.log('文字调整')
+                    console.log(data)
                     if (data.data !== null) {
                         this.currentFormDataGroup = JSON.parse(JSON.stringify(data.data))
                         this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data))
@@ -55,6 +94,8 @@
 
 
         savedData(formHeader, workShop?) {
+            console.log('formHeader')
+            console.log(formHeader)
             let pkgTextInsert: TextObj = {};
             let pkgTextUpdate: TextObj = {};
             // if (!_.isEqual(this.orgFormDataGroup, this.currentFormDataGroup)) {
@@ -70,19 +111,16 @@
             if (workShop === 'sterilize') {
                 this.currentFormDataGroup.orderId = formHeader.orderId;
                 this.currentFormDataGroup.orderNo = formHeader.orderNo;
-                this.currentFormDataGroup.potOrderId = formHeader.id;
-                this.currentFormDataGroup.potOrderNo = formHeader.potOrderNo;
-                this.currentFormDataGroup.textStage = formHeader.textStage;
-            } else {
-                // this.currentFormDataGroup.factory = JSON.parse(sessionStorage.getItem('factory') || '{}').id;
-                // this.currentFormDataGroup.orderId = formHeader.id;
-                // this.currentFormDataGroup.orderNo = formHeader.orderNo;
+                // this.currentFormDataGroup.potOrderId = formHeader.id;
+                // this.currentFormDataGroup.potOrderNo = formHeader.potOrderNo;
+                this.currentFormDataGroup.textStage = 'INSTORAGE';
             }
             if (this.isNewForm && this.currentFormDataGroup.text !== '') {
                 pkgTextInsert = this.currentFormDataGroup;
             } else if (this.currentFormDataGroup.text !== this.orgFormDataGroup.text) {
                 pkgTextUpdate = this.currentFormDataGroup;
             }
+            this.initData()
             return {
                 pkgTextInsert,
                 pkgTextUpdate

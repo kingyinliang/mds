@@ -252,6 +252,9 @@ export default class CookingDetail extends Vue {
         }
         if (this.formHeaders.cookingNo) {
             this.getDetail(this.formHeaders.cookingNo);
+        } else {
+            this.formHeaders.changer = getUserNameNumber();
+            this.formHeaders.changed = dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss');
         }
     }
 
@@ -353,7 +356,7 @@ export default class CookingDetail extends Vue {
 
     // 溶解罐下拉 - 溶解罐领用
     getDissolutionPot(deptId) {
-        STE_API.STE_DISSOLUTIONBUCKET_QUERY_API({ workShop: deptId, potStatus: '', potNo: '' }).then(({ data }) => {
+        STE_API.STE_DISSOLUTIONBUCKET_QUERY_API({ workShop: deptId, potStatus: ['M', 'U'], potNo: '' }).then(({ data }) => {
             this.dissolutionPot = data.data;
         })
     }
@@ -385,6 +388,7 @@ export default class CookingDetail extends Vue {
         const sole: Dissolution = {
             potId: '',
             potNo: '',
+            cycle: '',
             productMaterial: '',
             productMaterialName: '',
             feedDate: '',
@@ -535,7 +539,8 @@ export default class CookingDetail extends Vue {
     changePotNo(val, row) {
         const potSole = this.dissolutionPot.find((item: DissolutionPot) => item.potNo === val);
         if (potSole) {
-            row.potId = potSole.id;
+            row.potId = potSole.potId;
+            row.cycle = potSole.cycle;
             row.productMaterial = potSole.prodcutMaterial;
             row.productMaterialName = potSole.prodcutMaterialName;
             row.feedDate = potSole.feedDate;
@@ -656,6 +661,7 @@ interface Dissolution {
     id?: string;
     potId?: string;
     potNo?: string;
+    cycle?: string;
     productMaterial?: string;
     productMaterialName?: string;
     feedDate?: string;
