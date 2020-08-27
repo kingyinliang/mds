@@ -18,25 +18,25 @@
             <el-col :span="20">
                 <div class="card-right" style="background: #487bff;">
                     <p class="dataEntry-head-leftRight__title">
-                        <i class="iconfont factory-gongchang" />{{ formData.factoryName ? formData.factoryName : '' }}
+                        <em class="iconfont factory-gongchang" />{{ formData.factoryName ? formData.factoryName : '' }}
                     </p>
                     <div class="dataEntry-head-leftRight-message">
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>{{ formData.workShop ? formData.workShop : '' }}</p>
-                            <p><i class="iconfont factory-37_zhusu" /> 杀菌车间</p>
+                            <p><em class="iconfont factory-37_zhusu" /> 杀菌车间</p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.prodcutMaterial ? formData.prodcutMaterial : '' }}
                             </p>
-                            <p> <i class="iconfont factory-bianhao" />生产物料 </p>
+                            <p> <em class="iconfont factory-bianhao" />生产物料 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.potAmount ? formData.potAmount.toLocaleString() : 0 }}
                                 {{ formData.unit ? formData.unit : 'KG' }}
                             </p>
-                            <p> <i class="iconfont factory-cunchurongliang" />数量 </p>
+                            <p> <em class="iconfont factory-cunchurongliang" />数量 </p>
                         </div>
                     </div>
                 </div>

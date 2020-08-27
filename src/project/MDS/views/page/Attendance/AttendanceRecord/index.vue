@@ -61,14 +61,14 @@
                     </el-col>
                 </el-row>
                 <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
+                    <em class="el-icon-caret-top" />
                 </div>
             </el-card>
         </div>
         <div class="main">
             <el-card class="tableCard">
                 <div class="toggleSearchTop">
-                    <i class="el-icon-caret-bottom" />
+                    <em class="el-icon-caret-bottom" />
                 </div>
                 <el-row v-if="clearStatus">
                     <el-table ref="table1" header-row-class-name="tableHead" :data="datalist" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
@@ -137,12 +137,12 @@
                             <template slot-scope="scope">
                                 <el-col v-if="scope.row.redactStatus">
                                     <span v-if="scope.row.userType !== '临时工'" style="cursor: pointer;" @click="selectUser(scope.row)">
-                                        <i>{{ scope.row.userId }}</i>
-                                        <i>点击选择人员</i>
+                                        <em>{{ scope.row.userId }}</em>
+                                        <em>点击选择人员</em>
                                     </span>
                                     <span v-if="scope.row.userType == '临时工'" style="cursor: pointer;" @click="dayLaborer(scope.row)">
-                                        <i>{{ scope.row.userId }}</i>
-                                        <i>点击输入临时工</i>
+                                        <em>{{ scope.row.userId }}</em>
+                                        <em>点击输入临时工</em>
                                     </span>
                                 </el-col>
                                 <span v-else>{{ scope.row.userId }}</span>
@@ -254,12 +254,12 @@
                     <el-table-column label="姓名（工号）" :show-overflow-tooltip="true" width="120">
                         <template slot-scope="scope">
                             <span v-if="scope.row.userType !== '临时工'" style="cursor: pointer;" @click="selectUser(scope.row)">
-                                <i v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</i>
-                                <i>点击选择人员</i>
+                                <em v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</em>
+                                <em>点击选择人员</em>
                             </span>
                             <span v-if="scope.row.userType == '临时工'" style="cursor: pointer;" @click="dayLaborer(scope.row)">
-                                <i v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</i>
-                                <i>点击输入临时工</i>
+                                <em v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</em>
+                                <em>点击输入临时工</em>
                             </span>
                         </template>
                     </el-table-column>

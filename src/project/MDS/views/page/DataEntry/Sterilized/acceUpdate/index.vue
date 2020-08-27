@@ -63,10 +63,10 @@
                 <el-table-column type="index" width="55" label="序号" :show-overflow-tooltip="true" fixed />
                 <el-table-column label="辅料状态" min-width="80" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        <i v-if="scope.row.orderStatus === 'submit'">已提交</i>
-                        <i v-else-if="scope.row.orderStatus === 'checked'">通过</i>
-                        <i v-else-if="scope.row.orderStatus === 'noPass'">不通过</i>
-                        <i v-else>{{ scope.row.supStatus }}</i>
+                        <em v-if="scope.row.orderStatus === 'submit'">已提交</em>
+                        <em v-else-if="scope.row.orderStatus === 'checked'">通过</em>
+                        <em v-else-if="scope.row.orderStatus === 'noPass'">不通过</em>
+                        <em v-else>{{ scope.row.supStatus }}</em>
                     </template>
                 </el-table-column>
                 <el-table-column label="订单号" min-width="120" prop="orderNo" :show-overflow-tooltip="true" />
@@ -80,7 +80,7 @@
                 <el-table-column label="单位" min-width="50" prop="unit" :show-overflow-tooltip="true" />
                 <el-table-column label="杀菌状态" min-width="120" prop="steStatus" :show-overflow-tooltip="true">
                     <template slot="header">
-                        <i class="reqI">*</i><span>杀菌状态</span>
+                        <em class="reqI">*</em><span>杀菌状态</span>
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.steStatus" placeholder="请选择" size="mini" :disabled="!(scope.row.orderStatus !== 'submit' && scope.row.orderStatus !== 'checked' && isRedact === true)">
@@ -149,7 +149,7 @@
                 <el-table-column label="添加状态" width="80" prop="addStatus" :show-overflow-tooltip="true" />
                 <el-table-column label="物料" :show-overflow-tooltip="true">
                     <template slot="header">
-                        <i class="reqI">*</i><span>物料</span>
+                        <em class="reqI">*</em><span>物料</span>
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.materialCode" filterable placeholder="请选择" size="mini" style="width: 180px;" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" @change="selectMaterial(scope.row)">
@@ -160,7 +160,7 @@
                 </el-table-column>
                 <el-table-column label="添加数量" width="110" prop="addAmount" :show-overflow-tooltip="true">
                     <template slot="header">
-                        <i class="reqI">*</i><span>添加数量</span>
+                        <em class="reqI">*</em><span>添加数量</span>
                     </template>
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.addAmount" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'" placeholder="请输入" size="mini" @input="AddSupDataChange(scope.row)" />
@@ -168,7 +168,7 @@
                 </el-table-column>
                 <el-table-column label="单位" width="100" prop="unit" :show-overflow-tooltip="true">
                     <template slot="header">
-                        <i class="reqI">*</i><span>单位</span>
+                        <em class="reqI">*</em><span>单位</span>
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.unit" placeholder="请选择" size="mini" :disabled="!isRedact || scope.row.supStatus === '已确认' || scope.row.addStatus === '已添加'">

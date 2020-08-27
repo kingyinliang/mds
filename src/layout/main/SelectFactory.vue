@@ -1,7 +1,7 @@
 <template>
     <el-dialog :show-close="false" :visible.sync="factoryVisible" class="selectFa">
         <div class="factoryBox">
-            <i class="el-icon-close factory__close" @click="factoryVisible = false" />
+            <em class="el-icon-close factory__close" @click="factoryVisible = false" />
             <div v-for="(item, index) in factory" :key="index" class="factoryItem">
                 <div class="itemBox">
                     <div class="item-title">

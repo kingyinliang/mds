@@ -15,18 +15,18 @@
             <el-col :span="20">
                 <div class="card-right" style="background: #487bff;">
                     <p class="dataEntry-head-leftRight__title">
-                        <i class="iconfont factory-gongchang" />{{ formData.factoryName ? formData.factoryName : '' }}
+                        <em class="iconfont factory-gongchang" />{{ formData.factoryName ? formData.factoryName : '' }}
                     </p>
                     <div class="dataEntry-head-leftRight-message">
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>{{ formData.workShopName ? formData.workShopName : '' }}</p>
-                            <p><i class="iconfont factory-quyu" />车间</p>
+                            <p><em class="iconfont factory-quyu" />车间</p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.location ? formData.location : '' }}
                             </p>
-                            <p> <i class="iconfont factory-bianhao" />库位 </p>
+                            <p> <em class="iconfont factory-bianhao" />库位 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <el-tooltip class="item" effect="dark" :content="(formData.materialCode ? formData.materialCode : '') + ' ' + (formData.materialName ? formData.materialName : '')" placement="top">
@@ -34,17 +34,17 @@
                                     {{ (formData.materialCode ? formData.materialCode : '') + ' ' + (formData.materialName ? formData.materialName : '') }}
                                 </p>
                             </el-tooltip>
-                            <p> <i class="iconfont factory-cunchurongliang" />物料</p>
+                            <p> <em class="iconfont factory-cunchurongliang" />物料</p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.sumAmount }}
                             </p>
-                            <p> <i class="iconfont factory-bianma" />总容量  </p>
+                            <p> <em class="iconfont factory-bianma" />总容量  </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p> L </p>
-                            <p> <i class="iconfont factory-shujurongliang" />单位 </p>
+                            <p> <em class="iconfont factory-shujurongliang" />单位 </p>
                         </div>
                     </div>
                 </div>
@@ -220,7 +220,7 @@
                         ]"
                     >
                         <el-input v-model.number="adjustForm.quantity" type="number" style="width: 220px;">
-                            <i slot="suffix">L</i>
+                            <em slot="suffix">L</em>
                         </el-input>
                     </el-form-item>
                     <el-form-item

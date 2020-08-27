@@ -48,7 +48,7 @@
                 </el-form-item>
             </el-form>
             <div class="box-card-title clearfix">
-                <h3><i class="title-icon" style="background: #5bd171;" />过程监控数据记录</h3>
+                <h3><em class="title-icon" style="background: #5bd171;" />过程监控数据记录</h3>
                 <el-button type="primary" size="small" style="float: right;" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" @click="addlishui">
                     + 新增
                 </el-button>
@@ -57,7 +57,7 @@
                 <el-table-column label="序号" type="index" width="50" fixed />
                 <el-table-column min-width="180">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>观察时间</span>
                     </template>
                     <template slot-scope="scope">
@@ -66,7 +66,7 @@
                 </el-table-column>
                 <el-table-column min-width="90">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>润水/°C</span>
                     </template>
                     <template slot-scope="scope">
@@ -75,7 +75,7 @@
                 </el-table-column>
                 <el-table-column min-width="90">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>预热/°C</span>
                     </template>
                     <template slot-scope="scope">
@@ -84,7 +84,7 @@
                 </el-table-column>
                 <el-table-column>
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>下料量</span>
                     </template>
                     <template slot-scope="scope">
@@ -93,7 +93,7 @@
                 </el-table-column>
                 <el-table-column min-width="120">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>润水速度L/h</span>
                     </template>
                     <template slot-scope="scope">
@@ -116,7 +116,7 @@
                 </el-table-column>
             </el-table>
             <div class="box-card-title clearfix">
-                <h3><i class="title-icon" style="background: #f05c4a;" />异常情况记录</h3>
+                <h3><em class="title-icon" style="background: #f05c4a;" />异常情况记录</h3>
             </div>
             <div><el-input v-model="craftfrom.cookingException" type="textarea" class="textarea" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" style="width: 100%; height: 40px;" /></div>
         </mds-card>
@@ -133,7 +133,7 @@
                 </el-form-item>
             </el-form>
             <div class="box-card-title clearfix">
-                <h3><i class="title-icon" style="background: #5bd171;" />过程监控数据记录</h3>
+                <h3><em class="title-icon" style="background: #5bd171;" />过程监控数据记录</h3>
                 <el-button type="primary" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" size="small" style="float: right;" @click="addzhengzhu">
                     + 新增
                 </el-button>
@@ -141,7 +141,7 @@
             <el-table ref="zhengzhuTable" class="newTable borderTable" max-height="267" border header-row-class-name="tableHead" :data="zhengzhuList" :row-class-name="rowDelFlag">
                 <el-table-column min-width="175">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>观察时间</span>
                     </template>
                     <template slot-scope="scope">
@@ -156,7 +156,7 @@
                     </el-table-column>
                     <el-table-column min-width="95">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>蒸煮机械</span>
                         </template>
                         <template slot-scope="scope">
@@ -165,7 +165,7 @@
                     </el-table-column>
                     <el-table-column min-width="95">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>分汽包</span>
                         </template>
                         <template slot-scope="scope">
@@ -181,7 +181,7 @@
                     </el-table-column>
                     <el-table-column min-width="95">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>蒸煮机械</span>
                         </template>
                         <template slot-scope="scope">
@@ -195,7 +195,7 @@
                     </el-table-column>
                     <el-table-column min-width="100">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>下转阀冷却</span>
                         </template>
                         <template slot-scope="scope">
@@ -214,7 +214,7 @@
                 </el-table-column>
             </el-table>
             <div class="box-card-title clearfix">
-                <h3><i class="title-icon" style="background: #f05c4a;" />异常情况记录</h3>
+                <h3><em class="title-icon" style="background: #f05c4a;" />异常情况记录</h3>
             </div>
             <div><el-input v-model="craftfrom.continuousCookingException" type="textarea" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" class="textarea" style="width: 100%; height: 40px;" /></div>
         </mds-card>
@@ -227,7 +227,7 @@
             <el-table ref="hunheTable" class="newTable" max-height="267" border header-row-class-name="tableHead" :data="hunheList" :row-class-name="rowDelFlag">
                 <el-table-column width="205">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>观察时间</span>
                     </template>
                     <template slot-scope="scope">
@@ -236,7 +236,7 @@
                 </el-table-column>
                 <el-table-column>
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>混合料/°C</span>
                     </template>
                     <template slot-scope="scope">
@@ -245,7 +245,7 @@
                 </el-table-column>
                 <el-table-column label="">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>接种/°C</span>
                     </template>
                     <template slot-scope="scope">
@@ -254,7 +254,7 @@
                 </el-table-column>
                 <el-table-column>
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>煮豆感官</span>
                     </template>
                     <template slot-scope="scope">
@@ -278,7 +278,7 @@
                 </el-table-column>
             </el-table>
             <div class="box-card-title clearfix">
-                <h3><i class="title-icon" style="background: #f05c4a;" />异常情况记录</h3>
+                <h3><em class="title-icon" style="background: #f05c4a;" />异常情况记录</h3>
             </div>
             <div><el-input v-model="craftfrom.blendException" type="textarea" :disabled="!(isRedact && craftfrom.status !== 'submit' && craftfrom.status !== 'checked')" class="textarea" style="width: 100%; height: 40px;" /></div>
         </mds-card>
@@ -605,7 +605,7 @@
     .audit {
         margin: 10px 0;
         line-height: 32px;
-        i {
+        em {
             float: left;
             font-size: 22px;
         }

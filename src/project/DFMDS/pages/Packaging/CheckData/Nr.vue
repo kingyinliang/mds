@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="tab__heads clearfix">
-            <i class="title-icon" />
+            <em class="title-icon" />
             <span>NR检测</span>
             <div style="float: right;">
                 <el-button v-if="isAuth('pkgCkdInsert')" :disabled="!isRedact" type="primary" size="small" @click="nrAddRow()">
@@ -13,7 +13,7 @@
             <el-table-column type="index" label="序号" width="55" />
             <el-table-column width="195" :show-overflow-tooltip="true">
                 <template slot="header">
-                    <i class="reqI">*</i><span>检测时间</span>
+                    <em class="reqI">*</em><span>检测时间</span>
                 </template>
                 <template slot-scope="scope">
                     <el-date-picker v-model="scope.row.checkDate" :disabled="!isRedact" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择时间" size="mini" />

@@ -12,7 +12,7 @@
             <el-table-column label="生产使用" width="135">
                 <template slot-scope="scope">
                     <div class="required">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.productUseNum" size="small" placeholder="手工录入" type="number" min="0" />
                         <el-input v-else v-model="scope.row.productUseNum" size="small" placeholder="手工录入" disabled type="number" min="0" />
                     </div>
@@ -65,7 +65,7 @@
             <el-table-column width="150" label="领用罐号">
                 <template slot-scope="scope">
                     <div class="required">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <el-select
                             v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'"
                             v-model="scope.row.potNo"
@@ -91,7 +91,7 @@
             <el-table-column width="190" label="过滤日期">
                 <template slot-scope="scope">
                     <div class="required">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <el-date-picker
                             v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked' && order.factoryCode === '6010'"
                             v-model="scope.row.filterDate"
@@ -108,7 +108,7 @@
             <el-table-column width="150" label="批次">
                 <template slot-scope="scope">
                     <div class="required">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked' && order.factoryCode === '6010'" v-model="scope.row.batch" size="small" maxlength="10" />
                         <el-input v-else v-model="scope.row.batch" size="small" disabled />
                     </div>
@@ -117,7 +117,7 @@
             <el-table-column width="120" label="生产使用量">
                 <template slot-scope="scope">
                     <div class="required">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <el-input v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.productUseNum" size="small" />
                         <el-input v-else v-model="scope.row.productUseNum" size="small" disabled />
                     </div>
@@ -126,7 +126,7 @@
             <el-table-column v-if="order.factoryCode !== '6010'" width="120" label="使用情况">
                 <template slot-scope="scope">
                     <div class="required">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <el-select v-if="isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '') && scope.row.status !== 'submit' && scope.row.status !== 'checked'" v-model="scope.row.useUsage" size="small">
                             <el-option v-for="(item, index) in useUsageList" :key="index" :value="item" :label="item" />
                         </el-select>
@@ -139,7 +139,7 @@
             <el-table-column v-if="order.factoryCode !== '6010'" label="库存量" width="120">
                 <template slot-scope="scope">
                     <div class="required">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <el-input v-model="scope.row.surplusAmount" size="small" disabled />
                     </div>
                 </template>
@@ -186,7 +186,7 @@
                         size="small"
                         @click="addSapS(listbomS, scope.row)"
                     >
-                        <i class="icons iconfont factory-chaifen" />拆分
+                        <em class="icons iconfont factory-chaifen" />拆分
                     </el-button>
                     <el-button v-if="scope.row.isSplit === '1' && isRedact && (Sapstatus === 'noPass' || Sapstatus === 'saved' || Sapstatus === '')" class="delBtn" type="text" icon="el-icon-delete" size="small" @click="dellistbomS(scope.row)">
                         删除

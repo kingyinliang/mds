@@ -72,9 +72,9 @@
                             </p>
                             <div v-if="item.content !== 0" class="topBox_boxItem_popover">
                                 <p v-for="(i, ins) in Object.keys(item.content)" :key="ins">
-                                    <i v-if="i != ''" class="dot" :style="{ background: ins === 0 ? '#1890FF' : ins === 1 ? '#FFBF00' : '#1890FF' }" />{{ i }} <span v-if="i != ''" style="float: right;">{{ item.content[i] }}方</span>
+                                    <em v-if="i != ''" class="dot" :style="{ background: ins === 0 ? '#1890FF' : ins === 1 ? '#FFBF00' : '#1890FF' }" />{{ i }} <span v-if="i != ''" style="float: right;">{{ item.content[i] }}方</span>
                                 </p>
-                                <i class="topBox_boxItem_popover_ar" />
+                                <em class="topBox_boxItem_popover_ar" />
                             </div>
                         </div>
                         <div v-if="item.color" class="topBox_circle" :style="{ background: item.color }">
@@ -87,7 +87,7 @@
         <mds-card v-show="fastS" title="原汁罐列表" name="potTotal" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px; line-height: 32px;">
-                    <i v-if="isAuth('juice:pot:juiceStockItem')"><a href="#/DataEntry-Juice-Pot-summary" style="color: #487bff; font-size: 14px;">原汁库存情况>></a></i>
+                    <em v-if="isAuth('juice:pot:juiceStockItem')"><a href="#/DataEntry-Juice-Pot-summary" style="color: #487bff; font-size: 14px;">原汁库存情况>></a></em>
                 </div>
             </template>
             <div>
@@ -1220,7 +1220,7 @@
             color: #1890ff;
             font-size: 14px;
             cursor: pointer;
-            i {
+            em {
                 ::before {
                     color: #1890ff;
                 }

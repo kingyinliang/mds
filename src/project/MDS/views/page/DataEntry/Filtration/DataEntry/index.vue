@@ -50,11 +50,11 @@
                                         :style="{
                                             background: item.orderStatus === 'noPass' ? 'red' : item.orderStatus === 'checked' ? '#67C23A' : item.orderStatus === 'submit' ? '#1890ff' : item.orderStatus === 'saved' ? '#1890ff' : '#7ED321',
                                         }"
-                                    />订单状态：<i
+                                    />订单状态：<em
                                         :style="{
                                             color: item.orderStatus === 'noPass' ? 'red' : item.orderStatus === 'checked' ? '#67C23A' : '',
                                         }"
-                                    >{{ item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus }}</i>
+                                    >{{ item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus }}</em>
                                 </div>
                                 <el-button v-if="isAuth('filter:instorage:list')" type="primary" size="small" style="float: right; margin-top: 14px; color: white; background-color: #1890ff;" @click="go(item)">
                                     数据录入

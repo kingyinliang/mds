@@ -42,7 +42,7 @@
                     </el-form>
                 </el-col>
                 <el-col :span="3" style="margin-top: 16px;">
-                    <i
+                    <em
                         class="dataEntry-head-title__status"
                         :class="{
                             noPass: formHeader.orderStatus === '已退回',
@@ -51,7 +51,7 @@
                         }"
                     >
                         订单状态：{{ formHeader.orderStatusName }}
-                    </i>
+                    </em>
                 </el-col>
             </el-row>
         </div>
@@ -175,7 +175,7 @@
             <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
                 <div class="redact clearfix">
                     <div class="redact_tips">
-                        <i class="el-icon-info" />
+                        <em class="el-icon-info" />
                         <span>生管审核</span>
                     </div>
                     <div class="redact_btn">

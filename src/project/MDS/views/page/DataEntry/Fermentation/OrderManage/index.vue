@@ -45,12 +45,12 @@
                 </el-col>
             </el-row>
             <div class="toggleSearchBottom">
-                <i class="el-icon-caret-top" />
+                <em class="el-icon-caret-top" />
             </div>
         </el-card>
         <div class="tableCard">
             <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                <i class="el-icon-caret-bottom" />
+                <em class="el-icon-caret-bottom" />
             </div>
             <el-tabs id="DaatTtabs" ref="tabs" v-model="activeName" class="NewDaatTtabs tabsPages" type="border-card" style=" overflow: hidden; border-radius: 15px;">
                 <el-tab-pane name="1">

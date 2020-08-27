@@ -3,7 +3,7 @@
         <query-table ref="queryTable" :rules="rules" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'esCommon:iot'" :column="column" @get-data-success="getDataSuccess">
             <template slot="mds-button-middle">
                 <div class="box-card-title clearfix">
-                    <h3> <i class="title-icon" style="background: #487bff;" />ES报表</h3>
+                    <h3> <em class="title-icon" style="background: #487bff;" />ES报表</h3>
                 </div>
             </template>
         </query-table>

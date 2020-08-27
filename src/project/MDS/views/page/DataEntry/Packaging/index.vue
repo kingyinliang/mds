@@ -43,11 +43,11 @@
                                             </el-button>
                                             <span
                                                 style="float: right; min-width: 150px; color: #8a979e; font-size: 14px;"
-                                            >订单状态：<i
+                                            >订单状态：<em
                                                 :style="{
                                                     color: item.orderStatus === 'noPass' ? 'red' : item.orderStatus === 'checked' ? '#67C23A' : '',
                                                 }"
-                                            >{{ item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus }}</i></span>
+                                            >{{ item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus }}</em></span>
                                         </p>
                                     </el-form-item>
                                 </div>

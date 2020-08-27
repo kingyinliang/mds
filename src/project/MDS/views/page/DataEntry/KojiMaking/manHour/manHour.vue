@@ -63,14 +63,14 @@
                     </el-col>
                 </el-row>
                 <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
+                    <em class="el-icon-caret-top" />
                 </div>
             </el-card>
         </div>
         <div class="main">
             <div class="tableCard">
                 <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                    <i class="el-icon-caret-bottom" />
+                    <em class="el-icon-caret-bottom" />
                 </div>
             </div>
             <div v-show="searchCard">
@@ -154,7 +154,7 @@
             <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
                 <div class="redact clearfix">
                     <div v-if="!isRedact" class="redact_tips">
-                        <i class="el-icon-info" />
+                        <em class="el-icon-info" />
                         <span v-if="searchCard">点击编辑按钮，对当前页面进行编辑</span>
                         <span v-else>请先查询</span>
                     </div>

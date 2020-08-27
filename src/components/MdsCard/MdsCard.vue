@@ -1,14 +1,14 @@
 <template>
     <div class="box-card">
         <div class="box-card-title clearfix">
-            <h3> <i class="title-icon" :style="{ background: iconBg }" />{{ title }} </h3>
+            <h3> <em class="title-icon" :style="{ background: iconBg }" />{{ title }} </h3>
             <slot name="titleBtn" />
         </div>
         <div :class="name + 'Box'">
             <slot />
         </div>
         <div v-if="packUp" class="box-card-show-hidden">
-            <span class="showHiddenBtn" :name="name">收起 <i class="el-icon-caret-top" /></span>
+            <span class="showHiddenBtn" :name="name">收起 <em class="el-icon-caret-top" /></span>
         </div>
     </div>
 </template>

@@ -40,14 +40,14 @@
                     </el-col>
                 </el-row>
                 <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
+                    <em class="el-icon-caret-top" />
                 </div>
             </el-card>
         </div>
         <div class="main">
             <el-card class="tableCard">
                 <div class="toggleSearchTop">
-                    <i class="el-icon-caret-bottom" />
+                    <em class="el-icon-caret-bottom" />
                 </div>
                 <el-table border :data="pressList" header-row-class-name="tableHead">
                     <el-table-column label="工厂" prop="factoryName" :show-overflow-tooltip="true" width="230" />

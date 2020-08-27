@@ -63,11 +63,11 @@
                                     :style="{
                                         background: item.orderStatus === 'noPass' ? 'red' : item.orderStatus === 'checked' ? '#67C23A' : item.orderStatus === 'submit' ? '#1890ff' : item.orderStatus === 'saved' ? '#1890ff' : '#7ED321',
                                     }"
-                                />订单状态：<i
+                                />订单状态：<em
                                     :style="{
                                         color: item.orderStatus === 'noPass' ? 'red' : item.orderStatus === 'checked' ? '#67C23A' : '',
                                     }"
-                                >{{ item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus }}</i>
+                                >{{ item.orderStatus === 'submit' ? '已提交' : item.orderStatus === 'checked' ? '审核通过' : item.orderStatus === 'noPass' ? '审核不通过' : item.orderStatus === 'saved' ? '已保存' : item.orderStatus === '已同步' ? '未录入' : item.orderStatus }}</em>
                             </div>
                         </div>
                         <div class="sole_cont">
@@ -136,17 +136,17 @@
                             <template slot-scope="scope">
                                 <el-col>
                                     <span v-if="!isDisabled" style="cursor: pointer;" @click="selectUser(scope.row)">
-                                        <i v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</i>
+                                        <em v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</em>
                                         <span>
-                                            <i v-if="scope.row.userType == '临时工'">点击输入临时工</i>
-                                            <i v-else>点击选择人员</i>
+                                            <em v-if="scope.row.userType == '临时工'">点击输入临时工</em>
+                                            <em v-else>点击选择人员</em>
                                         </span>
                                     </span>
                                     <span v-else style="cursor: pointer;">
-                                        <i v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</i>
+                                        <em v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</em>
                                         <span>
-                                            <i v-if="scope.row.userType == '临时工'">点击输入临时工</i>
-                                            <i v-else>点击选择人员</i>
+                                            <em v-if="scope.row.userType == '临时工'">点击输入临时工</em>
+                                            <em v-else>点击选择人员</em>
                                         </span>
                                     </span>
                                 </el-col>

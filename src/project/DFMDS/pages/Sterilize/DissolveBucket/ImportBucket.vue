@@ -4,7 +4,7 @@
         <el-dialog title="入罐" :close-on-click-modal="false" :visible.sync="isTableDialogVisible" width="70%">
             <div class="inner-area">
                 <div class="inner-area__title">
-                    <h3><i class="title-icon" style="background: rgb(72, 123, 255);" />溶解罐列表 </h3>
+                    <h3><em class="title-icon" style="background: rgb(72, 123, 255);" />溶解罐列表 </h3>
                     <el-button type="primary" size="small" @click="addNewDataRow()">
                         新增
                     </el-button>
@@ -114,11 +114,11 @@
                                     <el-form-item prop="feedMan">
                                         <div class="required" style="min-height: 32px; line-height: 32px;">
                                             <!-- <span style="cursor: pointer;">
-                                                <i v-for="(item, index) in scope.row.feedMan.split(',')" :key="index">{{ item }}，</i>
+                                                <em v-for="(item, index) in scope.row.feedMan.split(',')" :key="index">{{ item }}，</em>
                                             </span> -->
                                             <span style="cursor: pointer;" @click="selectUser(scope.row,scope.$index)">
-                                                <i v-for="(item, index) in splitString(scope.row.feedMan)" :key="index">{{ item }}，</i>
-                                                <i>点击选择人员</i>
+                                                <em v-for="(item, index) in splitString(scope.row.feedMan)" :key="index">{{ item }}，</em>
+                                                <em>点击选择人员</em>
                                             </span>
                                         </div>
                                     </el-form-item>

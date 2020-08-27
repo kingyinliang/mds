@@ -6,14 +6,14 @@
         <el-submenu v-if="page.list.filter(it => it.type !== '2').length">
             <template slot="title">
                 <div>
-                    <i :class="page.icon || ''" class="site-sidebar__menu-icon iconfont" />
+                    <em :class="page.icon || ''" class="site-sidebar__menu-icon iconfont" />
                     <span>{{ page.name }}</span>
                 </div>
             </template>
             <page-sub-menu v-for="(item, index) in page.list.filter(it => it.type !== '2')" :key="index" :page="item" />
         </el-submenu>
         <el-menu-item v-else :index="page.menuId" @click="goPage(page)">
-            <i :class="page.icon || ''" class="site-sidebar__menu-icon iconfont" />
+            <em :class="page.icon || ''" class="site-sidebar__menu-icon iconfont" />
             <span slot="title">{{ page.name }}</span>
         </el-menu-item>
     </div>

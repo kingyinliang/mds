@@ -10,7 +10,7 @@
                 <el-input type="index" label="序号" fixed />
                 <el-table-column min-width="125">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>日期</span>
                     </template>
                     <template slot-scope="scope">
@@ -19,7 +19,7 @@
                 </el-table-column>
                 <el-table-column min-width="180">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>种曲</span>
                     </template>
                     <template slot-scope="scope">
@@ -30,7 +30,7 @@
                 </el-table-column>
                 <el-table-column min-width="130">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>生产批次</span>
                     </template>
                     <template slot-scope="scope">
@@ -44,7 +44,7 @@
                 </el-table-column>
                 <el-table-column>
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>数量</span>
                     </template>
                     <template slot-scope="scope">
@@ -53,7 +53,7 @@
                 </el-table-column>
                 <el-table-column min-width="60">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>单位</span>
                     </template>
                     <template slot-scope="scope">

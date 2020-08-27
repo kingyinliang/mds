@@ -252,7 +252,7 @@ export default {
         color: #1890ff;
         font-size: 14px;
         cursor: pointer;
-        i {
+        em {
             ::before {
                 color: #1890ff;
             }

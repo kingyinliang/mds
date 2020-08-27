@@ -31,12 +31,12 @@
                 </el-col>
             </el-row>
             <div class="toggleSearchBottom">
-                <i class="el-icon-caret-top" />
+                <em class="el-icon-caret-top" />
             </div>
         </el-card>
         <div class="tableCard">
             <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                <i class="el-icon-caret-bottom" />
+                <em class="el-icon-caret-bottom" />
             </div>
             <mds-card title="自淋信息" name="waterInfo" style="margin-top: 5px;" :pack-up="false">
                 <el-table class="newTable" :data="waterList" border header-row-class-name="tableHead" @selection-change="handleSelectionChange">
@@ -46,7 +46,7 @@
                     </el-table-column>
                     <el-table-column label="气垫车号" min-width="100" prop="gx" :show-overflow-tooltip="true">
                         <template slot="header">
-                            <i class="reqI">*</i><span>气垫车号</span>
+                            <em class="reqI">*</em><span>气垫车号</span>
                         </template>
                         <template slot-scope="scope">
                             {{ scope.row.deviceName }}
@@ -62,13 +62,13 @@
                     <el-table-column label="自淋时间(H)" min-width="100" prop="drenchTime" />
                     <el-table-column label="挪笼操作员" min-width="120" :show-overflow-tooltip="true">
                         <template slot="header">
-                            <i class="reqI">*</i><span>挪笼操作员</span>
+                            <em class="reqI">*</em><span>挪笼操作员</span>
                         </template>
                         <template slot-scope="scope">
                             <el-col v-if="!scope.row.moveOperator">
                                 <span :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">
-                                    <i>{{ scope.row.moveOperator }}</i>
-                                    <i>点击选择人员</i>
+                                    <em>{{ scope.row.moveOperator }}</em>
+                                    <em>点击选择人员</em>
                                 </span>
                             </el-col>
                             <span v-else :style="{'cursor':isRedact?'pointer':''}" @click="selectUser(scope.row)">{{ scope.row.moveOperator }}</span>

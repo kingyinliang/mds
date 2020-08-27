@@ -46,17 +46,17 @@
                                     <div class="el-upload-list__item is-success avatar">
                                         <img class="flex-img__image avatar" :src="detailImgFile">
                                         <label class="el-upload-list__item-status-label">
-                                            <i class="el-icon-upload-success el-icon-check" />
+                                            <em class="el-icon-upload-success el-icon-check" />
                                         </label>
                                         <span class="el-upload-list__item-actions">
                                             <span class="el-upload-list__item-delete">
-                                                <i class="el-icon-delete" @click.stop="() => { if (!isRedact) { removeFile() } }" />
+                                                <em class="el-icon-delete" @click.stop="() => { if (!isRedact) { removeFile() } }" />
                                             </span>
                                         </span>
                                     </div>
                                 </div>
                                 <el-upload v-show="!detailImgFile" ref="orgImgUpload" class="org-img-upload" :show-file-list="false" :action="FILE_API" :disabled="isRedact" :limit="1" :http-request="httpRequest" :on-success="addfile">
-                                    <i class="el-icon-plus avatar-uploader-icon" />
+                                    <em class="el-icon-plus avatar-uploader-icon" />
                                 </el-upload>
                             </el-form-item>
                             <el-form-item label="联系人：">
@@ -123,17 +123,17 @@
                         <div class="el-upload-list__item is-success avatar">
                             <img class="flex-img__image avatar" :src="addImgFile">
                             <label class="el-upload-list__item-status-label">
-                                <i class="el-icon-upload-success el-icon-check" />
+                                <em class="el-icon-upload-success el-icon-check" />
                             </label>
                             <span class="el-upload-list__item-actions">
                                 <span class="el-upload-list__item-delete">
-                                    <i class="el-icon-delete" @click.stop="removeFile()" />
+                                    <em class="el-icon-delete" @click.stop="removeFile()" />
                                 </span>
                             </span>
                         </div>
                     </div>
                     <el-upload v-show="!addImgFile" ref="orgImgUpload" class="org-img-upload" :show-file-list="false" :action="FILE_API" :limit="1" :http-request="httpRequest" :on-success="addfile">
-                        <i class="el-icon-plus avatar-uploader-icon" />
+                        <em class="el-icon-plus avatar-uploader-icon" />
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="联系人：">

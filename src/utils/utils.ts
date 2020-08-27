@@ -168,7 +168,7 @@ export function isURL(s) {
  * @param {*} key
  */
 export function isAuth(key) {
-    let authReturn = true
+    let authReturn = true;
     if (key === '') {
         authReturn = true;
     } else {
@@ -305,7 +305,7 @@ export function ShowHiddenNameBox($) {
                     .find('i')
                     .hasClass('el-icon-caret-top')
             ) {
-                $(this).html('展开<i class="el-icon-caret-bottom"></i>');
+                $(this).html('展开<em class="el-icon-caret-bottom"></em>');
                 $shiftBox.data('heightData', $shiftBox.height());
                 $shiftBox.css('overflow', 'hidden');
                 $shiftBox.animate({ height: 0 }, 300, function() {
@@ -313,7 +313,7 @@ export function ShowHiddenNameBox($) {
                 });
             } else {
                 $shiftBox.css('overflow', 'inherit');
-                $(this).html('收起<i class="el-icon-caret-top"></i>');
+                $(this).html('收起<em class="el-icon-caret-top"></em>');
                 $shiftBox.animate({ height: $shiftBox.data('heightData') }, 300, function() {
                     $shiftBox.css('height', 'auto');
                 });
@@ -373,7 +373,7 @@ export function dateFormat(date, fmt) {
  * @param {function} processingData 处理数据
  */
 export function dataEntryData(formHeader, data: DataEntryDataObj[], orgData: DataEntryDataObj[], delArr: string[], insertArr: DataEntryDataObj[], updateArr: DataEntryDataObj[], processingData?) {
-    data.forEach((item) => {
+    data.forEach(item => {
         if (item.delFlag === 1) {
             if (item.id) {
                 delArr.push(item.id);
@@ -383,7 +383,7 @@ export function dataEntryData(formHeader, data: DataEntryDataObj[], orgData: Dat
             if (!_.isEqual(orgObj, item)) {
                 item.orderId = formHeader.id;
                 if (processingData) {
-                    processingData(item)
+                    processingData(item);
                 }
                 updateArr.push(item);
             }
@@ -392,15 +392,15 @@ export function dataEntryData(formHeader, data: DataEntryDataObj[], orgData: Dat
             item.orderId = formHeader.id;
             item.orderNo = formHeader.orderNo;
             if (processingData) {
-                processingData(item)
+                processingData(item);
             }
             insertArr.push(item);
         }
     });
 }
 interface DataEntryDataObj {
-    delFlag? : number;
-    id? : string;
+    delFlag?: number;
+    id?: string;
     orderId?: string;
     factory?: string;
     orderNo?: string;
@@ -620,7 +620,7 @@ export function recombineField(arr, field) {
  */
 export function getIndexMethod(tableIndex, data): number {
     const num = data.reduce((total, currentValue, index) => {
-        return total + (tableIndex < index ? 0 : currentValue.delFlag === 1 ? 1 : 0)
+        return total + (tableIndex < index ? 0 : currentValue.delFlag === 1 ? 1 : 0);
     }, 0);
-    return tableIndex + 1 - num
+    return tableIndex + 1 - num;
 }
