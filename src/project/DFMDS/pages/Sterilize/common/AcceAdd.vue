@@ -317,6 +317,7 @@
                 item.potOrderId = formHeader.id;
             });
             return {
+                potOrderNo: formHeader.potOrderNo,
                 steCookingConsumeSaveDto,
                 steAccessoriesConsumeSaveDto,
                 newSteAccessoriesConsumeSaveDto
