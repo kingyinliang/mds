@@ -34,9 +34,9 @@
                 <el-col v-for="(item, index) in dataList" id="normal" :key="index" :span="12" style="margin-top: 12px; padding-bottom: 20px;">
                     <div class="title_left" style=" margin-bottom: 8px; font-weight: 600; font-size: 16px;">
                         工序：
-                        <font style="color: red;">
+                        <em style="color: red;">
                             {{ item.productLineName }}
-                        </font>
+                        </em>
                     </div>
                     <div class="sole_cont">
                         <el-form size="small" :inline="true" label-position="right" label-width="80px">
