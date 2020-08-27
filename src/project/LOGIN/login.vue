@@ -39,7 +39,7 @@
             </el-col>
         </el-row>
         <!--修改密码-->
-        <el-dialog :close-on-click-modal="false" width="500px" title="修改密码" :visible.sync="visible">
+        <el-dialog :close-on-click-modal="false" width="500px" :title="`修改密码 (${realName} ${userName})`" :visible.sync="visible">
             <div>
                 <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="100px" @keyup.enter.native="dataFormSubmit()">
                     <el-form-item label="原密码：" prop="password">
@@ -106,6 +106,8 @@ export default {
 
         };
         return {
+            userName: '',
+            realName: '',
             // 修改密码校验
             dataRule: {
                 password: [
@@ -198,6 +200,11 @@ export default {
                 if (valid) {
                     COMMON_API.UPPASS_API(this.dataForm).then(() => {
                         this.$successToast('密码修改成功');
+                        this.dataForm = {
+                            password: '',
+                            newPassword: '',
+                            conPassword: ''
+                        }
                         this.visible = false;
                         if (sessionStorage.getItem('defaultFactory')) {
                             const dfFa = this.factory.filter(item => item.deptCode === sessionStorage.getItem('defaultFactory'))[0]
@@ -243,9 +250,13 @@ export default {
             sessionStorage.setItem('staff-post', data.post || '');
             sessionStorage.setItem('staff-location', data.deptName || '');
             sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
+            this.userName = data.userName
+            this.realName = data.realName
             if (data.firstFlag === 'Y') {
                 this.visible = true;
                 this.factory = data.userFactory
+                this.dataForm.id = data.id
+                this.dataForm.workNum = data.userName
             } else if (data.defaultFactory) {
                 const dfFa = data.userFactory.filter(item => item.deptCode === data.defaultFactory)[0]
                 this.$refs.selectfactory.goFa(dfFa)

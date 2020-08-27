@@ -118,11 +118,11 @@
         daysFlag=[0, 0, 0]
         readList: MessageObject[]=[]
         unreadList: MessageObject[]=[]
-        loginUserId= sessionStorage.getItem('loginUserId');
+        loginUserId= sessionStorage.getItem('loginUserId')
         realName= sessionStorage.getItem('realName')
-        post=sessionStorage.getItem('staff-post')
-        deptName=sessionStorage.getItem('staff-location')
-        gender=sessionStorage.getItem('gender')
+        post= sessionStorage.getItem('staff-post')
+        deptName= sessionStorage.getItem('staff-location')
+        gender= sessionStorage.getItem('gender')
 
 
         async mounted() {
