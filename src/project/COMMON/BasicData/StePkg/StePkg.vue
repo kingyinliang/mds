@@ -3,7 +3,7 @@
         <mds-card title="对应列表" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
-                    <el-select v-model="queryForm.stePotId" size="small" placeholder="杀菌锅" style="width: 160px; margin-right: 10px;" clearable>
+                    <el-select v-model="queryForm.stePotId" size="small" filterable placeholder="杀菌锅" style="width: 160px; margin-right: 10px;" clearable>
                         <el-option v-for="(item, index) in holderList" :key="index" :label="item.holderName" :value="item.id" />
                     </el-select>
                     <el-button v-if="isAuth('stePkgQuery')" type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; queryType = 1; GetData() }">
