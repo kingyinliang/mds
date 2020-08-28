@@ -148,7 +148,7 @@
                 <el-table-column min-width="55">
                     <template slot-scope="scope">
                         <el-button v-if="isAuth('steCookMxInsert')" type="text" :disabled="!isRedact" @click="accSplit(scope.row, scope.$index)">
-                            <i class="iconfont factory-chaifen" />拆分
+                            <em class="iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
                 </el-table-column>

@@ -8,7 +8,7 @@
                 <el-col v-for="(item, index) in flourContainerList" :key="index" class="colorItem" :span="6" style="margin-bottom: 10px;">
                     <div class="stock-box colorContainer">
                         <p class="stock-title">
-                            <i class="iconfont factory-zhizaozhuisu" />{{ flourContainerList[index].holderName }}
+                            <em class="iconfont factory-zhizaozhuisu" />{{ flourContainerList[index].holderName }}
                         </p>
                         <div class="stock-container clearfix">
                             <img src="@/assets/img/ui2.0/instockPot.png" alt="" class="stock-img">

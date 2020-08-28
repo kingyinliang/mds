@@ -35,7 +35,7 @@
                                 <el-table-column label="操作" fixed="right" align="center" width="80">
                                     <template slot-scope="scope">
                                         <el-button v-if="isAuth('steSplit')" type="text" @click="orderSplit(scope.row)">
-                                            <i class="iconfont factory-chaifen" />拆分
+                                            <em class="iconfont factory-chaifen" />拆分
                                         </el-button>
                                     </template>
                                 </el-table-column>
@@ -85,7 +85,7 @@
                                             删除
                                         </el-button>
                                         <el-button v-if="isAuth('steSplitMx')" type="text" @click="orderSplitDetail(scope.row)">
-                                            <i class="iconfont factory-liebiao" />
+                                            <em class="iconfont factory-liebiao" />
                                             <span style="margin-left: 5px;">详情</span>
                                         </el-button>
                                     </template>

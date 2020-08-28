@@ -3,7 +3,7 @@
         <el-submenu v-for="(deptId, index) in workshop" :key="index" :index="deptId.deptId">
             <template slot="title">
                 <div @click="goPage(deptId)">
-                    <i :class="page.icon || ''" class="site-sidebar__menu-icon iconfont" />
+                    <em :class="page.icon || ''" class="site-sidebar__menu-icon iconfont" />
                     <span>{{ deptId.deptName.replace(/车间/g, '') }}</span>
                 </div>
             </template>

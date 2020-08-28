@@ -49,13 +49,13 @@
                         <el-table-column label="操作" width="65">
                             <template slot-scope="scope">
                                 <el-button v-if="scope.row.isSplit === '0'" type="text" size="mini" :disabled="!(isRedact && (scope.row.status === 'noPass' || (scope.row.status !== 'submit' && scope.row.status !== 'checked')))" @click="addData(scope.row, scope.$index, AddSupDate)">
-                                    <i class="icons iconfont factory-chaifen" />拆分
+                                    <em class="icons iconfont factory-chaifen" />拆分
                                 </el-button>
                             </template>
                         </el-table-column>
                         <el-table-column min-width="125">
                             <template slot="header">
-                                <i class="reqI">*</i><span>批次</span>
+                                <em class="reqI">*</em><span>批次</span>
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
@@ -63,7 +63,7 @@
                         </el-table-column>
                         <el-table-column label="领用数量" min-width="100">
                             <template slot="header">
-                                <i class="reqI">*</i><span>领用数量</span>
+                                <em class="reqI">*</em><span>领用数量</span>
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.receiveAmount" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" size="mini" />
@@ -111,13 +111,13 @@
                         <el-table-column label="操作" width="65">
                             <template slot-scope="scope">
                                 <el-button v-if="scope.row.isSplit === '0'" type="text" size="mini" :disabled="!(isRedact && (scope.row.status === 'noPass' || (scope.row.status !== 'submit' && scope.row.status !== 'checked')))" @click="addData(scope.row, scope.$index, SupDate)">
-                                    <i class="icons iconfont factory-chaifen" />拆分
+                                    <em class="icons iconfont factory-chaifen" />拆分
                                 </el-button>
                             </template>
                         </el-table-column>
                         <el-table-column min-width="125">
                             <template slot="header">
-                                <i class="reqI">*</i><span>批次</span>
+                                <em class="reqI">*</em><span>批次</span>
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.batch" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" maxlength="10" size="mini" />
@@ -125,7 +125,7 @@
                         </el-table-column>
                         <el-table-column label="领用数量" min-width="100">
                             <template slot="header">
-                                <i class="reqI">*</i><span>领用数量</span>
+                                <em class="reqI">*</em><span>领用数量</span>
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.receiveAmount" :disabled="!(isRedact && (scope.row.status === 'noPass' || (isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked' && scope.row.addStatus !== '已添加')))" placeholder="请输入" size="mini" />

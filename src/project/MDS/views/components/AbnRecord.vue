@@ -31,7 +31,7 @@ export default {
 .audit {
     margin: 10px 0;
     line-height: 32px;
-    i {
+    em {
         float: left;
         font-size: 22px;
     }

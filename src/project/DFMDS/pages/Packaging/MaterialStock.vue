@@ -14,7 +14,7 @@
         >
             <template slot="tab-head-main">
                 <div class="box-card-title clearfix">
-                    <h3> <i class="title-icon" />包材列表 </h3>
+                    <h3> <em class="title-icon" />包材列表 </h3>
                 </div>
             </template>
             <template slot="operation_column" slot-scope="{ scope }">

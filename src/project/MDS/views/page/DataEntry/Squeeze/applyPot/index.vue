@@ -31,12 +31,12 @@
                 </el-col>
             </el-row>
             <div class="toggleSearchBottom">
-                <i class="el-icon-caret-top" />
+                <em class="el-icon-caret-top" />
             </div>
         </el-card>
         <div class="tableCard">
             <div class="toggleSearchTop" style=" position: relative; margin-bottom: 8px; background-color: white; border-radius: 5px;">
-                <i class="el-icon-caret-bottom" />
+                <em class="el-icon-caret-bottom" />
             </div>
             <mds-card title="申请列表" :name="'applylist'" style="margin-top: 5px;">
                 <el-table class="newTable" header-row-class-name="tableHead" :data="dataList" border tooltip-effect="dark" @row-dblclick="showDetail">

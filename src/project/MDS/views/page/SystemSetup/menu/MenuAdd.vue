@@ -43,7 +43,7 @@
                                     @click="iconActiveHandle(item)"
                                 >
                                     <template>
-                                        <i :class="item" class="iconfont" style="font-size: 20px;" />
+                                        <em :class="item" class="iconfont" style="font-size: 20px;" />
                                     </template>
                                 </el-button>
                             </div>

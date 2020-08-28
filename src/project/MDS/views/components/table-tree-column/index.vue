@@ -2,7 +2,7 @@
     <el-table-column :prop="prop" v-bind="$attrs">
         <template slot-scope="scope">
             <span :style="childStyles(scope.row)" @click.prevent="toggleHandle(scope.$index, scope.row)">
-                <i :class="iconClasses(scope.row)" :style="iconStyles(scope.row)" />
+                <em :class="iconClasses(scope.row)" :style="iconStyles(scope.row)" />
                 {{ scope.row[prop] }}
             </span>
         </template>

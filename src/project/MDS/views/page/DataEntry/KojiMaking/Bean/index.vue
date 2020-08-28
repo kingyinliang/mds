@@ -306,17 +306,17 @@
                                 <template slot-scope="scope">
                                     <el-col>
                                         <span v-if="!disabled" style="cursor: pointer;" @click="selectUser(scope.row)">
-                                            <i v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</i>
+                                            <em v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</em>
                                             <span>
-                                                <i v-if="scope.row.userType === '临时工'">点击输入临时工</i>
-                                                <i v-else>点击选择人员</i>
+                                                <em v-if="scope.row.userType === '临时工'">点击输入临时工</em>
+                                                <em v-else>点击选择人员</em>
                                             </span>
                                         </span>
                                         <span v-else style="cursor: pointer;">
-                                            <i v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</i>
+                                            <em v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</em>
                                             <span>
-                                                <i v-if="scope.row.userType === '临时工'">点击输入临时工</i>
-                                                <i v-else>点击选择人员</i>
+                                                <em v-if="scope.row.userType === '临时工'">点击输入临时工</em>
+                                                <em v-else>点击选择人员</em>
                                             </span>
                                         </span>
                                     </el-col>

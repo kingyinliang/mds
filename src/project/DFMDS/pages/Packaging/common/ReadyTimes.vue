@@ -10,7 +10,7 @@
             </template>
             <div v-if="currentFormDataGroup.classes === 'M' || currentFormDataGroup.classes === 'D'" class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'M').dictValue : '' }}</h3>
+                    <h3><em class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'M').dictValue : '' }}</h3>
                 </div>
                 <el-row>
                     <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
@@ -65,7 +65,7 @@
             </div>
             <div v-if="currentFormDataGroup.classes === 'A' || currentFormDataGroup.classes === 'D'" class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'A').dictValue : '' }}</h3>
+                    <h3><em class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'A').dictValue : '' }}</h3>
                 </div>
                 <el-row>
                     <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
@@ -110,7 +110,7 @@
             </div>
             <div v-if="currentFormDataGroup.classes === 'N' || currentFormDataGroup.classes === 'D'" class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'N').dictValue : '' }}</h3>
+                    <h3><em class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'N').dictValue : '' }}</h3>
                 </div>
                 <el-row>
                     <el-form :inline="true" :model="currentFormDataGroup" label-width="100px">
@@ -165,7 +165,7 @@
             </div>
             <div class="marginL10px">
                 <div class="box-card-title clearfix">
-                    <h3><i class="point-icon" />备注</h3>
+                    <h3><em class="point-icon" />备注</h3>
                 </div>
                 <el-row>
                     <el-input v-model="currentFormDataGroup.remark" type="textarea" class="textarea" style="width: 100%; height: 100px;" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')" />

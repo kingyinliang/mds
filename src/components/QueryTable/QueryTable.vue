@@ -44,7 +44,7 @@
                 </el-form-item>
             </el-form>
             <div v-if="!tabs.length && type !== 'home'" class="toggleSearchBottom">
-                <i class="el-icon-caret-top" />
+                <em class="el-icon-caret-top" />
             </div>
         </el-card>
         <div v-if="type === 'home'">
@@ -64,7 +64,7 @@
                                 <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip || false" :width="chind.width || ''" />
                             </template>
                             <template v-if="item.header" slot="header">
-                                <i class="reqI">*</i><span>{{ item.label }}</span>
+                                <em class="reqI">*</em><span>{{ item.label }}</span>
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-if="item.redact && item.type === 'input'" v-model="scope.row[item.prop]" :disabled="!scope.row.redact" placeholder="手工录入" size="small" />
@@ -93,7 +93,7 @@
         </el-tabs>
         <div v-else class="tableCard box-card" style="min-height: 400px; background: #fff;">
             <div class="toggleSearchTop">
-                <i class="el-icon-caret-bottom" />
+                <em class="el-icon-caret-bottom" />
             </div>
             <div>
                 <slot :name="'tab-head-main'" />

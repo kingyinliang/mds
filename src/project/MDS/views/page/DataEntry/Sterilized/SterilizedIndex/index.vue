@@ -33,7 +33,7 @@
                         <div class="box-item-top">
                             <div class="box-item-title">
                                 <div class="box-item-title-name">
-                                    <i class="title-icon" />{{ item.holderName }}
+                                    <em class="title-icon" />{{ item.holderName }}
                                 </div>
                                 <div :class="item.selectOrder.orderStatus === 'noPass' ? 'box-item-title-state-nopass' : 'box-item-title-state'">
                                     <label style="color: rgba(0, 0, 0, 0.65);">状态：</label>{{ item.selectOrder.orderStatus === 'submit' ? '已提交' : item.selectOrder.orderStatus === 'checked' ? '审核通过' : item.selectOrder.orderStatus === 'noPass' ? '审核不通过' : item.selectOrder.orderStatus === 'saved' ? '已保存' : item.selectOrder.orderStatus === '已同步' ? '未录入' : item.selectOrder.orderStatus }}

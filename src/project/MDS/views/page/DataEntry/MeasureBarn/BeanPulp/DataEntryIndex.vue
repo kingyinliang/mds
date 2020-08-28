@@ -17,25 +17,25 @@
             <el-col :span="20">
                 <div class="card-right" style="background: #487bff;">
                     <p class="dataEntry-head-leftRight__title">
-                        <i class="iconfont factory-gongchang" />{{ formData.factoryName ? formData.factoryName : '' }}
+                        <em class="iconfont factory-gongchang" />{{ formData.factoryName ? formData.factoryName : '' }}
                     </p>
                     <div class="dataEntry-head-leftRight-message">
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>{{ formData.area ? formData.area : '' }}</p>
-                            <p><i class="iconfont factory-quyu" />物理区域</p>
+                            <p><em class="iconfont factory-quyu" />物理区域</p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.holderName ? formData.holderName : '' }}
                             </p>
-                            <p> <i class="iconfont factory-bianhao" />容器号 </p>
+                            <p> <em class="iconfont factory-bianhao" />容器号 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>
                                 {{ formData.capacity ? formData.capacity.toLocaleString() : '' }}
                                 KG
                             </p>
-                            <p> <i class="iconfont factory-cunchurongliang" />仓体容量 </p>
+                            <p> <em class="iconfont factory-cunchurongliang" />仓体容量 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <el-tooltip class="item" effect="dark" :content="(formData.materialNo ? formData.materialNo : '') + ' ' + (formData.materialName ? formData.materialName : '')" placement="top">
@@ -43,11 +43,11 @@
                                     {{ (formData.materialNo ? formData.materialNo : '') + ' ' + (formData.materialName ? formData.materialName : '') }}
                                 </p>
                             </el-tooltip>
-                            <p> <i class="iconfont factory-bianma" />物料编码 </p>
+                            <p> <em class="iconfont factory-bianma" />物料编码 </p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p>{{ total }} KG</p>
-                            <p> <i class="iconfont factory-shujurongliang" />当前总量 </p>
+                            <p> <em class="iconfont factory-shujurongliang" />当前总量 </p>
                         </div>
                     </div>
                 </div>
@@ -274,7 +274,7 @@
                         ]"
                     >
                         <el-input v-model.number="adjustForm.quantity" type="number" style="width: 220px;">
-                            <i slot="suffix">KG</i>
+                            <em slot="suffix">KG</em>
                         </el-input>
                     </el-form-item>
                     <el-form-item

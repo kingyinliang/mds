@@ -75,12 +75,12 @@
                             </p>
                             <div v-if="index > 0 && index < 7" class="topBox_boxItem_popover">
                                 <p class="">
-                                    <i class="dot" style="background: #1890ff;" />味极鲜<span style="float: right;">{{ item.wdm }} 罐</span>
+                                    <em class="dot" style="background: #1890ff;" />味极鲜<span style="float: right;">{{ item.wdm }} 罐</span>
                                 </p>
                                 <p class="">
-                                    <i class="dot" style="background: #ffbf00;" />六月鲜<span style="float: right;">{{ item.lyx }} 罐</span>
+                                    <em class="dot" style="background: #ffbf00;" />六月鲜<span style="float: right;">{{ item.lyx }} 罐</span>
                                 </p>
-                                <i class="topBox_boxItem_popover_ar" />
+                                <em class="topBox_boxItem_popover_ar" />
                             </div>
                         </div>
                         <div v-if="item.color" class="topBox_circle" :style="{ background: item.color }">
@@ -92,10 +92,10 @@
         </mds-card>
         <div v-show="fastS" class="box-card">
             <div class="box-card-title clearfix">
-                <h3> <i class="title-icon" style="background: #ffbf00;" />发酵罐列表 </h3>
-                <i v-if="isAuth('report:production:fermentation')" class="floatR" @click="goSummary()">
+                <h3> <em class="title-icon" style="background: #ffbf00;" />发酵罐列表 </h3>
+                <em v-if="isAuth('report:production:fermentation')" class="floatR" @click="goSummary()">
                     <a href="#/DataEntry-Fermentation-Fermenter-summary">发酵罐一览表>></a>
-                </i>
+                </em>
             </div>
             <div>
                 <el-row class="potList" :gutter="10" style="min-height: 150px;">

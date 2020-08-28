@@ -25,7 +25,7 @@
                     <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="materielDataList" :row-class-name="rowDelFlag" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;">
                         <el-table-column min-width="200">
                             <template slot="header">
-                                <i class="reqI">*</i> 生产物料
+                                <em class="reqI">*</em> 生产物料
                             </template>
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.productCode" value-key="productCode" placeholder="请选择生产物料" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeProduct(scope.row)">
@@ -35,7 +35,7 @@
                         </el-table-column>
                         <el-table-column min-width="100" label="">
                             <template slot="header">
-                                <i class="reqI">*</i> 生产数
+                                <em class="reqI">*</em> 生产数
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.productWeight" type="number" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" @input="changeProductWeight(scope.row)" />
@@ -48,7 +48,7 @@
                         </el-table-column>
                         <el-table-column min-width="200">
                             <template slot="header">
-                                <i class="reqI">*</i> 发料料号
+                                <em class="reqI">*</em> 发料料号
                             </template>
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.issueCode" value-key="issueCode" placeholder="请选择发料料号" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeIssue(scope.row)">
@@ -83,7 +83,7 @@
                         </el-table-column>
                         <el-table-column min-width="130">
                             <template slot="header">
-                                <i class="reqI">*</i> 发料批次
+                                <em class="reqI">*</em> 发料批次
                             </template>
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.issueBatch" placeholder="请选择发料批次" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" @change="changeBatch(scope.row)">
@@ -93,7 +93,7 @@
                         </el-table-column>
                         <el-table-column min-width="100">
                             <template slot="header">
-                                <i class="reqI">*</i> 入库数
+                                <em class="reqI">*</em> 入库数
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-model.number="scope.row.inStorageWeight" type="number" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />
@@ -101,7 +101,7 @@
                         </el-table-column>
                         <el-table-column width="140">
                             <template slot="header">
-                                <i class="reqI">*</i> 入库批次
+                                <em class="reqI">*</em> 入库批次
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.inStorageBatch" maxlength="10" :disabled="!isRedact || scope.row.status === 'submit' || scope.row.status === 'checked'" size="small" placeholder="手工录入" />

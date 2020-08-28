@@ -47,7 +47,7 @@
                             <span>参数</span>
                         </h4>
                         <h5>
-                            <span><i class="title-icon" style="background: #487bff;" />详细参数</span>
+                            <span><em class="title-icon" style="background: #487bff;" />详细参数</span>
                             <el-button v-if="isAuth('sys:dict:save')" size="small" type="primary" @click="addorupdate('param', false, true)">
                                 新增
                             </el-button>

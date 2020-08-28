@@ -44,14 +44,14 @@
                     </el-col>
                 </el-row>
                 <div class="toggleSearchBottom">
-                    <i class="el-icon-caret-top" />
+                    <em class="el-icon-caret-top" />
                 </div>
             </el-card>
         </div>
         <div class="main">
             <el-card class="tableCard">
                 <div class="toggleSearchTop">
-                    <i class="el-icon-caret-bottom" />
+                    <em class="el-icon-caret-bottom" />
                 </div>
                 <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
                     <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="100" />

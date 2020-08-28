@@ -57,9 +57,9 @@
                                         }"
                                     >
                                         <span v-if="typeof item.prop === 'object'">
-                                            <i v-for="(sole, soleIndex) in item.prop" :key="soleIndex">
+                                            <em v-for="(sole, soleIndex) in item.prop" :key="soleIndex">
                                                 {{ scope.row[sole] }}
-                                            </i>
+                                            </em>
                                         </span>
                                         <span v-else>
                                             {{ scope.row[item.prop] }}

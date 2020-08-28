@@ -19,7 +19,7 @@
                 </el-table-column>
                 <el-table-column min-width="120">
                     <template slot="header">
-                        <i class="reqI">*</i><span>原汁罐号</span>
+                        <em class="reqI">*</em><span>原汁罐号</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.potNoName }}

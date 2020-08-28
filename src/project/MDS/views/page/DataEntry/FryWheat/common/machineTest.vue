@@ -14,7 +14,7 @@
             </el-table-column>
             <el-table-column width="120">
                 <template slot="header">
-                    <i class="reqI">*</i> 焦糊率（%）
+                    <em class="reqI">*</em> 焦糊率（%）
                 </template>
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.cokingRate" size="small" />
@@ -22,7 +22,7 @@
             </el-table-column>
             <el-table-column width="120">
                 <template slot="header">
-                    <i class="reqI">*</i> 膨胀率
+                    <em class="reqI">*</em> 膨胀率
                 </template>
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.expandRate" size="small" />
@@ -30,7 +30,7 @@
             </el-table-column>
             <el-table-column width="120">
                 <template slot="header">
-                    <i class="reqI">*</i> 粉碎度
+                    <em class="reqI">*</em> 粉碎度
                 </template>
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.piecesRate" size="small" />

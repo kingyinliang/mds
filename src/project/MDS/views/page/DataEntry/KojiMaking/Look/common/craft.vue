@@ -42,7 +42,7 @@
         <el-card>
             <div class="htitle">
                 <span class="iconfont">&#xe606;</span> 看曲记录<el-button type="text" class="readyshiftBtn" name="lookar" style="margin-left: 30px;">
-                    收起<i class="el-icon-caret-top" />
+                    收起<em class="el-icon-caret-top" />
                 </el-button>
             </div>
             <div class="lookarBox">
@@ -81,7 +81,7 @@
                     <el-table-column label="序号" type="index" width="50px" fixed />
                     <el-table-column label="" width="205">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>看曲时间</span>
                         </template>
                         <template slot-scope="scope">
@@ -99,7 +99,7 @@
                     </el-table-column>
                     <el-table-column width="100">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>风温实际</span>
                         </template>
                         <template slot-scope="scope">
@@ -108,7 +108,7 @@
                     </el-table-column>
                     <el-table-column width="100">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>品温实际</span>
                         </template>
                         <template slot-scope="scope">
@@ -117,7 +117,7 @@
                     </el-table-column>
                     <el-table-column width="130">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>风速（R/HZ）</span>
                         </template>
                         <template slot-scope="scope">
@@ -126,7 +126,7 @@
                     </el-table-column>
                     <el-table-column width="100">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>风门/进风</span>
                         </template>
                         <template slot-scope="scope">
@@ -135,7 +135,7 @@
                     </el-table-column>
                     <el-table-column label="" width="100">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>强排/反风</span>
                         </template>
                         <template slot-scope="scope">
@@ -144,7 +144,7 @@
                     </el-table-column>
                     <el-table-column label="" width="100">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>加湿情况</span>
                         </template>
                         <template slot-scope="scope">
@@ -161,7 +161,7 @@
                     </el-table-column>
                     <el-table-column label="" width="100">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>加热/冷却</span>
                         </template>
                         <template slot-scope="scope">
@@ -175,7 +175,7 @@
                     <el-table-column label="外品温探头温度">
                         <el-table-column label="">
                             <template slot="header">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <span>上</span>
                             </template>
                             <template slot-scope="scope">
@@ -184,7 +184,7 @@
                         </el-table-column>
                         <el-table-column label="">
                             <template slot="header">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <span>中</span>
                             </template>
                             <template slot-scope="scope">
@@ -193,7 +193,7 @@
                         </el-table-column>
                         <el-table-column label="">
                             <template slot="header">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <span>下</span>
                             </template>
                             <template slot-scope="scope">
@@ -230,7 +230,7 @@
                     <el-table-column label="温度计温度">
                         <el-table-column label="外">
                             <template slot="header">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <span>外</span>
                             </template>
                             <template slot-scope="scope">
@@ -239,7 +239,7 @@
                         </el-table-column>
                         <el-table-column label="里">
                             <template slot="header">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <span>里</span>
                             </template>
                             <template slot-scope="scope">
@@ -267,7 +267,7 @@
             <el-form :inline="true" :model="tech" size="small">
                 <div class="htitle">
                     <span class="iconfont">&#xe609;</span> 加水量记录<el-button type="text" class="readyshiftBtn" name="shuiar" style="margin-left: 30px;">
-                        收起<i class="el-icon-caret-top" />
+                        收起<em class="el-icon-caret-top" />
                     </el-button>
                 </div>
                 <div class="shuiarBox">
@@ -305,7 +305,7 @@
         <el-card>
             <div class="htitle">
                 <span class="iconfont">&#xe602;</span> 感官评价记录<el-button type="text" class="readyshiftBtn" name="feelar" style="margin-left: 30px;">
-                    收起<i class="el-icon-caret-top" />
+                    收起<em class="el-icon-caret-top" />
                 </el-button>
             </div>
             <div class="feelarBox">
@@ -313,7 +313,7 @@
                     <el-table-column prop="feelName" />
                     <el-table-column>
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>U</span>
                         </template>
                         <template slot-scope="scope">
@@ -324,7 +324,7 @@
                     </el-table-column>
                     <el-table-column label="S">
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>S</span>
                         </template>
                         <template slot-scope="scope">
@@ -335,7 +335,7 @@
                     </el-table-column>
                     <el-table-column>
                         <template slot="header">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <span>A</span>
                         </template>
                         <template slot-scope="scope">
@@ -352,7 +352,7 @@
                 <div class="htitle">
                     <span class="iconfont">&#xe607;</span>
                     异常情况记录<el-button type="text" class="readyshiftBtn" name="excar" style="margin-left: 30px;">
-                        收起<i class="el-icon-caret-top" />
+                        收起<em class="el-icon-caret-top" />
                     </el-button>
                 </div>
                 <div class="excarBox">
@@ -727,7 +727,7 @@ input[type="number"] {
 .audit {
     margin: 0 0 10px;
     line-height: 32px;
-    i {
+    em {
         float: left;
         font-size: 22px;
     }

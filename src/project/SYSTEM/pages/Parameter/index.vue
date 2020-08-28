@@ -56,7 +56,7 @@
                             <span>参数</span>
                         </h4>
                         <h5>
-                            <span><i class="title-icon" style="background: #487bff;" />详细参数</span>
+                            <span><em class="title-icon" style="background: #487bff;" />详细参数</span>
                             <el-button v-if="isFocusChild && isAuth('dictInsert')" size="small" type="primary" @click="addOrUpdateItem('param',tempParentRow)">
                                 新增
                             </el-button>

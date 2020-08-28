@@ -9,12 +9,12 @@
         <div class="site-navbar__body clearfix">
             <el-menu class="site-navbar__menu" mode="horizontal">
                 <el-menu-item class="site-navbar__switch" index="0" @click="sidebarFold = !sidebarFold">
-                    <i class="iconfont factory-shouqicaidan switching" :class="{ open: sidebarFold, packup: !sidebarFold }" style="font-size: 25px;" />
+                    <em class="iconfont factory-shouqicaidan switching" :class="{ open: sidebarFold, packup: !sidebarFold }" style="font-size: 25px;" />
                 </el-menu-item>
             </el-menu>
             <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
                 <el-menu-item class="site-navbar__switch" index="4" style="padding: 8px 0;" @click.native="selectFactory">
-                    <span style=" display: block; height: 16px; padding: 0 11px; color: #00a2d4; font-size: 16px; line-height: 16px; border-left: 1px solid #d9d9d9;"><i class="iconfont factory-gongchang" style=" margin-right: 5px; color: #00a2d4;" />{{ factoryName }}</span>
+                    <span style=" display: block; height: 16px; padding: 0 11px; color: #00a2d4; font-size: 16px; line-height: 16px; border-left: 1px solid #d9d9d9;"><em class="iconfont factory-gongchang" style=" margin-right: 5px; color: #00a2d4;" />{{ factoryName }}</span>
                 </el-menu-item>
             </el-menu>
             <el-menu class="site-navbar__menu site-navbar__menu--right" mode="horizontal">
@@ -34,7 +34,7 @@
             </el-menu>
             <el-button v-if="factoryName!=='系统设置'" type="text" style="float: right;" @click.native="goMessage">
                 <el-badge :value="messageNum" :max="99" class="item" :hidden="messageNum===0">
-                    <i class="iconfont factory-bell" style="font-size: 18px;" />
+                    <em class="iconfont factory-bell" style="font-size: 18px;" />
                 </el-badge>
             </el-button>
         </div>

@@ -19,15 +19,15 @@
                     </p>
                     <el-form-item prop="user">
                         <el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号">
-                            <i slot="prefix" class="iconfont factory-zhanghaodenglu" />
+                            <em slot="prefix" class="iconfont factory-zhanghaodenglu" />
                         </el-input>
                     </el-form-item>
                     <el-form-item prop="pass">
                         <el-input v-model="ruleForm2.pass" type="password" auto-complete="off" placeholder="密码">
-                            <i slot="prefix" class="iconfont factory-mima" />
+                            <em slot="prefix" class="iconfont factory-mima" />
                         </el-input>
                         <el-button type="text" class="reset" @click="resetForm('ruleForm2')">
-                            <i class="iconfont factory-zhongzhi" style="font-size: 12px;" />重置
+                            <em class="iconfont factory-zhongzhi" style="font-size: 12px;" />重置
                         </el-button>
                     </el-form-item>
                     <el-form-item>

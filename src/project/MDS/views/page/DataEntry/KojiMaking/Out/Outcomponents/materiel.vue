@@ -10,7 +10,7 @@
                 <el-table-column type="index" width="50" label="序号" fixed />
                 <el-table-column label="盐水" width="200">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>盐水</span>
                     </template>
                     <template slot-scope="scope">
@@ -21,7 +21,7 @@
                 </el-table-column>
                 <el-table-column label="盐水罐号" width="140">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>盐水罐号</span>
                     </template>
                     <template slot-scope="scope">
@@ -37,7 +37,7 @@
                 </el-table-column>
                 <el-table-column label="起始值" width="140">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>起始值</span>
                     </template>
                     <template slot-scope="scope">
@@ -46,7 +46,7 @@
                 </el-table-column>
                 <el-table-column label="结束值" width="140">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>结束值</span>
                     </template>
                     <template slot-scope="scope">

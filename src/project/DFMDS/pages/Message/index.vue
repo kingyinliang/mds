@@ -32,7 +32,7 @@
         <div class="message-content">
             <el-card class="box-card">
                 <div slot="header" class="clearfix" style=" height: 24px; line-height: 24px;">
-                    <i class="iconfont factory-24_fayanduihualiuyan" style=" margin-top: 2px; color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">未读消息</span>
+                    <em class="iconfont factory-24_fayanduihualiuyan" style=" margin-top: 2px; color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">未读消息</span>
                     <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text" :disabled="unreadList.length===0" @click="markReaded">
                         全部已读
                     </el-button>
@@ -41,7 +41,7 @@
                 <ul>
                     <li v-for="item in unreadList" :key="item.id" class="message-item" @click="seeMessage(item)">
                         <div class="message-item__img">
-                            <span class="round-bg"><i class="iconfont" :class="item.icon" /></span>
+                            <span class="round-bg"><em class="iconfont" :class="item.icon" /></span>
                         </div>
                         <div class="message-item__infomation">
                             <div class="message-item__topic">
@@ -59,7 +59,7 @@
             </el-card>
             <el-card class="box-card">
                 <div slot="header" class="clearfix" style=" height: 24px; line-height: 24px;">
-                    <i class="iconfont factory-15_jiefeng" style=" color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">已读消息</span>
+                    <em class="iconfont factory-15_jiefeng" style=" color: #3889ff; font-size: 20px; vertical-align: middle;" /><span style=" font-weight: 600; font-size: 14px;">已读消息</span>
                     <el-button style="float: right; margin-left: 7px; padding: 3px 0; font-size: 14px;" type="text" :disabled="readList.length===0|| readNumStyle===30" @click="readNumStyle=30;pageSizeFromRead = 10;currPageFromRead = 1;daysFlag=[0,0,1]; getMsgDataList(currPageFromRead, pageSizeFromRead, 1)">
                         近30天
                     </el-button>
@@ -74,7 +74,7 @@
                 <ul>
                     <li v-for="item in readList" :key="item.id" class="message-item" @click="seeMessage(item)">
                         <div class="message-item__img">
-                            <span class="round-bg"><i class="iconfont" :class="item.icon" /></span>
+                            <span class="round-bg"><em class="iconfont" :class="item.icon" /></span>
                         </div>
                         <div class="message-item__infomation">
                             <div class="message-item__topic">
@@ -118,11 +118,11 @@
         daysFlag=[0, 0, 0]
         readList: MessageObject[]=[]
         unreadList: MessageObject[]=[]
-        loginUserId= sessionStorage.getItem('loginUserId');
+        loginUserId= sessionStorage.getItem('loginUserId')
         realName= sessionStorage.getItem('realName')
-        post=sessionStorage.getItem('staff-post')
-        deptName=sessionStorage.getItem('staff-location')
-        gender=sessionStorage.getItem('gender')
+        post= sessionStorage.getItem('staff-post')
+        deptName= sessionStorage.getItem('staff-location')
+        gender= sessionStorage.getItem('gender')
 
 
         async mounted() {

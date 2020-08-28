@@ -9,7 +9,7 @@
                         </div>
                         <div class="filter-input">
                             <el-input v-model="filterText" placeholder="部门名称" size="small">
-                                <i slot="prefix" class="el-input__icon el-icon-search" />
+                                <em slot="prefix" class="el-input__icon el-icon-search" />
                             </el-input>
                         </div>
                         <div class="tree-main SelfScrollbar">
@@ -68,17 +68,17 @@
                                             <div class="el-upload-list__item is-success avatar">
                                                 <img class="flex-img__image avatar" :src="'data:image/gif;base64,' + orgDetail.img">
                                                 <label class="el-upload-list__item-status-label">
-                                                    <i class="el-icon-upload-success el-icon-check" />
+                                                    <em class="el-icon-upload-success el-icon-check" />
                                                 </label>
                                                 <span class="el-upload-list__item-actions">
                                                     <span class="el-upload-list__item-delete">
-                                                        <i class="el-icon-delete" @click.stop="() => { if (!update) { removeFile() } }" />
+                                                        <em class="el-icon-delete" @click.stop="() => { if (!update) { removeFile() } }" />
                                                     </span>
                                                 </span>
                                             </div>
                                         </div>
                                         <el-upload v-show="!orgDetail.img" ref="orgImgUpload" class="org-img-upload" :show-file-list="false" :action="FILE_API" :disabled="update" :limit="1" :http-request="httpRequest" :on-success="addfile2">
-                                            <i class="el-icon-plus avatar-uploader-icon" />
+                                            <em class="el-icon-plus avatar-uploader-icon" />
                                         </el-upload>
                                     </el-form-item>
                                     <el-form-item label="联系人：" prop="lxr">
