@@ -24,7 +24,7 @@
                 <el-table-column type="selection" width="50" fixed="left" align="center" />
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="杀菌车间" prop="steWorkShopName" min-width="140" :show-overflow-tooltip="true" />
-                <el-table-column label="杀菌锅号" prop="stePotNo" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="杀菌锅号" prop="stePotName" min-width="140" :show-overflow-tooltip="true" />
                 <el-table-column label="包装车间" prop="pkgWorkShopName" min-width="140" :show-overflow-tooltip="true" />
                 <el-table-column label="包装产线" prop="pkgLineName" min-width="140" :show-overflow-tooltip="true" />
                 <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
