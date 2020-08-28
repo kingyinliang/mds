@@ -119,6 +119,7 @@
                     const filterArr3: (any) = this.pkgLine.filter(it => it.id === this.dataForm.pkgLine);// eslint-disable-line
                     const filterArr4: (any) = this.steWorkShop.filter(it => it.id === this.dataForm.steWorkShop);// eslint-disable-line
                     this.dataForm.stePotNo = filterArr1[0].holderNo;
+                    this.dataForm.stePotName = filterArr1[0].holderName;
                     this.dataForm.pkgWorkShopName = filterArr2[0].deptName;
                     this.dataForm.pkgLineName = filterArr3[0].deptName;
                     this.dataForm.steWorkShopName = filterArr4[0].deptName;
@@ -137,6 +138,7 @@
         pkgLineName?: string;
         stePotId?: string;
         stePotNo?: string;
+        stePotName?: string;
         steWorkShop?: string;
         steWorkShopName?: string;
         pkgWorkShop?: string;
