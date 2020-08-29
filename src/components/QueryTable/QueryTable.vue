@@ -17,6 +17,11 @@
                         <el-form-item v-if="item.type === 'input'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop">
                             <el-input :ref="item.prop" v-model="queryForm[item.prop]" style="width: 170px;" />
                         </el-form-item>
+                        <el-form-item v-if="item.type === 'radio'" :key="item.prop" :label="item.label?`${item.label}：` : ''" :prop="item.prop">
+                            <el-radio v-for="(it, num) in item.radioArr" :key="num" v-model="queryForm[item.prop]" :label="it.val">
+                                {{ it.label }}
+                            </el-radio>
+                        </el-form-item>
                         <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :prop="item.prop">
                             <el-row>
                                 <el-col :span="12">
@@ -55,7 +60,19 @@
                 <div>
                     <slot :name="'tab-head' + index" />
                 </div>
-                <el-table ref="table" class="newTable" :data="tabItem.tableData" max-height="420" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change=" val => tabHandleSelectionChange(val, index)">
+                <el-table
+                    v-if="tabItem.column"
+                    ref="table"
+                    class="newTable"
+                    :class="tableClass"
+                    :data="tabItem.tableData"
+                    max-height="420"
+                    border
+                    tooltip-effect="dark"
+                    header-row-class-name="tableHead"
+                    style="width: 100%; margin-bottom: 20px;"
+                    @selection-change=" val => tabHandleSelectionChange(val, index)"
+                >
                     <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
                     <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                     <template v-for="(item, index2) in tabItem.column">

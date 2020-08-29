@@ -3,6 +3,7 @@
         <query-table
             ref="queryTable"
             :rules="rules"
+            table-class="borderTable"
             :query-form-data="queryFormData"
             :list-interface="listInterface"
             :custom-data="true"
