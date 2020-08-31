@@ -20,7 +20,7 @@
                     <el-input v-model="scope.row.potAmount" size="small" placeholder="请输入" />
                 </template>
             </el-table-column>
-            <el-table-column label="单位" width="70" prop="outputUnit" />
+            <el-table-column label="单位" width="70" prop="potUnit" />
             <el-table-column label="备注" width="100" prop="remark">
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.remark" size="small" placeholder="请输入" />
