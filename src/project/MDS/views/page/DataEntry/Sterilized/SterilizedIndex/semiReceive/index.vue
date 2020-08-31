@@ -40,13 +40,13 @@
                         <el-table-column label="操作" width="70">
                             <template slot-scope="scope">
                                 <el-button type="text" size="mini" disabled @click="addData(scope.row, scope.$index)">
-                                    <i class="icons iconfont factory-chaifen" />拆分
+                                    <em class="icons iconfont factory-chaifen" />拆分
                                 </el-button>
                             </template>
                         </el-table-column>
                         <el-table-column min-width="130">
                             <template slot="header">
-                                <i class="reqI">*</i><span>罐号</span>
+                                <em class="reqI">*</em><span>罐号</span>
                             </template>
                             <template slot-scope="scope">
                                 <el-select v-model="scope.row.holderId" placeholder="请选择" filterable size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="setBatch(scope.row)">
@@ -56,12 +56,12 @@
                         </el-table-column>
                         <el-table-column min-width="200" label="罐内物料" show-overflow-tooltip>
                             <template slot-scope="scope">
-                                <i v-if="scope.row.holderMaterialCode !== null">{{ scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName }}</i>
+                                <em v-if="scope.row.holderMaterialCode !== null">{{ scope.row.holderMaterialCode + ' ' + scope.row.holderMaterialName }}</em>
                             </template>
                         </el-table-column>
                         <el-table-column min-width="130">
                             <template slot="header">
-                                <i class="reqI">*</i><span>批次</span>
+                                <em class="reqI">*</em><span>批次</span>
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.batch" :disabled="!scope.row.isB" size="small" maxlength="10" />
@@ -69,7 +69,7 @@
                         </el-table-column>
                         <el-table-column min-width="100">
                             <template slot="header">
-                                <i class="reqI">*</i><span>实际领料</span>
+                                <em class="reqI">*</em><span>实际领料</span>
                             </template>
                             <template slot-scope="scope">
                                 <el-input v-model="scope.row.receiveAmount" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" placeholder="手工录入" size="small" />

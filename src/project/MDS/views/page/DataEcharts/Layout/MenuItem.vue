@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-menu-item v-for="(item, index) in container" :key="index" :index="item.holderId" @click="goPage(item)">
-            <i :class="page.icon || ''" class="site-sidebar__menu-icon iconfont" />
+            <em :class="page.icon || ''" class="site-sidebar__menu-icon iconfont" />
             <span slot="title">{{ item.holderNo }}</span>
         </el-menu-item>
     </div>

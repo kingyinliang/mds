@@ -382,6 +382,7 @@
                 textUpdate: textRequest.pkgTextUpdate
             }).then(() => {
                 this.$successToast('保存成功');
+                this.isRedact = false;
                 // 重整数据
                 this.btnGetResult();
             })
@@ -404,6 +405,9 @@
                 textUpdate: textRequest.pkgTextUpdate
             }).then(() => {
                 this.$successToast('提交成功');
+                this.isRedact = false;
+                // 重整数据
+                this.btnGetResult();
             })
         }
     }

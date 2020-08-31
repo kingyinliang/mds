@@ -27,7 +27,7 @@
                 </el-table-column>
                 <el-table-column width="150" label="入库批次">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>入库批次</span>
                     </template>
                     <template slot-scope="scope">
@@ -43,7 +43,7 @@
                             删除
                         </el-button>
                         <el-button v-if="scope.row.isSplit === '0'" type="text" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="addInStock(scope.row, scope.$index)">
-                            <i class="icons iconfont factory-chaifen" />拆分
+                            <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
                 </el-table-column> -->

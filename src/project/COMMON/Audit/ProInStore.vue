@@ -17,7 +17,7 @@
         >
             <template slot="tab-head0">
                 <div class="tab__heads clearfix">
-                    <i class="title-icon" />
+                    <em class="title-icon" />
                     <span>入库列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />
@@ -33,7 +33,7 @@
             </template>
             <template slot="tab-head1">
                 <div class="tab__heads clearfix">
-                    <i class="title-icon" />
+                    <em class="title-icon" />
                     <span>入库列表</span>
                     <div style="float: right;">
                         <span>过账日期：</span><el-date-picker v-model="postingDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" size="small" style="width: 140px; margin-right: 10px;" />

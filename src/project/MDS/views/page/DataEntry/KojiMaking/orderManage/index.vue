@@ -56,7 +56,7 @@
                         <el-card style="min-height: 730px;">
                             <div class="box-card-title clearfix">
                                 <h3>
-                                    <i class="title-icon" />订单管理
+                                    <em class="title-icon" />订单管理
                                 </h3>
                                 <slot name="titleBtn" />
                             </div>
@@ -110,14 +110,14 @@
                                                     :disabled="!(scope.row.orderStatus === '不通过' || scope.row.orderStatus === '已同步' || scope.row.orderStatus === '已保存' || scope.row.orderStatus === '待审核' || scope.row.orderStatus === '未录入') || !isAuth('sys:kjmOrderHouse:mySaveOrUpdate')"
                                                     @click="orderSplit(scope.row)"
                                                 >
-                                                    <i class="iconfont factory-chaifen" />拆分
+                                                    <em class="iconfont factory-chaifen" />拆分
                                                 </el-button>
                                                 <el-button
                                                     type="text"
                                                     :disabled="scope.row.orderStatus === '已同步' || scope.row.orderStatus === '未录入' || !isAuth('sys:midInStorage:list')"
                                                     @click="orderCheck(scope.row)"
                                                 >
-                                                    <i class="iconfont factory-renzhengshenhe_huaban" />审核
+                                                    <em class="iconfont factory-renzhengshenhe_huaban" />审核
                                                 </el-button>
                                             </template>
                                         </el-table-column>
@@ -135,7 +135,7 @@
                                 <el-col :span="12" style=" color: #000; font-weight: 500; font-size: 16px;">
                                     <div class="box-card-title clearfix">
                                         <h3>
-                                            <i class="title-icon" :style="{ background: '#FFBF00FF' }" />订单明细
+                                            <em class="title-icon" :style="{ background: '#FFBF00FF' }" />订单明细
                                         </h3>
                                         <slot name="titleBtn" />
                                     </div>
@@ -232,7 +232,7 @@
                         </el-table-column>
                         <el-table-column width="140">
                             <template slot="header">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <span>入罐号</span>
                             </template>
                             <template slot-scope="scope">
@@ -243,7 +243,7 @@
                         </el-table-column>
                         <el-table-column width="140">
                             <template slot="header">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <span>曲房</span>
                             </template>
                             <template slot-scope="scope">
@@ -262,7 +262,7 @@
                         </el-table-column>
                         <el-table-column width="165">
                             <template slot="header">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <span>制曲日期</span>
                             </template>
                             <template slot-scope="scope">
@@ -271,7 +271,7 @@
                         </el-table-column>
                         <el-table-column label="生产日期" width="165">
                             <template slot="header">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <span>生产日期</span>
                             </template>
                             <template slot-scope="scope">

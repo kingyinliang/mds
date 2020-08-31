@@ -6,7 +6,7 @@
                     index="home"
                     @click="menuActiveName = 'home';$router.push({ path: 'home' });"
                 >
-                    <i class="site-sidebar__menu-icon iconfont factory-shouye" />
+                    <em class="site-sidebar__menu-icon iconfont factory-shouye" />
                     <span slot="title">首页</span>
                 </el-menu-item>
                 <template v-for="menu in menuList">

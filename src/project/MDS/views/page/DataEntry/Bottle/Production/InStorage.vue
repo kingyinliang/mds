@@ -14,7 +14,7 @@
             </el-table-column>
             <el-table-column label="生产批次" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="190">
                 <template slot="header">
-                    <i class="reqI">*</i><span>生产批次</span>
+                    <em class="reqI">*</em><span>生产批次</span>
                 </template>
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.batch" placeholder="手工录入" size="mini" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
@@ -22,7 +22,7 @@
             </el-table-column>
             <el-table-column label="本班生产 " :show-overflow-tooltip="true" prop="production" width="190">
                 <template slot="header">
-                    <i class="reqI">*</i><span>本班生产</span>
+                    <em class="reqI">*</em><span>本班生产</span>
                 </template>
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.production" type="number" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />

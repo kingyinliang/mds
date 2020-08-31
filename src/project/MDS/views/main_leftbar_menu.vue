@@ -2,7 +2,7 @@
     <el-submenu v-if="!getChildren" :index="menu.menuId + ''" :popper-class="'site-sidebar--' + sidebarLayoutSkin + '-popper'">
         <template slot="title">
             <div @click="gotoRouteHandle(menu)">
-                <i :class="menu.icon || ''" class="site-sidebar__menu-icon iconfont" />
+                <em :class="menu.icon || ''" class="site-sidebar__menu-icon iconfont" />
                 <span>{{ menu.name }}</span>
             </div>
         </template>
@@ -11,7 +11,7 @@
         </template>
     </el-submenu>
     <el-menu-item v-else :index="menu.menuId + ''" @click="gotoRouteHandle(menu)">
-        <i :class="menu.icon || ''" class="site-sidebar__menu-icon iconfont" />
+        <em :class="menu.icon || ''" class="site-sidebar__menu-icon iconfont" />
         <span>{{ menu.name }}</span>
     </el-menu-item>
 </template>

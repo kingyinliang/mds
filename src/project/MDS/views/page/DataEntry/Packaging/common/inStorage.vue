@@ -12,7 +12,7 @@
                     <el-table-column label="白/中/夜班" width="120">
                         <template slot-scope="scope">
                             <div class="required">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
                                     <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
                                 </el-select>
@@ -22,7 +22,7 @@
                     <el-table-column label="生产批次" width="150">
                         <template slot-scope="scope">
                             <div class="required">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <el-input v-model="scope.row.batch" placeholder="手工录入" size="small" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" maxlength="10" />
                             </div>
                         </template>
@@ -135,7 +135,7 @@
                     <el-table-column label="白/中/夜班" width="120">
                         <template slot-scope="scope">
                             <div class="required">
-                                <i class="reqI">*</i>
+                                <em class="reqI">*</em>
                                 <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
                                     <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
                                 </el-select>
@@ -226,7 +226,7 @@
                 <el-table-column label="白/中/夜班" width="120">
                     <template slot-scope="scope">
                         <div class="required">
-                            <i class="reqI">*</i>
+                            <em class="reqI">*</em>
                             <el-select v-model="scope.row.classType" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" size="small">
                                 <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
                             </el-select>

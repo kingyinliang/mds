@@ -11,7 +11,7 @@
                 <el-table-column prop="parentName" header-align="left" align="left" min-width="100" :show-overflow-tooltip="true" label="上级菜单" />
                 <el-table-column header-align="left" align="left" width="100" :show-overflow-tooltip="true" label="图标">
                     <template slot-scope="scope">
-                        <i class="iconfont" :class="scope.row.menuIcon" />
+                        <em class="iconfont" :class="scope.row.menuIcon" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="type" header-align="left" align="left" min-width="100" :show-overflow-tooltip="true" label="类型">

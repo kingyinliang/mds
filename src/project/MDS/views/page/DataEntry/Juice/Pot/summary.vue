@@ -4,7 +4,7 @@
             <el-tab-pane name="3">
                 <span slot="label" class="spanview">原汁库存汇总</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />原汁库存汇总表（单位：方）
+                    <em class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />原汁库存汇总表（单位：方）
                     <el-button v-if="isAuth('juice:pot:juiceStockItemExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelC(true)">
                         导出
                     </el-button>
@@ -37,7 +37,7 @@
             <el-tab-pane name="1">
                 <span slot="label" class="spanview">原汁库存明细</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />原汁总库存（单位:方）
+                    <em class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />原汁总库存（单位:方）
                     <el-button v-if="isAuth('juice:pot:juiceStockItemExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelA(true)">
                         导出
                     </el-button>
@@ -53,7 +53,7 @@
                     <el-table-column label="原汁总库存量" :show-overflow-tooltip="true" prop="sum" />
                 </el-table>
                 <div class="titleLeft">
-                    <i class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />原汁总库存列表（单位:方）
+                    <em class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />原汁总库存列表（单位:方）
                 </div>
                 <el-table header-row-class-name="tableHead" class="newTable" :data="dataLeftListOrder" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="55" :index="indexOrderMethod" fixed />
@@ -89,7 +89,7 @@
             <el-tab-pane name="2">
                 <span slot="label" class="spanview">可用原汁明细</span>
                 <div class="titleLeft">
-                    <i class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />原汁总库存（单位:方）
+                    <em class="iconfont factory-kucun" style=" margin-right: 10px; color: #666;" />原汁总库存（单位:方）
                     <el-button v-if="isAuth('juice:pot:juiceStockItemExport')" type="primary" size="small" style=" float: right; color: #fff; background-color: #1890ff;" @click="ExportExcelB(true)">
                         导出
                     </el-button>
@@ -105,7 +105,7 @@
                     <el-table-column label="原汁总库存量" :show-overflow-tooltip="true" prop="sum" />
                 </el-table>
                 <div class="titleLeft">
-                    <i class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />可用原汁列表（单位:方）
+                    <em class="iconfont factory-icon_function_keyongkucun" style=" margin-right: 10px; color: #666;" />可用原汁列表（单位:方）
                 </div>
                 <el-table header-row-class-name="tableHead" class="newTable" :data="dataRightListOrder" border tooltip-effect="dark">
                     <el-table-column type="index" label="序号" width="55" :index="indexOrderMethodRight" fixed />

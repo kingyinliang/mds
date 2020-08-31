@@ -139,7 +139,7 @@ module.exports = {
         'no-whitespace-before-property': 2,
         'no-void': 2, // 禁用 void 操作符
         'no-var': 1, // 禁用 var，用 let 和 const 代替
-        'no-warning-comments': [1, { terms: ['todo', 'fixme', 'xxx'], location: 'start' }], //不能有警告备注
+        'no-warning-comments': [1, { terms: ['fixme', 'xxx'], location: 'start' }], //不能有警告备注
         'no-with': 2, // 禁用 with
         'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0, // 禁止使用 debugger
         'array-bracket-spacing': [2, 'never'], // 是否允许非空数组里面有多余的空格

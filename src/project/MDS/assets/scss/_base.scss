@@ -901,7 +901,7 @@ img {
                 color: white;
                 font-weight: 600;
                 font-size: 16px;
-                i {
+                em {
                     font-weight: normal;
                     margin-right: 10px;
                 }
@@ -949,7 +949,7 @@ img {
                         text-overflow: ellipsis;
                         color: white;
                         text-align: center;
-                        i {
+                        em {
                             margin-right: 5px;
                         }
                     }
@@ -1148,7 +1148,7 @@ img {
                     color: #333;
                 }
                 .el-form-item__label {
-                    i {
+                    em {
                         color: $main-color;
                     }
                 }
@@ -1229,7 +1229,7 @@ img {
                 font-size: 14px;
                 color: #999;
                 line-height: 32px;
-                i {
+                em {
                     color: #487bff;
                     margin-right: 5px;
                 }
@@ -1447,7 +1447,7 @@ $indexlist: (
         background: #3a8ee6;
         span,
         button,
-        i {
+        em {
             color: white !important;
         }
     }

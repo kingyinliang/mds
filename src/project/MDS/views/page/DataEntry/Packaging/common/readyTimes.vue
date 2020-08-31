@@ -20,7 +20,7 @@
         <el-card v-if="readyDate.classes === '' || readyDate.classes === '白班' || readyDate.classes === '多班'" class="box-card">
             <div slot="header" class="clearfix">
                 白班录入
-                <span class="readyshiftBtn dayshift" name="dayshift">收起<i class="el-icon-caret-top" /></span>
+                <span class="readyshiftBtn dayshift" name="dayshift">收起<em class="el-icon-caret-top" /></span>
             </div>
             <div class="dayshiftBox">
                 <el-form-item label="工作开始时间：">
@@ -78,7 +78,7 @@
         <el-card v-if="readyDate.isCause == '1' && (readyDate.classes === '' || readyDate.classes === '中班' || readyDate.classes === '多班')" class="box-card">
             <div slot="header" class="clearfix">
                 中班录入
-                <span class="readyshiftBtn middleshift" name="middleshift">收起 <i class="el-icon-caret-top" /></span>
+                <span class="readyshiftBtn middleshift" name="middleshift">收起 <em class="el-icon-caret-top" /></span>
             </div>
             <div class="middleshiftBox">
                 <el-form-item label="工作开始时间：">
@@ -136,7 +136,7 @@
         <el-card v-if="readyDate.isCause == '1' && (readyDate.classes === '' || readyDate.classes === '夜班' || readyDate.classes === '多班')" class="box-card">
             <div slot="header" class="clearfix">
                 夜班录入
-                <span class="readyshiftBtn nightshift" name="nightshift">收起 <i class="el-icon-caret-top" /></span>
+                <span class="readyshiftBtn nightshift" name="nightshift">收起 <em class="el-icon-caret-top" /></span>
             </div>
             <div class="nightshiftBox">
                 <el-form-item label="工作开始时间：">

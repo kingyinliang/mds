@@ -1,8 +1,15 @@
+<!--
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2020-08-27 16:48:29
+ * @LastEditors: Telliex
+ * @LastEditTime: 2020-08-27 19:26:24
+-->
 <template>
     <el-submenu v-if="!getChildren" :index="menu.id + ''" :popper-class="'site-sidebar--' + sidebarLayoutSkin + '-popper'">
         <template slot="title">
             <div @click="gotoRouteHandle(menu)">
-                <i :class="menu.menuIcon || ''" class="site-sidebar__menu-icon iconfont" />
+                <em :class="menu.menuIcon || ''" class="site-sidebar__menu-icon iconfont" />
                 <span>{{ menu.menuName }}</span>
             </div>
         </template>
@@ -11,7 +18,7 @@
         </template>
     </el-submenu>
     <el-menu-item v-else-if="menu.menuType !== 'P'" :index="menu.id + ''" @click="gotoRouteHandle(menu)">
-        <i :class="menu.menuIcon || ''" class="site-sidebar__menu-icon iconfont" />
+        <em :class="menu.menuIcon || ''" class="site-sidebar__menu-icon iconfont" />
         <span>{{ menu.menuName }}</span>
     </el-menu-item>
 </template>

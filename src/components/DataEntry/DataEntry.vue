@@ -2,10 +2,10 @@
     <div class="header_main">
         <div class="dataEntry-head">
             <div v-if="orderStatusShow" class="dataEntry-head-title">
-                <i class="dataEntry-head-title__icon iconfont factory-gongchang" />
+                <em class="dataEntry-head-title__icon iconfont factory-gongchang" />
                 <span v-if="headShow" class="dataEntry-head-title__text">{{ formHeader.factoryName }}</span>
                 <span v-else class="dataEntry-head-title__text">基础信息</span>
-                <i
+                <em
                     class="dataEntry-head-title__status"
                     :class="{
                         noPass: orderStatus === 'noPass' || orderStatus === '已退回',
@@ -16,13 +16,13 @@
                     }"
                 >
                     订单状态：{{ getTagStatus(orderStatus) }}
-                </i>
+                </em>
             </div>
             <div v-if="headShow" class="dataEntry-head-base">
                 <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form">
                     <el-form-item v-for="(item, index) in headerBase" :key="index">
                         <template slot="label">
-                            <i class="iconfont" :class="item.icon" style="margin-right: 5px; margin-left: 2px;" />
+                            <em class="iconfont" :class="item.icon" style="margin-right: 5px; margin-left: 2px;" />
                             <span>{{ item.label }}：</span>
                         </template>
                         <p v-if="item.type === 'p'">
@@ -64,7 +64,7 @@
             <div class="redactBox" :style="{ 'padding-left': sidebarFold ? '64px' : '170px' }">
                 <div v-if="redactBoxStatus" class="redact clearfix">
                     <div v-if="type === 'entry'" class="redact_tips">
-                        <i class="el-icon-info" />
+                        <em class="el-icon-info" />
                         <span v-if="orderStatus === 'toBeAudited'">请仔细核对数据后再进行提交</span>
                         <span v-else-if="orderStatus === '已过账'">订单已过账</span>
                         <span v-else-if="orderStatus === '待审核'">已提交至主管审核，请等待</span>
@@ -103,7 +103,7 @@
                 </div>
                 <div v-else class="redact clearfix">
                     <div class="redact_tips">
-                        <i class="el-icon-info" />
+                        <em class="el-icon-info" />
                         <span v-if="isRedact">请及时保存数据</span>
                         <span v-else>点击编辑按钮，对当前页面进行编辑</span>
                     </div>

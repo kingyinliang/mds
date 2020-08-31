@@ -57,7 +57,7 @@
                     </el-row>
                     <div class="card-item-color-lump_text">
                         <p class="card-item-color-lump_text__title">
-                            <i class="card-item-color-lump_text__icon" />
+                            <em class="card-item-color-lump_text__icon" />
                             <span>库存明细</span>
                             <el-button v-if="isAuth('kjm:pulpIn:save')" type="primary" size="small" style="margin-left: 10px;" @click="goParn(item)">
                                 入罐
@@ -69,12 +69,12 @@
                                 width="auto"
                             >
                                 <template slot="header">
-                                    <i class="iconfont factory-pici" style="margin-right: 5px;" />批次
+                                    <em class="iconfont factory-pici" style="margin-right: 5px;" />批次
                                 </template>
                             </el-table-column>
                             <el-table-column prop="currentQuantity" width="auto" header-align="left">
                                 <template slot="header">
-                                    <i class="iconfont factory-shuliang" style=" margin-right: 5px; font-size: 18px;" />数量
+                                    <em class="iconfont factory-shuliang" style=" margin-right: 5px; font-size: 18px;" />数量
                                 </template>
                                 <template slot-scope="scope">
                                     {{ (scope.row.amount * 1).toLocaleString() }}
@@ -151,7 +151,7 @@
                         ]"
                     >
                         <el-input v-model.number="inParnForm.startWeight" type="text" style="width: 220px;" :disabled="isInputWeight" @change="countWeight('startWeight')">
-                            <i slot="suffix">KG</i>
+                            <em slot="suffix">KG</em>
                         </el-input>
                     </el-form-item>
                     <el-form-item
@@ -167,7 +167,7 @@
                         ]"
                     >
                         <el-input v-model.number="inParnForm.endWeight" type="text" style="width: 220px;" :disabled="isInputWeight" @change="countWeight('endWeight')">
-                            <i slot="suffix">KG</i>
+                            <em slot="suffix">KG</em>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="领用数量：">

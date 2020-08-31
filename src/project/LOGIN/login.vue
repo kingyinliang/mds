@@ -19,15 +19,15 @@
                     </p>
                     <el-form-item prop="user">
                         <el-input v-model="ruleForm2.user" auto-complete="off" placeholder="账户/工号">
-                            <i slot="prefix" class="iconfont factory-zhanghaodenglu" />
+                            <em slot="prefix" class="iconfont factory-zhanghaodenglu" />
                         </el-input>
                     </el-form-item>
                     <el-form-item prop="pass">
                         <el-input v-model="ruleForm2.pass" type="password" auto-complete="off" placeholder="密码">
-                            <i slot="prefix" class="iconfont factory-mima" />
+                            <em slot="prefix" class="iconfont factory-mima" />
                         </el-input>
                         <el-button type="text" class="reset" @click="resetForm('ruleForm2')">
-                            <i class="iconfont factory-zhongzhi" style="font-size: 12px;" />重置
+                            <em class="iconfont factory-zhongzhi" style="font-size: 12px;" />重置
                         </el-button>
                     </el-form-item>
                     <el-form-item>
@@ -39,7 +39,7 @@
             </el-col>
         </el-row>
         <!--修改密码-->
-        <el-dialog :close-on-click-modal="false" width="500px" title="修改密码" :visible.sync="visible">
+        <el-dialog :close-on-click-modal="false" width="500px" :title="`修改密码 (${realName} ${userName})`" :visible.sync="visible">
             <div>
                 <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="100px" @keyup.enter.native="dataFormSubmit()">
                     <el-form-item label="原密码：" prop="password">
@@ -106,6 +106,8 @@ export default {
 
         };
         return {
+            userName: '',
+            realName: '',
             // 修改密码校验
             dataRule: {
                 password: [
@@ -198,6 +200,11 @@ export default {
                 if (valid) {
                     COMMON_API.UPPASS_API(this.dataForm).then(() => {
                         this.$successToast('密码修改成功');
+                        this.dataForm = {
+                            password: '',
+                            newPassword: '',
+                            conPassword: ''
+                        }
                         this.visible = false;
                         if (sessionStorage.getItem('defaultFactory')) {
                             const dfFa = this.factory.filter(item => item.deptCode === sessionStorage.getItem('defaultFactory'))[0]
@@ -243,9 +250,13 @@ export default {
             sessionStorage.setItem('staff-post', data.post || '');
             sessionStorage.setItem('staff-location', data.deptName || '');
             sessionStorage.setItem('defaultFactory', data.defaultFactory || '');
+            this.userName = data.userName
+            this.realName = data.realName
             if (data.firstFlag === 'Y') {
                 this.visible = true;
                 this.factory = data.userFactory
+                this.dataForm.id = data.id
+                this.dataForm.workNum = data.userName
             } else if (data.defaultFactory) {
                 const dfFa = data.userFactory.filter(item => item.deptCode === data.defaultFactory)[0]
                 this.$refs.selectfactory.goFa(dfFa)

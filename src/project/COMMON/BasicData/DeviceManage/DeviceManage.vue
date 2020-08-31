@@ -45,7 +45,7 @@
         <el-dialog title="配置" width="400px" :close-on-click-modal="false" :visible.sync="configVisible">
             <div :class="{'limit-upload': ImageUrl}" style="text-align: center;">
                 <el-upload ref="upload" class="org-img-upload" list-type="picture-card" :action="FILE_API" :limit="1" :http-request="httpRequest" :file-list="fileList" :on-success="addfile" :on-remove="removeFile" :on-preview="handlePictureCardPreview">
-                    <i class="el-icon-plus" />
+                    <em class="el-icon-plus" />
                 </el-upload>
             </div>
             <div slot="footer" class="dialog-footer">

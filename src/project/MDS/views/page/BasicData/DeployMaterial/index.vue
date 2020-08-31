@@ -3,7 +3,7 @@
         <query-table ref="queryTable" :query-auth="'ste:material:list'" :show-operation-column="true" :operation-column-width="70" :show-select-column="true" :list-interface="listInterface" :query-form-data="queryFormData" :column="column">
             <template slot="mds-button-middle">
                 <div class="box-card-title clearfix">
-                    <h3> <i class="title-icon" style="background: #487bff;" />调配物料列表</h3>
+                    <h3> <em class="title-icon" style="background: #487bff;" />调配物料列表</h3>
                     <el-button v-if="isAuth('ste:material:dataInsert')" type="primary" size="small" @click="addOrupdate()">
                         新增
                     </el-button>
@@ -48,7 +48,7 @@
                         <el-col style="width: 290px;">
                             <el-form-item>
                                 <template slot="label">
-                                    <i class="reqI">*</i>
+                                    <em class="reqI">*</em>
                                     <span>领用物料：</span>
                                 </template>
                                 <el-select
@@ -65,7 +65,7 @@
                         <el-col style="width: 180px;">
                             <el-form-item label-width="95px" prop="type">
                                 <template slot="label">
-                                    <i class="reqI">*</i>
+                                    <em class="reqI">*</em>
                                     <span>BL_LY标识：</span>
                                 </template>
                                 <el-select v-model="item.type" placeholder="请选择" style="width: 100%;">

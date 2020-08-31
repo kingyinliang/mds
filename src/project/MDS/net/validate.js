@@ -281,7 +281,7 @@ export function Readyanimation($) {
                 .find('i')
                 .hasClass('el-icon-caret-top')
         ) {
-            $(this).html('展开<i class="el-icon-caret-bottom"></i>');
+            $(this).html('展开<em class="el-icon-caret-bottom"></em>');
             $shiftBox.data('heightData', $shiftBox.height());
             $shiftBox.css('overflow', 'hidden');
             $shiftBox.animate({ height: 0 }, 300, function() {
@@ -289,7 +289,7 @@ export function Readyanimation($) {
             });
         } else {
             $shiftBox.css('overflow', 'auto');
-            $(this).html('收起<i class="el-icon-caret-top"></i>');
+            $(this).html('收起<em class="el-icon-caret-top"></em>');
             $shiftBox.animate({ height: $shiftBox.data('heightData') }, 300, function() {
                 $shiftBox.css('height', 'auto');
             });

@@ -6,13 +6,13 @@
                     <template v-for="(item, index) in menuList">
                         <el-submenu :key="index" index="basicdata">
                             <template slot="title">
-                                <i class="el-icon-location" />
+                                <em class="el-icon-location" />
                                 <span>{{ item.menu_name }}</span>
                             </template>
                             <template v-for="(item1, subIndex) in item.children">
                                 <el-submenu v-if="item1.children.length != 0" :key="subIndex">
                                     <template slot="title">
-                                        <i class="el-icon-location" />
+                                        <em class="el-icon-location" />
                                         <span>{{ item1.menu_name }}</span>
                                     </template>
                                     <template v-for="(item2, childIndex) in item1.children">
@@ -31,7 +31,7 @@
                     </template>
                     <!--<el-submenu index="basicdata">-->
                     <!--<template slot="title">-->
-                    <!--<i class="el-icon-location"></i>-->
+                    <!--<em class="el-icon-location"></em>-->
                     <!--<span>基础数据</span>-->
                     <!--</template>-->
                     <!--<el-menu-item index="orgStructure">组织架构</el-menu-item>-->
@@ -40,36 +40,36 @@
                     <!--</el-submenu>-->
                     <!--<el-submenu index="systemsetup">-->
                     <!--<template slot="title">-->
-                    <!--<i class="el-icon-menu"></i>-->
+                    <!--<em class="el-icon-menu"></em>-->
                     <!--<span slot="title">系统设置</span>-->
                     <!--</template>-->
                     <!--<el-menu-item index="">-->
-                    <!--<i class="el-icon-menu"></i>-->
+                    <!--<em class="el-icon-menu"></em>-->
                     <!--<span slot="title">参数维护</span>-->
                     <!--</el-menu-item>-->
                     <!--<el-menu-item index="">-->
-                    <!--<i class="el-icon-menu"></i>-->
+                    <!--<em class="el-icon-menu"></em>-->
                     <!--<span slot="title">角色管理</span>-->
                     <!--</el-menu-item>-->
                     <!--<el-menu-item index="">-->
-                    <!--<i class="el-icon-menu"></i>-->
+                    <!--<em class="el-icon-menu"></em>-->
                     <!--<span slot="title">用户管理</span>-->
                     <!--</el-menu-item>-->
                     <!--</el-submenu>-->
                     <!--<el-menu-item index="">-->
-                    <!--<i class="el-icon-document"></i>-->
+                    <!--<em class="el-icon-document"></em>-->
                     <!--<span slot="title">数据录入</span>-->
                     <!--</el-menu-item>-->
                     <!--<el-menu-item index="">-->
-                    <!--<i class="el-icon-setting"></i>-->
+                    <!--<em class="el-icon-setting"></em>-->
                     <!--<span slot="title">生管审核</span>-->
                     <!--</el-menu-item>-->
                     <!--<el-menu-item index="">-->
-                    <!--<i class="el-icon-setting"></i>-->
+                    <!--<em class="el-icon-setting"></em>-->
                     <!--<span slot="title">工资核算</span>-->
                     <!--</el-menu-item>-->
                     <!--<el-menu-item index="">-->
-                    <!--<i class="el-icon-setting"></i>-->
+                    <!--<em class="el-icon-setting"></em>-->
                     <!--<span slot="title">报表管理</span>-->
                     <!--</el-menu-item>-->
                 </el-menu>
@@ -87,7 +87,7 @@
                                     }
                                 }"
                         >
-                            <i class="el-icon-menu" />
+                            <em class="el-icon-menu" />
                         </p>
                     </div>
                 </div>

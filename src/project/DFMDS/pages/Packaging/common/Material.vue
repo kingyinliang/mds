@@ -24,7 +24,7 @@
                 <el-table-column width="70">
                     <template slot-scope="scope">
                         <el-button v-if="isAuth('pkgPdInsert')" type="text" :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P' && scope.row.materialStatus !== '3') || scope.row.materialStatus === '3'" @click="SplitDate('currentDataTable', scope.row, scope.$index)">
-                            <i class="icons iconfont factory-chaifen" />拆分
+                            <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
                 </el-table-column>
@@ -98,7 +98,7 @@
                 <el-table-column width="70">
                     <template slot-scope="scope">
                         <el-button v-if="isAuth('pkgPdInsert')" type="text" :disabled="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P' && scope.row.materialStatus !== '3')" @click="SplitDateS('materialS', scope.row, scope.$index)">
-                            <i class="icons iconfont factory-chaifen" />拆分
+                            <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
                 </el-table-column>

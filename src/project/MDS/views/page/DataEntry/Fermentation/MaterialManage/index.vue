@@ -102,7 +102,7 @@
                 </el-table-column>
                 <el-table-column label="数量" min-width="100" prop="kjmAmount">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>数量</span>
                     </template>
                     <template slot-scope="scope">
@@ -112,7 +112,7 @@
                 <el-table-column label="单位" min-width="50" prop="kjmUnit" />
                 <el-table-column label="批次" min-width="120" prop="batch">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>批次</span>
                     </template>
                     <template slot-scope="scope">
@@ -129,7 +129,7 @@
                 <el-table-column label="操作" width="112" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.approveStatus !== 'submit' && scope.row.approveStatus !== 'checked'" type="text" style="" size="mini" :disabled="!isRedact" @click="AddData(scope.row, scope.$index)">
-                            <i class="icons iconfont factory-chaifen" />拆分
+                            <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                         <el-button v-if="scope.row.approveStatus !== 'submit' && scope.row.approveStatus !== 'checked'" type="text" style=" margin-left: 0; color: red;" icon="el-icon-delete" size="mini" :disabled="!isRedact" @click="delData(scope.row)">
                             删除

@@ -16,13 +16,13 @@
             <el-table-column label="操作" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="80">
                 <template slot-scope="scope">
                     <el-button v-if="scope.row.isSplit === '0'" type="text" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="splitDate(scope.row, scope.$index)">
-                        <i class="icons iconfont factory-chaifen" />拆分
+                        <em class="icons iconfont factory-chaifen" />拆分
                     </el-button>
                 </template>
             </el-table-column>
             <el-table-column label="批次 " :show-overflow-tooltip="true" prop="kjmWorkShopName" width="140">
                 <template slot="header">
-                    <i class="reqI">*</i><span>批次</span>
+                    <em class="reqI">*</em><span>批次</span>
                 </template>
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.batch" placeholder="手工录入" size="mini" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
@@ -30,7 +30,7 @@
             </el-table-column>
             <el-table-column label="生产使用量 " :show-overflow-tooltip="true" width="140">
                 <template slot="header">
-                    <i class="reqI">*</i><span>生产使用量</span>
+                    <em class="reqI">*</em><span>生产使用量</span>
                 </template>
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.productUseAmount" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="ChangeNum()" />
@@ -48,7 +48,7 @@
             </el-table-column>
             <el-table-column label="供应商 " :show-overflow-tooltip="true" prop="kjmWorkShopName" width="140">
                 <template slot="header">
-                    <i class="reqI">*</i><span>供应商</span>
+                    <em class="reqI">*</em><span>供应商</span>
                 </template>
                 <template slot-scope="scope">
                     <el-select v-model="scope.row.supplier" placeholder="请选择" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')">

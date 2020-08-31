@@ -88,7 +88,7 @@
         <el-card style="margin-top: 5px;">
             <el-row>
                 <el-col style="font-weight: 600;">
-                    <i class="iconfont factory-shouye" />
+                    <em class="iconfont factory-shouye" />
                     <span>开罐列表</span>
                 </el-col>
             </el-row>

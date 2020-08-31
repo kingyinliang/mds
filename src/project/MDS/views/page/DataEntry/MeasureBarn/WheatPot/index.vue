@@ -57,7 +57,7 @@
                     </el-row>
                     <div class="card-item-color-lump_text">
                         <p class="card-item-color-lump_text__title">
-                            <i class="card-item-color-lump_text__icon" />
+                            <em class="card-item-color-lump_text__icon" />
                             <span>库存明细</span>
                         </p>
                         <el-table :data="item.wheatList" header-row-class-name="card-item-color-lump_text__table__head" class="card-item-color-lump_text__table" height="165">
@@ -66,12 +66,12 @@
                                 width="auto"
                             >
                                 <template slot="header">
-                                    <i class="iconfont factory-pici" style="margin-right: 5px;" />批次
+                                    <em class="iconfont factory-pici" style="margin-right: 5px;" />批次
                                 </template>
                             </el-table-column>
                             <el-table-column prop="currentQuantity" width="auto" header-align="left">
                                 <template slot="header">
-                                    <i class="iconfont factory-shuliang" style=" margin-right: 5px; font-size: 18px;" />数量
+                                    <em class="iconfont factory-shuliang" style=" margin-right: 5px; font-size: 18px;" />数量
                                 </template>
                                 <template slot-scope="scope">
                                     {{ (scope.row.amount * 1).toLocaleString() }}

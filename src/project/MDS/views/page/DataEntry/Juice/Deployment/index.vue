@@ -49,7 +49,7 @@
                 </el-form>
             </el-row>
             <!-- <div class="toggleSearchBottom">
-                <i class="el-icon-caret-top" />
+                <em class="el-icon-caret-top" />
             </div> -->
         </el-card>
         <mds-card title="原汁调配" name="deployment" :pack-up="false" style="margin-top: 10px;">
@@ -77,7 +77,7 @@
                 <el-table-column label="单位" prop="unit" width="50" />
                 <el-table-column width="130">
                     <template slot="header">
-                        <i class="reqI">*</i> 调配罐
+                        <em class="reqI">*</em> 调配罐
                     </template>
                     <template slot-scope="scope">
                         <el-select v-model="scope.row.holderId" size="small" :disabled="!isRedact">
@@ -90,7 +90,7 @@
                 </el-table-column>
                 <el-table-column width="170">
                     <template slot="header">
-                        <i class="reqI">*</i> 调配日期
+                        <em class="reqI">*</em> 调配日期
                     </template>
                     <template slot-scope="scope">
                         <el-date-picker v-model="scope.row.allocateTime" :disabled="!isRedact" type="date" placeholder="请选择" format="yyyy-MM-dd" value-format="yyyy-MM-dd" style="width: 150px;" size="small" />
@@ -138,7 +138,7 @@
                 <el-table-column width="70">
                     <template slot-scope="scope">
                         <el-button type="text" :disabled="SplitStatus(scope.row)" @click="SplitDate(scope.row, scope.$index)">
-                            <i class="icons iconfont factory-chaifen" />拆分
+                            <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
                 </el-table-column>
@@ -154,7 +154,7 @@
                 </el-table-column>
                 <el-table-column width="120">
                     <template slot="header">
-                        <i class="reqI">*</i> 实际领料
+                        <em class="reqI">*</em> 实际领料
                     </template>
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.receiveAmount" :disabled="SplitStatuss(scope.row)" size="small" />
@@ -162,7 +162,7 @@
                 </el-table-column>
                 <el-table-column width="130">
                     <template slot="header">
-                        <i class="reqI">*</i> 批次
+                        <em class="reqI">*</em> 批次
                     </template>
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.batch" maxlength="10" :disabled="SplitStatuss(scope.row)" size="small" />
