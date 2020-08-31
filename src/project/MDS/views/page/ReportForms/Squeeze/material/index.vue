@@ -1,173 +1,143 @@
 <template>
     <div class="header_main">
-        <el-card class="reportForms">
-            <el-form :inline="true" :model="plantList" size="small" label-width="70px" class="multi_row">
-                <el-form-item label="生产工厂：">
-                    <el-select v-model="plantList.factory" style="width: 150px;">
-                        <el-option label="请选择" value="" />
-                        <el-option v-for="sole in factory" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="生产车间：">
-                    <el-select v-model="plantList.workShop" style="width: 150px;">
-                        <el-option label="请选择" value="" />
-                        <el-option v-for="sole in workshop" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="原汁罐：">
-                    <el-select v-model="plantList.potNo" filterable style="width: 150px;">
-                        <el-option label="请选择" value="" />
-                        <el-option v-for="sole in Pot" :key="sole.holderId" :label="sole.holderName" :value="sole.holderId" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="生产物料：">
-                    <el-select v-model="plantList.materialCode" filterable style="width: 150px;">
-                        <el-option label="请选择" value="" />
-                        <el-option v-for="item in SerchSapList" :key="item.code" :label="item.code + ' ' + item.value" :value="item.code" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="生产日期：">
-                    <el-date-picker v-model="plantList.commitDateOne" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 150px;" />
-                    -
-                    <el-date-picker v-model="plantList.commitDateTwo" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 150px;" />
-                </el-form-item>
-                <el-form-item class="floatr">
-                    <el-button v-if="isAuth('report:res:prsMaterial')" type="primary" size="small" @click="GetList(true)">
-                        查询
-                    </el-button>
-                    <el-button v-if="isAuth('report:res:expectPrsMaterial')" type="primary" size="small" @click="ExportExcel(true)">
-                        导出
-                    </el-button>
-                </el-form-item>
-            </el-form>
-        </el-card>
-        <el-card style="margin-top: 5px;">
-            <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
-                <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" width="120" />
-                <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="120" />
-                <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="110" />
-                <el-table-column prop="material" label="生产物料" :show-overflow-tooltip="true" />
-                <el-table-column prop="useAmount" label="领用数量" :show-overflow-tooltip="true" width="100" />
-                <el-table-column prop="useBatch" label="领用批次" :show-overflow-tooltip="true" width="120" />
-                <el-table-column prop="inPotAmount" label="原汁入库数量" :show-overflow-tooltip="true" width="120" />
-                <el-table-column prop="batch" label="入库批次" :show-overflow-tooltip="true" width="110" />
-            </el-table>
-            <el-row>
-                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-            </el-row>
-        </el-card>
+        <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:res:prsMaterial'" :column="column" :export-excel="true" :export-option="exportOption" />
     </div>
 </template>
 
 <script>
 import { BASICDATA_API, REP_API, SYSTEMSETUP_API } from '@/api/api';
-import { exportFile } from '@/net/validate';
-import { Getdeptcode, Getdeptbyid } from '@/assets/js/util';
+import { dateFormat } from '@/net/validate';
 export default {
     name: 'Index',
     components: {},
     data() {
         return {
-            factory: [],
-            workshop: [],
-            Pot: [],
-            SerchSapList: [],
-            plantList: {
-                factory: '',
-                workShop: '',
-                potNo: '',
-                materialCode: '',
-                commitDateOne: '',
-                commitDateTwo: '',
-                currPage: 1,
-                pageSize: 10,
-                totalCount: 0
-            },
-            dataList: []
-        };
-    },
-    computed: {},
-    watch: {
-        'plantList.factory'(n) {
-            Getdeptbyid(this, n, '压榨');
-            this.getMaterial(n);
-        },
-        'plantList.workShop'(n) {
-            this.GetPot(n);
-        }
-    },
-    mounted() {
-        Getdeptcode(this);
-        this.getMaterial();
-    },
-    methods: {
-        GetList(st) {
-            if (st) {
-                this.plantList.currPage = 1;
-            }
-            this.$http(`${REP_API.PRSMATERIAL_LIST_API}`, 'POST', this.plantList).then(({ data }) => {
-                if (data.code === 0) {
-                    this.dataList = data.page.list;
-                    this.plantList.currPage = data.page.currPage;
-                    this.plantList.pageSize = data.page.pageSize;
-                    this.plantList.totalCount = data.page.totalCount;
-                } else {
-                    this.$errorToast(data.msg);
-                }
-            });
-        },
-        // 导出
-        ExportExcel() {
-            exportFile(`${REP_API.PRSMATERIAL_EXPECT_API}`, '物料领用报表', this);
-        },
-        // 获取物料下拉
-        getMaterial(factory) {
-            this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', { factory: factory, type: 'YA_M_MATERIAL' }, false, false, false).then(({ data }) => {
-                if (data.code === 0) {
-                    this.SerchSapList = data.dicList;
-                } else {
-                    this.$errorToast(data.msg);
-                }
-            });
-        },
-        /* eslint-disable @typescript-eslint/camelcase */
-        GetPot(id) {
-            if (id) {
-                const workShopName = this.workshop.find(item => item.deptId === id).deptName;
-                this.$http(
-                    `${BASICDATA_API.CONTAINERLIST_API}`,
-                    `POST`,
-                    {
-                        currPage: 1,
-                        holder_type: '013',
-                        pageSize: 9999,
-                        type: 'holder_type',
-                        workShopName: workShopName,
-                        dept_id: id
+            queryFormData: [
+                {
+                    type: 'select',
+                    label: '生产工厂',
+                    prop: 'factory',
+                    defaultOptionsFn: () => {
+                        return this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false);// eslint-disable-line
                     },
-                    false,
-                    false,
-                    false
-                ).then(({ data }) => {
-                    if (data.code === 0) {
-                        this.Pot = data.page.list;
-                    } else {
-                        this.$errorToast(data.msg);
+                    resVal: {
+                        resData: 'typeList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    linkageProp: ['workShop', 'materialCode']
+                },
+                {
+                    type: 'select',
+                    label: '生产车间',
+                    prop: 'workShop',
+                    optionsFn: val => {
+                        return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {// eslint-disable-line
+                            deptId: val,
+                            deptName: '压榨'
+                        });
+                    },
+                    resVal: {
+                        resData: 'typeList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    linkageProp: ['potNo']
+                },
+                {
+                    type: 'select',
+                    label: '原汁罐',
+                    prop: 'potNo',
+                    resVal: {
+                        resData: 'page.list',
+                        label: ['holderName'],
+                        value: 'holderId'
+                    },
+                    defaultValue: '',
+                    /* eslint-disable */
+                    optionsFn: val => {
+                        const workShopName = this.$refs.queryTable.optionLists.workShop.find(item => item.deptId === val)['deptName'];
+                        return this.$http(`${BASICDATA_API.CONTAINERLIST_API}`, 'POST', {
+                            type: 'holder_type',
+                            holder_type: '013',
+                            pageSize: 9999,
+                            workShopName: workShopName,
+                            currPage: 1,
+                            dept_id: val
+                        });
                     }
-                });
-            }
-        },
-        /* eslint-enable @typescript-eslint/camelcase */
-        // 改变每页条数
-        handleSizeChange(val) {
-            this.plantList.pageSize = val;
-            this.GetList();
-        },
-        // 跳转页数
-        handleCurrentChange(val) {
-            this.plantList.currPage = val;
-            this.GetList();
-        }
+                    /* eslint-enable */
+                },
+                {
+                    type: 'select',
+                    label: '生产物料',
+                    prop: 'materialCode',
+                    resVal: {
+                        resData: 'dicList',
+                        label: ['code', 'value'],
+                        value: 'code'
+                    },
+                    defaultValue: '',
+                    optionsFn: val => {
+                        return this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {
+                            factory: val,
+                            type: 'YA_M_MATERIAL'
+                        });
+                    }
+                },
+                {
+                    type: 'date-interval',
+                    label: '生产日期',
+                    prop: 'startTime',
+                    defaultValue: dateFormat(new Date(), 'yyyy-MM-dd'),
+                    defaultValueTwo: dateFormat(new Date(), 'yyyy-MM-dd'),
+                    propTwo: 'endTime'
+                }
+            ],
+            listInterface: params => {
+                return this.$http(`${REP_API.PRSMATERIAL_LIST_API}`, 'POST', params);
+            },
+            exportOption: {
+                exportInterface: REP_API.PRSMATERIAL_EXPECT_API,
+                auth: 'report:res:expectPrsMaterial',
+                text: '物料领用报表'
+            },
+            column: [
+                {
+                    prop: 'factoryName',
+                    label: '工厂',
+                    minwidth: '120'
+                }, {
+                    prop: 'workShopName',
+                    label: '车间',
+                    minwidth: '120'
+                }, {
+                    prop: 'productDate',
+                    label: '生产日期',
+                    minwidth: '110'
+                }, {
+                    prop: 'material',
+                    label: '生产物料',
+                    minwidth: '180'
+                }, {
+                    prop: 'useAmount',
+                    label: '领用数量',
+                    minwidth: '100'
+                }, {
+                    prop: 'useBatch',
+                    label: '领用批次',
+                    minwidth: '120'
+                }, {
+                    prop: 'inPotAmount',
+                    label: '原汁入库数量',
+                    minwidth: '120'
+                }, {
+                    prop: 'batch',
+                    label: '入库批次',
+                    minwidth: '110'
+                }
+            ]
+        };
     }
 };
 </script>
