@@ -125,7 +125,7 @@
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 this.formHeader.textStage = 'acceadd';
-                this.tabs[0].status = data.data.steTagPot.accessoriesStatus;
+                this.tabs[0].status = (data.data.steTagPot ? data.data.steTagPot.accessoriesStatus : '未录入');
                 this.$refs.acceadd.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'acceadd');
                 this.$refs.textRecord.init(this.formHeader, 'sterilize');
