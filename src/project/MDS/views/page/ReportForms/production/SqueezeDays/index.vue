@@ -19,6 +19,7 @@
 
 <script>
     import { BASICDATA_API, REP_API } from '@/api/api';
+    import { dateFormat } from '@/net/validate';
     export default {
         name: 'Index',
         components: {},
@@ -52,6 +53,7 @@
                         type: 'date-picker',
                         label: '月份',
                         prop: 'productDate',
+                        defaultValue: dateFormat(new Date(), 'yyyy-MM'),
                         dataType: 'month',
                         valueFormat: 'yyyy-MM'
                     }
