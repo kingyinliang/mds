@@ -1,11 +1,19 @@
 <template>
-    <el-form :inline="true" :model="formHeader" size="small" label-width="70px" class="topform">
-        <el-form-item label="生产车间：">
+    <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form">
+        <el-form-item>
+            <template slot="label">
+                <i class="iconfont factory-shengchanchejian" style="margin-right: 5px; margin-left: 2px;" />
+                <span>生产车间：</span>
+            </template>
             <p class="el-input">
                 {{ formHeader.workShopName || '' }}
             </p>
         </el-form-item>
-        <el-form-item label="产线：">
+        <el-form-item>
+            <template slot="label">
+                <i class="iconfont factory-shengchanxian" style="margin-right: 5px; margin-left: 2px;" />
+                <span>生产产线：</span>
+            </template>
             <p v-if="!pro" class="el-input">
                 {{ formHeader.productLineName || '' }}
             </p>
@@ -16,37 +24,65 @@
                 </el-select>
             </p>
         </el-form-item>
-        <el-form-item label="订单号：">
+        <el-form-item>
+            <template slot="label">
+                <i class="iconfont factory-bianhao" style="margin-right: 5px; margin-left: 2px;" />
+                <span>生产订单：</span>
+            </template>
             <p class="el-input">
                 {{ formHeader.orderNo || '' }}
             </p>
         </el-form-item>
-        <el-form-item label="生产品项：">
+        <el-form-item>
+            <template slot="label">
+                <i class="iconfont factory-pinleiguanli" style="margin-right: 5px; margin-left: 2px;" />
+                <span>生产物料：</span>
+            </template>
             <el-tooltip class="item" effect="dark" :content="(formHeader.materialCode || '') + ' ' + (formHeader.materialName || '')" placement="top">
                 <p class="el-input" style="text-overflow: ellipsis;">
                     {{ (formHeader.materialCode || '') + ' ' + (formHeader.materialName || '') }}
                 </p>
             </el-tooltip>
         </el-form-item>
-        <el-form-item label="订单日期：">
+        <el-form-item>
+            <template slot="label">
+                <i class="iconfont factory-riqi1" style="margin-right: 5px; margin-left: 2px;" />
+                <span>订单日期：</span>
+            </template>
             <p class="el-input">
                 {{ formHeader.orderDate | formatDate }}
             </p>
         </el-form-item>
-        <el-form-item label="计划产量：">
+        <el-form-item>
+            <template slot="label">
+                <i class="iconfont factory--meirijihuachanliangpeizhi" style="margin-right: 5px; margin-left: 2px;" />
+                <span>计划产量：</span>
+            </template>
             <p class="el-input">
                 {{ (formHeader.planOutput || '') + ' ' + (formHeader.outputUnit || '') }}
             </p>
         </el-form-item>
-        <el-form-item label="生产日期：">
+        <el-form-item>
+            <template slot="label">
+                <i class="iconfont factory-riqi1" style="margin-right: 5px; margin-left: 2px;" />
+                <span>生产日期：</span>
+            </template>
             <el-date-picker v-model="formHeader.productDate" size="small" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 145px;" @change="updateProductDate" />
         </el-form-item>
-        <el-form-item label="提交人员：">
+        <el-form-item>
+            <template slot="label">
+                <i class="iconfont factory-xianchangrenyuan" style="margin-right: 5px; margin-left: 2px;" />
+                <span>提交人员：</span>
+            </template>
             <p class="el-input">
                 {{ formHeader.operator || '' }}
             </p>
         </el-form-item>
-        <el-form-item label="提交时间：">
+        <el-form-item>
+            <template slot="label">
+                <i class="iconfont factory-riqi" style="margin-right: 5px; margin-left: 2px;" />
+                <span>提交时间：</span>
+            </template>
             <p class="el-input">
                 {{ formHeader.operDate ? (formHeader.operDate.indexOf('.') !== -1 ? formHeader.operDate.substring(0, formHeader.operDate.indexOf('.')) : formHeader.operDate) : '' }}
             </p>

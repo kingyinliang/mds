@@ -1,482 +1,480 @@
 <template>
-    <el-row>
-        <el-col>
-            <div class="header_main">
-                <el-card class="searchCard queryHead">
-                    <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
-                        <el-form-item label="生产工厂：">
-                            <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" @change="changeOptions('factory')">
-                                <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="生产车间：">
-                            <el-select v-model="params.workshopId" class="selectwpx" style="width: 130px;" @change="changeOptions('workshop')">
-                                <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="制曲日期：" label-width="70px">
-                            <el-date-picker v-model="params.zqDate" type="date" value-format="yyyy-MM-dd" style="width: 135px;" />
-                        </el-form-item>
-                        <el-form-item label="订单：" label-width="45px">
-                            <el-input v-model="params.orderNo" type="text" clearable style="width: 140px;" />
-                        </el-form-item>
-                        <el-form-item label="生产状态：" label-width="70px">
-                            <el-select v-model="params.productStatus" class="selectwpx" style="width: 140px;">
-                                <el-option label="正常生产" value="normal" />
-                                <el-option label="无生产" value="abnormal" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item style="float: right;">
-                            <el-button v-if="isMyAuth" type="primary" size="small" @click="getOrderList()">
-                                查询
+    <div>
+        <div class="header_main">
+            <el-card class="searchCard queryHead">
+                <el-form :model="params" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
+                    <el-form-item label="生产工厂：">
+                        <el-select v-model="params.factoryId" class="selectwpx" style="width: 140px;" placeholder="请选择" clearable @change="changeOptions('factory')">
+                            <el-option v-for="sole in factoryList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="生产车间：">
+                        <el-select v-model="params.workshopId" class="selectwpx" style="width: 130px;" placeholder="请选择" clearable @change="changeOptions('workshop')">
+                            <el-option v-for="sole in workshopList" :key="sole.deptId" :label="sole.deptName" :value="sole.deptId" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="制曲日期：" label-width="70px">
+                        <el-date-picker v-model="params.zqDate" type="date" value-format="yyyy-MM-dd" style="width: 160px;" />
+                    </el-form-item>
+                    <el-form-item label="订单：" label-width="45px">
+                        <el-input v-model="params.orderNo" type="text" clearable style="width: 140px;" />
+                    </el-form-item>
+                    <el-form-item label="生产状态：" label-width="70px">
+                        <el-select v-model="params.productStatus" class="selectwpx" style="width: 130px;">
+                            <el-option label="正常生产" value="normal" />
+                            <el-option label="无生产" value="abnormal" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item style="float: right;">
+                        <el-button v-if="isMyAuth" type="primary" size="small" @click="getOrderList()">
+                            查询
+                        </el-button>
+                        <template v-if="params.productStatus === 'abnormal'">
+                            <el-button v-if="searched && disabled && isAuth('kjm:user:updateUser')" type="primary" size="small" @click="setDisabled(false)">
+                                编辑
                             </el-button>
-                            <template v-if="params.productStatus === 'abnormal'">
-                                <el-button v-if="searched && disabled && isAuth('kjm:user:updateUser')" type="primary" size="small" @click="setDisabled(false)">
-                                    编辑
-                                </el-button>
-                                <el-button v-if="!disabled" type="primary" size="small" @click="setDisabled(true)">
-                                    返回
-                                </el-button>
-                            </template>
-                            <template v-if="params.productStatus === 'abnormal' && !disabled && isAuth('kjm:user:updateUser')">
-                                <el-button type="primary" size="small" @click="addPeople">
-                                    新增
-                                </el-button>
-                                <el-button type="primary" size="small" @click="save">
-                                    保存
-                                </el-button>
-                            </template>
-                        </el-form-item>
-                    </el-form>
-                </el-card>
-                <el-row v-if="params.productStatus === 'normal' && searched" style="margin-top: 5px;">
-                    <el-col>
-                        <template v-for="(item, index) in orderList">
-                            <el-row v-if="index % 3 === 0" :key="index" :gutter="10">
-                                <el-col v-if="index < orderList.length" :span="8">
-                                    <div class="box-item">
-                                        <div class="box-item-top">
-                                            <div class="box-item-title">
-                                                <div class="box-item-title-name">
-                                                    <div>
-                                                        {{ orderList[index].houseNo }}
-                                                    </div>
-                                                    <div>
-                                                        {{ orderList[index].inPotNoName }}
-                                                    </div>
-                                                </div>
-                                                <div :class="orderList[index].status === '不通过' ? 'box-item-title-state-nopass' : 'box-item-title-state'">
-                                                    <label style="color: rgba(0, 0, 0, 0.65);">状态：</label>{{ orderList[index].status }}
-                                                </div>
-                                            </div>
-                                            <div class="box-item-container">
-                                                <div class="box-item-container-left">
-                                                    <div class="box-item-container-img">
-                                                        <img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg">
-                                                    </div>
-                                                </div>
-                                                <div class="box-item-container-right">
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            生产订单
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index].orderNo }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            生产品项
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index].materialCode + ' ' + orderList[index].materialName }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            入曲时长
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index].inEndTimeLength }}
-                                                            小时
-                                                        </div>
-                                                    </div>
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            入曲时间
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index].inEndTime ? orderList[index].inEndTime : '' }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="btn">
-                                                        <el-tooltip class="item" effect="dark" :content="orderList[index].beanStatus" placement="top-start">
-                                                            <el-button
-                                                                type="primary"
-                                                                size="mini"
-                                                                :class="{
-                                                                    nopassBtn: orderList[index].beanStatus === '不通过',
-                                                                }"
-                                                                @click="goPage('煮豆', orderList[index])"
-                                                            >
-                                                                煮豆
-                                                            </el-button>
-                                                        </el-tooltip>
-                                                        <el-tooltip class="item" effect="dark" :content="orderList[index].guardStatus" placement="top-start">
-                                                            <el-button
-                                                                type="primary"
-                                                                size="mini"
-                                                                :class="{
-                                                                    nopassBtn: orderList[index].guardStatus === '不通过',
-                                                                }"
-                                                                @click="goPage('看曲', orderList[index])"
-                                                            >
-                                                                看曲
-                                                            </el-button>
-                                                        </el-tooltip>
-                                                        <el-tooltip class="item" effect="dark" :content="orderList[index].outStatus" placement="top-start">
-                                                            <el-button
-                                                                type="primary"
-                                                                size="mini"
-                                                                :class="{
-                                                                    nopassBtn: orderList[index].outStatus === '不通过',
-                                                                }"
-                                                                @click="goPage('出曲', orderList[index])"
-                                                            >
-                                                                出曲
-                                                            </el-button>
-                                                        </el-tooltip>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--<div class="box-item-bottom">-->
-                                        <!--<el-tooltip class="item" effect="dark" :content="orderList[index].beanStatus" placement="top-start">-->
-                                        <!--<div class="box-item-bottom-item" :style="{'color':orderList[index].beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', orderList[index])">煮豆</div>-->
-                                        <!--</el-tooltip>-->
-                                        <!--<div class="box-item-bottom-split"></div>-->
-                                        <!--<el-tooltip class="item" effect="dark" :content="orderList[index].guardStatus" placement="top-start">-->
-                                        <!--<div class="box-item-bottom-item" :style="{'color': orderList[index].guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', orderList[index])">看曲</div>-->
-                                        <!--</el-tooltip>-->
-                                        <!--<div class="box-item-bottom-split"></div>-->
-                                        <!--<el-tooltip class="item" effect="dark" :content="orderList[index].outStatus" placement="top-start">-->
-                                        <!--<div class="box-item-bottom-item" :style="{'color': orderList[index].outStatus === '不通过'? 'red' : ''}" @click="goPage('出曲', orderList[index])">出曲</div>-->
-                                        <!--</el-tooltip>-->
-                                        <!--</div>-->
-                                    </div>
-                                </el-col>
-                                <el-col v-if="index + 1 < orderList.length" :span="8">
-                                    <div class="box-item">
-                                        <div class="box-item-top">
-                                            <div class="box-item-title">
-                                                <div class="box-item-title-name">
-                                                    <div style="background: #5bd171;">
-                                                        {{ orderList[index + 1].houseNo }}
-                                                    </div>
-                                                    <div>
-                                                        {{ orderList[index + 1].inPotNoName }}
-                                                    </div>
-                                                </div>
-                                                <div :class="orderList[index + 1].status === '不通过' ? 'box-item-title-state-nopass' : 'box-item-title-state'">
-                                                    <label style="color: rgba(0, 0, 0, 0.65);">状态：</label>{{ orderList[index + 1].status }}
-                                                </div>
-                                            </div>
-                                            <div class="box-item-container">
-                                                <div class="box-item-container-left">
-                                                    <div class="box-item-container-img">
-                                                        <img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg">
-                                                    </div>
-                                                </div>
-                                                <div class="box-item-container-right">
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            生产订单
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index + 1].orderNo }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            生产品项
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index + 1].materialCode + ' ' + orderList[index + 1].materialName }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            入曲时长
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index + 1].inEndTimeLength }}
-                                                            小时
-                                                        </div>
-                                                    </div>
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            入曲时间
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index + 1].inEndTime ? orderList[index + 1].inEndTime : '' }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="btn">
-                                                        <el-tooltip class="item" effect="dark" :content="orderList[index + 1].beanStatus" placement="top-start">
-                                                            <el-button
-                                                                type="primary"
-                                                                size="mini"
-                                                                :class="{
-                                                                    nopassBtn: orderList[index + 1].beanStatus === '不通过',
-                                                                }"
-                                                                @click="goPage('煮豆', orderList[index + 1])"
-                                                            >
-                                                                煮豆
-                                                            </el-button>
-                                                        </el-tooltip>
-                                                        <el-tooltip class="item" effect="dark" :content="orderList[index + 1].guardStatus" placement="top-start">
-                                                            <el-button
-                                                                type="primary"
-                                                                size="mini"
-                                                                :class="{
-                                                                    nopassBtn: orderList[index + 1].guardStatus === '不通过',
-                                                                }"
-                                                                @click="goPage('看曲', orderList[index + 1])"
-                                                            >
-                                                                看曲
-                                                            </el-button>
-                                                        </el-tooltip>
-                                                        <el-tooltip class="item" effect="dark" :content="orderList[index + 1].outStatus" placement="top-start">
-                                                            <el-button
-                                                                type="primary"
-                                                                size="mini"
-                                                                :class="{
-                                                                    nopassBtn: orderList[index + 1].outStatus === '不通过',
-                                                                }"
-                                                                @click="goPage('出曲', orderList[index + 1])"
-                                                            >
-                                                                出曲
-                                                            </el-button>
-                                                        </el-tooltip>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--<div class="box-item-bottom">-->
-                                        <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 1].beanStatus" placement="top-start">-->
-                                        <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 1].beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', orderList[index + 1])">煮豆</div>-->
-                                        <!--</el-tooltip>-->
-                                        <!--<div class="box-item-bottom-split"></div>-->
-                                        <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 1].guardStatus" placement="top-start">-->
-                                        <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 1].guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', orderList[index + 1])">看曲</div>-->
-                                        <!--</el-tooltip>-->
-                                        <!--<div class="box-item-bottom-split"></div>-->
-                                        <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 1].outStatus" placement="top-start">-->
-                                        <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 1].outStatus === '不通过'? 'red' : ''}" @click="goPage('出曲', orderList[index + 1])">出曲</div>-->
-                                        <!--</el-tooltip>-->
-                                        <!--</div>-->
-                                    </div>
-                                </el-col>
-                                <el-col v-if="index + 2 < orderList.length" :span="8">
-                                    <div class="box-item">
-                                        <div class="box-item-top">
-                                            <div class="box-item-title">
-                                                <div class="box-item-title-name">
-                                                    <div style="background: #2c92f6;">
-                                                        {{ orderList[index + 2].houseNo }}
-                                                    </div>
-                                                    <div>
-                                                        {{ orderList[index + 2].inPotNoName }}
-                                                    </div>
-                                                </div>
-                                                <div :class="orderList[index + 2].status === '不通过' ? 'box-item-title-state-nopass' : 'box-item-title-state'">
-                                                    <label style="color: rgba(0, 0, 0, 0.65);">状态：</label>{{ orderList[index + 2].status }}
-                                                </div>
-                                            </div>
-                                            <div class="box-item-container">
-                                                <div class="box-item-container-left">
-                                                    <div class="box-item-container-img">
-                                                        <img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg">
-                                                    </div>
-                                                </div>
-                                                <div class="box-item-container-right">
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            生产订单
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index + 2].orderNo }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            生产品项
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index + 2].materialCode + ' ' + orderList[index + 2].materialName }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            入曲时长
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index + 2].inEndTimeLength }}
-                                                            小时
-                                                        </div>
-                                                    </div>
-                                                    <div class="box-item-container-item">
-                                                        <div class="name">
-                                                            入曲时间
-                                                        </div>
-                                                        <div class="detail">
-                                                            {{ orderList[index + 2].inEndTime ? orderList[index + 2].inEndTime : '' }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="btn">
-                                                        <el-tooltip class="item" effect="dark" :content="orderList[index + 2].beanStatus" placement="top-start">
-                                                            <el-button
-                                                                type="primary"
-                                                                size="mini"
-                                                                :class="{
-                                                                    nopassBtn: orderList[index + 2].beanStatus === '不通过',
-                                                                }"
-                                                                @click="goPage('煮豆', orderList[index + 2])"
-                                                            >
-                                                                煮豆
-                                                            </el-button>
-                                                        </el-tooltip>
-                                                        <el-tooltip class="item" effect="dark" :content="orderList[index + 2].guardStatus" placement="top-start">
-                                                            <el-button
-                                                                type="primary"
-                                                                size="mini"
-                                                                :class="{
-                                                                    nopassBtn: orderList[index + 2].guardStatus === '不通过',
-                                                                }"
-                                                                @click="goPage('看曲', orderList[index + 2])"
-                                                            >
-                                                                看曲
-                                                            </el-button>
-                                                        </el-tooltip>
-                                                        <el-tooltip class="item" effect="dark" :content="orderList[index + 2].outStatus" placement="top-start">
-                                                            <el-button
-                                                                type="primary"
-                                                                size="mini"
-                                                                :class="{
-                                                                    nopassBtn: orderList[index + 2].outStatus === '不通过',
-                                                                }"
-                                                                @click="goPage('出曲', orderList[index + 2])"
-                                                            >
-                                                                出曲
-                                                            </el-button>
-                                                        </el-tooltip>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--<div class="box-item-bottom">-->
-                                        <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 2].beanStatus" placement="top-start">-->
-                                        <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 2].beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', orderList[index + 2])">煮豆</div>-->
-                                        <!--</el-tooltip>-->
-                                        <!--<div class="box-item-bottom-split"></div>-->
-                                        <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 2].guardStatus" placement="top-start">-->
-                                        <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 2].guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', orderList[index + 2])">看曲</div>-->
-                                        <!--</el-tooltip>-->
-                                        <!--<div class="box-item-bottom-split"></div>-->
-                                        <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 2].outStatus" placement="top-start">-->
-                                        <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 2].outStatus === '不通过'? 'red' : ''}" @click="goPage('出曲', orderList[index + 2])">出曲</div>-->
-                                        <!--</el-tooltip>-->
-                                        <!--</div>-->
-                                    </div>
-                                </el-col>
-                            </el-row>
+                            <el-button v-if="!disabled" type="primary" size="small" @click="setDisabled(true)">
+                                返回
+                            </el-button>
                         </template>
-                    </el-col>
-                </el-row>
-                <el-row v-show="params.productStatus === 'abnormal' && searched" style="margin-top: 5px;">
-                    <div style="min-height: 340px;">
-                        <el-table border header-row-class-name="tableHead" :data="datalist">
-                            <el-table-column label="中/白/夜班" prop="classType" width="100">
-                                <template slot-scope="scope">
-                                    <el-select v-model="scope.row.classType" placeholder="请选择" size="small" :disabled="disabled">
-                                        <el-option v-for="sole in DayTypeList" :key="sole" :value="sole" :label="sole" />
-                                    </el-select>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="工序" width="120">
-                                <template slot-scope="scope">
-                                    <el-select v-model="scope.row.deptId" placeholder="请选择" size="small" :disabled="disabled" @change="changeProcType(scope.row)">
-                                        <el-option v-for="sole in processesList" :key="sole.deptId" :value="sole.deptId" :label="sole.deptName" />
-                                    </el-select>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="人员属性" prop="userType" width="110">
-                                <template slot-scope="scope">
-                                    <el-select v-model="scope.row.userType" placeholder="请选择" size="small" :disabled="disabled" @change="changeProcType(scope.row)">
-                                        <el-option v-for="sole in EmployeeTypeList" :key="sole" :value="sole" :label="sole" />
-                                    </el-select>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true" width="200">
-                                <template slot-scope="scope">
-                                    <el-col>
-                                        <span v-if="!disabled" style="cursor: pointer;" @click="selectUser(scope.row)">
-                                            <i v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</i>
-                                            <span>
-                                                <i v-if="scope.row.userType === '临时工'">点击输入临时工</i>
-                                                <i v-else>点击选择人员</i>
-                                            </span>
-                                        </span>
-                                        <span v-else style="cursor: pointer;">
-                                            <i v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</i>
-                                            <span>
-                                                <i v-if="scope.row.userType === '临时工'">点击输入临时工</i>
-                                                <i v-else>点击选择人员</i>
-                                            </span>
-                                        </span>
-                                    </el-col>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="开始时间" prop="startDate" width="190">
-                                <template slot-scope="scope">
-                                    <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="disabled" />
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="用餐时间" prop="dinner" width="100">
-                                <template slot-scope="scope">
-                                    <el-input v-model="scope.row.dinner" type="number" size="small" :disabled="disabled" />
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="结束时间" prop="endDate" width="190">
-                                <template slot-scope="scope">
-                                    <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="disabled" />
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="备注" prop="remark">
-                                <template slot-scope="scope">
-                                    <Remark v-model="scope.row.remark" :width="'150px'" :disabled="disabled" />
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="操作" fixed="right" width="50">
-                                <template slot-scope="scope">
-                                    <el-button v-if="isAuth('kjm:user:delUser')" type="danger" icon="el-icon-delete" circle size="small" :disabled="disabled" @click="delUser(scope.row)" />
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <el-row style=" margin-top: 10px; font-size: 14px; line-height: 30px;">
-                            实际作业人数: {{ countMan }}
+                        <template v-if="params.productStatus === 'abnormal' && !disabled && isAuth('kjm:user:updateUser')">
+                            <el-button type="primary" size="small" @click="addPeople">
+                                新增
+                            </el-button>
+                            <el-button type="primary" size="small" @click="save">
+                                保存
+                            </el-button>
+                        </template>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+            <el-row v-if="params.productStatus === 'normal' && searched" style="margin-top: 5px;">
+                <el-col>
+                    <template v-for="(item, index) in orderList">
+                        <el-row v-if="index % 3 === 0" :key="index" :gutter="10">
+                            <el-col v-if="index < orderList.length" :span="8">
+                                <div class="box-item">
+                                    <div class="box-item-top">
+                                        <div class="box-item-title">
+                                            <div class="box-item-title-name">
+                                                <div>
+                                                    {{ orderList[index].houseNo }}
+                                                </div>
+                                                <div>
+                                                    {{ orderList[index].inPotNoName }}
+                                                </div>
+                                            </div>
+                                            <div :class="orderList[index].status === '不通过' ? 'box-item-title-state-nopass' : 'box-item-title-state'">
+                                                <label style="color: rgba(0, 0, 0, 0.65);">状态：</label>{{ orderList[index].status }}
+                                            </div>
+                                        </div>
+                                        <div class="box-item-container">
+                                            <div class="box-item-container-left">
+                                                <div class="box-item-container-img">
+                                                    <img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg">
+                                                </div>
+                                            </div>
+                                            <div class="box-item-container-right">
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        生产订单
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index].orderNo }}
+                                                    </div>
+                                                </div>
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        生产品项
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index].materialCode + ' ' + orderList[index].materialName }}
+                                                    </div>
+                                                </div>
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        入曲时长
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index].inEndTimeLength }}
+                                                        小时
+                                                    </div>
+                                                </div>
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        入曲时间
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index].inEndTime ? orderList[index].inEndTime : '' }}
+                                                    </div>
+                                                </div>
+                                                <div class="btn">
+                                                    <el-tooltip class="item" effect="dark" :content="orderList[index].beanStatus" placement="top-start">
+                                                        <el-button
+                                                            type="primary"
+                                                            size="mini"
+                                                            :class="{
+                                                                nopassBtn: orderList[index].beanStatus === '不通过',
+                                                            }"
+                                                            @click="goPage('煮豆', orderList[index])"
+                                                        >
+                                                            煮豆
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" :content="orderList[index].guardStatus" placement="top-start">
+                                                        <el-button
+                                                            type="primary"
+                                                            size="mini"
+                                                            :class="{
+                                                                nopassBtn: orderList[index].guardStatus === '不通过',
+                                                            }"
+                                                            @click="goPage('看曲', orderList[index])"
+                                                        >
+                                                            看曲
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" :content="orderList[index].outStatus" placement="top-start">
+                                                        <el-button
+                                                            type="primary"
+                                                            size="mini"
+                                                            :class="{
+                                                                nopassBtn: orderList[index].outStatus === '不通过',
+                                                            }"
+                                                            @click="goPage('出曲', orderList[index])"
+                                                        >
+                                                            出曲
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--<div class="box-item-bottom">-->
+                                    <!--<el-tooltip class="item" effect="dark" :content="orderList[index].beanStatus" placement="top-start">-->
+                                    <!--<div class="box-item-bottom-item" :style="{'color':orderList[index].beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', orderList[index])">煮豆</div>-->
+                                    <!--</el-tooltip>-->
+                                    <!--<div class="box-item-bottom-split"></div>-->
+                                    <!--<el-tooltip class="item" effect="dark" :content="orderList[index].guardStatus" placement="top-start">-->
+                                    <!--<div class="box-item-bottom-item" :style="{'color': orderList[index].guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', orderList[index])">看曲</div>-->
+                                    <!--</el-tooltip>-->
+                                    <!--<div class="box-item-bottom-split"></div>-->
+                                    <!--<el-tooltip class="item" effect="dark" :content="orderList[index].outStatus" placement="top-start">-->
+                                    <!--<div class="box-item-bottom-item" :style="{'color': orderList[index].outStatus === '不通过'? 'red' : ''}" @click="goPage('出曲', orderList[index])">出曲</div>-->
+                                    <!--</el-tooltip>-->
+                                    <!--</div>-->
+                                </div>
+                            </el-col>
+                            <el-col v-if="index + 1 < orderList.length" :span="8">
+                                <div class="box-item">
+                                    <div class="box-item-top">
+                                        <div class="box-item-title">
+                                            <div class="box-item-title-name">
+                                                <div style="background: #5bd171;">
+                                                    {{ orderList[index + 1].houseNo }}
+                                                </div>
+                                                <div>
+                                                    {{ orderList[index + 1].inPotNoName }}
+                                                </div>
+                                            </div>
+                                            <div :class="orderList[index + 1].status === '不通过' ? 'box-item-title-state-nopass' : 'box-item-title-state'">
+                                                <label style="color: rgba(0, 0, 0, 0.65);">状态：</label>{{ orderList[index + 1].status }}
+                                            </div>
+                                        </div>
+                                        <div class="box-item-container">
+                                            <div class="box-item-container-left">
+                                                <div class="box-item-container-img">
+                                                    <img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg">
+                                                </div>
+                                            </div>
+                                            <div class="box-item-container-right">
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        生产订单
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index + 1].orderNo }}
+                                                    </div>
+                                                </div>
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        生产品项
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index + 1].materialCode + ' ' + orderList[index + 1].materialName }}
+                                                    </div>
+                                                </div>
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        入曲时长
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index + 1].inEndTimeLength }}
+                                                        小时
+                                                    </div>
+                                                </div>
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        入曲时间
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index + 1].inEndTime ? orderList[index + 1].inEndTime : '' }}
+                                                    </div>
+                                                </div>
+                                                <div class="btn">
+                                                    <el-tooltip class="item" effect="dark" :content="orderList[index + 1].beanStatus" placement="top-start">
+                                                        <el-button
+                                                            type="primary"
+                                                            size="mini"
+                                                            :class="{
+                                                                nopassBtn: orderList[index + 1].beanStatus === '不通过',
+                                                            }"
+                                                            @click="goPage('煮豆', orderList[index + 1])"
+                                                        >
+                                                            煮豆
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" :content="orderList[index + 1].guardStatus" placement="top-start">
+                                                        <el-button
+                                                            type="primary"
+                                                            size="mini"
+                                                            :class="{
+                                                                nopassBtn: orderList[index + 1].guardStatus === '不通过',
+                                                            }"
+                                                            @click="goPage('看曲', orderList[index + 1])"
+                                                        >
+                                                            看曲
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" :content="orderList[index + 1].outStatus" placement="top-start">
+                                                        <el-button
+                                                            type="primary"
+                                                            size="mini"
+                                                            :class="{
+                                                                nopassBtn: orderList[index + 1].outStatus === '不通过',
+                                                            }"
+                                                            @click="goPage('出曲', orderList[index + 1])"
+                                                        >
+                                                            出曲
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--<div class="box-item-bottom">-->
+                                    <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 1].beanStatus" placement="top-start">-->
+                                    <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 1].beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', orderList[index + 1])">煮豆</div>-->
+                                    <!--</el-tooltip>-->
+                                    <!--<div class="box-item-bottom-split"></div>-->
+                                    <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 1].guardStatus" placement="top-start">-->
+                                    <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 1].guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', orderList[index + 1])">看曲</div>-->
+                                    <!--</el-tooltip>-->
+                                    <!--<div class="box-item-bottom-split"></div>-->
+                                    <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 1].outStatus" placement="top-start">-->
+                                    <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 1].outStatus === '不通过'? 'red' : ''}" @click="goPage('出曲', orderList[index + 1])">出曲</div>-->
+                                    <!--</el-tooltip>-->
+                                    <!--</div>-->
+                                </div>
+                            </el-col>
+                            <el-col v-if="index + 2 < orderList.length" :span="8">
+                                <div class="box-item">
+                                    <div class="box-item-top">
+                                        <div class="box-item-title">
+                                            <div class="box-item-title-name">
+                                                <div style="background: #2c92f6;">
+                                                    {{ orderList[index + 2].houseNo }}
+                                                </div>
+                                                <div>
+                                                    {{ orderList[index + 2].inPotNoName }}
+                                                </div>
+                                            </div>
+                                            <div :class="orderList[index + 2].status === '不通过' ? 'box-item-title-state-nopass' : 'box-item-title-state'">
+                                                <label style="color: rgba(0, 0, 0, 0.65);">状态：</label>{{ orderList[index + 2].status }}
+                                            </div>
+                                        </div>
+                                        <div class="box-item-container">
+                                            <div class="box-item-container-left">
+                                                <div class="box-item-container-img">
+                                                    <img src="@/assets/img/fajiaoguan.png" alt="" class="bgimg">
+                                                </div>
+                                            </div>
+                                            <div class="box-item-container-right">
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        生产订单
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index + 2].orderNo }}
+                                                    </div>
+                                                </div>
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        生产品项
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index + 2].materialCode + ' ' + orderList[index + 2].materialName }}
+                                                    </div>
+                                                </div>
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        入曲时长
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index + 2].inEndTimeLength }}
+                                                        小时
+                                                    </div>
+                                                </div>
+                                                <div class="box-item-container-item">
+                                                    <div class="name">
+                                                        入曲时间
+                                                    </div>
+                                                    <div class="detail">
+                                                        {{ orderList[index + 2].inEndTime ? orderList[index + 2].inEndTime : '' }}
+                                                    </div>
+                                                </div>
+                                                <div class="btn">
+                                                    <el-tooltip class="item" effect="dark" :content="orderList[index + 2].beanStatus" placement="top-start">
+                                                        <el-button
+                                                            type="primary"
+                                                            size="mini"
+                                                            :class="{
+                                                                nopassBtn: orderList[index + 2].beanStatus === '不通过',
+                                                            }"
+                                                            @click="goPage('煮豆', orderList[index + 2])"
+                                                        >
+                                                            煮豆
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" :content="orderList[index + 2].guardStatus" placement="top-start">
+                                                        <el-button
+                                                            type="primary"
+                                                            size="mini"
+                                                            :class="{
+                                                                nopassBtn: orderList[index + 2].guardStatus === '不通过',
+                                                            }"
+                                                            @click="goPage('看曲', orderList[index + 2])"
+                                                        >
+                                                            看曲
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" :content="orderList[index + 2].outStatus" placement="top-start">
+                                                        <el-button
+                                                            type="primary"
+                                                            size="mini"
+                                                            :class="{
+                                                                nopassBtn: orderList[index + 2].outStatus === '不通过',
+                                                            }"
+                                                            @click="goPage('出曲', orderList[index + 2])"
+                                                        >
+                                                            出曲
+                                                        </el-button>
+                                                    </el-tooltip>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--<div class="box-item-bottom">-->
+                                    <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 2].beanStatus" placement="top-start">-->
+                                    <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 2].beanStatus === '不通过'? 'red' : ''}" @click="goPage('煮豆', orderList[index + 2])">煮豆</div>-->
+                                    <!--</el-tooltip>-->
+                                    <!--<div class="box-item-bottom-split"></div>-->
+                                    <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 2].guardStatus" placement="top-start">-->
+                                    <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 2].guardStatus === '不通过'? 'red' : ''}" @click="goPage('看曲', orderList[index + 2])">看曲</div>-->
+                                    <!--</el-tooltip>-->
+                                    <!--<div class="box-item-bottom-split"></div>-->
+                                    <!--<el-tooltip class="item" effect="dark" :content="orderList[index + 2].outStatus" placement="top-start">-->
+                                    <!--<div class="box-item-bottom-item" :style="{'color': orderList[index + 2].outStatus === '不通过'? 'red' : ''}" @click="goPage('出曲', orderList[index + 2])">出曲</div>-->
+                                    <!--</el-tooltip>-->
+                                    <!--</div>-->
+                                </div>
+                            </el-col>
                         </el-row>
-                    </div>
-                    <el-row>
-                        <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                    </template>
+                </el-col>
+            </el-row>
+            <el-row v-show="params.productStatus === 'abnormal' && searched" style="margin-top: 5px;">
+                <div style="min-height: 340px;">
+                    <el-table border header-row-class-name="tableHead" :data="datalist">
+                        <el-table-column label="中/白/夜班" prop="classType" width="100">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.classType" placeholder="请选择" size="small" :disabled="disabled">
+                                    <el-option v-for="sole in DayTypeList" :key="sole" :value="sole" :label="sole" />
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="工序" width="120">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.deptId" placeholder="请选择" size="small" :disabled="disabled" @change="changeProcType(scope.row)">
+                                    <el-option v-for="sole in processesList" :key="sole.deptId" :value="sole.deptId" :label="sole.deptName" />
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="人员属性" prop="userType" width="110">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.userType" placeholder="请选择" size="small" :disabled="disabled" @change="changeProcType(scope.row)">
+                                    <el-option v-for="sole in EmployeeTypeList" :key="sole" :value="sole" :label="sole" />
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true" width="200">
+                            <template slot-scope="scope">
+                                <el-col>
+                                    <span v-if="!disabled" style="cursor: pointer;" @click="selectUser(scope.row)">
+                                        <em v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</em>
+                                        <span>
+                                            <em v-if="scope.row.userType === '临时工'">点击输入临时工</em>
+                                            <em v-else>点击选择人员</em>
+                                        </span>
+                                    </span>
+                                    <span v-else style="cursor: pointer;">
+                                        <em v-if="scope.row.userId !== undefined">{{ scope.row.userId.join(',') }}</em>
+                                        <span>
+                                            <em v-if="scope.row.userType === '临时工'">点击输入临时工</em>
+                                            <em v-else>点击选择人员</em>
+                                        </span>
+                                    </span>
+                                </el-col>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="开始时间" prop="startDate" width="190">
+                            <template slot-scope="scope">
+                                <el-date-picker v-model="scope.row.startDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="disabled" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="用餐时间" prop="dinner" width="100">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.dinner" type="number" size="small" :disabled="disabled" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="结束时间" prop="endDate" width="190">
+                            <template slot-scope="scope">
+                                <el-date-picker v-model="scope.row.endDate" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="选择时间" size="small" style="width: 175px;" :disabled="disabled" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="备注" prop="remark">
+                            <template slot-scope="scope">
+                                <Remark v-model="scope.row.remark" :width="'150px'" :disabled="disabled" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" fixed="right" width="50">
+                            <template slot-scope="scope">
+                                <el-button v-if="isAuth('kjm:user:delUser')" type="danger" icon="el-icon-delete" circle size="small" :disabled="disabled" @click="delUser(scope.row)" />
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <el-row style=" margin-top: 10px; font-size: 14px; line-height: 30px;">
+                        实际作业人数: {{ countMan }}
                     </el-row>
+                </div>
+                <el-row>
+                    <el-pagination :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </el-row>
-            </div>
-            <temporary-worker ref="temporaryWorker" @changeUser="changeUser" />
-            <loaned-personnel ref="loanedPersonnel" :org-tree="OrgTree" :arr-list="arrList" @changeUser="changeUser" />
-            <official-worker ref="officialWorker" @changeUser="changeUser" />
-        </el-col>
-    </el-row>
+            </el-row>
+        </div>
+        <temporary-worker ref="temporaryWorker" @changeUser="changeUser" />
+        <loaned-personnel ref="loanedPersonnel" :org-tree="OrgTree" :arr-list="arrList" @changeUser="changeUser" />
+        <official-worker ref="officialWorker" @changeUser="changeUser" />
+    </div>
 </template>
 
 <script lang="ts">

@@ -58,7 +58,7 @@
                 type: 'p',
                 label: '生产锅号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'potNo'
+                value: 'potNoString'
             },
             {
                 type: 'tooltip',
@@ -67,10 +67,10 @@
                 value: ['materialCode', 'materialName']
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 label: '生产锅序',
                 icon: 'factory-bianhao',
-                value: 'potOrder'
+                value: ['potOrderString', 'potOrderNo']
             },
             {
                 type: 'p',
@@ -130,6 +130,8 @@
                 potOrderNo: this.$store.state.sterilize.Craft.potOrderMap.potOrderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
+                this.formHeader.potNoString = '第' + data.data.potNo + '锅';
+                 this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'CRAFT';
                 this.$refs.craft.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'CRAFT');
@@ -198,6 +200,8 @@ interface FormHeader{
     orderNo?: string;
     potAmount?: string;
     potNo?: string;
+    potNoString?: string;
+    potOrderString?: string;
     potOrder?: string;
     potOrderNo?: string;
     potUnit?: string;

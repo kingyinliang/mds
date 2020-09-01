@@ -1,83 +1,69 @@
 <template>
-    <el-col>
-        <el-col>
-            <div class="header_main">
-                <el-card class="searchCard">
-                    <el-row type="flex">
-                        <el-col>
-                            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
-                                <el-form-item label="生产工厂：">
-                                    <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px;">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="生产车间：">
-                                    <el-select v-model="plantList.workShop" placeholder="请选择" style="width: 160px;">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="生产产线：">
-                                    <el-select v-model="plantList.productLine" placeholder="产线" style="width: 160px;">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="(item, index) in productline" :key="index" :label="item.deptName" :value="item.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="订单号：">
-                                    <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 160px;" />
-                                </el-form-item>
-                                <el-form-item label="订单状态：">
-                                    <el-select v-model="plantList.status" placeholder="请选择" style="width: 160px;">
-                                        <el-option label="请选择" value="" />
-                                        <el-option label="未审核" value="submit" />
-                                        <el-option label="审核通过" value="checked" />
-                                        <el-option label="审核不通过" value="noPass" />
-                                        <el-option label="接口失败" value="0" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="订单类型：">
-                                    <el-select v-model="plantList.orderType" placeholder="请选择" style="width: 160px;">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.value" :value="item.code" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="生产日期：" class="dateinput">
-                                    <el-row>
-                                        <el-col :span="12">
-                                            <el-date-picker v-model="plantList.prodDateBegin" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 135px;" />
-                                            <span>-</span>
-                                        </el-col>
-                                        <el-col :span="12">
-                                            <el-date-picker v-model="plantList.prodDateEnd" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 135px;" />
-                                        </el-col>
-                                    </el-row>
-                                </el-form-item>
-                                <el-form-item class="floatr">
-                                    <el-button v-if="isAuth('sys:verifyInStorage:list')" type="primary" size="small" @click="GetAuditList(true)">
-                                        查询
-                                    </el-button>
-                                    <el-button v-if="isAuth('sys:verifyInStorage:auditing')" type="primary" size="small" @click="subAutio()">
-                                        审核通过
-                                    </el-button>
-                                    <el-button v-if="isAuth('sys:verifyInStorage:auditing')" type="danger" size="small" @click="repulseAutios()">
-                                        审核不通过
-                                    </el-button>
-                                </el-form-item>
-                            </el-form>
-                        </el-col>
-                    </el-row>
-                    <div class="toggleSearchBottom">
-                        <i class="el-icon-caret-top" />
-                    </div>
-                </el-card>
-            </div>
-            <div class="main">
-                <el-card class="tableCard">
-                    <div class="toggleSearchTop">
-                        <i class="el-icon-caret-bottom" />
-                    </div>
-                    <el-form ref="pstngDate" :model="plantList" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="100px" class="topforms">
+    <div class="header_main">
+        <el-card class="searchCard" style="margin-bottom: 5px;">
+            <el-row type="flex">
+                <el-col>
+                    <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="plantList.workShop" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产产线：">
+                            <el-select v-model="plantList.productLine" placeholder="产线" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in productline" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单号：">
+                            <el-input v-model="plantList.orderNo" placeholder="订单号" style="width: 160px;" />
+                        </el-form-item>
+                        <el-form-item label="订单状态：">
+                            <el-select v-model="plantList.status" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option label="未审核" value="submit" />
+                                <el-option label="审核通过" value="checked" />
+                                <el-option label="审核不通过" value="noPass" />
+                                <el-option label="接口失败" value="0" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单类型：">
+                            <el-select v-model="plantList.orderType" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in orderTypeList" :key="index" :label="item.value" :value="item.code" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产日期：" class="dateinput">
+                            <el-row>
+                                <el-col :span="12">
+                                    <el-date-picker v-model="plantList.prodDateBegin" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 135px;" />
+                                    <span>  -</span>
+                                </el-col>
+                                <el-col :span="12">
+                                    <el-date-picker v-model="plantList.prodDateEnd" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 135px;" />
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                        <el-form-item class="floatr">
+                            <el-button v-if="isAuth('sys:verifyInStorage:list')" type="primary" size="small" @click="GetAuditList(true)">
+                                查询
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </el-card>
+        <mds-card title="生产入库" name="auditList" :pack-up="false">
+            <template slot="titleBtn">
+                <div style="float: right; width: 688px;">
+                    <el-form ref="pstngDate" :model="plantList" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="82px" class="topforms" style=" float: left; width: 505px;">
                         <el-form-item label="过账日期：" prop="pstngDate">
                             <el-date-picker v-model="plantList.pstngDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
                         </el-form-item>
@@ -85,117 +71,123 @@
                             <el-input v-model="plantList.headerTxt" placeholder="抬头文本" style="width: 160px;" />
                         </el-form-item>
                     </el-form>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" max-height="450" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="checkboxT" width="50" />
-                        <el-table-column label="审核状态" width="100">
-                            <template slot-scope="scope">
-                                {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? (scope.row.interfaceReturnStatus === '0' ? '接口失败' : '审核通过') : scope.row.status === 'noPass' ? '审核不通过' : '' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="120" />
-                        <el-table-column prop="orderNo" label="生产订单号" :show-overflow-tooltip="true" width="120" />
-                        <el-table-column label="生产物料" :show-overflow-tooltip="true" width="360">
-                            <template slot-scope="scope">
-                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="planOutput" label="计划生产数量" width="105" />
-                        <el-table-column prop="outputUnitName" label="单位" width="50" />
-                        <el-table-column prop="entryQnt" label="入库数量" width="78" />
-                        <el-table-column prop="entryUomName" label="单位" width="50" />
-                        <el-table-column label="是否样品" width="78">
-                            <template slot-scope="scope">
-                                {{ scope.row.isSample === '0' ? '否' : '是' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="batch" label="物料批次" width="112" />
-                        <el-table-column label="生产日期" width="105">
-                            <template slot-scope="scope">
-                                {{ scope.row.prodDate | SetDate }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="入库库位" width="78">
-                            <template slot-scope="scope">
-                                <el-input v-if="scope.row.redact" v-model="scope.row.stgeLoc" placeholder="手工录入" size="small" />
-                                <span v-if="!scope.row.redact">{{ scope.row.stgeLoc }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="移动类型" width="78">
-                            <template slot-scope="scope">
-                                <el-input v-if="scope.row.redact" v-model="scope.row.moveType" placeholder="手工录入" size="small" />
-                                <span v-if="!scope.row.redact">{{ scope.row.moveType }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="库存类型" width="78">
-                            <template slot-scope="scope">
-                                <el-input v-if="scope.row.redact" v-model="scope.row.stckType" placeholder="手工录入" size="small" />
-                                <span v-if="!scope.row.redact">{{ scope.row.stckType }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="交货已完成标识" width="120">
-                            <template slot-scope="scope">
-                                <el-input v-if="scope.row.redact" v-model="scope.row.noMoreGr" placeholder="手工录入" size="small" />
-                                <span v-if="!scope.row.redact">{{ scope.row.noMoreGr }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="货架寿命到期日" width="120">
-                            <template slot-scope="scope">
-                                <el-input v-if="scope.row.redact" v-model="scope.row.expirydate" placeholder="手工录入" size="small" />
-                                <span v-if="!scope.row.redact">{{ scope.row.expirydate }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="mixType" label="是否混合罐" width="105" />
-                        <el-table-column prop="potNo" label="原汁罐号" width="105" />
-                        <el-table-column prop="fullPotAmount" label="满罐数量" width="105" />
-                        <el-table-column prop="fullPotDate" label="满罐日期" width="105" />
-                        <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="150" />
-                        <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="150" />
-                        <el-table-column prop="verifyMan" label="审核人" width="160" />
-                        <el-table-column prop="verifyDate" label="审核时间" width="160" />
-                        <el-table-column :show-overflow-tooltip="true" label="备注">
-                            <template slot-scope="scope">
-                                <el-input v-if="scope.row.redact" v-model="scope.row.remark" placeholder="手工录入" size="small" />
-                                <span v-if="!scope.row.redact">{{ scope.row.remark }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="70">
-                            <template slot-scope="scope">
-                                <el-button v-if="!((scope.row.status === 'checked' && scope.row.interfaceReturnStatus === '1') || scope.row.status === 'noPass') && isAuth('sys:verifyInStorage:auditing')" class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)">
-                                    {{ scope.row.redact ? '保存' : '编辑' }}
-                                </el-button>
-                                <el-button v-if="scope.row.status === 'checked' && scope.row.interfaceReturnStatus === '1' && isAuth('sys:verifyInStorage:resetIns')" class="ra_btn" type="warning" round size="mini" @click="ResetD(scope.row)">
-                                    反审
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <el-row>
-                        <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                    </el-row>
-                </el-card>
-            </div>
-            <el-dialog title="审核拒绝" :close-on-click-modal="false" :visible.sync="visible">
-                <p style="line-height: 42px;">
-                    请填写不通过原因
-                </p>
-                <el-input v-model="Text" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="visible = false">取消</el-button>
-                    <el-button type="primary" @click="repulseAutio()">确定</el-button>
-                </span>
-            </el-dialog>
-            <el-dialog title="反审" :close-on-click-modal="false" :visible.sync="visibleRe">
-                <p style="line-height: 42px;">
-                    请填写反审意见
-                </p>
-                <el-input v-model="ReText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="visibleRe = false">取消</el-button>
-                    <el-button type="primary" @click="ResetIn()">确定</el-button>
-                </span>
-            </el-dialog>
-        </el-col>
-    </el-col>
+                    <el-button v-if="isAuth('sys:verifyInStorage:auditing')" type="primary" size="small" @click="subAutio()">
+                        审核通过
+                    </el-button>
+                    <el-button v-if="isAuth('sys:verifyInStorage:auditing')" type="danger" size="small" @click="repulseAutios()">
+                        审核不通过
+                    </el-button>
+                </div>
+            </template>
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="AuditList" max-height="450" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" :selectable="checkboxT" width="50" />
+                <el-table-column label="审核状态" width="100">
+                    <template slot-scope="scope">
+                        {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? (scope.row.interfaceReturnStatus === '0' ? '接口失败' : '审核通过') : scope.row.status === 'noPass' ? '审核不通过' : '' }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="120" />
+                <el-table-column prop="orderNo" label="生产订单号" :show-overflow-tooltip="true" width="120" />
+                <el-table-column label="生产物料" :show-overflow-tooltip="true" width="360">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="planOutput" label="计划生产数量" width="105" />
+                <el-table-column prop="outputUnitName" label="单位" width="50" />
+                <el-table-column prop="entryQnt" label="入库数量" width="78" />
+                <el-table-column prop="entryUomName" label="单位" width="50" />
+                <el-table-column label="是否样品" width="78">
+                    <template slot-scope="scope">
+                        {{ scope.row.isSample === '0' ? '否' : '是' }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="batch" label="物料批次" width="112" />
+                <el-table-column label="生产日期" width="105">
+                    <template slot-scope="scope">
+                        {{ scope.row.prodDate | SetDate }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="入库库位" width="78">
+                    <template slot-scope="scope">
+                        <el-input v-if="scope.row.redact" v-model="scope.row.stgeLoc" placeholder="手工录入" size="small" />
+                        <span v-if="!scope.row.redact">{{ scope.row.stgeLoc }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="移动类型" width="78">
+                    <template slot-scope="scope">
+                        <el-input v-if="scope.row.redact" v-model="scope.row.moveType" placeholder="手工录入" size="small" />
+                        <span v-if="!scope.row.redact">{{ scope.row.moveType }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="库存类型" width="78">
+                    <template slot-scope="scope">
+                        <el-input v-if="scope.row.redact" v-model="scope.row.stckType" placeholder="手工录入" size="small" />
+                        <span v-if="!scope.row.redact">{{ scope.row.stckType }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="交货已完成标识" width="120">
+                    <template slot-scope="scope">
+                        <el-input v-if="scope.row.redact" v-model="scope.row.noMoreGr" placeholder="手工录入" size="small" />
+                        <span v-if="!scope.row.redact">{{ scope.row.noMoreGr }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="货架寿命到期日" width="120">
+                    <template slot-scope="scope">
+                        <el-input v-if="scope.row.redact" v-model="scope.row.expirydate" placeholder="手工录入" size="small" />
+                        <span v-if="!scope.row.redact">{{ scope.row.expirydate }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="mixType" label="是否混合罐" width="105" />
+                <el-table-column prop="potNo" label="原汁罐号" width="105" />
+                <el-table-column prop="fullPotAmount" label="满罐数量" width="105" />
+                <el-table-column prop="fullPotDate" label="满罐日期" width="105" />
+                <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="150" />
+                <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="150" />
+                <el-table-column prop="verifyMan" label="审核人" width="160" />
+                <el-table-column prop="verifyDate" label="审核时间" width="160" />
+                <el-table-column :show-overflow-tooltip="true" label="备注">
+                    <template slot-scope="scope">
+                        <el-input v-if="scope.row.redact" v-model="scope.row.remark" placeholder="手工录入" size="small" />
+                        <span v-if="!scope.row.redact">{{ scope.row.remark }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column fixed="right" label="操作" width="70">
+                    <template slot-scope="scope">
+                        <el-button v-if="!((scope.row.status === 'checked' && scope.row.interfaceReturnStatus === '1') || scope.row.status === 'noPass') && isAuth('sys:verifyInStorage:auditing')" class="ra_btn" type="primary" round size="mini" @click="redact(scope.row)">
+                            {{ scope.row.redact ? '保存' : '编辑' }}
+                        </el-button>
+                        <el-button v-if="scope.row.status === 'checked' && scope.row.interfaceReturnStatus === '1' && isAuth('sys:verifyInStorage:resetIns')" class="ra_btn" type="warning" round size="mini" @click="ResetD(scope.row)">
+                            反审
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-row>
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
+        <el-dialog title="审核拒绝" :close-on-click-modal="false" :visible.sync="visible">
+            <p style="line-height: 42px;">
+                请填写不通过原因
+            </p>
+            <el-input v-model="Text" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visible = false">取消</el-button>
+                <el-button type="primary" @click="repulseAutio()">确定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="反审" :close-on-click-modal="false" :visible.sync="visibleRe">
+            <p style="line-height: 42px;">
+                请填写反审意见
+            </p>
+            <el-input v-model="ReText" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visibleRe = false">取消</el-button>
+                <el-button type="primary" @click="ResetIn()">确定</el-button>
+            </span>
+        </el-dialog>
+    </div>
 </template>
 
 <script>

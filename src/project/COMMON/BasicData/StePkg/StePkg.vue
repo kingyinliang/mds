@@ -3,7 +3,7 @@
         <mds-card title="对应列表" :pack-up="false">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px;">
-                    <el-select v-model="queryForm.stePotId" size="small" placeholder="杀菌锅" style="width: 160px; margin-right: 10px;" clearable>
+                    <el-select v-model="queryForm.stePotId" size="small" filterable placeholder="杀菌锅" style="width: 160px; margin-right: 10px;" clearable>
                         <el-option v-for="(item, index) in holderList" :key="index" :label="item.holderName" :value="item.id" />
                     </el-select>
                     <el-button v-if="isAuth('stePkgQuery')" type="primary" size="small" style="margin-right: 10px;" @click="() => { queryForm.current = 1; queryType = 1; GetData() }">
@@ -24,7 +24,7 @@
                 <el-table-column type="selection" width="50" fixed="left" align="center" />
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column label="杀菌车间" prop="steWorkShopName" min-width="140" :show-overflow-tooltip="true" />
-                <el-table-column label="杀菌锅号" prop="stePotNo" min-width="140" :show-overflow-tooltip="true" />
+                <el-table-column label="杀菌锅号" prop="stePotName" min-width="140" :show-overflow-tooltip="true" />
                 <el-table-column label="包装车间" prop="pkgWorkShopName" min-width="140" :show-overflow-tooltip="true" />
                 <el-table-column label="包装产线" prop="pkgLineName" min-width="140" :show-overflow-tooltip="true" />
                 <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" />
@@ -170,8 +170,8 @@
                 params = {
                     stePotId: this.queryForm.stePotId,
                     current: this.queryForm.current,
-                    size: this.queryForm.current,
-                    total: this.queryForm.current
+                    size: this.queryForm.size,
+                    total: this.queryForm.total
                 }
             } else if (this.queryType === 2) {
                 params = {
@@ -179,8 +179,8 @@
                     pkgWorkShop: this.queryForm.pkgWorkShop,
                     pkgLine: this.queryForm.pkgLine,
                     current: this.queryForm.current,
-                    size: this.queryForm.current,
-                    total: this.queryForm.current
+                    size: this.queryForm.size,
+                    total: this.queryForm.total
                 }
             }
             BASIC_API.STEPKG_LIST_API(params).then(({ data }) => {

@@ -52,15 +52,15 @@
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
                             <span v-if="!isRedact" style="cursor: pointer;">
-                                <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
                             </span>
                             <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
-                                <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
-                                <i>点击选择人员</i>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em>点击选择人员</em>
                             </span>
                             <span v-if="isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" @click="dayLaborer(scope.row)">
-                                <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
-                                <i>点击输入人员</i>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em>点击输入人员</em>
                             </span>
                         </div>
                     </template>

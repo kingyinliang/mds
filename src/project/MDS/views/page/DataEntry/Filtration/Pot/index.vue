@@ -30,7 +30,7 @@
         <mds-card v-show="fastS" title="成品罐区" name="potTotal" :pack-up="false" style="margin-top: 10px;">
             <template slot="titleBtn">
                 <div style="float: right; height: 32px; margin-bottom: 10px; line-height: 32px;">
-                    <i v-if="isAuth('ste:semi:reportForm')"><a style="color: #487bff; font-size: 14px;" @click="goPot">杀菌罐区库存情况>></a></i>
+                    <em v-if="isAuth('ste:semi:reportForm')"><a style="color: #487bff; font-size: 14px;" @click="goPot">杀菌罐区库存情况>></a></em>
                 </div>
             </template>
             <div>
@@ -561,7 +561,7 @@ export default {
         color: #1890ff;
         font-size: 14px;
         cursor: pointer;
-        i {
+        em {
             &::before {
                 color: #1890ff;
             }

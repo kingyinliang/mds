@@ -1,114 +1,106 @@
 <template>
-    <el-col>
-        <el-col>
-            <div class="header_main">
-                <el-card class="searchCard">
-                    <el-row type="flex">
-                        <el-col>
-                            <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row" @keyup.enter.native="GetAuditList()" @submit.native.prevent>
-                                <el-form-item label="生产工厂：">
-                                    <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px;">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="生产车间：">
-                                    <el-select v-model="plantList.workShop" placeholder="请选择" style="width: 160px;">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="生产产线：">
-                                    <el-select v-model="plantList.productLine" placeholder="产线" style="width: 160px;">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="(item, index) in productline" :key="index" :label="item.deptName" :value="item.deptId" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="日期：">
-                                    <el-date-picker v-model="plantList.setDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
-                                </el-form-item>
-                                <el-form-item label="考勤类型：">
-                                    <el-select v-model="plantList.kqlx" placeholder="请选择" size="small" style="width: 160px;">
-                                        <el-option label="请选择" value="" />
-                                        <el-option v-for="(iteam, index) in ARtype" :key="index" :label="iteam.value" :value="iteam.code" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="人员：">
-                                    <el-input v-model="plantList.userId" placeholder="请输入" style="width: 160px;" />
-                                </el-form-item>
-                                <el-form-item label="审核状态：">
-                                    <el-select v-model="plantList.status" placeholder="请选择" style="width: 160px;">
-                                        <el-option label="请选择" value="" />
-                                        <el-option label="未审核" value="submit" />
-                                        <el-option label="审核通过" value="checked" />
-                                        <el-option label="审核不通过" value="noPass" />
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item class="floatr">
-                                    <el-button v-if="isAuth('sys:att:listAtt')" type="primary" size="small" @click="GetAuditList(true)">
-                                        查询
-                                    </el-button>
-                                    <el-button v-if="isAuth('sys:att:auditAtt')" type="primary" size="small" @click="subAutio">
-                                        审核通过
-                                    </el-button>
-                                    <el-button v-if="isAuth('sys:att:auditAtt')" type="danger" size="small" @click="repulseAutios">
-                                        审核不通过
-                                    </el-button>
-                                </el-form-item>
-                            </el-form>
-                        </el-col>
-                    </el-row>
-                    <div class="toggleSearchBottom">
-                        <i class="el-icon-caret-top" />
-                    </div>
-                </el-card>
-            </div>
-            <div class="main">
-                <el-card class="tableCard">
-                    <div class="toggleSearchTop">
-                        <i class="el-icon-caret-bottom" />
-                    </div>
-                    <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" :selectable="checkboxT" width="50" />
-                        <el-table-column label="审核状态" width="100">
-                            <template slot-scope="scope">
-                                {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? '审核通过' : scope.row.status === 'noPass' ? '审核不通过' : '' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="reqno" label="订单号" :show-overflow-tooltip="true" width="120" />
-                        <el-table-column prop="kqrq" label="日期" :show-overflow-tooltip="true" width="120" />
-                        <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="120" />
-                        <el-table-column prop="kqdlName" label="考勤大类" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="kqlxName" label="考勤类型" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="productLineName" label="产线" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="deptIdName" label="班组" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="userType" label="人员属性" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true" width="160" />
-                        <el-table-column prop="classTypeName" label="白/中/夜班" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="content" label="工作内容" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="timedTime" label="计时时数（小时）" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="pieceTime" label="计件时数（小时）" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="workTime" label="出勤时数（小时）" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="remark" label="考勤备注" :show-overflow-tooltip="true" width="80" />
-                        <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="80" />
-                    </el-table>
-                    <el-row>
-                        <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                    </el-row>
-                </el-card>
-            </div>
-            <el-dialog title="审核拒绝" :close-on-click-modal="false" :visible.sync="visible">
-                <p style="line-height: 42px;">
-                    请填写不通过原因
-                </p>
-                <el-input v-model="Text" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="visible = false">取消</el-button>
-                    <el-button type="primary" @click="repulseAutio()">确定</el-button>
-                </span>
-            </el-dialog>
-        </el-col>
-    </el-col>
+    <div class="header_main">
+        <el-card class="searchCard" style="margin-bottom: 5px;">
+            <el-row type="flex">
+                <el-col>
+                    <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row" @keyup.enter.native="GetAuditList()" @submit.native.prevent>
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="plantList.factory" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="plantList.workShop" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产产线：">
+                            <el-select v-model="plantList.productLine" placeholder="产线" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in productline" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="日期：">
+                            <el-date-picker v-model="plantList.setDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
+                        </el-form-item>
+                        <el-form-item label="考勤类型：">
+                            <el-select v-model="plantList.kqlx" placeholder="请选择" size="small" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(iteam, index) in ARtype" :key="index" :label="iteam.value" :value="iteam.code" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="人员：">
+                            <el-input v-model="plantList.userId" placeholder="请输入" style="width: 160px;" />
+                        </el-form-item>
+                        <el-form-item label="审核状态：">
+                            <el-select v-model="plantList.status" placeholder="请选择" style="width: 160px;">
+                                <el-option label="请选择" value="" />
+                                <el-option label="未审核" value="submit" />
+                                <el-option label="审核通过" value="checked" />
+                                <el-option label="审核不通过" value="noPass" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item class="floatr">
+                            <el-button v-if="isAuth('sys:att:listAtt')" type="primary" size="small" @click="GetAuditList(true)">
+                                查询
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </el-card>
+        <mds-card title="考勤审核" name="AuditList" :pack-up="false">
+            <template slot="titleBtn">
+                <div style="float: right; width: 688px; text-align: right;">
+                    <el-button v-if="isAuth('sys:att:auditAtt')" type="primary" size="small" @click="subAutio">
+                        审核通过
+                    </el-button>
+                    <el-button v-if="isAuth('sys:att:auditAtt')" type="danger" size="small" @click="repulseAutios">
+                        审核不通过
+                    </el-button>
+                </div>
+            </template>
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" :selectable="checkboxT" width="50" />
+                <el-table-column label="审核状态" min-width="100">
+                    <template slot-scope="scope">
+                        {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? '审核通过' : scope.row.status === 'noPass' ? '审核不通过' : '' }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="reqno" label="订单号" :show-overflow-tooltip="true" min-width="170" />
+                <el-table-column prop="kqrq" label="日期" :show-overflow-tooltip="true" min-width="120" />
+                <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" min-width="120" />
+                <el-table-column prop="kqdlName" label="考勤大类" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="kqlxName" label="考勤类型" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="productLineName" label="产线" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="deptIdName" label="班组" :show-overflow-tooltip="true" min-width="100" />
+                <el-table-column prop="userType" label="人员属性" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="userId" label="姓名（工号）" :show-overflow-tooltip="true" min-width="160" />
+                <el-table-column prop="classTypeName" label="白/中/夜班" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="content" label="工作内容" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="timedTime" label="计时时数（小时）" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="pieceTime" label="计件时数（小时）" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="workTime" label="出勤时数（小时）" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="remark" label="考勤备注" :show-overflow-tooltip="true" min-width="80" />
+                <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" min-width="80" />
+            </el-table>
+            <el-row>
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
+        <el-dialog title="审核拒绝" :close-on-click-modal="false" :visible.sync="visible">
+            <p style="line-height: 42px;">
+                请填写不通过原因
+            </p>
+            <el-input v-model="Text" type="textarea" :rows="6" class="textarea" style="width: 100%; height: 200px;" />
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visible = false">取消</el-button>
+                <el-button type="primary" @click="repulseAutio()">确定</el-button>
+            </span>
+        </el-dialog>
+    </div>
 </template>
 
 <script>

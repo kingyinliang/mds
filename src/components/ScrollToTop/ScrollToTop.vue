@@ -1,7 +1,7 @@
 <template>
     <transition name="el-fade-in">
         <div v-show="toTopShow" class="page-up scroll-to-top" @click="scrollToTop">
-            <i class="el-icon-caret-top" />
+            <em class="el-icon-caret-top" />
             <span>TOP</span>
         </div>
     </transition>
@@ -86,7 +86,7 @@ export default {
     background: rgba(72, 123, 255, 0.88);
     border-radius: 50%;
     cursor: pointer;
-    i {
+    em {
         display: block;
         font-size: 18px;
     }

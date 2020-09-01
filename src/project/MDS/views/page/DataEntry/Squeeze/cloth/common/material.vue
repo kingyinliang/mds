@@ -11,7 +11,7 @@
                 <el-table-column type="index" label="序号" width="50px" fixed />
                 <el-table-column min-width="100px">
                     <template slot="header">
-                        <i class="reqI">*</i><span>布浆机</span>
+                        <em class="reqI">*</em><span>布浆机</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.pulpMachineName }}
@@ -19,7 +19,7 @@
                 </el-table-column>
                 <el-table-column min-width="180px" show-overflow-tooltip>
                     <template slot="header">
-                        <i class="reqI">*</i><span>气垫小车号</span>
+                        <em class="reqI">*</em><span>气垫小车号</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.hovercraftName }}
@@ -28,7 +28,7 @@
                 <el-table-column prop="pulpNum" label="布浆张数" />
                 <el-table-column min-width="150px">
                     <template slot="header">
-                        <i class="reqI">*</i><span>布浆开始时间</span>
+                        <em class="reqI">*</em><span>布浆开始时间</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.pulpStartDate }}
@@ -36,7 +36,7 @@
                 </el-table-column>
                 <el-table-column min-width="150px">
                     <template slot="header">
-                        <i class="reqI">*</i><span>布浆结束时间</span>
+                        <em class="reqI">*</em><span>布浆结束时间</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.pulpEndDate }}
@@ -45,7 +45,7 @@
                 <el-table-column prop="pulpTime" label="布浆时间合计(MIN)" width="150px" />
                 <el-table-column>
                     <template slot="header">
-                        <i class="reqI">*</i><span>布浆量</span>
+                        <em class="reqI">*</em><span>布浆量</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.pulpAmount }}
@@ -62,7 +62,7 @@
                 </el-table-column>
                 <el-table-column show-overflow-tooltip min-width="210px">
                     <template slot="header">
-                        <i class="reqI">*</i><span>原汁分类</span>
+                        <em class="reqI">*</em><span>原汁分类</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.sauceClass }}
@@ -70,7 +70,7 @@
                 </el-table-column>
                 <el-table-column min-width="160px">
                     <template slot="header">
-                        <i class="reqI">*</i><span>布浆自淋时间(MIN)</span>
+                        <em class="reqI">*</em><span>布浆自淋时间(MIN)</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.selfDrenchTime }}
@@ -78,7 +78,7 @@
                 </el-table-column>
                 <el-table-column min-width="150px">
                     <template slot="header">
-                        <i class="reqI">*</i><span>发酵罐号1</span>
+                        <em class="reqI">*</em><span>发酵罐号1</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.potOne }}
@@ -87,7 +87,7 @@
                 <el-table-column prop="potTwo" label="发酵罐号2" min-width="150px" />
                 <el-table-column prop="classes" width="100px">
                     <template slot="header">
-                        <i class="reqI">*</i><span>白/中/夜班</span>
+                        <em class="reqI">*</em><span>白/中/夜班</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.classes }}
@@ -95,7 +95,7 @@
                 </el-table-column>
                 <el-table-column prop="man" show-overflow-tooltip min-width="210px">
                     <template slot="header">
-                        <i class="reqI">*</i><span>人员</span>
+                        <em class="reqI">*</em><span>人员</span>
                     </template>
                     <template slot-scope="scope">
                         {{ scope.row.man }}
@@ -174,8 +174,8 @@
                 <el-form-item label="人员：" :label-width="formLabelWidth" prop="man">
                     <el-col v-if="!sauce.man">
                         <span :style="{ cursor: 'pointer' }" @click="selectUser()">
-                            <i>{{ sauce.man }}</i>
-                            <i>[点击选择人员]</i>
+                            <em>{{ sauce.man }}</em>
+                            <em>[点击选择人员]</em>
                         </span>
                     </el-col>
                     <span v-else :style="{ cursor: 'pointer' }" @click="selectUser()">{{ sauce.man }}[点击选择人员]</span>

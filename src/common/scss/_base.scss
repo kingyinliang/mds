@@ -515,6 +515,9 @@
 }
 
 .newCard {
+    border-radius: 8px;
+    padding:14px;
+    margin-bottom: 10px;
     .el-card__body {
         padding: 7px !important;
     }
@@ -932,7 +935,7 @@
                 color: white;
                 font-weight: bold;
                 font-size: 16px;
-                i {
+                em {
                     font-weight: normal;
                     margin-right: 10px;
                 }
@@ -980,7 +983,7 @@
                         text-overflow: ellipsis;
                         color: white;
                         text-align: center;
-                        i {
+                        em {
                             margin-right: 5px;
                         }
                     }
@@ -1221,7 +1224,7 @@
                     color: #333;
                 }
                 .el-form-item__label {
-                    i {
+                    em {
                         color: $main-color;
                     }
                 }
@@ -1302,7 +1305,7 @@
                 font-size: 14px;
                 color: #999;
                 line-height: 32px;
-                i {
+                em {
                     color: #487bff;
                     margin-right: 5px;
                 }
@@ -1509,7 +1512,7 @@ $indexlist: (1: 11, 2: 10, 3: 9, 4: 8, 5: 7, 6: 6, 7: 5, 8: 4, 9: 3, 10: 2, 11: 
         background: #3a8ee6;
         span,
         button,
-        i {
+        em {
             color: white !important;
         }
     }

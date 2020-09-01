@@ -9,7 +9,7 @@
         </template>
         <div v-if="currentFormDataGroup.classes === 'M' || currentFormDataGroup.classes === 'D'" class="marginL10px">
             <div class="box-card-title clearfix">
-                <h3><i class="point-icon" />{{ classesOptions.length !== 0 ? classesOptions.find((item)=> item.dictCode === 'M').dictValue : '' }}</h3>
+                <h3><em class="point-icon" />{{ classesOptions.length !== 0 ? classesOptions.find((item)=> item.dictCode === 'M').dictValue : '' }}</h3>
             </div>
             <el-row>
                 <el-form :inline="true" :model="currentFormDataGroup" size="small" label-width="100px" class="multi_row">
@@ -54,7 +54,7 @@
         </div>
         <div v-if="currentFormDataGroup.classes === 'A' || currentFormDataGroup.classes === 'D'" class="marginL10px">
             <div class="box-card-title clearfix">
-                <h3><i class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'A').dictValue : '' }}</h3>
+                <h3><em class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'A').dictValue : '' }}</h3>
             </div>
             <el-row>
                 <el-form :inline="true" :model="currentFormDataGroup" size="small" label-width="100px" class="multi_row">
@@ -99,7 +99,7 @@
         </div>
         <div v-if="currentFormDataGroup.classes === 'N' || currentFormDataGroup.classes === 'D'" class="marginL10px">
             <div class="box-card-title clearfix">
-                <h3><i class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'N').dictValue : '' }}</h3>
+                <h3><em class="point-icon" />{{ classesOptions ? classesOptions.find((item)=> item.dictCode === 'N').dictValue : '' }}</h3>
             </div>
             <el-row>
                 <el-form :inline="true" :model="currentFormDataGroup" size="small" label-width="100px" class="multi_row">

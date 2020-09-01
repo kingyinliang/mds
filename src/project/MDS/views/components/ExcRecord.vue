@@ -1,7 +1,7 @@
 <template>
     <mds-card :title="'录入数据单位：MIN'" :name="'exc'" :icon-bg="'#f05c4a'">
         <template slot="titleBtn">
-            <div style="float: right;">
+            <div style="float: right; margin-bottom: 5px;">
                 <el-button type="primary" size="small" :disabled="!isRedact" @click="AddExcDate(ExcDate)">
                     新增
                 </el-button>
@@ -11,7 +11,7 @@
             <el-table-column type="index" width="55" label="序号" fixed />
             <el-table-column label="白/中/夜班" min-width="100">
                 <template slot="header">
-                    <i class="reqI">*</i>
+                    <em class="reqI">*</em>
                     <span>白/中/夜班</span>
                 </template>
                 <template slot-scope="scope">
@@ -22,7 +22,7 @@
             </el-table-column>
             <el-table-column label="异常情况" width="150">
                 <template slot="header">
-                    <i class="reqI">*</i>
+                    <em class="reqI">*</em>
                     <span>异常情况</span>
                 </template>
                 <template slot-scope="scope">
@@ -38,7 +38,7 @@
             </el-table-column>
             <el-table-column width="185" label="异常开始时间">
                 <template slot="header">
-                    <i class="reqI">*</i>
+                    <em class="reqI">*</em>
                     <span>异常开始时间</span>
                 </template>
                 <template slot-scope="scope">
@@ -47,7 +47,7 @@
             </el-table-column>
             <el-table-column width="185" label="异常结束时间">
                 <template slot="header">
-                    <i class="reqI">*</i>
+                    <em class="reqI">*</em>
                     <span>异常结束时间</span>
                 </template>
                 <template slot-scope="scope">

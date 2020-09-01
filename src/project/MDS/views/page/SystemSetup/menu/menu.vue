@@ -46,7 +46,7 @@
                     label="图标"
                 >
                     <template slot-scope="scope">
-                        <i class="iconfont" :class="scope.row.icon" />
+                        <em class="iconfont" :class="scope.row.icon" />
                     </template>
                 </el-table-column>
                 <el-table-column

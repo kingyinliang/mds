@@ -52,15 +52,15 @@
                     <template slot-scope="scope">
                         <div class="required" style="min-height: 32px; line-height: 32px;">
                             <span v-if="!(isRedact && status !== 'C' && status !== 'D' && status !== 'P')">
-                                <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
                             </span>
                             <span v-if="isRedact && scope.row.userType !== 'EXTERNAL' && scope.row.userType !== 'TEMP'" style="cursor: pointer;" @click="selectUser(scope.row)">
-                                <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
-                                <i>点击选择人员</i>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em>点击选择人员</em>
                             </span>
                             <span v-if="isRedact && (scope.row.userType === 'EXTERNAL' || scope.row.userType === 'TEMP')" style="cursor: pointer;" @click="dayLaborer(scope.row)">
-                                <i v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</i>
-                                <i>点击输入人员</i>
+                                <em v-for="(item, index) in scope.row.userList" :key="index">{{ item }}，</em>
+                                <em>点击输入人员</em>
                             </span>
                         </div>
                     </template>
@@ -420,7 +420,7 @@ export default class ProductPeople extends Vue {
             return false
         }
         for (const item of currentFormDataGroupNew) {
-            if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || !item.dinner || Number(item.dinner) === 0 || !item.endDate || item.endDate === '') {
+            if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || (!item.dinner && item.dinner !== 0) || !item.endDate || item.endDate === '') {
                 this.$warningToast('请填写生产人员页签人员统计必填项');
                 return false
             }

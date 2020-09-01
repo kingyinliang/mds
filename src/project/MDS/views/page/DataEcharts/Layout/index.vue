@@ -7,7 +7,7 @@
                     menuActiveName = 'home';
                     $router.push({ path: '/home' });"
             >
-                <i class="site-sidebar__menu-icon iconfont factory-shouye" />
+                <em class="site-sidebar__menu-icon iconfont factory-shouye" />
                 <span slot="title">首页</span>
             </el-menu-item>
             <page-sub-menu v-for="(item, index) in menuList.filter(it => it.type === '4')[0].list" :key="index" :page="item" />

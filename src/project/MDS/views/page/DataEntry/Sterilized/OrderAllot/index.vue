@@ -57,7 +57,7 @@
                 </el-col>
             </el-row>
             <!-- <div class="toggleSearchBottom">
-                <i class="el-icon-caret-top" />
+                <em class="el-icon-caret-top" />
             </div> -->
         </el-card>
         <mds-card title="订单分配" name="dataList" :pack-up="false" style="margin-top: 10px;">
@@ -83,7 +83,7 @@
                 <el-table-column label="BL原汁量" min-width="100" prop="amount" />
                 <el-table-column min-width="170" prop="productDate">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>生产日期</span>
                     </template>
                     <template slot-scope="scope">

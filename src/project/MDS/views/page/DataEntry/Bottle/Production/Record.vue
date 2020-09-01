@@ -1,13 +1,15 @@
 <template>
-    <div>
-        <el-button type="primary" size="small" :disabled="!isRedact" style="float: right; margin-bottom: 5px;" @click="AddRecord">
-            新增
-        </el-button>
-        <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="RecordList.filter(item => item.delFlag === '0').slice((currPage - 1) * pageSize, currPage * pageSize)" border tooltip-effect="dark">
+    <mds-card title="投胚记录">
+        <template slot="titleBtn">
+            <el-button type="primary" size="small" :disabled="!isRedact" style="float: right; margin-bottom: 5px;" @click="AddRecord">
+                新增
+            </el-button>
+        </template>
+        <el-table header-row-class-name="tableHead" class="newTable" :row-class-name="RowDelFlag" :data="RecordList.filter(item => item.delFlag === '0').slice((currPage - 1) * pageSize, currPage * pageSize)" border tooltip-effect="dark">
             <el-table-column type="index" label="序号" width="55" fixed />
             <el-table-column label="时间" prop="kjmWorkShopName">
                 <template slot="header">
-                    <i class="reqI">*</i><span>时间</span>
+                    <em class="reqI">*</em><span>时间</span>
                 </template>
                 <template slot-scope="scope">
                     <el-date-picker v-model="scope.row.date" style="width: 100%;" size="mini" type="datetime" :disabled="!isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked'" value-format="yyyy-MM-dd  HH:mm:ss" format="yyyy-MM-dd  HH:mm" />
@@ -15,7 +17,7 @@
             </el-table-column>
             <el-table-column label="瓶胚批号" :show-overflow-tooltip="true" width="180">
                 <template slot="header">
-                    <i class="reqI">*</i><span>瓶胚批号</span>
+                    <em class="reqI">*</em><span>瓶胚批号</span>
                 </template>
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.embryoBatch" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
@@ -23,7 +25,7 @@
             </el-table-column>
             <el-table-column label="瓶胚数量 " :show-overflow-tooltip="true" width="180">
                 <template slot="header">
-                    <i class="reqI">*</i><span>瓶胚数量</span>
+                    <em class="reqI">*</em><span>瓶胚数量</span>
                 </template>
                 <template slot-scope="scope">
                     <el-input v-model="scope.row.embryoAmount" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
@@ -66,7 +68,7 @@
         <p style="font-size: 14px; line-height: 32px;">
             合计数量：{{ sumNum }}个
         </p>
-    </div>
+    </mds-card>
 </template>
 
 <script>

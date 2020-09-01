@@ -2,6 +2,8 @@
     <div class="header_main">
         <query-table
             ref="queryTable"
+            table-class="borderTable"
+            :custom-data="true"
             :query-form-data="queryFormData"
             :rules="rules"
             :list-interface="listInterface"

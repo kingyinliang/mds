@@ -64,13 +64,13 @@
                 <el-table-column width="70">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.isSplit === '0'" type="text" :disabled="!isRedact || soleStatus" @click="SplitData(scope.row, scope.$index)">
-                            <i class="icons iconfont factory-chaifen" />拆分
+                            <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
                 </el-table-column>
                 <el-table-column min-width="110">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>过滤剂用量</span>
                     </template>
                     <template slot-scope="scope">
@@ -80,7 +80,7 @@
                 <el-table-column label="单位" prop="unit" min-width="50" />
                 <el-table-column min-width="140">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>批次</span>
                     </template>
                     <template slot-scope="scope">
@@ -662,7 +662,7 @@ export default {
 }
 .audit {
     line-height: 40px;
-    i {
+    em {
         float: left;
         font-size: 22px;
     }

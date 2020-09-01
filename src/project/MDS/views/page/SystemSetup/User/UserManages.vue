@@ -9,7 +9,7 @@
                         </div>
                         <div class="filter-input">
                             <el-input v-model="filterText" placeholder="部门名称" size="small">
-                                <i slot="prefix" class="el-input__icon el-icon-search" />
+                                <em slot="prefix" class="el-input__icon el-icon-search" />
                             </el-input>
                         </div>
                         <div class="tree-main SelfScrollbar">

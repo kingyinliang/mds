@@ -2,7 +2,7 @@
     <div>
         <mds-card :title="'人员 (小时:H)'" :name="'user'">
             <template slot="titleBtn">
-                <div style="float: right;">
+                <div style="float: right; margin-bottom: 5px;">
                     <el-button type="primary" size="small" :disabled="!isRedact" @click="AddWorkerDate(WorkerDate)">
                         新增
                     </el-button>
@@ -26,7 +26,7 @@
                 </el-table-column>
                 <el-table-column label="人员属性" min-width="100">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>人员属性</span>
                     </template>
                     <template slot-scope="scope">
@@ -39,21 +39,21 @@
                 </el-table-column>
                 <el-table-column label="人员选择" min-width="105" :show-overflow-tooltip="true">
                     <template slot="header">
-                        <i class="reqI">*</i>
+                        <em class="reqI">*</em>
                         <span>人员选择</span>
                     </template>
                     <template slot-scope="scope">
                         <div class="required" style="line-height: 32px;">
                             <span v-if="!isRedact" style="cursor: pointer;">
-                                <i v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</i>
+                                <em v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</em>
                             </span>
                             <span v-if="isRedact && scope.row.userType !== '临时工'" style="cursor: pointer;" @click="selectUser(scope.row)">
-                                <i v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</i>
-                                <i>点击选择人员</i>
+                                <em v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</em>
+                                <em>点击选择人员</em>
                             </span>
                             <span v-if="scope.row.userType == '临时工' && isRedact" style="cursor: pointer;" @click="dayLaborer(scope.row)">
-                                <i v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</i>
-                                <i>点击输入临时工</i>
+                                <em v-for="(item, index) in scope.row.userId" :key="index">{{ item }}，</em>
+                                <em>点击输入临时工</em>
                             </span>
                         </div>
                     </template>
@@ -96,8 +96,8 @@
             </p>
         </mds-card>
         <mds-card v-if="att" :title="'产量考勤分配'" :name="'user'">
-            <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="attendance" border tooltip-effect="dark">
-                <el-table-column label="班组" width="60">
+            <el-table header-row-class-name="tableHead" class="newTable" :row-class-name="RowDelFlag" :data="attendance" border tooltip-effect="dark">
+                <el-table-column label="班组" width="80">
                     <template slot-scope="scope">
                         {{ scope.row.itemName }}
                     </template>
@@ -110,7 +110,7 @@
                 <el-table-column width="70">
                     <template slot-scope="scope">
                         <el-button type="text" size="mini" :disabled="!isRedact" @click="addUser(scope.row, scope.$index)">
-                            <i class="icons iconfont factory-chaifen" />拆分
+                            <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
                 </el-table-column>
@@ -189,8 +189,8 @@ export default {
             type: Boolean
         },
         attendance: {
-            type: Object,
-            default: function() { return {} }
+            type: Array,
+            default: function() { return [] }
         }
     },
     data() {

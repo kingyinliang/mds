@@ -62,7 +62,7 @@
                     <div class="machineBox_item clearfix colorContainer">
                         <div class="clearfix machinediv">
                             <p class="machineBox_item_title">
-                                <i class="iconfont factory-zhizaozhuisu" />{{ item.deviceName }}
+                                <em class="iconfont factory-zhizaozhuisu" />{{ item.deviceName }}
                             </p>
                             <p class="machineBox_item_text">
                                 点击下方开始按钮设备开始运转，<br>点击结束按钮设备停止工作。
@@ -495,7 +495,7 @@ export default {
             &_title {
                 margin-bottom: 5px;
                 font-size: $base-sise + 2;
-                i {
+                em {
                     margin-right: 5px;
                 }
             }

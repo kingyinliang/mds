@@ -26,7 +26,7 @@
                     </el-table-column>
                     <el-table-column width="110">
                         <template slot="header">
-                            <i class="reqI">*</i><span>原汁罐号</span>
+                            <em class="reqI">*</em><span>原汁罐号</span>
                         </template>
                         <template slot-scope="scope">
                             {{ scope.row.fumet.potNoName }}
@@ -53,14 +53,14 @@
                             :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked')"
                             @click="splitDate(scope.row.fumet, scope.$index)"
                         >
-                            <i class="icons iconfont factory-chaifen" />拆分
+                            <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="发酵罐号">
                     <el-table-column width="120">
                         <template slot="header">
-                            <i class="reqI">*</i><span>发酵罐号</span>
+                            <em class="reqI">*</em><span>发酵罐号</span>
                         </template>
                         <template slot-scope="scope">
                             <el-select v-model="scope.row.material.childPotNo" filterable placeholder="请选择" :disabled="!(isRedact && scope.row.material.childStatus !== 'submit' && scope.row.material.childStatus !== 'checked' && scope.row.material.isDropDown === '1')" size="small" @visible-change="PotChange($event, scope.row)">
@@ -81,7 +81,7 @@
                     </el-table-column>
                     <el-table-column width="120">
                         <template slot="header">
-                            <i class="reqI">*</i><span>当日用量</span>
+                            <em class="reqI">*</em><span>当日用量</span>
                         </template>
                         <template
                             slot-scope="scope"

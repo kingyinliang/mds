@@ -4,7 +4,7 @@
         <el-dialog title="入罐" :close-on-click-modal="false" :visible.sync="isTableDialogVisible" width="70%">
             <div class="inner-area">
                 <div class="inner-area__title">
-                    <h3><i class="title-icon" style="background: rgb(72, 123, 255);" />溶解罐列表 </h3>
+                    <h3><em class="title-icon" style="background: rgb(72, 123, 255);" />溶解罐列表 </h3>
                     <el-button type="primary" size="small" @click="addNewDataRow()">
                         新增
                     </el-button>
@@ -114,11 +114,11 @@
                                     <el-form-item prop="feedMan">
                                         <div class="required" style="min-height: 32px; line-height: 32px;">
                                             <!-- <span style="cursor: pointer;">
-                                                <i v-for="(item, index) in scope.row.feedMan.split(',')" :key="index">{{ item }}，</i>
+                                                <em v-for="(item, index) in scope.row.feedMan.split(',')" :key="index">{{ item }}，</em>
                                             </span> -->
                                             <span style="cursor: pointer;" @click="selectUser(scope.row,scope.$index)">
-                                                <i v-for="(item, index) in splitString(scope.row.feedMan)" :key="index">{{ item }}，</i>
-                                                <i>点击选择人员</i>
+                                                <em v-for="(item, index) in splitString(scope.row.feedMan)" :key="index">{{ item }}，</em>
+                                                <em>点击选择人员</em>
                                             </span>
                                         </div>
                                     </el-form-item>
@@ -262,7 +262,7 @@
                 id: item.id,
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 potId: this.currentPotId,
-                potStatus: this.currentPotStatus,
+                // potStatus: this.currentPotStatus,
                 potNo: this.currentPotNo,
                 workShop: this.currentWorkShop
             }).then(({ data }) => {
@@ -296,15 +296,15 @@
 
             // API 辅料前处理-查询不带分页 (查询生产物料)
             STE_API.STE_PREACCESSORIES_LIST_API({
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id
-                // preStage: 'DISSOLUTION'
+                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                preStage: 'DISSOLUTION'
             }).then(({ data }) => {
                 console.log('辅料前处理')
                 console.log(data)
                 this.feedMateriallList = []
                 if (data.data) {
                     data.data.forEach(element => {
-                        this.feedMateriallList.push({ dictCode: element.productMaterial, dictValue: element.productMaterialName })
+                        this.feedMateriallList.push({ dictCode: element.useMaterial, dictValue: element.useMaterial + ' ' + element.useMaterialName })
                     })
                 }
             });
@@ -435,17 +435,20 @@
                 const updateDtosArray: CurrentDataTable[] = []
 
                 this.importBucketInfo.forEach((item: CurrentDataTable, index) => {
-                    item.potStatus = this.currentPotStatus
-                    item.workShop = this.currentWorkShop
+
                     if (item.delFlag === 1) {
                         if (item.id) {
                             delIdsArray.push(item.id)
                         }
                     } else if (item.id) {
                         if (!_.isEqual(this.orgFormDataGroup[index], item)) {
+                            item.potStatus = this.currentPotStatus
+                            item.workShop = this.currentWorkShop
                             updateDtosArray.push(item)
                         }
                     } else {
+                        item.potStatus = this.currentPotStatus
+                        item.workShop = this.currentWorkShop
                         insertDtosArray.push(item)
                     }
                 })
@@ -455,15 +458,19 @@
                 console.log(insertDtosArray)
                 console.log('updateDtosArray')
                 console.log(updateDtosArray)
-                STE_API.STE_DISSOLUTIONBUCKET_SAVE_API({
-                    delIds: delIdsArray,
-                    insertDtos: insertDtosArray,
-                    updateDtos: updateDtosArray
-                }).then(({ data }) => {
-                    console.log(data)
-                    this.$emit('importBucketFinish', obj);
+                if (!(delIdsArray.length === 0 && insertDtosArray.length === 0 && updateDtosArray.length === 0)) {
+                    STE_API.STE_DISSOLUTIONBUCKET_SAVE_API({
+                        delIds: delIdsArray,
+                        insertDtos: insertDtosArray,
+                        updateDtos: updateDtosArray
+                    }).then(({ data }) => {
+                        console.log(data)
+                        this.$emit('importBucketFinish', obj);
+                        this.isTableDialogVisible = false
+                    });
+                } else {
                     this.isTableDialogVisible = false
-                });
+                }
             }
         }
 

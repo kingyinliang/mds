@@ -1,7 +1,7 @@
 <template>
     <div class="header_main">
-        <el-card class="searchCard  newCard" style="margin-bottom: 5px;">
-            <el-form :inline="true" size="small" :model="formHeader" label-width="80px" class="topform multi_row">
+        <el-card class="searchCard" style="margin-bottom: 5px;">
+            <el-form :inline="true" size="small" :model="formHeader" label-width="80px" class="topform sole_row">
                 <el-form-item label="生产工厂：">
                     <el-select v-model="formHeader.factory" placeholder="请选择" style="width: 180px;">
                         <el-option label="请选择" value="" />
@@ -27,24 +27,28 @@
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card class="tableCard">
-            <el-form ref="pstngDate" :model="formHeader" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="100px" class="topforms">
-                <el-form-item label="记账日期：" prop="pstngDate">
-                    <el-date-picker v-model="formHeader.pstngDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
-                </el-form-item>
-                <el-form-item label="抬头文本：">
-                    <el-input v-model="formHeader.headerTxt" placeholder="抬头文本" style="width: 160px;" />
-                </el-form-item>
-                <el-form-item style="float: right;">
-                    <el-button type="primary" size="small" @click="subAutio()">
-                        审核通过
-                    </el-button>
-                    <el-button type="danger" size="small" @click="repulseAutios()">
-                        审核不通过
-                    </el-button>
-                </el-form-item>
-            </el-form>
-            <el-table ref="table1" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
+        <mds-card title="助滤剂审核" name="AuditList" :pack-up="false">
+            <template slot="titleBtn">
+                <div style="float: right; width: 688px; text-align: right;">
+                    <el-form ref="pstngDate" :model="formHeader" :rules="plantListRule" size="small" :inline="true" label-position="right" label-width="82px" class="topforms">
+                        <el-form-item label="记账日期：" prop="pstngDate">
+                            <el-date-picker v-model="formHeader.pstngDate" type="date" placeholder="选择" value-format="yyyy-MM-dd" style="width: 160px;" />
+                        </el-form-item>
+                        <el-form-item label="抬头文本：">
+                            <el-input v-model="formHeader.headerTxt" placeholder="抬头文本" style="width: 160px;" />
+                        </el-form-item>
+                        <el-form-item style="float: right; margin-right: 0;">
+                            <el-button type="primary" size="small" @click="subAutio()">
+                                审核通过
+                            </el-button>
+                            <el-button type="danger" size="small" @click="repulseAutios()">
+                                审核不通过
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </template>
+            <el-table ref="table1" class="newTable" header-row-class-name="tableHead" :data="AuditList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" :selectable="checkboxT" width="50" />
                 <el-table-column type="index" label="序号" :index="indexMethod" width="55" fixed />
                 <el-table-column label="审核状态" width="100">
@@ -52,16 +56,16 @@
                         {{ scope.row.status === 'submit' ? '未审核' : scope.row.status === 'checked' ? (scope.row.interfaceReturnStatus === '0' ? '接口失败' : '审核通过') : scope.row.status === 'noPass' ? '审核不通过' : '' }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="80" />
-                <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="80" />
-                <el-table-column prop="confActiUnit3" label="生产物料" :show-overflow-tooltip="true" width="120">
+                <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="100" />
+                <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="130" />
+                <el-table-column prop="confActiUnit3" label="生产物料" :show-overflow-tooltip="true" width="190">
                     <template slot-scope="scope">
                         {{ scope.row.materialCodeH + ' ' + scope.row.materialNameH }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="planOutput" label="计划生产数量" :show-overflow-tooltip="true" width="110" />
                 <el-table-column prop="outputUnitName" label="单位" :show-overflow-tooltip="true" width="50" />
-                <el-table-column prop="confActiUnit3" label="组件物料" :show-overflow-tooltip="true" width="120">
+                <el-table-column prop="confActiUnit3" label="组件物料" :show-overflow-tooltip="true" width="180">
                     <template slot-scope="scope">
                         {{ scope.row.materialCode + ' ' + scope.row.materialName }}
                     </template>
@@ -94,7 +98,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="stckType" label="库存类型" :show-overflow-tooltip="true" width="80" />
-                <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="80" />
+                <el-table-column prop="interfaceReturn" label="接口回写" :show-overflow-tooltip="true" width="120" />
                 <el-table-column prop="memo" label="审核意见" :show-overflow-tooltip="true" width="80" />
                 <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" width="80">
                     <template slot-scope="scope">
@@ -112,7 +116,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-        </el-card>
+        </mds-card>
         <el-dialog title="审核拒绝" :close-on-click-modal="false" :visible.sync="visible">
             <p style="line-height: 42px;">
                 请填写不通过原因
