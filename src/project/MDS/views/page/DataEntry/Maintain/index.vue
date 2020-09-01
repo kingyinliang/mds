@@ -1,134 +1,128 @@
 <template>
-    <el-col>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row type="flex">
-                    <el-col>
-                        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="maintain multi_row">
-                            <el-form-item label="生产工厂：">
-                                <el-select v-model="plantList.factory" placeholder="请选择">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="生产车间：">
-                                <el-select v-model="plantList.workshop" placeholder="请选择">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="产线：">
-                                <el-select v-model="plantList.productline" placeholder="产线">
-                                    <el-option label="请选择" value="" />
-                                    <el-option v-for="(item, index) in productline" :key="index" :label="item.deptName" :value="item.deptId" />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="订单号：">
-                                <el-input v-model="plantList.orderNo" placeholder="订单号" />
-                            </el-form-item>
-                            <el-form-item label="日期：">
-                                <el-date-picker v-model="plantList.productdate" type="date" placeholder="选择" value-format="yyyy-MM-dd HH:mm:ss" />
-                            </el-form-item>
-                            <el-form-item class="floatr">
-                                <el-button type="primary" size="small" @click="GetMaintainList(true)">
-                                    查询
-                                </el-button>
-                                <el-button v-if="isAuth('sys:verifyJWZ:update')" type="primary" size="small" @click="save()">
-                                    保存
-                                </el-button>
-                                <el-button v-if="isAuth('sys:verifyJWZ:finished')" type="primary" size="small" @click="submit()">
-                                    提交
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <em class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <el-card class="tableCard">
-                <div class="toggleSearchTop">
-                    <em class="el-icon-caret-bottom" />
-                </div>
-                <el-table ref="maintain" header-row-class-name="tableHead" :data="noMaintainList" border tooltip-effect="dark" style="width: 100%; margin-bottom: 20px;" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" :selectable="checkboxT" width="50" fixed />
-                    <el-table-column type="index" width="55" label="序号" fixed />
-                    <el-table-column prop="orderNo" label="生产订单号" :show-overflow-tooltip="true" width="120" />
-                    <el-table-column label="品项" :show-overflow-tooltip="true" width="300">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="batch" label="生产批次" width="120" />
-                    <el-table-column prop="aiShelves" label="自动上架数-立体库" width="140" />
-                    <el-table-column prop="aiShelvesUnitName" label="单位" width="50" />
-                    <el-table-column label="车间确认人" :show-overflow-tooltip="true" width="92">
-                        <template slot-scope="scope">
-                            {{ scope.row.workShopMan }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="机维组确认整板数" width="135">
-                        <template slot-scope="scope">
-                            <el-input v-if="scope.row.redact" v-model="scope.row.jwzZb" />
-                            <span v-if="!scope.row.redact">{{ scope.row.jwzZb }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="机维组确认半板数" width="135">
-                        <template slot-scope="scope">
-                            <el-input v-if="scope.row.redact" v-model="scope.row.jwzBb" />
-                            <span v-if="!scope.row.redact">{{ scope.row.jwzBb }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="机维组确认数" width="107">
-                        <template slot-scope="scope">
-                            <span>{{ (scope.row.jwzAcount = scope.row.jwzBb * 1 + scope.row.jwzZb * 1) }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="差异数量" width="78">
-                        <template slot-scope="scope">
-                            <span>{{ (scope.row.different = scope.row.jwzAcount * 1 - scope.row.aiShelves * 1) }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="单位" width="50">
-                        <template slot-scope="scope">
-                            <span>{{ scope.row.differentUnitName }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="原差异数量" width="92">
-                        <template slot-scope="scope">
-                            <el-input v-if="scope.row.redact" v-model="scope.row.orgnDifferent" />
-                            <span v-else>{{ scope.row.orgnDifferent }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="差异说明" :show-overflow-tooltip="true" width="78">
-                        <template slot-scope="scope">
-                            <el-input v-if="scope.row.redact" v-model="scope.row.differentInfo" />
-                            <span v-else>{{ scope.row.differentInfo }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="jwzMan" label="机维组确认人" width="107" />
-                    <el-table-column label="备注" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            <span>{{ scope.row.remark }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column fixed="right" prop="address" label="操作" width="50">
-                        <template slot-scope="scope">
-                            <el-button v-if="isAuth('sys:verifyJWZ:update') && scope.row.status !== 'finished' && scope.row.aiShelves !== 0" style="padding: 0;" type="text" size="small" @click="redact(scope.row)">
-                                {{ scope.row.redact ? '保存' : '编辑' }}
+    <div class="header_main">
+        <el-card class="searchCards searchCard">
+            <el-row type="flex">
+                <el-col>
+                    <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="maintain multi_row">
+                        <el-form-item label="生产工厂：">
+                            <el-select v-model="plantList.factory" placeholder="请选择">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in factory" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="生产车间：">
+                            <el-select v-model="plantList.workshop" placeholder="请选择">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in workshop" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="产线：">
+                            <el-select v-model="plantList.productline" placeholder="产线">
+                                <el-option label="请选择" value="" />
+                                <el-option v-for="(item, index) in productline" :key="index" :label="item.deptName" :value="item.deptId" />
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="订单号：">
+                            <el-input v-model="plantList.orderNo" placeholder="订单号" />
+                        </el-form-item>
+                        <el-form-item label="日期：">
+                            <el-date-picker v-model="plantList.productdate" type="date" placeholder="选择" value-format="yyyy-MM-dd HH:mm:ss" />
+                        </el-form-item>
+                        <el-form-item class="floatr">
+                            <el-button type="primary" size="small" @click="GetMaintainList(true)">
+                                查询
                             </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-row>
-                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
-    </el-col>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </el-card>
+        <mds-card title="立体库" name="noMaintainList" :pack-up="false" style="margin-top: 10px;">
+            <el-table ref="maintain" class="newTable" header-row-class-name="tableHead" :data="noMaintainList" border tooltip-effect="dark" style="width: 100%;" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" :selectable="checkboxT" width="50" fixed />
+                <el-table-column type="index" width="55" label="序号" fixed />
+                <el-table-column prop="orderNo" label="生产订单号" :show-overflow-tooltip="true" width="120" />
+                <el-table-column label="品项" :show-overflow-tooltip="true" width="300">
+                    <template slot-scope="scope">
+                        {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="batch" label="生产批次" width="120" />
+                <el-table-column prop="aiShelves" label="自动上架数-立体库" width="140" />
+                <el-table-column prop="aiShelvesUnitName" label="单位" width="50" />
+                <el-table-column label="车间确认人" :show-overflow-tooltip="true" width="92">
+                    <template slot-scope="scope">
+                        {{ scope.row.workShopMan }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="机维组确认整板数" width="135">
+                    <template slot-scope="scope">
+                        <el-input v-if="scope.row.redact" v-model="scope.row.jwzZb" size="small" />
+                        <span v-if="!scope.row.redact">{{ scope.row.jwzZb }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="机维组确认半板数" width="135">
+                    <template slot-scope="scope">
+                        <el-input v-if="scope.row.redact" v-model="scope.row.jwzBb" size="small" />
+                        <span v-if="!scope.row.redact">{{ scope.row.jwzBb }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="机维组确认数" width="107">
+                    <template slot-scope="scope">
+                        <span>{{ (scope.row.jwzAcount = scope.row.jwzBb * 1 + scope.row.jwzZb * 1) }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="差异数量" width="78">
+                    <template slot-scope="scope">
+                        <span>{{ (scope.row.different = scope.row.jwzAcount * 1 - scope.row.aiShelves * 1) }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" width="50">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.differentUnitName }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="原差异数量" width="92">
+                    <template slot-scope="scope">
+                        <el-input v-if="scope.row.redact" v-model="scope.row.orgnDifferent" size="small" />
+                        <span v-else>{{ scope.row.orgnDifferent }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="差异说明" :show-overflow-tooltip="true" width="78">
+                    <template slot-scope="scope">
+                        <el-input v-if="scope.row.redact" v-model="scope.row.differentInfo" size="small" />
+                        <span v-else>{{ scope.row.differentInfo }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="jwzMan" label="机维组确认人" width="107" />
+                <el-table-column label="备注" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.remark }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column fixed="right" prop="address" label="操作" width="50">
+                    <template slot-scope="scope">
+                        <el-button v-if="isAuth('sys:verifyJWZ:update') && scope.row.status !== 'finished' && scope.row.aiShelves !== 0" style="padding: 0;" type="text" size="small" @click="redact(scope.row)">
+                            {{ scope.row.redact ? '保存' : '编辑' }}
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-row>
+                <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </el-row>
+        </mds-card>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="isAuth('sys:verifyJWZ:update')" type="primary" size="small" @click="save()">
+                    保存
+                </el-button>
+                <el-button v-if="isAuth('sys:verifyJWZ:finished')" type="primary" size="small" @click="submit()">
+                    提交
+                </el-button>
+            </template>
+        </redact-box>
+    </div>
 </template>
 
 <script>

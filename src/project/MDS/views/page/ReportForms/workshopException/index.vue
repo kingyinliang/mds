@@ -1,178 +1,167 @@
 <template>
-    <el-row>
-        <div class="header_main">
-            <el-card class="searchCard">
-                <el-row type="flex">
-                    <el-col>
-                        <linkage :plant-list="plantList" :lablewidth="true" />
-                        <el-form :model="plantList" size="small" :inline="true" label-position="right" label-width="70px" class="multi_row">
-                            <el-form-item label="生产日期：" class="dateinput">
-                                <el-row>
-                                    <el-col :span="12">
-                                        <el-date-picker v-model="plantList.commitDateOne" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;" />
-                                    </el-col>
-                                    <el-col :span="12">
-                                        <el-date-picker v-model="plantList.commitDateTwo" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 135px;" />
-                                    </el-col>
-                                </el-row>
-                            </el-form-item>
-                            <el-form-item class="floatr">
-                                <el-button v-if="isAuth('report:form:listExc')" type="primary" size="small" @click="GetList(true)">
-                                    查询
-                                </el-button>
-                                <el-button v-if="isAuth('report:form:exportExc')" type="primary" size="small" @click="ExportExcel(true)">
-                                    导出
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-                <div class="toggleSearchBottom">
-                    <em class="el-icon-caret-top" />
-                </div>
-            </el-card>
-        </div>
-        <div class="main">
-            <el-card class="tableCard">
-                <div class="toggleSearchTop">
-                    <em class="el-icon-caret-bottom" />
-                </div>
-                <el-table :data="dataList" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;">
-                    <el-table-column prop="productDate" label="生产日期" :show-overflow-tooltip="true" width="100" />
-                    <el-table-column prop="factoryName" label="工厂" :show-overflow-tooltip="true" width="90" />
-                    <el-table-column prop="workShopName" label="车间" :show-overflow-tooltip="true" width="95" />
-                    <el-table-column prop="productLineName" label="产线" :show-overflow-tooltip="true" width="70" />
-                    <el-table-column prop="orderNo" label="生产订单" :show-overflow-tooltip="true" width="120" />
-                    <el-table-column label="物料" :show-overflow-tooltip="true" width="180">
-                        <template slot-scope="scope">
-                            {{ scope.row.materialH }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="expCodeName" label="异常情况" :show-overflow-tooltip="true" width="80" />
-                    <el-table-column prop="expInfo" label="异常描述" :show-overflow-tooltip="true" width="80" />
-                    <el-table-column prop="expStartDate" label="异常开始时间" :show-overflow-tooltip="true" width="120" />
-                    <el-table-column prop="expEndDate" label="异常结束时间" :show-overflow-tooltip="true" width="120" />
-                    <el-table-column prop="expContinue" label="异常时间" :show-overflow-tooltip="true" width="77" />
-                    <el-table-column prop="expContinueUnit" label="单位" :show-overflow-tooltip="true" width="50" />
-                    <el-table-column prop="deviceIdName" label="设备" :show-overflow-tooltip="true" width="100" />
-                    <el-table-column prop="materialShortName" label="物料分类简称" :show-overflow-tooltip="true" width="105" />
-                    <el-table-column prop="energyName" label="能源" :show-overflow-tooltip="true" width="50" />
-                    <el-table-column prop="affectProduction" label="影响产量" :show-overflow-tooltip="true" width="80" />
-                    <el-table-column prop="affectProductionUnitName" label="单位" :show-overflow-tooltip="true" width="50" />
-                    <el-table-column prop="remark" label="备注" :show-overflow-tooltip="true" width="80" />
-                </el-table>
-                <el-row>
-                    <el-pagination :current-page="plantList.currPage" :page-sizes="[10, 20, 50]" :page-size="plantList.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="plantList.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-                </el-row>
-            </el-card>
-        </div>
-    </el-row>
+    <div class="header_main">
+        <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" query-auth="report:form:listExc" :column="column" :export-excel="true" :export-option="exportOption" />
+    </div>
 </template>
 
 <script>
-import { REP_API, SYSTEMSETUP_API } from '@/api/api';
-import { exportFile, headanimation } from '@/net/validate';
+import { BASICDATA_API, REP_API } from '@/api/api';
 export default {
     name: 'Index',
-    components: {
-        Linkage: resolve => {
-            require(['@/views/page/ReportForms/common/Linkage'], resolve);
-        }
-    },
     data() {
         return {
-            lodingS: false,
-            SerchSapList: [],
-            dataList: [],
-            plantList: {
-                commitDateOne: '',
-                commitDateTwo: '',
-                factory: '',
-                workshop: '',
-                productline: '',
-                currPage: 1,
-                pageSize: 10,
-                totalCount: 0
-            }
+            queryFormData: [
+                {
+                    type: 'select',
+                    label: '生产工厂',
+                    prop: 'factory',
+                    defaultOptionsFn: () => {
+                        return this.$http(`${BASICDATA_API.FINDORG_API}?code=factory`, 'POST', {}, false, false, false);
+                    },
+                    resVal: {
+                        resData: 'typeList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    linkageProp: ['workshop']
+                },
+                {
+                    type: 'select',
+                    label: '生产车间',
+                    prop: 'workshop',
+                    optionsFn: val => {
+                        return this.$http(`${BASICDATA_API.FINDORGBYID_API}`, 'POST', {
+                            deptId: val
+                        });
+                    },
+                    resVal: {
+                        resData: 'typeList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    linkageProp: ['productline']
+                },
+                {
+                    type: 'select',
+                    label: '生产产线',
+                    prop: 'productline',
+                    resVal: {
+                        resData: 'childList',
+                        label: ['deptName'],
+                        value: 'deptId'
+                    },
+                    optionsFn: val => {
+                        return this.$http(`${BASICDATA_API.FINDORGBYPARENTID_API}`, 'POST', { parentId: val });
+                    }
+                },
+                {
+                    type: 'date-interval',
+                    label: '生产日期',
+                    prop: 'commitDateOne',
+                    propTwo: 'commitDateTwo'
+                }
+            ],
+            listInterface: params => {
+                return this.$http(`${REP_API.REPEXCLIST_API}`, 'POST', params);
+            },
+            exportOption: {
+                exportInterface: REP_API.REPEXCOUTPUT_API,
+                auth: 'report:form:exportExc',
+                text: '车间异常统计报表数据导出'
+            },
+            column: [
+                {
+                    prop: 'productDate',
+                    label: '生产日期',
+                    minwidth: '100'
+                },
+                {
+                    prop: 'factoryName',
+                    label: '工厂',
+                    minwidth: '90'
+                },
+                {
+                    prop: 'workShopName',
+                    label: '车间',
+                    minwidth: '95'
+                },
+                {
+                    prop: 'productLineName',
+                    label: '产线',
+                    minwidth: '95'
+                },
+                {
+                    prop: 'orderNo',
+                    label: '生产订单',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'materialH',
+                    label: '物料',
+                    minwidth: '150'
+                },
+                {
+                    prop: 'expCodeName',
+                    label: '异常情况',
+                    minwidth: '80'
+                },
+                {
+                    prop: 'expInfo',
+                    label: '异常描述',
+                    minwidth: '80'
+                },
+                {
+                    prop: 'expStartDate',
+                    label: '异常开始时间',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'expEndDate',
+                    label: '异常结束时间',
+                    minwidth: '120'
+                },
+                {
+                    prop: 'expContinue',
+                    label: '异常时间',
+                    minwidth: '77'
+                },
+                {
+                    prop: 'expContinueUnit',
+                    label: '单位',
+                    width: '50'
+                },
+                {
+                    prop: 'deviceIdName',
+                    label: '设备',
+                    minwidth: '100'
+                },
+                {
+                    prop: 'materialShortName',
+                    label: '物料分类简称',
+                    minwidth: '105'
+                },
+                {
+                    prop: 'energyName',
+                    label: '能源',
+                    minwidth: '50'
+                },
+                {
+                    prop: 'affectProduction',
+                    label: '影响产量',
+                    minwidth: '90'
+                },
+                {
+                    prop: 'affectProductionUnitName',
+                    label: '单位',
+                    width: '50'
+                },
+                {
+                    prop: 'remark',
+                    label: '备注',
+                    width: '80'
+                }
+            ]
         };
-    },
-    computed: {},
-    mounted() {
-        headanimation(this.$);
-    },
-    methods: {
-        GetList(st) {
-            this.lodingS = true;
-            if (st) {
-                this.plantList.currPage = 1;
-            }
-            this.$http(`${REP_API.REPEXCLIST_API}`, 'POST', this.plantList).then(({ data }) => {
-                if (data.code === 0) {
-                    this.dataList = data.page.list;
-                    // this.GetmaterialShort()
-                    // this.Getenery()
-                    this.plantList.currPage = data.page.currPage;
-                    this.plantList.pageSize = data.page.pageSize;
-                    this.plantList.totalCount = data.page.totalCount;
-                } else {
-                    this.$errorToast(data.msg);
-                }
-                this.lodingS = false;
-            });
-        },
-        ExportExcel() {
-            exportFile(`${REP_API.REPEXCOUTPUT_API}`, '车间异常统计报表数据导出', this);
-        },
-        // 获取物料分类简称
-        GetmaterialShort() {
-            this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {
-                type: 'MATERIAL_SHORT'
-            }).then(({ data }) => {
-                if (data.code === 0) {
-                    this.dataList.forEach((item) => {
-                        data.dicList.forEach((items) => {
-                            if (item.materialShort === items.code) {
-                                item.materialShortName = items.value;
-                                this.dataList.splice(this.dataList.length, 0, {});
-                                this.dataList.splice(this.dataList.length - 1, 1);
-                            }
-                        });
-                    });
-                } else {
-                    this.$errorToast(data.msg);
-                }
-            });
-        },
-        // 获取能源下拉
-        Getenery() {
-            this.$http(`${SYSTEMSETUP_API.PARAMETERLIST_API}`, 'POST', {
-                type: 'ENERGY'
-            }).then(({ data }) => {
-                if (data.code === 0) {
-                    this.dataList.forEach((item) => {
-                        data.dicList.forEach((items) => {
-                            if (item.energy === items.code) {
-                                item.energyName = items.value;
-                                this.dataList.splice(this.dataList.length, 0, {});
-                                this.dataList.splice(this.dataList.length - 1, 1);
-                            }
-                        });
-                    });
-                } else {
-                    this.$errorToast(data.msg);
-                }
-            });
-        },
-        // 改变每页条数
-        handleSizeChange(val) {
-            this.plantList.pageSize = val;
-            this.GetList();
-        },
-        // 跳转页数
-        handleCurrentChange(val) {
-            this.plantList.currPage = val;
-            this.GetList();
-        }
     }
 };
 </script>

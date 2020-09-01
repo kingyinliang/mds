@@ -2,7 +2,7 @@
     <div>
         <mds-card :title="'人员 (小时:H)'" :name="'user'">
             <template slot="titleBtn">
-                <div style="float: right;">
+                <div style="float: right; margin-bottom: 5px;">
                     <el-button type="primary" size="small" :disabled="!isRedact" @click="AddWorkerDate(WorkerDate)">
                         新增
                     </el-button>
@@ -96,8 +96,8 @@
             </p>
         </mds-card>
         <mds-card v-if="att" :title="'产量考勤分配'" :name="'user'">
-            <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="attendance" border tooltip-effect="dark">
-                <el-table-column label="班组" width="60">
+            <el-table header-row-class-name="tableHead" class="newTable" :row-class-name="RowDelFlag" :data="attendance" border tooltip-effect="dark">
+                <el-table-column label="班组" width="80">
                     <template slot-scope="scope">
                         {{ scope.row.itemName }}
                     </template>
@@ -189,8 +189,8 @@ export default {
             type: Boolean
         },
         attendance: {
-            type: Object,
-            default: function() { return {} }
+            type: Array,
+            default: function() { return [] }
         }
     },
     data() {

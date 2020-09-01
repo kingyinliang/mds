@@ -1,48 +1,48 @@
 <template>
     <div class="header_main">
-        <el-card class="searchCards newCard">
+        <el-card class="searchCard newCard">
             <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
                 <el-form-item label="生产车间：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         {{ formHeader.workShopName }}
                     </p>
                 </el-form-item>
                 <el-form-item label="生产产线：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         {{ formHeader.productLineName }}
                     </p>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         {{ formHeader.productDate }}
                     </p>
                 </el-form-item>
                 <el-form-item label="订单号：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         {{ formHeader.orderNo }}
                     </p>
                 </el-form-item>
                 <el-form-item label="生产品项：">
                     <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + formHeader.materialName" placement="top-start">
-                        <p class="bottom">
+                        <p class="bottom-line">
                             {{ formHeader.materialCode }}
                             {{ formHeader.materialName }}
                         </p>
                     </el-tooltip>
                 </el-form-item>
                 <el-form-item label="计划产量：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         {{ formHeader.planOutput }}
                     </p>
                 </el-form-item>
                 <el-form-item label="保存人员：">
-                    <p class="bottom">
-                        &nbsp;{{ formHeader.changer }}
+                    <p class="bottom-line">
+                        {{ formHeader.changer }}
                     </p>
                 </el-form-item>
                 <el-form-item label="保存时间：">
-                    <p class="bottom">
-                        &nbsp;{{ formHeader.changed }}
+                    <p class="bottom-line">
+                        {{ formHeader.changed }}
                     </p>
                 </el-form-item>
                 <el-form-item class="floatr">
@@ -50,41 +50,29 @@
                         <el-button
                             type="primary"
                             size="small"
-                            @click="
-                                $router.push({
-                                    path: '/DataEntry-Bottle-index',
-                                })
-                            "
+                            @click="$router.push({path: '/DataEntry-Bottle-index'})"
                         >
                             返回
-                        </el-button>
-                        <el-button v-if="isAuth('bottle:workshop:techProductParameterSave')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                            {{ isRedact ? '取消' : '编辑' }}
-                        </el-button>
-                    </template>
-                    <template v-if="isRedact" style="float: right;">
-                        <el-button v-if="isAuth('bottle:workshop:techProductParameterSave')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                            保存
                         </el-button>
                     </template>
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-tabs ref="tabs" v-model="activeName" type="border-card" class="NewDaatTtabs secondcard" @tab-click="tabClick">
+        <el-tabs ref="tabs" v-model="activeName" type="border-card" class="NewDaatTtabs tabsPages" @tab-click="tabClick">
             <el-tab-pane name="1" label="产品参数">
                 <el-row>
-                    <el-col style="float: right;">
+                    <el-col style="float: right; margin-bottom: 5px;">
                         <el-button type="primary" :disabled="!isRedact" size="small" style="float: right;" @click="AddProductRow">
                             新增
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="productList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
-                    <el-table-column type="index" label="序号" width="50" fixed="left" />
+                <el-table :data="productList" class="newTable" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="min-height: 90px;">
+                    <el-table-column type="index" label="序号" width="50" fixed="left" align="center" />
                     <el-table-column label="产品参数" fixed="left" show-overflow-tooltip width="85" prop="parameter" />
                     <el-table-column label="时间" width="200">
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.time" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />
+                            <el-date-picker v-model="scope.row.time" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择日期" size="small" />
                         </template>
                     </el-table-column>
                     <el-table-column label="1#" width="100">
@@ -147,7 +135,7 @@
                             <el-input v-model="scope.row.twelveWell" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column width="70" fixed="right">
+                    <el-table-column label="操作" width="70" fixed="right">
                         <template slot-scope="scope">
                             <el-button v-if="scope.row.parameter === '拉伸角度'" class="delBtn" type="text" icon="el-icon-delete" :disabled="!isRedact" size="mini" @click="DelRow(scope.row, 1, scope.$index)">
                                 删除
@@ -155,21 +143,21 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :current-page="pages.currPage" :page-size="pages.pageSize" layout="prev, pager, next, jumper" :total="pages.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                <el-pagination v-if="productList.length!==0" :current-page="pages.currPage" :page-size="pages.pageSize" layout="prev, pager, next, jumper" :total="pages.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </el-tab-pane>
             <el-tab-pane name="2" label="设备数据">
                 <el-row>
-                    <el-col style="float: right;">
+                    <el-col style="float: right; margin-bottom: 5px;">
                         <el-button type="primary" :disabled="!isRedact" size="small" style="float: right;" @click="AddEquipmentRow">
                             新增
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="equipmentList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
-                    <el-table-column type="index" label="序号" width="50" fixed />
-                    <el-table-column label="时间">
+                <el-table :data="equipmentList" class="newTable" :row-class-name="rowDelFlag" border header-row-class-name="tableHead">
+                    <el-table-column type="index" label="序号" width="50" fixed align="center" />
+                    <el-table-column label="时间" width="200">
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.date" type="datetime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />
+                            <el-date-picker v-model="scope.row.date" type="datetime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择日期" size="small" />
                         </template>
                     </el-table-column>
                     <el-table-column label="电压V">
@@ -182,27 +170,27 @@
                             <el-input v-model.number="scope.row.current" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="高压气压力Mpa">
+                    <el-table-column label="高压气压力Mpa" min-width="160">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.highPressure" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="低压气压力Mpa">
+                    <el-table-column label="低压气压力Mpa" min-width="160">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.lowPressure" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="冷水机1进水温度(°C)" width="160">
+                    <el-table-column label="冷水机1进水温度(°C)" min-width="160">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.oneInletWaterTemp" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="冷水机2进水温度(°C)" width="160">
+                    <el-table-column label="冷水机2进水温度(°C)" min-width="160">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.twoInletWaterTemp" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column width="70" fixed="right">
+                    <el-table-column label="操作" width="70" fixed="right">
                         <template slot-scope="scope">
                             <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!isRedact" size="mini" @click="DelRow(scope.row, 2)">
                                 删除
@@ -213,100 +201,100 @@
             </el-tab-pane>
             <el-tab-pane name="3" label="加温参数">
                 <el-row>
-                    <el-col style="float: right;">
+                    <el-col style="float: right; margin-bottom: 5px;">
                         <el-button type="primary" :disabled="!isRedact" size="small" style="float: right;" @click="AddWarmingRow">
                             新增
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="warmingList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
-                    <el-table-column type="index" label="序号" width="50" fixed />
+                <el-table :data="warmingList" class="newTable" :row-class-name="rowDelFlag" border header-row-class-name="tableHead">
+                    <el-table-column type="index" label="序号" width="50" fixed align="center" />
                     <el-table-column label="时间" width="200">
                         <template slot-scope="scope">
-                            <el-date-picker v-model="scope.row.date" type="datetime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 180px;" placeholder="请选择日期" size="small" />
+                            <el-date-picker v-model="scope.row.date" type="datetime" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" style="width: 170px;" placeholder="请选择日期" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="前1" width="100">
+                    <el-table-column label="前1" min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.beforeOne" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="前2" width="100">
+                    <el-table-column label="前2" min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.beforeTwo" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="前3" width="100">
+                    <el-table-column label="前3" min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.beforeThree" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="前4" width="100">
+                    <el-table-column label="前4" min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.beforeFour" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="前5" width="100">
+                    <el-table-column label="前5" min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.beforeFive" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="前6" width="100">
+                    <el-table-column label="前6" min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.beforeSix" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="前7" width="100">
+                    <el-table-column label="前7" min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.beforeSevev" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="前8" width="100">
+                    <el-table-column label="前8" min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.beforeEight" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后1" show-overflow-tooltip width="100">
+                    <el-table-column label="后1" show-overflow-tooltip min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterOne" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后2" show-overflow-tooltip width="100">
+                    <el-table-column label="后2" show-overflow-tooltip min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterTwo" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后3" show-overflow-tooltip :disabled="!isRedact" width="100">
+                    <el-table-column label="后3" show-overflow-tooltip :disabled="!isRedact" min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterThree" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后4" show-overflow-tooltip width="100">
+                    <el-table-column label="后4" show-overflow-tooltip min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterFour" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后5" show-overflow-tooltip width="100">
+                    <el-table-column label="后5" show-overflow-tooltip min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterFive" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后6" show-overflow-tooltip width="100">
+                    <el-table-column label="后6" show-overflow-tooltip min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterSix" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后7" show-overflow-tooltip width="100">
+                    <el-table-column label="后7" show-overflow-tooltip min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterSeven" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column label="后8" show-overflow-tooltip width="100">
+                    <el-table-column label="后8" show-overflow-tooltip min-width="100">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.afterEight" :disabled="!isRedact" size="small" />
                         </template>
                     </el-table-column>
-                    <el-table-column width="70" fixed="right">
+                    <el-table-column label="操作" width="70" fixed="right">
                         <template slot-scope="scope">
                             <el-button class="delBtn" type="text" icon="el-icon-delete" :disabled="!isRedact" size="mini" @click="DelRow(scope.row, 3)">
                                 删除
@@ -316,6 +304,21 @@
                 </el-table>
             </el-tab-pane>
         </el-tabs>
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="isAuth('bottle:workshop:techProductParameterSave')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button v-if="isAuth('bottle:workshop:techProductParameterSave')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <!-- <el-button v-if="isAuth('bottle:workshop:techProductParameterSave')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button> -->
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 
@@ -636,11 +639,15 @@ export default {
 </script>
 
 <style>
-.bottom {
+.bottom-line {
     width: 150px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     border-bottom: 1px solid #d8d8d8;
+}
+.bottom-line::before {
+    opacity: 0;
+    content: "*";
 }
 </style>

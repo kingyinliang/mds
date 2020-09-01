@@ -420,7 +420,7 @@ export default class ProductPeople extends Vue {
             return false
         }
         for (const item of currentFormDataGroupNew) {
-            if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || !item.dinner || Number(item.dinner) === 0 || !item.endDate || item.endDate === '') {
+            if (!item.classes || !item.deptId || !item.userType || item.userList.length === 0 || !item.startDate || item.startDate === '' || (!item.dinner && item.dinner !== 0) || !item.endDate || item.endDate === '') {
                 this.$warningToast('请填写生产人员页签人员统计必填项');
                 return false
             }

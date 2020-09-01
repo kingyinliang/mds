@@ -1,54 +1,59 @@
 <template>
     <div>
-        <el-button type="primary" size="small" :disabled="!isRedact" style="float: right; margin-bottom: 5px;" @click="AddIn">
-            新增
-        </el-button>
-        <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="InDataList" border tooltip-effect="dark">
-            <el-table-column type="index" label="序号" width="55" fixed />
-            <el-table-column label="白/中/夜班" :show-overflow-tooltip="true" prop="kjmWorkShopName">
-                <template slot-scope="scope">
-                    <el-select v-model="scope.row.classes" style="width: 100%;" size="mini" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="ChangeProductShift(scope.row)">
-                        <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column label="生产批次" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="190">
-                <template slot="header">
-                    <em class="reqI">*</em><span>生产批次</span>
-                </template>
-                <template slot-scope="scope">
-                    <el-input v-model="scope.row.batch" placeholder="手工录入" size="mini" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
-                </template>
-            </el-table-column>
-            <el-table-column label="本班生产 " :show-overflow-tooltip="true" prop="production" width="190">
-                <template slot="header">
-                    <em class="reqI">*</em><span>本班生产</span>
-                </template>
-                <template slot-scope="scope">
-                    <el-input v-model="scope.row.production" type="number" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
-                </template>
-            </el-table-column>
-            <el-table-column label="单位" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="60">
-                <template slot-scope="scope">
-                    {{ (scope.row.unitName = '个') }}
-                </template>
-            </el-table-column>
-            <el-table-column label="备注" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="190">
-                <template slot-scope="scope">
-                    <el-input v-model="scope.row.remark" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
-                </template>
-            </el-table-column>
-            <el-table-column label="操作" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="70" fixed="right">
-                <template slot-scope="scope">
-                    <el-button class="delBtn" type="text" icon="el-icon-delete" circle size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delIn(scope.row)">
-                        删除
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <p style="font-size: 14px; line-height: 32px;">
-            产量数合计：{{ sumNum }}个
-        </p>
+        <mds-card title="生产入库">
+            <template slot="titleBtn">
+                <el-button type="primary" size="small" :disabled="!isRedact" style="float: right; margin-bottom: 5px;" @click="AddIn">
+                    新增
+                </el-button>
+            </template>
+
+            <el-table header-row-class-name="tableHead" class="newTable" :row-class-name="RowDelFlag" :data="InDataList" border tooltip-effect="dark">
+                <el-table-column type="index" label="序号" width="55" fixed />
+                <el-table-column label="白/中/夜班" :show-overflow-tooltip="true" prop="kjmWorkShopName">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.classes" style="width: 100%;" size="mini" placeholder="请选择" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @change="ChangeProductShift(scope.row)">
+                            <el-option v-for="(iteam, index) in productShift" :key="index" :label="iteam.value" :value="iteam.code" />
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="生产批次" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="190">
+                    <template slot="header">
+                        <i class="reqI">*</i><span>生产批次</span>
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.batch" placeholder="手工录入" size="mini" maxlength="10" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="本班生产 " :show-overflow-tooltip="true" prop="production" width="190">
+                    <template slot="header">
+                        <i class="reqI">*</i><span>本班生产</span>
+                    </template>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.production" type="number" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="60">
+                    <template slot-scope="scope">
+                        {{ (scope.row.unitName = '个') }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="备注" :show-overflow-tooltip="true" prop="kjmWorkShopName" min-width="190">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.remark" placeholder="手工录入" size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" :show-overflow-tooltip="true" prop="kjmWorkShopName" width="70" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button class="delBtn" type="text" icon="el-icon-delete" circle size="mini" :disabled="!(isRedact && scope.row.status !== 'submit' && scope.row.status !== 'checked')" @click="delIn(scope.row)">
+                            删除
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <p style="font-size: 14px; line-height: 32px;">
+                产量数合计：{{ sumNum }}个
+            </p>
+        </mds-card>
         <audit-log :table-data="InAudit" />
     </div>
 </template>

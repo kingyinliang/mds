@@ -1,9 +1,7 @@
 <template>
-    <el-row>
-        <div class="header_main">
-            <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:form:listJBS'" :column="column" :export-excel="true" :export-option="exportOption" />
-        </div>
-    </el-row>
+    <div class="header_main">
+        <query-table ref="queryTable" :query-form-data="queryFormData" :list-interface="listInterface" :query-auth="'report:form:listJBS'" :column="column" :export-excel="true" :export-option="exportOption" />
+    </div>
 </template>
 
 <script>
@@ -97,67 +95,67 @@ export default {
                 {
                     prop: 'factoryName',
                     label: '工厂',
-                    width: '90'
+                    minwidth: '90'
                 },
                 {
                     prop: 'workShopName',
                     label: '车间',
-                    width: '95'
+                    minwidth: '95'
                 },
                 {
                     prop: 'productLineName',
                     label: '产线',
-                    width: '70'
+                    minwidth: '70'
                 },
                 {
                     prop: 'orderNo',
                     label: '生产订单',
-                    width: '120'
+                    minwidth: '120'
                 },
                 {
                     prop: 'materialH',
                     label: '生产品项',
-                    width: '180'
+                    minwidth: '180'
                 },
                 {
                     prop: 'batch',
                     label: '生产批次',
-                    width: '120'
+                    minwidth: '120'
                 },
                 {
                     prop: 'washing',
                     label: '清洗冲顶',
-                    width: '50'
+                    minwidth: '80'
                 },
                 {
                     prop: 'changeProduct',
                     label: '换罐冲顶',
-                    width: '50'
+                    minwidth: '80'
                 },
                 {
                     prop: 'bootHeader',
                     label: '开机冲顶',
-                    width: '50'
+                    minwidth: '80'
                 },
                 {
                     prop: 'badMaterial',
                     label: '包材不良',
-                    width: '50'
+                    minwidth: '80'
                 },
                 {
                     prop: 'badProduct',
                     label: '制程不良',
-                    width: '50'
+                    minwidth: '80'
                 },
                 {
                     prop: 'badSemi',
                     label: '半成品物料不合格',
-                    width: '80'
+                    minwidth: '140'
                 },
                 {
                     prop: 'deviceLoss',
                     label: '设备残留',
-                    width: '50'
+                    minwidth: '80'
                 },
                 {
                     prop: 'remark',

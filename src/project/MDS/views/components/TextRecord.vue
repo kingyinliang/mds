@@ -1,7 +1,14 @@
+<!--
+ * @Description:
+ * @Anthor: Telliex
+ * @Date: 2020-07-16 11:33:16
+ * @LastEditors: Telliex
+ * @LastEditTime: 2020-08-07 16:39:11
+-->
 <template>
-    <div>
+    <mds-card title="文本记录">
         <el-input v-model="textObj.pkgText" type="textarea" class="textarea" :disabled="!isRedact" style="width: 100%; height: 200px;" />
-    </div>
+    </mds-card>
 </template>
 
 <script>

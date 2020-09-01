@@ -17,6 +17,11 @@
                         <el-form-item v-if="item.type === 'input'" :key="item.prop" :label="`${item.label}：` || ''" :prop="item.prop">
                             <el-input :ref="item.prop" v-model="queryForm[item.prop]" style="width: 170px;" />
                         </el-form-item>
+                        <el-form-item v-if="item.type === 'radio'" :key="item.prop" :label="item.label?`${item.label}：` : ''" :prop="item.prop">
+                            <el-radio v-for="(it, num) in item.radioArr" :key="num" v-model="queryForm[item.prop]" :label="it.val">
+                                {{ it.label }}
+                            </el-radio>
+                        </el-form-item>
                         <el-form-item v-if="item.type === 'date-interval'" :key="item.prop" class="dateinput" :label="`${item.label}：` || ''" :prop="item.prop">
                             <el-row>
                                 <el-col :span="12">
@@ -55,7 +60,19 @@
                 <div>
                     <slot :name="'tab-head' + index" />
                 </div>
-                <el-table ref="table" class="newTable" :data="tabItem.tableData" max-height="420" border tooltip-effect="dark" header-row-class-name="tableHead" style="width: 100%; margin-bottom: 20px;" @selection-change=" val => tabHandleSelectionChange(val, index)">
+                <el-table
+                    v-if="tabItem.column"
+                    ref="table"
+                    class="newTable"
+                    :class="tableClass"
+                    :data="tabItem.tableData"
+                    max-height="420"
+                    border
+                    tooltip-effect="dark"
+                    header-row-class-name="tableHead"
+                    style="width: 100%; margin-bottom: 20px;"
+                    @selection-change=" val => tabHandleSelectionChange(val, index)"
+                >
                     <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
                     <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                     <template v-for="(item, index2) in tabItem.column">
@@ -120,7 +137,7 @@
                 <el-table-column v-if="showSelectColumn" :selectable="selectableFn" type="selection" width="50px" fixed />
                 <el-table-column v-if="showIndexColumn" type="index" :index="indexMethod" label="序号" width="50px" fixed />
                 <template v-for="(item, index) in column">
-                    <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="true">
+                    <el-table-column v-if="!item.hide" :key="index" :fixed="item.fixed" :prop="item.prop" :label="item.label" :width="item.width || ''" :min-width="item.minwidth || ''" :formatter="item.formatter" :show-overflow-tooltip="(item.showOverFlowTooltip? false : true)">
                         <template v-if="item.child">
                             <el-table-column v-for="chind in item.child" :key="chind.prop" :prop="chind.prop" :label="chind.label" :formatter="chind.formatter" :show-overflow-tooltip="chind.showOverFlowTooltip" :width="chind.width || ''" />
                         </template>
@@ -476,19 +493,19 @@
                             this.tableData = path.list;
                         }
                         if (this.resData.currPage) {
-                            this.queryForm.currPage = path[this.resData.currPage];
+                            this.queryForm.currPage = Number(path[this.resData.currPage]);
                         } else {
-                            this.queryForm.currPage = path.currPage;
+                            this.queryForm.currPage = Number(path.currPage);
                         }
                         if (this.resData.pageSize) {
-                            this.queryForm[this.pagesizeConfig] = path[this.resData.pageSize];
+                            this.queryForm[this.pagesizeConfig] = Number(path[this.resData.pageSize]);
                         } else {
-                            this.queryForm[this.pagesizeConfig] = path.pageSize;
+                            this.queryForm[this.pagesizeConfig] = Number(path.pageSize);
                         }
                         if (this.resData.totalCount) {
-                            this.queryForm.totalCount = path[this.resData.totalCount];
+                            this.queryForm.totalCount = Number(path[this.resData.totalCount]);
                         } else {
-                            this.queryForm.totalCount = path.totalCount;
+                            this.queryForm.totalCount = Number(path.totalCount);
                         }
                     } else if (this.factoryType === 1) {
                         this.tableData = data.data.records;

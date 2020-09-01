@@ -18,7 +18,7 @@
                 </el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="dataList" border header-row-class-name="tableHead" style="margin-top: 10px;">
+        <el-table :data="dataList" class="newTable" border header-row-class-name="tableHead" style="margin-top: 10px;">
             <el-table-column label="车间" prop="workShop" width="110" />
             <el-table-column label="订单" prop="orderNo" width="130" />
             <!-- <el-table-column label="物料" prop="materialCode" treeKey="id"></el-table-column> -->

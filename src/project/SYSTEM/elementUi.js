@@ -39,6 +39,7 @@ export default () => {
     Vue.use(Tag);
     Vue.use(InputNumber);
     Vue.use(Scrollbar);
+    Vue.use(Loading);
     const MB = MessageBox;
     Vue.prototype.$loading = Loading.service;
     Vue.prototype.$msgbox = MB;

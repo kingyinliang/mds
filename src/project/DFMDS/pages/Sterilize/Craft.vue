@@ -70,7 +70,7 @@
                 type: 'tooltip',
                 label: '生产锅序',
                 icon: 'factory-bianhao',
-                value: ['potOrder', 'potOrderNo']
+                value: ['potOrderString', 'potOrderNo']
             },
             {
                 type: 'p',
@@ -131,6 +131,7 @@
             }).then(({ data }) => {
                 this.formHeader = data.data;
                 this.formHeader.potNoString = '第' + data.data.potNo + '锅';
+                 this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'CRAFT';
                 this.$refs.craft.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'CRAFT');
@@ -200,6 +201,7 @@ interface FormHeader{
     potAmount?: string;
     potNo?: string;
     potNoString?: string;
+    potOrderString?: string;
     potOrder?: string;
     potOrderNo?: string;
     potUnit?: string;
