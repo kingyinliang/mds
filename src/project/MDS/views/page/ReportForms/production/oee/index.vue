@@ -59,7 +59,7 @@
                 </el-card>
                 <el-row v-show="searched" style="margin-top: 5px;">
                     <div style="min-height: 320px;">
-                        <el-table v-show="params.radio === 'OEE'" border header-row-class-name="tableHead" :data="dataList">
+                        <el-table v-show="params.radio === 'OEE'" class="newTable" border header-row-class-name="tableHead" :data="dataList">
                             <el-table-column label="工厂" width="130" :show-overflow-tooltip="true">
                                 <template slot-scope="scope">
                                     {{ scope.row.factoryName }}

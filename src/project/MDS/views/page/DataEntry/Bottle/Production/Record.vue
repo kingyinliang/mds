@@ -1,9 +1,11 @@
 <template>
-    <div>
-        <el-button type="primary" size="small" :disabled="!isRedact" style="float: right; margin-bottom: 5px;" @click="AddRecord">
-            新增
-        </el-button>
-        <el-table header-row-class-name="tableHead" :row-class-name="RowDelFlag" :data="RecordList.filter(item => item.delFlag === '0').slice((currPage - 1) * pageSize, currPage * pageSize)" border tooltip-effect="dark">
+    <mds-card title="投胚记录">
+        <template slot="titleBtn">
+            <el-button type="primary" size="small" :disabled="!isRedact" style="float: right; margin-bottom: 5px;" @click="AddRecord">
+                新增
+            </el-button>
+        </template>
+        <el-table header-row-class-name="tableHead" class="newTable" :row-class-name="RowDelFlag" :data="RecordList.filter(item => item.delFlag === '0').slice((currPage - 1) * pageSize, currPage * pageSize)" border tooltip-effect="dark">
             <el-table-column type="index" label="序号" width="55" fixed />
             <el-table-column label="时间" prop="kjmWorkShopName">
                 <template slot="header">
@@ -66,7 +68,7 @@
         <p style="font-size: 14px; line-height: 32px;">
             合计数量：{{ sumNum }}个
         </p>
-    </div>
+    </mds-card>
 </template>
 
 <script>

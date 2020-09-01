@@ -1,47 +1,47 @@
 <template>
     <div class="header_main">
-        <el-card class="searchCards">
+        <el-card class="newCard">
             <el-form :model="formHeader" :inline="true" size="small" label-width="70px" class="multi_row">
                 <el-form-item label="生产车间：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         {{ formHeader.workShopName }}
                     </p>
                 </el-form-item>
                 <el-form-item label="生产产线：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         {{ formHeader.productLineName }}
                     </p>
                 </el-form-item>
                 <el-form-item label="生产日期：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         {{ formHeader.productDate }}
                     </p>
                 </el-form-item>
                 <el-form-item label="订单号：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         {{ formHeader.orderNo }}
                     </p>
                 </el-form-item>
                 <el-form-item label="生产品项：">
                     <el-tooltip class="item" effect="dark" :content="formHeader.materialCode + formHeader.materialName" placement="top-start">
-                        <p class="bottom">
+                        <p class="bottom-line">
                             {{ formHeader.materialCode }}
                             {{ formHeader.materialName }}
                         </p>
                     </el-tooltip>
                 </el-form-item>
                 <el-form-item label="计划产量：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         {{ formHeader.planOutput }}
                     </p>
                 </el-form-item>
                 <el-form-item label="保存人员：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         &nbsp;{{ formHeader.changer }}
                     </p>
                 </el-form-item>
                 <el-form-item label="保存时间：">
-                    <p class="bottom">
+                    <p class="bottom-line">
                         &nbsp;{{ formHeader.changed }}
                     </p>
                 </el-form-item>
@@ -57,27 +57,17 @@
                         >
                             返回
                         </el-button>
-                        <el-button v-if="isAuth('bottle:workshop:techProductParameterList')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
-                            {{ isRedact ? '取消' : '编辑' }}
-                        </el-button>
-                    </template>
-                    <template v-if="isRedact" style="float: right; margin-left: 10px;">
-                        <el-button v-if="isAuth('bottle:workshop:techProductParameterList')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
-                            保存
-                        </el-button>
                     </template>
                 </el-form-item>
             </el-form>
         </el-card>
-        <el-card class="secondcard">
-            <el-row>
-                <el-col style="float: right;">
-                    <el-button type="primary" :disabled="!isRedact" size="small" style="float: right;" @click="addRow">
-                        新增
-                    </el-button>
-                </el-col>
-            </el-row>
-            <el-table :data="dataList" :row-class-name="rowDelFlag" border header-row-class-name="tableHead" style="margin-top: 10px;">
+        <mds-card title="质量检测">
+            <template slot="titleBtn">
+                <el-button type="primary" :disabled="!isRedact" size="small" style="float: right; margin-bottom: 5px;" @click="addRow">
+                    新增
+                </el-button>
+            </template>
+            <el-table :data="dataList" class="newTable" :row-class-name="rowDelFlag" border header-row-class-name="tableHead">
                 <el-table-column type="index" label="序号" width="50" fixed="left" />
                 <el-table-column label="参数" show-overflow-tooltip width="85" prop="parameter" fixed="left" />
                 <el-table-column label="时间" width="200" prop="date">
@@ -85,7 +75,7 @@
                         <el-date-picker v-model="scope.row.date" type="datetime" size="small" :disabled="!isRedact" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="请选择日期" style="width: 180px;" />
                     </template>
                 </el-table-column>
-                <el-table-column label="1#" width="100">
+                <el-table-column label="1#" min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.oneWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -98,7 +88,7 @@
                         <el-input v-else v-model="scope.row.oneWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="2#" width="100">
+                <el-table-column label="2#" min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.twoWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -111,7 +101,7 @@
                         <el-input v-else v-model="scope.row.twoWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="3#" width="100">
+                <el-table-column label="3#" min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.threeWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -124,7 +114,7 @@
                         <el-input v-else v-model="scope.row.threeWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="4#" width="100">
+                <el-table-column label="4#" min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.fourWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -137,7 +127,7 @@
                         <el-input v-else v-model="scope.row.fourWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="5#" width="100">
+                <el-table-column label="5#" min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.fiveWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -150,7 +140,7 @@
                         <el-input v-else v-model="scope.row.fiveWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="6#" width="100">
+                <el-table-column label="6#" min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.sixWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -163,7 +153,7 @@
                         <el-input v-else v-model="scope.row.sixWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="7#" width="100">
+                <el-table-column label="7#" min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.sevenWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -176,7 +166,7 @@
                         <el-input v-else v-model="scope.row.sevenWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="8#" show-overflow-tooltip width="100">
+                <el-table-column label="8#" show-overflow-tooltip min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.eightWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -189,7 +179,7 @@
                         <el-input v-else v-model="scope.row.eightWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="9#" show-overflow-tooltip width="100">
+                <el-table-column label="9#" show-overflow-tooltip min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.nineWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -202,7 +192,7 @@
                         <el-input v-else v-model="scope.row.nineWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="10#" show-overflow-tooltip width="100">
+                <el-table-column label="10#" show-overflow-tooltip min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.tenWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -215,7 +205,7 @@
                         <el-input v-else v-model="scope.row.tenWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="11#" show-overflow-tooltip width="100">
+                <el-table-column label="11#" show-overflow-tooltip min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.elevenWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -228,7 +218,7 @@
                         <el-input v-else v-model="scope.row.elevenWell" :disabled="!isRedact" size="small" />
                     </template>
                 </el-table-column>
-                <el-table-column label="12#" show-overflow-tooltip width="100">
+                <el-table-column label="12#" show-overflow-tooltip min-width="100">
                     <template slot-scope="scope">
                         <el-select v-if="scope.row.parameter === '外观' || scope.row.parameter === '密封性能' || scope.row.parameter === '跌落性能'" v-model="scope.row.twelveWell" :disabled="!isRedact" size="small">
                             <el-option value="合格">
@@ -258,7 +248,7 @@
                         {{ scope.row.changed }}
                     </template>
                 </el-table-column>
-                <el-table-column width="70" fixed="right">
+                <el-table-column label="操作" width="70" fixed="right">
                     <template slot-scope="scope">
                         <el-button v-if="scope.row.parameter === '外观'" class="delBtn" type="text" icon="el-icon-delete" :disabled="!isRedact" size="mini" @click="DelRow(scope.row, scope.$index)">
                             删除
@@ -266,14 +256,28 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination :current-page="pages.currPage" :page-size="pages.pageSize" layout="prev, pager, next, jumper" :total="pages.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-        </el-card>
-        <el-card class="secondcard">
-            <div style="font-weight: 600;">
-                异常事项
-            </div>
+            <el-pagination v-if="dataList.length!==0" :current-page="pages.currPage" :page-size="pages.pageSize" layout="prev, pager, next, jumper" :total="pages.totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+        </mds-card>
+
+        <mds-card title="异常事项">
             <el-input v-model="Textareas" type="textarea" :disabled="!isRedact" style="width: 100%; margin: 10px 0;" />
-        </el-card>
+        </mds-card>
+
+        <redact-box>
+            <template slot="button">
+                <el-button v-if="isAuth('bottle:workshop:techProductParameterList')" type="primary" class="button" size="small" @click="isRedact = !isRedact">
+                    {{ isRedact ? '取消' : '编辑' }}
+                </el-button>
+                <template v-if="isRedact">
+                    <el-button v-if="isAuth('bottle:workshop:techProductParameterList')" type="primary" size="small" @click="savedOrSubmitForm('saved')">
+                        保存
+                    </el-button>
+                    <!-- <el-button v-if="isAuth('bottle:workshop:techProductParameterList')" type="primary" size="small" @click="SubmitForm">
+                        提交
+                    </el-button> -->
+                </template>
+            </template>
+        </redact-box>
     </div>
 </template>
 
@@ -419,6 +423,55 @@ export default {
             this.pages.currPage = val;
             this.getList();
         },
+        // 校验
+        dataRul() {
+            let ty = true;
+            if (this.crafData.hotMedium.length > 0) {
+                this.crafData.hotMedium.forEach(item => {
+                    if (item === '酱油') {
+                        if (!this.crafData.sauceTemp) {
+                            ty = false;
+                            this.$warningToast('酱油温度必填');
+                        }
+                    } else if (item === '热水') {
+                        if (!this.crafData.hotTemp) {
+                            ty = false;
+                            this.$warningToast('热水温度必填');
+                        }
+                    }
+                });
+            }
+            this.crafData.result.forEach(item => {
+                if (!item.temp) {
+                    ty = false;
+                    this.$warningToast('屏显温度必填');
+                }
+                if (!item.logTime) {
+                    ty = false;
+                    this.$warningToast('记录时间必填');
+                }
+            });
+            return ty;
+        },
+        // 保存提交
+        SubmitForm() {
+            if (!this.dataRul()) {
+                return;
+            }
+            this.$refs.dataForm.validate(valid => {
+                if (valid) {
+                    this.$confirm('确认提交该订单, 是否继续?', '提交订单', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.savedOrSubmitForm('submit');
+                    }).catch(() => {
+                        // this.$infoToast('已取消删除');
+                    });
+                }
+            });
+        },
         savedOrSubmitForm(str) {
             this.dataList.map(item => {
                 item.status = str;
@@ -467,11 +520,15 @@ export default {
 </script>
 
 <style>
-.bottom {
+.bottom-line {
     width: 150px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     border-bottom: 1px solid #d8d8d8;
+}
+.bottom-line::before {
+    opacity: 0;
+    content: "*";
 }
 </style>
