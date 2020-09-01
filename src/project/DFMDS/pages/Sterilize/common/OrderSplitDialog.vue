@@ -121,7 +121,7 @@
             this.splitTable.push({
                 id: '',
                 delFlag: 0,
-                potUnit: this.orderObj.countOutputUnit,
+                potUnit: this.orderObj.outputUnit,
                 workShop: this.orderObj.workShop,
                 productLine: this.orderObj.productLine,
                 orderType: this.orderObj.orderType,

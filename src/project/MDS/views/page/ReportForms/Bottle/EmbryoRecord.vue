@@ -14,6 +14,14 @@ export default {
                 {
                     prop: 'factory',
                     text: '请选择工厂'
+                },
+                {
+                    prop: 'productDateStart',
+                    text: '请选择生产日期'
+                },
+                {
+                    prop: 'productDateEnd',
+                    text: '请选择生产日期'
                 }
             ],
             queryFormData: [
@@ -108,10 +116,7 @@ export default {
                 }
             ],
             listInterface: params => {
-                if (params.productDateStart || params.productDateEnd) {
-                    return this.$http(`${REP_API.BOTTLEEMRE_LIST_API}`, 'POST', params);
-                }
-                    this.$warningToast('请选择生产日期');
+                return this.$http(`${REP_API.BOTTLEEMRE_LIST_API}`, 'POST', params);
 
             },
             exportOption: {
