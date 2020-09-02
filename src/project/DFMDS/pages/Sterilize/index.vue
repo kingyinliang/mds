@@ -66,18 +66,18 @@
                                 </div>
                                 <div class="home_card__main__item__footer clearfix">
                                     <div style="float: right;">
-                                        <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.semiMaterialStatus : ''" placement="top-start">
-                                            <el-button v-if="isAuth('steMaterial')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot&& item.potOrderMap.steTagPot.semiMaterialStatus === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 1)">
+                                        <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.semiMaterialStatusName : ''" placement="top-start">
+                                            <el-button v-if="isAuth('steMaterial')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot&& item.potOrderMap.steTagPot.semiMaterialStatusName === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 1)">
                                                 半成品领用
                                             </el-button>
                                         </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.accessoriesStatus : ''" placement="top-start">
-                                            <el-button v-if="isAuth('steAcc')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot && item.potOrderMap.steTagPot.accessoriesStatus === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 2)">
+                                        <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.accessoriesStatusName : ''" placement="top-start">
+                                            <el-button v-if="isAuth('steAcc')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot && item.potOrderMap.steTagPot.accessoriesStatusName === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 2)">
                                                 辅料添加
                                             </el-button>
                                         </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.controlStatus : ''" placement="top-start">
-                                            <el-button v-if="isAuth('steControl')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot && item.potOrderMap.steTagPot.controlStatus === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 3)">
+                                        <el-tooltip class="item" effect="dark" :content="item.potOrderMap && item.potOrderMap.steTagPot? item.potOrderMap.steTagPot.controlStatusName : ''" placement="top-start">
+                                            <el-button v-if="isAuth('steControl')" :disabled="!item.potOrderMap" :style="{ color: item.potOrderMap && item.potOrderMap.steTagPot && item.potOrderMap.steTagPot.controlStatusName === '退回' ? 'red' : ''}" size="small" @click="goEntry(item, 3)">
                                                 工艺控制
                                             </el-button>
                                         </el-tooltip>
