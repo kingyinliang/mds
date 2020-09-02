@@ -11,8 +11,11 @@
             </el-col>
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
-                    <el-input v-model="filterText" size="small" placeholder="搜索人员" />
-                    <el-tree ref="userlistTree" :filter-node-method="filterNode1" node-key="id" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
+                    <el-row style=" margin-bottom: 10px; padding: 0 20px; line-height: 40px; background: #f5f7fa;">
+                        <el-checkbox v-model="checkedLeft" @change="checkedAll('userlistTree')" /> 未分配人员
+                    </el-row>
+                    <el-input v-model="filterText" size="small" placeholder="搜索人员" style="padding-bottom: 10px;" />
+                    <el-tree ref="userlistTree" :filter-node-method="filterNode1" node-key="label" :data="userlist" show-checkbox :props="userListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick" @check-change="userTree" />
                 </el-card>
             </el-col>
             <el-col style="width: 50px; padding: 70px 5px;">
@@ -21,8 +24,11 @@
             </el-col>
             <el-col style="width: 250px;">
                 <el-card style="height: 303px; overflow-y: scroll;">
-                    <el-input v-model="filterText1" size="small" placeholder="搜索人员" />
-                    <el-tree ref="userlistTree1" :filter-node-method="filterNode1" node-key="id" :data="selctId" show-checkbox :props="selctListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick1" @check-change="userTree1" />
+                    <el-row style=" margin-bottom: 10px; padding: 0 20px; line-height: 40px; background: #f5f7fa;">
+                        <el-checkbox v-model="checkedRight" @change="checkedAll('userlistTree1')" /> 已分配人员
+                    </el-row>
+                    <el-input v-model="filterText1" size="small" placeholder="搜索人员" style="padding-bottom: 10px;" />
+                    <el-tree ref="userlistTree1" :filter-node-method="filterNode1" node-key="label" :data="selctId" show-checkbox :props="selctListTreeProps" :expand-on-click-node="false" @node-click="treeNodeClick1" @check-change="userTree1" />
                 </el-card>
             </el-col>
         </el-row>
@@ -76,7 +82,9 @@ export default {
                 children: ''
             },
             orgTree: [],
-            arrList: []
+            arrList: [],
+            checkedLeft: false,
+            checkedRight: false
         };
     },
     computed: {},
@@ -131,9 +139,11 @@ export default {
                 deptId: dataObj.id
             }).then(({ data }) => {
                 this.userlist = data.data;
-                this.userlist.map(item => {
-                    item.label = item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）';
-                })
+                if (this.userlist) {
+                    this.userlist.map(item => {
+                        item.label = item.realName + '（' + (item.workNum !== null && item.workNum !== '' ? item.workNum : item.workNumTemp) + '）';
+                    })
+                }
                 this.tree1Status = false;
             });
             // this.$http(`${SYSTEMSETUP_API.USERLIST_API}`, 'POST', {
@@ -226,6 +236,22 @@ export default {
                 row.push(item.label);
             });
             this.$emit('changeUser', row);
+        },
+        checkedAll(node) {
+            if (node === 'userlistTree') {
+                if (this.checkedLeft) {
+                    this.$refs.userlistTree.setCheckedNodes(this.userlist);
+                } else {
+                    this.$refs.userlistTree.setCheckedKeys([]);
+                }
+            } else {
+                // eslint-disable-next-line
+                if (this.checkedRight) {
+                    this.$refs.userlistTree1.setCheckedNodes(this.selctId);
+                } else {
+                    this.$refs.userlistTree1.setCheckedKeys([]);
+                }
+            }
         }
     }
 };
