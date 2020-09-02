@@ -94,7 +94,7 @@
                         <span v-else>{{ scope.row.differentInfo }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="jwzMan" label="机维组确认人" width="107" />
+                <el-table-column prop="jwzMan" label="机维组确认人" width="140" />
                 <el-table-column label="备注" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
                         <span>{{ scope.row.remark }}</span>
