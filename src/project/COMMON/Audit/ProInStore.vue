@@ -120,7 +120,7 @@
                 label: '计划数量'
             },
             {
-                prop: 'orderAmount',
+                prop: 'carAmount',
                 label: '入库数量（箱）'
             },
             {
