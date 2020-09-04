@@ -1,40 +1,25 @@
-<template>
-    <div class="header_main">
-        <mds-card title="报工中间表" :name="'spe'" :pack-up="false" style="margin-bottom: 0; background: #fff;">
-            <template slot="titleBtn">
-                <el-row style="float: right;">
-                    <el-form :inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent>
-                        <el-form-item>
-                            <el-input v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.materialCode===''?getItemsList():false" @change="dataOfSearch.productMaterial=controllableForm.materialCode" />
-                        </el-form-item>
-                        <el-form-item style="height: 32px;">
-                            <el-button type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')" @clear="controllableForm.materialCode=''">
-                                查询
-                            </el-button>
-                            <el-button type="primary" size="small" @click="btnAdvanceSearch">
-                                高级查询
-                            </el-button>
-                            <el-button type="primary" size="small" @click="btnAddItem">
-                                新增
-                            </el-button>
-                            <el-button type="danger" size="small" @click="btnRemoveItems">
-                                批量删除
-                            </el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-row>
-            </template>
-            <!-- show table -->
-            <table-show ref="showTable" :table-element-setting="tableItemSetting" :target-table.sync="tableData" />
-            <el-pagination v-if="tableData.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-        </mds-card>
-        <!-- 新增工序 -->
-        <dialog-form ref="addWorkProcedure" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem" />
-        <!-- 编辑工序 -->
-        <dialog-form ref="updateWorkProcedure" :form-element-setting="dialogEditItemSetting" :data-form.sync="dataOfEditItem" @send-dialog-form-data="updateItem" />
-        <!-- 高级查询 -->
-        <dialog-form ref="advanceSearch" :form-element-setting="dialogSearchSetting" :data-form.sync="dataOfSearch" @send-dialog-form-data="getItemsListFromDialog" />
-    </div>
+<template lang="pug">
+    div.header_main
+        mds-card(title="报工中间表" :name="'spe'" :pack-up="false" style="margin-bottom: 0; background: #fff;")
+            template(slot="titleBtn")
+                el-row(style="float: right;")
+                    el-form(:inline="true" :model="controllableForm" size="small" label-width="68px" class="topforms2" @submit.native.prevent)
+                        el-form-item
+                            el-input(v-model="controllableForm.materialCode" placeholder="物料" suffix-icon="el-icon-search" clearable @clear="getItemsList" @blur="controllableForm.materialCode===''?getItemsList():false" @change="dataOfSearch.productMaterial=controllableForm.materialCode")
+                        el-form-item(style="height: 32px;")
+                            el-button(type="primary" size="small" :disabled="controllableForm.materialCode.trim()===''" @click="getItemsList(true,'normal')" @clear="controllableForm.materialCode=''") 查询
+                            el-button(type="primary" size="small" @click="btnAdvanceSearch") 高级查询
+                            el-button(type="primary" size="small" @click="btnAddItem") 新增
+                            el-button(type="danger" size="small" @click="btnRemoveItems") 批量删除
+            //- show table
+            table-show(ref="showTable" :table-element-setting="tableItemSetting" :target-table.sync="tableData")
+            el-pagination(v-if="tableData.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange")
+        //- 新增工序
+        dialog-form(ref="addWorkProcedure" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem")
+        //- 编辑工序
+        dialog-form(ref="updateWorkProcedure" :form-element-setting="dialogEditItemSetting" :data-form.sync="dataOfEditItem" @send-dialog-form-data="updateItem")
+        //- 高级查询
+        dialog-form(ref="advanceSearch" :form-element-setting="dialogSearchSetting" :data-form.sync="dataOfSearch" @send-dialog-form-data="getItemsListFromDialog")
 </template>
 
 <script lang="ts">
@@ -618,4 +603,4 @@ interface Options {
 
 </script>
 
-<style scoped></style>
+<style lang="sass" scoped></style>
