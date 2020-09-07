@@ -2,7 +2,7 @@
     <el-form :inline="true" :model="formHeader" size="small" class="dataEntry-head-base__form">
         <el-form-item>
             <template slot="label">
-                <i class="iconfont factory-shengchanchejian" style="margin-right: 5px; margin-left: 2px;" />
+                <em class="iconfont factory-shengchanchejian" style="margin-right: 5px; margin-left: 2px;" />
                 <span>生产车间：</span>
             </template>
             <p class="el-input">
@@ -11,7 +11,7 @@
         </el-form-item>
         <el-form-item>
             <template slot="label">
-                <i class="iconfont factory-shengchanxian" style="margin-right: 5px; margin-left: 2px;" />
+                <em class="iconfont factory-shengchanxian" style="margin-right: 5px; margin-left: 2px;" />
                 <span>生产产线：</span>
             </template>
             <p v-if="!pro" class="el-input">
@@ -26,7 +26,7 @@
         </el-form-item>
         <el-form-item>
             <template slot="label">
-                <i class="iconfont factory-bianhao" style="margin-right: 5px; margin-left: 2px;" />
+                <em class="iconfont factory-bianhao" style="margin-right: 5px; margin-left: 2px;" />
                 <span>生产订单：</span>
             </template>
             <p class="el-input">
@@ -35,7 +35,7 @@
         </el-form-item>
         <el-form-item>
             <template slot="label">
-                <i class="iconfont factory-pinleiguanli" style="margin-right: 5px; margin-left: 2px;" />
+                <em class="iconfont factory-pinleiguanli" style="margin-right: 5px; margin-left: 2px;" />
                 <span>生产物料：</span>
             </template>
             <el-tooltip class="item" effect="dark" :content="(formHeader.materialCode || '') + ' ' + (formHeader.materialName || '')" placement="top">
@@ -46,7 +46,7 @@
         </el-form-item>
         <el-form-item>
             <template slot="label">
-                <i class="iconfont factory-riqi1" style="margin-right: 5px; margin-left: 2px;" />
+                <em class="iconfont factory-riqi1" style="margin-right: 5px; margin-left: 2px;" />
                 <span>订单日期：</span>
             </template>
             <p class="el-input">
@@ -55,7 +55,7 @@
         </el-form-item>
         <el-form-item>
             <template slot="label">
-                <i class="iconfont factory--meirijihuachanliangpeizhi" style="margin-right: 5px; margin-left: 2px;" />
+                <em class="iconfont factory--meirijihuachanliangpeizhi" style="margin-right: 5px; margin-left: 2px;" />
                 <span>计划产量：</span>
             </template>
             <p class="el-input">
@@ -64,14 +64,14 @@
         </el-form-item>
         <el-form-item>
             <template slot="label">
-                <i class="iconfont factory-riqi1" style="margin-right: 5px; margin-left: 2px;" />
+                <em class="iconfont factory-riqi1" style="margin-right: 5px; margin-left: 2px;" />
                 <span>生产日期：</span>
             </template>
             <el-date-picker v-model="formHeader.productDate" size="small" type="date" :disabled="!isRedact" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 145px;" @change="updateProductDate" />
         </el-form-item>
         <el-form-item>
             <template slot="label">
-                <i class="iconfont factory-xianchangrenyuan" style="margin-right: 5px; margin-left: 2px;" />
+                <em class="iconfont factory-xianchangrenyuan" style="margin-right: 5px; margin-left: 2px;" />
                 <span>提交人员：</span>
             </template>
             <p class="el-input">
@@ -80,7 +80,7 @@
         </el-form-item>
         <el-form-item>
             <template slot="label">
-                <i class="iconfont factory-riqi" style="margin-right: 5px; margin-left: 2px;" />
+                <em class="iconfont factory-riqi" style="margin-right: 5px; margin-left: 2px;" />
                 <span>提交时间：</span>
             </template>
             <p class="el-input">

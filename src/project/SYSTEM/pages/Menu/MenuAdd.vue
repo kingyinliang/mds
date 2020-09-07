@@ -6,7 +6,7 @@
                     <el-radio key="PC" label="PC">
                         PC
                     </el-radio>
-                    <el-radio key="APP" label="">
+                    <el-radio key="APP" label="APP">
                         APP
                     </el-radio>
                 </el-radio-group>

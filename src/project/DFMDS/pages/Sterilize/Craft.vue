@@ -58,7 +58,7 @@
                 type: 'p',
                 label: '生产锅号',
                 icon: 'factory-qiyaguanjianhua',
-                value: 'potNoString'
+                value: 'potNo'
             },
             {
                 type: 'tooltip',
@@ -130,8 +130,8 @@
                 potOrderNo: this.$store.state.sterilize.Craft.potOrderMap.potOrderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
-                this.formHeader.potNoString = '第' + data.data.potNo + '锅';
-                 this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
+                // this.formHeader.potNoString = '第' + data.data.potNo + '锅';
+                this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'CRAFT';
                 this.$refs.craft.init(this.formHeader);
                 this.$refs.excRecord.init(this.formHeader, 'CRAFT');
