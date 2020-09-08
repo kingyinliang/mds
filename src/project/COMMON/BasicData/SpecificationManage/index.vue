@@ -217,8 +217,8 @@
                             }).then(({ data }) => {
                                 const tempOptionList = data.data
                                 tempOptionList.forEach(item => {
-                                    item.dictCode = item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName
-                                    item.dictValue = item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName
+                                    item.optValue = item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName
+                                    item.optLabel = item.materialCode + ' ' + item.materialName + ' ' + item.materialTypeName
                                 })
                                 resolve(tempOptionList)
                             })
@@ -264,9 +264,13 @@
                             COMMON_API.DICTQUERY_API({
                                 dictType: 'COMMON_CATEGORY'
                             }).then(({ data }) => {
-                                const optionList: Options[] = [];
-                                data.data.forEach(item => {
-                                    optionList.push({ 'dictCode': item.dictCode, 'dictValue': item.dictValue })
+                                const optionList = data.data
+                                optionList.forEach(item => {
+                                    // optionList.push({ 'optValue': item.dictCode, 'optLabel': item.dictValue })
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
                                 })
                                 resolve(optionList)
                             })
@@ -297,9 +301,13 @@
                             COMMON_API.DICTQUERY_API({
                                 dictType: 'COMMON_SPEC_UNIT'
                             }).then(({ data }) => {
-                                const optionList: Options[] = [];
-                                data.data.forEach(item => {
-                                    optionList.push({ 'dictCode': item.dictCode, 'dictValue': item.dictValue })
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // optionList.push({ 'optValue': item.dictCode, 'optLabel': item.dictValue })
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
                                 })
                                 resolve(optionList)
                             })
@@ -326,9 +334,12 @@
                             COMMON_API.DICTQUERY_API({
                                 dictType: 'COMMON_SPEC_UNIT'
                             }).then(({ data }) => {
-                                const optionList: Options[] = [];
-                                data.data.forEach(item => {
-                                    optionList.push({ 'dictCode': item.dictCode, 'dictValue': item.dictValue })
+                                const optionList = data.data
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
                                 })
                                 resolve(optionList)
                             })
@@ -398,9 +409,12 @@
                             COMMON_API.DICTQUERY_API({
                                 dictType: 'COMMON_CATEGORY'
                             }).then(({ data }) => {
-                                const optionList: Options[] = [];
-                                data.data.forEach(item => {
-                                    optionList.push({ 'dictCode': item.dictCode, 'dictValue': item.dictValue })
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
                                 })
                                 resolve(optionList)
                             })
@@ -431,9 +445,12 @@
                             COMMON_API.DICTQUERY_API({
                                 dictType: 'COMMON_SPEC_UNIT'
                             }).then(({ data }) => {
-                                const optionList: Options[] = [];
-                                data.data.forEach(item => {
-                                    optionList.push({ 'dictCode': item.dictCode, 'dictValue': item.dictValue })
+                                const optionList = data.data
+                                optionList.forEach(item => {
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
                                 })
                                 resolve(optionList)
                             })
@@ -460,9 +477,13 @@
                             COMMON_API.DICTQUERY_API({
                                 dictType: 'COMMON_SPEC_UNIT'
                             }).then(({ data }) => {
-                                const optionList: Options[] = [];
-                                data.data.forEach(item => {
-                                    optionList.push({ 'dictCode': item.dictCode, 'dictValue': item.dictValue })
+                                const optionList = data.data;
+                                optionList.forEach(item => {
+                                    // optionList.push({ 'optValue': item.dictCode, 'optLabel': item.dictValue })
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optLabel', item.dictValue)
+                                    // eslint-disable-next-line no-invalid-this
+                                    this.$set(item, 'optValue', item.dictCode)
                                 })
                                 resolve(optionList)
                             })
@@ -583,7 +604,8 @@
                 }).then(({ data }) => {
                     this.largeClassList = data.data;
                     this.largeClassList.forEach(item => {
-                        this.largeClassObject[item.dictCode] = item.dictValue
+                        this.$set(this.largeClassObject, 'optLabel', item.dictValue)
+                        this.$set(this.largeClassObject, 'optValue', item.dictCode)
                     })
                 });
         }
@@ -595,7 +617,8 @@
                 }).then(({ data }) => {
                     this.unitClassList = data.data;
                     this.unitClassList.forEach(item => {
-                        this.unitClassObject[item.dictCode] = item.dictValue
+                        this.$set(this.unitClassObject, 'optLabel', item.dictValue)
+                        this.$set(this.unitClassObject, 'optValue', item.dictCode)
                     })
                 });
         }
@@ -687,6 +710,8 @@ interface Options {
     dictCode: string;
     // dictId?: string;
     dictValue: string;
+    optValue?: string;
+    optLabel?: string;
     // factoryName?: string;
     // id?: string;
 }

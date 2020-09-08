@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-08 15:32:24
+ * @LastEditTime: 2020-09-08 16:20:25
 -->
 <template lang="pug">
     el-dialog(:title="formElementSetting.props.title" :close-on-click-modal="false" :visible.sync="isCurrentDailogShow")
@@ -11,11 +11,11 @@
             template(v-for="(formElement,index) in formElementSetting.data")
                 el-form-item(v-if="formElement.type==='select:remote'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :rules="formElement.rules" )
                     el-select(:ref="formElement.prop" v-model="dataForm[formElement.prop]" filterable remote :placeholder="formElement.placeholder" style="width: 100%;" clearable @clear="clearVal(formElement)" :disabled="formElement.disabled || false"  :loading="loading" :remote-method="((val)=>{remoteMethod(val,index)})" @change="((val)=>{emitChange(val,formElement,index)})")
-                        el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="opt.dictValue" :value="opt.dictCode" )
+                        el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="opt.optLabel" :value="opt.optValue" )
                 el-form-item(v-if="formElement.type==='select'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :rules="formElement.rules")
                     el-select(:ref="formElement.prop" v-model="dataForm[formElement.prop]" filterable :placeholder="formElement.placeholder" style="width: 100%;" clearable @clear="clearVal(formElement)" :disabled="formElement.disabled || false")
                         //- el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="setLabel(opt, formElement)" :value="opt[formElement.resVal.value]")
-                        el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="opt.dictValue" :value="opt.dictCode")
+                        el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="opt.optLabel" :value="opt.optValue")
                 el-form-item(v-if="formElement.type==='input'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :rules="formElement.rules")
                     el-input(:ref="formElement.prop" v-model="dataForm[formElement.prop]" :placeholder="formElement.placeholder" :oninput="formElement.oninput" clearable :disabled="formElement.disabled || false")
                 el-form-item(v-if="formElement.type==='text'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop")
@@ -99,6 +99,8 @@
                 } else if (item.defaultOptionsFn) {
                     // 初始化下拉
                     item.defaultOptionsFn().then((res) => {
+                        console.log('res')
+                        console.log(res)
                         this.$set(item, 'optionList', res);
 
                     });
