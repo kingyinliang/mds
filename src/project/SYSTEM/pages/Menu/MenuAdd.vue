@@ -1,6 +1,16 @@
 <template>
     <el-dialog :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" :visible.sync="visible">
         <el-form ref="dataForm" :model="dataForm" :rules="dataRule" label-width="120px" size="small" @keyup.enter.native="dataFormSubmit()">
+            <el-form-item label="系统：" prop="terminal">
+                <el-radio-group v-model="dataForm.terminal">
+                    <el-radio key="PC" label="PC">
+                        PC
+                    </el-radio>
+                    <el-radio key="APP" label="APP">
+                        APP
+                    </el-radio>
+                </el-radio-group>
+            </el-form-item>
             <el-form-item label="类型：" prop="menuType">
                 <el-radio-group v-model="dataForm.menuType">
                     <el-radio v-for="(subType, index) in typeList" :key="index" :label="subType.key" :value="subType.key">
@@ -141,6 +151,7 @@ export default class MenuAdd extends Vue {
     dataForm = {
         id: '',
         deptIdList: [],
+        terminal: 'PC',
         menuType: 'C',
         menuName: '',
         parentId: 0,
@@ -153,6 +164,13 @@ export default class MenuAdd extends Vue {
     }
 
     dataRule = {
+        terminal: [
+            {
+                required: true,
+                message: '系统不能为空',
+                trigger: 'blur'
+            }
+        ],
         menuName: [
             {
                 required: true,
@@ -218,6 +236,7 @@ export default class MenuAdd extends Vue {
                     this.dataForm = {
                         id: '',
                         deptIdList: [],
+                        terminal: 'PC',
                         menuType: 'C',
                         menuName: '',
                         parentId: 0,
@@ -233,6 +252,7 @@ export default class MenuAdd extends Vue {
                     this.type = false;
                     this.dataForm.id = item.id;
                     this.dataForm.deptIdList = item.deptIdList;
+                    this.dataForm.terminal = item.terminal;
                     this.dataForm.menuType = item.menuType;
                     this.dataForm.menuName = item.menuName;
                     this.dataForm.parentId = item.parentId;

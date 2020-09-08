@@ -120,6 +120,10 @@
                 label: '计划数量'
             },
             {
+                prop: 'carAmount',
+                label: '入库数量（箱）'
+            },
+            {
                 prop: 'orderEntryUom',
                 label: '单位'
             },

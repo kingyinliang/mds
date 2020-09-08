@@ -50,8 +50,8 @@ div
     export default class SemiReceive extends Vue {
         @Prop({ type: Boolean, default: false }) isRedact
         @Prop({ default: '' }) cardTitle: string;
-        @Prop({ default: [] }) tableData: object[];
-        @Prop({ default: [] }) pkgWorkShopList: object[];
+        @Prop({ default: () => { return [] } }) tableData: object[];
+        @Prop({ default: () => { return [] } }) pkgWorkShopList: object[];
 
 
         $refs: {

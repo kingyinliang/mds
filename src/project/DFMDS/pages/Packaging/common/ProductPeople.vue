@@ -323,7 +323,7 @@ export default class ProductPeople extends Vue {
                 userType: '',
                 userList: [],
                 startDate: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].startDate,
-                dinner: 60,
+                dinner: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].dinner ? currentFormDataGroupNew[currentFormDataGroupNew.length - 1].dinner : 60,
                 endDate: currentFormDataGroupNew[currentFormDataGroupNew.length - 1].endDate,
                 remark: '',
                 changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss'),
