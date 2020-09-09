@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-08 16:20:25
+ * @LastEditTime: 2020-09-08 19:02:06
 -->
 <template lang="pug">
     el-dialog(:title="formElementSetting.props.title" :close-on-click-modal="false" :visible.sync="isCurrentDailogShow")
@@ -19,7 +19,7 @@
                 el-form-item(v-if="formElement.type==='input'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :rules="formElement.rules")
                     el-input(:ref="formElement.prop" v-model="dataForm[formElement.prop]" :placeholder="formElement.placeholder" :oninput="formElement.oninput" clearable :disabled="formElement.disabled || false")
                 el-form-item(v-if="formElement.type==='text'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop")
-                    el-input(:ref="formElement.prop" v-model="dataForm[formElement.prop]" :disabled="formElement.disabled || false")
+                    el-input(:ref="formElement.prop" v-model="dataForm[formElement.prop]" disabled)
         div(slot="footer" class="dialog-footer")
             el-button(@click="closeDialog") 取消
             el-button(type="primary" @click="submitDataForm") 确定
