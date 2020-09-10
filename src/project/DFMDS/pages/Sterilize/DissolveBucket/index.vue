@@ -182,6 +182,8 @@
                 type: 'select',
                 label: '生产车间',
                 prop: 'workShop',
+                rule: [{ required: true, message: ' ', trigger: 'change' }],
+                labelWidth: 90,
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
                         COMMON_API.ORG_QUERY_WORKSHOP_API({
@@ -204,6 +206,7 @@
                 type: 'select',
                 label: '溶解罐号',
                 prop: 'potId',
+                labelWidth: 80,
                 optionsFn: val => {
                     return new Promise((resolve) => {
                         COMMON_API.HOLDER_QUERY_API({ // /sysHolder/query
@@ -229,6 +232,8 @@
                 type: 'select',
                 label: '状态',
                 prop: 'potStatus',
+                labelWidth: 50,
+                defaultValue: '',
                 defaultOptionsFn: () => {
                     return new Promise((resolve) => {
                         COMMON_API.DICTQUERY_API({ dictType: 'COMMON_HOLDER_STATUS' }).then((res) => {
@@ -582,6 +587,13 @@ interface CurrentDataTable{
 
 .orderMangedialog >>> .el-checkbox__input.is-checked .el-checkbox__inner::after {
     transform: rotate(0deg) scaleY(1);
+}
+
+.header_main >>> .searchCard .el-form-item.is-error .el-input__inner,
+.header_main >>> .searchCard .el-form-item.is-success .el-input__inner,
+.header_main >>> .searchCard .el-form-item.is-error .el-input__inner:focus,
+.header_main >>> .searchCard .el-form-item.is-success .el-input__inner:focus {
+    border-color: #dcdfe6;
 }
 
 </style>
