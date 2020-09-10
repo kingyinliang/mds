@@ -177,7 +177,7 @@
                 <el-table-column prop="useUnit" label="单位" :show-overflow-tooltip="true" />
                 <el-table-column>
                     <template slot-scope="scope">
-                        <el-button type="text" :disabled="!(isRedact)" @click="SplitDate('steAccessoriesConsume', scope.row, scope.$index)">
+                        <el-button type="text" :disabled="!(isRedact)" @click="SplitDate('newSteAccessoriesConsume', scope.row, scope.$index)">
                             <em class="icons iconfont factory-chaifen" />拆分
                         </el-button>
                     </template>
