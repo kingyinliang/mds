@@ -4,7 +4,7 @@
             <template slot="titleBtn">
                 <el-row style="margin-bottom: 5px; text-align: right;">
                     <el-input v-model="form.useMaterial" size="small" placeholder="领用物料" suffix-icon="el-icon-search" style="width: 180px; margin-right: 16px;" clearable @clear="getDataList()" @keyup.enter.native="getDataList()" />
-                    <el-button v-if="isAuth('propQuery')" type="primary" size="small" @click="getDataList(true)">
+                    <el-button v-if="isAuth('propQuery')" type="primary" size="small" @click="getDataLowList(true)">
                         查询
                     </el-button>
                     <el-button v-if="isAuth('propQuery')" type="primary" size="small" @click="isSearchDialogShow = true">
@@ -53,12 +53,12 @@
             <el-form ref="searchDialog" :model="form" size="small" label-width="200px" class="locationdialog">
                 <el-form-item label="生产物料：">
                     <el-select v-model="form.productMaterial" placeholder="请选择" filterable clearable>
-                        <el-option v-for="(item, index) in prodMaterialList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
+                        <el-option v-for="(item, index) in prodMaterialList" :key="index" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="领用物料：">
                     <el-select v-model="form.useMaterial" placeholder="请选择" filterable clearable>
-                        <el-option v-for="(item, index) in useMaterialList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode" />
+                        <el-option v-for="(item, index) in useMaterialList" :key="index" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="是否增补料：">
@@ -91,12 +91,12 @@
                 <el-form ref="formatData" :model="formatData" :rules="rules" size="small" label-width="110px" @keyup.enter.native="dataFormSubmit()" @submit.native.prevent>
                     <el-form-item label="生产物料：" prop="productMaterialString">
                         <el-select v-model="formatData.productMaterialString" filterable :disabled="formatData.id ? true: false">
-                            <el-option v-for="(item, index) in prodMaterialList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode + ' ' + item.materialName" />
+                            <el-option v-for="(item, index) in prodMaterialList" :key="index" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode + ' ' + item.materialName" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="领用物料：" prop="useMaterialString">
                         <el-select v-model="formatData.useMaterialString" filterable>
-                            <el-option v-for="(item, index) in useMaterialList" :key="index" :label="item.materialCode + ' ' + item.materialName" :value="item.materialCode + ' ' + item.materialName" />
+                            <el-option v-for="(item, index) in useMaterialList" :key="index" :label="item.materialName + ' ' + item.materialCode" :value="item.materialCode + ' ' + item.materialName" />
                         </el-select>
                     </el-form-item>
                     <el-form-item label="是否增补料：" prop="supplyFlag">
@@ -126,7 +126,7 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button size="small" @click="isDialogShow = false">取消</el-button>
+                <el-button size="small" @click="dataFormCancel('formatData')">取消</el-button>
                 <el-button size="small" type="primary" @click="dataFormSubmit('formatData')">确定</el-button>
             </span>
         </el-dialog>
@@ -164,6 +164,11 @@ export default class SpecialMaterialAttr extends Vue {
     formatData: FormData = {};
 
     form = {
+        productMaterial: '',
+        useMaterial: '',
+        supplyFlag: '',
+        limitFlag: '',
+        complexFlag: '',
         size: 10,
         current: 1
     };
@@ -235,7 +240,7 @@ export default class SpecialMaterialAttr extends Vue {
         });
     }
 
-    // 查询
+    // 高级查询
     getDataList(st?) {
         if (st === true) {
             this.form.current = 1;
@@ -247,6 +252,15 @@ export default class SpecialMaterialAttr extends Vue {
                 this.isSearchDialogShow = false;
             }
         })
+    }
+
+    // 查询
+    getDataLowList(st) {
+        this.form.productMaterial = '';
+        this.form.supplyFlag = '';
+        this.form.limitFlag = '';
+        this.form.complexFlag = '';
+        this.getDataList(st);
     }
 
     // 新增
@@ -301,19 +315,20 @@ export default class SpecialMaterialAttr extends Vue {
             if (valid) {
                 if (this.formatData.productMaterialString) {
                     const productMaterialString = this.formatData.productMaterialString.split(' ');
-                    this.formatData.productMaterial = productMaterialString[0];
-                    this.formatData.productMaterialName = productMaterialString[1];
+                    this.formatData.productMaterial = productMaterialString[1];
+                    this.formatData.productMaterialName = productMaterialString[0];
                 }
                 if (this.formatData.useMaterialString) {
                     const useMaterialString = this.formatData.useMaterialString.split(' ');
-                    this.formatData.useMaterial = useMaterialString[0];
-                    this.formatData.useMaterialName = useMaterialString[1];
+                    this.formatData.useMaterial = useMaterialString[1];
+                    this.formatData.useMaterialName = useMaterialString[0];
                 }
                 if (this.formatData.id) {
                     COMMON_API.SPECIAL_MATERIAL_UPDATE_API(this.formatData).then(({ data }) => {
                         if (data.code === 200) {
                             this.isDialogShow = false;
                             this.$successToast('修改成功');
+                            this.$refs[formName].resetFields();
                             this.getDataList(true);
                         }
                     })
@@ -322,12 +337,19 @@ export default class SpecialMaterialAttr extends Vue {
                         if (data.code === 200) {
                             this.isDialogShow = false;
                             this.$successToast('保存成功');
+                            this.$refs[formName].resetFields();
                             this.getDataList(true);
                         }
                     })
                 }
             }
         });
+    }
+
+    // 取消
+    dataFormCancel(formName) {
+        this.isDialogShow = false;
+        this.$refs[formName].resetFields();
     }
 
     handleSelectionChange(val) {
