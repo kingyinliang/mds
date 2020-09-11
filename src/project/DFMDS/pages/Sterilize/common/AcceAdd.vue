@@ -174,7 +174,13 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column prop="useUnit" label="单位" :show-overflow-tooltip="true" />
+                <el-table-column prop="useUnit" label="单位" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-select v-model="scope.row.useUnit" placeholder="请选择" size="small" clearable filterable :disabled="!(isRedact && scope.row.checkStatus !== 'C' && scope.row.checkStatus !== 'D' && scope.row.checkStatus !== 'P')">
+                            <el-option v-for="(iteam, index) in Unit" :key="index" :label="iteam.dictValue" :value="iteam.dictCode" />
+                        </el-select>
+                    </template>
+                </el-table-column>
                 <el-table-column>
                     <template slot-scope="scope">
                         <el-button type="text" :disabled="!(isRedact)" @click="SplitDate('newSteAccessoriesConsume', scope.row, scope.$index)">
@@ -244,6 +250,7 @@
         useBoxNo = [];
         ACMaterial = [];
         materialList = [];
+        Unit = [];
         formHeader: OrderData = {};
         steCookingConsume: CCObj[] = [];
         OrgSteCookingConsume: CCObj[] = [];
@@ -392,6 +399,11 @@
             }).then(({ data }) => {
                 this.holderList = data.data
             })
+            COMMON_API.DICTQUERY_API({
+                dictType: 'COMMON_UNIT'
+            }).then(({ data }) => {
+                this.Unit = data.data;
+            });
             COMMON_API.HOLDER_QUERY_API({
                 deptId: this.formHeader.workShop,
                 holderType: '022',
