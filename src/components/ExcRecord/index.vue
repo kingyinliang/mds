@@ -99,12 +99,20 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-row class="solerow">
+            <div>
+                总异常时间：
+            </div>
+            <div class="input_bottom">
+                {{ totalMin }} MIN
+            </div>
+        </el-row>
     </mds-card>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator';
-import { dateFormat, getUserNameNumber, getDateDiff } from 'utils/utils';
+import { dateFormat, getUserNameNumber, getDateDiff, accAdd } from 'utils/utils';
 import { COMMON_API, STE_API } from 'common/api/api';
 import _ from 'lodash';
 
@@ -114,6 +122,7 @@ import _ from 'lodash';
 export default class ExcRecord extends Vue {
     @Prop({ type: Boolean, default: false }) isRedact
     @Prop({ type: Object, default: {} }) formHeader
+
 
     classesOptions: object[] = [];
     abnormalList: object[] = [];
@@ -125,6 +134,17 @@ export default class ExcRecord extends Vue {
         POORPROCESSWAIT: [],
         ENERGY: []
     };
+
+    // 获取总异常时间
+    get totalMin() {
+        let MinNum = 0;
+        this.excList.map((item: ExcList) => {
+            if (item.delFlag !== 1) {
+                MinNum = accAdd(MinNum, item.duration);
+            }
+        });
+        return MinNum;
+    }
 
     init(formHeader, tagName) {
         const net1 = new Promise((resolve) => {
