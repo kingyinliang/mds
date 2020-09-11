@@ -14,9 +14,9 @@
             //- show table
             table-show(ref="targetInfoList" :table-element-setting="tableItemSetting" :target-table.sync="targetInfoList" @updateItem="btnUpdateItem")
             el-pagination(:current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange")
-        //- 编辑工序
+        //- 编辑规格
         dialog-form(ref="updateSpecification" :form-element-setting="dialogUpdateItemSetting" :data-form.sync="dataOfUpdateItem" @send-dialog-form-data="updateItem")
-        //- 新增工序
+        //- 新增规格
         dialog-form(ref="addSpecification" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem")
         //- 高级查询
         dialog-form(ref="advanceSearch" :form-element-setting="dialogSearchSetting" :data-form.sync="dataOfSearch" @send-dialog-form-data="getItemsList(true,'Advance')")
@@ -63,79 +63,118 @@
                     headerAlign: 'left',
                     align: 'left',
                     label: '物料', // 表单元件名称
-                    minWidth: '160px',
-                    width: '', // width 会覆盖 minWidth
+                    minWidth: 300,
+                    width: 0, // width 会覆盖 minWidth
                     content: ['materialCode', 'materialName']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'brand',
                     label: '品牌', // 表单元件名称
-                    minWidth: '',
-                    width: '200px',
+                    minWidth: 0,
+                    width: 100,
                     content: ['brand']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'largeClass',
                     label: '大类', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 160,
                     content: ['largeClass'],
                     // eslint-disable-next-line no-invalid-this
-                    wrapperList: this.largeClassObject
+                    // transList: this.largeClassObject
+                    transFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                                dictType: 'COMMON_CATEGORY'
+                                }).then(({ data }) => {
+                                const wrapperObject = {};
+                                data.data.forEach(item => {
+                                    wrapperObject[item.dictCode] = item.dictValue
+                                })
+                                resolve(wrapperObject)
+                            })
+                        })
+                    }
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'boxSpec',
                     label: '箱规格', // 表单元件名称
-                    minWidth: '',
-                    width: '70px',
+                    minWidth: 0,
+                    width: 70,
                     content: ['boxSpec']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'boxSpecUnit',
                     label: '单位', // 表单元件名称
-                    minWidth: '',
-                    width: '70px',
+                    minWidth: 0,
+                    width: 70,
                     content: ['boxSpecUnit'],
                     // eslint-disable-next-line no-invalid-this
-                    wrapperList: this.unitClassObject
+                    // transList: this.unitClassObject
+                    transFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                            dictType: 'COMMON_SPEC_UNIT'
+                            }).then(({ data }) => {
+                                const wrapperObject = {};
+                                data.data.forEach(item => {
+                                    wrapperObject[item.dictCode] = item.dictValue
+                                })
+                                resolve(wrapperObject)
+                            })
+                        })
+                    }
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'bottleSpec',
                     label: '瓶规格', // 表单元件名称
-                    minWidth: '',
-                    width: '70px',
+                    minWidth: 0,
+                    width: 70,
                     content: ['bottleSpec']
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'bottleSpecUnit',
                     label: '单位', // 表单元件名称
-                    minWidth: '',
-                    width: '70px',
+                    minWidth: 0,
+                    width: 70,
                     content: ['bottleSpecUnit'],
                     // eslint-disable-next-line no-invalid-this
-                    wrapperList: this.unitClassObject
+                    // transList: this.unitClassObject
+                    transFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.DICTQUERY_API({
+                            dictType: 'COMMON_SPEC_UNIT'
+                            }).then(({ data }) => {
+                                const wrapperObject = {};
+                                data.data.forEach(item => {
+                                    wrapperObject[item.dictCode] = item.dictValue
+                                })
+                                resolve(wrapperObject)
+                            })
+                        })
+                    }
                 },
                 {
                     type: 'single', // 表格元件
                     prop: 'changer',
                     label: '维护人', // 表单元件名称
-                    minWidth: '',
-                    width: '160px',
+                    minWidth: 0,
+                    width: 160,
                     content: ['changer']
                 },
                 {
                     type: 'button', // 表格元件
                     prop: 'control',
                     label: '操作', // 表单元件名称
-                    minWidth: '',
-                    width: '100px',
-                    content: [{
+                    minWidth: 0,
+                    width: 100,
+                    control: [{
                             buttonName: '编辑',
                             btn: 'editBtn',
                             icon: 'el-icon-edit',
@@ -517,13 +556,17 @@
             return this.$store.state.common.mainClientHeight;
         }
 
-        created() {
-            this.getLargeClass(); // 大类下拉选单
-            this.getUnit(); // 单位下拉选单
-        }
+        // async created() {
+        //     this.getLargeClass(); // 大类下拉选单
+        //     this.getUnit(); // 单位下拉选单
+        //     this.getItemsList(); // 获取数据
+        // }
 
-        mounted() {
-            this.getItemsList();
+        async mounted() {
+            await this.getLargeClass(); // 大类下拉选单
+            await this.getUnit(); // 单位下拉选单
+            await this.getItemsList(); // 获取数据
+            await this.$refs.targetInfoList.init();
         }
 
         // [BTN] 新增
@@ -602,10 +645,12 @@
             COMMON_API.DICTQUERY_API({
                 dictType: 'COMMON_CATEGORY'
                 }).then(({ data }) => {
+                    this.largeClassObject = {}
                     this.largeClassList = data.data;
                     this.largeClassList.forEach(item => {
-                        this.$set(this.largeClassObject, 'optLabel', item.dictValue)
-                        this.$set(this.largeClassObject, 'optValue', item.dictCode)
+                        this.$set(item, 'optLabel', item.dictValue)
+                        this.$set(item, 'optValue', item.dictCode)
+                        this.largeClassObject[item.dictCode] = item.dictValue
                     })
                 });
         }
@@ -615,10 +660,12 @@
             COMMON_API.DICTQUERY_API({
                 dictType: 'COMMON_SPEC_UNIT'
                 }).then(({ data }) => {
+                    this.unitClassObject = {}
                     this.unitClassList = data.data;
                     this.unitClassList.forEach(item => {
-                        this.$set(this.unitClassObject, 'optLabel', item.dictValue)
-                        this.$set(this.unitClassObject, 'optValue', item.dictCode)
+                        this.$set(item, 'optLabel', item.dictValue)
+                        this.$set(item, 'optValue', item.dictCode)
+                        this.unitClassObject[item.dictCode] = item.dictValue
                     })
                 });
         }
