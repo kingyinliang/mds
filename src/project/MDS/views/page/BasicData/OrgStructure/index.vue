@@ -108,9 +108,9 @@
                 </el-col>
             </el-row>
             <el-dialog id="adddepform" :close-on-click-modal="false" :visible.sync="dialogFormVisible" :title="sibling ? '新增同级' : '新增下级'" @close="closeAddOrgForm('addDep')">
-                <el-form ref="addDep" :model="addDep" :rules="dataRules" size="small" label-position="left" label-width="125px">
+                <el-form ref="addDep" :model="addDep" :rules="dataRules" size="small" label-position="left" label-width="125px" style="padding-bottom: 20px;">
                     <el-form-item label="部门编号：" prop="deptCode" :inline-message="true">
-                        <el-input v-model.number="addDep.deptCode" auto-complete="off" />
+                        <el-input v-model="addDep.deptCode" auto-complete="off" />
                     </el-form-item>
                     <el-form-item label="部门名称：" prop="deptName">
                         <el-input v-model="addDep.deptName" auto-complete="off" />
@@ -153,10 +153,10 @@
                         <el-input v-model="addDep.remark" type="textarea" />
                     </el-form-item>
                     <div style="text-align: center;">
-                        <el-button @click="openAddOrgFrom('addDep')">
+                        <el-button size="small" @click="openAddOrgFrom('addDep')">
                             保存
                         </el-button>
-                        <el-button @click="closeAddOrgForm('addDep')">
+                        <el-button size="small" @click="closeAddOrgForm('addDep')">
                             关闭
                         </el-button>
                     </div>
@@ -219,8 +219,8 @@ export default {
             fileReader: {},
             dataRules: {
                 deptCode: [
-                    { required: true, message: '请输入编号', trigger: 'blur' },
-                    { type: 'number', message: '必须为数字值' }
+                    { required: true, message: '请输入编号', trigger: 'blur' }
+                    // { type: 'number', message: '必须为数字值' }
                 ],
                 deptName: [
                     { required: true, message: '请输入部门名称', trigger: 'blur' }
@@ -255,6 +255,9 @@ export default {
     watch: {
         filterText(val) {
             this.$refs.tree2.filter(val);
+        },
+        'addDep.deptCode'() {
+            this.addDep.deptCode = this.addDep.deptCode.replace(/[^0-9A-Z]/g, '');
         }
     },
     mounted() {
