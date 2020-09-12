@@ -74,7 +74,7 @@
                                     <em class="iconfont factory-shuliang" style=" margin-right: 5px; font-size: 18px;" />物料
                                 </template>
                                 <template slot-scope="scope">
-                                    {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                    {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                                 </template>
                             </el-table-column>
                             <el-table-column
