@@ -66,10 +66,10 @@
                 value: ['materialCode', 'materialName']
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 label: '生产锅序',
                 icon: 'factory-bianhao',
-                value: 'potOrder'
+                value: ['potOrderString', 'potOrderNo']
             },
             {
                 type: 'p',
@@ -124,6 +124,7 @@
                 potOrderNo: this.$store.state.sterilize.AcceAdd.potOrderMap.potOrderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
+                this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'acceadd';
                 this.tabs[0].status = (data.data.steTagPot ? data.data.steTagPot.accessoriesStatus : '未录入');
                 this.$refs.acceadd.init(this.formHeader);
@@ -177,6 +178,7 @@
     interface OrderData {
         textStage?: string;
         factoryName?: string;
+        potOrderString?: string;
         potNo?: string;
         potOrder?: string;
         steTagPot?: StatusObj;
