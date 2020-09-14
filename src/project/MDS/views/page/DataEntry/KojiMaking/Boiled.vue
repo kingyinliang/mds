@@ -65,7 +65,7 @@
                                         生产品项
                                     </div>
                                     <div class="detail">
-                                        {{ item.materialCode + ' ' + item.materialName }}
+                                        {{ item.materialName + ' ' + item.materialCode }}
                                     </div>
                                 </div>
                                 <div class="box-item-container-item">

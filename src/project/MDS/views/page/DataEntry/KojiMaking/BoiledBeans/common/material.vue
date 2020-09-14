@@ -120,7 +120,7 @@
                 <el-table-column label="日期" prop="useDate" min-width="110" />
                 <el-table-column label="物料" prop="materialCode" min-width="160">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                        {{ scope.row.materialName }} {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="麦粉罐" prop="holderName" min-width="140" />
@@ -193,7 +193,7 @@
                 <el-table-column label="日期" prop="pulpDate" min-width="100" :show-overflow-tooltip="true" />
                 <el-table-column label="物料" min-width="190" :show-overflow-tooltip="true">
                     <template slot-scope="scope">
-                        {{ scope.row.materialCode }} {{ scope.row.materialName }}
+                        {{ scope.row.materialName }} {{ scope.row.materialCode }}
                     </template>
                 </el-table-column>
                 <el-table-column label="领用粮仓" prop="foodHolderName" min-width="100" :show-overflow-tooltip="true" />
@@ -235,7 +235,7 @@
                 </el-form-item>
                 <el-form-item label="物料描述：" :label-width="formLabelWidth">
                     <p class="disabled-text">
-                        {{ wheat.materialCode }} {{ wheat.materialName }}
+                        {{ wheat.materialName }} {{ wheat.materialCode }}
                     </p>
                 </el-form-item>
                 <el-form-item label="起始数：" :label-width="formLabelWidth" prop="startWeight">
@@ -269,7 +269,7 @@
                 </el-form-item>
                 <el-form-item label="物料描述：" :label-width="formLabelWidth">
                     <p class="disabled-text">
-                        {{ wheat.materialCode }} {{ wheat.materialName }}
+                        {{ wheat.materialName }} {{ wheat.materialCode }}
                     </p>
                 </el-form-item>
                 <el-form-item label="结束数：" :label-width="formLabelWidth" prop="endWeight">
@@ -303,7 +303,7 @@
                 </el-form-item>
                 <el-form-item label="物料描述：" :label-width="formLabelWidth">
                     <p class="disabled-text">
-                        {{ wheat.materialCode }} {{ wheat.materialName }}
+                        {{ wheat.materialName }} {{ wheat.materialCode }}
                     </p>
                 </el-form-item>
                 <el-form-item label="起始数：" :label-width="formLabelWidth" prop="startWeight">
@@ -350,7 +350,7 @@
                 </el-form-item>
                 <el-form-item label="领用物料：" :label-width="formLabelWidth">
                     <p class="disabled-text">
-                        {{ rusoy.materialCode }} {{ rusoy.materialName }}
+                        {{ rusoy.materialName }} {{ rusoy.materialCode }}
                     </p>
                 </el-form-item>
                 <el-form-item label="剩余数：" :label-width="formLabelWidth">
@@ -617,7 +617,7 @@
                     const part = this.DouHoldList.find(item => item.holderId === this.holderIdomg).pici.find(item => item.batch === this.chusoy.batch);
                     this.chusoy.materialCode = part['materialCode'];
                     this.chusoy.materialName = part['materialName'];
-                    this.chusoy.soyMaterialstr = part['materialCode'] + ' ' + part['materialName'];
+                    this.chusoy.soyMaterialstr = part['materialName'] + ' ' + part['materialCode'];
                 }
             },
             'rusoy.foodHolderId'() {
@@ -1193,7 +1193,7 @@
                     this.rusoy = Object.assign({}, row);
                 } else {
                     this.dialogFormVisibleDouChu = true;
-                    row.soyMaterialstr = (row.materialCode || '') + ' ' + (row.materialName || '');
+                    row.soyMaterialstr = (row.materialName || '') + ' ' + (row.materialCode || '');
                     this.chusoy = Object.assign({}, row);
                 }
             },
@@ -1296,7 +1296,7 @@
                     pulpHolderId: row.holderId,
                     pulpHolderName: row.holderName,
                     foodHolderId: '',
-                    soyMaterialstr: (row.materialCode || '') + ' ' + (row.materialName || ''),
+                    soyMaterialstr: (row.materialName || '') + ' ' + (row.materialCode || ''),
                     foodHolderName: '',
                     startWeight: '',
                     endWeight: '',
@@ -1607,7 +1607,7 @@
                                 }
                             });
                             this.soyList.forEach(item => {
-                                this.$set(item, 'soyMaterialstr', item.materialCode + ' ' + item.materialName);
+                                this.$set(item, 'soyMaterialstr', item.materialName + ' ' + item.materialCode);
                                 if (item.status === 'noPass') {
                                     no = no + 1;
                                 } else if (item.status === 'submit') {
@@ -1679,7 +1679,7 @@
                                 }
                             });
                             this.soyList.forEach(item => {
-                                this.$set(item, 'soyMaterialstr', item.materialCode + ' ' + item.materialName);
+                                this.$set(item, 'soyMaterialstr', item.materialName + ' ' + item.materialCode);
                                 if (item.status === 'noPass') {
                                     no = no + 1;
                                 } else if (item.status === 'submit') {

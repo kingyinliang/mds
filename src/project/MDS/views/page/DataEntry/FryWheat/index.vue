@@ -93,7 +93,7 @@
                                     </el-form-item>
                                     <el-form-item label="品项：" class="width50b">
                                         <div style="width: 152px; padding-left: 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; background: rgba(245, 245, 245, 1); border-radius: 4px;">
-                                            &nbsp;{{ item.materialCode + ' ' + item.materialName }}
+                                            &nbsp;{{ item.materialName + ' ' + item.materialCode }}
                                         </div>
                                     </el-form-item>
                                     <el-form-item label="实际产量：" class="width50b">
