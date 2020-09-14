@@ -55,7 +55,7 @@
     import { Vue, Component } from 'vue-property-decorator';
     import { COMMON_API, KOJI_API } from 'common/api/api';
 
-    import StockDetailTable from '../common/StockDetailTable.vue';
+    import StockDetailTable from '../../common/StockDetailTable.vue';
     @Component({
         name: 'StockY158Index',
         components: {

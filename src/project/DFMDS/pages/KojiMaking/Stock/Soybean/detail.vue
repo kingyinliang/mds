@@ -60,7 +60,7 @@
 
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
-    import StockTableData from '../common/StockTableData.vue'
+    import StockTableData from '../../common/StockTableData.vue'
     @Component({
         components: {
             StockTableData
