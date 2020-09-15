@@ -23,6 +23,7 @@
 </template>
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
+    import { getUserNameNumber } from 'utils/utils';
     import { COMMON_API } from 'common/api/api';
     import DialogForm from 'components/DialogForm.vue';
     import TableShow from 'components/TableShow.vue';
@@ -187,7 +188,7 @@
         // [dialog][setting] 高级查询
         dialogSearchSetting={
             props: {
-                labelWidth: '100px',
+                labelWidth: 100,
                 title: '高级查询'
             },
             data: [
@@ -235,7 +236,7 @@
         // [dialog][setting] 新增规格
         dialogAddItemSetting={
             props: {
-                labelWidth: '100px',
+                labelWidth: 100,
                 title: '新增规格'
             },
             data: [
@@ -389,7 +390,7 @@
         }
 
 
-        // [dialog][data] 新增工序
+        // [dialog][data] 新增规格
         dataOfAddItem={
             id: '',
             material: '',
@@ -399,7 +400,7 @@
             boxSpecUnit: '',
             bottleSpec: '',
             bottleSpecUnit: '',
-            changer: '',
+            changer: getUserNameNumber(),
             version: 0,
             materialCode: '',
             materialName: ''
@@ -408,7 +409,7 @@
         // [dialog][setting] 编辑规格
         dialogUpdateItemSetting={
             props: {
-                labelWidth: '100px',
+                labelWidth: 100,
                 title: '新增规格'
             },
             data: [
@@ -637,6 +638,7 @@
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
                 this.totalCount = data.data.total;
+                this.$refs.targetInfoList.init();
             });
         }
 
@@ -720,7 +722,7 @@
 
         }
 
-        // [BTN] 新增
+        // [BTN] 更新
         btnUpdateItem(dataForm) {
             console.log(dataForm)
             this.dataOfUpdateItem = JSON.parse(JSON.stringify(dataForm))
