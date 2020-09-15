@@ -10,9 +10,9 @@
                             el-button(type="primary" size="small" :disabled="controllableForm.material===''" @click="getItemsList(true,'normal')") 查询
                             el-button(type="primary" size="small" @click="btnAdvanceSearch") 高级查询
                             el-button(type="primary" size="small" @click="btnAddItem") 新增
-                            el-button(type="danger" size="small" @click="btnRemoveItems") 批量删除
+                            el-button(type="danger" size="small" @click="btnRemoveItems" v-if="tableData.length!==0" :disabled="chechDeleteList===0") 批量删除
             //- show table
-            table-show(ref="showTable" :table-element-setting="tableItemSetting" :target-table.sync="tableData" @updateItem="btnUpdateItem" @removeItem="")
+            table-show(ref="showTable" :table-element-setting="tableItemSetting" :target-table.sync="tableData" :check-delete.sync="chechDeleteList" @updateItem="btnUpdateItem" @removeItem="")
             el-pagination(v-if="tableData.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange")
         //- 新增工序
         dialog-form(ref="addKojiCraftStandard" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem")
@@ -50,6 +50,7 @@
         totalCount= 1
 
         nowSearchModle='normal'
+        chechDeleteList=0
 
         controllableForm= {
             workShop: '',
@@ -264,8 +265,7 @@
                                 resolve(optionList)
                             })
                         })
-                    },
-                    linkageProp: ['productProcess']
+                    }
                 },
                 {
                     type: 'select',
@@ -558,6 +558,16 @@
 
         // [btn] 新增
         btnAddItem() {
+            this.dataOfAddItem = {
+                workShop: '',
+                productMaterial: '',
+                standardAmount: 0,
+                standardDuration: 0,
+                remark: '',
+                changer: getUserNameNumber(),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
+
             this.$nextTick(() => {
                 this.$refs.addKojiCraftStandard.init();
             });

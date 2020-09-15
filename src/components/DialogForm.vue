@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-15 16:10:18
+ * @LastEditTime: 2020-09-15 19:13:20
 -->
 <template lang="pug">
     el-dialog(:title="formElementSetting.props.title" :close-on-click-modal="false" :visible.sync="isCurrentDailogShow")
@@ -61,6 +61,7 @@
                     // 对 newDataForm 做处理
                     this.$emit('update:dataForm', newDataForm)
                     this.$emit('send-dialog-form-data', newDataForm);
+                    this.$refs.dataForm.resetFields();
                     this.isCurrentDailogShow = false;
                 } else {
                     this.$infoToast('请完善表单')

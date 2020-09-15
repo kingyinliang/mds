@@ -3,7 +3,7 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-15 14:25:26
+ * @LastEditTime: 2020-09-15 20:00:54
 -->
 <template lang="pug">
     el-table(ref="targetTable" class="newTable" border header-row-class-name="tableHead" :data="targetTable" :height="tableElementSetting.props.height" tooltip-effect="dark" @selection-change="handleSelectionChange" style="width:100%")
@@ -33,7 +33,7 @@
     export default class DialogSearch extends Vue {
         @Prop({ type: Array, default: () => { return [] } }) targetTable // 数据
         @Prop({ type: Object, default: () => { return {} } }) tableElementSetting // 表单元素设置
-
+        @Prop({ type: Number, default: 0 }) checkDelete // 表单元素设置
         $refs: {
             targetTable: HTMLFormElement;
         }
@@ -56,6 +56,7 @@
 
         // 表格选中
         handleSelectionChange(val) {
+            this.$emit('update:checkDelete', val.length)
             this.multipleSelection = val;
         }
 

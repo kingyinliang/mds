@@ -10,16 +10,16 @@
                             el-button(v-if="isAuth('specQuery')" type="primary" size="small" :disabled="dataOfSearch.materialCode.trim()===''" @click="getItemsList(true,'normal')") 查询
                             el-button(v-if="isAuth('specQuery')" type="primary" size="small" @click="btnAdvanceSearch") 高级查询
                             el-button(v-if="isAuth('specInsert')" type="primary" size="small" @click="btnAddItem") 新增
-                            el-button(v-if="isAuth('specDel')" type="danger" size="small"  @click="btnRemoveItems") 批量删除
+                            el-button(v-if="isAuth('specDel')&&targetInfoList.length!==0" type="danger" size="small"  @click="btnRemoveItems" :disabled="chechDeleteList===0" ) 批量删除
             //- show table
-            table-show(ref="targetInfoList" :table-element-setting="tableItemSetting" :target-table.sync="targetInfoList" @updateItem="btnUpdateItem")
+            table-show(ref="targetInfoList" :table-element-setting="tableItemSetting" :target-table.sync="targetInfoList" :check-delete.sync="chechDeleteList" @updateItem="btnUpdateItem")
             el-pagination(:current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange")
         //- 编辑规格
         dialog-form(ref="updateSpecification" :form-element-setting="dialogUpdateItemSetting" :data-form.sync="dataOfUpdateItem" @send-dialog-form-data="updateItem")
         //- 新增规格
         dialog-form(ref="addSpecification" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem")
         //- 高级查询
-        dialog-form(ref="advanceSearch" :form-element-setting="dialogSearchSetting" :data-form.sync="dataOfSearch" @send-dialog-form-data="getItemsList(true,'Advance')")
+        dialog-form(ref="advanceSearch" :form-element-setting="dialogSearchSetting" :data-form.sync="dataOfSearch" @send-dialog-form-data="getItemsListFromDialog")
 </template>
 <script lang="ts">
     import { Vue, Component } from 'vue-property-decorator';
@@ -51,6 +51,8 @@
         targetInfoList: CurrentDataTable[]= []
         multipleSelection: CurrentDataTable[]= []
 
+        nowSearchModle='normal'
+        chechDeleteList=0 // 删除都选统计
         tableItemSetting={
             props: {
                 // eslint-disable-next-line no-invalid-this
@@ -572,6 +574,20 @@
 
         // [BTN] 新增
         btnAddItem() {
+            this.dataOfAddItem = {
+                id: '',
+                material: '',
+                brand: '',
+                largeClass: '',
+                boxSpec: '',
+                boxSpecUnit: '',
+                bottleSpec: '',
+                bottleSpecUnit: '',
+                changer: getUserNameNumber(),
+                version: 0,
+                materialCode: '',
+                materialName: ''
+            }
             this.$nextTick(() => {
                 this.$refs.addSpecification.init();
             });
@@ -618,6 +634,7 @@
                 this.currPage = 1;
             }
             if (type === 'normal') {
+                this.nowSearchModle = 'normal'
                 this.dataOfSearch.brand = '';
                 this.dataOfSearch.boxSpec = '';
                 this.dataOfSearch.productSpec = '';
@@ -672,16 +689,21 @@
                 });
         }
 
+        getItemsListFromDialog() {
+            this.nowSearchModle = 'advance'
+            this.getItemsList(true, 'advance')
+        }
+
         // 改变每页条数
         handleSizeChange(val) {
             this.pageSize = val;
-            this.getItemsList();
+            this.getItemsList(false, this.nowSearchModle);
         }
 
         // 跳转页数
         handleCurrentChange(val) {
             this.currPage = val;
-            this.getItemsList();
+            this.getItemsList(false, this.nowSearchModle);
         }
 
         addItem(dataForm) {

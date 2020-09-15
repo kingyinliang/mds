@@ -12,9 +12,9 @@
                             el-button(type="primary" size="small" :disabled="controllableForm.workShop===''" @click="getItemsList(true,'normal')") 查询
                             el-button(type="primary" size="small" @click="btnAdvanceSearch") 高级查询
                             el-button(type="primary" size="small" @click="btnAddItem") 新增
-                            el-button(type="danger" size="small" @click="btnRemoveItems") 批量删除
+                            el-button(type="danger" size="small" @click="btnRemoveItems" v-if="tableData.length!==0" :disabled="chechDeleteList===0") 批量删除
             //- show table
-            table-show(ref="showTable" :table-element-setting="tableItemSetting" :target-table.sync="tableData" @updateItem="btnUpdateItem" @removeItem="")
+            table-show(ref="showTable" :table-element-setting="tableItemSetting" :target-table.sync="tableData" :check-delete.sync="chechDeleteList" @updateItem="btnUpdateItem" @removeItem="")
             el-pagination(v-if="tableData.length!==0" :current-page="currPage" :page-sizes="[10, 20, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount" @size-change="handleSizeChange" @current-change="handleCurrentChange")
         //- 新增工序
         dialog-form(ref="addWorkProcedure" :form-element-setting="dialogAddItemSetting" :data-form.sync="dataOfAddItem" @send-dialog-form-data="addItem")
@@ -52,6 +52,7 @@
         totalCount= 1
 
         nowSearchModle='normal'
+        chechDeleteList=0 // 删除都选统计
 
         controllableForm= {
             jobBookingProcess: '',
@@ -335,7 +336,7 @@
                     placeholder: '请選擇报工工序',
                     disabled: false,
                     rules: [
-                        { required: true, message: '请選擇报工工序', trigger: 'blur' }
+                        { required: true, message: '请選擇报工工序', trigger: 'change' }
                     ],
                     defaultOptionsFn: () => {
                         return new Promise((resolve) => {
@@ -358,7 +359,7 @@
                     label: '生产工序',
                     placeholder: '请選擇生产工序',
                     rules: [
-                        { required: true, message: '请選擇生产工序', trigger: 'blur' }
+                        { required: true, message: '请選擇生产工序', trigger: 'change' }
                     ],
                     emitChange: (val) => {
                         return new Promise((resolve) => {
@@ -415,7 +416,7 @@
         // [dialog][setting] 编辑工序
         dialogEditItemSetting={
             props: {
-                labelWidth: '100px',
+                labelWidth: 100,
                 title: '编辑报工'
             },
             data: [
@@ -577,7 +578,6 @@
 
          // from dialog
         addItem(dataForm) {
-            console.log(dataForm)
 
             KOJI_API.WORKPROCEDURE_INSERT_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -624,7 +624,7 @@
                 this.nowSearchModle = 'normal'
                 this.controllableForm.jobBookingProcess = ''
                 this.controllableForm.productProcess = ''
-                this.controllableForm.workShop = ''
+                this.controllableForm.material = ''
             }
             KOJI_API.WORKPROCEDURE_QUERY_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
@@ -655,6 +655,18 @@
 
         // [BTN] 新增
         btnAddItem() {
+            this.dataOfAddItem = {
+                workShop: '',
+                productMaterial: '',
+                jobBookingProcess: '',
+                productProcess: '',
+                material: '',
+                materialCode: '',
+                materialName: '',
+                remark: '',
+                changer: getUserNameNumber(),
+                changed: dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss')
+            }
             this.$nextTick(() => {
                 this.$refs.addWorkProcedure.init();
             });
