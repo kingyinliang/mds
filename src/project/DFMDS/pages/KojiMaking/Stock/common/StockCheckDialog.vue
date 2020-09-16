@@ -11,10 +11,10 @@
             <el-table-column label="数量" width="100" :show-overflow-tooltip="true" prop="moveAmount" align="center" />
             <el-table-column label="领用订单" width="100" :show-overflow-tooltip="true" prop="orderNo" align="center" />
             <el-table-column label="调整说明" width="100" :show-overflow-tooltip="true" prop="adjustInfo" align="center" />
-            <el-table-column label="操作人" width="100" :show-overflow-tooltip="true" prop="operator" align="center" />
+            <el-table-column label="操作人" width="100" :show-overflow-tooltip="true" prop="changer" align="center" />
             <el-table-column label="操作时间" width="160" align="center">
                 <template slot-scope="scope">
-                    {{ scope.row.operatoDate }}
+                    {{ scope.row.changed }}
                 </template>
             </el-table-column>
         </el-table>
