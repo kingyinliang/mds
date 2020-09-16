@@ -4,7 +4,7 @@
             <el-table-column type="index" label="序号" width="55" fixed align="center" />
             <el-table-column label="物料" :show-overflow-tooltip="true" width="180" prop="material" align="center">
                 <template slot-scope="scope">
-                    {{ scope.row.material }}
+                    {{ scope.row.materialCode + scope.row.materialName }}
                 </template>
             </el-table-column>
             <el-table-column label="批次" width="100" :show-overflow-tooltip="true" prop="batch" align="center" />
