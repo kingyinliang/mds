@@ -60,6 +60,20 @@
                 this.orgFormDataGroup = JSON.parse(JSON.stringify(data.data))
                 this.isNewForm = false
             } else {
+                this.currentFormDataGroup = {
+                    text: '', // 文本
+                    factory: '', // 工厂
+                    id: '', // 主键
+                    orderId: '', // 订单ID
+                    orderNo: '' // 订单号
+                }
+                this.orgFormDataGroup = {
+                    text: '', // 文本
+                    factory: '', // 工厂
+                    id: '', // 主键
+                    orderId: '', // 订单ID
+                    orderNo: '' // 订单号
+                }
                 this.isNewForm = true
             }
         }

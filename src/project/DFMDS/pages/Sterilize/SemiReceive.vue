@@ -66,10 +66,10 @@
                 value: ['materialCode', 'materialName']
             },
             {
-                type: 'p',
+                type: 'tooltip',
                 label: '生产锅序',
                 icon: 'factory-bianhao',
-                value: 'potOrder'
+                value: ['potOrderString', 'potOrderNo']
             },
             {
                 type: 'p',
@@ -128,6 +128,7 @@
                 potOrderNo: this.$store.state.sterilize.SemiReceive.potOrderMap.potOrderNo
             }).then(({ data }) => {
                 this.formHeader = data.data;
+                this.formHeader.potOrderString = '第' + data.data.potOrder + '锅';
                 this.formHeader.textStage = 'semiReceive';
                 this.tabs[0].status = (data.data.steTagPot ? data.data.steTagPot.semiMaterialStatus : '未录入');
                 this.$refs.semiReceive.init(this.formHeader);
@@ -175,6 +176,7 @@
     }
     interface OrderData {
         textStage?: string;
+        potOrderString?: string;
         factoryName?: string;
         potNo?: string;
         potOrder?: string;

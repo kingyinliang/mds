@@ -215,6 +215,9 @@ export default class Crafts extends Vue {
     }
 
     getSavedOrSubmitData(formHeader) {
+        this.craftTable.map((item) => {
+            item.potOrderNo = formHeader.potOrderNo
+        })
         this.craftInfo['steItem'] = this.craftTable;
         this.craftInfo['potOrderId'] = formHeader.id;
         this.craftInfo['potOrderNo'] = formHeader.potOrderNo;

@@ -62,7 +62,7 @@
                     <el-table-column type="index" label="序号" width="55" align="center" fixed />
                     <el-table-column label="物料" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="批次" :show-overflow-tooltip="true" width="180">
@@ -100,7 +100,7 @@
                     <el-table-column type="index" label="序号" width="55" fixed />
                     <el-table-column label="物料" :show-overflow-tooltip="true" width="200">
                         <template slot-scope="scope">
-                            {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                            {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                         </template>
                     </el-table-column>
                     <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
@@ -158,7 +158,7 @@
                         <el-table-column type="index" label="序号" width="55" align="center" fixed />
                         <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
@@ -196,7 +196,7 @@
                         <el-table-column type="index" label="序号" width="55" align="center" fixed />
                         <el-table-column label="物料" :show-overflow-tooltip="true" width="160">
                             <template slot-scope="scope">
-                                {{ scope.row.materialCode + ' ' + scope.row.materialName }}
+                                {{ scope.row.materialName + ' ' + scope.row.materialCode }}
                             </template>
                         </el-table-column>
                         <el-table-column label="批次" :show-overflow-tooltip="true" width="140">
@@ -247,7 +247,7 @@
                 <el-form ref="adjustForm" :model="adjustForm" label-width="100px" size="small">
                     <el-form-item label="物料：">
                         <p class="disabled-text" style="width: 220px;">
-                            {{ adjustForm.materialCode + ' ' + adjustForm.materialName }}
+                            {{ adjustForm.materialName + ' ' + adjustForm.materialCode }}
                         </p>
                     </el-form-item>
                     <el-form-item label="批次：">

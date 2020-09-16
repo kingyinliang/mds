@@ -72,7 +72,7 @@ export default {
                     type: 'tooltip',
                     icon: 'factory-pinleiguanli',
                     label: '生产品项',
-                    value: ['materialCode', 'materialName']
+                    value: ['materialName', 'materialCode']
                 },
                 {
                     type: 'p',
