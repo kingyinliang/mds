@@ -12,28 +12,28 @@
             <el-col :span="19">
                 <div class="card-right">
                     <p class="dataEntry-head-leftRight__title">
-                        <em class="iconfont factory-gongchang" />{{ stockInfoObj.factoryName ? stockInfoObj.factoryName : '烟台欣和企业食品有限公司' }}
+                        <em class="iconfont factory-gongchang" />{{ stockInfoObj.factoryName ? stockInfoObj.factoryName : factoryName }}
                     </p>
                     <div class="dataEntry-head-leftRight-message">
                         <div class="dataEntry-head-leftRight-message__item">
-                            <p>{{ stockInfoObj.workShopName ? stockInfoObj.workShopName : '制曲一车间' }}</p>
+                            <p>{{ stockInfoObj.workShopName ? stockInfoObj.workShopName : '' }}</p>
                             <p><em class="iconfont factory-quyu" />车间</p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p class="dataEntry-head-leftRight-message__item_info">
-                                {{ stockInfoObj.prodcutMaterial ? stockInfoObj.prodcutMaterial : '#3d' }}
+                                {{ stockInfoObj.beanLocationName || '' }}
                             </p>
                             <p><em class="iconfont factory-bianhao" />库位</p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p class="dataEntry-head-leftRight-message__item_info">
-                                {{ stockInfoObj.prodcutMaterial ? stockInfoObj.prodcutMaterial : '31312323' }}
+                                {{ stockMaterial }}
                             </p>
                             <p><em class="iconfont factory-bianma" />生产物料</p>
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p class="dataEntry-head-leftRight-message__item_info">
-                                {{ stockInfoObj.storageTotal ? stockInfoObj.storageTotal.toLocaleString() : 0 }}<span>{{ stockInfoObj.detailsList&&stockInfoObj.detailsList.length>0 ? stockInfoObj.detailsList[0].unit : '' }}</span>
+                                {{ totalNum }}<span>{{ stockUnit }}</span>
                             </p>
                             <p><em class="iconfont factory-cunchurongliang" />总库存</p>
                         </div>
@@ -72,11 +72,36 @@
         private activetTabName = '1';
         // 车间详情信息
         private stockInfoObj = {};
-
+        private factoryName = '';
         mounted() {
             this.stockInfoObj = {
                 ...this.$store.state.koji.StockY158Info
             };
+            this.factoryName = JSON.parse(sessionStorage.getItem('factory') || '{}').deptShort;
+        }
+
+        // 计算总量
+        get totalNum() {
+            let total = 0;
+            this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.map(item => {
+                total += item.currentAmount
+            })
+            return total
+        }
+
+        get stockUnit() {
+            if (this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.length) {
+                return this.stockInfoObj.detailsList[0].unit
+            }
+            return 'KG'
+        }
+
+         get stockMaterial() {
+            if (this.stockInfoObj.detailsList && this.stockInfoObj.detailsList.length) {
+                return this.stockInfoObj.detailsList[0].materialCode + ' ' + this.stockInfoObj.detailsList[0].materialName
+            }
+
+            return ''
         }
     }
 </script>
@@ -113,6 +138,7 @@
         font-weight: 500;
         font-size: 14px;
         .dataEntry-head-leftRight-message__item_info {
+            max-width: 300px;
             color: #fff;
             font-weight: 600;
             font-size: 22px;

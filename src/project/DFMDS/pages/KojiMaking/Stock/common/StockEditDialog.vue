@@ -34,9 +34,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item label="调整说明：" prop="adjustInfo">
-                <el-input v-model.number="dialogForm.adjustInfo" class="stock-form_item_style" size="small" placeholder="请输入">
-                    <span slot="suffix" class="stock-form_item_input_suffix">KG</span>
-                </el-input>
+                <el-input v-model.number="dialogForm.adjustInfo" class="stock-form_item_style" size="small" placeholder="请输入" />
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -85,7 +83,8 @@
             moveType: '',
             moveAmount: '',
             adjustInfo: '',
-            stockType: ''
+            stockType: '',
+            id: ''
         };
 
         // 表单 data Rule
@@ -101,15 +100,17 @@
         // 弹窗初始
         init(rowData) {
             this.isShowCurrentDialog = true;
+            console.log(this.stockType, 77)
 
             this.dialogForm = {
-                material: rowData.material,
+                material: rowData.materialCode + rowData.materialName,
                 batch: rowData.batch,
                 supplier: rowData.supplier,
                 moveType: '',
                 moveAmount: '',
                 adjustInfo: '',
-                stockType: this.stockType
+                stockType: this.stockType,
+                id: rowData.id
             };
         }
 
@@ -156,6 +157,7 @@
         moveAmount?: number|string;
         adjustInfo?: string;
         stockType?: string;
+        id: number|string;
     }
 </script>
 

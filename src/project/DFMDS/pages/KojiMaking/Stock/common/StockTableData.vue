@@ -4,14 +4,14 @@
             <el-table-column type="index" label="序号" width="55" fixed align="center" />
             <el-table-column label="物料" :show-overflow-tooltip="true" width="180" align="center">
                 <template slot-scope="scope">
-                    {{ scope.row.material }}
+                    {{ scope.row.materialCode +' '+ scope.row.materialName }}
                 </template>
             </el-table-column>
             <el-table-column label="批次" width="120" :show-overflow-tooltip="true" prop="batch" align="center" />
             <el-table-column label="厂家" width="120" :show-overflow-tooltip="true" prop="supplier" align="center" />
-            <el-table-column label="入库日期" width="120" :show-overflow-tooltip="true" prop="inStorageDate" align="center" />
-            <el-table-column label="生产日期" width="120" :show-overflow-tooltip="true" prop="productDate" align="center" />
-            <el-table-column v-if="!isHistoryPage" label="存储天数" :show-overflow-tooltip="true" prop="days" align="center" />
+            <el-table-column label="入库日期" width="160" :show-overflow-tooltip="true" prop="inStorageDate" align="center" />
+            <el-table-column label="生产日期" width="120" :show-overflow-tooltip="true" prop="productDate" align="center" :formatter="formatterProductDate" />
+            <el-table-column v-if="!isHistoryPage" label="存储天数" :show-overflow-tooltip="true" prop="days" align="center" :formatter="formatterSaveDays" />
             <el-table-column label="入库数量(KG)" width="100" :show-overflow-tooltip="true" prop="inStorageAmount" align="center" />
             <el-table-column label="当前数量(KG)" width="100" :show-overflow-tooltip="true" prop="currentAmount" align="center" />
             <el-table-column v-if="stockType!=='Y158'" label="杂质率" :show-overflow-tooltip="true" prop="impurityRate" align="center" />
@@ -30,7 +30,7 @@
         <el-row v-if="tableDataList.length > 0 && !isHistoryPage">
             <el-pagination :current-page="tablePage" :page-sizes="[10, 20, 50]" :page-size="tableSize" layout="total, sizes, prev, pager, next, jumper" :total="tableTotal" @size-change="handleSizeChange" @current-change="handlePageChange" />
         </el-row>
-        <stock-edit-dialog ref="stockEditDialog" title="盘点调整" @refreshTableList="getStockDetailList" />
+        <stock-edit-dialog ref="stockEditDialog" title="盘点调整" :stock-type="stockType" @refreshTableList="getStockDetailList" />
         <stock-check-dialog ref="stockCheckDialog" :stock-type="stockType" title="移动明细" />
     </div>
 </template>
@@ -38,6 +38,7 @@
 <script lang="ts">
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import { KOJI_API } from 'common/api/api';
+    import { getDateDiff, getNewDate, dateFormat } from 'utils/utils';
 
     import StockEditDialog from './StockEditDialog.vue';
     import StockCheckDialog from './StockCheckDialog.vue';
@@ -72,13 +73,21 @@
         // 表格数据
         private tableDataList: object[] = [];
 
+        private formatterProductDate(row, column, cellValue) {
+            return dateFormat(new Date(cellValue), 'yyyy-MM-dd')
+        }
+
+        private formatterSaveDays(row) {
+            return parseInt(getDateDiff(row.productDate, getNewDate(), 'day'), 10)
+        }
+
         // 获取表格明细数据
         getStockDetailList() {
             const queryObj = {
                 current: this.tablePage,
-                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                // factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 size: this.tableSize,
-                workShop: this.workShop
+                workShopId: this.workShop
             };
             if (!this.isHistoryPage) {
                 KOJI_API[`KOJI_STOCK_${this.stockType}_DETAIL_CUR_LIST_API`](queryObj).then(({ data }) => {
