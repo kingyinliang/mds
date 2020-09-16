@@ -3,19 +3,19 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-15 20:00:54
+ * @LastEditTime: 2020-09-16 16:38:05
 -->
 <template lang="pug">
     el-table(ref="targetTable" class="newTable" border header-row-class-name="tableHead" :data="targetTable" :height="tableElementSetting.props.height" tooltip-effect="dark" @selection-change="handleSelectionChange" style="width:100%")
         el-table-column(v-if="targetTable.length!==0" type="selection" width="50" fixed)
-        el-table-column(type="index" label="序号" :index="indexMethod" width="55" align="center" fixed)
+        el-table-column(type="index" label="序号" :index="setIndexMethod" width="55" align="center" fixed)
         template(v-for="(tableElement,index) in tableElementSetting.data")
-            el-table-column(v-if="tableElement.type==='multiple'" :key="'targetTable'+tableElement.prop+index" :prop="tableElement.prop" :label="tableElement.label" :show-overflow-tooltip="true" :min-width="tableElement.minWidth" :width="tableElement.minWidth===0?tableElement.width:null" :align="tableElement.align || 'left'" :header-align="tableElement.headerAlign || 'left'")
+            el-table-column(v-if="tableElement.type==='multiple'" :formatter="tableElement.formatter" :key="'targetTable'+tableElement.prop+index" :prop="tableElement.prop" :label="tableElement.label" :show-overflow-tooltip="true" :min-width="tableElement.minWidth" :width="tableElement.minWidth===0?tableElement.width:null" :align="tableElement.align || 'left'" :header-align="tableElement.headerAlign || 'left'")
                 template(slot-scope="scope")
                     span(v-for="val in tableElement.content" :key="'targetTable'+val" style="padding-right:5px") {{ scope.row[val] }}
-            el-table-column(v-else-if="tableElement.type==='single'&&tableElement.wrapper" :key="'targetTable'+tableElement.prop+index" :prop="tableElement.prop" :label="tableElement.label" :min-width="tableElement.minWidth" :width="tableElement.minWidth===0?tableElement.width:null" :show-overflow-tooltip="true" :align="tableElement.align || 'left'" :header-align="tableElement.headerAlign || 'left'")
+            el-table-column(v-else-if="tableElement.type==='single'&&tableElement.transFn" :formatter="tableElement.formatter" :key="'targetTable'+tableElement.prop+index" :prop="tableElement.prop" :label="tableElement.label" :min-width="tableElement.minWidth" :width="tableElement.minWidth===0?tableElement.width:null" :show-overflow-tooltip="true" :align="tableElement.align || 'left'" :header-align="tableElement.headerAlign || 'left'")
                 template(slot-scope="scope") {{ tableElement.wrapper[scope.row[tableElement.prop]] }}
-            el-table-column(v-else-if="tableElement.type==='single'" :key="'targetTable'+tableElement.prop+index" :prop="tableElement.prop" :label="tableElement.label" :min-width="tableElement.minWidth" :width="tableElement.minWidth===0?tableElement.width:null" :show-overflow-tooltip="true" :align="tableElement.align || 'left'" :header-align="tableElement.headerAlign || 'left'")
+            el-table-column(v-else-if="tableElement.type==='single'" :formatter="tableElement.formatter" :key="'targetTable'+tableElement.prop+index" :prop="tableElement.prop" :label="tableElement.label" :min-width="tableElement.minWidth" :width="tableElement.minWidth===0?tableElement.width:null" :show-overflow-tooltip="true" :align="tableElement.align || 'left'" :header-align="tableElement.headerAlign || 'left'")
                 template(slot-scope="scope") {{ scope.row[tableElement.prop] }}
             el-table-column(v-else-if="tableElement.type==='button'" :key="'targetTable'+tableElement.prop+index"  :width="tableElement.minWidth===0?tableElement.width:null" :label="tableElement.label" fixed="right")
                 template(slot-scope="scope")
@@ -42,15 +42,19 @@
         currPage= 1
         pageSize= 10
 
+
         created() {
+            console.log('table created')
             //
         }
 
         mounted() {
+            console.log('table mounted')
             //
         }
 
         init() {
+            console.log('table init')
             this.setting()
         }
 
@@ -61,7 +65,7 @@
         }
 
         // 序号
-        indexMethod(index) {
+        setIndexMethod(index) {
             return index + 1 + (Number(this.currPage) - 1) * Number(this.pageSize);
         }
 
@@ -84,13 +88,10 @@
         setting() {
             this.tableElementSetting.data.forEach(item => {
                 if (item.transList) {
-                        this.$nextTick(() =>
-                            this.$set(item, 'wrapper', item.transList)
-                        )
-
+                    this.$set(item, 'wrapper', item.transList)
                 } else if (item.transFn) {
                     item.transFn().then((res) => {
-                        this.$set(item, 'wrapper', res);
+                        this.$set(item, 'wrapper', res)
                     });
                 }
             })
