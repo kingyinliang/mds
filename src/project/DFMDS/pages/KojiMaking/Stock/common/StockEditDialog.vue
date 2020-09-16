@@ -78,12 +78,15 @@
         // 表单 data
         dialogForm: DialogForm = {
             material: '',
+            materialCode: '',
+            materialName: '',
             batch: '',
             supplier: '',
             moveType: '',
             moveAmount: '',
             adjustInfo: '',
             stockType: '',
+            moveUnit: '',
             id: ''
         };
 
@@ -102,8 +105,11 @@
             this.isShowCurrentDialog = true;
             this.dialogForm = {
                 material: rowData.materialCode + rowData.materialName,
+                materialCode: rowData.materialCode,
+                materialName: rowData.materialName,
                 batch: rowData.batch,
                 supplier: rowData.supplier,
+                moveUnit: rowData.unit,
                 moveType: '',
                 moveAmount: '',
                 adjustInfo: '',
@@ -149,6 +155,8 @@
 
     interface DialogForm {
         material?: string;
+        materialCode?: number|string;
+        materialName?: string;
         batch?: string;
         supplier?: string;
         moveType?: string;
@@ -156,6 +164,7 @@
         adjustInfo?: string;
         stockType?: string;
         id: number|string;
+        moveUnit?: string;
     }
 </script>
 
