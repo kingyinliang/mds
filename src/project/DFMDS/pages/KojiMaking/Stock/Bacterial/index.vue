@@ -17,7 +17,7 @@
             <el-col v-for="item in stockInfoList" :key="item.potId" :span="12">
                 <div class="card-stock">
                     <div class="card-stock__head">
-                        <span>{{ `${item.workShopName}${item.beanLocationName || item.beanWareHouseName? '：'+(item.beanLocationName || item.beanWareHouseName) : ''}` }}</span>
+                        <span>{{ `${item.workShopName}${item.wareHouseNo || item.materialLocation? '：'+(item.wareHouseNo || item.materialLocation) : ''}` }}</span>
                         <el-button class="floatr" type="text" @click="goDetail(item)">
                             详情
                         </el-button>
@@ -83,9 +83,11 @@
         private FnCallBackHandle(data) {
             if (data.code === 200) {
                 this.stockInfoList = data.data || [];
+                if (this.stockInfoList.length === 0) {
+                    this.$infoToast('暂无任何内容');
+                }
             } else {
                 this.stockInfoList = [];
-                this.$infoToast('暂无任何内容');
             }
         }
 

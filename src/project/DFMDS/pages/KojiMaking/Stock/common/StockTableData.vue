@@ -62,7 +62,6 @@
         };
 
         mounted() {
-            console.log('isHistoryPage:', this.isHistoryPage, '  workShop:', this.workShop, '  stockType:', this.stockType)
             this.getStockDetailList();
         }
 

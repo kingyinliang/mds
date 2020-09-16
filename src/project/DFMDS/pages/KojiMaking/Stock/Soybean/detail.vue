@@ -21,7 +21,7 @@
                         </div>
                         <div class="dataEntry-head-leftRight-message__item">
                             <p class="dataEntry-head-leftRight-message__item_info">
-                                {{ stockInfoObj.beanLocationName || '' }}
+                                {{ stockInfoObj.beanWareHouse || stockInfoObj.beanLocation || '' }}
                             </p>
                             <p><em class="iconfont factory-bianhao" />库位</p>
                         </div>
@@ -71,7 +71,7 @@
         // 默认第一个标签
         private activetTabName = '1';
         // 车间详情信息
-        private stockInfoObj = {};
+        private stockInfoObj: DataObj = {};
 
         private factoryName = '';
 
@@ -105,6 +105,16 @@
 
             return ''
         }
+    }
+    interface DataObj {
+        detailsList?: DetailsList[];
+    }
+
+    interface DetailsList {
+        currentAmount: number;
+        materialCode?: number|string;
+        materialName?: number|string;
+        unit?: number|string;
     }
 </script>
 <style lang="scss" scoped>

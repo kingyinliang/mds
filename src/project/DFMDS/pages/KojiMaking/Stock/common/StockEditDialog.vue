@@ -100,8 +100,6 @@
         // 弹窗初始
         init(rowData) {
             this.isShowCurrentDialog = true;
-            console.log(this.stockType, 77)
-
             this.dialogForm = {
                 material: rowData.materialCode + rowData.materialName,
                 batch: rowData.batch,

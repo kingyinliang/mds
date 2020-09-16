@@ -36,7 +36,6 @@
         }) currentData;
 
         get totalNum() {
-            console.log(this.currentData);
             let total = 0;
             this.currentData.detailsList && this.currentData.detailsList.map(item => {
                 total += item.currentAmount

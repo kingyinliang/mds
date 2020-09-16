@@ -22,11 +22,8 @@
             <el-pagination :current-page="tablePage" :page-sizes="[10, 20, 50]" :page-size="tableSize" layout="total, sizes, prev, pager, next, jumper" :total="tableTotal" @size-change="handleSizeChange" @current-change="handlePageChange" />
         </el-row>
         <div slot="footer" class="dialog-footer">
-            <el-button size="small" @click="btnHandleCancel">
-                取 消
-            </el-button>
             <el-button type="primary" size="small" @click="btnHandleCancel">
-                确 定
+                关闭
             </el-button>
         </div>
     </el-dialog>
@@ -55,7 +52,7 @@
         isShowCurrentDialog = false;
 
         // 操作的数据行
-        currentRowData = {};
+        currentRowData: CurrentData = {};
 
         init(rowData) {
             // 弹窗打开
@@ -73,15 +70,18 @@
             KOJI_API.KOJI_STOCK_Y158_DETAIL_ADJUST_LIST_API({
                 current: this.tablePage,
                 size: this.tableSize,
-                stockType: this.stockType
+                stockType: this.stockType,
+                materialCode: this.currentRowData.materialCode
             }).then(({ data }) => {
                 if (data.code === 200) {
                     this.tableDataList = data.data.records || [];
                     this.tableTotal = data.data.total || 0;
+                    if (this.tableTotal === 0) {
+                        this.$infoToast('暂无任何内容');
+                    }
                 } else {
                     this.tableDataList = [];
                     this.tableTotal = 0;
-                    this.$infoToast('暂无任何内容');
                 }
             });
         }
@@ -106,6 +106,9 @@
             // 表格数据
             this.tableDataList = [];
         }
+    }
+    interface CurrentData {
+        materialCode?: number|string;
     }
 </script>
 <style>
