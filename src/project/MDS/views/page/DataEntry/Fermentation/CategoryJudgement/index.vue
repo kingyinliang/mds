@@ -44,7 +44,7 @@
                                 <el-option value="">
                                     请选择
                                 </el-option>
-                                <el-option v-for="(item, index) of materialList" :key="index" :value="item.materialCode" :label="item.materialCode + item.materialName" />
+                                <el-option v-for="(item, index) of materialList" :key="index" :value="item.materialCode" :label="item.materialName + item.materialCode" />
                             </el-select>
                         </el-form-item>
                         <el-form-item label="发酵天数：">

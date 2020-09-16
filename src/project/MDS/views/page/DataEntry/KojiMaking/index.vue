@@ -88,7 +88,7 @@
                                                         生产品项
                                                     </div>
                                                     <div class="detail">
-                                                        {{ orderList[index].materialCode + ' ' + orderList[index].materialName }}
+                                                        {{ orderList[index].materialName + ' ' + orderList[index].materialCode }}
                                                     </div>
                                                 </div>
                                                 <div class="box-item-container-item">
@@ -200,7 +200,7 @@
                                                         生产品项
                                                     </div>
                                                     <div class="detail">
-                                                        {{ orderList[index + 1].materialCode + ' ' + orderList[index + 1].materialName }}
+                                                        {{ orderList[index + 1].materialName + ' ' + orderList[index + 1].materialCode }}
                                                     </div>
                                                 </div>
                                                 <div class="box-item-container-item">
@@ -312,7 +312,7 @@
                                                         生产品项
                                                     </div>
                                                     <div class="detail">
-                                                        {{ orderList[index + 2].materialCode + ' ' + orderList[index + 2].materialName }}
+                                                        {{ orderList[index + 2].materialName + ' ' + orderList[index + 2].materialCode }}
                                                     </div>
                                                 </div>
                                                 <div class="box-item-container-item">

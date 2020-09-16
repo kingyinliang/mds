@@ -16,9 +16,9 @@
             </p>
         </el-form-item>
         <el-form-item label="生产品项：">
-            <el-tooltip class="item" effect="dark" :content="(formHeader.materialCode ? formHeader.materialCode : '') + ' ' + (formHeader.materialName ? formHeader.materialName : '')" placement="top">
+            <el-tooltip class="item" effect="dark" :content="(formHeader.materialName ? formHeader.materialName : '') + ' ' + (formHeader.materialCode ? formHeader.materialCode : '')" placement="top">
                 <p class="el-input">
-                    {{ (formHeader.materialCode ? formHeader.materialCode : '') + ' ' + (formHeader.materialName ? formHeader.materialName : '') }}
+                    {{ (formHeader.materialName ? formHeader.materialName : '') + ' ' + (formHeader.materialCode ? formHeader.materialCode : '') }}
                 </p>
             </el-tooltip>
         </el-form-item>

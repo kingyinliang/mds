@@ -3,22 +3,24 @@
  * @Anthor: Telliex
  * @Date: 2020-09-02 10:21:15
  * @LastEditors: Telliex
- * @LastEditTime: 2020-09-08 19:02:06
+ * @LastEditTime: 2020-09-15 19:13:20
 -->
 <template lang="pug">
     el-dialog(:title="formElementSetting.props.title" :close-on-click-modal="false" :visible.sync="isCurrentDailogShow")
-        el-form(ref="dataForm" :model="dataForm" size="small" :label-width="formElementSetting.props.labelWidth")
+        el-form(ref="dataForm" :model="dataForm" size="small"  :label-width="`${formElementSetting.props.labelWidth || 100}px`")
             template(v-for="(formElement,index) in formElementSetting.data")
-                el-form-item(v-if="formElement.type==='select:remote'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :rules="formElement.rules" )
+                el-form-item(v-if="formElement.type==='select:remote'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :label-width="`${formElement.labelWidth || formElementSetting.props.labelWidth}px`" :rules="formElement.rules" )
                     el-select(:ref="formElement.prop" v-model="dataForm[formElement.prop]" filterable remote :placeholder="formElement.placeholder" style="width: 100%;" clearable @clear="clearVal(formElement)" :disabled="formElement.disabled || false"  :loading="loading" :remote-method="((val)=>{remoteMethod(val,index)})" @change="((val)=>{emitChange(val,formElement,index)})")
                         el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="opt.optLabel" :value="opt.optValue" )
-                el-form-item(v-if="formElement.type==='select'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :rules="formElement.rules")
-                    el-select(:ref="formElement.prop" v-model="dataForm[formElement.prop]" filterable :placeholder="formElement.placeholder" style="width: 100%;" clearable @clear="clearVal(formElement)" :disabled="formElement.disabled || false")
+                el-form-item(v-else-if="formElement.type==='select'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :label-width="`${formElement.labelWidth || formElementSetting.props.labelWidth}px`" :rules="formElement.rules" )
+                    el-select(:ref="formElement.prop" v-model="dataForm[formElement.prop]" filterable :placeholder="formElement.placeholder" style="width: 100%;" clearable @clear="clearVal(formElement)" :disabled="formElement.disabled || false" @change="((val)=>{emitChange(val,formElement,index)})")
                         //- el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="setLabel(opt, formElement)" :value="opt[formElement.resVal.value]")
                         el-option(v-for="(opt, optIndex) in formElement.optionList" :key="opt+optIndex" :label="opt.optLabel" :value="opt.optValue")
-                el-form-item(v-if="formElement.type==='input'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :rules="formElement.rules")
-                    el-input(:ref="formElement.prop" v-model="dataForm[formElement.prop]" :placeholder="formElement.placeholder" :oninput="formElement.oninput" clearable :disabled="formElement.disabled || false")
-                el-form-item(v-if="formElement.type==='text'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop")
+                el-form-item(v-else-if="formElement.type==='input'&&formElement.typeof==='number'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :label-width="`${formElement.labelWidth || 100}px`" :rules="formElement.rules")
+                    el-input(:ref="formElement.prop" v-model.number="dataForm[formElement.prop]" :placeholder="formElement.placeholder" :oninput="formElement.oninput" clearable :disabled="formElement.disabled || false" )
+                el-form-item(v-else-if="formElement.type==='input'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :label-width="`${formElement.labelWidth || formElementSetting.props.labelWidth}px`" :rules="formElement.rules")
+                    el-input(:ref="formElement.prop" v-model="dataForm[formElement.prop]" :placeholder="formElement.placeholder" :oninput="formElement.oninput" clearable :disabled="formElement.disabled || false" )
+                el-form-item(v-else-if="formElement.type==='text'" :key="formElement.prop+index" :label="`${formElement.label}：` || ''" :prop="formElement.prop" :label-width="`${formElement.labelWidth || formElementSetting.props.labelWidth}px`")
                     el-input(:ref="formElement.prop" v-model="dataForm[formElement.prop]" disabled)
         div(slot="footer" class="dialog-footer")
             el-button(@click="closeDialog") 取消
@@ -59,6 +61,7 @@
                     // 对 newDataForm 做处理
                     this.$emit('update:dataForm', newDataForm)
                     this.$emit('send-dialog-form-data', newDataForm);
+                    this.$refs.dataForm.resetFields();
                     this.isCurrentDailogShow = false;
                 } else {
                     this.$infoToast('请完善表单')
@@ -70,7 +73,12 @@
         clearVal(item) {
             // 将有连动的下拉清空
             item.linkageProp.forEach(element => {
-                this.dataForm[element.prop] = ''; // 先清空
+                this.dataForm[element] = '' // 清空连动栏位
+                this.formElementSetting.data.forEach(atom => {
+                    if (atom.prop === element) {
+                        atom.optionList = [] // 先清空连动栏位下拉选单
+                    }
+                })
             })
         }
 
@@ -78,7 +86,6 @@
             this.isCurrentDailogShow = true;
             // 基础设置
             this.setting()
-
         }
 
         // 设置下拉label
@@ -99,12 +106,21 @@
                 } else if (item.defaultOptionsFn) {
                     // 初始化下拉
                     item.defaultOptionsFn().then((res) => {
-                        console.log('res')
-                        console.log(res)
                         this.$set(item, 'optionList', res);
 
                     });
                 }
+
+                if (item.linkageProp) {
+                    if (this.dataForm[item.prop]) {
+                        const target = this.formElementSetting.data.filter(element => element.prop === item.linkageProp[0])[0]
+                        target.emitChange(this.dataForm[item.prop]).then((res) => {
+                            this.$set(target, 'optionList', JSON.parse(JSON.stringify(res)))
+                        })
+                    }
+
+                }
+
 
             });
         }
@@ -114,13 +130,17 @@
             console.log(element)
             console.log(index)
             // TODO 目前只接受一个连动，后续在添加
-            this.formElementSetting.data.filter(item => item.prop === element.linkageProp[0])[0].emitChange(val, element).then((res) => {
-                console.log(res)
-            })
+            if (element.linkageProp) {
+                // 連動對象
+                const target = this.formElementSetting.data.filter(item => item.prop === element.linkageProp[0])[0]
+                target.emitChange(val, element).then((res) => {
+                    this.$set(target, 'optionList', JSON.parse(JSON.stringify(res)))
+                })
+            }
 
 
             // 联动监听事件对象
-            // if (item.linkageProp) {
+            // if (element.linkageProp) {
             //     console.log('有1个')
             //     this.$nextTick(() => {
             //         // 添加监听
