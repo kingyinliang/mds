@@ -45,12 +45,18 @@
             showTable: HTMLFormElement;
         }
 
+        testShow=false
+
+
         currPage= 1
         pageSize= 10
         totalCount= 1
 
         nowSearchModle='normal'
         chechDeleteList=0
+
+        workShopList: Options[]= [] // 车间缓存
+        workShopListObject= {}
 
         controllableForm= {
             workShop: '',
@@ -72,22 +78,22 @@
                     label: '生产车间', // 表单元件名称
                     minWidth: 100,
                     width: 0, // width 会覆盖 minWidth
-                    content: ['workShop']
-                    // transFn: () => {
-                    //     return new Promise((resolve) => {
-                    //         COMMON_API.ORG_QUERY_WORKSHOP_API({
-                    //             factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
-                    //             deptType: ['WORK_SHOP'],
-                    //             deptName: '制曲'
-                    //         }).then(({ data }) => {
-                    //             const wrapperObject = {};
-                    //             data.data.forEach(item => {
-                    //                 wrapperObject[item.dictCode] = item.dictValue
-                    //             })
-                    //             resolve(wrapperObject)
-                    //         })
-                    //     })
-                    // }
+                    content: ['workShop'],
+                    transFn: () => {
+                        return new Promise((resolve) => {
+                            COMMON_API.ORG_QUERY_WORKSHOP_API({
+                                factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                                deptType: ['WORK_SHOP'],
+                                deptName: '制曲'
+                            }).then(({ data }) => {
+                                const wrapperObject = {};
+                                data.data.forEach(item => {
+                                    wrapperObject[item.deptCode] = item.deptName
+                                })
+                                resolve(wrapperObject)
+                            })
+                        })
+                    }
                 },
                 {
                     type: 'multiple', // 表格元件
@@ -134,7 +140,7 @@
                     prop: 'changed',
                     label: '操作时间', // 表单元件名称
                     minWidth: 0,
-                    width: 160,
+                    width: 170,
                     content: ['changed']
                 },
                 {
@@ -470,14 +476,18 @@
             return this.$store.state.common.mainClientHeight;
         }
 
-        mounted() {
-            this.getItemsList();
+        created() {
+            //
+        }
+
+        async mounted() {
+            await this.getWorkShop()
+            await this.$refs.showTable.init();
+            await this.getItemsList();
         }
 
         // from dialog
         addItem(dataForm) {
-            console.log(dataForm)
-
             KOJI_API.CRAFTSTANDARD_INSERT_API({
                 factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
                 workShop: dataForm.workShop,
@@ -542,7 +552,7 @@
                 if (haveParas && data.data.records.length === 0) {
                         this.$infoToast('暂无任何内容');
                 }
-                this.$refs.showTable.init();
+                console.log('data in')
                 this.tableData = data.data.records;
                 this.currPage = data.data.current;
                 this.pageSize = data.data.size;
@@ -610,6 +620,31 @@
             }
         }
 
+            // 车间下拉
+        getWorkShop() {
+            return new Promise(resolve => {
+                    COMMON_API.ORG_QUERY_WORKSHOP_API({
+                    factory: JSON.parse(sessionStorage.getItem('factory') || '{}').id,
+                    deptType: ['WORK_SHOP'],
+                    deptName: '制曲'
+                }).then(({ data }) => {
+                    const optionList = data.data;
+                    this.workShopListObject = {}
+                    optionList.forEach(item => {
+                        // eslint-disable-next-line no-invalid-this
+                        this.$set(item, 'optLabel', `${item.deptName}`)
+                        // eslint-disable-next-line no-invalid-this
+                        this.$set(item, 'optValue', `${item.deptCode}`)
+                        this.workShopListObject[item.deptCode] = item.deptName
+                    })
+                    console.log('车间下拉完成！！')
+                    this.workShopList = optionList
+                    resolve()
+                })
+            })
+
+
+        }
 
         // [btn] 高级查询
         btnAdvanceSearch() {
